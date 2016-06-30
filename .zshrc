@@ -167,9 +167,13 @@ alias gitshadow="git config --global http.proxy 'socks5://127.0.0.1:1080' \
     git config --global https.proxy 'socks5://127.0.0.1:1080'"
 alias gitunshadow="git config --global --unset http.proxy \
     git config -'global --unset https.proxy"
-alias banwa='ssh -p 26968 root@45.78.62.230'
+alias banwa='ssh root@45.78.62.230 -p 26812'
 
 alias jhbuild='~/.local/bin/jhbuild'
+alias nd='devtool'
+alias cis='sudo nvram boot-args="niog=1"'
+alias ois='sudo nvram -d boot-args'
+alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'
 
 #别名设置举例
 #alias g='git'
@@ -186,3 +190,18 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org \
   --userconfig=$HOME/.cnpmrc"
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# Use ~~ as the trigger sequence instead of the default **
+export FZF_COMPLETION_TRIGGER='ii'
+
+# Options to fzf command
+export FZF_COMPLETION_OPTS='+c -x'
+
+# Use ag instead of the default find command for listing candidates.
+# - The first argument to the function is the base path to start traversal
+# - Note that ag only lists files not directories
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  ag -g "" "$1"
+}
+it2prof() { echo -e "\033]50;SetProfile=$1\a" }

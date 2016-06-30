@@ -1,12 +1,12 @@
- " leave insert mode quickly
-  "if ! has('gui_running')
-    set ttimeoutlen=30
-    augroup FastEscape
-      autocmd!
-      au InsertEnter * set timeoutlen=0
-      au InsertLeave * set timeoutlen=1000
-    augroup END
-  "endif
+" leave insert mode quickly
+"if ! has('gui_running')
+set ttimeoutlen=30
+augroup FastEscape
+    autocmd!
+    au InsertEnter * set timeoutlen=0
+    au InsertLeave * set timeoutlen=1000
+augroup END
+"endif
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -27,6 +27,7 @@ set ttimeoutlen=10
 call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
+Plug 'Shougo/unite.vim'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify'
@@ -36,6 +37,7 @@ Plug 'frankier/neovim-colors-solarized-truecolor-only'
 "Plug 'tomtom/tlib_vim'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
+Plug 'junegunn/gv.vim'
 Plug 'ervandew/supertab'
 "Plug 'altercation/vim-colors-solarized'
 Plug 'spf13/vim-colors'
@@ -81,26 +83,58 @@ Plug 'KabbAmine/vCoolor.vim'
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 Plug 'benmills/vimux'
 Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
-"Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/a.vim'
-"Plug 'junegunn/goyo.vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'junegunn/goyo.vim'
 Plug 'Valloric/YouCompleteMe'
 "Plug 'ternjs/tern_for_vim'
 Plug 'benmills/vimux'
 Plug 'vim-scripts/mru.vim'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
 Plug 'vim-utils/vim-man'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              for Unite                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"if executable('ag')
+" Use ag (the silver searcher)
+" https://github.com/ggreer/the_silver_searcher
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts =
+            \ '-i --vimgrep --hidden --ignore ' .
+            \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+let g:unite_source_grep_recursive_opt = ''
+"elseif executable('ack-grep')
+"" Use ack
+"" http://beyondgrep.com/
+"let g:unite_source_grep_command = 'ack-grep'
+"let g:unite_source_grep_default_opts =
+"\ '-i --no-heading --no-color -k -H'
+"let g:unite_source_grep_recursive_opt = ''
+"endif
+
+"let g:unite_source_rec_async_command =
+"\ ['ack', '-f', '--nofilter']
 
 """""""""""""""""""
 "自定义map
 """""""""""""""""""
+"noremap <silent> <leader>ct :Unite file/async file_rec/neovim buffer neomru/file file/new -direction=dynamicbottom -start-insert<CR>
+nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
+nmap <leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
+nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR><CR>
+nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
+nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
+
 nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
 nmap <silent> <leader>l <Plug>(jsdoc)
 nmap <leader>,, :set wrap<CR>
@@ -130,13 +164,20 @@ map <leader><leader>- mzgg=G`z
 nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
 map <F10> :QuickRun<CR>
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
-map <C-L> <C-W>l<C-W>_
-map <C-H> <C-W>h<C-W>_
+"map <C-J> <C-W>j<C-W>_
+"map <C-K> <C-W>k<C-W>_
+"map <C-L> <C-W>l<C-W>_
+"map <C-H> <C-W>h<C-W>_
 nmap j jzz
 nmap k kzz
 "nmap <leader>cl :VimuxRunLastCommand("%")
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                nerdcommenter too many unsless issue                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>rccccccccc :NERDComComment
+nmap <leader>rcccccccccccn :NERDComNestedComment
+nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
 
 """""""""""""""""""
 "ack
@@ -238,13 +279,13 @@ let g:airline#extensions#tabline#buffers_label = 'buffers'
 let g:airline#extensions#tabline#tabs_label = 'tabs'
 
 " configure separators for the tabline only. >
-  "let g:airline#extensions#tabline#left_sep = '⚡'
-  "let g:airline#extensions#tabline#left_alt_sep = '⚡'
-  "let g:airline#extensions#tabline#right_sep = '<<'
-  "let g:airline#extensions#tabline#right_alt_sep = '<<'
+"let g:airline#extensions#tabline#left_sep = '⚡'
+"let g:airline#extensions#tabline#left_alt_sep = '⚡'
+"let g:airline#extensions#tabline#right_sep = '<<'
+"let g:airline#extensions#tabline#right_alt_sep = '<<'
 
 " configure whether close button should be shown: >
-  let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_close_button = 0
 
 """""""""""""""""""
 "set设置
@@ -252,7 +293,11 @@ let g:airline#extensions#tabline#tabs_label = 'tabs'
 "highlight current line and column
 set cursorcolumn
 "fold depend on syntax
-set cmdheight=2
+set foldmethod=indent
+set foldlevelstart=20
+set foldnestmax=9      "deepest fold is 10 levels
+"set foldlevel=1         "this is just what i use
+"set cmdheight=2
 set wrap
 syntax on
 
@@ -358,9 +403,8 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+" <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
-map <c-space> ?
 
 " Close the current buffer
 map <leader>bd :bdelete<cr>:tabclose<cr>gT
@@ -393,21 +437,21 @@ cno $h e ~/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-vnoremap $1 <esc>`>a)<esc>`<i(<esc>
-vnoremap $2 <esc>`>a]<esc>`<i[<esc>
-vnoremap $3 <esc>`>a}<esc>`<i{<esc>
-vnoremap $$ <esc>`>a"<esc>`<i"<esc>
-vnoremap $q <esc>`>a'<esc>`<i'<esc>
-vnoremap $e <esc>`>a"<esc>`<i"<esc>
+"vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+"vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+"vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+"vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+"vnoremap $q <esc>`>a'<esc>`<i'<esc>
+"vnoremap $e <esc>`>a"<esc>`<i"<esc>
 
 " Map auto complete of (, ", ', [
-inoremap $1 ()<esc>i
-inoremap $2 []<esc>i
-inoremap $3 {}<esc>i
-inoremap $4 {}<esc>i<C-j>
-inoremap $q ''<esc>i
-inoremap $e ""<esc>i
-inoremap $t <><esc>i
+"inoremap $1 ()<esc>i
+"inoremap $2 []<esc>i
+"inoremap $3 {}<esc>i
+"inoremap $4 {}<esc>i<C-j>
+"inoremap $q ''<esc>i
+"inoremap $e ""<esc>i
+"inoremap $t <><esc>i
 
 
 """""""""""""""""""
@@ -452,8 +496,10 @@ if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
     inoremap <silent> <C-[>OC <RIGHT>
 endif
 " }
-set background=dark " Assume a dark background
-colorscheme solarized
+let g:seoul256_light_background = 256
+set background=light " Assume a dark background
+"colorscheme solarized
+colorscheme seoul256
 
 " Allow to trigger background
 function! ToggleBG()
@@ -869,15 +915,19 @@ if !has('python') && !has('python3')
     let g:pymode = 0
 endif
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              ctrlp fzf                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ctrlp {
 "if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
-let g:ctrlp_working_path_mode = 'ra'
-nnoremap <silent> <D-t> :CtrlP<CR>
+"let g:ctrlp_working_path_mode = 'ra'
+"nnoremap <silent> <D-t> :CtrlP<CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
-nnoremap <silent> <Leader>cc :CtrlPFunky<CR>
-let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-            \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
+nnoremap <silent> <Leader>cc :FZF<CR>
+nnoremap <leader><leader><leader>cc <Plug>NERDCommenterComment
+"let g:ctrlp_custom_ignore = {
+"\ 'dir':  '\.git$\|\.hg$\|\.svn$',
+"\ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 
 if executable('ag')
     let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
