@@ -170,7 +170,7 @@ alias gitunshadow="git config --global --unset http.proxy \
 alias banwa='ssh root@45.78.62.230 -p 26812'
 
 alias jhbuild='~/.local/bin/jhbuild'
-alias nd='devtool'
+alias nd='devtool -w'
 alias cis='sudo nvram boot-args="niog=1"'
 alias ois='sudo nvram -d boot-args'
 alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'

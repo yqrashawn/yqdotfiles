@@ -30,7 +30,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'Shougo/unite.vim'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mileszs/ack.vim'
-Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
 "Plug 'MarcWeber/vim-addon-mw-utils'
@@ -38,7 +38,7 @@ Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'junegunn/gv.vim'
-Plug 'ervandew/supertab'
+"Plug 'ervandew/supertab'
 "Plug 'altercation/vim-colors-solarized'
 Plug 'spf13/vim-colors'
 "Plug 'itchyny/dictionary.vim'
@@ -49,7 +49,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tacahiroy/ctrlp-funky'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/sessionman.vim'
-Plug 'matchit.zip'
+"Plug 'matchit.zip'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
 Plug 'bling/vim-bufferline'
@@ -59,9 +59,9 @@ Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim'
-Plug 'mhinz/vim-signify'
-Plug 'gcmt/wildfire.vim'
-Plug 'reedes/vim-litecorrect'
+Plug 'mhinz/vim-signify' "show lines modified
+"Plug 'gcmt/wildfire.vim' "press enter to select words
+"Plug 'reedes/vim-litecorrect'
 Plug 'scrooloose/syntastic',{'for': 'objc'}
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
@@ -81,20 +81,21 @@ Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'spf13/vim-preview', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
-Plug 'benmills/vimux'
-Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
-Plug 'Shougo/vimproc.vim'
+"Plug 'benmills/vimux'
+"Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
+"Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/a.vim'
+"Plug 'rizzatti/dash.vim'
 Plug 'junegunn/seoul256.vim'
-Plug 'junegunn/goyo.vim'
+"Plug 'junegunn/goyo.vim'
 Plug 'Valloric/YouCompleteMe'
 "Plug 'ternjs/tern_for_vim'
-Plug 'benmills/vimux'
+"Plug 'benmills/vimux'
 Plug 'vim-scripts/mru.vim'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
 Plug 'vim-utils/vim-man'
