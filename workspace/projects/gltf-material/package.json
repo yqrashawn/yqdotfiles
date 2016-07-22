@@ -1,0 +1,40 @@
+{
+  "name": "gltf-pipeline",
+  "version": "0.1.0-alpha1",
+  "description": "",
+  "license": "",
+  "contributors": [
+    {
+      "name": "yqrashawn",
+      "url": "rashawn.top"
+    }
+  ],
+  "keywords": [
+    "glTF",
+    "cesium"
+  ],
+  "homepage": "http://115.28.138.35:3000/zhangyuxiao/gltf-material",
+  "repository": {
+    "type": "git",
+    "url": "git@115.28.138.35:zhangyuxiao/gltf-material.git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "async": "2.0.0-rc.6",
+    "bluebird": "^3.4.1",
+    "buffer-equal": "1.0.0",
+    "cesium": "1.23.0",
+    "data-uri-to-buffer": "0.0.4",
+    "devtool": "^2.0.3",
+    "jimp": "0.2.24",
+    "jquery": "^3.1.0",
+    "jsonfile": "^2.3.1",
+    "object-values": "1.0.0",
+    "yargs": "4.7.1"
+  },
+  "bin": {
+    "gltf-pipeline": "./bin/gltf-pipeline.js"
+  }
+}

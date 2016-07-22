@@ -1,0 +1,10 @@
+/.idea
+/coverage
+/output
+/specs
+/test
+/TypeScriptDefinitions
+.jshintrc
+.npmignore
+.travis.yml
+gulpfile.js
