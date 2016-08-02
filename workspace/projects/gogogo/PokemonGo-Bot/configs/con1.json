@@ -5,8 +5,6 @@
     "location": "37.80913974983744,-122.4100112915039",
     "gmapkey": "AIzaSyATfe8_UKIPYV33kO7G8gzB8Oo_9-w2BxM",
 
-
-
     "tasks": [
       {
         "type": "HandleSoftBan"
@@ -21,7 +19,10 @@
         }
       },
         {
-            "type":"NicknamePokemon"
+            "type":"NicknamePokemon",
+            "config":{
+                "nickname_template":"{iv_pct}_{iv_ads}"
+            }
         },
       {
         "type": "TransferPokemon"
@@ -62,18 +63,20 @@
         "type": "SpinFort"
       },
       {
-        "type": "MoveToFort"
+        "type": "MoveToFort",
+        "config":{
+          "lure_attraction": false,
+          "lure_max_distance": 2000
+        }
       },
       {
         "type": "FollowSpiral"
       }
     ],
-    "nickname_template": "{iv_pct}_{iv_ads}",
     "map_object_cache_time": 5,
-    "max_steps": 5,
     "forts": {
       "avoid_circles": true,
-      "max_circle_size": 50
+      "max_circle_size": 20
     },
     "websocket_server": false,
     "walk": 10,
@@ -290,7 +293,7 @@
         "// Grimer evolves to Muk"                                  : {},
         "Grimer"                                                    : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "// Magikarp evolves to Gyarados"                           : {},
-        "Magikarp"                                                  : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
+        "Magikarp"                                                  : { "release_below_cp" : 120, "release_below_iv"  : 0.93, "logic" : "or" },
         "// Exeggcute evolves to Exeggutor"                         : {},
         "Exeggcute"                                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "// Eevee evolves to many versions, like Vaporeon, Flareon" : {},
@@ -342,7 +345,7 @@
         "Kakuna"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Rattata"                                : { "release_below_cp" : 300, "release_below_iv" : 0.1, "logic" : "or" },
         "Abra"                                   : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Zubat"                                  : { "release_below_cp" : 300, "release_below_iv" : 0.1, "logic" : "or" },
+        "Zubat"                                  : { "release_below_cp" : 400, "release_below_iv" : 0.1, "logic" : "or" },
         "Chansey"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Pidgey"                                 : { "release_below_cp" : 205, "release_below_iv" : 0.1, "logic" : "or" },
         "Spearow"                                : { "release_below_cp" : 400, "release_below_iv" : 0.93, "logic" : "or" },
@@ -362,20 +365,20 @@
         "Mankey"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Pikachu"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Magnemite"                              : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Tentacool"                              : { "release_below_cp" : 500, "release_below_iv" : 0.1, "logic" : "or" },
+        "Tentacool"                              : { "release_below_cp" : 600, "release_below_iv" : 0.1, "logic" : "or" },
         "Paras"                                  : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Jigglypuff"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Ditto"                                  : { "release_below_cp" : 11, "release_below_iv" : 0.13, "logic" : "or" },
         "Staryu"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Charmander"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Goldeen"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
+        "Goldeen"                                : { "release_below_cp" : 700, "release_below_iv" : 0.93, "logic" : "or" },
         "Squirtle"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Cubone"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Venonat"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Bulbasaur"                              : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Drowzee"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Machop"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Psyduck"                                : { "release_below_cp" : 680, "release_below_iv" : 0.1, "logic" : "or" },
+        "Psyduck"                                : { "release_below_cp" : 740, "release_below_iv" : 0.1, "logic" : "or" },
         "Seel"                                   : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Kabuto"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Bellsprout"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },

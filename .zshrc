@@ -291,4 +291,4 @@ elif type compctl &>/dev/null; then
 fi
 ###-end-npm-completion-###
 #https://github.com/zsh-users/zsh-history-substring-search
-source ~/.oh-my-zsh/custom/plugins/zsh-history-substring-serach.zsh
+source ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search.zsh

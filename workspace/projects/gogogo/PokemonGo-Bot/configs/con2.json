@@ -5,8 +5,6 @@
     "location": "37.80913974983744,-122.4100112915039",
     "gmapkey": "AIzaSyATfe8_UKIPYV33kO7G8gzB8Oo_9-w2BxM",
 
-
-
     "tasks": [
       {
         "type": "HandleSoftBan"
@@ -20,9 +18,12 @@
           "longer_eggs_first": true
         }
       },
-      {
-        "type":"NicknamePokemon"
-      },
+        {
+            "type":"NicknamePokemon",
+            "config":{
+                "nickname_template":"{iv_pct}_{iv_ads}"
+            }
+        },
       {
         "type": "TransferPokemon"
       },
@@ -44,6 +45,9 @@
             "Ultraball":       { "keep" : 50 },
             "Masterball":       { "keep" : 50 },
             "Max Potion":   { "keep" : 50 },
+            "Potion":   { "keep" : 0 },
+            "Super Potion":   { "keep" : 0 },
+            "Hyper Potion":   { "keep" : 50 },
             "Revive":         { "keep" : 50 },
             "Razz Berry":     { "keep" : 50 }
           }
@@ -59,18 +63,20 @@
         "type": "SpinFort"
       },
       {
-        "type": "MoveToFort"
+        "type": "MoveToFort",
+        "config":{
+          "lure_attraction": false,
+          "lure_max_distance": 2000
+        }
       },
       {
         "type": "FollowSpiral"
       }
     ],
-    "nickname_template": "{iv_pct}_{iv_ads}",
     "map_object_cache_time": 5,
-    "max_steps": 5,
     "forts": {
       "avoid_circles": true,
-      "max_circle_size": 50
+      "max_circle_size": 20
     },
     "websocket_server": false,
     "walk": 10,
@@ -268,6 +274,7 @@
         "// S-Tier pokemons (if pokemon can be evolved into tier, list the representative)" : {},
         "Mewtwo"                                                                            : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or"},
         "Dragonite"                                                                         : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
+        "Dratini"                                                                         : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Snorlax"                                                                           : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "// Mew evolves to Mewtwo"                                                          : {},
         "Mew"                                                                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
@@ -375,7 +382,6 @@
         "Seel"                                   : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Kabuto"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Bellsprout"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Dratini"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Omanyte"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Kadabra"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Oddish"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
