@@ -54,7 +54,7 @@ setopt RM_STAR_WAIT
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 #plugins=(vim git autojump osx brew zsh-syntax-highlighting colored-man-pages copydir tmux vi-mode web-search git-flow-completion)
-plugins=(jump pj fasd vim git osx git-flow-completion zsh-syntax-highlighting colored-man-pages tmux vi-mode)
+plugins=(jump pj fasd vim git osx git-flow-completion zsh-syntax-highlighting colored-man-pages tmux)
 
 #for pj
 PROJECT_PATHS=(~/workspace ~/workspace/projects ~/workspace/XiheMap ~/workspace/gogs-webhook ~/workspace/projecs/cesium)
@@ -62,10 +62,10 @@ plugins+=(zsh-completions)
 autoload -U compinit && compinit
 
 # Load zsh-syntax-highlighting.
-#source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Load zsh-autosuggestions.
-#source ~/.zsh/zsh-autosuggestions/autosuggestions.zsh
+source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/autosuggestions.zsh
 
 # Enable autosuggestions automatically.
 zle-line-init() {
@@ -290,3 +290,5 @@ elif type compctl &>/dev/null; then
   compctl -K _npm_completion npm
 fi
 ###-end-npm-completion-###
+#https://github.com/zsh-users/zsh-history-substring-search
+source ~/.oh-my-zsh/custom/plugins/zsh-history-substring-serach.zsh
