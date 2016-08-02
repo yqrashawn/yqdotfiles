@@ -1,4 +1,41 @@
-command! -bar -nargs=1 Browse silent! exe '!open' shellescape(<q-args>, 1)
+set backupdir=~/vimtmp,.
+set directory=~/vimtmp,.
+set nobackup
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           Neo terminal emulator                            "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:tnoremap <Esc>1 <C-\><C-n>
+:tnoremap <C-w>h <C-\><C-n><C-w>h
+:tnoremap <C-w>j <C-\><C-n><C-w>j
+:tnoremap <C-w>k <C-\><C-n><C-w>k
+:tnoremap <C-w>l <C-\><C-n><C-w>l
+":nnoremap <C-w><C-h> <C-w>h
+":nnoremap <C-w><C-j> <C-w>j
+":nnoremap <C-w><C-k> <C-w>k
+":nnoremap <C-w><C-l> <C-w>l
+:nnoremap <silent> <leader>t :terminal<CR>
+:nnoremap <leader><leader>t :te 
+
+"jira configuration
+let g:jira_url = 'https://115.28.138.35:8080'
+let g:jira_username = 'zhangyuxiao'
+let g:jira_password = 'namy0000'
+
+" Customize
+let g:unite_source_issue_jira_priority_table = {
+            \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
+
+let g:unite_source_issue_jira_status_table = {
+            \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
+            \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
+            \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
+
+let g:unite_source_issue_jira_type_table = {
+            \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
+            \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
+
+
 " leave insert mode quickly
 "if ! has('gui_running')
 set ttimeoutlen=30
@@ -12,11 +49,16 @@ augroup END
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 syntastic                                  "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_eslint_exec = '/usr/local/bin/jshint'
+
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -24,21 +66,20 @@ let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 set ttimeoutlen=10
 
-set backupdir=$VIMRUNTIME\\temp\\
-set directory=$VIMRUNTIME\\temp\\
 
 call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
+"for jira
+Plug 'mattn/webapi-vim'
+Plug 'tyru/open-browser.vim'
+Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
-Plug 'tyru/open-browser.vim'
-Plug 'rafi/vim-unite-issue'
-Plug 'mattn/webapi-vim'
 "Plug 'MarcWeber/vim-addon-mw-utils'
 "Plug 'tomtom/tlib_vim'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
@@ -68,7 +109,7 @@ Plug 'vim-scripts/restore_view.vim'
 Plug 'mhinz/vim-signify' "show lines modified
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
-Plug 'scrooloose/syntastic',{'for': 'objc'}
+Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 "Plug 'tpope/vim-commentary'
@@ -86,7 +127,7 @@ Plug 'gorodinskiy/vim-coloresque'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'spf13/vim-preview', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
-Plug 'maksimr/vim-jsbeautify'
+Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
 "Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 "Plug 'Shougo/vimproc.vim'
@@ -94,13 +135,12 @@ Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
-"Plug 'elzr/vim-json'
 Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/a.vim'
 "Plug 'rizzatti/dash.vim'
 Plug 'junegunn/seoul256.vim'
 "Plug 'junegunn/goyo.vim'
-Plug 'Valloric/YouCompleteMe',{'for': 'css'}
+Plug 'Valloric/YouCompleteMe'
 "Plug 'ternjs/tern_for_vim'
 "Plug 'benmills/vimux'
 Plug 'vim-scripts/mru.vim'
@@ -138,7 +178,7 @@ let g:unite_source_grep_recursive_opt = ''
 """""""""""""""""""
 "noremap <silent> <leader>ct :Unite file/async file_rec/neovim buffer neomru/file file/new -direction=dynamicbottom -start-insert<CR>
 nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
-nmap <leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
+"nmap <leader><leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
 nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR><CR>
 nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
 nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
@@ -149,8 +189,11 @@ nmap <leader>,, :set wrap<CR>
 let leader='\'
 nmap <F8> :TagbarToggle<CR>
 imap <C-j> <CR>
-imap jk <Esc>
-imap kj <Esc>
+nnoremap <C-w>= <C-w>+
+nnoremap <C-w><C-=> <C-w>+
+nnoremap <C-w><C--> <C-w>-
+"imap jk <Esc>
+"imap kj <Esc>
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
 nnoremap j jzz
@@ -159,8 +202,8 @@ nnoremap <Down> jzz
 nnoremap <Up> kzz
 map <Leader>L <Plug>(easymotion-bd-jk)
 "nmap <Leader>LL <Plug>(easymotion-overwin-line)
-map <leader><leader><leader>q ZZ
-map <leader><leader>q :w!<CR>:bdelete<CR>
+map <leader><leader>q :bd!<CR>
+map <leader><leader><leader>q :tabc<CR>
 imap <C-f> <Right>
 imap <C-b> <Left>
 imap <C-e> <Esc><S-A>
@@ -171,7 +214,8 @@ nnoremap <leader>bp :bp<CR>
 map <leader><leader>- mzgg=G`z
 nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
-map <F10> :QuickRun<CR>
+"nnoremap <C-e> :NERDTreeToggle<CR>
+map <leader><F10> :QuickRun<CR>
 "map <C-J> <C-W>j<C-W>_
 "map <C-K> <C-W>k<C-W>_
 "map <C-L> <C-W>l<C-W>_
@@ -187,6 +231,16 @@ nmap k kzz
 "nnoremap <A-j> <C-w>j
 "nnoremap <A-k> <C-w>k
 "nnoremap <A-l> <C-w>l
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                   jsdoc                                    "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:jsdoc_enable_es6 = 1
+let g:jsdoc_allow_input_prompt = 1
+let g:jsdoc_input_description = 1
+let g:jsdoc_underscore_private = 1
+let g:jsdoc_access_descriptions = 1
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                nerdcommenter too many unsless issue                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -261,6 +315,16 @@ nmap <leader>5 <Plug>AirlineSelectTab5
 nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 
+
+:tnoremap <leader><leader> <C-\><C-n>
+:tnoremap <leader>1 <C-\><C-n><Plug>AirlineSelectTab1
+:tnoremap <leader>2 <C-\><C-n><Plug>AirlineSelectTab2
+:tnoremap <leader>3 <C-\><C-n><Plug>AirlineSelectTab3
+:tnoremap <leader>4 <C-\><C-n><Plug>AirlineSelectTab4
+:tnoremap <leader>5 <C-\><C-n><Plug>AirlineSelectTab5
+:tnoremap <leader>6 <C-\><C-n><Plug>AirlineSelectTab6
+:tnoremap <leader>7 <C-\><C-n><Plug>AirlineSelectTab7
+
 " enable/disable enhanced tabline. (c)
 let g:airline#extensions#tabline#enabled = 1
 
@@ -321,16 +385,17 @@ syntax on
 """"""""""""""""""""
 let g:ycm_allow_changing_updatetime = 1
 let g:ycm_min_num_of_chars_for_completion = 1
-"let g:ycm_use_ultisnips_completer = 1
+let g:ycm_use_ultisnips_completer = 1
 "let g:ycm_seed_identifiers_with_syntax = 1
 "compatible with UltiSnips (using supertab)
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
-"let g:UltiSnipsExpandTrigger = "<tab>"
-"let g:UltiSnipsJumpForwardTrigger = "<tab>"
-"let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 autocmd BufLeave,FocusLost * silent! wall
+"autocmd VimEnter  * silent! :split | term
 
 let g:ycm_semantic_triggers =  {
             \   'c' : ['->', '.'],
@@ -487,11 +552,12 @@ let g:EasyMotion_smartcase = 1
 "map <Leader>j <Plug>(easymotion-j)
 "map <Leader>k <Plug>(easymotion-k)
 
-"let g:UltiSnipsSnippetsDir='~/.vim/privateSnippets'
-"let g:UltiSnipsUsePythonVersion = 3
-let  g:UltiSnipsListSnippets ='<C-tab>'
-"let g:UltiSnipsSnippetDirectories=["UltiSnips", "privateS"]
+let g:UltiSnipsSnippetsDir='~/.config/nvim/UltiSnips'
+let g:UltiSnipsUsePythonVersion = 3
+"let  g:UltiSnipsListSnippets ='<C-tab>'
+let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 let g:snips_author = 'yqrashawn <namy.19@gmail.com>'
+nmap <leader><leader>u :UltiSnipsEdit<CR>
 
 "change this variables
 let g:returnApp = "iTerm"
@@ -573,7 +639,6 @@ augroup resCur
 augroup END
 
 " Setting up the directories {
-set backup                  " Backups are nice ...
 if has('persistent_undo')
     set undofile                " So is persistent undo ...
     set undolevels=1000         " Maximum number of changes that can be undone
@@ -826,7 +891,7 @@ map zl zL
 map zh zH
 
 " Easier formatting
-nnoremap <silent> <leader>q gwip
+nnoremap <silent> <leader>q ZZ
 
 " FIXME: Revert this f70be548
 " fullscreen mode for GVIM and Terminal, need 'wmctrl' in you PATH
@@ -997,12 +1062,10 @@ if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
     nnoremap <silent> <leader>gc :Gcommit<CR>
     nnoremap <silent> <leader>gb :Gblame<CR>
     nnoremap <silent> <leader>gl :Glog<CR>
-    nnoremap <silent> <leader>gp :Git push 
+    nnoremap <silent> <leader>gp :Git push<CR>
     nnoremap <silent> <leader>gr :Gread<CR>
     nnoremap <silent> <leader>gw :Gwrite<CR>
     nnoremap <silent> <leader>ge :Gedit<CR>
-    nnoremap <leader>gpp :Git pull 
-    nnoremap <leader>go :Git checkout 
     " Mnemonic _i_nteractive
     nnoremap <silent> <leader>gi :Git add -p %<CR>
     nnoremap <silent> <leader>gg :SignifyToggle<CR>
@@ -1027,9 +1090,9 @@ endif
 
 " For snippet_complete marker.
 "if !exists("g:spf13_no_conceal")
-if has('conceal')
-    set conceallevel=2 concealcursor=i
-endif
+"if has('conceal')
+"set conceallevel=2 concealcursor=i
+"endif
 "         " Disable the neosnippet preview candidate window
 "         " When enabled, there can be too much visual noise
 "         " especially when splits are used.
