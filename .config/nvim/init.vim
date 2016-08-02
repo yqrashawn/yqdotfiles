@@ -1,3 +1,41 @@
+set backupdir=~/vimtmp,.
+set directory=~/vimtmp,.
+set nobackup
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           Neo terminal emulator                            "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:tnoremap <Esc>1 <C-\><C-n>
+:tnoremap <C-w>h <C-\><C-n><C-w>h
+:tnoremap <C-w>j <C-\><C-n><C-w>j
+:tnoremap <C-w>k <C-\><C-n><C-w>k
+:tnoremap <C-w>l <C-\><C-n><C-w>l
+":nnoremap <C-w><C-h> <C-w>h
+":nnoremap <C-w><C-j> <C-w>j
+":nnoremap <C-w><C-k> <C-w>k
+":nnoremap <C-w><C-l> <C-w>l
+:nnoremap <silent> <leader>t :terminal<CR>
+:nnoremap <leader><leader>t :te 
+
+"jira configuration
+let g:jira_url = 'https://115.28.138.35:8080'
+let g:jira_username = 'zhangyuxiao'
+let g:jira_password = 'namy0000'
+
+" Customize
+let g:unite_source_issue_jira_priority_table = {
+            \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
+
+let g:unite_source_issue_jira_status_table = {
+            \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
+            \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
+            \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
+
+let g:unite_source_issue_jira_type_table = {
+            \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
+            \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
+
+
 " leave insert mode quickly
 "if ! has('gui_running')
 set ttimeoutlen=30
@@ -11,11 +49,16 @@ augroup END
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 syntastic                                  "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_eslint_exec = '/usr/local/bin/jshint'
+
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -27,6 +70,10 @@ set ttimeoutlen=10
 call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
+"for jira
+Plug 'mattn/webapi-vim'
+Plug 'tyru/open-browser.vim'
+Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mileszs/ack.vim'
@@ -62,7 +109,7 @@ Plug 'vim-scripts/restore_view.vim'
 Plug 'mhinz/vim-signify' "show lines modified
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
-Plug 'scrooloose/syntastic',{'for': 'objc'}
+Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 "Plug 'tpope/vim-commentary'
@@ -131,7 +178,7 @@ let g:unite_source_grep_recursive_opt = ''
 """""""""""""""""""
 "noremap <silent> <leader>ct :Unite file/async file_rec/neovim buffer neomru/file file/new -direction=dynamicbottom -start-insert<CR>
 nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
-nmap <leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
+"nmap <leader><leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
 nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR><CR>
 nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
 nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
@@ -142,8 +189,11 @@ nmap <leader>,, :set wrap<CR>
 let leader='\'
 nmap <F8> :TagbarToggle<CR>
 imap <C-j> <CR>
-imap jk <Esc>
-imap kj <Esc>
+nnoremap <C-w>= <C-w>+
+nnoremap <C-w><C-=> <C-w>+
+nnoremap <C-w><C--> <C-w>-
+"imap jk <Esc>
+"imap kj <Esc>
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
 nnoremap j jzz
@@ -152,8 +202,8 @@ nnoremap <Down> jzz
 nnoremap <Up> kzz
 map <Leader>L <Plug>(easymotion-bd-jk)
 "nmap <Leader>LL <Plug>(easymotion-overwin-line)
-map <leader><leader><leader>q ZZ
-map <leader><leader>q :w!<CR>:bdelete<CR>
+map <leader><leader>q :bd!<CR>
+map <leader><leader><leader>q :tabc<CR>
 imap <C-f> <Right>
 imap <C-b> <Left>
 imap <C-e> <Esc><S-A>
@@ -164,7 +214,8 @@ nnoremap <leader>bp :bp<CR>
 map <leader><leader>- mzgg=G`z
 nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
-map <F10> :QuickRun<CR>
+"nnoremap <C-e> :NERDTreeToggle<CR>
+map <leader><F10> :QuickRun<CR>
 "map <C-J> <C-W>j<C-W>_
 "map <C-K> <C-W>k<C-W>_
 "map <C-L> <C-W>l<C-W>_
@@ -172,6 +223,23 @@ map <F10> :QuickRun<CR>
 nmap j jzz
 nmap k kzz
 "nmap <leader>cl :VimuxRunLastCommand("%")
+"tnoremap <A-h> <C-\><C-n><C-w>h
+"tnoremap <A-j> <C-\><C-n><C-w>j
+"tnoremap <A-k> <C-\><C-n><C-w>k
+"tnoremap <A-l> <C-\><C-n><C-w>l
+"nnoremap <A-h> <C-w>h
+"nnoremap <A-j> <C-w>j
+"nnoremap <A-k> <C-w>k
+"nnoremap <A-l> <C-w>l
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                   jsdoc                                    "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:jsdoc_enable_es6 = 1
+let g:jsdoc_allow_input_prompt = 1
+let g:jsdoc_input_description = 1
+let g:jsdoc_underscore_private = 1
+let g:jsdoc_access_descriptions = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                nerdcommenter too many unsless issue                 "
@@ -247,6 +315,16 @@ nmap <leader>5 <Plug>AirlineSelectTab5
 nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 
+
+:tnoremap <leader><leader> <C-\><C-n>
+:tnoremap <leader>1 <C-\><C-n><Plug>AirlineSelectTab1
+:tnoremap <leader>2 <C-\><C-n><Plug>AirlineSelectTab2
+:tnoremap <leader>3 <C-\><C-n><Plug>AirlineSelectTab3
+:tnoremap <leader>4 <C-\><C-n><Plug>AirlineSelectTab4
+:tnoremap <leader>5 <C-\><C-n><Plug>AirlineSelectTab5
+:tnoremap <leader>6 <C-\><C-n><Plug>AirlineSelectTab6
+:tnoremap <leader>7 <C-\><C-n><Plug>AirlineSelectTab7
+
 " enable/disable enhanced tabline. (c)
 let g:airline#extensions#tabline#enabled = 1
 
@@ -317,6 +395,7 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 autocmd BufLeave,FocusLost * silent! wall
+"autocmd VimEnter  * silent! :split | term
 
 let g:ycm_semantic_triggers =  {
             \   'c' : ['->', '.'],
@@ -473,11 +552,12 @@ let g:EasyMotion_smartcase = 1
 "map <Leader>j <Plug>(easymotion-j)
 "map <Leader>k <Plug>(easymotion-k)
 
-let g:UltiSnipsSnippetsDir='~/.vim/privateSnippets'
+let g:UltiSnipsSnippetsDir='~/.config/nvim/UltiSnips'
 let g:UltiSnipsUsePythonVersion = 3
 "let  g:UltiSnipsListSnippets ='<C-tab>'
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "privateS"]
+let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 let g:snips_author = 'yqrashawn <namy.19@gmail.com>'
+nmap <leader><leader>u :UltiSnipsEdit<CR>
 
 "change this variables
 let g:returnApp = "iTerm"
@@ -559,7 +639,6 @@ augroup resCur
 augroup END
 
 " Setting up the directories {
-set backup                  " Backups are nice ...
 if has('persistent_undo')
     set undofile                " So is persistent undo ...
     set undolevels=1000         " Maximum number of changes that can be undone
@@ -575,7 +654,7 @@ let g:skipview_files = [
 
 " Vim UI {
 
-"if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+"if filereadable(expand("~/.vim/plugged/vim-colors-solarized/colors/solarized.vim"))
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
 "let g:solarized_contrast="normal"
@@ -702,7 +781,7 @@ endfunction
 
 
 " indent_guides {
-"if isdirectory(expand("~/.vim/bundle/vim-indent-guides/"))
+"if isdirectory(expand("~/.vim/plugged/vim-indent-guides/"))
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_vim_startup = 1
@@ -812,7 +891,7 @@ map zl zL
 map zh zH
 
 " Easier formatting
-nnoremap <silent> <leader>q gwip
+nnoremap <silent> <leader>q ZZ
 
 " FIXME: Revert this f70be548
 " fullscreen mode for GVIM and Terminal, need 'wmctrl' in you PATH
@@ -859,7 +938,7 @@ au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
 " }
 
 " NerdTree {
-if isdirectory(expand("~/.vim/bundle/nerdtree"))
+if isdirectory(expand("~/.vim/plugged/nerdtree"))
     map <C-e> :NERDTreeToggle<CR>
     map <leader>e :NERDTreeFind<CR>
     " nmap <leader>nt :NERDTreeFind<CR>
@@ -876,7 +955,7 @@ endif
 " }
 
 " Tabularize {
-if isdirectory(expand("~/.vim/bundle/tabular"))
+if isdirectory(expand("~/.vim/plugged/tabular"))
     nmap <Leader>a& :Tabularize /&<CR>
     vmap <Leader>a& :Tabularize /&<CR>
     nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
@@ -898,7 +977,7 @@ endif
 
 " Session List {
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-if isdirectory(expand("~/.vim/bundle/sessionman.vim/"))
+if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
     nmap <leader>sl :SessionList<CR>
     nmap <leader>ss :SessionSave<CR>
     "nmap <leader>sc :SessionClose<CR>
@@ -920,7 +999,7 @@ endif
 "                              ctrlp fzf                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ctrlp {
-"if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
+"if isdirectory(expand("~/.vim/plugged/ctrlp.vim/"))
 "let g:ctrlp_working_path_mode = 'ra'
 "nnoremap <silent> <D-t> :CtrlP<CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
@@ -954,7 +1033,7 @@ elseif executable('ack')
                 \ 'fallback': s:ctrlp_fallback
                 \ }
 
-    if isdirectory(expand("~/.vim/bundle/ctrlp-funky/"))
+    if isdirectory(expand("~/.vim/plugged/ctrlp-funky/"))
         " CtrlP extensions
         let g:ctrlp_extensions = ['funky']
 
@@ -965,19 +1044,19 @@ endif
 "}
 
 " TagBar {
-if isdirectory(expand("~/.vim/bundle/tagbar/"))
+if isdirectory(expand("~/.vim/plugged/tagbar/"))
     nnoremap <silent> <leader>tt :TagbarToggle<CR>
 endif
 "}
 
 " Rainbow {
-if isdirectory(expand("~/.vim/bundle/rainbow/"))
+if isdirectory(expand("~/.vim/plugged/rainbow/"))
     let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 endif
 "}
 
 " Fugitive {
-if isdirectory(expand("~/.vim/bundle/vim-fugitive/"))
+if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
     nnoremap <silent> <leader>gs :Gstatus<CR>
     nnoremap <silent> <leader>gd :Gdiff<CR>
     nnoremap <silent> <leader>gc :Gcommit<CR>
@@ -1011,9 +1090,9 @@ endif
 
 " For snippet_complete marker.
 "if !exists("g:spf13_no_conceal")
-if has('conceal')
-    set conceallevel=2 concealcursor=i
-endif
+"if has('conceal')
+"set conceallevel=2 concealcursor=i
+"endif
 "         " Disable the neosnippet preview candidate window
 "         " When enabled, there can be too much visual noise
 "         " especially when splits are used.
