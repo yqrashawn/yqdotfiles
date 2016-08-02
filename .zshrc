@@ -1,15 +1,16 @@
+source ~/.zprezto/init.zsh
 #. /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
 # oh-my-zsh auto update
 DISABLE_UPDATE_PROMPT=true
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+#export ZSH=$HOME/.oh-my-zsh
 # 10ms for key sequences
 #KEYTIMEOUT=1
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="ys"
+#ZSH_THEME="ys"
 setopt RM_STAR_WAIT
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -54,24 +55,24 @@ setopt RM_STAR_WAIT
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 #plugins=(vim git autojump osx brew zsh-syntax-highlighting colored-man-pages copydir tmux vi-mode web-search git-flow-completion)
-plugins=(jump pj fasd vim git osx git-flow-completion zsh-syntax-highlighting colored-man-pages tmux)
+#plugins=(jump pj fasd vim git osx git-flow-completion zsh-syntax-highlighting colored-man-pages tmux)
 
 #for pj
 PROJECT_PATHS=(~/workspace ~/workspace/projects ~/workspace/XiheMap ~/workspace/gogs-webhook ~/workspace/projecs/cesium)
-plugins+=(zsh-completions)
+#plugins+=(zsh-completions)
 autoload -U compinit && compinit
 
 # Load zsh-syntax-highlighting.
-source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Load zsh-autosuggestions.
-source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/autosuggestions.zsh
+#source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/autosuggestions.zsh
 
 # Enable autosuggestions automatically.
-zle-line-init() {
-    zle autosuggest-start
-}
-zle -N zle-line-init
+#zle-line-init() {
+    #zle autosuggest-start
+#}
+#zle -N zle-line-init
 
 #zsh-syntax-highlighting为新加入的 不知道干嘛用的
 
@@ -80,7 +81,7 @@ zle -N zle-line-init
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -113,8 +114,7 @@ export VISUAL=$EDITOR
 
 
 #zsh自动补全插件 incr-0.2.zsh
-source ~/.oh-my-zsh/plugins/incr-0.2.zsh
-source ~/.oh-my-zsh/plugins/sublime.plugin.zsh
+#source ~/.oh-my-zsh/plugins/incr-0.2.zsh
 
 #安装autojump时添加的代码
 #[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && . ~/.autojump/etc/profile.d/autojump.sh
@@ -146,8 +146,8 @@ alias ariaconfig='nvim /Users/Rashawn/.aria2/aria2.conf'
 alias ttmux='tmuxinator start haha'
 alias tmuxconfig='nvim ~/.tmux.conf'
 alias tmux='tmux -3'
-alias j='z'
-alias jj='zz'
+#alias j='z'
+#alias jj='zz'
 alias tls='tmux ls'
 alias surconfig='nvim ~/.surge.conf'
 alias cyper='p http://www.douyutv.com/576190'
@@ -291,4 +291,4 @@ elif type compctl &>/dev/null; then
 fi
 ###-end-npm-completion-###
 #https://github.com/zsh-users/zsh-history-substring-search
-source ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search.zsh
+#source ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search.zsh
