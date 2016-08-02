@@ -8,7 +8,8 @@ export ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="wedisagree"
+#ZSH_THEME="wedisagree"
+ZSH_THEME="ys"
 setopt RM_STAR_WAIT
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -105,7 +106,6 @@ export VISUAL=$EDITOR
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
@@ -119,7 +119,8 @@ source ~/.oh-my-zsh/plugins/sublime.plugin.zsh
 
 #sublime text 打开各类型文件的设置
 alias -s md=st
-alias zshconfig="nvim ~/.zshrc"
+alias zc="nvim ~/.zshrc"
+alias sc='source ~/.zshrc'
 alias cl='clear'
 alias o='open'
 alias lst='ls -t'
@@ -142,7 +143,7 @@ alias ccc='cc -c'
 alias lsl='ls -l'
 alias pproxy='proxychains4'
 alias p='you-get -p mpv '
-alias vi='mvim'
+alias v='nvim'
 # alias vim='/usr/local/Cellar/macvim/7.4-96/MacVim.app/Contents/MacOS/Vim'
 alias finalz='p http://www.douyutv.com/D3D3D3'
 alias vimconfig='nvim /Users/Rashawn/.vimrc'

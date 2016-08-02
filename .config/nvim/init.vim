@@ -1,3 +1,4 @@
+command! -bar -nargs=1 Browse silent! exe '!open' shellescape(<q-args>, 1)
 " leave insert mode quickly
 "if ! has('gui_running')
 set ttimeoutlen=30
@@ -23,6 +24,8 @@ let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 set ttimeoutlen=10
 
+set backupdir=$VIMRUNTIME\\temp\\
+set directory=$VIMRUNTIME\\temp\\
 
 call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-prettyprint'
@@ -33,6 +36,9 @@ Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
+Plug 'tyru/open-browser.vim'
+Plug 'rafi/vim-unite-issue'
+Plug 'mattn/webapi-vim'
 "Plug 'MarcWeber/vim-addon-mw-utils'
 "Plug 'tomtom/tlib_vim'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
@@ -80,7 +86,7 @@ Plug 'gorodinskiy/vim-coloresque'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'spf13/vim-preview', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
+Plug 'maksimr/vim-jsbeautify'
 "Plug 'benmills/vimux'
 "Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 "Plug 'Shougo/vimproc.vim'
@@ -88,12 +94,13 @@ Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
+"Plug 'elzr/vim-json'
 Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/a.vim'
 "Plug 'rizzatti/dash.vim'
 Plug 'junegunn/seoul256.vim'
 "Plug 'junegunn/goyo.vim'
-Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe',{'for': 'css'}
 "Plug 'ternjs/tern_for_vim'
 "Plug 'benmills/vimux'
 Plug 'vim-scripts/mru.vim'
@@ -314,15 +321,15 @@ syntax on
 """"""""""""""""""""
 let g:ycm_allow_changing_updatetime = 1
 let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_use_ultisnips_completer = 1
+"let g:ycm_use_ultisnips_completer = 1
 "let g:ycm_seed_identifiers_with_syntax = 1
 "compatible with UltiSnips (using supertab)
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+"let g:UltiSnipsExpandTrigger = "<tab>"
+"let g:UltiSnipsJumpForwardTrigger = "<tab>"
+"let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 autocmd BufLeave,FocusLost * silent! wall
 
 let g:ycm_semantic_triggers =  {
@@ -480,10 +487,10 @@ let g:EasyMotion_smartcase = 1
 "map <Leader>j <Plug>(easymotion-j)
 "map <Leader>k <Plug>(easymotion-k)
 
-let g:UltiSnipsSnippetsDir='~/.vim/privateSnippets'
-let g:UltiSnipsUsePythonVersion = 3
-"let  g:UltiSnipsListSnippets ='<C-tab>'
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "privateS"]
+"let g:UltiSnipsSnippetsDir='~/.vim/privateSnippets'
+"let g:UltiSnipsUsePythonVersion = 3
+let  g:UltiSnipsListSnippets ='<C-tab>'
+"let g:UltiSnipsSnippetDirectories=["UltiSnips", "privateS"]
 let g:snips_author = 'yqrashawn <namy.19@gmail.com>'
 
 "change this variables
@@ -582,7 +589,7 @@ let g:skipview_files = [
 
 " Vim UI {
 
-"if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+"if filereadable(expand("~/.vim/plugged/vim-colors-solarized/colors/solarized.vim"))
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
 "let g:solarized_contrast="normal"
@@ -709,7 +716,7 @@ endfunction
 
 
 " indent_guides {
-"if isdirectory(expand("~/.vim/bundle/vim-indent-guides/"))
+"if isdirectory(expand("~/.vim/plugged/vim-indent-guides/"))
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_vim_startup = 1
@@ -866,7 +873,7 @@ au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
 " }
 
 " NerdTree {
-if isdirectory(expand("~/.vim/bundle/nerdtree"))
+if isdirectory(expand("~/.vim/plugged/nerdtree"))
     map <C-e> :NERDTreeToggle<CR>
     map <leader>e :NERDTreeFind<CR>
     " nmap <leader>nt :NERDTreeFind<CR>
@@ -883,7 +890,7 @@ endif
 " }
 
 " Tabularize {
-if isdirectory(expand("~/.vim/bundle/tabular"))
+if isdirectory(expand("~/.vim/plugged/tabular"))
     nmap <Leader>a& :Tabularize /&<CR>
     vmap <Leader>a& :Tabularize /&<CR>
     nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
@@ -905,7 +912,7 @@ endif
 
 " Session List {
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-if isdirectory(expand("~/.vim/bundle/sessionman.vim/"))
+if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
     nmap <leader>sl :SessionList<CR>
     nmap <leader>ss :SessionSave<CR>
     "nmap <leader>sc :SessionClose<CR>
@@ -927,7 +934,7 @@ endif
 "                              ctrlp fzf                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ctrlp {
-"if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
+"if isdirectory(expand("~/.vim/plugged/ctrlp.vim/"))
 "let g:ctrlp_working_path_mode = 'ra'
 "nnoremap <silent> <D-t> :CtrlP<CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
@@ -961,7 +968,7 @@ elseif executable('ack')
                 \ 'fallback': s:ctrlp_fallback
                 \ }
 
-    if isdirectory(expand("~/.vim/bundle/ctrlp-funky/"))
+    if isdirectory(expand("~/.vim/plugged/ctrlp-funky/"))
         " CtrlP extensions
         let g:ctrlp_extensions = ['funky']
 
@@ -972,28 +979,30 @@ endif
 "}
 
 " TagBar {
-if isdirectory(expand("~/.vim/bundle/tagbar/"))
+if isdirectory(expand("~/.vim/plugged/tagbar/"))
     nnoremap <silent> <leader>tt :TagbarToggle<CR>
 endif
 "}
 
 " Rainbow {
-if isdirectory(expand("~/.vim/bundle/rainbow/"))
+if isdirectory(expand("~/.vim/plugged/rainbow/"))
     let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 endif
 "}
 
 " Fugitive {
-if isdirectory(expand("~/.vim/bundle/vim-fugitive/"))
+if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
     nnoremap <silent> <leader>gs :Gstatus<CR>
     nnoremap <silent> <leader>gd :Gdiff<CR>
     nnoremap <silent> <leader>gc :Gcommit<CR>
     nnoremap <silent> <leader>gb :Gblame<CR>
     nnoremap <silent> <leader>gl :Glog<CR>
-    nnoremap <silent> <leader>gp :Git push<CR>
+    nnoremap <silent> <leader>gp :Git push 
     nnoremap <silent> <leader>gr :Gread<CR>
     nnoremap <silent> <leader>gw :Gwrite<CR>
     nnoremap <silent> <leader>ge :Gedit<CR>
+    nnoremap <leader>gpp :Git pull 
+    nnoremap <leader>go :Git checkout 
     " Mnemonic _i_nteractive
     nnoremap <silent> <leader>gi :Git add -p %<CR>
     nnoremap <silent> <leader>gg :SignifyToggle<CR>
