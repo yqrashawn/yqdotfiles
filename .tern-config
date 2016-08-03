@@ -1,0 +1,17 @@
+{
+  "libs": [
+    "browser",
+    "jquery",
+    "threejs"
+  ],
+  "loadEagerly": [
+    "importantfile.js"
+  ],
+  "plugins": {
+    "threejs":{},
+    "requirejs": {
+      "baseURL": "./",
+      "paths": {}
+    }
+  }
+}
