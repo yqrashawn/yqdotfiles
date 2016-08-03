@@ -21,7 +21,10 @@
         }
       },
         {
-            "type":"NicknamePokemon"
+            "type":"NicknamePokemon",
+            "config":{
+                "nickname_template": "{iv_pct}_{iv_ads}"
+            }
         },
       {
         "type": "TransferPokemon"
@@ -39,16 +42,16 @@
         "type": "RecycleItems",
         "config": {
           "item_filter": {
-            "Pokeball":       { "keep" : 50 },
-            "Greatball":       { "keep" : 50 },
-            "Ultraball":       { "keep" : 50 },
+            "Pokeball":       { "keep" : 20 },
+            "Greatball":       { "keep" : 30 },
+            "Ultraball":       { "keep" : 30 },
             "Masterball":       { "keep" : 50 },
             "Max Potion":   { "keep" : 50 },
             "Potion":   { "keep" : 0 },
             "Super Potion":   { "keep" : 0 },
-            "Hyper Potion":   { "keep" : 50 },
+            "Hyper Potion":   { "keep" : 10 },
             "Revive":         { "keep" : 50 },
-            "Razz Berry":     { "keep" : 50 }
+            "Razz Berry":     { "keep" : 40 }
           }
         }
       },
