@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>MongoDb Starter</name>
+  <version>1.0</version>
+  <bundle>nl.osingasoftware.mongodb-starter</bundle>
+  <updated>1462179043</updated>
+  <file>mongodb_starter.alfredworkflow</file>
+</workflow>

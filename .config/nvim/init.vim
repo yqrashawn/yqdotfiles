@@ -46,19 +46,26 @@ augroup FastEscape
 augroup END
 "endif
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_javascript_eslint_exec = '/usr/local/bin/jshint'
-
+let g:syntastic_loc_list_height = 5
+let g:syntastic_mode_map = {
+    \ "mode": "passive",
+    \ "active_filetypes": ["json"],
+    \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -75,6 +82,7 @@ Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
 Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
+Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
@@ -183,7 +191,7 @@ nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR
 nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
 nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
 
-nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
+"nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
 nmap <silent> <leader>l <Plug>(jsdoc)
 nmap <leader>,, :set wrap<CR>
 let leader='\'

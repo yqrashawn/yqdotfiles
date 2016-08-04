@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>pro.elms.paul.speedtest</string>
+	<key>connections</key>
+	<dict>
+		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BB8B786F-9FFE-4E6E-88F2-79503B75A03B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>36085A34-AA83-44C5-B74B-79E7C5971E5F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>5E13239A-E849-4999-ACEA-4E0F68BDBFFD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>36085A34-AA83-44C5-B74B-79E7C5971E5F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Paul Elms, Ostap Senyuk and Vlad Gorohovsky</string>
+	<key>description</key>
+	<string>Measure the speed of the Internet</string>
+	<key>disabled</key>
+	<true/>
+	<key>name</key>
+	<string>Speedtest</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Internet Speed</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>BB8B786F-9FFE-4E6E-88F2-79503B75A03B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>if [ '{query}' ]
+then
+	python speedtest-cli.py --simple --server {query} | sed 's/Download/DL/' | sed 's/Upload/UL/'
+else
+	python speedtest-cli.py --simple | sed 's/Download/DL/' | sed 's/Upload/UL/'
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>speedtest</string>
+				<key>subtext</key>
+				<string>pass server id as argument</string>
+				<key>text</key>
+				<string>SpeedTest</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>please wait</string>
+				<key>title</key>
+				<string>Testing…</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>36085A34-AA83-44C5-B74B-79E7C5971E5F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>speedserv</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>please wait…</string>
+				<key>script</key>
+				<string>if [ {query} -eq 0 ]; then
+	lines=`cat servers_cache.txt | wc -l`
+else
+	lines={query}
+fi
+
+function age() {
+   local filename=$1
+   local changed=$(perl -MFile::stat -e "print stat(\"${filename}\")-&gt;mtime")
+   local now=`date +%s`
+   local elapsed
+
+   let elapsed=now-changed
+   echo $elapsed
+}
+
+# cache 10min (600s)
+if [ $(age "servers_cache.txt") -gt 600 ]
+then
+	python speedtest-cli.py --list | sed '1,2d' &gt; servers_cache.txt
+fi
+
+echo '&lt;?xml version="1.0"?&gt;&lt;items&gt;'
+
+cat servers_cache.txt | head -n $lines | while read line
+do
+	echo "&lt;item uid='custom' arg='`echo "$line" | grep -E -o "[0-9]+)\ " | tr -d \)\ `' valid='yes'&gt;"
+	echo "&lt;title&gt;`echo "$line" | sed 's/.*)\ \(.*)\)\ \[.*\]/\1/'`&lt;/title&gt;"
+	echo "&lt;subtitle&gt;ID: `echo "$line" | grep -E -o "[0-9]+)\ " | tr -d \)\ ` | Distance: `echo "$line" | sed 's/.* \[\(.*\)\]/\1/'`&lt;/subtitle&gt;"
+	echo "&lt;icon&gt;icon.png&lt;/icon&gt;"
+	echo "&lt;/item&gt;"
+done
+
+echo '&lt;/items&gt;'</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>how many? (0 = ALL)</string>
+				<key>title</key>
+				<string>SpeedTest Servers</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>5E13239A-E849-4999-ACEA-4E0F68BDBFFD</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<real>140</real>
+		</dict>
+		<key>36085A34-AA83-44C5-B74B-79E7C5971E5F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
+			<key>ypos</key>
+			<real>190</real>
+		</dict>
+		<key>5E13239A-E849-4999-ACEA-4E0F68BDBFFD</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<real>260</real>
+		</dict>
+		<key>BB8B786F-9FFE-4E6E-88F2-79503B75A03B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>http://paul.elms.pro/</string>
+</dict>
+</plist>

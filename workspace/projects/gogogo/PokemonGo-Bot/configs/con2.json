@@ -1,10 +1,10 @@
+
 {
     "auth_service": "google",
     "username": "yqrashawn@gmail.com",
     "password": "namy9999+",
     "location": "37.80913974983744,-122.4100112915039",
     "gmapkey": "AIzaSyATfe8_UKIPYV33kO7G8gzB8Oo_9-w2BxM",
-
     "tasks": [
       {
         "type": "HandleSoftBan"
@@ -18,22 +18,19 @@
           "longer_eggs_first": true
         }
       },
-        {
-            "type":"NicknamePokemon",
-            "config":{
-                "nickname_template":"{iv_pct}_{iv_ads}"
-            }
-        },
       {
         "type": "TransferPokemon"
       },
       {
-        "type": "EvolveAll",
+        "type": "EvolvePokemon",
         "config": {
-          "evolve_all": "NONE",
-          "evolve_cp_min": 100,
-          "evolve_speed": 5,
-          "use_lucky_egg": false
+            "evolve_all": "all",
+            "first_evolve_by": "cp",
+            "evolve_above_cp": 1,
+            "evolve_above_iv": 0.1,
+            "logic": "or",
+            "evolve_speed": 20,
+            "use_lucky_egg": false
         }
       },
       {
@@ -47,9 +44,9 @@
             "Max Potion":   { "keep" : 50 },
             "Potion":   { "keep" : 0 },
             "Super Potion":   { "keep" : 0 },
-            "Hyper Potion":   { "keep" : 50 },
-            "Revive":         { "keep" : 50 },
-            "Razz Berry":     { "keep" : 50 }
+            "Hyper Potion":   { "keep" : 3 },
+            "Revive":         { "keep" : 20 },
+            "Razz Berry":     { "keep" : 30 }
           }
         }
       },
@@ -65,21 +62,25 @@
       {
         "type": "MoveToFort",
         "config":{
-          "lure_attraction": false,
+          "lure_attraction": true,
           "lure_max_distance": 2000
         }
       },
       {
-        "type": "FollowSpiral"
+        "type": "FollowSpiral",
+        "config": {
+          "diameter": 4,
+          "step_size": 70
+        }
       }
     ],
     "map_object_cache_time": 5,
     "forts": {
       "avoid_circles": true,
-      "max_circle_size": 20
+      "max_circle_size": 50
     },
     "websocket_server": false,
-    "walk": 10,
+    "walk": 15,
     "action_wait_min": 1,
     "action_wait_max": 3,
     "debug": false,
@@ -91,9 +92,6 @@
     "evolve_captured": "NONE",
     "catch_randomize_reticle_factor": 1.0,
     "catch_randomize_spin_factor": 1.0,
-
-
-
     "catch": {
         "any": {"catch_above_cp": 0, "catch_above_iv": 0, "logic": "or" },
 
@@ -293,7 +291,7 @@
         "// Grimer evolves to Muk"                                  : {},
         "Grimer"                                                    : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "// Magikarp evolves to Gyarados"                           : {},
-        "Magikarp"                                                  : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
+        "Magikarp"                                                  : { "release_below_cp" : 120, "release_below_iv"  : 0.93, "logic" : "or" },
         "// Exeggcute evolves to Exeggutor"                         : {},
         "Exeggcute"                                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "// Eevee evolves to many versions, like Vaporeon, Flareon" : {},
@@ -345,7 +343,7 @@
         "Kakuna"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Rattata"                                : { "release_below_cp" : 300, "release_below_iv" : 0.1, "logic" : "or" },
         "Abra"                                   : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Zubat"                                  : { "release_below_cp" : 300, "release_below_iv" : 0.1, "logic" : "or" },
+        "Zubat"                                  : { "release_below_cp" : 400, "release_below_iv" : 0.1, "logic" : "or" },
         "Chansey"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Pidgey"                                 : { "release_below_cp" : 205, "release_below_iv" : 0.1, "logic" : "or" },
         "Spearow"                                : { "release_below_cp" : 400, "release_below_iv" : 0.93, "logic" : "or" },
@@ -365,20 +363,20 @@
         "Mankey"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Pikachu"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Magnemite"                              : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Tentacool"                              : { "release_below_cp" : 500, "release_below_iv" : 0.1, "logic" : "or" },
+        "Tentacool"                              : { "release_below_cp" : 600, "release_below_iv" : 0.1, "logic" : "or" },
         "Paras"                                  : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Jigglypuff"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Ditto"                                  : { "release_below_cp" : 11, "release_below_iv" : 0.13, "logic" : "or" },
         "Staryu"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Charmander"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Goldeen"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
+        "Goldeen"                                : { "release_below_cp" : 700, "release_below_iv" : 0.93, "logic" : "or" },
         "Squirtle"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Cubone"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Venonat"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Bulbasaur"                              : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Drowzee"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Machop"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Psyduck"                                : { "release_below_cp" : 680, "release_below_iv" : 0.1, "logic" : "or" },
+        "Psyduck"                                : { "release_below_cp" : 740, "release_below_iv" : 0.1, "logic" : "or" },
         "Seel"                                   : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Kabuto"                                 : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Bellsprout"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
@@ -392,9 +390,9 @@
         "Pidgeotto"                              : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Farfetch'd"                             : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Poliwhirl"                              : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Nidorino"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
+        "Nidorino"                               : { "release_below_cp" : 440, "release_below_iv" : 0.13, "logic" : "or" },
         "Haunter"                                : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
-        "Nidorina"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
+        "Nidorina"                               : { "release_below_cp" : 440, "release_below_iv" : 0.13, "logic" : "or" },
         "Graveler"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Beedrill"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },
         "Raticate"                               : { "release_below_cp" : 11, "release_below_iv" : 0.93, "logic" : "or" },

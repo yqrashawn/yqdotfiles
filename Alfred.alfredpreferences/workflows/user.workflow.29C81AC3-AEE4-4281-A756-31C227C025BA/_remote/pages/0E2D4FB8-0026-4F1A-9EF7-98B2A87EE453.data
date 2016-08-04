@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>iconid</key>
+	<string>4366C3BD-9C03-4413-AD70-B48D5BB409C9</string>
+	<key>iconisuserspecified</key>
+	<true/>
+	<key>items</key>
+	<array>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>mute</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>A9FF1573-0F77-4CE8-AF56-94CDD6A53806</string>
+			<key>buttonlabel</key>
+			<string>Mute</string>
+			<key>itemuid</key>
+			<string>81D699D0-D6E2-45B2-B00A-1A3AE8EDAA2B</string>
+		</dict>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>unmute</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>ED426E04-8709-4E02-9746-5F53C3D7C2B7</string>
+			<key>buttonlabel</key>
+			<string>Unmute</string>
+			<key>itemuid</key>
+			<string>2BCBABCA-3EE2-46C1-B10A-57FB879A292C</string>
+		</dict>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>volume_up</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>C7F942F4-F493-4213-9813-23F9CE715036</string>
+			<key>buttonlabel</key>
+			<string>Volume Up</string>
+			<key>itemuid</key>
+			<string>8FB7BC49-3179-4240-B1B3-52148AAF45B3</string>
+		</dict>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>volume_down</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>34B068DD-8A53-436D-8F7A-2B28D4E9758F</string>
+			<key>buttonlabel</key>
+			<string>Volume Down</string>
+			<key>itemuid</key>
+			<string>09D90526-04BA-41EB-9F54-69CA404EB5CE</string>
+		</dict>
+	</array>
+	<key>subtitle</key>
+	<string>Control Volume with your mac</string>
+	<key>title</key>
+	<string>Volume Control</string>
+</dict>
+</plist>

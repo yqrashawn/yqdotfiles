@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>DeskDrawer for Alfred  — Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+/* 
+   This stylesheet created by github user simonic
+   https://github.com/simonlc/Markdown-CSS
+   ---------------------------------------------------------------
+   Additional tweaks by Carl Smith (@CarlosNZ)
+
+*/
+
+
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body{
+color:#444;
+font-family: "Avenir Next", Helvetica, Arial, sans-serif;
+font-size:12px;
+line-height:1.5em;
+padding:1em;
+margin:auto;
+max-width:55em;
+background:#fefefe;
+}
+
+a{ color: #0645ad; text-decoration:none;}
+a:visited{ color: #0645ad; }
+a:hover{ color: #06e; }
+a:active{ color:#faa700; }
+a:focus{ outline: thin dotted; }
+a:hover, a:active{ outline: 0; }
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+p{
+margin:0.4em 0;
+}
+
+img{
+max-width:100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+font-weight:normal;
+color:#111;
+line-height:1em;
+}
+h4,h5,h6{ font-weight: bold; }
+h1{ font-size:2.5em; }
+h2{ font-size:1.6em; }
+h3{ font-size:1.4em; margin-top:1em; margin-bottom:0.5em; padding-bottom:0.3em; border-bottom:1px solid #ddd; }
+h4{ font-size:1.2em; }
+h5{ font-size:1em; }
+h6{ font-size:0.9em; }
+
+blockquote{
+color:#666666;
+margin:0;
+margin-top: 1em;
+padding-left: 1em;
+border-left: 0.5em #EEE solid;
+}
+hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+pre, code, kbd, samp { color: #000; font-family: monospace, monospace; _font-family: 'courier new', monospace; font-size: 0.98em; }
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+b, strong { font-weight: bold; }
+
+dfn { font-style: italic; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+li p:last-child { margin:0 }
+dd { margin: 0 0 0 2em; }
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+@media only screen and (min-width: 480px) {
+body{font-size:14px;}
+}
+
+@media only screen and (min-width: 768px) {
+body{font-size:16px;}
+}
+
+@media print {
+  * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+  body{font-size:12pt; max-width:100%;}
+  a, a:visited { text-decoration: underline; }
+  hr { height: 1px; border:0; border-bottom:1px solid black; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page :left { margin: 15mm 20mm 15mm 10mm; }
+  @page :right { margin: 15mm 10mm 15mm 20mm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}
+
+@media print{
+#generated-toc-clone,#generated-toc{display:none!important}
+}
+
+</style>
+
+</head>
+<body class="normal">
+  <div id="wrapper">
+      <h1 id="deskdrawerforalfred"><strong>DeskDrawer</strong> for Alfred</h1>
+
+<h2 id="bycarlsmithcarlosnz">by <a href="http://geekzone.philosophicalzombie.net/">Carl Smith (@CarlosNZ)</a></h2>
+
+<h3 id="v15whatsnew25march2014">v1.5 <a href="#changelog">(What’s new?)</a> | 25 March 2014</h3>
+
+<figure>
+<img src="images/blog_header.jpg" alt="">
+</figure>
+
+<p>If you’d like a simple, elegant way to keep your Mac Desktop free of 
+all the miscellaneous clutter that inevitably ends up there, you can pay
+ money for a program like <a href="http://www.lightpillar.com/macos/desktoptidy/">DesktopTidy</a> or <a href="http://unclutterapp.com/">Unclutter</a>, or you can use this workflow for <a href="http://geekzone.philosophicalzombie.net/alfred">Alfred 2</a> to achieve pretty much the same thing.</p>
+
+<p>What it does is provide a special “drawer” folder for keeping all 
+your Desktop crap in, nicely out of sight, but quickly accessible (via 
+Alfred — see screenshot above) when you need it. Just like the top 
+drawer of your IRL desk!</p>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="accessingthedeskdrawer">Accessing the DeskDrawer</h3>
+
+<p>In Alfred, enter the keyword <strong>drawer</strong> (or—better 
+still—a custom hotkey), and your DeskDrawer contents will be revealed in
+ Alfred’s results, as shown above. From there, you can perform the 
+following actions on each item:</p>
+
+<ul>
+<li><strong>Select</strong> an item to open it with the default application.</li>
+<li><strong>Option-select</strong> an item to move it back your actual Desktop.</li>
+<li><strong>Command-select</strong> an item to reveal it in Finder (which will be the DeskDrawer folder).</li>
+<li><strong>Control-select</strong> an item to open it in Alfred (for further actions).</li>
+<li><strong>fn-select</strong> an item to Trash it.</li>
+</ul>
+
+<p>If you have a lot of stuff in your Drawer, you can narrow the scope 
+of the displayed list by starting to type a name, and the results list 
+will be limited to matching items:</p>
+
+<figure>
+<img src="images/results_narrowed_shrink.png" alt="">
+</figure>
+
+<h3 id="puttingstuffinthedeskdrawer">Putting stuff in the DeskDrawer</h3>
+
+<p>There are four ways to do this:</p>
+
+<ul>
+<li>Use the <em>file action</em> called “Move to DeskDrawer” in Alfred 
+to move a bunch of selected files and folders to the Drawer. (Use the 
+Alfred hotkey for launching actions on the current Finder selection — 
+Command-Option-/ by default.)</li>
+<li>Use the <strong>move</strong> keyword. Basically the same as the 
+previous method, except you enter the keyword directly into Alfred’s 
+main window instead of launching a file action.</li>
+<li>Use the custom hotkey (eg. Ctrl-M) to move the selected items.</li>
+<li>The “clean sweep” — type the keyword <strong>sweep</strong> into Alfred to move everything currently on your Desktop into the Drawer.</li>
+</ul>
+
+<figure>
+<img src="images/sweep_shrink.png" alt="">
+</figure>
+
+<h3 id="movingstuffbacktothedesktop">Moving stuff back to the Desktop</h3>
+
+<p>There are three ways to move stuff back out of the Drawer onto your Desktop:</p>
+
+<ul>
+<li>Use the keyword <strong>unmove</strong> to undo the last movement of files/folders to the DeskDrawer. (Ideal for unintentional moves.)</li>
+<li><strong>Option-select</strong> an item in the Drawer list in Alfred (as previously mentioned).</li>
+<li>Use the keyword <strong>deskrestore</strong> to dump everything out of the Drawer back on to your Desktop.</li>
+</ul>
+
+<h3 id="keepingspecificitemspermanentlyonthedesktop">Keeping specific items permanently on the Desktop</h3>
+
+<p>If you have certain files or folders that you want to keep on the 
+Desktop and prevent being “swept” to the DeskDrawer, you can “protect” 
+them by either:</p>
+
+<ul>
+<li>Use the <em>file action</em> called “Protect from DeskDrawer Sweep” on a selection of Desktop items.</li>
+<li>Use the keyword <strong>protect</strong> to do the same.</li>
+</ul>
+
+<p>You can reverse the protection with either the <em>file action</em> “UnProtect from DeskDrawer Sweep” or the keyword <strong>unprotect</strong>.</p>
+
+<h3 id="onemorething">One more thing…</h3>
+
+<p>By default, the DeskDrawer folder is created in your Home folder. 
+However, if you’d like to put it somewhere more convenient (say, in your
+ Documents folder, or Dropbox), then use the keyword <strong>:movedrawer</strong>,
+ and you’ll be prompted to select a new location for your DeskDrawer. 
+You can actually even put the DeskDrawer on your Desktop itself! (It 
+will be automatically “protected”.)</p>
+
+<p>And there you have it — the <strong>DeskDrawer</strong> for Alfred. Leave your feedback, suggestions, bug reports etc. in the Comments on my <a href="http://geekzone.philosophicalzombie.net/post/46839691092/deskdrawer">DeskDrawer webpage</a>, or in the <a href="http://www.alfredforum.com/topic/440-deskdrawer-keep-the-clutter-off-your-desktop-updated-to-13/">DeskDrawer thread</a> on the <a href="http://www.alfredforum.com/">Alfred forum</a>.</p>
+
+<hr>
+
+<p><a name="changelog"></a></p>
+
+<h2 id="changelog">Changelog</h2>
+
+<h3 id="v15---25march2014">v1.5 — 25 March 2014</h3>
+
+<ul>
+<li>New icon for DeskDrawer folder (to fit in with OS X custom folder look).</li>
+<li>DeskDrawer is now allowed on the Desktop itself.</li>
+<li>“Undo” function to reverse the last “Move” to DeskDrawer or Sweep.</li>
+<li>“Protect” specified Desktop items from being moved to the DeskDrawer during Sweeps.</li>
+<li>Fix for XML-illegal characters in filenames.</li>
+<li>More icons.</li>
+<li>Removed AlleyOop updater support.</li>
+<li>Default DeskDrawer location is now Home folder.</li>
+<li>Local documentation (keyword: <strong>deskdrawer help</strong>)</li>
+<li>Miscellaneous minor tweaks and fixes.</li>
+</ul>
+
+<h3 id="v14---2april2013">v1.4 — 2 April 2013</h3>
+
+<ul>
+<li>New keyword - “move” - to move selected Finder items to Drawer. 
+(Basically the same as the File Action, but just another way of doing 
+it.)</li>
+<li>Changed “movedrawer” keyword to “:movedrawer” to avoid conflict with
+ “move”. Figured it’s a once-in-a-blue-moon action, so doesn’t need to 
+be easily accessible.</li>
+</ul>
+
+<h3 id="v13---1april2013">v1.3 — 1 April 2013</h3>
+
+<ul>
+<li>New action: “fn-select” item to Trash it.</li>
+<li>Consolidated and tidied up workflow setup panel.</li>
+<li>Support for Alleyoop auto-updater (http://www.alfredforum.com/topic/1582-alleyoop-update-alfred-workflows/)</li>
+<li>Minor cosmetic tweaks.</li>
+</ul>
+
+<h3 id="v12---2feb2013">v1.2 — 2 Feb 2013</h3>
+
+<ul>
+<li>Added “movedrawer” functionality - choose the storage location of your DeskDrawer.</li>
+</ul>
+
+<h3 id="v11---1feb2013">v1.1 — 1 Feb 2013</h3>
+
+<ul>
+<li>Small update to take advantage of the new “Browse in Alfred” Action, rather than doing it clunkily with Applescript.</li>
+</ul>
+
+<h3 id="v10---30jan2013">v1.0 — 30 Jan 2013</h3>
+
+<ul>
+<li>Initial release.</li>
+</ul>
+<!-- ##END MARKED WRAPPER## -->
+    </div>
+
+</body></html>

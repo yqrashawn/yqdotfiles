@@ -18,3 +18,19 @@ endsnippet
 snippet ca "${}" i
 &{${1:variable name}}
 endsnippet
+
+snippet des "describe" b
+describe('${1:}', (${2:}) => {
+  it('${3:description}',() => {
+    ${4:expect}(${5:})${6:}
+    });
+});
+endsnippet
+
+snippet exp "expect()" i
+expect(${1:}).to.${2:}
+endsnippet
+
+snippet es6 "jshint es6 comment" b
+/* jshint esversion: 6 */
+endsnippet

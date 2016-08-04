@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>ch.milan.hiddenfiles</string>
+	<key>connections</key>
+	<dict>
+		<key>0A618FFB-7B7A-4FAA-A9D6-151BE6C9518A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C92DCB4D-518F-4BD7-A126-62E103AB696E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>A4D754AB-01B6-459A-8ECA-BC11CE6AEF55</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C92DCB4D-518F-4BD7-A126-62E103AB696E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Milan van Zanten</string>
+	<key>description</key>
+	<string>Toggle the visibility of hidden files</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Hidden Files</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+	set v to do shell script "echo $(defaults read com.apple.finder AppleShowAllFiles)"
+	if v is "True" then
+		do shell script "defaults write com.apple.finder AppleShowAllFiles FALSE"
+	else
+		do shell script "defaults write com.apple.finder AppleShowAllFiles TRUE"
+	end if
+	do shell script "killall Finder"
+	tell application "System Events" to set frontmost of process "Finder" to true
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>C92DCB4D-518F-4BD7-A126-62E103AB696E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>hidden</string>
+				<key>script</key>
+				<string>#!/bin/sh
+# Script by Subject22 (http://www.alfredforum.com/user/3857-subject22)
+
+#check the current value and display the result as subtitle
+CURVALUE=$(defaults read com.apple.finder AppleShowAllFiles -bool)
+
+if [ $CURVALUE = 0 ] || [ $CURVALUE = "FALSE" ]; then
+	icon="icon-filled.png"
+	title="Show Hidden Files"
+	subtitle="Hidden files are currently invisible"
+else
+	icon="icon-faded.png"
+	title="Hide Hidden Files"
+	subtitle="Hidden files are currently visible"
+fi
+
+echo '&lt;?xml version="1.0"?&gt;&lt;items&gt;'
+echo "&lt;item arg=\"{query}\" uid=\"ssid\" valid=\"yes\"&gt;"
+echo "&lt;title&gt;$title&lt;/title&gt;"
+echo "&lt;subtitle&gt;$subtitle&lt;/subtitle&gt;"
+echo "&lt;icon&gt;$icon&lt;/icon&gt;&lt;/item&gt;&lt;/items&gt;"
+echo "&lt;/items&gt;"</string>
+				<key>subtext</key>
+				<string>Type out 'hidden' to see the status of hidden files</string>
+				<key>title</key>
+				<string>Toggle Hidden Files</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>A4D754AB-01B6-459A-8ECA-BC11CE6AEF55</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>togglehidden</string>
+				<key>subtext</key>
+				<string>Immediately toggle the visibility of hidden files</string>
+				<key>text</key>
+				<string>Toggle Hidden Files</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>0A618FFB-7B7A-4FAA-A9D6-151BE6C9518A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>USAGE:
+
+‚hidden’ to see status of hidden files before changing
+
+‚togglehidden‘ to immediately change the visibility of hidden files
+
+
+
+THANKS TO
+
+Mark Shropshire (http://mark.shropshires.net)
+
+AND
+
+Subject22 (http://www.alfredforum.com/user/3857-subject22)
+
+FOR THEIR CONTRIBUTION!</string>
+	<key>uidata</key>
+	<dict>
+		<key>0A618FFB-7B7A-4FAA-A9D6-151BE6C9518A</key>
+		<dict>
+			<key>ypos</key>
+			<real>260</real>
+		</dict>
+		<key>A4D754AB-01B6-459A-8ECA-BC11CE6AEF55</key>
+		<dict>
+			<key>ypos</key>
+			<real>140</real>
+		</dict>
+		<key>C92DCB4D-518F-4BD7-A126-62E103AB696E</key>
+		<dict>
+			<key>ypos</key>
+			<real>140</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>milanovi.ch</string>
+</dict>
+</plist>
