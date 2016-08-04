@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Toggle Wifi</name>
+  <version>1.0</version>
+  <bundle>ch.milan.togglewifi</bundle>
+  <updated>1396097210</updated>
+  <file>toggle_wifi.alfredworkflow</file>
+</workflow>
