@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.eunjae.alfred.simpletimer</string>
+	<key>connections</key>
+	<dict>
+		<key>507588CD-5E20-4CEF-81B2-E77FA7793996</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5F1F2FEA-61CC-411D-82C7-5598143ECD09</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>5F1F2FEA-61CC-411D-82C7-5598143ECD09</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C707B821-B4BE-45A5-B699-D4820B0CBA18</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Paul Eunjae Lee</string>
+	<key>description</key>
+	<string>A simple timer</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Simple Timer</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>Alarm</string>
+				<key>title</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>C707B821-B4BE-45A5-B699-D4820B0CBA18</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>timer</string>
+				<key>subtext</key>
+				<string>{time} {message}</string>
+				<key>text</key>
+				<string>Simple Timer</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>507588CD-5E20-4CEF-81B2-E77FA7793996</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>/usr/bin/python scripts.py {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5F1F2FEA-61CC-411D-82C7-5598143ECD09</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Time formats can be one of the followings:
+
+3s
+3sec
+3secs
+3second
+3seconds
+3m
+3min
+3mins
+3minute
+3minutes
+3h
+3hour
+3hours
+
+but, I prefer the simplest formats.
+
+&gt; timer 3m Start the work!</string>
+	<key>uidata</key>
+	<dict>
+		<key>507588CD-5E20-4CEF-81B2-E77FA7793996</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+		<key>5F1F2FEA-61CC-411D-82C7-5598143ECD09</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+		<key>C707B821-B4BE-45A5-B699-D4820B0CBA18</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>https://github.com/eunjae-lee</string>
+</dict>
+</plist>

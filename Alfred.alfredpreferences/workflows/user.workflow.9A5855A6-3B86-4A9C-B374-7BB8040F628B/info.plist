@@ -1,0 +1,1183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>carlosnz.deskdrawer</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>07211450-F7B0-4DC6-B08D-ECDF4A93CBAB</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>2437A736-72E9-4EF5-BF97-8E72332B16BE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>73E831D9-FB33-4834-B85C-33C70B5942D7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>253F8E46-B4A0-4CDC-9824-189A7991D345</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>32711FD0-5C9A-4B0C-A567-B2179563F620</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>54FCA586-A198-4570-B9E0-9C4895743C09</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>4A8E70CB-E302-4151-B4A5-DBF6E4173323</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>4B5F2BCF-1815-4F7E-9F91-9793AB9A8A5F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>54FCA586-A198-4570-B9E0-9C4895743C09</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>5B728DF1-BC71-46AA-99B6-98FE86C906B4</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C91593D9-0A32-44D3-85BD-14F5CCD3446A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>6D6BFE92-FC29-4E39-BE71-B5350AEF3545</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>730AB895-E316-49A7-84F7-E08C883AB7B2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>73E831D9-FB33-4834-B85C-33C70B5942D7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D7403C6F-7ADA-4859-ABF8-229730955C75</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>4A8E70CB-E302-4151-B4A5-DBF6E4173323</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>Move back to Desktop</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>0F1B6767-AD28-40BE-A0B0-4625FBB216F7</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Reveal in DeskDrawer</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>323050EE-A47A-4981-9F1B-0B823FBB2F3F</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Browse in Alfred</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>92510403-CAD6-468F-A947-6A5E84E95054</string>
+				<key>modifiers</key>
+				<integer>8388608</integer>
+				<key>modifiersubtext</key>
+				<string>Move to Trash</string>
+			</dict>
+		</array>
+		<key>91C7C5A7-A288-44D9-8FBB-A76ACA9F33DA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>07211450-F7B0-4DC6-B08D-ECDF4A93CBAB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>92510403-CAD6-468F-A947-6A5E84E95054</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>960B66FD-B942-42FE-A87C-5B9DCA6E823E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>A4851B7C-A3F0-4008-B795-36A8312027F3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>730AB895-E316-49A7-84F7-E08C883AB7B2</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>C91593D9-0A32-44D3-85BD-14F5CCD3446A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>D48D254E-FD2C-46A5-B2AD-677040418307</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>D7403C6F-7ADA-4859-ABF8-229730955C75</key>
+		<array/>
+		<key>D7C65E8E-2A98-4E9E-A1A2-D85013323BFA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>73E831D9-FB33-4834-B85C-33C70B5942D7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>E2685298-C05D-4F24-B6E7-80C51763B528</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>F6EF4D4E-CE4A-4256-9988-C5EFA5650852</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>FB266892-D14C-4369-9696-A965A5E32475</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>960B66FD-B942-42FE-A87C-5B9DCA6E823E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Carl Smith (@CarlosNZ)</string>
+	<key>description</key>
+	<string>Keep your Desktop free of clutter</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>DeskDrawer</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>drawer</string>
+				<key>script</key>
+				<string>./drawer_list.sh "{query}"</string>
+				<key>subtext</key>
+				<string>Show files in your Desk Drawer</string>
+				<key>title</key>
+				<string>DeskDrawer</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>arg="{query}"
+
+if [ $arg = sweep ]; then
+	./sweep.sh
+	exit
+else
+	open "$arg"
+fi</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D7403C6F-7ADA-4859-ABF8-229730955C75</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>F6EF4D4E-CE4A-4256-9988-C5EFA5650852</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>4</integer>
+				<key>script</key>
+				<string>item="{query}"
+
+mv "$item" $HOME/Desktop
+
+name=$(basename "$item")
+
+echo -n "\"$name\" moved back to your Desktop"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>4A8E70CB-E302-4151-B4A5-DBF6E4173323</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>type</key>
+			<string>alfred.workflow.action.revealfile</string>
+			<key>uid</key>
+			<string>0F1B6767-AD28-40BE-A0B0-4625FBB216F7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict/>
+			<key>type</key>
+			<string>alfred.workflow.action.browseinalfred</string>
+			<key>uid</key>
+			<string>323050EE-A47A-4981-9F1B-0B823FBB2F3F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>4</integer>
+				<key>script</key>
+				<string>mv "{query}" $HOME/.Trash
+
+file=$(basename "{query}")
+
+echo -n "\"$file\" has been trashed."</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>92510403-CAD6-468F-A947-6A5E84E95054</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>./move_files.sh "{query}"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>acceptsmulti</key>
+				<true/>
+				<key>filetypes</key>
+				<array/>
+				<key>name</key>
+				<string>Move to DeskDrawer</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.action</string>
+			<key>uid</key>
+			<string>6D6BFE92-FC29-4E39-BE71-B5350AEF3545</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>move</string>
+				<key>subtext</key>
+				<string>Move selected Finder items to DeskDrawer</string>
+				<key>text</key>
+				<string>Move to DeskDrawer</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2437A736-72E9-4EF5-BF97-8E72332B16BE</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>script</key>
+				<string>./move_finder_selection.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>73E831D9-FB33-4834-B85C-33C70B5942D7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>D7C65E8E-2A98-4E9E-A1A2-D85013323BFA</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>unmove</string>
+				<key>subtext</key>
+				<string>Restore last-moved DeskDrawer items back to Desktop</string>
+				<key>text</key>
+				<string>Undo DeskDrawer Move</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>D48D254E-FD2C-46A5-B2AD-677040418307</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>./undo.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>./protect.sh "{query}"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>07211450-F7B0-4DC6-B08D-ECDF4A93CBAB</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>acceptsmulti</key>
+				<true/>
+				<key>filetypes</key>
+				<array/>
+				<key>name</key>
+				<string>Protect from DeskDrawer Sweep</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.action</string>
+			<key>uid</key>
+			<string>91C7C5A7-A288-44D9-8FBB-A76ACA9F33DA</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>DeskDrawer</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>script</key>
+				<string>./protect_finder_selection.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>protect</string>
+				<key>subtext</key>
+				<string>Protect selected Finder items from DeskDrawer sweeps</string>
+				<key>text</key>
+				<string>Protect from DeskDrawer</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>253F8E46-B4A0-4CDC-9824-189A7991D345</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>acceptsmulti</key>
+				<true/>
+				<key>filetypes</key>
+				<array/>
+				<key>name</key>
+				<string>UnProtect from DeskDrawer Sweep</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.action</string>
+			<key>uid</key>
+			<string>5B728DF1-BC71-46AA-99B6-98FE86C906B4</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>./unprotect.sh "{query}"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>C91593D9-0A32-44D3-85BD-14F5CCD3446A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>unprotect</string>
+				<key>subtext</key>
+				<string>Allow selected Finder items into DeskDrawer sweeps</string>
+				<key>text</key>
+				<string>Unprotect from DeskDrawer</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>E2685298-C05D-4F24-B6E7-80C51763B528</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>script</key>
+				<string>./unprotect_finder_selection.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>sweep</string>
+				<key>subtext</key>
+				<string>Move all Desktop items to your DeskDrawer.</string>
+				<key>text</key>
+				<string>Sweep your Desktop clean</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>4B5F2BCF-1815-4F7E-9F91-9793AB9A8A5F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>script</key>
+				<string>./sweep.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>deskrestore</string>
+				<key>subtext</key>
+				<string>Empty your DeskDrawer back on to your Desktop</string>
+				<key>text</key>
+				<string>Restore your Desktop items</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>FB266892-D14C-4369-9696-A965A5E32475</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>script</key>
+				<string>./restore.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>960B66FD-B942-42FE-A87C-5B9DCA6E823E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>script</key>
+				<string>./move_drawer.sh</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>54FCA586-A198-4570-B9E0-9C4895743C09</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>:movedrawer</string>
+				<key>subtext</key>
+				<string>Select a new location</string>
+				<key>text</key>
+				<string>Move your DeskDrawer folder</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>32711FD0-5C9A-4B0C-A567-B2179563F620</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>deskdrawer help</string>
+				<key>subtext</key>
+				<string>View DeskDrawer Documentation</string>
+				<key>text</key>
+				<string>DeskDrawer Help</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>A4851B7C-A3F0-4008-B795-36A8312027F3</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>open "help_files/help.html"
+echo -n "Showing Documentation."
+</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>730AB895-E316-49A7-84F7-E08C883AB7B2</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>DeskDrawer v1.5
+by Carl Smith (@CarlosNZ)
+25 March 2014
+=========================
+
+NOTE: FOR MORE DETAILED HELP, USE THE KEYWORD "deskdrawer help".
+
+Forum thread: http://www.alfredforum.com/topic/440-deskdrawer-keep-the-clutter-off-your-desktop-updated-to-14/
+
+DeskDrawer provides you with a special "Drawer" folder in which you can sweep all the crap from your Desktop in order to keep your Desktop looking tidy.
+
+USAGE
+=====
+
+Keyword: "drawer" (or hotkey) - show the contents of your DeskDrawer in Alfred, from where you can perform actions on the items:
+	* Select item to open it.
+	* Option-select item to move it back to your actual Desktop.
+	* Command-select to "reveal in Finder" (ie. open DeskDrawer folder)
+	* Ctrl-select to browse in Alfred (where you can then perform further actions with Alfred).
+	* fn-select to delete an item (moves it to Trash).
+
+To move an item to your DeskDrawer, select in Finder and launch Alfred's file selection hotkey (default: "Command-option-\" ), then select the "Move to DeskDrawer" file action. (Or, alternatively, you can enter "move" in Alfred's default window.) There is also a custom hotkey available to move items to the DeskDrawer.
+
+keyword: "unmoved" (or File Action) - undo the last movement of files/folders to the DeskDrawer. (Ideal for unintentional moves.)
+
+Keyword: "sweep" - move your entire Desktop contents to you DeskDrawer in one hit.
+
+Keyword: "deskrestore" - dump your DeskDrawer contents back on your Desktop.
+
+Keyword: "protect" (or File Action) - protect selected Desktop items, preventing them from being moved to the DeskDrawer during sweeps.
+
+Keyword: "unprotect" (or File Action) - reverse the above.
+
+Keyword: ":movedrawer" - move the DeskDrawer folder to a file location of your choosing.
+
+Keyword: "deskdrawer help" - display documentation in browser.
+
+
+CHANGELOG
+=========
+
+v1.5
+24 March 2014
+
+* New icon for DeskDrawer folder (to fit in with OS X custom folder look).
+* DeskDrawer is now allowed on the Desktop itself.
+* "Undo" function to reverse the last "Move" to DeskDrawer or Sweep.
+* "Protect" specified Desktop items from being moved to the DeskDrawer during Sweeps.
+* Fix for XML-illegal characters in filenames.
+* More icons.
+* Removed AlleyOop updater support.
+* Default DeskDrawer location is now Home folder.
+* Local documentation (keyword: **deskdrawer help**)
+* Miscellaneous minor tweaks and fixes.
+
+v1.4
+2 April 2013
+
+* New keyword - "move" - to move selected Finder items to Drawer. (Basically the same as the File Action, but just another way of doing it.)
+* Changed "movedrawer" keyword to ":movedrawer" to avoid conflict with "move". Figured it's a once-in-a-blue-moon action, so doesn't need to be easily accessible.
+
+v1.3  
+1 April 2013
+
+* New action: "fn-select" item to Trash it.
+* Consolidated and tidied up workflow setup panel.
+* Support for Alleyoop auto-updater (http://www.alfredforum.com/topic/1582-alleyoop-update-alfred-workflows/)
+* Minor cosmetic tweaks.
+
+v1.2  
+2 Feb 2013
+
+* Added "movedrawer" functionality - choose the storage location of your DeskDrawer.
+
+v1.1  
+1 Feb 2013
+
+* Small update to take advantage of the new "Browse in Alfred" Action, rather than doing it clunkily with Applescript.
+
+v1.0  
+30 Jan 2013
+
+* Initial release</string>
+	<key>uidata</key>
+	<dict>
+		<key>07211450-F7B0-4DC6-B08D-ECDF4A93CBAB</key>
+		<dict>
+			<key>ypos</key>
+			<real>810</real>
+		</dict>
+		<key>0F1B6767-AD28-40BE-A0B0-4625FBB216F7</key>
+		<dict>
+			<key>ypos</key>
+			<real>210</real>
+		</dict>
+		<key>2437A736-72E9-4EF5-BF97-8E72332B16BE</key>
+		<dict>
+			<key>ypos</key>
+			<real>610</real>
+		</dict>
+		<key>253F8E46-B4A0-4CDC-9824-189A7991D345</key>
+		<dict>
+			<key>ypos</key>
+			<real>910</real>
+		</dict>
+		<key>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</key>
+		<dict>
+			<key>ypos</key>
+			<real>1110</real>
+		</dict>
+		<key>323050EE-A47A-4981-9F1B-0B823FBB2F3F</key>
+		<dict>
+			<key>ypos</key>
+			<real>310</real>
+		</dict>
+		<key>32711FD0-5C9A-4B0C-A567-B2179563F620</key>
+		<dict>
+			<key>ypos</key>
+			<real>1410</real>
+		</dict>
+		<key>4A8E70CB-E302-4151-B4A5-DBF6E4173323</key>
+		<dict>
+			<key>ypos</key>
+			<real>110</real>
+		</dict>
+		<key>4B5F2BCF-1815-4F7E-9F91-9793AB9A8A5F</key>
+		<dict>
+			<key>ypos</key>
+			<real>1210</real>
+		</dict>
+		<key>54FCA586-A198-4570-B9E0-9C4895743C09</key>
+		<dict>
+			<key>ypos</key>
+			<real>1410</real>
+		</dict>
+		<key>5B728DF1-BC71-46AA-99B6-98FE86C906B4</key>
+		<dict>
+			<key>ypos</key>
+			<real>1010</real>
+		</dict>
+		<key>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</key>
+		<dict>
+			<key>ypos</key>
+			<real>1210</real>
+		</dict>
+		<key>6215F0CB-AE2C-47B9-B725-62409FB72FE8</key>
+		<dict>
+			<key>ypos</key>
+			<real>870</real>
+		</dict>
+		<key>6D6BFE92-FC29-4E39-BE71-B5350AEF3545</key>
+		<dict>
+			<key>ypos</key>
+			<real>510</real>
+		</dict>
+		<key>730AB895-E316-49A7-84F7-E08C883AB7B2</key>
+		<dict>
+			<key>ypos</key>
+			<real>1510</real>
+		</dict>
+		<key>73E831D9-FB33-4834-B85C-33C70B5942D7</key>
+		<dict>
+			<key>ypos</key>
+			<real>610</real>
+		</dict>
+		<key>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>91C7C5A7-A288-44D9-8FBB-A76ACA9F33DA</key>
+		<dict>
+			<key>ypos</key>
+			<real>810</real>
+		</dict>
+		<key>92510403-CAD6-468F-A947-6A5E84E95054</key>
+		<dict>
+			<key>ypos</key>
+			<real>410</real>
+		</dict>
+		<key>960B66FD-B942-42FE-A87C-5B9DCA6E823E</key>
+		<dict>
+			<key>ypos</key>
+			<real>1310</real>
+		</dict>
+		<key>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</key>
+		<dict>
+			<key>ypos</key>
+			<real>510</real>
+		</dict>
+		<key>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</key>
+		<dict>
+			<key>ypos</key>
+			<real>910</real>
+		</dict>
+		<key>A4851B7C-A3F0-4008-B795-36A8312027F3</key>
+		<dict>
+			<key>ypos</key>
+			<real>1510</real>
+		</dict>
+		<key>C91593D9-0A32-44D3-85BD-14F5CCD3446A</key>
+		<dict>
+			<key>ypos</key>
+			<real>1010</real>
+		</dict>
+		<key>D48D254E-FD2C-46A5-B2AD-677040418307</key>
+		<dict>
+			<key>ypos</key>
+			<real>710</real>
+		</dict>
+		<key>D7403C6F-7ADA-4859-ABF8-229730955C75</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>D7C65E8E-2A98-4E9E-A1A2-D85013323BFA</key>
+		<dict>
+			<key>ypos</key>
+			<real>660</real>
+		</dict>
+		<key>E2685298-C05D-4F24-B6E7-80C51763B528</key>
+		<dict>
+			<key>ypos</key>
+			<real>1110</real>
+		</dict>
+		<key>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</key>
+		<dict>
+			<key>ypos</key>
+			<real>710</real>
+		</dict>
+		<key>F6EF4D4E-CE4A-4256-9988-C5EFA5650852</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>FB266892-D14C-4369-9696-A965A5E32475</key>
+		<dict>
+			<key>ypos</key>
+			<real>1310</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>http://geekzone.philosophicalzombie.net</string>
+</dict>
+</plist>

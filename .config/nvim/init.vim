@@ -46,19 +46,27 @@ augroup FastEscape
 augroup END
 "endif
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_javascript_eslint_exec = '/usr/local/bin/jshint'
-
+"let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
+let g:syntastic_loc_list_height = 5
+let g:syntastic_mode_map = {
+    \ "mode": "passive",
+    \ "active_filetypes": ["json"],
+    \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -75,7 +83,9 @@ Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
 Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
+Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
+Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
@@ -125,7 +135,6 @@ Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'gorodinskiy/vim-coloresque'
 "Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
-Plug 'spf13/vim-preview', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
@@ -148,6 +157,15 @@ Plug 'vim-scripts/mru.vim'
 Plug 'vim-utils/vim-man'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            for markdown                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+" 代码块高亮
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh','javascript=js','json']
+" 不根据语法隐藏
+let g:markdown_syntax_conceal = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              for Unite                              "
@@ -183,7 +201,7 @@ nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR
 nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
 nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
 
-nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
+"nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
 nmap <silent> <leader>l <Plug>(jsdoc)
 nmap <leader>,, :set wrap<CR>
 let leader='\'

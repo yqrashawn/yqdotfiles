@@ -1,14 +1,25 @@
 {
+"ecmaVersion": 6,
   "libs": [
     "browser",
     "jquery",
-    "threejs"
+    "chai",
+    "ecma6",
+    "underscore",
+    "infer"
   ],
   "loadEagerly": [
     "importantfile.js"
   ],
   "plugins": {
     "threejs":{},
+    "complete_strings":{},
+    "modules":{},
+    "node_resolve":{},
+    "webpack":{},
+
+    "es_modules":{},
+    "node":{},
     "requirejs": {
       "baseURL": "./",
       "paths": {}
