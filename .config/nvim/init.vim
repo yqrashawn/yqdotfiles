@@ -80,7 +80,6 @@ call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-ref'
 "for jira
 Plug 'mattn/webapi-vim'
-Plug 'tpope/vim-markdown'
 Plug 'tyru/open-browser.vim'
 Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
@@ -136,7 +135,6 @@ Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'gorodinskiy/vim-coloresque'
 "Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
-Plug 'spf13/vim-preview', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
