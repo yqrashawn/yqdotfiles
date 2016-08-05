@@ -1,0 +1,142 @@
+---
+- :name: Color LCD
+  :modes:
+  - :width: '640'
+    :height: '480'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@640x480@32
+  - :width: '720'
+    :height: '450'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@720x450@32h
+  - :width: '800'
+    :height: '600'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@800x600@32
+  - :width: '825'
+    :height: '525'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@825x525@32h
+  - :width: '840'
+    :height: '524'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@840x524@32
+  - :width: '840'
+    :height: '525'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@840x525@32h
+  - :width: '960'
+    :height: '540'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@960x540@32h
+  - :width: '960'
+    :height: '600'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@960x600@32h
+  - :width: '1024'
+    :height: '640'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@1024x640@32h
+  - :width: '1024'
+    :height: '768'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@1024x768@32
+  - :width: '1152'
+    :height: '720'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@1152x720@32
+  - :width: '1280'
+    :height: '720'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@1280x720@32h
+  - :width: '1280'
+    :height: '800'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@1280x800@32h
+  - :width: '1440'
+    :height: '900'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@1440x900@32h
+  - :width: '1650'
+    :height: '1050'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@1650x1050@32
+  - :width: '1680'
+    :height: '1050'
+    :bits: '32'
+    :hidpi: true
+    :dpi: HiDPI
+    :id: 0@1680x1050@32h
+  - :width: '1920'
+    :height: '1080'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@1920x1080@32
+  - :width: '1920'
+    :height: '1200'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@1920x1200@32
+  - :width: '2048'
+    :height: '1280'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@2048x1280@32
+  - :width: '2560'
+    :height: '1440'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@2560x1440@32
+  - :width: '2560'
+    :height: '1600'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@2560x1600@32
+  - :width: '2880'
+    :height: '1800'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@2880x1800@32
+  - :width: '3360'
+    :height: '2100'
+    :bits: '32'
+    :hidpi: false
+    :dpi: normal resolution
+    :id: 0@3360x2100@32
+  :current_mode: 0@1280x800@32h
