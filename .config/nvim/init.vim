@@ -59,8 +59,9 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_javascript_eslint_exec = '/usr/local/bin/jshint'
+"let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
 let g:syntastic_loc_list_height = 5
 let g:syntastic_mode_map = {
     \ "mode": "passive",
@@ -84,6 +85,7 @@ Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
 Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
+"Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
