@@ -85,7 +85,7 @@ Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
 Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
-"Plug 'mtscout6/syntastic-local-eslint.vim'
+Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
