@@ -80,6 +80,7 @@ call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-ref'
 "for jira
 Plug 'mattn/webapi-vim'
+Plug 'tpope/vim-markdown'
 Plug 'tyru/open-browser.vim'
 Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
@@ -158,6 +159,15 @@ Plug 'vim-scripts/mru.vim'
 Plug 'vim-utils/vim-man'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            for markdown                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+" 代码块高亮
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh','javascript=js','json']
+" 不根据语法隐藏
+let g:markdown_syntax_conceal = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              for Unite                              "
