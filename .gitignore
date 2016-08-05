@@ -15,3 +15,7 @@ WeFlow_workspace
 spf*
 node_modules
 Source
+aria2.conf
+bullet-train.zsh-theme
+npm-install-15963.sh
+ycm_extra_conf.objc.py
