@@ -15,10 +15,10 @@ set nobackup
 ":nnoremap <C-w><C-k> <C-w>k
 ":nnoremap <C-w><C-l> <C-w>l
 :nnoremap <silent> <leader>t :terminal<CR>
-:nnoremap <leader><leader>t :te 
+:nnoremap <leader><leader>t :te
 
 "jira configuration
-let g:jira_url = 'https://115.28.138.35:8080'
+let g:jira_url = 'http://115.28.138.35:8080'
 let g:jira_username = 'zhangyuxiao'
 let g:jira_password = 'namy0000'
 
@@ -60,13 +60,15 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 "let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_checkers = ['eslint','jscs']
 let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
+let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
+let g:syntastic_javascript_jscs_args = '--preset=airbnb'
 let g:syntastic_loc_list_height = 5
 let g:syntastic_mode_map = {
-    \ "mode": "passive",
-    \ "active_filetypes": ["json"],
-    \ "passive_filetypes": []}
+            \ "mode": "passive",
+            \ "active_filetypes": ["json"],
+            \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -74,11 +76,16 @@ let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 set ttimeoutlen=10
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                               Plugins                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
 "for jira
+Plug 'Chiel92/vim-autoformat'
+Plug 'othree/yajs.vim'
 Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
 Plug 'rafi/vim-unite-issue'
@@ -109,6 +116,8 @@ Plug 'vim-scripts/sessionman.vim'
 "Plug 'matchit.zip'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'morhetz/gruvbox'
 Plug 'bling/vim-bufferline'
 Plug 'easymotion/vim-easymotion'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
@@ -136,7 +145,7 @@ Plug 'gorodinskiy/vim-coloresque'
 "Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
+"Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
 "Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 "Plug 'Shougo/vimproc.vim'
@@ -157,6 +166,15 @@ Plug 'vim-scripts/mru.vim'
 Plug 'vim-utils/vim-man'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             Autoformat                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au BufWrite * :Autoformat
+let g:autoformat_verbosemode=1
+let g:formatters_javascript = ['jscs']
+let g:formatdef_jscs='"jscs -x -c /Users/Rashawn/.jscsrc"'
+"let g:formatdef_jscs='-x'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                            for markdown                             "
@@ -250,6 +268,16 @@ nmap k kzz
 "nnoremap <A-k> <C-w>k
 "nnoremap <A-l> <C-w>l
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                     javascript-libraries-syntax                     "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:used_javascript_libs = 'chai,underscore'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           vim-javascript                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:javascript_plugin_jsdoc = 1
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   jsdoc                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -269,7 +297,7 @@ nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
 """""""""""""""""""
 "ack
 """""""""""""""""""
-nnoremap <leader>ac :Ack 
+nnoremap <leader>ac :Ack
 let g:ackprg = 'ag --vimgrep'
 
 """""""""""""""""""
@@ -301,7 +329,7 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 
 if exists('$ITERM_PROFILE')
-    if exists('$TMUX') 
+    if exists('$TMUX')
         let &t_SI = "\<Esc>[3 q"
         let &t_EI = "\<Esc>[0 q"
     else
@@ -390,7 +418,7 @@ let g:airline#extensions#tabline#show_close_button = 0
 "highlight current line and column
 set cursorcolumn
 "fold depend on syntax
-set foldmethod=indent
+set foldmethod=syntax
 set foldlevelstart=20
 set foldnestmax=9      "deepest fold is 10 levels
 "set foldlevel=1         "this is just what i use
@@ -430,7 +458,7 @@ let g:ycm_semantic_triggers =  {
             \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Turn persistent undo on 
+" => Turn persistent undo on
 "    means that you can undo even when you close a buffer/VIM
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 try
@@ -488,7 +516,7 @@ let g:mapleader = '\'
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 " command W w !sudo tee % > /dev/null
 
@@ -513,8 +541,8 @@ map <leader>bac :bufdo bd<cr>
 " Useful mappings for managing tabs
 map <leader>bn :tabnew<cr>
 map <leader>bo :tabonly<cr>
-map <leader>bm :tabmove 
-map <leader>b<leader> :tabnext 
+map <leader>bm :tabmove
+map <leader>b<leader> :tabnext
 
 
 " Let 'tl' toggle between this and the last accessed tab
@@ -582,7 +610,7 @@ let g:returnApp = "iTerm"
 let g:returnAppFlag = 0
 
 let g:startify_bookmarks = ['~/workspace/project']
-map <leader><leader>0 :call JsBeautify()<cr>
+"map <leader><leader>0 :call JsBeautify()<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""spf13
@@ -594,11 +622,12 @@ map <leader><leader>0 :call JsBeautify()<cr>
 if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
     inoremap <silent> <C-[>OC <RIGHT>
 endif
-" }
 let g:seoul256_light_background = 256
-set background=light " Assume a dark background
+set background=dark " Assume a dark background
 "colorscheme solarized
-colorscheme seoul256
+"colorscheme seoul256
+colorscheme gruvbox
+
 
 " Allow to trigger background
 function! ToggleBG()

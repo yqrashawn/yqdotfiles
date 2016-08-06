@@ -17,7 +17,6 @@
     "modules":{},
     "node_resolve":{},
     "webpack":{},
-
     "es_modules":{},
     "node":{},
     "requirejs": {
