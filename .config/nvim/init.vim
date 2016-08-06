@@ -17,7 +17,10 @@ set nobackup
 :nnoremap <silent> <leader>t :terminal<CR>
 :nnoremap <leader><leader>t :te
 
-"jira configuration
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                         jira configuration                          "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:jira_url = 'http://115.28.138.35:8080'
 let g:jira_username = 'zhangyuxiao'
 let g:jira_password = 'namy0000'
@@ -36,15 +39,16 @@ let g:unite_source_issue_jira_type_table = {
             \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
 
 
-" leave insert mode quickly
-"if ! has('gui_running')
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             quicker ESC                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 set ttimeoutlen=30
 augroup FastEscape
     autocmd!
     au InsertEnter * set timeoutlen=0
     au InsertLeave * set timeoutlen=1000
 augroup END
-"endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
@@ -147,7 +151,7 @@ Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
 "Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
-"Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
+Plug 'thinca/vim-quickrun'
 "Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
@@ -168,12 +172,21 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              Quickrun                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:quickrun_config = {}
+"let g:quickrun_config.javascript = {'command' : 'node'}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             Autoformat                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au BufWrite * :Autoformat
-let g:autoformat_verbosemode=1
+"let g:autoformat_verbosemode=1 " for debug
 let g:formatters_javascript = ['jscs']
-let g:formatdef_jscs='"jscs -x -c /Users/Rashawn/.jscsrc"'
+let g:formatters_json = ['js-beautify']
+let g:formatters_html = ['html-beautify']
+let g:formatters_css = ['css-beautify']
+let g:formatters_markdown = ['remark']
+let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
 "let g:formatdef_jscs='-x'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -209,9 +222,10 @@ let g:unite_source_grep_recursive_opt = ''
 "let g:unite_source_rec_async_command =
 "\ ['ack', '-f', '--nofilter']
 
-"""""""""""""""""""
-"自定义map
-"""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             custom map                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 "noremap <silent> <leader>ct :Unite file/async file_rec/neovim buffer neomru/file file/new -direction=dynamicbottom -start-insert<CR>
 nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
 "nmap <leader><leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
@@ -610,7 +624,7 @@ let g:returnApp = "iTerm"
 let g:returnAppFlag = 0
 
 let g:startify_bookmarks = ['~/workspace/project']
-"map <leader><leader>0 :call JsBeautify()<cr>
+"map <leader><leader>0 :Autoformat<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""spf13
