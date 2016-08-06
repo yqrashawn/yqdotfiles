@@ -175,11 +175,10 @@ call plug#end()
 "                              Quickrun                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:quickrun_config = {}
-"let g:quickrun_config.javascript = {'command' : 'node'}
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             Autoformat                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-au BufWrite * :Autoformat
+"au BufWrite * :Autoformat
 "let g:autoformat_verbosemode=1 " for debug
 let g:formatters_javascript = ['jscs']
 let g:formatters_json = ['js-beautify']
@@ -266,21 +265,8 @@ nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
 "nnoremap <C-e> :NERDTreeToggle<CR>
 map <leader><F10> :QuickRun<CR>
-"map <C-J> <C-W>j<C-W>_
-"map <C-K> <C-W>k<C-W>_
-"map <C-L> <C-W>l<C-W>_
-"map <C-H> <C-W>h<C-W>_
 nmap j jzz
 nmap k kzz
-"nmap <leader>cl :VimuxRunLastCommand("%")
-"tnoremap <A-h> <C-\><C-n><C-w>h
-"tnoremap <A-j> <C-\><C-n><C-w>j
-"tnoremap <A-k> <C-\><C-n><C-w>k
-"tnoremap <A-l> <C-\><C-n><C-w>l
-"nnoremap <A-h> <C-w>h
-"nnoremap <A-j> <C-w>j
-"nnoremap <A-k> <C-w>k
-"nnoremap <A-l> <C-w>l
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                     javascript-libraries-syntax                     "
@@ -308,15 +294,16 @@ nmap <leader>rccccccccc :NERDComComment
 nmap <leader>rcccccccccccn :NERDComNestedComment
 nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
 
-"""""""""""""""""""
-"ack
-"""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 ack                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 nnoremap <leader>ac :Ack
 let g:ackprg = 'ag --vimgrep'
 
-"""""""""""""""""""
-"tmux
-"""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                tmux                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)
 function! WrapForTmux(s)
@@ -352,16 +339,15 @@ if exists('$ITERM_PROFILE')
     endif
 end
 
+
 "if exists('$TMUX')
 "set term=screen-256color
 "endif
 
-"let g:user_emmet_install_global = 0
-"autocmd FileType html,css EmmetInstall
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             vim-airline                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"""""""""""""""""""
-"vim-airline
-""""""""""""""""""""
 let g:airline#extensions#tabline#buffer_nr_show = 0
 " 关闭状态显示空白符号计数,这个对我用处不大"
 let g:airline#extensions#whitespace#enabled = 0
@@ -374,6 +360,7 @@ nmap <leader>4 <Plug>AirlineSelectTab4
 nmap <leader>5 <Plug>AirlineSelectTab5
 nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
 
 
 :tnoremap <leader><leader> <C-\><C-n>
@@ -384,6 +371,7 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 :tnoremap <leader>5 <C-\><C-n><Plug>AirlineSelectTab5
 :tnoremap <leader>6 <C-\><C-n><Plug>AirlineSelectTab6
 :tnoremap <leader>7 <C-\><C-n><Plug>AirlineSelectTab7
+:tnoremap <leader>8 <C-\><C-n><Plug>AirlineSelectTab8
 
 " enable/disable enhanced tabline. (c)
 let g:airline#extensions#tabline#enabled = 1
@@ -426,9 +414,10 @@ let g:airline#extensions#tabline#tabs_label = 'tabs'
 " configure whether close button should be shown: >
 let g:airline#extensions#tabline#show_close_button = 0
 
-"""""""""""""""""""
-"set设置
-""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 set                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 "highlight current line and column
 set cursorcolumn
 "fold depend on syntax
@@ -440,9 +429,9 @@ set foldnestmax=9      "deepest fold is 10 levels
 set wrap
 syntax on
 
-"""""""""""""""""""
-"ycm设置
-""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 ycm                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_allow_changing_updatetime = 1
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_use_ultisnips_completer = 1
@@ -481,13 +470,14 @@ try
 catch
 endtry
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Command mode related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                         command line alias                          "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Smart mappings on the command line
-cno $h e ~/
-"cno $d e ~/Desktop/
-"cno $j e ./
+cno hhh  ~/
+cno ddd e ~/Desktop/
+cno jjj e ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -624,7 +614,7 @@ let g:returnApp = "iTerm"
 let g:returnAppFlag = 0
 
 let g:startify_bookmarks = ['~/workspace/project']
-"map <leader><leader>0 :Autoformat<cr>
+map <leader><leader>0 :Autoformat<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""spf13
