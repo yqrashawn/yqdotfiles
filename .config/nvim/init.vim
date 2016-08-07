@@ -1,3 +1,6 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                        get rid of *.*~ file                         "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set backupdir=~/vimtmp,.
 set directory=~/vimtmp,.
 set nobackup
@@ -179,10 +182,11 @@ let g:quickrun_config = {}
 "                             Autoformat                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "au BufWrite * :Autoformat
-"let g:autoformat_verbosemode=1 " for debug
+let g:autoformat_verbosemode=1 " for debug
+map <leader><leader>0 :Autoformat<cr>
 let g:formatters_javascript = ['jscs']
 let g:formatters_json = ['js-beautify']
-let g:formatters_html = ['html-beautify']
+let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
 let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
@@ -475,9 +479,9 @@ endtry
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Smart mappings on the command line
-cno hhh  ~/
-cno ddd e ~/Desktop/
-cno jjj e ./
+cno hhh ~/
+cno ddd ~/Desktop/
+cno kkk ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -543,10 +547,10 @@ map <leader>bd :bdelete<cr>:tabclose<cr>gT
 map <leader>bac :bufdo bd<cr>
 
 " Useful mappings for managing tabs
-map <leader>bn :tabnew<cr>
-map <leader>bo :tabonly<cr>
-map <leader>bm :tabmove
-map <leader>b<leader> :tabnext
+"map <leader>bn :tabnew<cr>
+"map <leader>bo :tabonly<cr>
+"map <leader>bm :tabmove
+"map <leader>b<leader> :tabnext
 
 
 " Let 'tl' toggle between this and the last accessed tab
@@ -559,15 +563,14 @@ au TabLeave * let g:lasttab = tabpagenr()
 " => Command mode related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Smart mappings on the command line
-cno $h e ~/
-"cno $d e ~/Desktop/
-"cno $j e ./
-"cno $c e <C-\>eCurrentFileDir("e")<cr>
+cno hhh  ~/
+cno ddd  ~/Desktop/
+cno ccc ./
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $3 <esc>`>a)<esc>`<i(<esc>
 "vnoremap $2 <esc>`>a]<esc>`<i[<esc>
 "vnoremap $3 <esc>`>a}<esc>`<i{<esc>
 "vnoremap $$ <esc>`>a"<esc>`<i"<esc>
@@ -575,7 +578,7 @@ cno $h e ~/
 "vnoremap $e <esc>`>a"<esc>`<i"<esc>
 
 " Map auto complete of (, ", ', [
-"inoremap $1 ()<esc>i
+inoremap $3 ()<esc>i
 "inoremap $2 []<esc>i
 "inoremap $3 {}<esc>i
 "inoremap $4 {}<esc>i<C-j>
@@ -602,6 +605,10 @@ let g:EasyMotion_smartcase = 1
 "map <Leader>j <Plug>(easymotion-j)
 "map <Leader>k <Plug>(easymotion-k)
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              UltiSnips                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:UltiSnipsSnippetsDir='~/.config/nvim/UltiSnips'
 let g:UltiSnipsUsePythonVersion = 3
 "let  g:UltiSnipsListSnippets ='<C-tab>'
@@ -612,10 +619,10 @@ nmap <leader><leader>u :UltiSnipsEdit<CR>
 "change this variables
 let g:returnApp = "iTerm"
 let g:returnAppFlag = 0
-
-let g:startify_bookmarks = ['~/workspace/project']
-map <leader><leader>0 :Autoformat<cr>
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              Startify                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:startify_bookmarks = ['~/workspace']
 
 """""""""""""""""""""""""""""""""""""""""""""""spf13
 """""""""""""""""""""""""""""""""""""""""""""""spf13
@@ -626,7 +633,12 @@ map <leader><leader>0 :Autoformat<cr>
 if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
     inoremap <silent> <C-[>OC <RIGHT>
 endif
-let g:seoul256_light_background = 256
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             colorscheme                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"let g:seoul256_light_background = 256
 set background=dark " Assume a dark background
 "colorscheme solarized
 "colorscheme seoul256
@@ -648,6 +660,7 @@ noremap <leader>bg :call ToggleBG()<CR>
 " if !has('gui')
 "set term=$TERM          " Make arrow and other keys work
 " endif
+
 filetype plugin indent on   " Automatically detect file types.
 set mouse=a                 " Automatically enable mouse usage
 set mousehide               " Hide the mouse cursor while typing
