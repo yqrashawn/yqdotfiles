@@ -1,3 +1,6 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                        get rid of *.*~ file                         "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set backupdir=~/vimtmp,.
 set directory=~/vimtmp,.
 set nobackup
@@ -15,10 +18,13 @@ set nobackup
 ":nnoremap <C-w><C-k> <C-w>k
 ":nnoremap <C-w><C-l> <C-w>l
 :nnoremap <silent> <leader>t :terminal<CR>
-:nnoremap <leader><leader>t :te 
+:nnoremap <leader><leader>t :te
 
-"jira configuration
-let g:jira_url = 'https://115.28.138.35:8080'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                         jira configuration                          "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:jira_url = 'http://115.28.138.35:8080'
 let g:jira_username = 'zhangyuxiao'
 let g:jira_password = 'namy0000'
 
@@ -36,29 +42,40 @@ let g:unite_source_issue_jira_type_table = {
             \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
 
 
-" leave insert mode quickly
-"if ! has('gui_running')
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             quicker ESC                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 set ttimeoutlen=30
 augroup FastEscape
     autocmd!
     au InsertEnter * set timeoutlen=0
     au InsertLeave * set timeoutlen=1000
 augroup END
-"endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 syntastic                                  "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 syntastic                                  "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_javascript_eslint_exec = '/usr/local/bin/jshint'
-
+"let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_checkers = ['eslint','jscs']
+let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
+let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
+let g:syntastic_javascript_jscs_args = '--preset=airbnb'
+let g:syntastic_loc_list_height = 5
+let g:syntastic_mode_map = {
+            \ "mode": "passive",
+            \ "active_filetypes": ["json"],
+            \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -66,16 +83,23 @@ let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 set ttimeoutlen=10
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                               Plugins                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
 "for jira
+Plug 'Chiel92/vim-autoformat'
+Plug 'othree/yajs.vim'
 Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
 Plug 'rafi/vim-unite-issue'
 Plug 'Shougo/unite.vim'
+Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
+Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
@@ -99,6 +123,8 @@ Plug 'vim-scripts/sessionman.vim'
 "Plug 'matchit.zip'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'morhetz/gruvbox'
 Plug 'bling/vim-bufferline'
 Plug 'easymotion/vim-easymotion'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
@@ -125,11 +151,10 @@ Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'gorodinskiy/vim-coloresque'
 "Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
-Plug 'spf13/vim-preview', { 'for': 'markdown' }
 Plug 'KabbAmine/vCoolor.vim'
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
+"Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
-"Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
+Plug 'thinca/vim-quickrun'
 "Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
@@ -148,6 +173,33 @@ Plug 'vim-scripts/mru.vim'
 Plug 'vim-utils/vim-man'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              Quickrun                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:quickrun_config = {}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             Autoformat                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"au BufWrite * :Autoformat
+let g:autoformat_verbosemode=1 " for debug
+map <leader><leader>0 :Autoformat<cr>
+let g:formatters_javascript = ['jscs']
+let g:formatters_json = ['js-beautify']
+let g:formatters_html = ['htmlbeautify']
+let g:formatters_css = ['css-beautify']
+let g:formatters_markdown = ['remark']
+let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
+"let g:formatdef_jscs='-x'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            for markdown                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+" 代码块高亮
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh','javascript=js','json']
+" 不根据语法隐藏
+let g:markdown_syntax_conceal = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              for Unite                              "
@@ -173,9 +225,10 @@ let g:unite_source_grep_recursive_opt = ''
 "let g:unite_source_rec_async_command =
 "\ ['ack', '-f', '--nofilter']
 
-"""""""""""""""""""
-"自定义map
-"""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             custom map                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 "noremap <silent> <leader>ct :Unite file/async file_rec/neovim buffer neomru/file file/new -direction=dynamicbottom -start-insert<CR>
 nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
 "nmap <leader><leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
@@ -183,7 +236,7 @@ nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR
 nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
 nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
 
-nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
+"nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
 nmap <silent> <leader>l <Plug>(jsdoc)
 nmap <leader>,, :set wrap<CR>
 let leader='\'
@@ -216,21 +269,18 @@ nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
 "nnoremap <C-e> :NERDTreeToggle<CR>
 map <leader><F10> :QuickRun<CR>
-"map <C-J> <C-W>j<C-W>_
-"map <C-K> <C-W>k<C-W>_
-"map <C-L> <C-W>l<C-W>_
-"map <C-H> <C-W>h<C-W>_
 nmap j jzz
 nmap k kzz
-"nmap <leader>cl :VimuxRunLastCommand("%")
-"tnoremap <A-h> <C-\><C-n><C-w>h
-"tnoremap <A-j> <C-\><C-n><C-w>j
-"tnoremap <A-k> <C-\><C-n><C-w>k
-"tnoremap <A-l> <C-\><C-n><C-w>l
-"nnoremap <A-h> <C-w>h
-"nnoremap <A-j> <C-w>j
-"nnoremap <A-k> <C-w>k
-"nnoremap <A-l> <C-w>l
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                     javascript-libraries-syntax                     "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:used_javascript_libs = 'chai,underscore'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           vim-javascript                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:javascript_plugin_jsdoc = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   jsdoc                                    "
@@ -248,15 +298,16 @@ nmap <leader>rccccccccc :NERDComComment
 nmap <leader>rcccccccccccn :NERDComNestedComment
 nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
 
-"""""""""""""""""""
-"ack
-"""""""""""""""""""
-nnoremap <leader>ac :Ack 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 ack                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nnoremap <leader>ac :Ack
 let g:ackprg = 'ag --vimgrep'
 
-"""""""""""""""""""
-"tmux
-"""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                tmux                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)
 function! WrapForTmux(s)
@@ -283,7 +334,7 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 
 if exists('$ITERM_PROFILE')
-    if exists('$TMUX') 
+    if exists('$TMUX')
         let &t_SI = "\<Esc>[3 q"
         let &t_EI = "\<Esc>[0 q"
     else
@@ -292,16 +343,15 @@ if exists('$ITERM_PROFILE')
     endif
 end
 
+
 "if exists('$TMUX')
 "set term=screen-256color
 "endif
 
-"let g:user_emmet_install_global = 0
-"autocmd FileType html,css EmmetInstall
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             vim-airline                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"""""""""""""""""""
-"vim-airline
-""""""""""""""""""""
 let g:airline#extensions#tabline#buffer_nr_show = 0
 " 关闭状态显示空白符号计数,这个对我用处不大"
 let g:airline#extensions#whitespace#enabled = 0
@@ -314,6 +364,7 @@ nmap <leader>4 <Plug>AirlineSelectTab4
 nmap <leader>5 <Plug>AirlineSelectTab5
 nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
 
 
 :tnoremap <leader><leader> <C-\><C-n>
@@ -324,6 +375,7 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 :tnoremap <leader>5 <C-\><C-n><Plug>AirlineSelectTab5
 :tnoremap <leader>6 <C-\><C-n><Plug>AirlineSelectTab6
 :tnoremap <leader>7 <C-\><C-n><Plug>AirlineSelectTab7
+:tnoremap <leader>8 <C-\><C-n><Plug>AirlineSelectTab8
 
 " enable/disable enhanced tabline. (c)
 let g:airline#extensions#tabline#enabled = 1
@@ -366,13 +418,14 @@ let g:airline#extensions#tabline#tabs_label = 'tabs'
 " configure whether close button should be shown: >
 let g:airline#extensions#tabline#show_close_button = 0
 
-"""""""""""""""""""
-"set设置
-""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 set                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 "highlight current line and column
 set cursorcolumn
 "fold depend on syntax
-set foldmethod=indent
+set foldmethod=syntax
 set foldlevelstart=20
 set foldnestmax=9      "deepest fold is 10 levels
 "set foldlevel=1         "this is just what i use
@@ -380,9 +433,9 @@ set foldnestmax=9      "deepest fold is 10 levels
 set wrap
 syntax on
 
-"""""""""""""""""""
-"ycm设置
-""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 ycm                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_allow_changing_updatetime = 1
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_use_ultisnips_completer = 1
@@ -412,7 +465,7 @@ let g:ycm_semantic_triggers =  {
             \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Turn persistent undo on 
+" => Turn persistent undo on
 "    means that you can undo even when you close a buffer/VIM
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 try
@@ -421,13 +474,14 @@ try
 catch
 endtry
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Command mode related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                         command line alias                          "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Smart mappings on the command line
-cno $h e ~/
-"cno $d e ~/Desktop/
-"cno $j e ./
+cno hhh ~/
+cno ddd ~/Desktop/
+cno kkk ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -470,7 +524,7 @@ let g:mapleader = '\'
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 " command W w !sudo tee % > /dev/null
 
@@ -493,10 +547,10 @@ map <leader>bd :bdelete<cr>:tabclose<cr>gT
 map <leader>bac :bufdo bd<cr>
 
 " Useful mappings for managing tabs
-map <leader>bn :tabnew<cr>
-map <leader>bo :tabonly<cr>
-map <leader>bm :tabmove 
-map <leader>b<leader> :tabnext 
+"map <leader>bn :tabnew<cr>
+"map <leader>bo :tabonly<cr>
+"map <leader>bm :tabmove
+"map <leader>b<leader> :tabnext
 
 
 " Let 'tl' toggle between this and the last accessed tab
@@ -509,15 +563,14 @@ au TabLeave * let g:lasttab = tabpagenr()
 " => Command mode related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Smart mappings on the command line
-cno $h e ~/
-"cno $d e ~/Desktop/
-"cno $j e ./
-"cno $c e <C-\>eCurrentFileDir("e")<cr>
+cno hhh  ~/
+cno ddd  ~/Desktop/
+cno ccc ./
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $3 <esc>`>a)<esc>`<i(<esc>
 "vnoremap $2 <esc>`>a]<esc>`<i[<esc>
 "vnoremap $3 <esc>`>a}<esc>`<i{<esc>
 "vnoremap $$ <esc>`>a"<esc>`<i"<esc>
@@ -525,7 +578,7 @@ cno $h e ~/
 "vnoremap $e <esc>`>a"<esc>`<i"<esc>
 
 " Map auto complete of (, ", ', [
-"inoremap $1 ()<esc>i
+inoremap $3 ()<esc>i
 "inoremap $2 []<esc>i
 "inoremap $3 {}<esc>i
 "inoremap $4 {}<esc>i<C-j>
@@ -552,6 +605,10 @@ let g:EasyMotion_smartcase = 1
 "map <Leader>j <Plug>(easymotion-j)
 "map <Leader>k <Plug>(easymotion-k)
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              UltiSnips                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:UltiSnipsSnippetsDir='~/.config/nvim/UltiSnips'
 let g:UltiSnipsUsePythonVersion = 3
 "let  g:UltiSnipsListSnippets ='<C-tab>'
@@ -562,10 +619,10 @@ nmap <leader><leader>u :UltiSnipsEdit<CR>
 "change this variables
 let g:returnApp = "iTerm"
 let g:returnAppFlag = 0
-
-let g:startify_bookmarks = ['~/workspace/project']
-map <leader><leader>0 :call JsBeautify()<cr>
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              Startify                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:startify_bookmarks = ['~/workspace']
 
 """""""""""""""""""""""""""""""""""""""""""""""spf13
 """""""""""""""""""""""""""""""""""""""""""""""spf13
@@ -576,11 +633,17 @@ map <leader><leader>0 :call JsBeautify()<cr>
 if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
     inoremap <silent> <C-[>OC <RIGHT>
 endif
-" }
-let g:seoul256_light_background = 256
-set background=light " Assume a dark background
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             colorscheme                             "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"let g:seoul256_light_background = 256
+set background=dark " Assume a dark background
 "colorscheme solarized
-colorscheme seoul256
+"colorscheme seoul256
+colorscheme gruvbox
+
 
 " Allow to trigger background
 function! ToggleBG()
@@ -597,6 +660,7 @@ noremap <leader>bg :call ToggleBG()<CR>
 " if !has('gui')
 "set term=$TERM          " Make arrow and other keys work
 " endif
+
 filetype plugin indent on   " Automatically detect file types.
 set mouse=a                 " Automatically enable mouse usage
 set mousehide               " Hide the mouse cursor while typing

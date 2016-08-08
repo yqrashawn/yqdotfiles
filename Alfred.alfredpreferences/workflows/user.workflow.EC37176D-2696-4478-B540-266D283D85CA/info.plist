@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.renegaed.restart-app</string>
+	<key>connections</key>
+	<dict>
+		<key>FB440AD3-A256-4411-956A-CD0CA77EF215</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>09909EFB-C776-45D7-97FD-8816FDF6F535</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>renegaed</string>
+	<key>description</key>
+	<string>Restart a currently running App</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Restart App</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+	tell application q to quit
+	delay 2 -- Wait for App to close
+	tell application q to activate
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>09909EFB-C776-45D7-97FD-8816FDF6F535</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>keyword</key>
+				<string>restart</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Loading</string>
+				<key>script</key>
+				<string>apps = `osascript -e 'tell application "System Events" to get the file of every process whose background only is false'`
+apps = apps.strip.split(",").collect {|line| line.strip.gsub(/^alias Macintosh HD/, '').gsub(/:/, '/')[0..-2]}.sort
+
+puts "&lt;items&gt;"
+apps.each do |line|
+  app_path = line
+  app_name = File.basename(app_path, ".app")
+  query = "{query}"
+  if ! app_name.downcase[query]
+    next
+  end
+  if !(app_path =~ /^\/System\//) &amp;&amp; !(app_path =~ /^\/Library\//)
+  puts &lt;&lt;ENDS_HERE
+  &lt;item uid="status" arg="#{app_name}"&gt;
+	&lt;title&gt;#{app_name}&lt;/title&gt;
+	&lt;subtitle&gt;Press Enter to activate #{app_path}&lt;/subtitle&gt;
+	&lt;icon type="fileicon"&gt;#{app_path}&lt;/icon&gt;
+  &lt;/item&gt;
+ENDS_HERE
+  end
+end
+puts "&lt;/items&gt;"
+</string>
+				<key>subtext</key>
+				<string>List all running applications</string>
+				<key>title</key>
+				<string>Restart App</string>
+				<key>type</key>
+				<integer>2</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>FB440AD3-A256-4411-956A-CD0CA77EF215</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>09909EFB-C776-45D7-97FD-8816FDF6F535</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>FB440AD3-A256-4411-956A-CD0CA77EF215</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>

@@ -1,0 +1,9 @@
+{
+  "alfredsnippet" : {
+    "snippet" : "\/**\n * Returns a random integer between min (inclusive) and max (inclusive)\n * Using Math.round() will give you a non-uniform distribution!\n *\/\nfunction getRandomInt(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n}",
+    "dontautoexpand" : true,
+    "uid" : "91A03744-8B9C-463C-85FB-51F5DAF0A48D",
+    "name" : "getRandomInt",
+    "keyword" : "rand"
+  }
+}

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>Find YYeTs</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>1992A25B-FCF4-4139-BF63-84F4E6229796</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>772FA0EF-CAB3-4BD2-99E6-32C0385B85E7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>4E013417-39DF-40F3-B750-BC7B80C16CA8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6B053B91-A01C-4AC8-8477-D3909B7778DA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>池建强</string>
+	<key>description</key>
+	<string>通过API和RSS搜索YYeTs资源</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>FindYYeTs</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>keyword</key>
+				<string>yyapi</string>
+				<key>runningsubtext</key>
+				<string>请稍候</string>
+				<key>script</key>
+				<string># -*- coding: utf-8 -*-
+
+__author__ = 'Sagacity'
+
+import urllib2
+import json
+
+theQuery = "{query}"
+
+theQuery = theQuery.strip()
+apiurl = 'http://www.yyets.com/php/search/api?keyword='
+urldoc = json.loads( urllib2.urlopen( apiurl + theQuery ).read())
+
+results = urldoc["data"]
+
+if not results:
+    exit()
+
+print "&lt;?xml version=\"1.0\"?&gt;\n&lt;items&gt;"
+for res in results:
+    link = "http://www.yyets.com/" + res["type"] + "/" + res["itemid"]
+    title = res["title"].replace( "&amp;", "#" )
+    print "    &lt;item uid=\"YYeTs\" arg=\""+ link +"\"&gt;"
+    print "        &lt;title&gt;" + title.encode('utf-8') + "&lt;/title&gt;"
+    print "        &lt;subtitle&gt;" + (res["prefix"] + title).encode('utf-8') + "&lt;/subtitle&gt;"
+    print '''        &lt;icon type="fileicon"&gt;/Applications/QuickTime Player.app/&lt;/icon&gt;
+    &lt;/item&gt;'''
+
+print "&lt;/items&gt;\n"</string>
+				<key>subtext</key>
+				<string>YYeTs</string>
+				<key>title</key>
+				<string>Find Media in YYeTs(API)…</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>4E013417-39DF-40F3-B750-BC7B80C16CA8</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>keyword</key>
+				<string>yyrss</string>
+				<key>runningsubtext</key>
+				<string>请稍候</string>
+				<key>script</key>
+				<string># -*- coding: utf-8 -*-
+
+__author__ = 'Sagacity'
+
+import urllib2
+import xml.dom.minidom
+
+theQuery = u"{query}"
+# theQuery = u"all"
+theQuery = theQuery.strip()
+rssurl = 'http://www.yyets.com/rss/feed/'
+urldoc = xml.dom.minidom.parse( urllib2.urlopen( rssurl ) )
+
+print "&lt;?xml version=\"1.0\"?&gt;\n&lt;items&gt;"
+for item in urldoc.getElementsByTagName('item'):
+    title = item.getElementsByTagName('title')[0].firstChild.data.replace( "&amp;", "#" )
+    link = item.getElementsByTagName('link')[0].firstChild.data
+
+    if title.__contains__(theQuery) or theQuery == "all":
+        print "    &lt;item uid=\"YYeTs\" arg=\""+ link +"\"&gt;"
+        print "        &lt;title&gt;" + title.encode('utf-8') + "&lt;/title&gt;"
+        print "        &lt;subtitle&gt;" + title.encode('utf-8') + "&lt;/subtitle&gt;"
+        print '''        &lt;icon type="fileicon"&gt;/Applications/QuickTime Player.app/&lt;/icon&gt;
+    &lt;/item&gt;'''
+print "&lt;/items&gt;\n"</string>
+				<key>subtext</key>
+				<string>YYeTs</string>
+				<key>title</key>
+				<string>Find Media in YYeTs(RSS)…</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>1992A25B-FCF4-4139-BF63-84F4E6229796</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>772FA0EF-CAB3-4BD2-99E6-32C0385B85E7</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>6B053B91-A01C-4AC8-8477-D3909B7778DA</string>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>1992A25B-FCF4-4139-BF63-84F4E6229796</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>4E013417-39DF-40F3-B750-BC7B80C16CA8</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>6B053B91-A01C-4AC8-8477-D3909B7778DA</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>772FA0EF-CAB3-4BD2-99E6-32C0385B85E7</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>http://q.itari.com.cn</string>
+</dict>
+</plist>
