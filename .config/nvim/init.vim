@@ -479,7 +479,10 @@ endtry
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Smart mappings on the command line
+cno jira Unite issue:jira<cr>
 cno hhh ~/
+cno xihemap ~/workspace/XiheMap
+cno cesium ~/workspace/projects/cesium
 cno ddd ~/Desktop/
 cno kkk ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
