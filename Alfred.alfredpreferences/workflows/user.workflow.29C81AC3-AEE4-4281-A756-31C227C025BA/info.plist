@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.alexw.me.volume</string>
+	<key>connections</key>
+	<dict>
+		<key>28660937-2892-43F4-8181-7231D3400821</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>34D8A52E-B846-4936-AD9E-6FFE68A15B04</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>D3183917-8152-4A7B-9E03-6810B6FA5E10</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>34D8A52E-B846-4936-AD9E-6FFE68A15B04</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>E0AED9ED-2848-466E-AA71-B90C185E6617</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>34D8A52E-B846-4936-AD9E-6FFE68A15B04</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>EB967E47-65EC-4DFA-867B-896C55C2C06B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>34D8A52E-B846-4936-AD9E-6FFE68A15B04</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Alex Wolkov</string>
+	<key>description</key>
+	<string>Control your macs volume from alfred remote</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Remote Volume Control</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>mute</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>mute</string>
+				<key>triggername</key>
+				<string>Mute</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>28660937-2892-43F4-8181-7231D3400821</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>unmute</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>unmute</string>
+				<key>triggername</key>
+				<string>Unmute</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>EB967E47-65EC-4DFA-867B-896C55C2C06B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+	if q is equal to "mute" then		set volume with output muted		return true	end if	
+	if q is equal to "unmute" then		set volume without output muted		return true	end if	
+	if q is equal to "volume_up" then		set volume output volume (output volume of (get volume settings) + 10) --100%		return true	end if	
+	if q is equal to "volume_down" then		set volume output volume (output volume of (get volume settings) - 10) --100%		return true	end if	
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>34D8A52E-B846-4936-AD9E-6FFE68A15B04</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>volume_up</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>volume_up</string>
+				<key>triggername</key>
+				<string>Volume Up</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>D3183917-8152-4A7B-9E03-6810B6FA5E10</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>volume_down</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>volume_down</string>
+				<key>triggername</key>
+				<string>Volume Down</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>E0AED9ED-2848-466E-AA71-B90C185E6617</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>top - Opens Terminal.app and runs top
+
+Dinner Time - Says and shows “Dinner Time”
+
+Movie Checker - Opens 3 websites with the selected text in OS X</string>
+	<key>uidata</key>
+	<dict>
+		<key>28660937-2892-43F4-8181-7231D3400821</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>34D8A52E-B846-4936-AD9E-6FFE68A15B04</key>
+		<dict>
+			<key>ypos</key>
+			<real>180</real>
+		</dict>
+		<key>D3183917-8152-4A7B-9E03-6810B6FA5E10</key>
+		<dict>
+			<key>ypos</key>
+			<real>250</real>
+		</dict>
+		<key>E0AED9ED-2848-466E-AA71-B90C185E6617</key>
+		<dict>
+			<key>ypos</key>
+			<real>380</real>
+		</dict>
+		<key>EB967E47-65EC-4DFA-867B-896C55C2C06B</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>alexw.me</string>
+</dict>
+</plist>

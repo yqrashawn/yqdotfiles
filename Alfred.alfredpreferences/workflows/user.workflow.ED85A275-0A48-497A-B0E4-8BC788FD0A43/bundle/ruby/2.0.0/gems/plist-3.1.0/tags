@@ -1,0 +1,65 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	Development	//
+<<	lib/plist/generator.rb	/^    def <<(val)$/;"	f	language:Ruby	class:Plist.IndentedString
+<=>	lib/plist/generator.rb	/^  def <=> (other)$/;"	f	language:Ruby	class:Symbol
+Array	lib/plist/generator.rb	/^class Array #:nodoc:$/;"	c	language:Ruby
+Hash	lib/plist/generator.rb	/^class Hash #:nodoc:$/;"	c	language:Ruby
+IndentedString	lib/plist/generator.rb	/^  class IndentedString #:nodoc:$/;"	c	language:Ruby	class:Plist
+Listener	lib/plist/parser.rb	/^  class Listener$/;"	c	language:Ruby	class:Plist
+PArray	lib/plist/parser.rb	/^  class PArray < PTag$/;"	c	language:Ruby
+PData	lib/plist/parser.rb	/^  class PData < PTag$/;"	c	language:Ruby
+PDate	lib/plist/parser.rb	/^  class PDate < PTag$/;"	c	language:Ruby
+PDict	lib/plist/parser.rb	/^  class PDict < PTag$/;"	c	language:Ruby
+PFalse	lib/plist/parser.rb	/^  class PFalse < PTag$/;"	c	language:Ruby
+PInteger	lib/plist/parser.rb	/^  class PInteger < PTag$/;"	c	language:Ruby
+PKey	lib/plist/parser.rb	/^  class PKey < PTag$/;"	c	language:Ruby
+PList	lib/plist/parser.rb	/^  class PList < PTag$/;"	c	language:Ruby
+PReal	lib/plist/parser.rb	/^  class PReal < PTag$/;"	c	language:Ruby
+PString	lib/plist/parser.rb	/^  class PString < PTag$/;"	c	language:Ruby
+PTag	lib/plist/parser.rb	/^    def PTag::inherited( sub_class )$/;"	f	language:Ruby	class:PTag
+PTag	lib/plist/parser.rb	/^    def PTag::mappings$/;"	f	language:Ruby	class:PTag
+PTag	lib/plist/parser.rb	/^  class PTag$/;"	c	language:Ruby
+PTrue	lib/plist/parser.rb	/^  class PTrue < PTag$/;"	c	language:Ruby
+Plist	lib/plist.rb	/^module Plist$/;"	m	language:Ruby
+Plist	lib/plist/generator.rb	/^module Plist ; end$/;"	m	language:Ruby
+Plist	lib/plist/generator.rb	/^module Plist::Emit$/;"	m	language:Ruby
+Plist	lib/plist/parser.rb	/^  def Plist::parse_xml( filename_or_xml )$/;"	f	language:Ruby	class:Plist
+Plist	lib/plist/parser.rb	/^module Plist$/;"	m	language:Ruby
+StreamParser	lib/plist/parser.rb	/^  class StreamParser$/;"	c	language:Ruby	class:Plist
+Symbol	lib/plist/generator.rb	/^class Symbol #:nodoc:$/;"	c	language:Ruby
+comment	lib/plist/generator.rb	/^  def self.comment(content)$/;"	F	language:Ruby	class:Plist
+dump	lib/plist/generator.rb	/^  def self.dump(obj, envelope = true)$/;"	F	language:Ruby	class:Plist
+element_type	lib/plist/generator.rb	/^  def self.element_type(item)$/;"	F	language:Ruby	class:Plist
+initialize	lib/plist/generator.rb	/^    def initialize(str = "\\t")$/;"	f	language:Ruby	class:Plist.IndentedString
+initialize	lib/plist/parser.rb	/^    def initialize$/;"	f	language:Ruby	class:PTag
+initialize	lib/plist/parser.rb	/^    def initialize$/;"	f	language:Ruby	class:Plist.Listener
+initialize	lib/plist/parser.rb	/^    def initialize( plist_data_or_file, listener )$/;"	f	language:Ruby	class:Plist.StreamParser
+lower_indent	lib/plist/generator.rb	/^    def lower_indent$/;"	f	language:Ruby	class:Plist.IndentedString
+parse	lib/plist/parser.rb	/^    def parse$/;"	f	language:Ruby	class:Plist.StreamParser
+plist_node	lib/plist/generator.rb	/^  def self.plist_node(element)$/;"	F	language:Ruby	class:Plist
+raise_indent	lib/plist/generator.rb	/^    def raise_indent$/;"	f	language:Ruby	class:Plist.IndentedString
+save_plist	lib/plist/generator.rb	/^  def save_plist(filename)$/;"	f	language:Ruby	class:Plist
+save_plist	lib/plist/generator.rb	/^  def self.save_plist(obj, filename)$/;"	F	language:Ruby	class:Plist
+tag	lib/plist/generator.rb	/^  def self.tag(type, contents = '', &block)$/;"	F	language:Ruby	class:Plist
+tag_end	lib/plist/parser.rb	/^    def tag_end(name)$/;"	f	language:Ruby	class:Plist.Listener
+tag_start	lib/plist/parser.rb	/^    def tag_start(name, attributes)$/;"	f	language:Ruby	class:Plist.Listener
+text	lib/plist/parser.rb	/^    def text( contents )$/;"	f	language:Ruby	class:Plist.Listener
+to_plist	lib/plist/generator.rb	/^  def to_plist(envelope = true)$/;"	f	language:Ruby	class:Plist
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PArray
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PData
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PDate
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PDict
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PFalse
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PInteger
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PKey
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PList
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PReal
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PString
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PTag
+to_ruby	lib/plist/parser.rb	/^    def to_ruby$/;"	f	language:Ruby	class:PTrue
+to_s	lib/plist/generator.rb	/^    def to_s$/;"	f	language:Ruby	class:Plist.IndentedString
+wrap	lib/plist/generator.rb	/^  def self.wrap(contents)$/;"	F	language:Ruby	class:Plist

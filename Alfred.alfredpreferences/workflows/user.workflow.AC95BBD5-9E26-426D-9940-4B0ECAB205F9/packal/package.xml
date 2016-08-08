@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Flip Text</name>
+  <version>1.0</version>
+  <bundle>com.tildesoft.alfred.workflow.flip-text</bundle>
+  <updated>1427178372</updated>
+  <file>fliptext.alfredworkflow</file>
+</workflow>

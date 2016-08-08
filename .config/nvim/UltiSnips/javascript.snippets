@@ -18,3 +18,53 @@ endsnippet
 snippet ca "${}" i
 &{${1:variable name}}
 endsnippet
+
+snippet des "describe" b
+describe('${1:}', (${2:}) => {
+  it('${3:description}',() => {
+    ${4:expect}(${5:}).to.${6:}
+    });
+});
+endsnippet
+
+snippet exp "expect()" i
+expect(${1:}).to.${2:}
+endsnippet
+
+snippet es6 "jshint es6 comment" b
+/* jshint esversion: 6 */
+endsnippet
+
+snippet func "es6 func" b
+${1:const} ${2:name} = (${3:args}) => {
+  ${4:}
+}${5:;}
+endsnippet
+
+snippet fun "es6 func" i
+(${2:args}) => {
+  ${3:}
+}${4:;}
+endsnippet
+
+snippet foro "for...of" b
+for (let ${1:prop} of ${2:arr}){
+  ${3:}
+}
+endsnippet
+
+snippet fori "for...in" b
+for (let ${1:prop} in ${2:obj}){
+  ${3:}
+}
+endsnippet
+
+snippet it "chai it" i
+it('${1:should }${2:}', () => {
+  ${3:expect}(${4:}).to.${5:}
+});
+endsnippet
+
+snippet err "throw error" b
+throw new Error('${1:err msg}');
+endsnippet

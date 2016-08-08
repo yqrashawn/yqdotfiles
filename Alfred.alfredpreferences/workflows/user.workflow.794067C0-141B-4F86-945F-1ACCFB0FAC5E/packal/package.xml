@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Toggle/Enable/Disable Block All Incoming Connections</name>
+  <version>1.1</version>
+  <bundle>me.pasine.blockconnections</bundle>
+  <updated>1431384434</updated>
+  <file>block_all_incoming_connections.alfredworkflow</file>
+</workflow>

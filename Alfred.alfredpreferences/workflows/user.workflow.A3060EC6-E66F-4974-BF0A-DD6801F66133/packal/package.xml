@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>SpeedTest</name>
+  <version>1.0</version>
+  <bundle>com.chusiang.speedtest</bundle>
+  <updated>1463985531</updated>
+  <file>speedtest.alfredworkflow</file>
+</workflow>
