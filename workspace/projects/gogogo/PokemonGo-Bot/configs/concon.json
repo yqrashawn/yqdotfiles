@@ -1,7 +1,7 @@
 {
     "auth_service": "google",
     "username": "namy.19@gmail.com",
-    "password": "namy9999+",
+    "password": ";namy9999+",
     "location": "37.80913974983744,-122.4100112915039",
     "gmapkey": "AIzaSyATfe8_UKIPYV33kO7G8gzB8Oo_9-w2BxM",
     "tasks": [
@@ -286,7 +286,7 @@
       "Bulbasaur"                                                                         : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
       "Drowzee"                                                                           : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
       "Machop"                                                                            : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
-      "Psyduck"                                                                           : { "release_below_cp" : 470, "release_below_iv" : 0.13, "logic" : "or" },
+      "Psyduck"                                                                           : { "release_below_cp" : 750, "release_below_iv" : 0.13, "logic" : "or" },
       "Seel"                                                                              : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
       "Kabuto"                                                                            : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
       "Bellsprout"                                                                        : { "release_below_cp" : 11, "release_below_iv"  : 0.93, "logic" : "or" },
