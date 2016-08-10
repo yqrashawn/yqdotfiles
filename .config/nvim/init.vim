@@ -61,6 +61,7 @@ nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -182,7 +183,7 @@ let g:quickrun_config = {}
 "                             Autoformat                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "au BufWrite * :Autoformat
-let g:autoformat_verbosemode=1 " for debug
+let g:autoformat_verbosemode=0 " for debug
 map <leader><leader>0 :Autoformat<cr>
 let g:formatters_javascript = ['jscs']
 let g:formatters_json = ['js-beautify']
@@ -1124,12 +1125,15 @@ endif
 
 " Fugitive {
 if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
+    cno gitfindcommit Glog --grep=
+
     nnoremap <silent> <leader>gs :Gstatus<CR>
     nnoremap <silent> <leader>gd :Gdiff<CR>
     nnoremap <silent> <leader>gc :Gcommit<CR>
     nnoremap <silent> <leader>gb :Gblame<CR>
     nnoremap <silent> <leader>gl :Glog<CR>
     nnoremap <silent> <leader>gp :Git push<CR>
+    nnoremap <silent> <leader>gpp :Git pull<CR>
     nnoremap <silent> <leader>gr :Gread<CR>
     nnoremap <silent> <leader>gw :Gwrite<CR>
     nnoremap <silent> <leader>ge :Gedit<CR>
