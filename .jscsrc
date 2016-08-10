@@ -1,4 +1,10 @@
 {
     "preset": "airbnb",
-    "validateIndentation": 4
+    "requireSpaceBeforeBlockStatements": 1,
+    "validateIndentation": 4,
+    "requireSpaceBeforeKeywords": [
+    "else",
+    "while",
+    "catch"
+]
 }
