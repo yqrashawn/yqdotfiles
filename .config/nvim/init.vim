@@ -118,6 +118,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'mattn/ctrlp-register'
 Plug 'tacahiroy/ctrlp-funky'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/sessionman.vim'
@@ -156,13 +157,14 @@ Plug 'KabbAmine/vCoolor.vim'
 "Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
 Plug 'thinca/vim-quickrun'
-"Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/a.vim'
+Plug 't9md/vim-choosewin'
 "Plug 'rizzatti/dash.vim'
 Plug 'junegunn/seoul256.vim'
 "Plug 'junegunn/goyo.vim'
@@ -172,9 +174,16 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/mru.vim'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
 Plug 'vim-utils/vim-man'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 call plug#end()
 
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              choosewin                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:choosewin_overlay_enable = 1
+nmap  <C-w><C-f> <Plug>(choosewin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              Quickrun                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1072,6 +1081,8 @@ endif
 "nnoremap <silent> <D-t> :CtrlP<CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
 nnoremap <silent> <Leader>cc :FZF<CR>
+nmap <C-f> :Lines<CR>
+let g:fzf_buffers_jump = 1
 nnoremap <leader><leader><leader>cc <Plug>NERDCommenterComment
 "let g:ctrlp_custom_ignore = {
 "\ 'dir':  '\.git$\|\.hg$\|\.svn$',
