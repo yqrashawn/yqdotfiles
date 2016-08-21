@@ -96,8 +96,8 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'othree/yajs.vim'
 Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
-Plug 'rafi/vim-unite-issue'
-Plug 'Shougo/unite.vim'
+"Plug 'rafi/vim-unite-issue'
+"Plug 'Shougo/unite.vim'
 Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mtscout6/syntastic-local-eslint.vim'
@@ -157,7 +157,7 @@ Plug 'KabbAmine/vCoolor.vim'
 "Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "Plug 'benmills/vimux'
 Plug 'thinca/vim-quickrun'
-Plug 'Shougo/vimproc.vim'
+"Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
