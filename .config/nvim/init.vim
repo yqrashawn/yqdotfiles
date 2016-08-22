@@ -136,7 +136,7 @@ Plug 'vim-scripts/restore_view.vim'
 Plug 'mhinz/vim-signify' "show lines modified
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
-Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 "Plug 'tpope/vim-commentary'
@@ -295,6 +295,7 @@ let g:jsdoc_access_descriptions = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                nerdcommenter too many unsless issue                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let NERDSpaceDelims = 1
 nmap <leader>rccccccccc :NERDComComment
 nmap <leader>rcccccccccccn :NERDComNestedComment
 nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
@@ -642,11 +643,11 @@ endif
 "                             colorscheme                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"let g:seoul256_light_background = 256
+let g:seoul256_light_background = 256
 set background=dark " Assume a dark background
-"colorscheme solarized
-"colorscheme seoul256
-colorscheme gruvbox
+" colorscheme solarized
+colorscheme seoul256
+" colorscheme gruvbox
 
 
 " Allow to trigger background
@@ -782,7 +783,7 @@ set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic white
 
 " set nowrap                      " Do not wrap long lines
 set autoindent                  " Indent at the same level of the previous line
-set shiftwidth=4                " Use indents of 4 spaces
+set shiftwidth=2                " Use indents of 4 spaces
 set expandtab                   " Tabs are spaces, not tabs
 set tabstop=4                   " An indentation every four columns
 set softtabstop=4               " Let backspace delete indent
@@ -1026,6 +1027,7 @@ endif
 if isdirectory(expand("~/.vim/plugged/tabular"))
     nmap <Leader>a& :Tabularize /&<CR>
     vmap <Leader>a& :Tabularize /&<CR>
+    vmap <Leader>a\ :Tabularize /\<CR>
     nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
     vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
     nmap <Leader>a=> :Tabularize /=><CR>

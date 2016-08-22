@@ -4,15 +4,12 @@
     "browser",
     "jquery",
     "chai",
-    "ecma6",
-    "underscore",
-    "infer"
+    "ecma6"
   ],
   "loadEagerly": [
     "importantfile.js"
   ],
   "plugins": {
-    "threejs":{},
     "complete_strings":{},
     "modules":{},
     "node_resolve":{},
