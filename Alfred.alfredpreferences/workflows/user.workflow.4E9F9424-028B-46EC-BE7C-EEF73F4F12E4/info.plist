@@ -4,8 +4,6 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.alfredapp.vero.gettingstartedkeywords</string>
-	<key>category</key>
-	<string>Getting Started</string>
 	<key>connections</key>
 	<dict>
 		<key>77269867-DF3F-43FA-AD1A-893B32E5B492</key>
@@ -31,28 +29,9 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Getting Started - Keywords</string>
+	<string>bimsop</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>spaces</key>
-				<string></string>
-				<key>url</key>
-				<string>http://115.28.138.35:3000/</string>
-				<key>utf8</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>FBDBD78B-D80B-4A34-9623-DDBA9DCD3A0C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -71,6 +50,25 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>77269867-DF3F-43FA-AD1A-893B32E5B492</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>http://115.28.138.35:3000/</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>FBDBD78B-D80B-4A34-9623-DDBA9DCD3A0C</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
