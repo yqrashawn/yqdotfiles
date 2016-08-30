@@ -29,7 +29,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>jira</string>
+	<string>git</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -38,11 +38,11 @@
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>jira</string>
+				<string>git</string>
 				<key>subtext</key>
-				<string>Launch Bimsop Jira</string>
+				<string>Launch Bimsop Git</string>
 				<key>text</key>
-				<string>Launch Bimsop Jira</string>
+				<string>Launch Bimsop Git</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -61,7 +61,7 @@
 				<key>spaces</key>
 				<string></string>
 				<key>url</key>
-				<string>http://115.28.138.35:8080/secure/Dashboard.jspa</string>
+				<string>http://121.42.172.21:3000/</string>
 				<key>utf8</key>
 				<true/>
 			</dict>

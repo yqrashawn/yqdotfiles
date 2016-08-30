@@ -1,3 +1,10 @@
+if &nu == 1
+   set rnu
+elseif &rnu == 1
+   set nornu
+else
+   set nu
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                        get rid of *.*~ file                         "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -524,8 +531,7 @@ filetype indent on
 
 " Set to auto read when a file is changed from the outside
 set autoread
-set number
-set relativenumber
+"set relativenumber
 
 "Always show current position
 set ruler
@@ -772,7 +778,7 @@ endif
 
 set backspace=indent,eol,start  " Backspace for dummies
 set linespace=0                 " No extra spaces between rows
-set number                      " Line numbers on
+" set number                      " Line numbers on
 set showmatch                   " Show matching brackets/parenthesis
 set incsearch                   " Find as you type search
 set hlsearch                    " Highlight search terms
