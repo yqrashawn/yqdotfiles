@@ -1,6 +1,6 @@
 
-snippet vr "var require" b
-var ${1:variable name} = require('${2:module name}')${3:;}
+snippet re "const require" b
+const ${1:variable name} = require('${2:module name}')${3:;}
 endsnippet
 
 snippet req "require" i
@@ -21,10 +21,10 @@ endsnippet
 
 snippet des "describe" b
 describe('${1:}', (${2:}) => {
-  it('${3:description}',() => {
-    ${4:expect}(${5:}).to.${6:}
-    });
-});
+		it('${3:description}',() => {
+				${4:expect}(${5:}).to.${6:}
+				});
+		});
 endsnippet
 
 snippet exp "expect()" i
@@ -37,32 +37,32 @@ endsnippet
 
 snippet func "es6 func" b
 const ${1:name} = (${2:args}) => {
-  ${3:}
+	${3:}
 }${4:;}
 endsnippet
 
 snippet fun "es6 func" i
 (${2:args}) => {
-  ${3:}
+	${3:}
 }${4:;}
 endsnippet
 
 snippet foro "for...of" b
-for (let ${1:prop} of ${2:arr}){
-  ${3:}
+for (const ${1:prop} of ${2:arr}){
+	${3:}
 }
 endsnippet
 
 snippet fori "for...in" b
-for (let ${1:prop} in ${2:obj}){
-  ${3:}
+for (const ${1:prop} in ${2:obj}){
+	${3:}
 }
 endsnippet
 
 snippet it "chai it" i
 it('${1:should }${2:}', () => {
-  ${3:expect}(${4:}).to.${5:}
-});
+		${3:expect}(${4:}).to.${5:}
+		});
 endsnippet
 
 snippet err "throw error" b
@@ -71,6 +71,23 @@ endsnippet
 
 snippet el "else" i
 else{
-  ${1:func}
+	${1:func}
 }${2:}
+endsnippet
+
+snippet lint "eslint comment" b
+/* ${1:} */
+endsnippet
+
+snippet querytag "querySelectorAll" b
+const ${1:name} = document.querySelectorAll('${2:div}${3:#id or .class} ${4:}');${5:}
+endsnippet
+
+snippet switch "switch" b
+switch (className) {
+	case '${1:case1}':
+			  return ${2:func1};
+	default:
+			  return ${3:undefined};
+}
 endsnippet
