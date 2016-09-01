@@ -122,6 +122,10 @@ Plug 'junegunn/gv.vim'
 Plug 'spf13/vim-colors'
 "Plug 'itchyny/dictionary.vim'
 Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-endwise'
+Plug 'jceb/vim-orgmode'
+Plug 'xolox/vim-notes'
+Plug 'xolox/vim-misc'
 Plug 'tpope/vim-repeat'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -160,8 +164,10 @@ Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'gorodinskiy/vim-coloresque'
 "Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
 Plug 'KabbAmine/vCoolor.vim'
-"Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
+Plug 'maksimr/vim-jsbeautify',
 "Plug 'benmills/vimux'
 Plug 'thinca/vim-quickrun'
 "Plug 'Shougo/vimproc.vim'
@@ -184,8 +190,10 @@ Plug 'vim-utils/vim-man'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 call plug#end()
 
-
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              vim-notes                              "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+:let g:notes_directories = ['/Users/Rashawn/Library/Mobile\ Documents/com~apple~CloudDocs/']
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              choosewin                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -258,7 +266,7 @@ nmap <silent> <leader>l <Plug>(jsdoc)
 nmap <leader>,, :set wrap<CR>
 let leader='\'
 nmap <F8> :TagbarToggle<CR>
-imap <C-j> <CR>
+imap <C-j> <cr>
 nnoremap <C-w>= <C-w>+
 nnoremap <C-w><C-=> <C-w>+
 nnoremap <C-w><C--> <C-w>-
