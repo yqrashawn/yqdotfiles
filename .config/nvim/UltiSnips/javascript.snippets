@@ -21,10 +21,10 @@ endsnippet
 
 snippet des "describe" b
 describe('${1:}', (${2:}) => {
-		it('${3:description}',() => {
-				${4:expect}(${5:}).to.${6:}
-				});
-		});
+  it('${3:description}',() => {
+    ${4:expect}(${5:}).to.${6:}
+    });
+  });
 endsnippet
 
 snippet exp "expect()" i
@@ -37,32 +37,32 @@ endsnippet
 
 snippet func "es6 func" b
 const ${1:name} = (${2:args}) => {
-	${3:}
+ ${3:}
 }${4:;}
 endsnippet
 
 snippet fun "es6 func" i
 (${2:args}) => {
-	${3:}
+ ${3:}
 }${4:;}
 endsnippet
 
 snippet foro "for...of" b
 for (const ${1:prop} of ${2:arr}){
-	${3:}
+ ${3:}
 }
 endsnippet
 
 snippet fori "for...in" b
 for (const ${1:prop} in ${2:obj}){
-	${3:}
+ ${3:}
 }
 endsnippet
 
 snippet it "chai it" i
 it('${1:should }${2:}', () => {
-		${3:expect}(${4:}).to.${5:}
-		});
+  ${3:expect}(${4:}).to.${5:}
+  });
 endsnippet
 
 snippet err "throw error" b
@@ -71,7 +71,7 @@ endsnippet
 
 snippet el "else" i
 else{
-	${1:func}
+ ${1:func}
 }${2:}
 endsnippet
 
@@ -85,11 +85,15 @@ endsnippet
 
 snippet switch "switch" b
 switch (className) {
-	case '${1:case1}':
-			  return ${2:func1};
-	default:
-			  return ${3:undefined};
+ case '${1:case1}':
+     return ${2:func1};
+ default:
+     return ${3:undefined};
 }
 endsnippet
 
-
+snippet obj "no fori and foro" b
+Object.keys(${1:obj}).forEach((v,i) => {
+${2:func}
+  });
+endsnippet

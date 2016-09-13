@@ -1,9 +1,9 @@
 if &nu == 1
-   set rnu
+  set rnu
 elseif &rnu == 1
-   set nornu
+  set nornu
 else
-   set nu
+  set nu
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                        get rid of *.*~ file                         "
@@ -37,16 +37,16 @@ let g:jira_password = 'namy0000'
 
 " Customize
 let g:unite_source_issue_jira_priority_table = {
-            \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
+      \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
 
 let g:unite_source_issue_jira_status_table = {
-            \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
-            \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
-            \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
+      \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
+      \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
+      \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
 
 let g:unite_source_issue_jira_type_table = {
-            \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
-            \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
+      \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
+      \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -55,9 +55,9 @@ let g:unite_source_issue_jira_type_table = {
 
 set ttimeoutlen=30
 augroup FastEscape
-    autocmd!
-    au InsertEnter * set timeoutlen=0
-    au InsertLeave * set timeoutlen=1000
+  autocmd!
+  au InsertEnter * set timeoutlen=0
+  au InsertLeave * set timeoutlen=1000
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -81,9 +81,9 @@ let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
 let g:syntastic_javascript_jscs_args = '--preset=airbnb'
 let g:syntastic_loc_list_height = 5
 let g:syntastic_mode_map = {
-            \ "mode": "passive",
-            \ "active_filetypes": ["json"],
-            \ "passive_filetypes": []}
+      \ "mode": "passive",
+      \ "active_filetypes": ["json"],
+      \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -101,6 +101,8 @@ call plug#begin('~/.vim/plugged')
 "for jira
 Plug 'Chiel92/vim-autoformat'
 Plug 'othree/yajs.vim'
+Plug 'sheerun/vim-polyglot'
+" Plug 'carlitux/deoplete-ternjs'
 Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
 "Plug 'rafi/vim-unite-issue'
@@ -127,6 +129,7 @@ Plug 'jceb/vim-orgmode'
 Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
 Plug 'tpope/vim-repeat'
+Plug 'git-time-metric/gtm-vim-plugin'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-register'
@@ -151,6 +154,7 @@ Plug 'mhinz/vim-signify' "show lines modified
 Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'tpope/vim-commentary'
 Plug 'godlygeek/tabular'
 Plug 'luochen1990/rainbow'
@@ -182,14 +186,36 @@ Plug 't9md/vim-choosewin'
 Plug 'junegunn/seoul256.vim'
 "Plug 'junegunn/goyo.vim'
 Plug 'Valloric/YouCompleteMe'
-"Plug 'ternjs/tern_for_vim'
+" Plug 'ternjs/tern_for_vim'
 "Plug 'benmills/vimux'
 Plug 'vim-scripts/mru.vim'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
 Plug 'vim-utils/vim-man'
+" Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 call plug#end()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                  vim-better-javascript-completion                   "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vimjs#casesensistive = 1
+" Enabled by default. flip the value to make completion matches case insensitive
 
+let g:vimjs#smartcomplete = 1
+" Disabled by default. Enabling this will let vim complete matches at any location
+" e.g. typing 'ocument' will suggest 'document' if enabled.
+
+let g:vimjs#chromeapis = 1
+" Disabled by default. Toggling this will enable completion for a number of Chrome's JavaScript extension APIs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              deoplete                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use deoplete.
+" let g:deoplete#enable_at_startup = 1
+" let g:tern_request_timeout = 1
+" let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
+" Use tern_for_vim.
+" let g:tern#command = ["tern"]
+" let g:tern#arguments = ["--persistent"]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-notes                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -235,8 +261,8 @@ let g:markdown_syntax_conceal = 1
 " https://github.com/ggreer/the_silver_searcher
 let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts =
-            \ '-i --vimgrep --hidden --ignore ' .
-            \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+      \ '-i --vimgrep --hidden --ignore ' .
+      \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
 let g:unite_source_grep_recursive_opt = ''
 "elseif executable('ack-grep')
 "" Use ack
@@ -337,36 +363,36 @@ let g:ackprg = 'ag --vimgrep'
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)
 function! WrapForTmux(s)
-    if !exists('$TMUX')
-        return a:s
-    endif
+  if !exists('$TMUX')
+    return a:s
+  endif
 
-    let tmux_start = "\<Esc>Ptmux;"
-    let tmux_end = "\<Esc>\\"
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
 
-    return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
 endfunction
 
 let &t_SI .= WrapForTmux("\<Esc>[?2004h")
 let &t_EI .= WrapForTmux("\<Esc>[?2004l")
 
 function! XTermPasteBegin()
-    set pastetoggle=<Esc>[201~
-    set paste
-    return ""
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
 endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 
 if exists('$ITERM_PROFILE')
-    if exists('$TMUX')
-        let &t_SI = "\<Esc>[3 q"
-        let &t_EI = "\<Esc>[0 q"
-    else
-        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-    endif
+  if exists('$TMUX')
+    let &t_SI = "\<Esc>[3 q"
+    let &t_EI = "\<Esc>[0 q"
+  else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  endif
 end
 
 
@@ -377,6 +403,15 @@ end
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             vim-airline                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"gtm airline
+let g:gtm_plugin_status_enabled = 1
+function! AirlineInit()
+  if exists('*GTMStatusline')
+    call airline#parts#define_function('gtmstatus', 'GTMStatusline')
+    let g:airline_section_b = airline#section#create([g:airline_section_b, ' ', '[', 'gtmstatus', ']'])
+  endif
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
 
 let g:airline#extensions#tabline#buffer_nr_show = 0
 " 关闭状态显示空白符号计数,这个对我用处不大"
@@ -477,26 +512,26 @@ autocmd BufLeave,FocusLost * silent! wall
 "autocmd VimEnter  * silent! :split | term
 
 let g:ycm_semantic_triggers =  {
-            \   'c' : ['->', '.'],
-            \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-            \             're!\[.*\]\s'],
-            \   'ocaml' : ['.', '#'],
-            \   'cpp,objcpp' : ['->', '.', '::'],
-            \   'perl' : ['->'],
-            \   'php' : ['->', '::'],
-            \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
-            \   'ruby' : ['.', '::'],
-            \   'lua' : ['.', ':'],
-            \   'erlang' : [':'],
-            \ }
+      \   'c' : ['->', '.'],
+      \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+      \             're!\[.*\]\s'],
+      \   'ocaml' : ['.', '#'],
+      \   'cpp,objcpp' : ['->', '.', '::'],
+      \   'perl' : ['->'],
+      \   'php' : ['->', '::'],
+      \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+      \   'ruby' : ['.', '::'],
+      \   'lua' : ['.', ':'],
+      \   'erlang' : [':'],
+      \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on
 "    means that you can undo even when you close a buffer/VIM
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 try
-    set undodir=~/.vim_runtime/temp_dirs/undodir
-    set undofile
+  set undodir=~/.vim_runtime/temp_dirs/undodir
+  set undofile
 catch
 endtry
 
@@ -659,7 +694,7 @@ let g:startify_bookmarks = ['~/workspace']
 " Arrow Key Fix {
 " https://github.com/spf13/spf13-vim/issues/780
 if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
-    inoremap <silent> <C-[>OC <RIGHT>
+  inoremap <silent> <C-[>OC <RIGHT>
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -675,13 +710,13 @@ colorscheme seoul256
 
 " Allow to trigger background
 function! ToggleBG()
-    let s:tbg = &background
-    " Inversion
-    if s:tbg == "dark"
-        set background=light
-    else
-        set background=dark
-    endif
+  let s:tbg = &background
+  " Inversion
+  if s:tbg == "dark"
+    set background=light
+  else
+    set background=dark
+  endif
 endfunction
 noremap <leader>bg :call ToggleBG()<CR>
 
@@ -695,11 +730,11 @@ set mousehide               " Hide the mouse cursor while typing
 scriptencoding utf-8
 
 if has('clipboard')
-    if has('unnamedplus')  " When possible use + register for copy-paste
-        set clipboard=unnamed,unnamedplus
-    else         " On mac and Windows, use * register for copy-paste
-        set clipboard=unnamed
-    endif
+  if has('unnamedplus')  " When possible use + register for copy-paste
+    set clipboard=unnamed,unnamedplus
+  else         " On mac and Windows, use * register for copy-paste
+    set clipboard=unnamed
+  endif
 endif
 "打开新buffer时 目录自动移动到新buffer文件的位置
 autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
@@ -719,30 +754,30 @@ au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 " Restore cursor to file position in previous editing session
 function! ResCur()
-    if line("'\"") <= line("$")
-        silent! normal! g`"
-        return 1
-    endif
+  if line("'\"") <= line("$")
+    silent! normal! g`"
+    return 1
+  endif
 endfunction
 
 augroup resCur
-    autocmd!
-    autocmd BufWinEnter * call ResCur()
+  autocmd!
+  autocmd BufWinEnter * call ResCur()
 augroup END
 
 " Setting up the directories {
 if has('persistent_undo')
-    set undofile                " So is persistent undo ...
-    set undolevels=1000         " Maximum number of changes that can be undone
-    set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+  set undofile                " So is persistent undo ...
+  set undolevels=1000         " Maximum number of changes that can be undone
+  set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
 endif
 
 " To disable views add the following to your .vimrc.before.local file:
 " Add exclusions to mkview and loadview
 " eg: *.*, svn-commit.tmp
 let g:skipview_files = [
-            \ '\[example pattern\]'
-            \ ]
+      \ '\[example pattern\]'
+      \ ]
 
 " Vim UI {
 
@@ -764,24 +799,24 @@ highlight clear LineNr          " Current line number row will have same backgro
 "highlight clear CursorLineNr    " Remove highlight color from current line number
 
 if has('cmdline_info')
-    set ruler                   " Show the ruler
-    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
-    set showcmd                 " Show partial commands in status line and
-    " Selected characters/lines in visual mode
+  set ruler                   " Show the ruler
+  set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
+  set showcmd                 " Show partial commands in status line and
+  " Selected characters/lines in visual mode
 endif
 
 if has('statusline')
-    set laststatus=2
+  set laststatus=2
 
-    " Broken down into easily includeable segments
-    set statusline=%<%f\                     " Filename
-    set statusline+=%w%h%m%r                 " Options
-    if !exists('g:override_spf13_bundles')
-        set statusline+=%{fugitive#statusline()} " Git Hotness
-    endif
-    set statusline+=\ [%{&ff}/%Y]            " Filetype
-    set statusline+=\ [%{getcwd()}]          " Current dir
-    set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+  " Broken down into easily includeable segments
+  set statusline=%<%f\                     " Filename
+  set statusline+=%w%h%m%r                 " Options
+  if !exists('g:override_spf13_bundles')
+    set statusline+=%{fugitive#statusline()} " Git Hotness
+  endif
+  set statusline+=\ [%{&ff}/%Y]            " Filetype
+  set statusline+=\ [%{getcwd()}]          " Current dir
+  set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
 endif
 
 set backspace=indent,eol,start  " Backspace for dummies
@@ -844,31 +879,31 @@ execute "noremap " . s:spf13_edit_config_mapping " :call <SID>EditSpf13Config()<
 "execute "noremap " . s:spf13_apply_config_mapping  " :source ~/.config/nvim/init.vim<CR>"
 
 function! s:ExpandFilenameAndExecute(command, file)
-    execute a:command . " " . expand(a:file, ":p")
+  execute a:command . " " . expand(a:file, ":p")
 endfunction
 
 function! s:EditSpf13Config()
-    call <SID>ExpandFilenameAndExecute("tabedit", "~/.config/nvim/init.vim")
-    "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before")
-    "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles")
+  call <SID>ExpandFilenameAndExecute("tabedit", "~/.config/nvim/init.vim")
+  "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before")
+  "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles")
 
-    "execute bufwinnr(".vimrc") . "wincmd w"
-    "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.local")
-    "wincmd l
-    "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before.local")
-    "wincmd l
-    "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles.local")
+  "execute bufwinnr(".vimrc") . "wincmd w"
+  "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.local")
+  "wincmd l
+  "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before.local")
+  "wincmd l
+  "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles.local")
 
-    "        if <SID>IsSpf14Fork()
-    "            execute bufwinnr(".vimrc") . "wincmd w"
-    "            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.fork")
-    "            wincmd l
-    "            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.fork")
-    "            wincmd l
-    "            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.fork")
-    "        endif
+  "        if <SID>IsSpf14Fork()
+  "            execute bufwinnr(".vimrc") . "wincmd w"
+  "            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.fork")
+  "            wincmd l
+  "            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.fork")
+  "            wincmd l
+  "            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.fork")
+  "        endif
 
-    "        execute bufwinnr(".vimrc.local") . "wincmd w"
+  "        execute bufwinnr(".vimrc.local") . "wincmd w"
 endfunction
 
 
@@ -880,15 +915,15 @@ let g:indent_guides_enable_on_vim_startup = 1
 "endif
 
 function! WrapRelativeMotion(key, ...)
-    let vis_sel=""
-    if a:0
-        let vis_sel="gv"
-    endif
-    if &wrap
-        execute "normal!" vis_sel . "g" . a:key
-    else
-        execute "normal!" vis_sel . a:key
-    endif
+  let vis_sel=""
+  if a:0
+    let vis_sel="gv"
+  endif
+  if &wrap
+    execute "normal!" vis_sel . "g" . a:key
+  else
+    execute "normal!" vis_sel . a:key
+  endif
 endfunction
 
 "" Map g* keys in Normal, Operator-pending, and Visual+select
@@ -910,15 +945,15 @@ endfunction
 "vnoremap ^ :<C-U>call WrapRelativeMotion("^", 1)<CR>
 
 if has("user_commands")
-    command! -bang -nargs=* -complete=file E e<bang> <args>
-    command! -bang -nargs=* -complete=file W w<bang> <args>
-    command! -bang -nargs=* -complete=file Wq wq<bang> <args>
-    command! -bang -nargs=* -complete=file WQ wq<bang> <args>
-    command! -bang Wa wa<bang>
-    command! -bang WA wa<bang>
-    command! -bang Q q<bang>
-    command! -bang QA qa<bang>
-    command! -bang Qa qa<bang>
+  command! -bang -nargs=* -complete=file E e<bang> <args>
+  command! -bang -nargs=* -complete=file W w<bang> <args>
+  command! -bang -nargs=* -complete=file Wq wq<bang> <args>
+  command! -bang -nargs=* -complete=file WQ wq<bang> <args>
+  command! -bang Wa wa<bang>
+  command! -bang WA wa<bang>
+  command! -bang Q q<bang>
+  command! -bang QA qa<bang>
+  command! -bang Qa qa<bang>
 endif
 
 "cmap Tabe tabe
@@ -998,10 +1033,10 @@ nnoremap <silent> <leader>q ZZ
 
 """""""""""omnicomplete
 if has("autocmd") && exists("+omnifunc")
-    autocmd Filetype *
-                \if &omnifunc == "" |
-                \setlocal omnifunc=syntaxcomplete#Complete |
-                \endif
+  autocmd Filetype *
+        \if &omnifunc == "" |
+        \setlocal omnifunc=syntaxcomplete#Complete |
+        \endif
 endif
 
 hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
@@ -1031,49 +1066,49 @@ au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
 
 " NerdTree {
 if isdirectory(expand("~/.vim/plugged/nerdtree"))
-    map <C-e> :NERDTreeToggle<CR>
-    map <leader>e :NERDTreeFind<CR>
-    " nmap <leader>nt :NERDTreeFind<CR>
+  map <C-e> :NERDTreeToggle<CR>
+  map <leader>e :NERDTreeFind<CR>
+  " nmap <leader>nt :NERDTreeFind<CR>
 
-    let NERDTreeShowBookmarks=1
-    let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
-    let NERDTreeChDirMode=0
-    let NERDTreeQuitOnOpen=1
-    let NERDTreeMouseMode=2
-    let NERDTreeShowHidden=1
-    let NERDTreeKeepTreeInNewTab=1
-    let g:nerdtree_tabs_open_on_gui_startup=0
+  let NERDTreeShowBookmarks=1
+  let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
+  let NERDTreeChDirMode=0
+  let NERDTreeQuitOnOpen=1
+  let NERDTreeMouseMode=2
+  let NERDTreeShowHidden=1
+  let NERDTreeKeepTreeInNewTab=1
+  let g:nerdtree_tabs_open_on_gui_startup=0
 endif
 " }
 
 " Tabularize {
 if isdirectory(expand("~/.vim/plugged/tabular"))
-    nmap <Leader>a& :Tabularize /&<CR>
-    vmap <Leader>a& :Tabularize /&<CR>
-    vmap <Leader>a\ :Tabularize /\<CR>
-    nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
-    vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
-    nmap <Leader>a=> :Tabularize /=><CR>
-    vmap <Leader>a=> :Tabularize /=><CR>
-    nmap <Leader>a: :Tabularize /:<CR>
-    vmap <Leader>a: :Tabularize /:<CR>
-    nmap <Leader>a:: :Tabularize /:\zs<CR>
-    vmap <Leader>a:: :Tabularize /:\zs<CR>
-    nmap <Leader>a, :Tabularize /,<CR>
-    vmap <Leader>a, :Tabularize /,<CR>
-    nmap <Leader>a,, :Tabularize /,\zs<CR>
-    vmap <Leader>a,, :Tabularize /,\zs<CR>
-    nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-    vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+  nmap <Leader>a& :Tabularize /&<CR>
+  vmap <Leader>a& :Tabularize /&<CR>
+  vmap <Leader>a\ :Tabularize /\<CR>
+  nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
+  vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
+  nmap <Leader>a=> :Tabularize /=><CR>
+  vmap <Leader>a=> :Tabularize /=><CR>
+  nmap <Leader>a: :Tabularize /:<CR>
+  vmap <Leader>a: :Tabularize /:<CR>
+  nmap <Leader>a:: :Tabularize /:\zs<CR>
+  vmap <Leader>a:: :Tabularize /:\zs<CR>
+  nmap <Leader>a, :Tabularize /,<CR>
+  vmap <Leader>a, :Tabularize /,<CR>
+  nmap <Leader>a,, :Tabularize /,\zs<CR>
+  vmap <Leader>a,, :Tabularize /,\zs<CR>
+  nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+  vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
 endif
 " }
 
 " Session List {
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
 if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
-    nmap <leader>sl :SessionList<CR>
-    nmap <leader>ss :SessionSave<CR>
-    "nmap <leader>sc :SessionClose<CR>
+  nmap <leader>sl :SessionList<CR>
+  nmap <leader>ss :SessionSave<CR>
+  "nmap <leader>sc :SessionClose<CR>
 endif
 " }
 
@@ -1085,7 +1120,7 @@ let g:vim_json_syntax_conceal = 0
 " PyMode {
 " Disable if python support not present
 if !has('python') && !has('python3')
-    let g:pymode = 0
+  let g:pymode = 0
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1105,68 +1140,68 @@ nnoremap <leader><leader><leader>cc <Plug>NERDCommenterComment
 "\ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 
 if executable('ag')
-    let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
-    let g:ackprg = 'ag --vimgrep'
+  let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
+  let g:ackprg = 'ag --vimgrep'
 elseif executable('ack-grep')
-    let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
+  let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
 elseif executable('ack')
-    let s:ctrlp_fallback = 'ack %s --nocolor -f'
-    " On Windows use "dir" as fallback command.
-    "elseif WINDOWS()
-    "    let s:ctrlp_fallback = 'dir %s /-n /b /s /a-d'
-    "    else
-    "    let s:ctrlp_fallback = 'find %s -type f'
-    "    endif
-    if exists("g:ctrlp_user_command")
-        unlet g:ctrlp_user_command
-    endif
-    let g:ctrlp_user_command = {
-                \ 'types': {
-                \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-                \ },
-                \ 'fallback': s:ctrlp_fallback
-                \ }
+  let s:ctrlp_fallback = 'ack %s --nocolor -f'
+  " On Windows use "dir" as fallback command.
+  "elseif WINDOWS()
+  "    let s:ctrlp_fallback = 'dir %s /-n /b /s /a-d'
+  "    else
+  "    let s:ctrlp_fallback = 'find %s -type f'
+  "    endif
+  if exists("g:ctrlp_user_command")
+    unlet g:ctrlp_user_command
+  endif
+  let g:ctrlp_user_command = {
+        \ 'types': {
+        \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+        \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+        \ },
+        \ 'fallback': s:ctrlp_fallback
+        \ }
 
-    if isdirectory(expand("~/.vim/plugged/ctrlp-funky/"))
-        " CtrlP extensions
-        let g:ctrlp_extensions = ['funky']
+  if isdirectory(expand("~/.vim/plugged/ctrlp-funky/"))
+    " CtrlP extensions
+    let g:ctrlp_extensions = ['funky']
 
-        "funky
-        nnoremap <Leader>fu :CtrlPFunky<Cr>
-    endif
+    "funky
+    nnoremap <Leader>fu :CtrlPFunky<Cr>
+  endif
 endif
 "}
 
 " TagBar {
 if isdirectory(expand("~/.vim/plugged/tagbar/"))
-    nnoremap <silent> <leader>tt :TagbarToggle<CR>
+  nnoremap <silent> <leader>tt :TagbarToggle<CR>
 endif
 "}
 
 " Rainbow {
 if isdirectory(expand("~/.vim/plugged/rainbow/"))
-    let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
+  let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 endif
 "}
 
 " Fugitive {
 if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
-    cno gitfindcommit Glog --grep=
+  cno gitfindcommit Glog --grep=
 
-    nnoremap <silent> <leader>gs :Gstatus<CR>
-    nnoremap <silent> <leader>gd :Gdiff<CR>
-    nnoremap <silent> <leader>gc :Gcommit<CR>
-    nnoremap <silent> <leader>gb :Gblame<CR>
-    nnoremap <silent> <leader>gl :Glog<CR>
-    nnoremap <silent> <leader>gp :Git push<CR>
-    nnoremap <silent> <leader>gpp :Git pull<CR>
-    nnoremap <silent> <leader>gr :Gread<CR>
-    nnoremap <silent> <leader>gw :Gwrite<CR>
-    nnoremap <silent> <leader>ge :Gedit<CR>
-    " Mnemonic _i_nteractive
-    nnoremap <silent> <leader>gi :Git add -p %<CR>
-    nnoremap <silent> <leader>gg :SignifyToggle<CR>
+  nnoremap <silent> <leader>gs :Gstatus<CR>
+  nnoremap <silent> <leader>gd :Gvdiff<CR>
+  nnoremap <silent> <leader>gc :Gcommit<CR>
+  nnoremap <silent> <leader>gb :Gblame<CR>
+  nnoremap <silent> <leader>gl :Glog<CR>
+  nnoremap <silent> <leader>gp :Git push<CR>
+  nnoremap <silent> <leader>gpp :Git pull<CR>
+  nnoremap <silent> <leader>gr :Gread<CR>
+  nnoremap <silent> <leader>gw :Gwrite<CR>
+  nnoremap <silent> <leader>ge :Gedit<CR>
+  " Mnemonic _i_nteractive
+  nnoremap <silent> <leader>gi :Git add -p %<CR>
+  nnoremap <silent> <leader>gg :SignifyToggle<CR>
 endif
 "}
 
@@ -1183,7 +1218,7 @@ autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 " $ `cabal install ghcmod` if missing and ensure
 " ~/.cabal/bin is in your $PATH.
 if !executable("ghcmod")
-    autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+  autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 endif
 
 " For snippet_complete marker.
@@ -1197,21 +1232,21 @@ endif
 "set completeopt-=preview
 " Shell command {
 function! s:RunShellCommand(cmdline)
-    botright new
+  botright new
 
-    setlocal buftype=nofile
-    setlocal bufhidden=delete
-    setlocal nobuflisted
-    setlocal noswapfile
-    setlocal nowrap
-    setlocal filetype=shell
-    setlocal syntax=shell
+  setlocal buftype=nofile
+  setlocal bufhidden=delete
+  setlocal nobuflisted
+  setlocal noswapfile
+  setlocal nowrap
+  setlocal filetype=shell
+  setlocal syntax=shell
 
-    call setline(1, a:cmdline)
-    call setline(2, substitute(a:cmdline, '.', '=', 'g'))
-    execute 'silent $read !' . escape(a:cmdline, '%#')
-    setlocal nomodifiable
-    1
+  call setline(1, a:cmdline)
+  call setline(2, substitute(a:cmdline, '.', '=', 'g'))
+  execute 'silent $read !' . escape(a:cmdline, '%#')
+  setlocal nomodifiable
+  1
 endfunction
 
 command! -complete=file -nargs=+ Shell call s:RunShellCommand(<q-args>)
