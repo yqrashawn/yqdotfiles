@@ -1189,13 +1189,16 @@ endif
 if isdirectory(expand("~/.vim/plugged/vim-fugitive/"))
   cno gitfindcommit Glog --grep=
 
+  nnoremap <silent> <leader>gca :te git commit --verbose --all<CR>
+  nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
+  nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
+  nnoremap <silent> <leader>gws :te git status --short<CR>
   nnoremap <silent> <leader>gs :Gstatus<CR>
   nnoremap <silent> <leader>gd :Gvdiff<CR>
   nnoremap <silent> <leader>gc :Gcommit<CR>
   nnoremap <silent> <leader>gb :Gblame<CR>
   nnoremap <silent> <leader>gl :Glog<CR>
   nnoremap <silent> <leader>gp :Git push<CR>
-  nnoremap <silent> <leader>gpp :Git pull<CR>
   nnoremap <silent> <leader>gr :Gread<CR>
   nnoremap <silent> <leader>gw :Gwrite<CR>
   nnoremap <silent> <leader>ge :Gedit<CR>
