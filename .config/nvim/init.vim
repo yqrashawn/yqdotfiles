@@ -701,10 +701,10 @@ endif
 "                             colorscheme                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:seoul256_light_background = 256
 set background=dark " Assume a dark background
 " colorscheme solarized
 colorscheme seoul256
+let g:seoul256_light_background = 252
 " colorscheme gruvbox
 
 
