@@ -98,21 +98,17 @@ set ttimeoutlen=10
 call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'mattn/webapi-vim'
-Plug 'tyru/open-browser.vim'
-Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
 Plug 'git-time-metric/gtm-vim-plugin'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-register'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'vim-scripts/sessionman.vim'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
 Plug 'easymotion/vim-easymotion'
@@ -130,7 +126,6 @@ Plug 'luochen1990/rainbow'
 Plug 'majutsushi/tagbar'
 Plug 'honza/vim-snippets'
 Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'groenewege/vim-less', { 'for': 'less' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
@@ -154,6 +149,8 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 "for jira
 " Plug 'othree/yajs.vim'
 " Plug 'carlitux/deoplete-ternjs'
+" Plug 'tyru/open-browser.vim'
+" Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 "Plug 'rafi/vim-unite-issue'
 "Plug 'Shougo/unite.vim'
 " Plug 'vimoutliner/vimoutliner'
@@ -166,6 +163,8 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 "Plug 'altercation/vim-colors-solarized'
 "Plug 'itchyny/dictionary.vim'
 " Plug 'tpope/vim-endwise'
+" Plug 'groenewege/vim-less', { 'for': 'less' }
+" Plug 'vim-scripts/sessionman.vim'
 " Plug 'jceb/vim-orgmode'
 " Plug 'xolox/vim-notes'
 " Plug 'xolox/vim-misc'
@@ -1103,12 +1102,12 @@ endif
 " }
 
 " Session List {
-set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
-  nmap <leader>sl :SessionList<CR>
-  nmap <leader>ss :SessionSave<CR>
-  "nmap <leader>sc :SessionClose<CR>
-endif
+" set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
+" if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
+  " nmap <leader>sl :SessionList<CR>
+  " nmap <leader>ss :SessionSave<CR>
+  " "nmap <leader>sc :SessionClose<CR>
+" endif
 " }
 
 " JSON {
