@@ -96,51 +96,25 @@ set ttimeoutlen=10
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
-"Plug 'thinca/vim-prettyprint'
-"Plug 'thinca/vim-ref'
-"for jira
 Plug 'Chiel92/vim-autoformat'
-" Plug 'othree/yajs.vim'
-Plug 'sheerun/vim-polyglot',{'for':'javascript'}
-" Plug 'carlitux/deoplete-ternjs'
 Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
-"Plug 'rafi/vim-unite-issue'
-"Plug 'Shougo/unite.vim'
-" Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
-" Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
-" Plug 'frankier/neovim-colors-solarized-truecolor-only'
-"Plug 'MarcWeber/vim-addon-mw-utils'
-"Plug 'tomtom/tlib_vim'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
-" Plug 'junegunn/gv.vim'
-"Plug 'ervandew/supertab'
-"Plug 'altercation/vim-colors-solarized'
-"Plug 'itchyny/dictionary.vim'
 Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-endwise'
-" Plug 'jceb/vim-orgmode'
-" Plug 'xolox/vim-notes'
-" Plug 'xolox/vim-misc'
 Plug 'tpope/vim-repeat'
 Plug 'git-time-metric/gtm-vim-plugin'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-register'
-" Plug 'tacahiroy/ctrlp-funky'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/sessionman.vim'
-"Plug 'matchit.zip'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
-" Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'morhetz/gruvbox'
-" Plug 'bling/vim-bufferline'
 Plug 'easymotion/vim-easymotion'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
@@ -148,13 +122,9 @@ Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify' "show lines modified
-"Plug 'gcmt/wildfire.vim' "press enter to select words
-"Plug 'reedes/vim-litecorrect'
 Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'tpope/vim-commentary'
 Plug 'godlygeek/tabular'
 Plug 'luochen1990/rainbow'
 Plug 'majutsushi/tagbar'
@@ -162,36 +132,65 @@ Plug 'honza/vim-snippets'
 Plug 'elzr/vim-json', { 'for': 'json' }
 Plug 'groenewege/vim-less', { 'for': 'less' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-" Plug 'briancollins/vim-jst', { 'for': 'javascript' }
 Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
-"Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
-" Plug 'KabbAmine/vCoolor.vim'
 Plug 'maksimr/vim-jsbeautify',
-"Plug 'benmills/vimux'
-" Plug 'thinca/vim-quickrun'
-"Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
-"Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
-" Plug 'vim-scripts/a.vim'
 Plug 't9md/vim-choosewin' "选择窗口
-"Plug 'rizzatti/dash.vim'
-Plug 'junegunn/seoul256.vim'
-"Plug 'junegunn/goyo.vim'
+Plug 'vim-utils/vim-man'
 Plug 'Valloric/YouCompleteMe'
+Plug 'vim-scripts/mru.vim'
+Plug 'junegunn/seoul256.vim'
+Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+" Plug 'sheerun/vim-polyglot',{'for':'javascript'}
+"Plug 'thinca/vim-prettyprint'
+"Plug 'thinca/vim-ref'
+"for jira
+" Plug 'othree/yajs.vim'
+" Plug 'carlitux/deoplete-ternjs'
+"Plug 'rafi/vim-unite-issue'
+"Plug 'Shougo/unite.vim'
+" Plug 'vimoutliner/vimoutliner'
+" Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
+" Plug 'frankier/neovim-colors-solarized-truecolor-only'
+"Plug 'MarcWeber/vim-addon-mw-utils'
+"Plug 'tomtom/tlib_vim'
+" Plug 'junegunn/gv.vim'
+"Plug 'ervandew/supertab'
+"Plug 'altercation/vim-colors-solarized'
+"Plug 'itchyny/dictionary.vim'
+" Plug 'tpope/vim-endwise'
+" Plug 'jceb/vim-orgmode'
+" Plug 'xolox/vim-notes'
+" Plug 'xolox/vim-misc'
+" Plug 'tacahiroy/ctrlp-funky'
+"Plug 'matchit.zip'
+" Plug 'othree/javascript-libraries-syntax.vim'
+" Plug 'morhetz/gruvbox'
+" Plug 'bling/vim-bufferline'
+"Plug 'gcmt/wildfire.vim' "press enter to select words
+"Plug 'reedes/vim-litecorrect'
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'tpope/vim-commentary'
+" Plug 'briancollins/vim-jst', { 'for': 'javascript' }
+"Plug 'mattn/emmet-vim'
+" Plug 'KabbAmine/vCoolor.vim'
+"Plug 'benmills/vimux'
+" Plug 'thinca/vim-quickrun'
+"Plug 'Shougo/vimproc.vim'
+" Plug 'vim-scripts/a.vim'
+"Plug 'rizzatti/dash.vim'
+"Plug 'junegunn/goyo.vim'
 " Plug 'ternjs/tern_for_vim'
 "Plug 'benmills/vimux'
-Plug 'vim-scripts/mru.vim'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
-Plug 'vim-utils/vim-man'
 " Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
-Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                  vim-better-javascript-completion                   "
@@ -290,7 +289,6 @@ nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
 nmap <silent> <leader>l <Plug>(jsdoc)
 nmap <leader>,, :set wrap<CR>
 let leader='\'
-nmap <F8> :TagbarToggle<CR>
 imap <C-j> <cr>
 nnoremap <C-w>= <C-w>+
 nnoremap <C-w><C-=> <C-w>+
@@ -1127,19 +1125,14 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              ctrlp fzf                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" ctrlp {
-"if isdirectory(expand("~/.vim/plugged/ctrlp.vim/"))
-"let g:ctrlp_working_path_mode = 'ra'
-"nnoremap <silent> <D-t> :CtrlP<CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
 nnoremap <silent> <Leader>vt :CtrlPRegister<CR>
 nnoremap <silent> <Leader>cc :FZF<CR>
-nmap <C-f> :Lines<CR>
 let g:fzf_buffers_jump = 1
-nnoremap <leader><leader><leader>cc <Plug>NERDCommenterComment
-"let g:ctrlp_custom_ignore = {
-"\ 'dir':  '\.git$\|\.hg$\|\.svn$',
-"\ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
+nmap <C-f> :Lines<CR>
+let g:ctrlp_custom_ignore = {
+      \ 'dir':  '\.git$\|\.hg$\|\.svn$',
+      \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 
 if executable('ag')
   let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
@@ -1148,12 +1141,6 @@ elseif executable('ack-grep')
   let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
 elseif executable('ack')
   let s:ctrlp_fallback = 'ack %s --nocolor -f'
-  " On Windows use "dir" as fallback command.
-  "elseif WINDOWS()
-  "    let s:ctrlp_fallback = 'dir %s /-n /b /s /a-d'
-  "    else
-  "    let s:ctrlp_fallback = 'find %s -type f'
-  "    endif
   if exists("g:ctrlp_user_command")
     unlet g:ctrlp_user_command
   endif
@@ -1164,20 +1151,12 @@ elseif executable('ack')
         \ },
         \ 'fallback': s:ctrlp_fallback
         \ }
-
-  if isdirectory(expand("~/.vim/plugged/ctrlp-funky/"))
-    " CtrlP extensions
-    let g:ctrlp_extensions = ['funky']
-
-    "funky
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
-  endif
 endif
 "}
 
 " TagBar {
 if isdirectory(expand("~/.vim/plugged/tagbar/"))
-  nnoremap <silent> <leader>tt :TagbarToggle<CR>
+  nnoremap <silent> <leader>F8 :TagbarToggle<CR>
 endif
 "}
 
@@ -1215,16 +1194,13 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 " Haskell post write lint and check with ghcmod
 " $ `cabal install ghcmod` if missing and ensure
 " ~/.cabal/bin is in your $PATH.
-if !executable("ghcmod")
-  autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-endif
+" if !executable("ghcmod")
+" autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+" endif
 
 " For snippet_complete marker.
 "if !exists("g:spf13_no_conceal")
@@ -1236,24 +1212,24 @@ endif
 "         " especially when splits are used.
 "set completeopt-=preview
 " Shell command {
-function! s:RunShellCommand(cmdline)
-  botright new
+" function! s:RunShellCommand(cmdline)
+" botright new
 
-  setlocal buftype=nofile
-  setlocal bufhidden=delete
-  setlocal nobuflisted
-  setlocal noswapfile
-  setlocal nowrap
-  setlocal filetype=shell
-  setlocal syntax=shell
+" setlocal buftype=nofile
+" setlocal bufhidden=delete
+" setlocal nobuflisted
+" setlocal noswapfile
+" setlocal nowrap
+" setlocal filetype=shell
+" setlocal syntax=shell
 
-  call setline(1, a:cmdline)
-  call setline(2, substitute(a:cmdline, '.', '=', 'g'))
-  execute 'silent $read !' . escape(a:cmdline, '%#')
-  setlocal nomodifiable
-  1
-endfunction
+" call setline(1, a:cmdline)
+" call setline(2, substitute(a:cmdline, '.', '=', 'g'))
+" execute 'silent $read !' . escape(a:cmdline, '%#')
+" setlocal nomodifiable
+" 1
+" endfunction
 
-command! -complete=file -nargs=+ Shell call s:RunShellCommand(<q-args>)
+" command! -complete=file -nargs=+ Shell call s:RunShellCommand(<q-args>)
 " e.g. Grep current file for <search_term>: Shell grep -Hn <search_term> %
 " }
