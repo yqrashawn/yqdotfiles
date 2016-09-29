@@ -100,54 +100,53 @@ call plug#begin('~/.vim/plugged')
 "Plug 'thinca/vim-ref'
 "for jira
 Plug 'Chiel92/vim-autoformat'
-Plug 'othree/yajs.vim'
-Plug 'sheerun/vim-polyglot'
+" Plug 'othree/yajs.vim'
+Plug 'sheerun/vim-polyglot',{'for':'javascript'}
 " Plug 'carlitux/deoplete-ternjs'
 Plug 'mattn/webapi-vim'
 Plug 'tyru/open-browser.vim'
 "Plug 'rafi/vim-unite-issue'
 "Plug 'Shougo/unite.vim'
-Plug 'vimoutliner/vimoutliner'
+" Plug 'vimoutliner/vimoutliner'
 Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'mhinz/vim-startify' "welcoming view
-Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
-Plug 'frankier/neovim-colors-solarized-truecolor-only'
+" Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
+" Plug 'frankier/neovim-colors-solarized-truecolor-only'
 "Plug 'MarcWeber/vim-addon-mw-utils'
 "Plug 'tomtom/tlib_vim'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
-Plug 'junegunn/gv.vim'
+" Plug 'junegunn/gv.vim'
 "Plug 'ervandew/supertab'
 "Plug 'altercation/vim-colors-solarized'
-Plug 'spf13/vim-colors'
 "Plug 'itchyny/dictionary.vim'
 Plug 'tpope/vim-surround'
 " Plug 'tpope/vim-endwise'
-Plug 'jceb/vim-orgmode'
-Plug 'xolox/vim-notes'
-Plug 'xolox/vim-misc'
+" Plug 'jceb/vim-orgmode'
+" Plug 'xolox/vim-notes'
+" Plug 'xolox/vim-misc'
 Plug 'tpope/vim-repeat'
 Plug 'git-time-metric/gtm-vim-plugin'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-register'
-Plug 'tacahiroy/ctrlp-funky'
+" Plug 'tacahiroy/ctrlp-funky'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/sessionman.vim'
 "Plug 'matchit.zip'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
-Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'morhetz/gruvbox'
-Plug 'bling/vim-bufferline'
+" Plug 'othree/javascript-libraries-syntax.vim'
+" Plug 'morhetz/gruvbox'
+" Plug 'bling/vim-bufferline'
 Plug 'easymotion/vim-easymotion'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'vim-scripts/restore_view.vim'
+Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify' "show lines modified
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
@@ -163,24 +162,24 @@ Plug 'honza/vim-snippets'
 Plug 'elzr/vim-json', { 'for': 'json' }
 Plug 'groenewege/vim-less', { 'for': 'less' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'briancollins/vim-jst'
+" Plug 'briancollins/vim-jst', { 'for': 'javascript' }
 Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
-Plug 'gorodinskiy/vim-coloresque'
+Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
 "Plug 'mattn/emmet-vim'
-Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
-Plug 'KabbAmine/vCoolor.vim'
+" Plug 'KabbAmine/vCoolor.vim'
 Plug 'maksimr/vim-jsbeautify',
 "Plug 'benmills/vimux'
-Plug 'thinca/vim-quickrun'
+" Plug 'thinca/vim-quickrun'
 "Plug 'Shougo/vimproc.vim'
 Plug 'othree/html5.vim' , {'for': 'html'}
 "Plug 'rizzatti/dash.vim'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
-Plug 'vim-scripts/a.vim'
+" Plug 'vim-scripts/a.vim'
 Plug 't9md/vim-choosewin'
 "Plug 'rizzatti/dash.vim'
 Plug 'junegunn/seoul256.vim'
@@ -197,14 +196,14 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                  vim-better-javascript-completion                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:vimjs#casesensistive = 1
+" let g:vimjs#casesensistive = 1
 " Enabled by default. flip the value to make completion matches case insensitive
 
-let g:vimjs#smartcomplete = 1
+" let g:vimjs#smartcomplete = 1
 " Disabled by default. Enabling this will let vim complete matches at any location
 " e.g. typing 'ocument' will suggest 'document' if enabled.
 
-let g:vimjs#chromeapis = 1
+" let g:vimjs#chromeapis = 1
 " Disabled by default. Toggling this will enable completion for a number of Chrome's JavaScript extension APIs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              deoplete                               "
@@ -397,7 +396,7 @@ end
 
 
 "if exists('$TMUX')
-"set term=screen-256color
+" set term=screen-256color
 "endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -704,8 +703,10 @@ endif
 set background=dark " Assume a dark background
 " colorscheme solarized
 colorscheme seoul256
-let g:seoul256_light_background = 252
+" let g:seoul256_light_background = 252
 " colorscheme gruvbox
+" let g:gruvbox_contrast='soft'
+
 
 
 " Allow to trigger background
@@ -1131,6 +1132,7 @@ endif
 "let g:ctrlp_working_path_mode = 'ra'
 "nnoremap <silent> <D-t> :CtrlP<CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
+nnoremap <silent> <Leader>vt :CtrlPRegister<CR>
 nnoremap <silent> <Leader>cc :FZF<CR>
 nmap <C-f> :Lines<CR>
 let g:fzf_buffers_jump = 1
