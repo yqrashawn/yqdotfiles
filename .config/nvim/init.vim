@@ -180,8 +180,8 @@ Plug 'othree/html5.vim' , {'for': 'html'}
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
-Plug 'vim-scripts/a.vim'
-Plug 't9md/vim-choosewin'
+" Plug 'vim-scripts/a.vim'
+Plug 't9md/vim-choosewin' "选择窗口
 "Plug 'rizzatti/dash.vim'
 Plug 'junegunn/seoul256.vim'
 "Plug 'junegunn/goyo.vim'
