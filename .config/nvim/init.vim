@@ -143,11 +143,12 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/mru.vim'
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+" Plug 'othree/yajs.vim'
+" Plug 'othree/es.next.syntax.vim'
 " Plug 'sheerun/vim-polyglot',{'for':'javascript'}
 "Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
 "for jira
-" Plug 'othree/yajs.vim'
 " Plug 'carlitux/deoplete-ternjs'
 " Plug 'tyru/open-browser.vim'
 " Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
