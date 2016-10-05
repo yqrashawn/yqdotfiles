@@ -77,6 +77,19 @@
 			<key>utf8</key>
 			<true/>
 		</dict>
+		<key>37B22197-7D2A-4EF9-8A58-3D14FCA2E651</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>npms</string>
+			<key>text</key>
+			<string>Search {query} in npms</string>
+			<key>url</key>
+			<string>https://npms.io/search?q={query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
 		<key>44CBD001-AE30-4601-8AA5-B9BFAAB705CA</key>
 		<dict>
 			<key>enabled</key>
