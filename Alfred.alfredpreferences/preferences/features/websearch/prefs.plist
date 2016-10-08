@@ -22,7 +22,7 @@
 		<key>22193FF7-D3BF-457D-B0F6-D28F415DE8E7</key>
 		<dict>
 			<key>enabled</key>
-			<true/>
+			<false/>
 			<key>keyword</key>
 			<string>npm</string>
 			<key>text</key>
@@ -162,6 +162,19 @@
 			<string>Search {query} in Github</string>
 			<key>url</key>
 			<string>https://github.com/search?utf8=%E2%9C%93&amp;q={query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+		<key>DCAB13AF-71FB-40F7-A47D-6ED2E68B3017</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>npm</string>
+			<key>text</key>
+			<string>Search {query} In npms.io</string>
+			<key>url</key>
+			<string>https://npms.io/search?q={query}</string>
 			<key>utf8</key>
 			<true/>
 		</dict>
