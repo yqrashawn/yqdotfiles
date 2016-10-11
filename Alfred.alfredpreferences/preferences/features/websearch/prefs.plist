@@ -178,6 +178,19 @@
 			<key>utf8</key>
 			<true/>
 		</dict>
+		<key>D292AE9B-65AA-42C1-8284-E74F5B4A70A4</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>ape</string>
+			<key>text</key>
+			<string>Search {query} on 51ape</string>
+			<key>url</key>
+			<string>https://www.google.com/search?q=site%3A+51ape.com+{query}</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
 		<key>DCAB13AF-71FB-40F7-A47D-6ED2E68B3017</key>
 		<dict>
 			<key>enabled</key>
