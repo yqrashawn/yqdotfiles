@@ -1127,7 +1127,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
 nnoremap <silent> <Leader>vt :CtrlPRegister<CR>
-nnoremap <silent> <Leader>cc :FZF<CR>
+nnoremap <silent> <Leader>ff :FZF<CR>
 let g:fzf_buffers_jump = 1
 nmap <C-f> :Lines<CR>
 let g:ctrlp_custom_ignore = {
