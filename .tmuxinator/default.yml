@@ -1,7 +1,11 @@
 # ~/.tmuxinator/default.yml
 
 name: yqRashawn
+<<<<<<< HEAD
 root: ~/workspace/projects/
+=======
+root: ~/workspace
+>>>>>>> 3cb39d84a880f14ee198c47dd76ffa4d626621b0
 
 # Optional tmux socket
 # socket_name: foo
@@ -31,9 +35,8 @@ windows:
   - editor:
       layout: main-vertical
       panes:
-        - nvim
+        - cl
   - server:
-      - cd xihemetro-express
-      - supervisor bin/www
+        - cl
   - console:
       - aria2c
