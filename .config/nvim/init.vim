@@ -78,7 +78,8 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint','jscs']
 let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
 let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
-let g:syntastic_javascript_jscs_args = '--preset=airbnb'
+" let g:syntastic_javascript_jscs_args = '--preset=airbnb'
+let g:syntastic_javascript_jscs_args = '--preset=google'
 let g:syntastic_loc_list_height = 5
 let g:syntastic_mode_map = {
       \ "mode": "passive",
@@ -238,7 +239,8 @@ let g:formatters_json = ['js-beautify']
 let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
-let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
+" let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
+let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/workspace/vizicities/.jscsrc"'
 "let g:formatdef_jscs='-x'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
