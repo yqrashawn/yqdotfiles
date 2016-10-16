@@ -70,15 +70,17 @@ nmap <script> <silent> <C-k> :call ToggleQuickfixList()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd! BufWritePost * Neomake
 nmap <leader><leader>w :Neomake<cr>:lopen<cr>:w!<cr>
+" let g:neomake_javascript_eslint_exe = '/usr/local/bin/eslint'
+" let g:neomake_javascript_jscs_exe = '/usr/local/bin/jscs'
 let g:neomake_javascript_eslint_maker = {
-    \ 'args': ['--fix'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ 'args': ['--no-color', '--format','compact'],
+    \ 'errorformat': '%f: line %l\, col %c\, %m'
     \ }
 let g:neomake_javascript_jscs_maker = {
-    \ 'args': ['--preset=airbnb'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ 'args': ['--no-colors', '--reporter', 'inline','--preset=aribnb'],
+    \ 'errorformat': '%E%f: line %l\, col %c\, %m',
     \ }
-let g:neomake_javascript_enabled_makers = ['jshint']
+let g:neomake_javascript_enabled_makers = ['eslint','jscs']
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
