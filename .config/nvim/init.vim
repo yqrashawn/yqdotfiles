@@ -835,7 +835,8 @@ if has('statusline')
   set statusline=%<%f\                     " Filename
   set statusline+=%w%h%m%r                 " Options
   if !exists('g:override_spf13_bundles')
-    set statusline+=%{fugitive#statusline()} " Git Hotness
+    " set statusline+=%{fugitive#statusline()} " Git Hotness
+    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
   endif
   set statusline+=\ [%{&ff}/%Y]            " Filetype
   set statusline+=\ [%{getcwd()}]          " Current dir
