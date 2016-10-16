@@ -264,8 +264,6 @@ let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
 let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
-" let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/workspace/vizicities/.jscsrc"'
-"let g:formatdef_jscs='-x'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                            for markdown                             "
