@@ -61,30 +61,50 @@ augroup FastEscape
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 lopen lclose                               "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <script> <silent> <C-l> :call ToggleLocationList()<CR>
+nmap <script> <silent> <C-k> :call ToggleQuickfixList()<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 neomake                                    "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd! BufWritePost * Neomake
+nmap <leader><leader>w :Neomake<cr>:lopen<cr>:w!<cr>
+let g:neomake_javascript_eslint_maker = {
+    \ 'args': ['--fix'],
+    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ }
+let g:neomake_javascript_jscs_maker = {
+    \ 'args': ['--preset=airbnb'],
+    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ }
+let g:neomake_javascript_enabled_makers = ['jshint']
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
+" nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-"let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_javascript_checkers = ['eslint','jscs']
-let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
-let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+" let g:syntastic_auto_loc_list = 0
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" "let g:syntastic_javascript_checkers = ['jshint']
+" let g:syntastic_javascript_checkers = ['eslint','jscs']
+" let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
+" let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
 " let g:syntastic_javascript_jscs_args = '--preset=airbnb'
-let g:syntastic_javascript_jscs_args = '--preset=google'
-let g:syntastic_loc_list_height = 5
-let g:syntastic_mode_map = {
-      \ "mode": "passive",
-      \ "active_filetypes": ["json"],
-      \ "passive_filetypes": []}
+" " let g:syntastic_javascript_jscs_args = '--preset=google'
+" let g:syntastic_loc_list_height = 5
+" let g:syntastic_mode_map = {
+      " \ "mode": "passive",
+      " \ "active_filetypes": ["json"],
+      " \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -98,9 +118,11 @@ set ttimeoutlen=10
 
 call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
+Plug 'milkypostman/vim-togglelist'
 Plug 'mattn/webapi-vim'
-Plug 'mtscout6/syntastic-local-eslint.vim'
+Plug 'benjie/neomake-local-eslint.vim'
 Plug 'mileszs/ack.vim'
+Plug 'neomake/neomake'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
@@ -119,7 +141,7 @@ Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify' "show lines modified
-Plug 'scrooloose/syntastic',{ 'for':'javascript' }
+" Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular'
@@ -239,8 +261,8 @@ let g:formatters_json = ['js-beautify']
 let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
-" let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
-let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/workspace/vizicities/.jscsrc"'
+let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
+" let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/workspace/vizicities/.jscsrc"'
 "let g:formatdef_jscs='-x'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
