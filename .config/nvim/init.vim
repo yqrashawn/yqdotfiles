@@ -166,6 +166,9 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/mru.vim'
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'morhetz/gruvbox'
+Plug 'justinmk/vim-sneak'
+Plug 'tomtom/quickfixsigns_vim'
 " Plug 'othree/yajs.vim'
 " Plug 'othree/es.next.syntax.vim'
 " Plug 'sheerun/vim-polyglot',{'for':'javascript'}
@@ -195,7 +198,6 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 " Plug 'tacahiroy/ctrlp-funky'
 "Plug 'matchit.zip'
 " Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'morhetz/gruvbox'
 " Plug 'bling/vim-bufferline'
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
@@ -724,12 +726,14 @@ endif
 
 set background=dark " Assume a dark background
 " colorscheme solarized
-colorscheme seoul256
+" colorscheme seoul256
 " let g:seoul256_light_background = 252
-" colorscheme gruvbox
-" let g:gruvbox_contrast='soft'
-
-
+colorscheme gruvbox
+let g:gruvbox_contrast_light = 'hard'
+let g:gruvbox_contrast_dark = 'hard'
+" let g:gruvbox_contrast_dark = 'soft'
+" let g:gruvbox_contrast_dark = 'medium'
+" let g:gruvbox_hls_cursor = 'white'
 
 " Allow to trigger background
 function! ToggleBG()
