@@ -70,15 +70,17 @@ nmap <script> <silent> <C-k> :call ToggleQuickfixList()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd! BufWritePost * Neomake
 nmap <leader><leader>w :Neomake<cr>:lopen<cr>:w!<cr>
+" let g:neomake_javascript_eslint_exe = '/usr/local/bin/eslint'
+" let g:neomake_javascript_jscs_exe = '/usr/local/bin/jscs'
 let g:neomake_javascript_eslint_maker = {
-    \ 'args': ['--fix'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ 'args': ['--no-color', '--format','compact'],
+    \ 'errorformat': '%f: line %l\, col %c\, %m'
     \ }
 let g:neomake_javascript_jscs_maker = {
-    \ 'args': ['--preset=airbnb'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ 'args': ['--no-colors', '--reporter', 'inline','--preset=aribnb'],
+    \ 'errorformat': '%E%f: line %l\, col %c\, %m',
     \ }
-let g:neomake_javascript_enabled_makers = ['jshint']
+let g:neomake_javascript_enabled_makers = ['eslint','jscs']
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
@@ -264,8 +266,6 @@ let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
 let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
-" let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/workspace/vizicities/.jscsrc"'
-"let g:formatdef_jscs='-x'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                            for markdown                             "
@@ -839,7 +839,8 @@ if has('statusline')
   set statusline=%<%f\                     " Filename
   set statusline+=%w%h%m%r                 " Options
   if !exists('g:override_spf13_bundles')
-    set statusline+=%{fugitive#statusline()} " Git Hotness
+    " set statusline+=%{fugitive#statusline()} " Git Hotness
+    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
   endif
   set statusline+=\ [%{&ff}/%Y]            " Filetype
   set statusline+=\ [%{getcwd()}]          " Current dir

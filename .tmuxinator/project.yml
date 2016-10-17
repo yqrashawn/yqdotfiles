@@ -1,7 +1,7 @@
 # ~/.tmuxinator/default.yml
 
 name: yqRashawn
-root: ~/workspace/projects/
+root: ~/workspace/
 
 # Optional tmux socket
 # socket_name: foo
