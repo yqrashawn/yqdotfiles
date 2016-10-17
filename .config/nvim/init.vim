@@ -1184,9 +1184,7 @@ endif
 "}
 
 " TagBar {
-if isdirectory(expand("~/.vim/plugged/tagbar/"))
-  nnoremap <silent> <leader>F8 :TagbarToggle<CR>
-endif
+nnoremap <silent> <leader>f :TagbarToggle<CR>
 "}
 
 " Rainbow {
