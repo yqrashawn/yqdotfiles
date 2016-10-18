@@ -125,11 +125,11 @@ Plug 'mattn/webapi-vim'
 Plug 'benjie/neomake-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'neomake/neomake'
+Plug 'moll/vim-node'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'tpope/vim-surround'
-Plug 'git-time-metric/gtm-vim-plugin'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-register'
@@ -143,7 +143,6 @@ Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify' "show lines modified
-" Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular'
@@ -159,6 +158,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'maksimr/vim-jsbeautify',
 Plug 'othree/html5.vim' , {'for': 'html'}
+Plug 'Olical/vim-enmasse'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
@@ -171,6 +171,8 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
 Plug 'justinmk/vim-sneak'
 Plug 'tomtom/quickfixsigns_vim'
+" Plug 'scrooloose/syntastic',{ 'for':'javascript' }
+" Plug 'git-time-metric/gtm-vim-plugin'
 " Plug 'othree/yajs.vim'
 " Plug 'othree/es.next.syntax.vim'
 " Plug 'sheerun/vim-polyglot',{'for':'javascript'}
@@ -335,7 +337,7 @@ imap <C-f> <Right>
 imap <C-b> <Left>
 imap <C-e> <Esc><S-A>
 imap <C-a> <Esc><S-I>
-nmap <leader>jst :JSHintToggle<CR>
+" nmap <leader>jst :JSHintToggle<CR>
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>bp :bp<CR>
 map <leader><leader>- mzgg=G`z
