@@ -725,12 +725,13 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             colorscheme                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+set termguicolors
 set background=dark " Assume a dark background
 " colorscheme solarized
 " colorscheme seoul256
 " let g:seoul256_light_background = 252
 colorscheme gruvbox
+let g:gruvbox_italic=1
 let g:gruvbox_contrast_light = 'hard'
 let g:gruvbox_contrast_dark = 'hard'
 " let g:gruvbox_contrast_dark = 'soft'
