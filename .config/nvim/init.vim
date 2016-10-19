@@ -329,8 +329,6 @@ nnoremap j jzz
 nnoremap k kzz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
-map <Leader>L <Plug>(easymotion-bd-jk)
-"nmap <Leader>LL <Plug>(easymotion-overwin-line)
 map <leader><leader>q :bd!<CR>
 map <leader><leader><leader>q :tabc<CR>
 imap <C-f> <Right>
@@ -678,11 +676,13 @@ inoremap $3 ()<esc>i
 """""""""""""""""""
 "easyMotion
 """""""""""""""""""""
+map <Leader>L <Plug>(easymotion-bd-jk)
+"nmap <Leader>LL <Plug>(easymotion-overwin-line)
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
-nmap e <Plug>(easymotion-overwin-f)
-vmap e <Plug>(easymotion-overwin-f)
+nmap <C-s> <Plug>(easymotion-overwin-f)
+vmap <C-s> <Plug>(easymotion-overwin-f)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
