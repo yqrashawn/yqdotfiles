@@ -69,7 +69,7 @@ nmap <script> <silent> <C-k> :call ToggleQuickfixList()<CR>
 "                                 neomake                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " autocmd! BufWritePost * Neomake
-nmap <leader><leader>w :Neomake<cr>:w!<cr>
+nmap <leader><leader>w :Neomake<cr>:w<cr>
 " let g:neomake_javascript_eslint_exe = '/usr/local/bin/eslint'
 " let g:neomake_javascript_jscs_exe = '/usr/local/bin/jscs'
 let g:neomake_javascript_eslint_maker = {
@@ -83,7 +83,7 @@ let g:neomake_javascript_jscs_maker = {
 let g:neomake_javascript_enabled_makers = ['eslint','jscs']
 let g:neomake_enabled_makers=['eslint','jscs']
 " let g:neomake_logfile='~/Downloads/neomake.log'
-let g:neomake_verbose=3
+" let g:neomake_verbose=0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
