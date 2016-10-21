@@ -68,8 +68,8 @@ nmap <script> <silent> <C-k> :call ToggleQuickfixList()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 neomake                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd! BufWritePost * Neomake
-nmap <leader><leader>w :Neomake<cr>:lopen<cr>:w!<cr>
+" autocmd! BufWritePost * Neomake
+nmap <leader><leader>w :Neomake<cr>:w!<cr>
 " let g:neomake_javascript_eslint_exe = '/usr/local/bin/eslint'
 " let g:neomake_javascript_jscs_exe = '/usr/local/bin/jscs'
 let g:neomake_javascript_eslint_maker = {
@@ -81,6 +81,9 @@ let g:neomake_javascript_jscs_maker = {
     \ 'errorformat': '%E%f: line %l\, col %c\, %m',
     \ }
 let g:neomake_javascript_enabled_makers = ['eslint','jscs']
+let g:neomake_enabled_makers=['eslint','jscs']
+" let g:neomake_logfile='~/Downloads/neomake.log'
+let g:neomake_verbose=3
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 syntastic                                  "
@@ -262,8 +265,9 @@ let g:quickrun_config = {}
 "au BufWrite * :Autoformat
 let g:autoformat_verbosemode=0 " for debug
 map <leader><leader>0 :Autoformat<cr>
+" let g:formatters_javascript = ['jscs']
 let g:formatters_javascript = ['jscs']
-let g:formatters_json = ['js-beautify']
+let g:formatters_json = ['jscs']
 let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
@@ -1030,12 +1034,13 @@ cmap w!! w !sudo tee % >/dev/null
 " http://vimcasts.org/e/14
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
 map <leader>ew :e ./
-map <leader><leader>ew :e ~/
+map <leader><leader>ew :e ../
+map <leader><leader><leader>ew :e ~/
 map <leader>es :sp ./
 map <leader>ev :vsp ./
 map <leader><leader>ev :vsp ~/
-map <leader>et :tabe ./
-map <leader><leader>et :tabe ~/
+" map <leader>et :tabe ./
+" map <leader><leader>et :tabe ~/
 
 " Adjust viewports to the same size
 map <Leader>= <C-w>=
