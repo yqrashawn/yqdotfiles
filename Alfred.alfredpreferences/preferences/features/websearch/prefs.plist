@@ -194,7 +194,7 @@
 		<key>DCAB13AF-71FB-40F7-A47D-6ED2E68B3017</key>
 		<dict>
 			<key>enabled</key>
-			<true/>
+			<false/>
 			<key>keyword</key>
 			<string>npm</string>
 			<key>text</key>
