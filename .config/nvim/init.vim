@@ -5,6 +5,21 @@ elseif &rnu == 1
 else
   set nu
 endif
+
+" autosave on focuslost
+autocmd BufLeave,FocusLost * silent! wall
+" autoinsert in terminal buffer
+" :au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  neoterm                                   "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:neoterm_autoinsert = 1
+set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
+set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
+set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
+nmap <NUL> :Ttoggle<CR>
+" imap <NUL> <ESC>:Ttoggle<CR>
+tnoremap <NUL> <C-\><C-n>:Ttoggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                        get rid of *.*~ file                         "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -73,13 +88,13 @@ nmap <leader><leader>w :Neomake<cr>:w<cr>
 " let g:neomake_javascript_eslint_exe = '/usr/local/bin/eslint'
 " let g:neomake_javascript_jscs_exe = '/usr/local/bin/jscs'
 let g:neomake_javascript_eslint_maker = {
-    \ 'args': ['--no-color', '--format','compact'],
-    \ 'errorformat': '%f: line %l\, col %c\, %m'
-    \ }
+      \ 'args': ['--no-color', '--format','compact'],
+      \ 'errorformat': '%f: line %l\, col %c\, %m'
+      \ }
 let g:neomake_javascript_jscs_maker = {
-    \ 'args': ['--no-colors', '--reporter', 'inline','--preset=aribnb'],
-    \ 'errorformat': '%E%f: line %l\, col %c\, %m',
-    \ }
+      \ 'args': ['--no-colors', '--reporter', 'inline','--preset=aribnb'],
+      \ 'errorformat': '%E%f: line %l\, col %c\, %m',
+      \ }
 let g:neomake_javascript_enabled_makers = ['eslint','jscs']
 let g:neomake_enabled_makers=['eslint','jscs']
 " let g:neomake_logfile='~/Downloads/neomake.log'
@@ -107,9 +122,9 @@ let g:neomake_enabled_makers=['eslint','jscs']
 " " let g:syntastic_javascript_jscs_args = '--preset=google'
 " let g:syntastic_loc_list_height = 5
 " let g:syntastic_mode_map = {
-      " \ "mode": "passive",
-      " \ "active_filetypes": ["json"],
-      " \ "passive_filetypes": []}
+" \ "mode": "passive",
+" \ "active_filetypes": ["json"],
+" \ "passive_filetypes": []}
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 au BufNewFile,BufRead *.handlebars set filetype=html
@@ -123,6 +138,7 @@ set ttimeoutlen=10
 
 call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
+Plug 'kassio/neoterm'
 Plug 'milkypostman/vim-togglelist'
 Plug 'mattn/webapi-vim'
 Plug 'benjie/neomake-local-eslint.vim'
@@ -150,7 +166,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular'
 Plug 'luochen1990/rainbow'
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 Plug 'honza/vim-snippets'
 Plug 'elzr/vim-json', { 'for': 'json' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
@@ -169,6 +185,7 @@ Plug 't9md/vim-choosewin' "选择窗口
 Plug 'vim-utils/vim-man'
 Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/mru.vim'
+Plug 'chrisbra/vim-zsh'
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
@@ -184,6 +201,7 @@ Plug 'tomtom/quickfixsigns_vim'
 "for jira
 " Plug 'carlitux/deoplete-ternjs'
 " Plug 'tyru/open-browser.vim'
+" Plug 'jlanzarotta/bufexplorer'
 " Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 "Plug 'rafi/vim-unite-issue'
 "Plug 'Shougo/unite.vim'
@@ -195,6 +213,7 @@ Plug 'tomtom/quickfixsigns_vim'
 " Plug 'junegunn/gv.vim'
 "Plug 'ervandew/supertab'
 "Plug 'altercation/vim-colors-solarized'
+" Plug 'vim-ctrlspace/vim-ctrlspace'
 "Plug 'itchyny/dictionary.vim'
 " Plug 'tpope/vim-endwise'
 " Plug 'groenewege/vim-less', { 'for': 'less' }
@@ -311,11 +330,11 @@ let g:unite_source_grep_recursive_opt = ''
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "noremap <silent> <leader>ct :Unite file/async file_rec/neovim buffer neomru/file file/new -direction=dynamicbottom -start-insert<CR>
-nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
+" nmap <NUL> :Unite line -direction=dynamicbottom -start-insert<CR>
 "nmap <leader><leader>t :Unite jump -direction=dynamicbottom -start-insert -quick-match<CR>
-nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR><CR>
-nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
-nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
+" nmap <leader><leader>x :Unite register -direction=dynamicbottom -start-insert<CR><CR>
+" nmap <leader><space> :Unite grep -direction=dynamicbottom<CR><CR>
+" nmap <leader><leader><space> :Unite grep -direction=dynamicbottom<CR>
 
 "nmap <leader><leader><leader> :source ~/.config/nvim/init.vim<cr>
 nmap <silent> <leader>l <Plug>(jsdoc)
@@ -373,9 +392,9 @@ let g:jsdoc_access_descriptions = 1
 "                nerdcommenter too many unsless issue                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let NERDSpaceDelims = 1
-nmap <leader>rccccccccc :NERDComComment
-nmap <leader>rcccccccccccn :NERDComNestedComment
-nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
+" nmap <leader>rccccccccc :NERDComComment
+" nmap <leader>rcccccccccccn :NERDComNestedComment
+" nmap <leader>rrrrrrrrc<space> :NERDComToggleComment
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 ack                                 "
@@ -430,20 +449,18 @@ end
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             vim-airline                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"gtm airline
-let g:gtm_plugin_status_enabled = 1
-function! AirlineInit()
-  if exists('*GTMStatusline')
-    call airline#parts#define_function('gtmstatus', 'GTMStatusline')
-    let g:airline_section_b = airline#section#create([g:airline_section_b, ' ', '[', 'gtmstatus', ']'])
-  endif
-endfunction
-autocmd User AirlineAfterInit call AirlineInit()
+" enable/disable detection of whitespace errors. >
+let g:airline#extensions#whitespace#enabled = 0
+" enable/disable showing only non-zero hunks. >
+let g:airline#extensions#hunks#non_zero_only = 0
+" enable/disable word counting. >
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline_inactive_collapse=0
+let g:airline_powerline_fonts=1
+let g:airline#extensions#branch#empty_message = 'NoBranch'
 
 let g:airline#extensions#tabline#buffer_nr_show = 0
-" 关闭状态显示空白符号计数,这个对我用处不大"
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#whitespace#symbol = '!'
+
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
@@ -453,7 +470,10 @@ nmap <leader>5 <Plug>AirlineSelectTab5
 nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
 
+let airline#extensions#tabline#ignore_bufadd_pat =
+          \ '\c\vgundo|undotree|vimfiler|tagbar|nerd_tree|ycm'
 
 :tnoremap <leader><leader> <C-\><C-n>
 :tnoremap <leader>1 <C-\><C-n><Plug>AirlineSelectTab1
@@ -477,8 +497,11 @@ let g:airline#extensions#tabline#switch_buffers_and_tabs = 0
 " enable/disable displaying buffers with a single tab. (c)
 let g:airline#extensions#tabline#show_buffers = 1
 
+" enable/disable displaying tabs, regardless of number. (c)
+  let g:airline#extensions#tabline#show_tabs = 0
+
 " enable/disable display preview window buffer in the tabline. >
-let g:airline#extensions#tabline#exclude_preview = 0
+let g:airline#extensions#tabline#exclude_preview = 1
 
 " configure how numbers are displayed in tab mode. >
 "let g:airline#extensions#tabline#tab_nr_type = 0 " # of splits (default)
@@ -497,11 +520,8 @@ let g:airline#extensions#tabline#buffers_label = 'buffers'
 " rename label for tabs (default: 'tabs') (c)
 let g:airline#extensions#tabline#tabs_label = 'tabs'
 
-" configure separators for the tabline only. >
-"let g:airline#extensions#tabline#left_sep = '⚡'
-"let g:airline#extensions#tabline#left_alt_sep = '⚡'
-"let g:airline#extensions#tabline#right_sep = '<<'
-"let g:airline#extensions#tabline#right_alt_sep = '<<'
+" configure the minimum number of buffers needed to show the tabline. >
+  let g:airline#extensions#tabline#buffer_min_count = 2
 
 " configure whether close button should be shown: >
 let g:airline#extensions#tabline#show_close_button = 0
@@ -524,6 +544,7 @@ syntax on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 ycm                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_allow_changing_updatetime = 1
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_use_ultisnips_completer = 1
@@ -535,9 +556,10 @@ let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-autocmd BufLeave,FocusLost * silent! wall
 "autocmd VimEnter  * silent! :split | term
 
+let g:ycm_server_python_interpreter = '/usr/local/bin/python3.5'
+let g:ycm_python_binary_path = '/usr/local/bin/python3.5'
 let g:ycm_semantic_triggers =  {
       \   'c' : ['->', '.'],
       \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
@@ -569,8 +591,6 @@ endtry
 " Smart mappings on the command line
 cno jira Unite issue:jira<cr>
 cno hhh ~/
-cno xihemap ~/workspace/XiheMap
-cno cesium ~/workspace/projects/cesium
 cno ddd ~/Desktop/
 cno kkk ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
@@ -886,12 +906,6 @@ set splitbelow                  " Puts new split windows to the bottom of the cu
 "set matchpairs+=<:>             " Match, to be used with %
 " set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
 set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
-" Remove trailing whitespaces and ^M chars
-" To disable the stripping of whitespace, add the following to your
-" .vimrc.before.local file:
-"   let g:spf13_keep_trailing_whitespace = 1
-" autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
-"autocmd FileType go autocmd BufWritePre <buffer> Fmt
 autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 softtabstop=2
 " preceding line best in a plugin but here for now.
@@ -1088,23 +1102,12 @@ inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
 inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
 inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
-" Automatically open and close the popup menu / preview window
-"            au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 set completeopt=menu,preview,longest,menuone
-"endif
-" }
-
-" AutoCloseTag {
-" Make it so AutoCloseTag works for xml and xhtml files as well
-au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
-"nmap <Leader>ac <Plug>ToggleAutoCloseMappings
-" }
 
 " NerdTree {
 if isdirectory(expand("~/.vim/plugged/nerdtree"))
   map <C-e> :NERDTreeToggle<CR>
   map <leader>e :NERDTreeFind<CR>
-  " nmap <leader>nt :NERDTreeFind<CR>
 
   let NERDTreeShowBookmarks=1
   let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
@@ -1137,20 +1140,6 @@ if isdirectory(expand("~/.vim/plugged/tabular"))
   nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
   vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
 endif
-" }
-
-" Session List {
-" set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-" if isdirectory(expand("~/.vim/plugged/sessionman.vim/"))
-  " nmap <leader>sl :SessionList<CR>
-  " nmap <leader>ss :SessionSave<CR>
-  " "nmap <leader>sc :SessionClose<CR>
-" endif
-" }
-
-" JSON {
-nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
-let g:vim_json_syntax_conceal = 0
 " }
 
 " PyMode {
@@ -1192,7 +1181,7 @@ endif
 "}
 
 " TagBar {
-nnoremap <silent> <leader>f :TagbarToggle<CR>
+" nnoremap <silent> <leader>f :TagbarToggle<CR>
 "}
 
 " Rainbow {
