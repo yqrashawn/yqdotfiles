@@ -349,8 +349,12 @@ nnoremap <C-w><C--> <C-w>-
 "imap kj <Esc>
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
+nnoremap n nzz
+nnoremap N Nzz
 nnoremap j jzz
 nnoremap k kzz
+nnoremap # #zz
+nnoremap * *zz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
 map <leader><leader>q :bd!<CR>
@@ -367,8 +371,6 @@ nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
 "nnoremap <C-e> :NERDTreeToggle<CR>
 map <leader><F10> :QuickRun<CR>
-nmap j jzz
-nmap k kzz
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                     javascript-libraries-syntax                     "
