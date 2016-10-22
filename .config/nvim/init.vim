@@ -7,7 +7,7 @@ else
 endif
 
 " autosave on focuslost
-autocmd BufLeave,FocusLost * silent! wall
+" autocmd BufLeave,FocusLost * silent! wall
 " autoinsert in terminal buffer
 " :au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
