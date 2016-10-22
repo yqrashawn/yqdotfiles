@@ -120,9 +120,9 @@ xnoremap <silent> ic mz:<C-U>call <SID>inner_blockwise_column(visualmode(), 'iw'
 " xnoremap <silent> ac mz:<C-U>call <SID>inner_blockwise_column(visualmode(), 'aw')<CR>
 " xnoremap <silent> aC mz:<C-U>call <SID>inner_blockwise_column(visualmode(), 'aW')<CR>
 onoremap <silent> ic :<C-U>call   <SID>inner_blockwise_column('',           'iw')<CR>
-onoremap <silent> iC :<C-U>call   <SID>inner_blockwise_column('',           'iW')<CR>
-onoremap <silent> ac :<C-U>call   <SID>inner_blockwise_column('',           'aw')<CR>
-onoremap <silent> aC :<C-U>call   <SID>inner_blockwise_column('',           'aW')<CR>
+" onoremap <silent> iC :<C-U>call   <SID>inner_blockwise_column('',           'iW')<CR>
+" onoremap <silent> ac :<C-U>call   <SID>inner_blockwise_column('',           'aw')<CR>
+" onoremap <silent> aC :<C-U>call   <SID>inner_blockwise_column('',           'aW')<CR>
 " ----------------------------------------------------------------------------
 " MatchParen delay
 " ----------------------------------------------------------------------------
@@ -909,8 +909,6 @@ set iskeyword-=-                    " '-' is an end of word designator
 " Instead of reverting the cursor to the last position in the buffer, we
 " set it to the first line when editing a git commit message
 au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
-" Fugitive
-  au FileType gitcommit nnoremap <buffer> <silent> cA :<C-U>Gcommit --amend --date="$(date)"<CR>
 
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 " Restore cursor to file position in previous editing session
