@@ -160,6 +160,7 @@ Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
+Plug 'ciaranm/detectindent'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify' "show lines modified
 Plug 'tpope/vim-fugitive'
