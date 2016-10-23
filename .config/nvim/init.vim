@@ -123,10 +123,68 @@ onoremap <silent> ic :<C-U>call   <SID>inner_blockwise_column('',           'iw'
 " onoremap <silent> iC :<C-U>call   <SID>inner_blockwise_column('',           'iW')<CR>
 " onoremap <silent> ac :<C-U>call   <SID>inner_blockwise_column('',           'aw')<CR>
 " onoremap <silent> aC :<C-U>call   <SID>inner_blockwise_column('',           'aW')<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tabularize mappings
+" For custom Tabularize definitions see after/plugin/tabularize.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap sa      :call <SID>Tabularize(0)<cr>
+xnoremap sa :<c-u>call <SID>Tabularize(1)<cr>
+function! s:Tabularize(visual)
+  let saved_cursor = getpos('.')
+
+  echohl ModeMsg | echo "-- ALIGN -- "  | echohl None
+  let char = nr2char(getchar())
+
+  if     char == '=' | let alignment = 'equals'
+  elseif char == '>' | let alignment = 'ruby_hash'
+  elseif char == ',' | let alignment = 'commas'
+  elseif char == ':' | let alignment = 'colons'
+  elseif char == ' ' | let alignment = 'space'
+  else
+    " just try aligning by the character
+    let char = escape(char, '/.')
+    let alignment = '/'.char
+  endif
+
+  if a:visual
+    exe "'<,'>Tabularize ".alignment
+  else
+    exe 'Tabularize '.alignment
+  endif
+
+  echo
+  call setpos('.', saved_cursor)
+endfunction
+
+" Tabularize "reset" -- removes all duplicate whitespace
+nnoremap s= :call <SID>TabularizeReset()<cr>
+xnoremap s= :call <SID>TabularizeReset()<cr>
+function! s:TabularizeReset()
+  let original_cursor = getpos('.')
+
+  s/\S\zs \+/ /ge
+  call histdel('search', -1)
+  let @/ = histget('search', -1)
+
+  call setpos('.', original_cursor)
+endfunction
 " ----------------------------------------------------------------------------
 " MatchParen delay
 " ----------------------------------------------------------------------------
 let g:matchparen_insert_timeout=5
+" <space>x -> :X
+" For easier typing of custom commands
+nnoremap <leader>;      :call <SID>SpaceMapping(0)<cr>
+xnoremap <leader>; :<c-u>call <SID>SpaceMapping(1)<cr>
+function! s:SpaceMapping(visual)
+  echo
+  let c = nr2char(getchar())
+  if a:visual
+    normal! gv
+  endif
+  call feedkeys(':'.toupper(c))
+endfunction
 " ----------------------------------------------------------------------------
 " ?il | inner line
 " ----------------------------------------------------------------------------
@@ -489,31 +547,6 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh','javascript=js','json']
 " 不根据语法隐藏
 let g:markdown_syntax_conceal = 1
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              for Unite                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"if executable('ag')
-" Use ag (the silver searcher)
-" https://github.com/ggreer/the_silver_searcher
-let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts =
-      \ '-i --vimgrep --hidden --ignore ' .
-      \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-let g:unite_source_grep_recursive_opt = ''
-"elseif executable('ack-grep')
-"" Use ack
-"" http://beyondgrep.com/
-"let g:unite_source_grep_command = 'ack-grep'
-"let g:unite_source_grep_default_opts =
-"\ '-i --no-heading --no-color -k -H'
-"let g:unite_source_grep_recursive_opt = ''
-"endif
-
-"let g:unite_source_rec_async_command =
-"\ ['ack', '-f', '--nofilter']
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             custom map                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1081,26 +1114,26 @@ let NERDTreeShowHidden=1
 let NERDTreeKeepTreeInNewTab=1
 let g:nerdtree_tabs_open_on_gui_startup=0
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 Tabularize                                 "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <Leader>a& :Tabularize /&<CR>
-vmap <Leader>a& :Tabularize /&<CR>
-vmap <Leader>a\ :Tabularize /\<CR>
-nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
-vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
-nmap <Leader>a=> :Tabularize /=><CR>
-vmap <Leader>a=> :Tabularize /=><CR>
-nmap <Leader>a: :Tabularize /:<CR>
-vmap <Leader>a: :Tabularize /:<CR>
-nmap <Leader>a:: :Tabularize /:\zs<CR>
-vmap <Leader>a:: :Tabularize /:\zs<CR>
-nmap <Leader>a, :Tabularize /,<CR>
-vmap <Leader>a, :Tabularize /,<CR>
-nmap <Leader>a,, :Tabularize /,\zs<CR>
-vmap <Leader>a,, :Tabularize /,\zs<CR>
-nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+                                " Tabularize                                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" nmap <Leader>a& :Tabularize /&<CR>
+" vmap <Leader>a& :Tabularize /&<CR>
+" vmap <Leader>a\ :Tabularize /\<CR>
+" nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
+" vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
+" nmap <Leader>a=> :Tabularize /=><CR>
+" vmap <Leader>a=> :Tabularize /=><CR>
+" nmap <Leader>a: :Tabularize /:<CR>
+" vmap <Leader>a: :Tabularize /:<CR>
+" nmap <Leader>a:: :Tabularize /:\zs<CR>
+" vmap <Leader>a:: :Tabularize /:\zs<CR>
+" nmap <Leader>a, :Tabularize /,<CR>
+" vmap <Leader>a, :Tabularize /,<CR>
+" nmap <Leader>a,, :Tabularize /,\zs<CR>
+" vmap <Leader>a,, :Tabularize /,\zs<CR>
+" nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+" vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              ctrlp fzf                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
