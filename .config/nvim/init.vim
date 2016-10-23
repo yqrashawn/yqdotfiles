@@ -286,8 +286,8 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 lopen lclose                               "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <script> <silent> <C-l> :call ToggleLocationList()<CR>
-nmap <script> <silent> <BS> :call ToggleQuickfixList()<CR>
+nmap <script> <silent> <BS> :call ToggleLocationList()<CR>
+nmap <script> <silent> g; :call ToggleQuickfixList()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 neomake                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -307,37 +307,6 @@ let g:neomake_javascript_enabled_makers = ['eslint','jscs']
 let g:neomake_enabled_makers=['eslint','jscs']
 " let g:neomake_logfile='~/Downloads/neomake.log'
 " let g:neomake_verbose=0
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 syntastic                                  "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" nmap <leader><leader>w :w!<cr>:SyntasticCheck<cr>
-
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
-" let g:syntastic_auto_loc_list = 0
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" "let g:syntastic_javascript_checkers = ['jshint']
-" let g:syntastic_javascript_checkers = ['eslint','jscs']
-" let g:syntastic_javascript_eslint_exec = '/usr/local/bin/eslint'
-" let g:syntastic_javascript_jscs_exec = '/usr/local/bin/jscs'
-" let g:syntastic_javascript_jscs_args = '--preset=airbnb'
-" " let g:syntastic_javascript_jscs_args = '--preset=google'
-" let g:syntastic_loc_list_height = 5
-" let g:syntastic_mode_map = {
-" \ "mode": "passive",
-" \ "active_filetypes": ["json"],
-" \ "passive_filetypes": []}
-
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-au BufNewFile,BufRead *.handlebars set filetype=html
-let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 set ttimeoutlen=10
 
@@ -384,6 +353,11 @@ call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'junegunn/vim-peekaboo'
 Plug 'kassio/neoterm'
+Plug 'Shougo/echodoc.vim'
+Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
+Plug 'carlitux/deoplete-ternjs'
+Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/neopairs.vim'
 Plug 'milkypostman/vim-togglelist'
 Plug 'mattn/webapi-vim'
 Plug 'AndrewRadev/splitjoin.vim'
@@ -391,6 +365,7 @@ Plug 'benjie/neomake-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'neomake/neomake'
 Plug 'moll/vim-node'
+Plug 'itchyny/vim-cursorword'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'justinmk/vim-gtfo'
@@ -429,7 +404,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
 Plug 'vim-utils/vim-man'
-Plug 'Valloric/YouCompleteMe'
 Plug 'vim-scripts/mru.vim'
 Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
 Plug 'junegunn/seoul256.vim'
@@ -437,16 +411,16 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
 Plug 'justinmk/vim-sneak'
 Plug 'tomtom/quickfixsigns_vim'
+Plug 'mxw/vim-jsx',{'for': 'javascript'}
+" Plug 'Valloric/YouCompleteMe'
 " Plug 'majutsushi/tagbar'
 " Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 " Plug 'git-time-metric/gtm-vim-plugin'
 " Plug 'othree/yajs.vim'
 " Plug 'othree/es.next.syntax.vim'
 " Plug 'sheerun/vim-polyglot',{'for':'javascript'}
-"Plug 'thinca/vim-prettyprint'
+" Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
-"for jira
-" Plug 'carlitux/deoplete-ternjs'
 " Plug 'tyru/open-browser.vim'
 " Plug 'jlanzarotta/bufexplorer'
 " Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
@@ -474,9 +448,7 @@ Plug 'tomtom/quickfixsigns_vim'
 " Plug 'bling/vim-bufferline'
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'tpope/vim-commentary'
-" Plug 'briancollins/vim-jst', { 'for': 'javascript' }
 "Plug 'mattn/emmet-vim'
 " Plug 'KabbAmine/vCoolor.vim'
 "Plug 'benmills/vimux'
@@ -488,30 +460,58 @@ Plug 'tomtom/quickfixsigns_vim'
 " Plug 'ternjs/tern_for_vim'
 "Plug 'benmills/vimux'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
-" Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
+Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                  vim-better-javascript-completion                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:vimjs#casesensistive = 1
+let g:jsx_ext_required = 0
+let g:vimjs#casesensistive = 1
 " Enabled by default. flip the value to make completion matches case insensitive
 
-" let g:vimjs#smartcomplete = 1
+let g:vimjs#smartcomplete = 1
 " Disabled by default. Enabling this will let vim complete matches at any location
 " e.g. typing 'ocument' will suggest 'document' if enabled.
 
-" let g:vimjs#chromeapis = 1
+let g:vimjs#chromeapis = 1
 " Disabled by default. Toggling this will enable completion for a number of Chrome's JavaScript extension APIs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              deoplete                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use deoplete.
-" let g:deoplete#enable_at_startup = 1
-" let g:tern_request_timeout = 1
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+let g:tern_request_timeout = 1
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 " let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
-" Use tern_for_vim.
-" let g:tern#command = ["tern"]
-" let g:tern#arguments = ["--persistent"]
+autocmd CompleteDone * pclose!
+let g:deoplete#auto_complete_delay = 20
+let g:deoplete#auto_refresh_delay = 30
+let g:deoplete#enable_refresh_always = 0
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+endfunction
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" let g:deoplete#sources#flow#flow_bin = '/usr/local/bin/flow' 
+function! StrTrim(txt)
+  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+endfunction
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:flow#enable = 1
+let g:flow#autoclose = 1
+call deoplete#custom#set('_', 'matchers', ['matcher_length','matcher_full_fuzzy'])
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = [
+  \ 'tern#Complete',
+  \ 'jspc#omni'
+  \]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-notes                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -519,7 +519,7 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              choosewin                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:choosewin_overlay_enable = 1
+" let g:choosewin_overlay_enable = 1
 nmap  <C-w><C-f> <Plug>(choosewin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              Quickrun                               "
@@ -557,6 +557,9 @@ xnoremap <silent> <BS> <gv
 xnoremap <silent> <C-l> >gv
 xnoremap < <gv
 xnoremap > >gv
+nnoremap gp %
+nnoremap ge $
+nnoremap ga ^
 nnoremap <tab>   <c-w>w
 nnoremap <S-tab> <c-w>W
 nnoremap <silent> <C-k> :move-2<cr>
@@ -572,6 +575,8 @@ nnoremap <C-w><C-=> <C-w>+
 nnoremap <C-w><C--> <C-w>-
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
+inoremap <down> <C-n>
+inoremap <up> <C-p>
 nnoremap n nzz
 nnoremap N Nzz
 nnoremap j jzz
@@ -603,7 +608,6 @@ map <leader><F10> :QuickRun<CR>
 "                           vim-javascript                            "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:javascript_plugin_jsdoc = 1
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   jsdoc                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -759,29 +763,29 @@ syntax on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 ycm                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_allow_changing_updatetime = 1
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_use_ultisnips_completer = 1
+" let g:ycm_autoclose_preview_window_after_completion = 1
+" let g:ycm_allow_changing_updatetime = 1
+" let g:ycm_min_num_of_chars_for_completion = 1
+" let g:ycm_use_ultisnips_completer = 1
 "let g:ycm_seed_identifiers_with_syntax = 1
 "compatible with UltiSnips (using supertab)
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = '<C-n>'
+" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+" let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 "autocmd VimEnter  * silent! :split | term
 
-let g:ycm_server_python_interpreter = '/usr/local/bin/python3.5'
-let g:ycm_python_binary_path = '/usr/local/bin/python3.5'
-let g:ycm_semantic_triggers =  {
-      \   'c' : ['->', '.'],
-      \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-      \             're!\[.*\]\s'],
-      \   'cpp,objcpp' : ['->', '.', '::'],
-      \   'javascript,typescript,python,go' : ['.'],
-      \ }
+" let g:ycm_server_python_interpreter = '/usr/local/bin/python3.5'
+" let g:ycm_python_binary_path = '/usr/local/bin/python3.5'
+" let g:ycm_semantic_triggers =  {
+      " \   'c' : ['->', '.'],
+      " \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+      " \             're!\[.*\]\s'],
+      " \   'cpp,objcpp' : ['->', '.', '::'],
+      " \   'javascript,typescript,python,go' : ['.'],
+      " \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on
@@ -802,22 +806,6 @@ cno hhh ~/
 cno ddd ~/Desktop/
 cno kkk ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => vim-javascript
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let javascript_enable_domhtmlcss = 1
-" let g:javascript_conceal_function       = "ƒ"
-" let g:javascript_conceal_null           = "ø"
-" let g:javascript_conceal_this           = "@"
-" let g:javascript_conceal_return         = "⇚"
-" let g:javascript_conceal_undefined      = "¿"
-" let g:javascript_conceal_NaN            = "ℕ"
-" let g:javascript_conceal_prototype      = "¶"
-" let g:javascript_conceal_static         = "•"
-" let g:javascript_conceal_super          = "Ω"
-" let g:javascript_conceal_arrow_function = "⇒"
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1179,7 +1167,7 @@ let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 
 " Fugitive {
 cno gitfindcommit Glog --grep=
-
+set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
 nnoremap <silent> <leader>gca :te git commit --all<CR>
 nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
 nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
