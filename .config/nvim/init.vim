@@ -238,17 +238,12 @@ set nobackup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           Neo terminal emulator                            "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:tnoremap <Esc>1 <C-\><C-n>
-:tnoremap <C-w>h <C-\><C-n><C-w>h
-:tnoremap <C-w>j <C-\><C-n><C-w>j
-:tnoremap <C-w>k <C-\><C-n><C-w>k
-:tnoremap <C-w>l <C-\><C-n><C-w>l
-:nnoremap <C-h> <C-w><C-h>
-:nnoremap <C-j> <C-w><C-j>
-:nnoremap <C-k> <C-w><C-k>
-:nnoremap <C-l> <C-w><C-l>
-:nnoremap <silent> <leader>t :terminal<CR>
-:nnoremap <leader><leader>t :te
+tnoremap <C-w>h <C-\><C-n><C-w>h
+tnoremap <C-w>j <C-\><C-n><C-w>j
+tnoremap <C-w>k <C-\><C-n><C-w>k
+tnoremap <C-w>l <C-\><C-n><C-w>l
+nnoremap <silent> <leader>t :terminal<CR>
+nnoremap <leader><leader>t :te
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             quicker ESC                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
