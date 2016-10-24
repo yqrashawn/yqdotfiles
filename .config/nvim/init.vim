@@ -817,20 +817,9 @@ map <space> /
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" inoremap $3 ()<esc>i
-"""""""""""""""""""
-"easyMotion
-"""""""""""""""""""""
-" let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-" nmap <C-s> <Plug>(easymotion-overwin-f)
-" vmap <C-s> <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-" Turn on case insensitive feature
-" let g:EasyMotion_smartcase = 1
+inoremap $3 ()<left>
+inoremap $2 {}<left><C-j>
+inoremap $1 []<left>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              UltiSnips                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
