@@ -550,7 +550,8 @@ nnoremap <C-w><C-=> <C-w>+
 nnoremap <C-w><C--> <C-w>-
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
-nnoremap é <C-i>
+nnoremap é <C-i>zz
+nnoremap <C-o> <C-o>zz
 inoremap <down> <C-n>
 inoremap <up> <C-p>
 nnoremap n nzz
