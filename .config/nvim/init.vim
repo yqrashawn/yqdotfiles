@@ -128,8 +128,8 @@ onoremap <silent> ic :<C-U>call   <SID>inner_blockwise_column('',           'iw'
 " Tabularize mappings
 " For custom Tabularize definitions see after/plugin/tabularize.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap sa      :call <SID>Tabularize(0)<cr>
-xnoremap sa :<c-u>call <SID>Tabularize(1)<cr>
+nnoremap gsa      :call <SID>Tabularize(0)<cr>
+xnoremap gsa :<c-u>call <SID>Tabularize(1)<cr>
 function! s:Tabularize(visual)
   let saved_cursor = getpos('.')
 
@@ -158,8 +158,8 @@ function! s:Tabularize(visual)
 endfunction
 
 " Tabularize "reset" -- removes all duplicate whitespace
-nnoremap s= :call <SID>TabularizeReset()<cr>
-xnoremap s= :call <SID>TabularizeReset()<cr>
+nnoremap gs= :call <SID>TabularizeReset()<cr>
+xnoremap gs= :call <SID>TabularizeReset()<cr>
 function! s:TabularizeReset()
   let original_cursor = getpos('.')
 
@@ -243,39 +243,15 @@ set nobackup
 :tnoremap <C-w>j <C-\><C-n><C-w>j
 :tnoremap <C-w>k <C-\><C-n><C-w>k
 :tnoremap <C-w>l <C-\><C-n><C-w>l
-":nnoremap <C-w><C-h> <C-w>h
-":nnoremap <C-w><C-j> <C-w>j
-":nnoremap <C-w><C-k> <C-w>k
-":nnoremap <C-w><C-l> <C-w>l
+:nnoremap <C-h> <C-w><C-h>
+:nnoremap <C-j> <C-w><C-j>
+:nnoremap <C-k> <C-w><C-k>
+:nnoremap <C-l> <C-w><C-l>
 :nnoremap <silent> <leader>t :terminal<CR>
 :nnoremap <leader><leader>t :te
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                         jira configuration                          "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:jira_url = 'http://115.28.138.35:8080'
-let g:jira_username = 'zhangyuxiao'
-let g:jira_password = 'namy0000'
-
-" Customize
-let g:unite_source_issue_jira_priority_table = {
-      \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
-
-let g:unite_source_issue_jira_status_table = {
-      \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
-      \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
-      \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
-
-let g:unite_source_issue_jira_type_table = {
-      \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
-      \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             quicker ESC                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 set ttimeoutlen=30
 augroup FastEscape
   autocmd!
@@ -286,7 +262,7 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 lopen lclose                               "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <script> <silent> <BS> :call ToggleLocationList()<CR>
+nmap <script> <silent> gh :call ToggleLocationList()<CR>
 nmap <script> <silent> g; :call ToggleQuickfixList()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 neomake                                    "
@@ -365,8 +341,8 @@ Plug 'benjie/neomake-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'neomake/neomake'
 Plug 'moll/vim-node'
-Plug 'itchyny/vim-cursorword'
 Plug 'mhinz/vim-startify' "welcoming view
+Plug 'ternjs/tern_for_vim',{'for': 'javascript'}
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'justinmk/vim-gtfo'
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
@@ -377,7 +353,6 @@ Plug 'mattn/ctrlp-register'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'bling/vim-airline'
 Plug 'powerline/fonts'
-Plug 'easymotion/vim-easymotion'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
@@ -409,11 +384,12 @@ Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
-Plug 'justinmk/vim-sneak'
 Plug 'tomtom/quickfixsigns_vim'
+Plug 'justinmk/vim-sneak'
 Plug 'mxw/vim-jsx',{'for': 'javascript'}
+Plug 'majutsushi/tagbar'
+" Plug 'easymotion/vim-easymotion'
 " Plug 'Valloric/YouCompleteMe'
-" Plug 'majutsushi/tagbar'
 " Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 " Plug 'git-time-metric/gtm-vim-plugin'
 " Plug 'othree/yajs.vim'
@@ -436,6 +412,7 @@ Plug 'mxw/vim-jsx',{'for': 'javascript'}
 "Plug 'altercation/vim-colors-solarized'
 " Plug 'vim-ctrlspace/vim-ctrlspace'
 "Plug 'itchyny/dictionary.vim'
+" Plug 'itchyny/vim-cursorword'
 " Plug 'tpope/vim-endwise'
 " Plug 'groenewege/vim-less', { 'for': 'less' }
 " Plug 'vim-scripts/sessionman.vim'
@@ -457,11 +434,15 @@ Plug 'mxw/vim-jsx',{'for': 'javascript'}
 " Plug 'vim-scripts/a.vim'
 "Plug 'rizzatti/dash.vim'
 "Plug 'junegunn/goyo.vim'
-" Plug 'ternjs/tern_for_vim'
 "Plug 'benmills/vimux'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
 Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
 call plug#end()
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 vim-sneak                                  "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:sneak#streak = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                  vim-better-javascript-completion                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -494,7 +475,6 @@ inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
     return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
 endfunction
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " let g:deoplete#sources#flow#flow_bin = '/usr/local/bin/flow' 
 function! StrTrim(txt)
   return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
@@ -561,9 +541,9 @@ nnoremap gp %
 nnoremap ge $
 nnoremap ga ^
 nnoremap <tab>   <c-w>w
-nnoremap <S-tab> <c-w>W
-nnoremap <silent> <C-k> :move-2<cr>
-nnoremap <silent> <C-j> :move+<cr>
+" nnoremap <S-tab> <c-w>W
+" nnoremap <silent> <C-k> :move-2<cr>
+" nnoremap <silent> <C-j> :move+<cr>
 nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz
 let leader='\'
@@ -575,6 +555,7 @@ nnoremap <C-w><C-=> <C-w>+
 nnoremap <C-w><C--> <C-w>-
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
+nnoremap é <C-i>
 inoremap <down> <C-n>
 inoremap <up> <C-p>
 nnoremap n nzz
@@ -838,11 +819,6 @@ set tm=500
 
 " <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
-
-" Let 'tl' toggle between this and the last accessed tab
-let g:lasttab = 1
-nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -850,16 +826,16 @@ au TabLeave * let g:lasttab = tabpagenr()
 """""""""""""""""""
 "easyMotion
 """""""""""""""""""""
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
-nmap <C-s> <Plug>(easymotion-overwin-f)
-vmap <C-s> <Plug>(easymotion-overwin-f)
+" nmap <C-s> <Plug>(easymotion-overwin-f)
+" vmap <C-s> <Plug>(easymotion-overwin-f)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
 " Turn on case insensitive feature
-let g:EasyMotion_smartcase = 1
+" let g:EasyMotion_smartcase = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              UltiSnips                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1160,7 +1136,11 @@ elseif executable('ack')
 endif
 
 " TagBar
-" nnoremap <silent> <leader>f :TagbarToggle<CR>
+nnoremap <silent> <leader>f :TagbarToggle<CR>
+" Let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
 
 " Rainbow {
 let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
