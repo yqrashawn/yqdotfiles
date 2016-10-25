@@ -1919,7 +1919,7 @@
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame NSFontPanel</key>
-	<string>172 208 445 77 0 0 1280 777 </string>
+	<string>205 100 445 77 0 0 1440 877 </string>
 	<key>NSWindow Frame Preferences</key>
 	<string>46 318 606 456 0 0 1280 777 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
@@ -1927,7 +1927,7 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>408 363 620 392 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>343 141 796 473 0 0 1440 877 </string>
+	<string>290 117 796 473 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
 	<string>0 0 1440 878 0 0 1440 877 </string>
 	<key>NeverWarnAboutShortLivedSessions_F708A1E7-4DB2-4095-8F4A-CE821730CC54</key>
@@ -2291,6 +2291,13 @@
 					<key>Text</key>
 					<string>0x7f</string>
 				</dict>
+				<key>0x69-0x40000</key>
+				<dict>
+					<key>Action</key>
+					<integer>11</integer>
+					<key>Text</key>
+					<string>0xe9</string>
+				</dict>
 				<key>0xf700-0x220000</key>
 				<dict>
 					<key>Action</key>
@@ -2514,7 +2521,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>Monaco 10</string>
+			<string>Monaco 12</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Option Key Sends</key>
@@ -2682,6 +2689,8 @@
 			<key>Use Bright Bold</key>
 			<true/>
 			<key>Use Canonical Parser</key>
+			<false/>
+			<key>Use Cursor Guide</key>
 			<false/>
 			<key>Use Italic Font</key>
 			<true/>
@@ -6620,7 +6629,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-10-22T16:52:18Z</date>
+	<date>2016-10-24T05:02:13Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
@@ -6675,6 +6684,10 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.9</string>
+	<string>3.0.10</string>
+	<key>kCPKSelectionViewPreferredModeKey</key>
+	<integer>0</integer>
+	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
+	<false/>
 </dict>
 </plist>

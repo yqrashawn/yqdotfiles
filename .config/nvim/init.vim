@@ -215,6 +215,7 @@ let g:signify_skip_filetype = { 'journal': 1 }
 " ----------------------------------------------------------------------------
 " AutoSave
 " ----------------------------------------------------------------------------
+autocmd BufLeave,FocusLost * silent! wall
 function! s:autosave(enable)
   augroup autosave
     autocmd!
@@ -233,7 +234,7 @@ command! -bang AutoSave call s:autosave(<bang>1)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set backupdir=~/vimtmp,.
 set directory=~/vimtmp,.
-set nobackup
+" set nobackup
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           Neo terminal emulator                            "
@@ -322,10 +323,9 @@ command! Root call s:root()
 
 call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
-Plug 'junegunn/vim-peekaboo'
 Plug 'kassio/neoterm'
 Plug 'Shougo/echodoc.vim'
-Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
+" Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'Shougo/deoplete.nvim'
 Plug 'Shougo/neopairs.vim'
@@ -393,6 +393,7 @@ Plug 'majutsushi/tagbar'
 " Plug 'thinca/vim-prettyprint'
 "Plug 'thinca/vim-ref'
 " Plug 'tyru/open-browser.vim'
+" Plug 'junegunn/vim-peekaboo'
 " Plug 'jlanzarotta/bufexplorer'
 " Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
 "Plug 'rafi/vim-unite-issue'
@@ -436,8 +437,7 @@ call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 vim-sneak                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:sneak#streak = 1
+let g:sneak#streak = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                  vim-better-javascript-completion                   "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -463,14 +463,13 @@ inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 " let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
 autocmd CompleteDone * pclose!
-let g:deoplete#auto_complete_delay = 20
-let g:deoplete#auto_refresh_delay = 30
+let g:deoplete#auto_complete_delay = 0
+let g:deoplete#auto_refresh_delay = 20
 let g:deoplete#enable_refresh_always = 0
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
     return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
 endfunction
-" let g:deoplete#sources#flow#flow_bin = '/usr/local/bin/flow' 
 function! StrTrim(txt)
   return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
@@ -479,9 +478,8 @@ function! s:my_cr_function()
     return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
 endfunction
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-let g:flow#enable = 1
-let g:flow#autoclose = 1
 call deoplete#custom#set('_', 'matchers', ['matcher_length','matcher_full_fuzzy'])
+let g:deoplete#sources = ['ultisnips','member', 'ternjs', 'file']
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete',
@@ -727,8 +725,6 @@ let g:airline#extensions#tabline#show_close_button = 0
 "                                 set                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"highlight current line and column
-set cursorcolumn
 "fold depend on syntax
 set foldmethod=syntax
 set foldlevelstart=20
@@ -916,10 +912,11 @@ endif
 set tabpagemax=15               " Only show 15 tabs
 set showmode                    " Display the current mode
 set cursorline                  " Highlight current line
+set nocuc
 
-highlight clear SignColumn      " SignColumn should match background
+" highlight clear SignColumn      " SignColumn should match background
 highlight clear LineNr          " Current line number row will have same background color in relative mode
-"highlight clear CursorLineNr    " Remove highlight color from current line number
+" highlight clear CursorLineNr    " Remove highlight color from current line number
 
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
 set showcmd                 " Show partial commands in status line and
@@ -1137,7 +1134,7 @@ nnoremap <silent> <leader>gca :te git commit --all<CR>
 nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
 nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
 nnoremap <silent> <leader>gws :te git status --short<CR>
-nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gs :Gstatus<CR>gg<C-n>
 nnoremap <silent> <leader>gd :Gvdiff<CR>
 nnoremap <silent> <leader>gc :Gcommit<CR>
 nnoremap <silent> <leader>gb :Gblame<CR>
