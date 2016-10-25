@@ -325,7 +325,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
 Plug 'Shougo/echodoc.vim'
-" Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
+Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'Shougo/deoplete.nvim'
 Plug 'Shougo/neopairs.vim'
@@ -485,6 +485,11 @@ let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete',
   \ 'jspc#omni'
   \]
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              vim-flow                               "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:flow#enable = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-notes                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -839,8 +844,8 @@ let g:startify_bookmarks = ['~/workspace']
 "                             colorscheme                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set termguicolors
-" set background=dark " Assume a dark background
-set background=light " Assume a dark background
+set background=dark " Assume a dark background
+" set background=light " Assume a dark background
 " colorscheme solarized
 " colorscheme seoul256
 " let g:seoul256_light_background = 252
