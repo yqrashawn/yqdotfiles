@@ -24,3 +24,6 @@ ycm_extra_conf.objc.py
 /go
 /heapDump-Webstorm-1471658795218.hprof.zip
 Applications (Parallels)
+examples.desktop
+temp.zsh
+workspace

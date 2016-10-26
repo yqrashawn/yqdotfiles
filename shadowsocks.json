@@ -1,0 +1,11 @@
+{
+	"server":"45.78.62.230",
+	"server_port":433,
+	"local_port":1080,
+	"password":"MTE4MTFhMD",
+	"timeout":300,
+	"method":"rc4-md5",
+    "fast_open": false,
+    "workers": 1,
+    "obfs": "http_simple"
+}
