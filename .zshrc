@@ -109,6 +109,11 @@ alias gfbr='git flow bugfix rebase'
 alias gfbc='git flow bugfix pull'
 alias gfbd='git flow bugfix delete'
 
+#for linux
+alias apt='apt-get install '
+alias s='sudo'
+eval "$(fasd --init auto)"
+
 #别名设置举例
 # export PATH="/usr/local/sbin:$PATH"
 #export PATH="$HOME/.node/bin:$PATH"
