@@ -1,9 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "<script type=\"text\/javascript\">\nvar ip = '<!--#echo var=\"REMOTE_ADDR\"-->';\ndocument.write('Your IP address is: ' + ip);\n<\/script>",
-    "dontautoexpand" : true,
-    "uid" : "5C152D0A-1977-4B7A-9B2F-5260F23DBCF9",
-    "name" : "getIP",
-    "keyword" : "getip"
-  }
-}

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Skim Remote</name>
-  <version>1.0</version>
-  <bundle>fm.fastmail.dfay.skimremote</bundle>
-  <updated>1422649285</updated>
-  <file>skim_remote.alfredworkflow</file>
-</workflow>

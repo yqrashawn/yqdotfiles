@@ -1,94 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>bundleid</key>
-	<string>com.calebgrove.sn</string>
-	<key>category</key>
-	<string>Tools</string>
-	<key>connections</key>
-	<dict>
-		<key>C541615E-0054-4A6F-A9CF-069E3DDB9A5A</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>88D7FBA5-053C-462B-B447-E8E7A655C7E5</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
-	</dict>
-	<key>createdby</key>
-	<string>Caleb Grove (@sircalebgrove)</string>
-	<key>description</key>
-	<string>Works in conjuction with Sticky Notifications (app).</string>
-	<key>disabled</key>
-	<false/>
-	<key>name</key>
-	<string>Create Sticky Notification</string>
-	<key>objects</key>
-	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>rem</string>
-				<key>subtext</key>
-				<string>Title:Subtitle:Message</string>
-				<key>text</key>
-				<string>Create a New Sticky Notification</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>C541615E-0054-4A6F-A9CF-069E3DDB9A5A</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>126</integer>
-				<key>script</key>
-				<string>set inputStr to "{query}"set my text item delimiters to ":"if number of text items of inputStr = 1 then	set nMessage to last text item of inputStr	set urlScheme to "sticky-notifications://note?message=" &amp; nMessageend ifif number of text items of inputStr = 2 then	set nTitle to first text item of inputStr	set nMessage to last text item of inputStr	set urlScheme to "sticky-notifications://note?title=" &amp; nTitle &amp; "&amp;message=" &amp; nMessageend ifif number of text items of inputStr = 3 then	set nTitle to first text item of inputStr	set nSubtitle to second text item of inputStr	set nMessage to last text item of inputStr	set urlScheme to "sticky-notifications://note?title=" &amp; nTitle &amp; "&amp;subtitle= " &amp; nSubtitle &amp; "&amp;message=" &amp; nMessageend iftell application "System Events"	open location urlSchemeend tell</string>
-				<key>type</key>
-				<integer>6</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>88D7FBA5-053C-462B-B447-E8E7A655C7E5</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-	</array>
-	<key>readme</key>
-	<string>You will need to get Sticky Notifications from the app store for this workflow to work: https://itunes.apple.com/us/app/sticky-notifications/id552377168?mt=12
-
-“Sticky Notifications” and yellow sticky icon © Instinctive Code - http://instinctivecode.com</string>
-	<key>uidata</key>
-	<dict>
-		<key>88D7FBA5-053C-462B-B447-E8E7A655C7E5</key>
-		<dict>
-			<key>ypos</key>
-			<real>10</real>
-		</dict>
-		<key>C541615E-0054-4A6F-A9CF-069E3DDB9A5A</key>
-		<dict>
-			<key>ypos</key>
-			<real>10</real>
-		</dict>
-	</dict>
-	<key>webaddress</key>
-	<string>calebgrove.com</string>
-</dict>
-</plist>
