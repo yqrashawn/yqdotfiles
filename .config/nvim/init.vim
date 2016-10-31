@@ -322,6 +322,7 @@ command! Root call s:root()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
+Plug 'Shougo/denite.nvim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
 Plug 'Shougo/echodoc.vim'
