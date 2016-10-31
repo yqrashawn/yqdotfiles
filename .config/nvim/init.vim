@@ -1096,7 +1096,7 @@ let g:fzf_files_options =
 nnoremap <silent> <expr> <Leader>ff (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
-nnoremap <silent> <Leader>vt :CtrlPBuffer<CR>
+nnoremap <silent> <C-p> :CtrlPBuffer<CR>
 nnoremap <silent> <leader>fgc :Gcommit<CR>
 nnoremap <silent> <leader>fbc :BGcommit<CR>
 let g:fzf_buffers_jump = 1
