@@ -17,6 +17,7 @@ set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
 set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
 set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
 nmap <NUL> :Ttoggle<CR>
+nmap <C-space> :Ttoggle<CR>
 " imap <NUL> <ESC>:Ttoggle<CR>
 tnoremap <NUL> <C-\><C-n>:Ttoggle<CR>
 " ----------------------------------------------------------------------------
@@ -243,6 +244,7 @@ tnoremap <C-w>h <C-\><C-n><C-w>h
 tnoremap <C-w>j <C-\><C-n><C-w>j
 tnoremap <C-w>k <C-\><C-n><C-w>k
 tnoremap <C-w>l <C-\><C-n><C-w>l
+tnoremap <C-space> <C-\><C-n>:Ttoggle<CR>
 nnoremap <silent> <leader>t :terminal<CR>
 nnoremap <leader><leader>t :te
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
