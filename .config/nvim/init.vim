@@ -539,6 +539,7 @@ xnoremap <silent> <C-l> >gv
 xnoremap < <gv
 xnoremap > >gv
 nnoremap gp %
+vnoremap gp %
 nnoremap ge $
 nnoremap ga ^
 nnoremap <tab>   <c-w>w
