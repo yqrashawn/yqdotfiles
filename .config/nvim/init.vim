@@ -467,7 +467,7 @@ inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 " let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
 autocmd CompleteDone * pclose!
 let g:deoplete#auto_complete_delay = 0
-let g:deoplete#auto_refresh_delay = 20
+let g:deoplete#auto_refresh_delay = 0
 let g:deoplete#enable_refresh_always = 0
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
