@@ -324,10 +324,8 @@ command! Root call s:root()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
-" Plug 'Shougo/denite.nvim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
-" Plug 'Shougo/echodoc.vim'
 Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'Shougo/deoplete.nvim'
@@ -371,12 +369,10 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'maksimr/vim-jsbeautify',
 Plug 'othree/html5.vim' , {'for': 'html'}
-" Plug 'Olical/vim-enmasse'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
-" Plug 'vim-utils/vim-man'
 Plug 'vim-scripts/mru.vim'
 Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
 Plug 'junegunn/seoul256.vim'
@@ -385,19 +381,23 @@ Plug 'morhetz/gruvbox'
 " Plug 'tomtom/quickfixsigns_vim'
 Plug 'justinmk/vim-sneak'
 Plug 'mxw/vim-jsx',{'for': 'javascript'}
-Plug 'majutsushi/tagbar'
-Plug 'jceb/vim-orgmode',{'for': 'org'}
-Plug 'tpope/vim-speeddating',{'for': 'org'}
-Plug 'vim-scripts/utl.vim',{'for': 'org'}
-Plug 'chrisbra/NrrwRgn',{'for': 'org'}
-Plug 'mattn/calendar-vim',{'for': 'org'}
-Plug 'vim-scripts/taglist.vim',{'for': 'org'}
-Plug 'vim-scripts/SyntaxRange',{'for': 'org'}
+" Plug 'vim-utils/vim-man'
+" Plug 'Olical/vim-enmasse'
+" Plug 'majutsushi/tagbar'
+" Plug 'jceb/vim-orgmode',{'for': 'org'}
+" Plug 'tpope/vim-speeddating',{'for': 'org'}
+" Plug 'vim-scripts/utl.vim',{'for': 'org'}
+" Plug 'chrisbra/NrrwRgn',{'for': 'org'}
+" Plug 'mattn/calendar-vim',{'for': 'org'}
+" Plug 'vim-scripts/taglist.vim',{'for': 'org'}
+" Plug 'vim-scripts/SyntaxRange',{'for': 'org'}
 " Plug 'easymotion/vim-easymotion'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 " Plug 'git-time-metric/gtm-vim-plugin'
 " Plug 'othree/yajs.vim'
+" Plug 'Shougo/denite.nvim'
+" Plug 'Shougo/echodoc.vim'
 " Plug 'othree/es.next.syntax.vim'
 " Plug 'sheerun/vim-polyglot',{'for':'javascript'}
 " Plug 'thinca/vim-prettyprint'
