@@ -324,10 +324,10 @@ command! Root call s:root()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
-Plug 'Shougo/denite.nvim'
+" Plug 'Shougo/denite.nvim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
-Plug 'Shougo/echodoc.vim'
+" Plug 'Shougo/echodoc.vim'
 Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'Shougo/deoplete.nvim'
@@ -356,7 +356,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
-Plug 'mhinz/vim-signify' "show lines modified
+Plug 'mhinz/vim-signify', {'on':'SignifyToggle'} "show lines modified
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular'
@@ -371,21 +371,28 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'maksimr/vim-jsbeautify',
 Plug 'othree/html5.vim' , {'for': 'html'}
-Plug 'Olical/vim-enmasse'
+" Plug 'Olical/vim-enmasse'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
-Plug 'vim-utils/vim-man'
+" Plug 'vim-utils/vim-man'
 Plug 'vim-scripts/mru.vim'
 Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
-Plug 'tomtom/quickfixsigns_vim'
+" Plug 'tomtom/quickfixsigns_vim'
 Plug 'justinmk/vim-sneak'
 Plug 'mxw/vim-jsx',{'for': 'javascript'}
 Plug 'majutsushi/tagbar'
+Plug 'jceb/vim-orgmode',{'for': 'org'}
+Plug 'tpope/vim-speeddating',{'for': 'org'}
+Plug 'vim-scripts/utl.vim',{'for': 'org'}
+Plug 'chrisbra/NrrwRgn',{'for': 'org'}
+Plug 'mattn/calendar-vim',{'for': 'org'}
+Plug 'vim-scripts/taglist.vim',{'for': 'org'}
+Plug 'vim-scripts/SyntaxRange',{'for': 'org'}
 " Plug 'easymotion/vim-easymotion'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'scrooloose/syntastic',{ 'for':'javascript' }
@@ -415,7 +422,6 @@ Plug 'majutsushi/tagbar'
 " Plug 'tpope/vim-endwise'
 " Plug 'groenewege/vim-less', { 'for': 'less' }
 " Plug 'vim-scripts/sessionman.vim'
-" Plug 'jceb/vim-orgmode'
 " Plug 'xolox/vim-notes'
 " Plug 'xolox/vim-misc'
 " Plug 'tacahiroy/ctrlp-funky'
@@ -459,6 +465,7 @@ let g:vimjs#chromeapis = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#debugMode = 1
 let g:deoplete#enable_smart_case = 1
 let g:tern_request_timeout = 1
 " <C-h>, <BS>: close popup and delete backword char.
@@ -922,7 +929,7 @@ endif
 set tabpagemax=15               " Only show 15 tabs
 set showmode                    " Display the current mode
 set cursorline                  " Highlight current line
-set nocuc
+" set nocuc
 
 " highlight clear SignColumn      " SignColumn should match background
 highlight clear LineNr          " Current line number row will have same background color in relative mode
@@ -1139,7 +1146,7 @@ let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 
 " Fugitive {
 cno gitfindcommit Glog --grep=
-set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
+set statusline+=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
 nnoremap <silent> <leader>gca :te git commit --all<CR>
 nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
 nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
