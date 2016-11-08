@@ -489,7 +489,7 @@ function! s:my_cr_function()
 endfunction
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 call deoplete#custom#set('_', 'matchers', ['matcher_length','matcher_full_fuzzy'])
-call deoplete#enable_logging('DEBUG', 'd.log')
+" call deoplete#enable_logging('DEBUG', 'd.log')
 let g:deoplete#sources = ['ultisnips','member', 'ternjs']
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = [
