@@ -294,6 +294,11 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  ;; https://github.com/purcell/exec-path-from-shell
+  ;; only need exec-path-from-shell on OSX
+  ;; this hopefully sets up path and other vars better
+  ;; (when (memq window-system '(mac ns))
+  ;;   (exec-path-from-shell-initialize))
   )
 
 (defun dotspacemacs/user-config ()
@@ -303,9 +308,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (auto-indent-global-mode)
-  (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  ;; (auto-indent-global-mode)
+  ;; (yas-reload-all)
+  ;; (add-hook "prog-mode-hook #'yas-minor-mode)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (setq scroll-margin 5
@@ -323,8 +328,13 @@ you should place your code here."
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
   ;; translate C-h to backspace, and M-h to C-h
+  ;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
   (keyboard-translate ?\C-h ?\C-?)
-  (define-key key-translation-map (kbd "M-h") (kbd "C-h"))
+  ;; (global-set-key (kbd "C-?") 'help-command)
+  ;; (global-set-key (kbd "M-?") 'mark-paragraph)
+  ;; (global-set-key (kbd "C-h") 'delete-backward-char)
+  ;; (global-set-key [(control ?h)] 'delete-backward-char)
+  ;; (global-set-key (kbd "M-h") 'backward-kill-word)
   ;; turn on flychecking globally
   (add-hook 'after-init-hook #'global-flycheck-mode)
   ;; disable jshint since we prefer eslint checking
@@ -333,14 +343,11 @@ you should place your code here."
                         '(javascript-jshint)))
   ;; use eslint with web-mode for jsx files
   (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (flycheck-add-mode 'javascript-eslint 'js-mode)
   ;; customize flycheck temp file prefix
   (setq-default flycheck-temp-prefix ".flycheck")
 
-  ;; https://github.com/purcell/exec-path-from-shell
-  ;; only need exec-path-from-shell on OSX
-  ;; this hopefully sets up path and other vars better
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
   ;; adjust indents for web-mode to 2 spaces
   (defun my-web-mode-hook ()
     "Hooks for Web mode. Adjust indents"
@@ -370,13 +377,14 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
   (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
   (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
-  ;; (define-key evil-insert-state-map (kbd "C-j") 'newline-and-indent)
   (setq-default evil-escape-key-sequence "kj")
   (setq auto-indent-indent-style 'conservative)
-  ;; (setq auto-indent-style 'conservative)
+  (setq auto-indent-style 'conservative)
   (setq auto-indent-on-visit-file t)
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
+  (setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
+  ;;(eval-after-load 'js2-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -388,10 +396,9 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(evil-escape-unordered-key-sequence t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
- '(flycheck-eslint-rules-directories (quote ("/User/Rashawn/.eslintrc.js")))
  '(package-selected-packages
    (quote
-    (auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme))))
+    (add-node-modules-path eslint-fix npm-mode auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
