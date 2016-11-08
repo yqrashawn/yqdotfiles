@@ -473,8 +473,8 @@ inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
 " let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
 autocmd CompleteDone * pclose!
-let g:deoplete#auto_complete_delay = 0
-let g:deoplete#auto_refresh_delay = 0
+let g:deoplete#auto_complete_delay = 1
+let g:deoplete#auto_refresh_delay = 1
 let g:deoplete#enable_refresh_always = 0
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
@@ -489,7 +489,8 @@ function! s:my_cr_function()
 endfunction
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 call deoplete#custom#set('_', 'matchers', ['matcher_length','matcher_full_fuzzy'])
-let g:deoplete#sources = ['ultisnips','member', 'ternjs', 'file']
+call deoplete#enable_logging('DEBUG', 'd.log')
+let g:deoplete#sources = ['ultisnips','member', 'ternjs']
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete',
