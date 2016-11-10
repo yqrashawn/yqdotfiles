@@ -301,8 +301,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-initialize))
   (setq url-proxy-services
-        '(("http"     . "http://127.0.0.1:6152")
-          ("https"    . "http://127.0.0.1:6152")))
+        '(("http" . "http://127.0.0.1:6152")
+          ("https" . "http://127.0.0.1:6152")))
   )
 
 (defun dotspacemacs/user-config ()
