@@ -304,7 +304,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; (setq url-proxy-services
   ;;       '(("http" . "http://127.0.0.1:6152")
   ;;         ("https" . "http://127.0.0.1:6152")))
-  ;; )
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -316,8 +316,6 @@ you should place your code here."
   ;; (auto-indent-global-mode)
   ;; (yas-reload-all)
   ;; (add-hook "prog-mode-hook #'yas-minor-mode)
-  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (setq scroll-margin 5
         scroll-conservatively 9999
         scroll-step 1)
