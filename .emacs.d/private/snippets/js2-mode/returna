@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: return async
+# key: returna
+# --
+return(async (${1:vars}) => {
+  ${2:func}
+})();
