@@ -2272,6 +2272,8 @@
 	<integer>2</integer>
 	<key>LoadPrefsFromCustomFolder</key>
 	<true/>
+	<key>Mark Alert Action</key>
+	<string>Post Notification</string>
 	<key>MaxVertically</key>
 	<false/>
 	<key>NSNavLastRootDirectory</key>
@@ -2308,10 +2310,12 @@
 		<key>TB Is Shown</key>
 		<integer>1</integer>
 	</dict>
+	<key>NSWindow Frame SUUpdateAlert</key>
+	<string>408 363 620 392 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>375 139 796 473 0 0 1440 877 </string>
+	<string>375 114 796 473 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1440 877 0 0 1440 877 </string>
+	<string>1 430 1433 447 0 0 1440 877 </string>
 	<key>NeverWarnAboutShortLivedSessions_F708A1E7-4DB2-4095-8F4A-CE821730CC54</key>
 	<true/>
 	<key>NeverWarnAboutSpaces</key>
@@ -3068,7 +3072,7 @@
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
-			<integer>2</integer>
+			<integer>9</integer>
 			<key>Working Directory</key>
 			<string>/Users/Rashawn</string>
 		</dict>
@@ -6951,6 +6955,8 @@
 	</dict>
 	<key>PrefsCustomFolder</key>
 	<string>/Users/Rashawn/Downloads</string>
+	<key>Print In Black And White</key>
+	<true/>
 	<key>PromptOnQuit</key>
 	<false/>
 	<key>QuitWhenAllWindowsClosed</key>
@@ -6968,7 +6974,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-11-12T05:55:39Z</date>
+	<date>2016-11-16T07:02:55Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
