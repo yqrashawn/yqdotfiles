@@ -316,6 +316,9 @@ you should place your code here."
   ;; (auto-indent-global-mode)
   ;; (yas-reload-all)
   ;; (add-hook "prog-mode-hook #'yas-minor-mode)
+  ;; (setq-default dotspacemacs-smartparens-strict-mode t)
+  (spacemacs/toggle-indent-guide-globally-on)
+  ;; (spacemacs/toggle-highlight-indentation-current-column-on)
   (setq scroll-margin 5
         scroll-conservatively 9999
         scroll-step 1)
@@ -330,6 +333,7 @@ you should place your code here."
   ;;javascript config
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
+  (define-key evil-normal-state-map "gh" 'evil-search-forward)
   ;; translate C-h to backspace, and M-h to C-h
   ;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
   (keyboard-translate ?\C-h ?\C-?)
@@ -380,7 +384,6 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
   (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
   (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
-  ;; (define-key evil-normal-state-map (kdb "C-SPC") evil-search-forward)
   (setq-default evil-escape-key-sequence "kj")
   (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
