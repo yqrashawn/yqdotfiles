@@ -43,7 +43,7 @@ values."
      emacs-lisp
      git
      markdown
-     ;; org
+     org
      osx
      evernote
      (javascript :variables javascript-disable-tern-port-files nil)
@@ -52,7 +52,7 @@ values."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
       syntax-checking
      ;; version-control
      )
@@ -301,9 +301,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; this hopefully sets up path and other vars better
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-initialize))
-  (setq url-proxy-services
-        '(("http" . "127.0.0.1:6152")
-          ("https" . "127.0.0.1:6152")))
+  ;; (setq url-proxy-services
+  ;;       '(("http" . "127.0.0.1:6152")
+  ;;         ("https" . "127.0.0.1:6152")))
   )
 
 (defun dotspacemacs/user-config ()
@@ -313,6 +313,22 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; automatically add project TODOs into agenda
+  (with-eval-after-load 'org-agenda
+    (require 'org-projectile)
+    (push (org-projectile:todo-files) org-agenda-files))
+  ;; project todo file position
+  (setq-default dotspacemacs-configuration-layers
+                '((org :variables org-projectile-file "TODOs.org")))
+  ;; org-mode github flavor
+  (setq-default dotspacemacs-configuration-layers '(
+                (org :variables org-enable-github-support t)))
+  ;; org-mode reveal.js support
+  ;; (setq-default dotspacemacs-configuration-layers
+  ;;               '((org :variables org-enable-reveal-js-support t)))
+  ;; add this line to .org file
+  ;; #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+
   ;; (auto-indent-global-mode)
   ;; (yas-reload-all)
   ;; (add-hook "prog-mode-hook #'yas-minor-mode)
