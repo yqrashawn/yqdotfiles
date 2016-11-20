@@ -1,0 +1,728 @@
+/* global Plant,viewer,THREE,viewerSetting */
+import './bimservice-test';
+
+const EventDispatcher = require('./EventDispatcher.js');
+const bim3dip = require('./host.json').bim3d;
+const Maths = require('./Maths.js');
+const MouseHandler = require('./MouseHandler.js');
+const POIManager = require('./POI/POIManager.js');
+const POI = require('./POI/POI.js');
+const Node = require('./Node.js');
+const GUI = require('./GUI/GUI.js');
+const FirstPersion = require('./FirstPersion.js');
+const Path = require('./Path.js');
+const LOD = require('./LOD/lod.js');
+const View = require('./View.js');
+const NodeHandler = require('./NodeHandler.js');
+const CesiumThreejsSwitcher = require('./CesiumThreejsSwitcher.js');
+const BimService = require('./bimservice-sdk');
+const Req = require('./Request.js');
+
+const positioning = false;
+const _idOrid = '_id';
+
+// Three.js
+const SceneViewer = require('./threejs/SceneViewer.js');
+
+/**
+ * 3D 地图
+ * 事件：
+ *      nodeclick: { node: Node }
+ * @param {Element|id} container 包含地图内容的容器。根据 Element|String 所指定的 DOM 元素，配合 options 参数初始化地图。
+ * @param {Object} [options] 参数对象，等同于 Cesium.Viewer() options 参数。
+ * @param {boolean} options.terrain 是否加载地形数据。
+ *
+ * @constructor
+ */
+class Map3D extends EventDispatcher {
+  constructor(container, options) {
+    super();
+
+    let cesiumViewer;
+    let dev;
+    if (options) {
+      dev = options.dev;
+    } else {
+      dev = false;
+    }
+
+    if (options && options.imageryProvider) {
+      viewerSetting.imageryProvider = options.imageryProvider;
+      viewerSetting.baseLayerPicker = false;
+    }
+
+    if (container instanceof Element || typeof container === 'string') {
+      const viewerSetting = {
+            baseLayerPicker: true,
+            animation: false,  // 是否显示动画控件
+            timeline: false, // 是否显示时间线控件
+            infoBox: false,
+            selectionIndicator: false,
+            fullscreenButton: false,
+            geocoder: true,
+            mapProjection: dev ? null : new Cesium.GeographicProjection(),
+            orderIndependentTranslucency: !dev,
+            imageryProvider: dev ? new Cesium.SingleTileImageryProvider({
+                                      url: require('base64-image!./imageryProvider.png'),
+                                      rectangle: Cesium.Rectangle.fromDegrees(-75.0, 28.0, -67.0, 29.75),
+                                    })
+                                     : undefined,
+
+            // skyAtmosphere: options.skyAtmosphere,
+            // skyBox: options.skyBox,
+            // vrButton: true,
+            // imageryProvider : Cesium.createOpenStreetMapImageryProvider({ url : 'https://a.tile.openstreetmap.org/' }),
+            // imageryProvider : new Cesium.createOpenStreetMapImageryProvider({
+            // url: "http://192.168.11.3:8080/googlemaps/roadmap/",
+            // url: "../../beijing-yxMap/googlemaps/satellite_en/",
+            // layer: "tdtVecBasicLayer",
+            // style: "default",
+            // format: "image/jpeg",
+            // fileExtension:'jpg',
+            // tileMatrixSetID: "GoogleMapsCompatible",
+            // show: false
+            // })
+          };
+      cesiumViewer = new Cesium.Viewer('cesiumContainer', viewerSetting);
+
+      // DEBUG : show FPS counter for performance review
+      cesiumViewer.scene.debugShowFramesPerSecond = true;
+    } else if (container instanceof Cesium.Viewer) {
+      cesiumViewer = container;
+    } else throw Error('Container invalid.');
+
+    // cesiumViewer.container.querySelector('.cesium-viewer-toolbar').style.display = 'none';
+    // cesiumViewer.bottomContainer.style.display='none';
+
+    cesiumViewer.container.querySelector('.cesium-viewer-bottom').style.display = 'none';
+    cesiumViewer.scene.globe.depthTestAgainstTerrain = true;
+
+    if (options && options.terrain) {
+      cesiumViewer.terrainProvider = new Cesium.CesiumTerrainProvider({
+          url: 'https://assets.agi.com/stk-terrain/world',
+          requestWaterMask: true,
+          requestVertexNormals: true,
+        });
+    }
+
+    this.viewer3js = new SceneViewer(this, document.getElementById('threejsContainer'));
+    this.cesiumThreejsSwitcher = new CesiumThreejsSwitcher(this, cesiumViewer, this.viewer3js);
+
+    this.viewer = cesiumViewer;
+    this.scene = cesiumViewer.scene;
+    this.view = View;
+    this.modelList = {};
+    this.req = Req;
+    this.nodeHandler = NodeHandler;
+    this.math = new Maths(this);
+    this.POIs = {};
+    this.POIs.threePoi = {};
+    this.ellipsoid = Cesium.Ellipsoid.WGS84;
+    this.poiManager = new POIManager(this);
+    this.mouseHandler = new MouseHandler(this);
+    this.mouseHandler.toggleClickAction();
+    this.lod = new LOD(this);
+
+    // this.viewerEllipsoid = this.vewer.scene.globe.ellipsoid;
+    this.userData = {};
+    this.models = {};
+    this.gui = new GUI(this);
+    this.firstPersion = new FirstPersion(this);
+    this.Paths = {};
+    this.path = new Path(this);
+    if (positioning) {
+      const Positioning = require('./Positioning.js');
+      this.position = new Positioning(this);
+    }
+
+    // this.gravity = {};
+    this.hilghlightMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000, emissive: 0x999999 });
+    this.translucencyMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.2 });
+
+    this.loadAllModelFromServer();
+  }
+
+  /**
+   * 获取内部使用的 Cesium.Viewer 对象。
+   * @returns {Cesium.Viewer}
+   */
+  getViewer() {
+    return this.viewer;
+  }
+
+  /*
+  * 获取相机视角信息。degree: longitude latitude heading pitch roll, meters: height
+  * */
+  getCameraView() {
+    const camera = map3d.viewer.camera;
+    const position = camera.positionCartographic;
+    const cameraView = {
+        position: {
+            longitude: Cesium.Math.toDegrees(position.longitude),
+            latitude: Cesium.Math.toDegrees(position.latitude),
+            height: position.height,
+          },
+      };
+    if (camera.heading !== undefined && camera.heading != null) {
+      cameraView.heading = Cesium.Math.toDegrees(camera.heading);
+      cameraView.pitch = Cesium.Math.toDegrees(camera.pitch);
+      cameraView.roll = Cesium.Math.toDegrees(camera.roll);
+    }
+
+    return cameraView;
+  }
+
+  /**
+   * 设置相机的视角信息，包括位置、方向和变换。可以设置为缓动。
+   *
+   * @param {Object} options 参数对象，各属性如下。
+   * @param {Cesium.Cartesian3} [options.destination] 目标位置 (longitude, latitude, height), degree .
+   * @param {Object} [options.orientation] 包含相机方向属性的参数对象。也可以是heading, pitch、roll。Degree, meters.
+   * @param {number} [options.duration] 持续时长(s)。如果>0则缓动变换相机视图，否则直接切换相机视图。
+   */
+  setCameraView(cameraView) {
+    const options = {
+        destination: Cesium.Cartesian3.fromDegrees(cameraView.position.longitude, cameraView.position.latitude, cameraView.position.height),
+        orientation: {
+            heading: Cesium.Math.toRadians(cameraView.heading),
+            pitch: Cesium.Math.toRadians(cameraView.pitch),
+            roll: Cesium.Math.toRadians(cameraView.roll),
+          },
+        duration: cameraView.duration,
+      };
+
+    if (options.duration > 0) map3d.viewer.camera.flyTo(options);
+    else map3d.viewer.camera.setView(options);
+  }
+
+  /**
+   * 获取Cesium渲染快照，通过callback返回。
+   * @param {function(imageUri)} callback
+     */
+  snapshotCesium(callback) {
+    if (!callback) return;
+
+    const postRenderCallback = function (scene) {
+      scene.postRender.removeEventListener(postRenderCallback, this);
+      callback(this.viewer.canvas.toDataURL());
+    };
+
+    this.viewer.scene.postRender.addEventListener(postRenderCallback, this);
+  }
+
+  /**
+   * 获取Threejs渲染快照，通过callback返回。
+   * @param {function(imageUri)} callback
+   */
+  snapshotThreejs(callback) {
+    if (!callback) return;
+
+    const postRenderCallback = function (event) {
+      event.target.removeEventListener('postRender', postRenderCallback);
+      callback(event.target.canvas.toDataURL());
+    };
+
+    this.viewer3js.addEventListener('postRender', postRenderCallback);
+  }
+
+  /**
+   * 获取视图状态数据。
+   * @returns {Object} viewStatus
+   *  viewStatus={
+   *      camera: <CammeraView>,
+   *      status: {
+   *          <FileId>: {
+   *              invisibles: [id1, id2, ...],
+   *              highlight: [id1, id2, ...]
+   *              translucencies: [id1, id2, ...]
+   *          }
+   *      }
+   *  }
+   *
+   * @see Map3D.getCameraView()
+   */
+  getViewStatus() {
+    const statusData = {};
+
+    const models = this.models;
+    Object.keys(models).forEach((docid) => {
+      let modelData;
+      this.eachNode(docid, (node) => {
+        if (!node.visible) {
+          if (!modelData) statusData[docid] = modelData = {};
+          if (!modelData.invisibles) modelData.invisibles = [];
+          modelData.invisibles.push(node.id);
+        }
+
+        if (node.highlight) {
+          if (!modelData) statusData[docid] = modelData = {};
+          if (!modelData.highlights) modelData.highlights = [];
+          modelData.highlights.push(node.id);
+        }
+
+        if (node.translucency) {
+          if (!modelData) statusData[docid] = modelData = {};
+          if (!modelData.translucencies) modelData.translucencies = [];
+          modelData.translucencies.push(node.id);
+        }
+      });
+    });
+
+    // for (let i = 0, l = this.models.length; i < l; i++) {
+    // }
+
+    return {
+        camera: map3d.getCameraView(),
+        status: statusData,
+      };
+  }
+
+  /**
+   * 设置视图状态数据。
+   * @see Map3D.getViewStatus()
+   */
+  setViewStatus(viewStatus) {
+    const camera = viewStatus.camera;
+    const statusData = viewStatus.status;
+
+    map3d.setCameraView(camera);
+
+    const models = this.models;
+    Object.keys(models).forEach((docid) => {
+      const modelData = statusData[docid];
+      this.eachNode(docid, (node) => {
+        if (modelData.invisibles && modelData.invisibles.indexOf(node.id) > -1) node.visible = false;
+        else if (modelData.highlights && modelData.highlights.indexOf(node.id) > -1) node.highlight = true;
+        else if (modelData.translucencies && modelData.translucencies.indexOf(node.id) > -1) node.translucency = true;
+        else {
+          node.visible = true;
+          node.highlight = false;
+          node.translucency = false;
+          node.isolate = false;
+        }
+      });
+    });
+  }
+
+  /**
+   * 递归处理当前节点和子节点，应用callback函数，直到callback有返回值或者全部处理完。
+   * @param {THREE.Object3D} 节点对象
+   * @param {function(Node)} callback　回调函数
+   * @returns {Any} callback返回的值
+   */
+  static childProcess(node, callback) {
+    if (!callback) return;
+
+    let ret = callback(node);
+    if (ret) return ret;
+
+    var children = node.children;
+
+    for (var i = 0, l = children.length; i < l; i++) {
+
+      ret = Map3D.childProcess(children[i], callback);
+      if (ret) return ret;
+
+    }
+  }
+
+  /**
+   * 查询子节点中数据id相符的节点。
+   * @param {THREE.Object3D} object3d 被搜索的节点对象
+   * @param {string} id　要搜索的数据id
+   * @returns {THREE.Object3D|undefined} 返回找到的子节点对象，否则无返回。
+   */
+  static childById(object3d, id) {
+    const node = new Node();
+    return Map3D.childProcess(object3d, function (child) {
+      node.object3d = child;
+      if (node.id === id) return child;
+    });
+  }
+
+  /**
+   * 根据 documentId 和 nodeId 获取 Node 节点。
+   * @param {string} documentId 文档ID
+   * @param {string} nodeId 节点ID
+   * @returns {XiheMap.Node} 返回查找到的节点
+   */
+  getNode(documentId, nodeId) {
+    const model = this.models[documentId];
+    if (model) {
+      const obj = Map3D.childById(model, nodeId);
+      if (obj) return new Node(obj, documentId, nodeId);
+    }
+  }
+
+  /**
+   * 对所有节点执行处理函数。
+   * @param {string} documentId 文档ID。
+   * @param {function(Node)} callback 回调函数。
+   * @returns {XiheMap.Node} 返回查找到的节点
+   */
+  eachNode(documentId, callback) {
+    const models = this.models[documentId];
+    if (models) {
+      for (let i = 0, l = models.length; i < l; i++) {
+        const model = models[i];
+        // model.traverse((child) => {
+        //   if (Node.idOfThreejsNode(child)) {
+        //     if (callback) callback(new Node(child));
+        //   }
+        // });
+      }
+    }
+  }
+
+  /**
+   * 根据节点属性设置节点外观。
+   * @param {string} documentId 文档ID。
+   * @param {json} props 要筛选的属性组合，如 {level:1, type:'door'} 。
+   * @param {json} nodeVisuals 要设置的外观属性组合，支持 visible、highlight、translucency 。外观属性支持函数，格式为 function(Node) 。
+   * @returns {XiheMap.Node} 返回查找到的节点
+   */
+  filterNode(documentId, props, nodeVisuals) {
+    map3d.eachNode(documentId, (node) => {
+      let propsMatch;
+      if (props) {
+        Object.keys(props).some((p) => {
+          if (typeof props[p] === 'function' ? props[p](node) :  node[p] !== props[p]) {
+            propsMatch = false;
+            return false;
+          }
+
+          return true;
+        });
+      }
+
+      if (propsMatch !== false && nodeVisuals) {
+        Object.keys(nodeVisuals).forEach((v) => {
+          const vv = nodeVisuals[v];
+          node[v] = typeof vv === 'function' ? vv(node) : vv;
+        });
+      }
+    });
+  }
+
+  /**
+   * 根据楼层属性筛选显示。（演示性接口）
+   * @param {string} documentId 文档ID。
+   * @param {String} level 要筛选的楼层。为 null 则没有条件，全部处理。
+   * @returns {XiheMap.Node} 返回查找到的节点
+   */
+  filterNodeByLevel(documentId, level) {
+    map3d.filterNode(documentId, null, { visible: (node) => node.level === level, });
+  }
+
+  /**
+   * 根据 documentId、nodeId 孤立或恢复 Node 节点。
+   * @param {string} documentId 文档ID。
+   * @param {String} nodeId 要操作的节点ID。
+   * @param {boolean} isolate true=孤立 false=恢复
+   */
+  isolateNode(documentId, nodeId, isolate) {
+    if (this.userData.__isolateNode !== isolate) {
+      this.userData.__isolateNode = isolate;
+      map3d.filterNode(documentId, null, { translucency: (node) => (node.id !== nodeId) && isolate, });
+    }
+  }
+
+  getIsolatedNode() {
+    return this.userData.__isolateNode;
+  }
+
+  setIsolatedNode(documentId, nodeId, isolate = true) {
+    this.isolateNode(documentId, nodeId, isolate);
+  }
+
+  /**
+   * 根据 nodeId 显示或隐藏 Node 节点。
+   * @param {string} documentId 文档ID。
+   * @param {string} nodeId 节点的ID
+   * @param {boolean} show true=显示 false=隐藏
+   * @returns {XiheMap.Node} 返回对应的节点
+   */
+  showNode(documentId, nodeId, show) {
+    const node = map3d.getNode(documentId, nodeId);
+    if (node) node.visible = show;
+
+    return node;
+  }
+
+  /**
+   * 根据 nodeId 高亮或恢复 Node 节点。
+   * @param {string} documentId 文档ID。
+   * @param {string} nodeId 节点的ID
+   * @param {boolean} show true=高亮 false=恢复
+   * @returns {XiheMap.Node} 返回对应的节点
+   */
+  highlightNode(documentId, nodeId, highlight) {
+    const node = map3d.getNode(documentId, nodeId);
+    if (node) node.highlight = highlight;
+
+    return node;
+  }
+
+  /**
+   * 根据 nodeName 半透明或恢复 Node 节点。
+   * @param {string} documentId 文档ID。
+   * @param {string} nodeId 节点的ID
+   * @param {boolean} show true=半透明 false=恢复
+   * @returns {XiheMap.Node} 返回对应的节点
+   */
+  translucencyNode(documentId, nodeId, translucency) {
+    const node = map3d.getNode(documentId, nodeId);
+    if (node) node.translucency = translucency;
+
+    return node;
+  }
+
+  /**
+   * 加载 gbim 格式的模型。
+   * @param {Object} options 参数对象。
+   * @param {String} [options.url] 模型路径
+   * @param {Cesium.Matrix4|THREE.Matrix4|Array} [options.matrix] 模型转换矩阵，如果提供该参数，忽略以下三个参数。
+   * @param {String} [options.docid] 模型对应的文档ID
+   *
+   */
+  loadModel(options, callback) {  //已经停止使用？
+    let matrix = options.matrix;
+    if (matrix instanceof Array) matrix = (new THREE.Matrix4()).fromArray(matrix);
+    else if (matrix instanceof Cesium.Matrix4) {
+      const a = [];
+      Cesium.Matrix4.pack(matrix, a);
+      matrix = (new THREE.Matrix4()).fromArray(a);
+    }
+
+    let model;
+
+    this.viewer3js.loadGBim({
+      url: options.url,
+      matrix,
+      docid: options.docid,
+      callback: (m) => {
+        if (!m) {
+          throw new Error('broken model');
+        } else {
+          model = m;
+          model.userData.docid = options.docid;
+          // if (this.models[options.docid] === undefined) {
+          // this.models[options.docid] = [];
+          // }
+
+          // this.models[options.docid].push(model);
+          if (callback) {
+            callback(model);
+          }
+
+          return model;
+        }
+      },
+    });
+  }
+
+  /**
+   * 加载 gbim 格式的模型。
+   * @param {Object} options 参数对象。
+   * @param {String} [options.url] 模型路径
+   * @param {Cesium.Matrix4|THREE.Matrix4|Array} [options.matrix] 模型转换矩阵，如果提供该参数，忽略以下三个参数。
+   * @param {String} [options.docid] 模型对应的文档ID
+   *
+   */
+  loadModelFromGltf(options, callback) {
+    if (!options.hasOwnProperty('url')) {
+      throw new Error('must give url');
+      return;
+    }
+
+    if (!options.hasOwnProperty('modelMatrix')) {
+      throw new Error('must give modelMatrix, or model will be place at 1,1,1,1');
+      return;
+    }
+
+    if (!options.hasOwnProperty('docid')) {
+      throw new Error('better give a docid');
+      return;
+    }
+
+    if (options.hasOwnProperty('isfromrevit') && options.isfromrevit) {
+      const rotation = new Cesium.Matrix3(1, 0, 0, 0, 0, 1, 0, -1, 0);
+      const rotatModdelMatrix = new Cesium.Matrix4();
+      Cesium.Matrix4.multiplyByMatrix3(options.modelMatrix, rotation, rotatModdelMatrix);
+      options.modelMatrix = rotatModdelMatrix;
+    }
+
+    console.log(options.url);
+    const model = this.scene.primitives.add(Cesium.Model.fromGltf(options));
+    model.readyPromise.then((model) => {
+      model.docid = options.docid;
+      model.userData = {
+        docid: options.docid,
+      };
+      if (this.models[options.docid] === undefined) {
+        this.models[options.docid] = [];
+      }
+
+      this.models[options.docid].push(model);
+      if (options.llh && Object.keys(this.modelsDataForEnter[`${options.llh.lat},${options.llh.lng}`]).length) {
+        this.modelsDataForEnter[`${options.llh.lat},${options.llh.lng}`].rpos = new Cesium.Cartesian3(
+          model._boundingSphere.center.x + this.modelsDataForEnter[`${options.llh.lat},${options.llh.lng}`].pos.x,
+          model._boundingSphere.center.y + this.modelsDataForEnter[`${options.llh.lat},${options.llh.lng}`].pos.y,
+          model._boundingSphere.center.z + this.modelsDataForEnter[`${options.llh.lat},${options.llh.lng}`].pos.z);
+      }
+
+      callback(model);
+      return model;
+    });
+  }
+
+  /**
+   * 加载所有模型
+   *
+   * @access public
+   */
+  loadAllModelFromServer() {
+    return (async () => {
+      const resolveUri = Req.resolveUri;
+      const validModelData = [];
+      this.modelsDataForEnter = validModelData;
+
+      // let data = require('./document-group.json');
+      const data = await this.req.BimDocumentGroupa.getGroups();
+      data.forEach((v, i) => {
+        this.req.getGroupDocuments(v[_idOrid], (gdata) => {
+          gdata.forEach((v, i) => {
+            const levels = ['L2', 'L3', 'L6', 'L8'];
+            if (v && v.location && v.location.lat && v.location.lng && v.gbimUri) {
+              const key = `${v.location.lat},${v.location.lng}`;
+              let modelData = validModelData[key];
+              if (!modelData) {
+                modelData = {
+                  groupId: v.groupId,
+                  lng: v.location.lng,
+                  lat: v.location.lat,
+                  pos: Cesium.Cartesian3.fromDegrees(v.location.lng, v.location.lat, v.elevation), // Use first height
+                  models: [],
+                };
+                validModelData[key] = modelData;
+              }
+
+              modelData.models.push({
+                groupId: v.groupId,
+                docid: v[_idOrid],
+                gbimUri: v.gbimUri,
+                height: v.elevation,
+                matrix: v.matrix,
+              });
+
+              this.modelList[v.id] = v;
+              levels.forEach((level) => {
+                if (v.gbimUri[level]) {
+                  const options = {
+                    url: resolveUri(v.gbimUri[level]),
+                    docid: v[_idOrid],
+                    modelMatrix: v.matrix,
+                    llh: {
+                      lng: v.location.lng,
+                      lat: v.location.lat,
+                      height: v.elevation,
+                    },
+                    name: v.name,
+                  };
+                  this.loadModelFromGltf(options);
+                }
+              });
+            }
+          });
+        });
+      });
+    })();
+  }
+
+  getBuildingCameraInstances(documentId, cb) {
+    // FIXME
+    this.req.getBuildingCameraInstances(documentId, (data) => {
+      if (Object.keys(data).length) {
+        Object.keys(data).forEach((index) => {
+          const v = data[index];
+          v.position = {
+            x: v.location[0],
+            y: -v.location[2],
+            z: v.location[1],
+          };
+          delete v.Location;
+          const v3 = new Cesium.Cartesian3(v.position.x, v.position.y, v.position.z);
+          v.matrix = new Cesium.Matrix4();
+          v.car3 = new Cesium.Cartesian3();
+          Cesium.Matrix4.multiplyByTranslation(this.modelList[v.documentId].matrix, v3, v.matrix);
+          Cesium.Matrix4.getTranslation(v.matrix, v.car3);
+        });
+
+        // console.log(data);
+        // 建筑中查找相机
+        this.viewer3js.cameraInstances = {};
+        data.forEach((v) => {
+          this.viewer3js.cameraInstances[v.elementGuid] = v;
+        });
+
+        // if (cb) {
+        // cb(data);
+        // }
+
+        // TODO: remove these, only for project
+        let name;
+        if (Object.keys(this.modelList).length) {
+          name = this.modelList[documentId].name;
+        }
+
+        const json = {
+          documentId: data[0].documentId,
+          id: data[0].documentId,
+          pId: 4, // 室内监控
+          name,
+          open: true,
+          isParent: true,
+        };
+
+        const dataForRender = [];
+        dataForRender.push(json);
+
+        data.forEach((v) => {
+          v.pId = v.documentId;
+          v.id = v.elementGuid;
+          v.isParent = false;
+          v.name = v.familyName;
+          dataForRender.push(v);
+        });
+
+        if (cb) {
+          cb(dataForRender);
+        }
+
+        return dataForRender;
+      } else {
+        throw new Error('data is empaty');
+      }
+    });
+  }
+
+  /**
+   * @name Map3D#autoEnterBim
+   * @type {boolean}
+   * @default true
+   */
+  get enabledEnterBim() {
+    return this.cesiumThreejsSwitcher.enabledEnterBim;
+  }
+
+  /**
+   * @name Map3D#autoEnterBim
+   * @type {boolean}
+   * @default true
+   */
+  set enabledEnterBim(value) {
+    this.cesiumThreejsSwitcher.enabledEnterBim = value;
+  }
+}
+
+module.exports = Map3D;

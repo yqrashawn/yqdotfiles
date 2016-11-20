@@ -1,0 +1,1 @@
+("~/workspace/chenzhou/MixSDK/BIMSDK/" "~/" "~/.emacs.d/" "~/workspace/chenzhou/MixSDK/" "~/workspace/chenzhou/MixSDK/GISSDK/VC/" "~/workspace/XiheMap/" "~/workspace/chenzhou/App/" "~/workspace/chenzhou/MixSDK/GISSDK/" "~/workspace/tunnel/" "~/workspace/xihemap/" "~/.zprezto/")

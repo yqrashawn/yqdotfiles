@@ -1,0 +1,13 @@
+The HTML Variable Element (<var>) represents a variable in a mathematical expression or a programming context.
+
+Permitted content:
+Phrasing content.
+
+Tag omission:
+Both start and end tags are required.
+
+Permitted parent elements:
+Any element that accepts phrasing content.
+
+DOM Interface:
+This element implements the HTMLElement interface.
