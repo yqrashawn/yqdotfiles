@@ -1,0 +1,89 @@
+import { BimCategory, BimDocument, BimElement, BimDocumentGroup, resolveUri } from './bimservice-sdk';
+/////////////////////////////
+/// Tests
+/////////////////////////////
+
+async function runTest() {
+  // ------------------------
+  const bc = BimCategory;
+  const cats = await bc.getCategories();
+  console.log('------------all cats-----------');
+  console.log(cats);
+
+  // ------------------------
+  const bg = BimDocumentGroup;
+  const groups = await bg.getGroups();
+  console.log('------------all groups---------');
+  console.log(groups);
+
+  const docs = await bg.getDocuments('58193f1eba0a24145d265894');
+  console.log(docs);
+  console.log('------------one doc-------------');
+
+  // ------------------------
+  const bd = BimDocument;
+  const elements = await bd.getElements('58193f1eba0a24145d265895');
+  {
+    // console.log(dd);
+    console.log('------------elems of docs-------------');
+    console.log(elements);
+    console.log(elements.length);
+    console.log('---filter by level---');
+    var filtered = elements.filter(el => el.levelGuid === 'e3e052f9-0156-11d5-9301-0000863f27ad-00000137'); // 按楼层过滤
+    console.log(filtered.length);
+    console.log(filtered);
+    console.log('---filter by category---');
+    filtered = elements.filter(el => el.categoryId === -2008079 && el.hierarchy === 0); // 安全设备
+    console.log(filtered.length);
+    console.log(filtered);
+  }
+
+ const setRes = await BimDocument.update('58193f1eba0a24145d265895', {
+    location: {lat: 333, lng: 333},
+    matrix: [0, 0, 0, 0, 0, 0]
+  });
+    console.log('------------set loc-------------');
+  console.log(setRes);
+
+  const alldocs = await bd.getDocuments();
+  const doc = await bd.getDocument('58193f1eba0a24145d265895');
+  {
+    console.log('------------one doc-------------');
+    console.log(doc);
+    console.log('------------doc level url-------------');
+    var keys = Object.keys(doc.gbimUri);
+    for (var ii = 0; ii < keys.length; ii++) {
+      var key = keys[ii];
+      var gbim = doc.gbimUri[key];
+      gbim = resolveUri(gbim);
+      console.log(gbim);
+    }
+  };
+
+  const levels = await bd.getLevels('58193f1eba0a24145d265895');
+  console.log('------------levels by docId-------------');
+  console.log(levels);
+
+  const group = await bd.getGroup('58193f1eba0a24145d265895');
+  console.log('------------docId to one group-------------');
+  console.log(group);
+
+  // ------------------------
+  const be = BimElement;
+  let element = await be.getElementByGuid('58193f1eba0a24145d265895', '70a59e44-638f-4f6e-a664-8eff535f9c46-0016b033');
+  console.log('------------doc+elemguid to elem-------------');
+  console.log(element);
+
+  element = await be.getElementByDbId('58193f41ba0a24145d265cff');
+  console.log('------------elemdbid-------------');
+  console.log(element);
+
+  let parameters = await be.getParametersByGuid('58193f1eba0a24145d265895', '70a59e44-638f-4f6e-a664-8eff535f9c46-0016b033');
+  console.log('------------doc+elemguid to elem params-------------');
+  console.log(parameters);
+  parameters = await be.getParametersByDbId('58193f41ba0a24145d265cff');
+  console.log('------------pramsDbId-------------');
+  console.log(parameters);
+}
+
+runTest();

@@ -299,11 +299,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; https://github.com/purcell/exec-path-from-shell
   ;; only need exec-path-from-shell on OSX
   ;; this hopefully sets up path and other vars better
-  ;; (when (memq window-system '(mac ns))
-  ;;   (exec-path-from-shell-initialize))
   ;; (setq url-proxy-services
   ;;       '(("http" . "127.0.0.1:6152")
   ;;         ("https" . "127.0.0.1:6152")))
+  (custom-set-variables
+   '(helm-follow-mode-persistent t))
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-copy-env "PATH")
+    (exec-path-from-shell-initialize))
   )
 
 (defun dotspacemacs/user-config ()
@@ -349,6 +352,7 @@ you should place your code here."
   ;;javascript config
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
+  ;; (define-key helm-ag-mode-map "C-c C-c" 'helm-ag--action-save-buffer)
   (define-key evil-normal-state-map "gh" 'evil-search-forward)
   ;; translate C-h to backspace, and M-h to C-h
   ;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
@@ -397,6 +401,7 @@ you should place your code here."
     :type line
     (evil-previous-line (or count 1))
     (evil-scroll-line-to-center nil))
+  (define-key evil-normal-state-map (kbd "C-e") 'neotree-toggle)
   (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
   (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
   (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
@@ -430,8 +435,16 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(evil-escape-unordered-key-sequence t)
+ '(evil-want-Y-yank-to-eol nil)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(helm-follow-mode-persistent t)
+ '(helm-source-names-using-follow
+   (quote
+    ("Search at ~/workspace/chenzhou/MixSDK/BIMSDK/src/loaders/GbimLoader/")))
  '(package-selected-packages
    (quote
     (flyspell-correct-helm flyspell-correct auto-dictionary sass-mode company-web tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data geeknote add-node-modules-path eslint-fix npm-mode auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme))))
