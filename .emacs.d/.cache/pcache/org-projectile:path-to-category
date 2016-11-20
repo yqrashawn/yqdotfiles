@@ -1,8 +1,0 @@
-;; Object org-projectile:path-to-category
-;; EIEIO PERSISTENT OBJECT
-(pcache-repository "org-projectile:path-to-category"
-  :file "org-projectile:path-to-category"
-  :object-name "org-projectile:path-to-category"
-  :version "25.1.1/0.4"
-  :entries #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8 data ())
-  :timestamp 1479538790.72365)
