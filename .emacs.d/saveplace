@@ -1,9 +1,8 @@
 ;;; -*- coding: utf-8 -*-
-(("/Users/Rashawn/.spacemacs" . 16842)
- ("/Users/Rashawn/workspace/chenzhou/MixSDK/BIMSDK/src/loaders/GbimLoader/GbimLoader.js" . 1286)
- ("/Users/Rashawn/.emacs.d/.cache/layouts/persp-auto-save" . 9231)
- ("/Users/Rashawn/.emacs.d/.cache/recentf" . 14333)
- ("/Users/Rashawn/.emacs.d/init.el" . 468)
+(("/Users/Rashawn/.spacemacs" . 16495)
+ ("/Users/Rashawn/.emacs.d/.cache/recentf" . 3256)
+ ("/Users/Rashawn/.emacs.d/.cache/layouts/persp-auto-save" . 8159)
+ ("/Users/Rashawn/workspace/chenzhou/MixSDK/BIMSDK/src/BimEngine.js" . 1098)
  ("/Users/Rashawn/workspace/xihemap/Xihemap/public/javascripts/inDoorFloor.js" . 751)
  ("/Users/Rashawn/workspace/xihemap/src/bimservice-sdk.js" . 9286)
  ("/Users/Rashawn/workspace/xihemap/src/Map3D.js" . 772)
