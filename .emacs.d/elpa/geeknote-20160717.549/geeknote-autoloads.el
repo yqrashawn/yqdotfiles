@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "geeknote" "geeknote.el" (22561 25543 0 0))
+;;;### (autoloads nil "geeknote" "geeknote.el" (22581 12850 0 0))
 ;;; Generated autoloads from geeknote.el
 
 (autoload 'geeknote-setup "geeknote" "\

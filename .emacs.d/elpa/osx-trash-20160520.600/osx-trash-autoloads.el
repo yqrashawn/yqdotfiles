@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "osx-trash" "osx-trash.el" (22556 42727 0 0))
+;;;### (autoloads nil "osx-trash" "osx-trash.el" (22581 13072 0 0))
 ;;; Generated autoloads from osx-trash.el
 
 (autoload 'osx-trash-setup "osx-trash" "\
@@ -19,7 +19,7 @@ non-nil value to enable trashing for file operations.
 
 ;;;***
 
-;;;### (autoloads nil nil ("osx-trash-pkg.el") (22556 42727 0 0))
+;;;### (autoloads nil nil ("osx-trash-pkg.el") (22581 13072 0 0))
 
 ;;;***
 

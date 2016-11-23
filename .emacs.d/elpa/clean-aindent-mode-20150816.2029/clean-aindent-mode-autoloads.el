@@ -4,7 +4,7 @@
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "clean-aindent-mode" "clean-aindent-mode.el"
-;;;;;;  (22556 41408 0 0))
+;;;;;;  (22581 12128 0 0))
 ;;; Generated autoloads from clean-aindent-mode.el
 
 (defvar clean-aindent-mode nil "\

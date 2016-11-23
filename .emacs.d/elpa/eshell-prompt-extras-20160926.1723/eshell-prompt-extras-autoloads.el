@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("eshell-prompt-extras.el") (22557 21718
+;;;### (autoloads nil nil ("eshell-prompt-extras.el") (22581 12177
 ;;;;;;  0 0))
 
 ;;;***

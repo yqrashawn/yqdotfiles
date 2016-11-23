@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "alert" "alert.el" (22573 18251 0 0))
+;;;### (autoloads nil "alert" "alert.el" (22581 13033 0 0))
 ;;; Generated autoloads from alert.el
 
 (autoload 'alert-add-rule "alert" "\

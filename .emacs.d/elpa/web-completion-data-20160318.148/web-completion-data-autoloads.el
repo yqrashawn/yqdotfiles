@@ -4,7 +4,7 @@
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil nil ("web-completion-data-pkg.el" "web-completion-data.el")
-;;;;;;  (22566 51480 0 0))
+;;;;;;  (22581 12160 0 0))
 
 ;;;***
 

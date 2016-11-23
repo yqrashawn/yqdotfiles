@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "quelpa" "quelpa.el" (22556 41392 0 0))
+;;;### (autoloads nil "quelpa" "quelpa.el" (22581 12053 0 0))
 ;;; Generated autoloads from quelpa.el
 
 (autoload 'quelpa-expand-recipe "quelpa" "\
@@ -41,8 +41,8 @@ the global var `quelpa-upgrade-p' is set to nil.
 
 ;;;***
 
-;;;### (autoloads nil nil ("bootstrap.el" "quelpa-pkg.el") (22556
-;;;;;;  41392 0 0))
+;;;### (autoloads nil nil ("bootstrap.el" "quelpa-pkg.el") (22581
+;;;;;;  12053 0 0))
 
 ;;;***
 
