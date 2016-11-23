@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "livid-mode" "livid-mode.el" (22557 27824 0
+;;;### (autoloads nil "livid-mode" "livid-mode.el" (22581 12944 0
 ;;;;;;  0))
 ;;; Generated autoloads from livid-mode.el
 

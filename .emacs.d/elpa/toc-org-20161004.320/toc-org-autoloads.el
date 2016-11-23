@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "toc-org" "toc-org.el" (22556 41739 0 0))
+;;;### (autoloads nil "toc-org" "toc-org.el" (22581 13133 0 0))
 ;;; Generated autoloads from toc-org.el
 
 (autoload 'toc-org-enable "toc-org" "\

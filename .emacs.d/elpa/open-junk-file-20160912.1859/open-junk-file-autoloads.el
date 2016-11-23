@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "open-junk-file" "open-junk-file.el" (22556
-;;;;;;  41690 0 0))
+;;;### (autoloads nil "open-junk-file" "open-junk-file.el" (22581
+;;;;;;  12960 0 0))
 ;;; Generated autoloads from open-junk-file.el
 
 (autoload 'find-file-hook--open-junk-file "open-junk-file" "\

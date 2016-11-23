@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "evil-ediff" "evil-ediff.el" (22556 41419 0
+;;;### (autoloads nil "evil-ediff" "evil-ediff.el" (22581 12204 0
 ;;;;;;  0))
 ;;; Generated autoloads from evil-ediff.el
 

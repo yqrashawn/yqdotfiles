@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "ac-ispell" "ac-ispell.el" (22556 42634 0 0))
+;;;### (autoloads nil "ac-ispell" "ac-ispell.el" (22581 12059 0 0))
 ;;; Generated autoloads from ac-ispell.el
 
 (autoload 'ac-ispell-ac-setup "ac-ispell" "\

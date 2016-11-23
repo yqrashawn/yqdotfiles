@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "hl-todo" "hl-todo.el" (22556 41681 0 0))
+;;;### (autoloads nil "hl-todo" "hl-todo.el" (22581 12899 0 0))
 ;;; Generated autoloads from hl-todo.el
 
 (autoload 'hl-todo-mode "hl-todo" "\
