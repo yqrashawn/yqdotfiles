@@ -10,7 +10,10 @@
 ;;; License: GPLv3
 
 ;; Without this comment emacs25 adds (package-initialize) here
-;; (package-initialize)
+(package-initialize)
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-copy-env "LC_ALL")
+  (exec-path-from-shell-initialize))
 
 ;; Increase gc-cons-threshold, depending on your system you may set it back to a
 ;; lower value in your dotfile (function `dotspacemacs/user-config')
