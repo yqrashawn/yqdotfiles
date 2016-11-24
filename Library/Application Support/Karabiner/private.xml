@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <root>
- <appdef>
+  <appdef>
     <appname>PdfExpert</appname>
     <equal>com.readdle.PDFExpert-Mac</equal>
   </appdef>
- <appdef>
+  <appdef>
     <appname>SublimeText</appname>
     <equal>com.sublimetext.3</equal>
   </appdef>
-<appdef>
+  <appdef>
     <appname>atom</appname>
     <equal>com.github.atom</equal>
   </appdef>
 
- <windownamedef>
+  <windownamedef>
     <name>Chrome_Dev_Tool</name>
     <regex>Developer\ Tools+</regex>
   </windownamedef>
 
- <item>
+  <item>
     <name>KeyBinding in Chrome Dev Tool</name>
     <identifier>private.windowname_chrome_dev_tool</identifier>
     <only>GOOGLE_CHROME</only>
@@ -73,11 +73,11 @@
     <only>SublimeText,atom</only>
 
     <autogen>
-    __KeyOverlaidModifier__
-  KeyCode::OPTION_L,
-  KeyCode::OPTION_L,
-  KeyCode::P,ModifierFlag::SHIFT_L,ModifierFlag::COMMAND_L,
-</autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_L,
+      KeyCode::OPTION_L,
+      KeyCode::P,ModifierFlag::SHIFT_L,ModifierFlag::COMMAND_L,
+    </autogen>
   </item>
   <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_APP_Vim</name>
@@ -88,44 +88,44 @@
     <equal>com.apple.dt.Xcode</equal>
   </appdef>
 
-<item>
+  <item>
     <name>hijk to cursor move in PdfExpert</name>
     <identifier>xcode_arrow_key</identifier>
-
     <only>PdfExpert</only>
-
-    <!--<autogen>__KeyToKey__ KeyCode::H,KeyCode::CURSOR_LEFT</autogen>-->
-    <!--<autogen>__KeyToKey__ KeyCode::L,KeyCode::CURSOR_RIGHT</autogen>-->
     <autogen>__KeyToKey__ KeyCode::J,ModifierFlag::D,KeyCode::CURSOR_DOWN</autogen>
     <autogen>__KeyToKey__ KeyCode::K,ModifierFlag::D,KeyCode::CURSOR_UP</autogen>
     <autogen>__KeyToKey__ KeyCode::SPACE,ModifierFlag::D,KeyCode::F,ModifierFlag::COMMAND_L</autogen>
   </item>
 
   <appdef>
+    <appname>Emacs</appname>
+    <equal>org.gnu.Emacs</equal>
+  </appdef>
+
+  <appdef>
     <appname>Chrome</appname>
     <equal>com.google.Chrome</equal>
   </appdef>
+
   <appdef>
     <appname>Dash</appname>
     <equal>com.kapeli.dashdoc</equal>
   </appdef>
 
-<!--<item>-->
-    <!--<name>scale in chrome</name>-->
-    <!--<identifier>scale_in_chrome</identifier>-->
-<!--<only>Chrome</only>-->
-        <!--[><autogen>__ScrollWheelToKey__ ScrollWheel::UP,  PointingButton::BUTTON5, KeyCode::EQUAL,ModifierFlag::COMMAND_L</autogen><]-->
-        <!--[><autogen>__ScrollWheelToKey__ ScrollWheel::DOWN, PointingButton::BUTTON5, KeyCode::MINUS,ModifierFlag::COMMAND_L</autogen><]-->
-        <!--<autogen>__KeyToKey__ PointingButton::BUTTON4,PointingButton::RIGHT,KeyCode::EQUAL,ModifierFlag::COMMAND_L</autogen>-->
-        <!--<autogen>__KeyToKey__ PointingButton::BUTTON5,PointingButton::RIGHT,KeyCode::MINUS,ModifierFlag::COMMAND_L</autogen>-->
-        <!--</item>-->
-<item>
+  <item>
+    <name>Leader in Emcas insert mode</name>
+    <identifier>emcas_insert_leader</identifier>
+    <only>Emacs</only>
+    <autogen>__KeyToKey__ KeyCode::JIS_KANA, KeyCode::M, ModifierFlag::OPTION_L</autogen>
+  </item>
+
+  <item>
     <name>button4 to define</name>
     <identifier>mouse_button4_to_define</identifier>
 
     <autogen>__KeyToKey__ PointingButton::BUTTON4,KeyCode::D,ModifierFlag::COMMAND_L,ModifierFlag::CONTROL_L</autogen>
   </item>
-<item>
+  <item>
     <name>Change C-jk to A-arrow key in dash</name>
     <identifier>Arrow_key_in_Dash</identifier>
 
@@ -135,62 +135,62 @@
     <autogen>__KeyToKey__ KeyCode::K,ModifierFlag::CONTROL_L ,KeyCode::CURSOR_UP,ModifierFlag::OPTION_L</autogen>
   </item>
 
-<item>
-<name>eisuu</name>
+  <item>
+    <name>eisuu</name>
     <identifier>private.switch_profile ensue</identifier>
-<autogen>
-  __KeyOverlaidModifier__
-  KeyCode::JIS_EISUU,
-  KeyCode::COMMAND_L,ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-  KeyCode::SPACE, ModifierFlag::OPTION_L,
-</autogen>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::JIS_EISUU,
+      KeyCode::COMMAND_L,ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::SPACE, ModifierFlag::OPTION_L,
+    </autogen>
 
 
 
 
-</item>
+  </item>
 
-<!-- <item>
-<name>kana to command and w</name>
-    <identifier>private.switch_profile kana</identifier>
-    <autogen>__KeyToKey__ KeyCode::JIS_KANA, KeyCode::W, ModifierFlag::COMMAND_L</autogen>
-</item>
- -->
- <!-- 把右边的KANA键改成option shift control 双击功能为 command w -->
- <item>
+  <!-- <item>
+       <name>kana to command and w</name>
+       <identifier>private.switch_profile kana</identifier>
+       <autogen>__KeyToKey__ KeyCode::JIS_KANA, KeyCode::W, ModifierFlag::COMMAND_L</autogen>
+       </item>
+  -->
+  <!-- 把右边的KANA键改成option shift control 双击功能为 command w -->
+  <item>
     <name>kana to F18</name>
     <identifier>private.switch_profile kana</identifier>
-<autogen>
-  __HoldingKeyToKey__
-  KeyCode::JIS_KANA, ModifierFlag::NONE,
-  <!-- short press -->
-  @begin
-  KeyCode::W, ModifierFlag::COMMAND_L,
-  @end
-  <!-- hold -->
-  @begin
-  KeyCode::W, ModifierFlag::COMMAND_L,
-  @end
-  Option::NOREPEAT,
-</autogen>
     <autogen>
-    __DoublePressModifier__
-    KeyCode::JIS_KANA,
-    KeyCode::OPTION_L, ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-    KeyCode::W, ModifierFlag::COMMAND_L,
+      __HoldingKeyToKey__
+      KeyCode::JIS_KANA, ModifierFlag::NONE,
+      <!-- short press -->
+      @begin
+      KeyCode::W, ModifierFlag::COMMAND_L,
+      @end
+      <!-- hold -->
+      @begin
+      KeyCode::W, ModifierFlag::COMMAND_L,
+      @end
+      Option::NOREPEAT,
     </autogen>
-</item>
-<item>
+    <autogen>
+      __DoublePressModifier__
+      KeyCode::JIS_KANA,
+      KeyCode::OPTION_L, ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::W, ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+  <item>
     <name>For HHKB change COMMAND_R to F18</name>
     <identifier>private.switch_profile COMMAND_R</identifier>
-<autogen>
-  __KeyOverlaidModifier__
-  KeyCode::COMMAND_R,
-  KeyCode::COMMAND_R,
-  KeyCode::W, ModifierFlag::COMMAND_L
- </autogen>
-   </item>
- <replacementdef>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_R,
+      KeyCode::COMMAND_R,
+      KeyCode::W, ModifierFlag::COMMAND_L
+    </autogen>
+  </item>
+  <replacementdef>
     <replacementname>EMACS_MODE_IGNORE_APPS</replacementname>
     <replacementvalue>
       EMACS,
@@ -201,129 +201,129 @@
 
 
 
-<!-- 把F18改成右边的OPTION+SHIFT+CONTROL -->
- <item>
+  <!-- 把F18改成右边的OPTION+SHIFT+CONTROL -->
+  <item>
     <name>modify F18</name>
     <identifier>private.f18</identifier>
     <autogen>
-        __KeyToKey__ KeyCode::F18, KeyCode::OPTION_L, ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L
+      __KeyToKey__ KeyCode::F18, KeyCode::OPTION_L, ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L
     </autogen>
-</item>
+  </item>
 
-<item>
- <name>F19 to F19</name>
- <appendix>(F19 to Hyper (ctrl+shift+cmd+opt) + F19 Only, F19)</appendix>
- <identifier>private.f192f19</identifier>
- <autogen>
- __KeyToKey__ KeyCode::F19, KeyCode::MINUS, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L | ModifierFlag::COMMAND_L
- </autogen>
- </item>
+  <item>
+    <name>F19 to F19</name>
+    <appendix>(F19 to Hyper (ctrl+shift+cmd+opt) + F19 Only, F19)</appendix>
+    <identifier>private.f192f19</identifier>
+    <autogen>
+      __KeyToKey__ KeyCode::F19, KeyCode::MINUS, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L | ModifierFlag::COMMAND_L
+    </autogen>
+  </item>
 
-<item>
- <name>Hyper+Tab To Capslock</name>
- <appendix>Hyper(cmd+ctrl+shift+opt)+tab, send capslock</appendix>
- <identifier>private.hypertab2capslock</identifier>
- <autogen>
- __KeyToKey__
- KeyCode::TAB, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L | ModifierFlag::COMMAND_L, KeyCode::CAPSLOCK
- </autogen>
- </item>
+  <item>
+    <name>Hyper+Tab To Capslock</name>
+    <appendix>Hyper(cmd+ctrl+shift+opt)+tab, send capslock</appendix>
+    <identifier>private.hypertab2capslock</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::TAB, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L | ModifierFlag::COMMAND_L, KeyCode::CAPSLOCK
+    </autogen>
+  </item>
 
-<item>
- <name>Esc to Hyper</name>
- <appendix>Esc</appendix>
- <identifier>private.Esc</identifier>
- <autogen>
-  __KeyOverlaidModifier__
-  KeyCode::ESCAPE,
-  KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-  KeyCode::ESCAPE,
- </autogen>
+  <item>
+    <name>Esc to Hyper</name>
+    <appendix>Esc</appendix>
+    <identifier>private.Esc</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::ESCAPE,
+      KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::ESCAPE,
+    </autogen>
 
-</item>
+  </item>
 
-<item>
- <name>OPTION_L to command+opt+shif+ctrl+w quiver </name>
- <appendix>OPTION_L</appendix>
- <identifier>private.OPTION_L</identifier>
- <autogen>
-  __KeyOverlaidModifier__
-  KeyCode::OPTION_L,
-  KeyCode::OPTION_L,
-  KeyCode::W, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,ModifierFlag::COMMAND_L,
- </autogen>
+  <item>
+    <name>OPTION_L to command+opt+shif+ctrl+w quiver </name>
+    <appendix>OPTION_L</appendix>
+    <identifier>private.OPTION_L</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_L,
+      KeyCode::OPTION_L,
+      KeyCode::W, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,ModifierFlag::COMMAND_L,
+    </autogen>
 
-</item>
+  </item>
 
-<item>
- <name>OPTION_R to Hyper and alfred </name>
- <appendix>OPTION_R</appendix>
- <identifier>private.OPTION_R</identifier>
- <autogen>
-  __KeyOverlaidModifier__
-  KeyCode::OPTION_R,
-  KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-  KeyCode::SPACE, ModifierFlag::OPTION_L,
- </autogen>
+  <item>
+    <name>OPTION_R to Hyper and alfred </name>
+    <appendix>OPTION_R</appendix>
+    <identifier>private.OPTION_R</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_R,
+      KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::SPACE, ModifierFlag::OPTION_L,
+    </autogen>
 
-</item>
+  </item>
 
-<item>
- <name>option toggle vim</name>
- <appendix>option</appendix>
- <identifier>private.OPTION1</identifier>
- <autogen>
-  __KeyOverlaidModifier__
-  KeyCode::OPTION_L,
-  KeyCode::OPTION_L,
-  KeyCode::VK_OPEN_URL_APP_Vim,
-  <!-- KeyCode::F12, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L -->
- </autogen>
+  <item>
+    <name>option toggle vim</name>
+    <appendix>option</appendix>
+    <identifier>private.OPTION1</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_L,
+      KeyCode::OPTION_L,
+      KeyCode::VK_OPEN_URL_APP_Vim,
+      <!-- KeyCode::F12, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L -->
+    </autogen>
 
-</item>
-<item>
- <name>command </name>
- <appendix>command</appendix>
- <identifier>private.COMMAND</identifier>
- <autogen>
-  __KeyOverlaidModifier__
-  KeyCode::COMMAND_L,
-  KeyCode::COMMAND_L,
-  KeyCode::S, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L
- </autogen>
+  </item>
+  <item>
+    <name>command </name>
+    <appendix>command</appendix>
+    <identifier>private.COMMAND</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_L,
+      KeyCode::COMMAND_L,
+      KeyCode::S, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L
+    </autogen>
 
-</item>
-<item>
- <name>command </name>
- <appendix>command</appendix>
- <identifier>private.COMMANDD</identifier>
-<autogen>
-  __HoldingKeyToKey__
-  KeyCode::COMMAND_L, ModifierFlag::NONE,
-  <!-- short press -->
-  @begin
-  KeyCode::COMMAND_L, ModifierFlag::NONE,
-  @end
-  <!-- hold -->
-  @begin
-  KeyCode::L, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-  @end
-  Option::NOREPEAT,
-</autogen>
+  </item>
+  <item>
+    <name>command </name>
+    <appendix>command</appendix>
+    <identifier>private.COMMANDD</identifier>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::COMMAND_L, ModifierFlag::NONE,
+      <!-- short press -->
+      @begin
+      KeyCode::COMMAND_L, ModifierFlag::NONE,
+      @end
+      <!-- hold -->
+      @begin
+      KeyCode::L, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      @end
+      Option::NOREPEAT,
+    </autogen>
 
-</item>
+  </item>
 
-<item>
- <name>double press option to space+option</name>
- <appendix>double press command to Hyper+P</appendix>
- <identifier>private.OPTION</identifier>
- <autogen>
-  __DoublePressModifier__
-  KeyCode::OPTION_L,
-  KeyCode::OPTION_L,
-  KeyCode::Q,ModifierFlag::COMMAND_L,
-</autogen>
-</item>
+  <item>
+    <name>double press option to space+option</name>
+    <appendix>double press command to Hyper+P</appendix>
+    <identifier>private.OPTION</identifier>
+    <autogen>
+      __DoublePressModifier__
+      KeyCode::OPTION_L,
+      KeyCode::OPTION_L,
+      KeyCode::Q,ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
 
 </root>
 
