@@ -55,7 +55,7 @@ values."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
      syntax-checking
      version-control
      )
@@ -168,7 +168,7 @@ values."
    ;; and TAB or <C-m> and RET.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab nil
+   dotspacemacs-distinguish-gui-tab t
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
    dotspacemacs-remap-Y-to-y$ nil
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
@@ -354,6 +354,7 @@ you should place your code here."
   (setq-default js-indent-level 2)
   ;; (define-key helm-ag-mode-map "C-c C-c" 'helm-ag--action-save-buffer)
   (define-key evil-normal-state-map "gh" 'evil-search-forward)
+  ;; (define-key evil-normal-state-map "C-i" 'evil-jump-forward)
   ;; translate C-h to backspace, and M-h to C-h
   ;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
   (keyboard-translate ?\C-h ?\C-?)
