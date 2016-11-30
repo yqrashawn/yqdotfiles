@@ -352,7 +352,6 @@ you should place your code here."
   ;;javascript config
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
-  ;; (define-key helm-ag-mode-map "C-c C-c" 'helm-ag--action-save-buffer)
   (define-key evil-normal-state-map "gh" 'evil-search-forward)
   (define-key evil-normal-state-map "e" 'evil-avy-goto-char-2)
   ;; (define-key evil-normal-state-map "C-i" 'evil-jump-forward)
@@ -407,6 +406,7 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
   (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
   (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
+  (define-key evil-normal-state-map "zl" 'hs-hide-level)
   (setq-default evil-escape-key-sequence "kj")
   (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
@@ -439,10 +439,12 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(helm-M-x-fuzzy-match t)
+ '(helm-etags-fuzzy-match t)
  '(helm-follow-mode-persistent t)
  '(helm-source-names-using-follow
    (quote
