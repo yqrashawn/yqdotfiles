@@ -303,7 +303,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; only need exec-path-from-shell on OSX
   ;; this hopefully sets up path and other vars better
   (custom-set-variables
-   '(helm-follow-mode-persistent t))
+   '(helm-follow-mode-persistent nil))
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-copy-env "PATH")
   ;;   (exec-path-from-shell-initialize))
@@ -352,7 +352,9 @@ you should place your code here."
   ;;javascript config
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
-  (define-key evil-normal-state-map "gh" 'evil-search-forward)
+  ;; (define-key evil-normal-state-map "gh" 'evil-search-forward)
+  (global-set-key (kbd "C-SPC") 'evil-search-forward)
+  ;; (define-key evil-normal-state-map "C-SPC" 'evil-search-forward)
   (define-key evil-normal-state-map "e" 'evil-avy-goto-char-2)
   ;; (define-key evil-normal-state-map "C-i" 'evil-jump-forward)
   ;; translate C-h to backspace, and M-h to C-h
