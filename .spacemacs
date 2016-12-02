@@ -336,7 +336,7 @@ you should place your code here."
   ;; (yas-reload-all)
   ;; (add-hook "prog-mode-hook #'yas-minor-mode)
   ;; (setq-default dotspacemacs-smartparens-strict-mode t)
-  (spacemacs/toggle-indent-guide-globally-on)
+  ;; (spacemacs/toggle-indent-guide-globally-on)
   ;; (spacemacs/toggle-highlight-indentation-current-column-on)
   (setq scroll-margin 5
         scroll-conservatively 9999
