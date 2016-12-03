@@ -48,14 +48,17 @@ values."
      markdown
      org
      osx
+     python
+     (python :variables python-enable-yapf-format-on-save t)
      evernote
+     javascript
      (javascript :variables javascript-disable-tern-port-files nil)
      (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
      vinegar
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     ;; spell-checking
+     spell-checking
      syntax-checking
      version-control
      )
