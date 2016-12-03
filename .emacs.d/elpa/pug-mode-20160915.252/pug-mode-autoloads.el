@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "pug-mode" "pug-mode.el" (22581 13119 0 0))
+;;;### (autoloads nil "pug-mode" "pug-mode.el" (22594 47654 0 0))
 ;;; Generated autoloads from pug-mode.el
 
 (autoload 'pug-mode "pug-mode" "\
