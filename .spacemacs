@@ -101,14 +101,13 @@ values."
    ;; One of `vim', `emacs' or `hybrid'.
    dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
+   dotspacemacs-verbose-loading t
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
-   ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'random
+   dotspacemacs-startup-banner 'nil
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -116,7 +115,8 @@ values."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 7))
+                                (projects . 2)
+                                (agenda . 2))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -147,7 +147,7 @@ values."
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "\\"
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m")
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -159,16 +159,16 @@ values."
    ;; works in the GUI. (default nil)
    dotspacemacs-distinguish-gui-tab t
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
-   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-remap-Y-to-y$ t
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
    ;; there. (default t)
    dotspacemacs-retain-visual-state-on-shift t
    ;; If non-nil, J and K move lines up and down when in visual mode.
    ;; (default nil)
-   dotspacemacs-visual-line-move-text nil
+   dotspacemacs-visual-line-move-text t
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
-   dotspacemacs-ex-substitute-global nil
+   dotspacemacs-ex-substitute-global t
    ;; Name of the default layout (default "Default")
    dotspacemacs-default-layout-name "Default"
    ;; If non nil the default layout name is displayed in the mode-line.
@@ -203,10 +203,10 @@ values."
    dotspacemacs-helm-use-fuzzy 'always
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
-   dotspacemacs-enable-paste-transient-state nil
+   dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.4
+   dotspacemacs-which-key-delay 0.0
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -215,17 +215,17 @@ values."
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
+   dotspacemacs-fullscreen-use-non-native t
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -257,18 +257,18 @@ values."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -288,51 +288,23 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; https://github.com/purcell/exec-path-from-shell
-  ;; only need exec-path-from-shell on OSX
-  ;; this hopefully sets up path and other vars better
   (custom-set-variables
    '(helm-follow-mode-persistent nil))
-  ;; (when (memq window-system '(mac ns))
-  ;;   (exec-path-from-shell-copy-env "PATH")
-  ;;   (exec-path-from-shell-initialize))
    )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
-layers configuration.
-This is the place where most of your configurations should be done. Unless it is
-explicitly specified that a variable should be set before a package is loaded,
-you should place your code here."
+layers configuration."
 
+  (require 'vlf)
   (defun my-find-file-check-make-large-file-read-only-hook ()
+    "If a file is over a given size, make the buffer read only."
     (when (> (buffer-size) (* 1024 1024))
       (vlf-mode 1)))
   (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
 
-  ;; automatically add project TODOs into agenda
-  (with-eval-after-load 'org-agenda
-    (require 'org-projectile)
-    (push (org-projectile:todo-files) org-agenda-files))
-  ;; project todo file position
-  (setq-default dotspacemacs-configuration-layers
-                '((org :variables org-projectile-file "TODOs.org")))
-  ;; org-mode github flavor
-  (setq-default dotspacemacs-configuration-layers '(
-                (org :variables org-enable-github-support t)))
-  ;; org-mode reveal.js support
-  ;; (setq-default dotspacemacs-configuration-layers
-  ;;               '((org :variables org-enable-reveal-js-support t)))
-  ;; add this line to .org file
-  ;; #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
-
-  ;; (auto-indent-global-mode)
-  ;; (yas-reload-all)
-  ;; (add-hook "prog-mode-hook #'yas-minor-mode)
-  ;; (setq-default dotspacemacs-smartparens-strict-mode t)
-  ;; (spacemacs/toggle-indent-guide-globally-on)
-  ;; (spacemacs/toggle-highlight-indentation-current-column-on)
+  (global-evil-mc-mode  1) ;; enable
   (setq scroll-margin 5
         scroll-conservatively 9999
         scroll-step 1)
@@ -349,17 +321,13 @@ you should place your code here."
   (setq-default js-indent-level 2)
   ;; (define-key evil-normal-state-map "gh" 'evil-search-forward)
   (global-set-key (kbd "C-SPC") 'evil-search-forward)
+  (global-set-key (kbd "^@") 'evil-search-forward)
   ;; (define-key evil-normal-state-map "C-SPC" 'evil-search-forward)
   (define-key evil-normal-state-map "e" 'evil-avy-goto-char-2)
-  ;; (define-key evil-normal-state-map "C-i" 'evil-jump-forward)
   ;; translate C-h to backspace, and M-h to C-h
   ;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
   (keyboard-translate ?\C-h ?\C-?)
-  ;; (global-set-key (kbd "C-?") 'help-command)
-  ;; (global-set-key (kbd "M-?") 'mark-paragraph)
-  ;; (global-set-key (kbd "C-h") 'delete-backward-char)
-  ;; (global-set-key [(control ?h)] 'delete-backward-char)
-  ;; (global-set-key (kbd "M-h") 'backward-kill-word)
+  (global-set-key [(control ?h)] 'delete-backward-char)
   ;; turn on flychecking globally
   (add-hook 'after-init-hook #'global-flycheck-mode)
   ;; disable jshint since we prefer eslint checking
@@ -399,9 +367,9 @@ you should place your code here."
     :type line
     (evil-previous-line (or count 1))
     (evil-scroll-line-to-center nil))
-  (define-key evil-normal-state-map (kbd "C-e") 'neotree-toggle)
   (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
   (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
+  (define-key evil-normal-state-map (kbd "C-e") 'neotree-toggle)
   (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
   (define-key evil-normal-state-map "zl" 'hs-hide-level)
   (setq-default evil-escape-key-sequence "kj")
@@ -438,17 +406,19 @@ you should place your code here."
    (quote
     ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(evil-escape-unordered-key-sequence t)
- '(evil-want-Y-yank-to-eol nil)
+ '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
- '(helm-follow-mode-persistent t)
+ '(helm-follow-mode-persistent nil)
  '(helm-source-names-using-follow
    (quote
     ("Search at ~/workspace/chenzhou/MixSDK/BIMSDK/src/loaders/GbimLoader/")))
  '(package-selected-packages
    (quote
-    (vlf helm-flyspell web-beautify livid-mode skewer-mode simple-httpd json-snatcher json-reformat js2-refactor multiple-cursors js-doc git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter company-tern dash-functional tern coffee-mode diff-hl flyspell-correct-helm flyspell-correct auto-dictionary sass-mode company-web tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data geeknote add-node-modules-path eslint-fix npm-mode auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme))))
+    (vlf helm-flyspell web-beautify livid-mode skewer-mode simple-httpd json-snatcher json-reformat js2-refactor multiple-cursors js-doc git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter company-tern dash-functional tern coffee-mode diff-hl flyspell-correct-helm flyspell-correct auto-dictionary sass-mode company-web tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data geeknote add-node-modules-path eslint-fix npm-mode auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+ '(visible-bell nil)
+ '(vlf-application (quote dont-ask)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
