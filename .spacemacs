@@ -6,9 +6,6 @@
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
 values."
-  (setq url-proxy-services
-        '(("http" . "127.0.0.1:6152")
-          ("https" . "127.0.0.1:6152")))
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
@@ -39,7 +36,6 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     html
      helm
      auto-completion
      better-defaults
@@ -48,19 +44,18 @@ values."
      markdown
      org
      osx
-     python
-     (python :variables python-enable-yapf-format-on-save t)
-     evernote
-     javascript
-     (javascript :variables javascript-disable-tern-port-files nil)
-     (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
-     vinegar
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
      syntax-checking
      version-control
+     html
+     javascript
+     (javascript :variables javascript-disable-tern-port-files nil)
+     python
+     (python :variables python-enable-yapf-format-on-save t)
+     (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -89,14 +84,20 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
+   ;; possible. Set it to nil if you have no way to use HTTPS in your
+   ;; environment, otherwise it is strongly recommended to let it set to t.
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
-   dotspacemacs-elpa-https nil
+   ;; (default t)
+   dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
-   dotspacemacs-elpa-timeout 60
+   dotspacemacs-elpa-timeout 30
    ;; If non nil then spacemacs will check for updates at startup
-   ;; when the current branch is not `develop'.
-   dotspacemacs-check-for-update t
+   ;; when the current branch is not `develop'. Note that checking for
+   ;; new versions works via git commands, thus it calls GitHub services
+   ;; whenever you start Emacs. (default nil)
+   dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
    ;; to `emacs-version'.
@@ -104,13 +105,14 @@ values."
    ;; One of `vim', `emacs' or `hybrid'.
    dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading t
+   dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
-   dotspacemacs-startup-banner 'nil
+   ;; If the value is nil then no banner is displayed. (default 'official)
+   dotspacemacs-startup-banner 'official
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -118,8 +120,7 @@ values."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 2)
-                                (agenda . 2))
+                                (projects . 7))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -150,7 +151,7 @@ values."
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key "\\"
+   dotspacemacs-major-mode-leader-key ","
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m")
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -183,7 +184,7 @@ values."
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
-   dotspacemacs-large-file-size nil
+   dotspacemacs-large-file-size 1
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
@@ -271,7 +272,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -291,69 +292,61 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (custom-set-variables
-   '(helm-follow-mode-persistent nil))
-   )
+
+
+  (package-initialize)
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-copy-env "LC_ALL")
+    (exec-path-from-shell-copy-env "TERM")
+    (exec-path-from-shell-initialize))
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
-layers configuration."
-  (setq-default dotspacemacs-configuration-layers
-                '((auto-completion :variables
-                                   auto-completion-enable-help-tooltip t)))
-  (setq-default dotspacemacs-configuration-layers
-                '((auto-completion :variables
-                                   auto-completion-enable-snippets-in-popup t)))
-  (global-company-mode)
-  (require 'vlf)
-  (require 'vlf-setup)
-  ;; (defun my-find-file-check-make-large-file-read-only-hook ()
-  ;;   "If a file is over a given size, make the buffer read only."
-  ;;   (when (> (buffer-size) (* 1024 1024))
-  ;;     (vlf-mode 1)))
-  ;; (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
+layers configuration.
+This is the place where most of your configurations should be done. Unless it is
+explicitly specified that a variable should be set before a package is loaded,
+you should place your code here."
 
-  (global-evil-mc-mode  1) ;; enable
-  (setq mouse-wheel-scroll-amount '(2 ((shift) . 1))) ;; two lines at a time
-  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-  (setq scroll-margin 5
-        scroll-conservatively 9999
-        scroll-step 1)
-  ;;cursor don't go back
-  (setq evil-move-cursor-back nil)
-  ;;remeber cursor location on reoppening
-  (setq save-place-file "~/.emacs.d/saveplace")
-  (setq-default save-place t)
+  ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
   (require 'saveplace)
   (require 'yasnippet)
+  (require 'vlf-setup)
   (yas-global-mode 1)
-  ;;javascript config
-  (setq-default js2-basic-offset 2)
-  (setq-default js-indent-level 2)
-  ;; (define-key evil-normal-state-map "gh" 'evil-search-forward)
+  (global-company-mode)
+  (global-evil-mc-mode  1)
+  (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
+  ;;;;;;;;;;;;;;;;;;;;; keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;; vim search
   (global-set-key (kbd "C-SPC") 'evil-search-forward)
   (global-set-key (kbd "^@") 'evil-search-forward)
-  ;; (define-key evil-normal-state-map "C-SPC" 'evil-search-forward)
+  ;;;;;C-h
   (define-key evil-normal-state-map "e" 'evil-avy-goto-char-2)
-  ;; translate C-h to backspace, and M-h to C-h
-  ;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char)
   (keyboard-translate ?\C-h ?\C-?)
   (global-set-key [(control ?h)] 'delete-backward-char)
-  ;; turn on flychecking globally
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-                (append flycheck-disabled-checkers
-                        '(javascript-jshint)))
-  ;; use eslint with web-mode for jsx files
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-add-mode 'javascript-eslint 'js-mode)
-  ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
+  ;;;;;; jzz kzz
+  (evil-define-motion evil-jzz (count)
+    "j to jzz"
+    :type line
+    (evil-next-line (or count 1))
+    (evil-scroll-line-to-center nil))
+  (evil-define-motion evil-kzz (count)
+    "k to kzz"
+    :type line
+    (evil-previous-line (or count 1))
+    (evil-scroll-line-to-center nil))
+  (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
+  (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
+  (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
+  (define-key evil-normal-state-map "zl" 'hs-hide-level)
 
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;; javascript ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
   ;; adjust indents for web-mode to 2 spaces
   (defun my-web-mode-hook ()
     "Hooks for Web mode. Adjust indents"
@@ -362,7 +355,6 @@ layers configuration."
     (setq web-mode-css-indent-offset 2)
     (setq web-mode-code-indent-offset 2))
   (add-hook 'web-mode-hook  'my-web-mode-hook)
-
   ;; for better jsx syntax-highlighting in web-mode
   ;; - courtesy of Patrick @halbtuerke
   (defadvice web-mode-highlight-part (around tweak-jsx activate)
@@ -370,42 +362,55 @@ layers configuration."
         (let ((web-mode-enable-part-face nil))
           ad-do-it)
       ad-do-it))
-  (evil-define-motion evil-jzz (count)
-    "j to jzz"
-    :type line
-    (evil-next-line (or count 1))
-  (evil-scroll-line-to-center nil))
-  (evil-define-motion evil-kzz (count)
-    "k to kzz"
-    :type line
-    (evil-previous-line (or count 1))
-    (evil-scroll-line-to-center nil))
-  (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
-  (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
-  (define-key evil-normal-state-map (kbd "C-e") 'neotree-toggle)
-  (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
-  (define-key evil-normal-state-map "zl" 'hs-hide-level)
+
+  ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
+  (setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
+  (setq-default save-place t)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (flycheck-add-mode 'javascript-eslint 'js-mode)
+  ;; customize flycheck temp file prefix
+  (setq-default flycheck-temp-prefix ".flycheck")
+  ;;;;;; disable jshint since we prefer eslint checking
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-jshint)))
+
+  ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
+  (setq-default js2-basic-offset 2)
+  (setq-default js-indent-level 2)
+  ;; http://rejeep.github.io/emacs/javascript/js2-mode/yasnippet/2009/06/14/js2-mode-and-yasnippet.html
+  (eval-after-load 'js2-mode
+    '(progn
+       (define-key js2-mode-map (kbd "TAB")
+         (lambda()
+           (interactive)
+           (let ((yas/fallback-behavior 'return-nil))
+             (unless (yas/expand)
+               (indent-for-tab-command)
+               (if (looking-back "^\s*")
+                   (back-to-indentation))))))))
+
+
+  ;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq evil-move-cursor-back nil) ;;cursor don't go back
+  (setq save-place-file "~/.emacs.d/saveplace") ;;remeber cursor location on reoppening
   (setq-default evil-escape-key-sequence "kj")
   (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
   (setq auto-indent-style 'conservative)
   (setq auto-indent-on-visit-file t)
-  (setq-default js2-basic-offset 2)
-  (setq-default js-indent-level 2)
-  (setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
+  ;; TODO
   (setq-default dotspacemacs-configuration-layers
-                '((shell :variables shell-default-term-shell "/bin/bash")))
-  ;;(eval-after-load 'js2-mode)
-  ;;http://rejeep.github.io/emacs/javascript/js2-mode/yasnippet/2009/06/14/js2-mode-and-yasnippet.html
-  (eval-after-load 'js2-mode
-    '(progn
-       (define-key js2-mode-map (kbd "TAB") (lambda()
-                                              (interactive)
-                                              (let ((yas/fallback-behavior 'return-nil))
-                                                (unless (yas/expand)
-                                                  (indent-for-tab-command)
-                                                  (if (looking-back "^\s*")
-                                                      (back-to-indentation))))))))
+                '((shell :variables shell-default-term-shell "/bin/zsh")))
+
+  ;;;;;;;;;;;;;;;;;;;;; others ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq mouse-wheel-scroll-amount '(2 ((shift) . 1))) ;; two lines at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+  (setq scroll-margin 5
+        scroll-conservatively 9999
+        scroll-step 1)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -415,26 +420,18 @@ layers configuration."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
- '(helm-follow-mode-persistent nil)
- '(helm-source-names-using-follow
-   (quote
-    ("Search at ~/workspace/chenzhou/MixSDK/BIMSDK/src/loaders/GbimLoader/")))
  '(large-file-warning-threshold 1000000)
  '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
  '(package-selected-packages
    (quote
-    (vlf helm-flyspell web-beautify livid-mode skewer-mode simple-httpd json-snatcher json-reformat js2-refactor multiple-cursors js-doc git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter company-tern dash-functional tern coffee-mode diff-hl flyspell-correct-helm flyspell-correct auto-dictionary sass-mode company-web tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data geeknote add-node-modules-path eslint-fix npm-mode auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(visible-bell nil)
  '(vlf-application (quote dont-ask)))
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
