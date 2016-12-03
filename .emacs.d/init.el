@@ -13,6 +13,7 @@
 (package-initialize)
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-copy-env "LC_ALL")
+  (exec-path-from-shell-copy-env "TERM")
   (exec-path-from-shell-initialize))
 
 ;; Increase gc-cons-threshold, depending on your system you may set it back to a
