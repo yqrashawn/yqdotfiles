@@ -2313,9 +2313,9 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>408 363 620 392 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>375 114 796 473 0 0 1440 877 </string>
+	<string>260 186 918 494 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1 430 1433 447 0 0 1440 877 </string>
+	<string>0 0 570 777 0 0 1280 777 </string>
 	<key>NeverWarnAboutShortLivedSessions_F708A1E7-4DB2-4095-8F4A-CE821730CC54</key>
 	<true/>
 	<key>NeverWarnAboutSpaces</key>
@@ -2544,6 +2544,8 @@
 			<integer>80</integer>
 			<key>Command</key>
 			<string></string>
+			<key>Cursor Boost</key>
+			<real>0.0</real>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -2953,7 +2955,7 @@
 			<key>Silence Bell</key>
 			<false/>
 			<key>Smart Cursor Color</key>
-			<true/>
+			<false/>
 			<key>Smart Selection Rules</key>
 			<array>
 				<dict>
@@ -6974,7 +6976,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-11-16T07:02:55Z</date>
+	<date>2016-11-30T06:26:30Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -7008,7 +7010,7 @@
 	<key>URLHandlersByGuid</key>
 	<dict/>
 	<key>UseBorder</key>
-	<true/>
+	<false/>
 	<key>UseCompactLabel</key>
 	<false/>
 	<key>UseLionStyleFullscreen</key>
@@ -7028,6 +7030,6 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.10</string>
+	<string>3.0.12</string>
 </dict>
 </plist>
