@@ -305,6 +305,9 @@ layers configuration."
   (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
 
   (global-evil-mc-mode  1) ;; enable
+  (setq mouse-wheel-scroll-amount '(2 ((shift) . 1))) ;; two lines at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
   (setq scroll-margin 5
         scroll-conservatively 9999
         scroll-step 1)
@@ -414,6 +417,7 @@ layers configuration."
  '(helm-source-names-using-follow
    (quote
     ("Search at ~/workspace/chenzhou/MixSDK/BIMSDK/src/loaders/GbimLoader/")))
+ '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
  '(package-selected-packages
    (quote
     (vlf helm-flyspell web-beautify livid-mode skewer-mode simple-httpd json-snatcher json-reformat js2-refactor multiple-cursors js-doc git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter company-tern dash-functional tern coffee-mode diff-hl flyspell-correct-helm flyspell-correct auto-dictionary sass-mode company-web tagedit slim-mode scss-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode web-completion-data geeknote add-node-modules-path eslint-fix npm-mode auto-indent-mode js2-mode json-mode web-mode xterm-color shell-pop multi-term evil-snipe eshell-z eshell-prompt-extras esh-help smeargle reveal-in-osx-finder pbcopy osx-trash osx-dictionary orgit org-projectile pcache org-present org org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow launchctl htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
