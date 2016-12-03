@@ -4,7 +4,7 @@
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "evil-visual-mark-mode" "evil-visual-mark-mode.el"
-;;;;;;  (22581 12823 0 0))
+;;;;;;  (22594 47290 0 0))
 ;;; Generated autoloads from evil-visual-mark-mode.el
 
 (defvar evil-visual-mark-mode nil "\

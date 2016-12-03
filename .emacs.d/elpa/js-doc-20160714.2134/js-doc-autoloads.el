@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "js-doc" "js-doc.el" (22581 12914 0 0))
+;;;### (autoloads nil "js-doc" "js-doc.el" (22594 47580 0 0))
 ;;; Generated autoloads from js-doc.el
 
 (autoload 'js-doc-insert-file-doc "js-doc" "\

@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "evil-indent-plus" "evil-indent-plus.el" (22581
-;;;;;;  12210 0 0))
+;;;### (autoloads nil "evil-indent-plus" "evil-indent-plus.el" (22594
+;;;;;;  47227 0 0))
 ;;; Generated autoloads from evil-indent-plus.el
  (autoload 'evil-indent-plus-i-indent "evil-indent-plus" nil t)
  (autoload 'evil-indent-plus-a-indent "evil-indent-plus" nil t)

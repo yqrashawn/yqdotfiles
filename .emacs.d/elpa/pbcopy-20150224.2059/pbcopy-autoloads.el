@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "pbcopy" "pbcopy.el" (22581 13112 0 0))
+;;;### (autoloads nil "pbcopy" "pbcopy.el" (22594 50055 0 0))
 ;;; Generated autoloads from pbcopy.el
 
 (autoload 'turn-on-pbcopy "pbcopy" "\

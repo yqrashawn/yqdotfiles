@@ -4,7 +4,7 @@
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "reveal-in-osx-finder" "reveal-in-osx-finder.el"
-;;;;;;  (22581 13122 0 0))
+;;;;;;  (22594 50056 0 0))
 ;;; Generated autoloads from reveal-in-osx-finder.el
 
 (autoload 'reveal-in-osx-finder "reveal-in-osx-finder" "\
