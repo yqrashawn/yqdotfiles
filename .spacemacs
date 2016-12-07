@@ -333,6 +333,8 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
   (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
   (evil-global-set-key 'normal (kbd "C-w z") 'zoom-window-zoom)
+  (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
+  (define-key evil-insert-state-map (kbd "C-k") 'backword-word)
   (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
   (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
   (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
