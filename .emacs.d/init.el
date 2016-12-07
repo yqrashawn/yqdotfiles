@@ -14,7 +14,7 @@
 
 ;; Increase gc-cons-threshold, depending on your system you may set it back to a
 ;; lower value in your dotfile (function `dotspacemacs/user-config')
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold 600000000)
 
 (defconst spacemacs-version          "0.200.5" "Spacemacs version.")
 (defconst spacemacs-emacs-min-version   "24.4" "Minimal version of Emacs.")
