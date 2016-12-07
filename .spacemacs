@@ -213,7 +213,7 @@ values."
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.1
+   dotspacemacs-which-key-delay 0.4
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -474,11 +474,12 @@ you should place your code here."
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(gc-cons-threshold 600000000)
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
  '(jscs-fix-show-errors nil)
  '(large-file-warning-threshold 1000000)
- '(magit-diff-expansion-threshold 0.1)
+ '(magit-diff-expansion-threshold 0.0)
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
  '(package-archives
