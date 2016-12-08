@@ -49,7 +49,7 @@ values."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
      syntax-checking
      version-control
      html
@@ -317,7 +317,6 @@ you should place your code here."
   (require 'yasnippet)
   (require 'vlf-setup)
   (which-key-mode 0)
-  (flyspell-mode 0)
   (yas-global-mode 1)
   (global-company-mode)
   (global-evil-mc-mode 1)
@@ -374,9 +373,15 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;; javascript ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (defun myfunc/js2-which-function ()
+  ;;   ;; clean the imenu cache
+  ;;   ;; @see http://stackoverflow.com/questions/13426564/how-to-force-a-rescan-in-imenu-by-a-function
+  ;;   (setq imenu--index-alist nil)
+  ;;   (which-function-mode t)
+  ;;   (which-function))
 
-  (add-hook 'js2-mode-hook #'jscs-indent-apply)
-  (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
+  ;; (add-hook 'js2-mode-hook #'jscs-indent-apply)
+  ;; (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
 
   (setq inferior-js-program-command "node")
   (setq inferior-js-program-arguments '("--interactive"))
@@ -474,12 +479,11 @@ you should place your code here."
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
- '(gc-cons-threshold 600000000)
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
  '(jscs-fix-show-errors nil)
  '(large-file-warning-threshold 1000000)
- '(magit-diff-expansion-threshold 0.0)
+ ;; '(magit-diff-expansion-threshold 0.0)
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
  '(package-archives
