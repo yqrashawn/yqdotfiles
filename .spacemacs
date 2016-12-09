@@ -31,14 +31,16 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     python
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      windows-scripts
-     helm
+     prodigy
+     imenu-list
+     ;; helm
+     ivy
      auto-completion
      better-defaults
      emacs-lisp
@@ -47,6 +49,7 @@ values."
      org
      osx
      gnus
+     (mu4e :variables mu4e-account-alist t)
      mu4e
      (mu4e :variables
            mu4e-enable-notifications t
@@ -58,6 +61,7 @@ values."
      syntax-checking
      version-control
      html
+     python
      javascript
      (javascript :variables javascript-disable-tern-port-files nil)
      go
@@ -69,7 +73,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(zoom-window phi-search js2-highlight-vars jscs vlf js-comint)
+   ;; (require 'vlf-setup)
+   dotspacemacs-additional-packages '(yasnippet saveplace zoom-window phi-search js2-highlight-vars jscs vlf vlf-setup benchmark-init guide-key js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -91,6 +96,9 @@ You should not put any user code in there besides modifying the variable
 values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
+  ;; TODO: there'll be better way to do this.
+  ;; See https://github.com/magit/magit/issues/2559
+  (setq magit-auto-revert-mode nil)
   (setq-default
    ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -301,9 +309,6 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; (load-file "/Users/Rashawn/.emacs.d/private/commands/general.el")
-  (setq url-proxy-services
-        '(("http" . "127.0.0.1:6152")
-          ("https" . "127.0.0.1:6152")))
   (package-initialize)
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-copy-env "LC_ALL")
@@ -318,11 +323,45 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (setq url-proxy-services
+        '(("http" . "127.0.0.1:6152")
+          ("https" . "127.0.0.1:6152")))
+
+  (benchmark-init/activate)
+
+  ;;;;;;;;;;;;;;;;;;;;; prodigy service ;;;;;;;;;;;;;;;;;;;;
+  (prodigy-define-service
+   :name "Build BIMSDK"
+   :command "webpack"
+   :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK/BIMSDK"
+   :args '("--config webpack.bimsdk.js" "-w" "--lint" "--notify")
+   :tags '(work))
+
+  (prodigy-define-service
+   :name "Build MixSDK"
+   :command "npm"
+   :args '("run" "build")
+   :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK"
+   :tags '(work))
+
+  (prodigy-define-service
+   :name "BIMSDK http-server"
+   :command "http-server"
+   :args '("-p" "2323")
+   :port 2323
+   :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK/BIMSDK"
+   :tags '(work))
+
+  (prodigy-define-service
+   :name "BIMSDK http-server"
+   :command "http-server"
+   :args '("-p" "2121")
+   :port 2121
+   :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK"
+   :tags '(work))
+
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  (require 'saveplace)
-  (require 'yasnippet)
-  (require 'vlf-setup)
   (which-key-mode 0)
   (yas-global-mode 1)
   (global-company-mode)
@@ -342,16 +381,18 @@ you should place your code here."
   (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
   (define-key evil-insert-state-map (kbd "C-k") 'backword-word)
   (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
+  (define-key evil-insert-state-map (kbd "C-n") 'mc/mark-next-like-this-word)
+  (define-key evil-insert-state-map (kbd "C-p") 'mc/mark-previous-like-this-word)
   (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
   (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
+  (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
+  (define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
   (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
-  (define-key evil-insert-state-map (kbd "C-n") 'mc/mark-next-like-this)
-  (define-key evil-insert-state-map (kbd "C-p") 'mc/mark-next-like-this)
   (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
   (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
   (define-key evil-insert-state-map [(control return)] 'mc/mark-all-dwim)
-  (global-set-key (kbd "C-SPC") 'evil-search-forward)
-  (global-set-key (kbd "^@") 'evil-search-forward)
+  (global-set-key (kbd "C-SPC") 'swiper)
+  (global-set-key (kbd "^@") 'swiper)
   ;;;;;C-h
   (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
   (define-key evil-normal-state-map "e" 'evil-avy-goto-char-2)
@@ -380,6 +421,13 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default dotspacemacs-configuration-layers
+                '((org :variables org-projectile-file "TODOs.org")))
+  (with-eval-after-load 'org-agenda
+    (require 'org-projectile)
+    (push (org-projectile:todo-files) org-agenda-files))
+
+  ;;;;;;;;;;;;;;;;;;; gnus ;;;;;;;;;;;;;;;;;;;;
   ;; Get email, and store in nnml
   (setq gnus-secondary-select-methods
         '(
@@ -408,17 +456,64 @@ you should place your code here."
   ;; store email in ~/gmail directory
   (setq nnml-directory "~/Mail")
   (setq message-directory "~/Mail")
+  ;;;;;;;;;;;;;;; mu4e ;;;;;;;;;;;;;;;;;;;;
+  (setq mail-user-agent 'message-user-agent)
+  (setq user-mail-address "namy.19@gmail.com"
+        user-full-name "yqrashawn")
+  (setq mu4e-account-alist
+        '(("gmail"
+           (mu4e-sent-messages-behavior delete)
+           (mu4e-sent-folder "/gmail/[Gmail]/.Sent Mail")
+           (mu4e-drafts-folder "/gmail/[Gmail]/.Drafts")
+           (user-mail-address "namy.19@gmail.com")
+           (user-full-name "yqrashawn"))
+          ("qqmail"
+           (mu4e-sent-messages-behavior sent)
+           (mu4e-sent-folder "/qqmail/Sent Items")
+           (mu4e-drafts-folder "/qqmail/Drafts")
+           (user-mail-address "254651372@qq.com")
+           (user-full-name "yqrashawn"))
+          ("bimsop"
+           (mu4e-sent-messages-behavior sent)
+           (mu4e-sent-folder "/bimsop/Sent Items")
+           (mu4e-drafts-folder "/bimsop/Drafts")
+           (user-mail-address "zhangyuxiao@bimsop.com")
+           (user-full-name "yqrashawn"))))
+  (mu4e/mail-account-reset)
+
   (setq mu4e-enable-mode-line t)
   (with-eval-after-load 'mu4e-alert
     (mu4e-alert-set-default-style 'libnotify))
   (setq-default dotspacemacs-configuration-layers
                 '((mu4e :variables
                         mu4e-installation-path "/usr/local/Cellar/mu/0.9.18/share/emacs/site-lisp")))
-  (setq-default dotspacemacs-configuration-layers
-                '((org :variables org-projectile-file "TODOs.org")))
-  (with-eval-after-load 'org-agenda
-    (require 'org-projectile)
-    (push (org-projectile:todo-files) org-agenda-files))
+
+  (setq mu4e-maildir "~/Mail"
+        mu4e-trash-folder "/Trash"
+        mu4e-refile-folder "/Archive"
+        mu4e-get-mail-command "offlineimap"
+        mu4e-update-interval 3600
+        mu4e-compose-signature-auto-include "yqrashawn"
+        mu4e-view-show-images t
+        mu4e-view-show-addresses t)
+
+;;; Mail directory shortcuts
+  (setq mu4e-maildir-shortcuts
+        '(("/gmail/INBOX" . ?g)
+          ("/qqmail/INBOX" . ?q)))
+
+;;; Bookmarks
+  (setq mu4e-bookmarks
+        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
+          ("date:today..now" "Today's messages" ?t)
+          ("date:7d..now" "Last 7 days" ?w)
+          ("mime:image/*" "Messages with images" ?p)
+          (,(mapconcat 'identity
+                       (mapcar
+                        (lambda (maildir)
+                          (concat "maildir:" (car maildir)))
+                        mu4e-maildir-shortcuts) " OR ")
+           "All inboxes" ?i)))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;; javascript ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -429,9 +524,22 @@ you should place your code here."
   ;;   (which-function-mode t)
   ;;   (which-function))
 
+  (defun my-js2-mode-hook ()
+    (if (featurep 'js2-highlight-vars)
+        (js2-highlight-vars-mode))
+
+    (lambda ()
+      (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+      (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
+      (local-set-key (kbd "C-c b") 'js-send-buffer)
+      (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
+      (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+      ))
+  (add-hook 'js2-mode-hook 'my-js2-mode-hook)
+
+
   ;; (add-hook 'js2-mode-hook #'jscs-indent-apply)
   ;; (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
-
   (setq inferior-js-program-command "node")
   (setq inferior-js-program-arguments '("--interactive"))
   (setq inferior-js-mode-hook
@@ -439,13 +547,14 @@ you should place your code here."
           ;; We like nice colors
           (ansi-color-for-comint-mode-on)))
 
-  (add-hook 'js2-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-              (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-              (local-set-key (kbd "C-c b") 'js-send-buffer)
-              (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-              (local-set-key (kbd "C-c l") 'js-load-file-and-go)))
+  ;; (add-hook 'js2-mode-hook
+  ;;           (lambda ()
+  ;;             (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+  ;;             (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
+  ;;             (local-set-key (kbd "C-c b") 'js-send-buffer)
+  ;;             (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
+  ;;             (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+  ;;             ))
 
 
   ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
@@ -525,9 +634,18 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-backends
+   (quote
+    (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
+                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  company-oddmuse company-dabbrev)))
+ '(debug-on-quit nil)
+ '(dired-hide-details-hide-information-lines nil)
+ '(dired-hide-details-hide-symlink-targets nil)
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(guide-key/guide-key-sequence (quote ("t")))
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
  '(jscs-fix-show-errors nil)
@@ -535,7 +653,6 @@ you should place your code here."
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
  '(mu4e-attachment-dir "/Users/Rashawn/Downloads")
- '(mu4e-maildir "/Users/Rashawn/Mail")
  '(mu4e-user-mail-address-list
    (quote
     ("zhangyuxiao@bimsop.com" "254651372@qq.com" "namy.19@gmail.com" "Rashawn@localhost")))
@@ -573,14 +690,22 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint slime go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (benchmark-init guide-key which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint slime go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(smtpmail-default-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 587)
  '(smtpmail-smtp-user "yqrashawn")
  '(user-full-name "yqrashawn")
  '(visible-bell nil)
- '(vlf-application (quote dont-ask)))
+ '(vlf-application (quote dont-ask))
+ '(which-key-allow-imprecise-window-fit t)
+ '(which-key-dont-use-unicode t)
+ '(which-key-echo-keystrokes 0.01)
+ '(which-key-idle-delay 0.02)
+ '(which-key-mode nil)
+ '(which-key-popup-type (quote minibuffer))
+ '(which-key-show-prefix (quote bottom))
+ '(which-key-sort-uppercase-first t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
