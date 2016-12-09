@@ -323,6 +323,7 @@ you should place your code here."
   (global-evil-mc-mode 1)
   (global-centered-cursor-mode  1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
