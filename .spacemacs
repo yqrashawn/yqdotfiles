@@ -46,7 +46,11 @@ values."
      markdown
      org
      osx
+     gnus
      mu4e
+     (mu4e :variables
+           mu4e-enable-notifications t
+           mu4e-enable-mode-line t)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -297,7 +301,9 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; (load-file "/Users/Rashawn/.emacs.d/private/commands/general.el")
-
+  (setq url-proxy-services
+        '(("http" . "127.0.0.1:6152")
+          ("https" . "127.0.0.1:6152")))
   (package-initialize)
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-copy-env "LC_ALL")
@@ -323,7 +329,6 @@ you should place your code here."
   (global-evil-mc-mode 1)
   (global-centered-cursor-mode  1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -375,6 +380,37 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Get email, and store in nnml
+  (setq gnus-secondary-select-methods
+        '(
+          (nnimap "gmail"
+                  (nnimap-address
+                   "imap.gmail.com")
+                  (nnimap-server-port 993)
+                  (nnimap-stream ssl))
+          ))
+
+  ;; Send email via Gmail:
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-default-smtp-server "smtp.gmail.com")
+
+  ;; Archive outgoing email in Sent folder on imap.gmail.com:
+  (setq gnus-message-archive-method '(nnimap "imap.gmail.com")
+        gnus-message-archive-group "[Gmail]/Sent Mail")
+
+  ;; set return email address based on incoming email address
+  (setq gnus-posting-styles
+        '(((header "to" "address@outlook.com")
+           (address "address@outlook.com"))
+          ((header "to" "namy.19@gmail.com")
+           (address "namy.19@gmail.com"))))
+
+  ;; store email in ~/gmail directory
+  (setq nnml-directory "~/Mail")
+  (setq message-directory "~/Mail")
+  (setq mu4e-enable-mode-line t)
+  (with-eval-after-load 'mu4e-alert
+    (mu4e-alert-set-default-style 'libnotify))
   (setq-default dotspacemacs-configuration-layers
                 '((mu4e :variables
                         mu4e-installation-path "/usr/local/Cellar/mu/0.9.18/share/emacs/site-lisp")))
