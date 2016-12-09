@@ -73,8 +73,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   ;; (require 'vlf-setup)
-   dotspacemacs-additional-packages '(yasnippet saveplace zoom-window phi-search js2-highlight-vars jscs vlf vlf-setup benchmark-init guide-key js-comint)
+   dotspacemacs-additional-packages '(yasnippet saveplace zoom-window phi-search js2-highlight-vars jscs vlf js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -226,7 +225,7 @@ values."
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.4
+   dotspacemacs-which-key-delay 0.1
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -245,7 +244,7 @@ values."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -327,7 +326,16 @@ you should place your code here."
         '(("http" . "127.0.0.1:6152")
           ("https" . "127.0.0.1:6152")))
 
-  (benchmark-init/activate)
+  (setq debug-on-error t)
+  ;; hack for GC, no freeze anymore
+  (defun my-minibuffer-setup-hook ()
+    (setq gc-cons-threshold most-positive-fixnum))
+
+  (defun my-minibuffer-exit-hook ()
+    (setq gc-cons-threshold 800000))
+
+  (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+  (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
   ;;;;;;;;;;;;;;;;;;;;; prodigy service ;;;;;;;;;;;;;;;;;;;;
   (prodigy-define-service
@@ -362,7 +370,7 @@ you should place your code here."
 
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  (which-key-mode 0)
+  (require 'vlf-setup)
   (yas-global-mode 1)
   (global-company-mode)
   (global-evil-mc-mode 1)
@@ -645,6 +653,7 @@ you should place your code here."
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(gc-cons-threshold 800000)
  '(guide-key/guide-key-sequence (quote ("t")))
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
@@ -667,7 +676,6 @@ Entered on %U")
      ("n" "notes" entry
       (file "~/Dropbox/org/notes.org")
       "* %?
-%c
 Entered on %U")
      ("f" "file TODOs" entry
       (file "~/Dropbox/org/gtd.org")
@@ -690,7 +698,7 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (benchmark-init guide-key which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint slime go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint slime go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(smtpmail-default-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 587)
