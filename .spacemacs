@@ -648,6 +648,7 @@ you should place your code here."
                   (company-dabbrev-code company-gtags company-etags company-keywords)
                   company-oddmuse company-dabbrev)))
  '(debug-on-quit nil)
+ '(diary-file "~/Dropbox/org/diary")
  '(dired-hide-details-hide-information-lines nil)
  '(dired-hide-details-hide-symlink-targets nil)
  '(evil-escape-unordered-key-sequence t)
@@ -665,6 +666,7 @@ you should place your code here."
  '(mu4e-user-mail-address-list
    (quote
     ("zhangyuxiao@bimsop.com" "254651372@qq.com" "namy.19@gmail.com" "Rashawn@localhost")))
+ '(org-agenda-diary-file "")
  '(org-agenda-files (quote ("~/Dropbox/org/gtd.org" "~/Dropbox/org/notes.org")))
  '(org-capture-templates
    (quote
