@@ -382,7 +382,7 @@ you should place your code here."
   (global-set-key (kbd "M-%") 'phi-replace-query)
   (global-set-key (kbd "C-s") 'phi-search)
   (spacemacs/declare-prefix "c" "my-git-prefix")
-  (spacemacs/set-leader-keys "gcc" 'magit-wip-commit)
+  (spacemacs/set-leader-keys "gcc" 'magit-commit)
   (spacemacs/set-leader-keys "gcs" 'magit-commit-squash)
   (spacemacs/set-leader-keys "gcS" 'magit-commit-instant-squash)
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
