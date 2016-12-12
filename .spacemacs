@@ -370,6 +370,7 @@ you should place your code here."
 
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
+  (which-key-mode 0)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (require 'vlf-setup)
@@ -385,6 +386,7 @@ you should place your code here."
   (global-set-key (kbd "C-s") 'phi-search)
   (spacemacs/declare-prefix "c" "my-git-prefix")
   (spacemacs/set-leader-keys "gcc" 'magit-commit)
+  (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
   (spacemacs/set-leader-keys "gcs" 'magit-commit-squash)
   (spacemacs/set-leader-keys "gcS" 'magit-commit-instant-squash)
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
@@ -536,8 +538,8 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;; javascript ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (eval-after-load 'js2-mode
-    '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
+  ;; (eval-after-load 'js2-mode
+  ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
   (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
   (defun myfunc/js2-which-function ()
     ;; clean the imenu cache
@@ -547,9 +549,6 @@ you should place your code here."
     (which-function))
 
   (defun my-js2-mode-hook ()
-    (if (featurep 'js2-highlight-vars)
-        (js2-highlight-vars-mode))
-
     (lambda ()
       (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
       (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
@@ -557,9 +556,8 @@ you should place your code here."
       (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
       (local-set-key (kbd "C-c l") 'js-load-file-and-go)
       ))
+
   (add-hook 'js2-mode-hook 'my-js2-mode-hook)
-
-
   (add-hook 'js2-mode-hook #'jscs-indent-apply)
   ;; (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
   (setq inferior-js-program-command "node")
