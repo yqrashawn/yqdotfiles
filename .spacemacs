@@ -48,12 +48,6 @@ values."
      markdown
      org
      osx
-     gnus
-     (mu4e :variables mu4e-account-alist t)
-     mu4e
-     (mu4e :variables
-           mu4e-enable-notifications t
-           mu4e-enable-mode-line t)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -442,99 +436,12 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq-default dotspacemacs-configuration-layers
-                '((org :variables org-projectile-file "TODOs.org")))
+                '((org :variables org-projectile-file "plans.org")))
+  ;; (setq org-projectile-file '("plans.org"))
   (with-eval-after-load 'org-agenda
     (require 'org-projectile)
-    (push (org-projectile:todo-files) org-agenda-files))
+    (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files))))
 
-  ;;;;;;;;;;;;;;;;;;; gnus ;;;;;;;;;;;;;;;;;;;;
-  ;; Get email, and store in nnml
-  (setq gnus-secondary-select-methods
-        '(
-          (nnimap "gmail"
-                  (nnimap-address
-                   "imap.gmail.com")
-                  (nnimap-server-port 993)
-                  (nnimap-stream ssl))
-          ))
-
-  ;; Send email via Gmail:
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-default-smtp-server "smtp.gmail.com")
-
-  ;; Archive outgoing email in Sent folder on imap.gmail.com:
-  (setq gnus-message-archive-method '(nnimap "imap.gmail.com")
-        gnus-message-archive-group "[Gmail]/Sent Mail")
-
-  ;; set return email address based on incoming email address
-  (setq gnus-posting-styles
-        '(((header "to" "address@outlook.com")
-           (address "address@outlook.com"))
-          ((header "to" "namy.19@gmail.com")
-           (address "namy.19@gmail.com"))))
-
-  ;; store email in ~/gmail directory
-  (setq nnml-directory "~/Mail")
-  (setq message-directory "~/Mail")
-  ;;;;;;;;;;;;;;; mu4e ;;;;;;;;;;;;;;;;;;;;
-  (setq mail-user-agent 'message-user-agent)
-  (setq user-mail-address "namy.19@gmail.com"
-        user-full-name "yqrashawn")
-  (setq mu4e-account-alist
-        '(("gmail"
-           (mu4e-sent-messages-behavior delete)
-           (mu4e-sent-folder "/gmail/[Gmail]/.Sent Mail")
-           (mu4e-drafts-folder "/gmail/[Gmail]/.Drafts")
-           (user-mail-address "namy.19@gmail.com")
-           (user-full-name "yqrashawn"))
-          ("qqmail"
-           (mu4e-sent-messages-behavior sent)
-           (mu4e-sent-folder "/qqmail/Sent Items")
-           (mu4e-drafts-folder "/qqmail/Drafts")
-           (user-mail-address "254651372@qq.com")
-           (user-full-name "yqrashawn"))
-          ("bimsop"
-           (mu4e-sent-messages-behavior sent)
-           (mu4e-sent-folder "/bimsop/Sent Items")
-           (mu4e-drafts-folder "/bimsop/Drafts")
-           (user-mail-address "zhangyuxiao@bimsop.com")
-           (user-full-name "yqrashawn"))))
-  (mu4e/mail-account-reset)
-
-  (setq mu4e-enable-mode-line t)
-  (with-eval-after-load 'mu4e-alert
-    (mu4e-alert-set-default-style 'libnotify))
-  (setq-default dotspacemacs-configuration-layers
-                '((mu4e :variables
-                        mu4e-installation-path "/usr/local/Cellar/mu/0.9.18/share/emacs/site-lisp")))
-
-  (setq mu4e-maildir "~/Mail"
-        mu4e-trash-folder "/Trash"
-        mu4e-refile-folder "/Archive"
-        mu4e-get-mail-command "offlineimap"
-        mu4e-update-interval 3600
-        mu4e-compose-signature-auto-include "yqrashawn"
-        mu4e-view-show-images t
-        mu4e-view-show-addresses t)
-
-;;; Mail directory shortcuts
-  (setq mu4e-maildir-shortcuts
-        '(("/gmail/INBOX" . ?g)
-          ("/qqmail/INBOX" . ?q)
-          ("/bimsop/INBOX" . ?b)))
-
-;;; Bookmarks
-  (setq mu4e-bookmarks
-        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
-          ("date:today..now" "Today's messages" ?t)
-          ("date:7d..now" "Last 7 days" ?w)
-          ("mime:image/*" "Messages with images" ?p)
-          (,(mapconcat 'identity
-                       (mapcar
-                        (lambda (maildir)
-                          (concat "maildir:" (car maildir)))
-                        mu4e-maildir-shortcuts) " OR ")
-           "All inboxes" ?i)))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;; javascript ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -631,6 +538,10 @@ you should place your code here."
   (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
   (setq auto-indent-style 'conservative)
+
+  (setq org-directory '("~/Dropbox/org/*.org"))
+  (setq org-agenda-files '("~/Dropbox/org"))
+  (setq org-default-notes-file '("~/Dropbox/org/notes.org"))
   (setq auto-indent-on-visit-file t)
   ;; TODO
   (setq-default dotspacemacs-configuration-layers
@@ -676,12 +587,6 @@ you should place your code here."
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
  '(markdown-command "multimarkdown")
- '(mu4e-attachment-dir "/Users/Rashawn/Downloads")
- '(mu4e-user-mail-address-list
-   (quote
-    ("zhangyuxiao@bimsop.com" "254651372@qq.com" "namy.19@gmail.com" "Rashawn@localhost")))
- '(org-agenda-diary-file "")
- '(org-agenda-files (quote ("~/Dropbox/org/gtd.org" "~/Dropbox/org/notes.org")))
  '(org-capture-templates
    (quote
     (("l" "Capture from the Internet with link" entry
@@ -703,11 +608,12 @@ Entered on %U")
       "* TODO %?           %^G
  %U"))))
  '(org-datetree-add-timestamp (quote inactive))
- '(org-directory "~/Dropbox/org")
+ '(org-projectile:allow-tramp-projects t)
  '(org-projectile:capture-template "* TODO %?
 %a
 %U
 ")
+ '(org-projectile:projects-file "~/Dropbox/org/projects.org")
  '(package-archives
    (quote
     (("gnu" . "http://elpa.gnu.org/packages/")
@@ -715,10 +621,6 @@ Entered on %U")
  '(package-selected-packages
    (quote
     (eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
- '(smtpmail-default-smtp-server "smtp.gmail.com" t)
- '(smtpmail-smtp-server "smtp.gmail.com")
- '(smtpmail-smtp-service 465)
- '(smtpmail-smtp-user "yqrashawn")
  '(user-full-name "yqrashawn")
  '(visible-bell nil)
  '(vlf-application (quote dont-ask))
