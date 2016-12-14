@@ -474,14 +474,14 @@ you should place your code here."
           ;; We like nice colors
           (ansi-color-for-comint-mode-on)))
 
-  ;; (add-hook 'js2-mode-hook
-  ;;           (lambda ()
-  ;;             (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-  ;;             (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-  ;;             (local-set-key (kbd "C-c b") 'js-send-buffer)
-  ;;             (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-  ;;             (local-set-key (kbd "C-c l") 'js-load-file-and-go)
-  ;;             ))
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+              (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
+              (local-set-key (kbd "C-c b") 'js-send-buffer)
+              (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
+              (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+              ))
 
 
   ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
@@ -585,7 +585,8 @@ you should place your code here."
  '(jscs-fix-show-errors nil)
  '(large-file-warning-threshold 1000000)
  '(magit-diff-highlight-trailing nil)
- '(magit-display-buffer-function (quote magit-display-buffer-same-window-except-diff-v1))
+ '(magit-display-buffer-function (quote magit-display-buffer-fullcolumn-most-v1))
+ '(magit-popup-show-common-commands t)
  '(markdown-command "multimarkdown")
  '(org-capture-templates
    (quote
@@ -609,10 +610,8 @@ Entered on %U")
  %U"))))
  '(org-datetree-add-timestamp (quote inactive))
  '(org-projectile:allow-tramp-projects t)
- '(org-projectile:capture-template "* TODO %?
-%a
-%U
-")
+ '(org-projectile:capture-template "*** TODO %?
+%a")
  '(org-projectile:projects-file "~/Dropbox/org/projects.org")
  '(package-archives
    (quote
