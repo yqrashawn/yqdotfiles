@@ -1,14 +1,23 @@
 <?php
 
+/*
+ * This file is part of the alfred-github-workflow package.
+ *
+ * (c) Gregor Harlan
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 require 'workflow.php';
 
 $query = trim($argv[1]);
 
 if ('>' !== $query[0] && 0 !== strpos($query, 'e >')) {
     if ('.git' == substr($query, -4)) {
-        $query = 'github-mac://openRepo/' . substr($query, 0, -4);
+        $query = 'github-mac://openRepo/'.substr($query, 0, -4);
     }
-    exec('osascript -e "open location \"' . $query . '\""');
+    exec('osascript -e "open location \"'.$query.'\""');
     return;
 }
 
@@ -23,7 +32,7 @@ Workflow::init($enterprise);
 switch ($parts[1]) {
     case 'enterprise-url':
         Workflow::setConfig('enterprise_url', rtrim($parts[2], '/'));
-        exec('osascript -e "tell application \"Alfred 2\" to search \"ghe \""');
+        exec('osascript -e "tell application \"Alfred 3\" to search \"ghe \""');
         break;
 
     case 'enterprise-reset':
@@ -39,8 +48,8 @@ switch ($parts[1]) {
         } elseif (!$enterprise) {
             Workflow::startServer();
             $state = version_compare(PHP_VERSION, '5.4', '<') ? 'm' : '';
-            $url = Workflow::getBaseUrl() . '/login/oauth/authorize?client_id=2d4f43826cb68e11c17c&scope=repo&state=' . $state;
-            exec('open ' . escapeshellarg($url));
+            $url = Workflow::getBaseUrl().'/login/oauth/authorize?client_id=2d4f43826cb68e11c17c&scope=repo&state='.$state;
+            exec('open '.escapeshellarg($url));
         }
         break;
 
@@ -55,10 +64,15 @@ switch ($parts[1]) {
         echo 'Successfully deleted cache';
         break;
 
+    case 'delete-database':
+        Workflow::deleteDatabase();
+        echo 'Successfully deleted database';
+        break;
+
     case 'refresh-cache':
         $curl = new Curl();
         foreach (explode(',', $parts[2]) as $url) {
-            Workflow::requestCache($url, $curl, null, 0, false);
+            Workflow::requestCache($url, $curl, null, false, 0, false);
         }
         $curl->execute();
         Workflow::cleanCache();

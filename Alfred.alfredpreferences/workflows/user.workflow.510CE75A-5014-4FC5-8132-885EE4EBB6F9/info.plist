@@ -150,6 +150,10 @@
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -194,7 +198,7 @@
 				<key>subtext</key>
 				<string>Search or type a command</string>
 				<key>title</key>
-				<string>gh{query}</string>
+				<string>gh...</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -276,6 +280,10 @@
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -320,7 +328,7 @@
 				<key>subtext</key>
 				<string>Search or type a command (GitHub Enterprise)</string>
 				<key>title</key>
-				<string>ghe{query}</string>
+				<string>ghe...</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -391,6 +399,23 @@
 	<key>readme</key>
 	<string>Changelog
 =========
+
+Version 1.5 – 2016-12-13
+------------------------
+
+### Features
+
+* new commands for searching repos and users globally in GitHub (`gh s repo` and `gh s @user`)
+* new command `gh my repos` (@jacobkossman)
+* new command `gh &gt; delete database`
+* source repos with higher priority than forks
+
+### Bugfixes
+
+* in some situations private repos were missing (@lxynox)
+* after saving GitHub Enterprise url the workflow didn't reopen correctly
+* updated user sub commands (Activity tab does not exist any more on GitHub)
+
 
 Version 1.4.1 – 2016-22-07
 --------------------------
@@ -539,7 +564,7 @@ Version 1.1 – 2015-01-10
 		<string>0</string>
 	</dict>
 	<key>version</key>
-	<string>1.4.1</string>
+	<string>1.5</string>
 	<key>webaddress</key>
 	<string>https://github.com/gharlan/alfred-github-workflow</string>
 </dict>
