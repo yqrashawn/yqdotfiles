@@ -552,8 +552,6 @@ you should place your code here."
   ;; uncomment these to enable flx
   ;; (setq ivy-re-builders-alist
   ;;       '((t . ivy--regex-fuzzy)))
-  (setq ivy-initial-inputs-alist . "^") ;; ^ before
-  ;; (setq undo-tree-auto-save-history t
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (buffer-flip-mode)
   (buffer-flip-set-keys 'buffer-flip-keys "u8*")
