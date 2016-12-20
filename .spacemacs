@@ -509,10 +509,6 @@ you should place your code here."
   (flycheck-add-mode 'javascript-eslint 'js-mode)
   ;; customize flycheck temp file prefix
   (setq-default flycheck-temp-prefix ".flycheck")
-  ;;;;;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-                (append flycheck-disabled-checkers
-                        '(javascript-jshint)))
   ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
@@ -584,10 +580,12 @@ you should place your code here."
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
  '(gc-cons-threshold 800000)
  '(guide-key/guide-key-sequence (quote ("t")))
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
+ '(js2-mode-show-strict-warnings nil)
  '(jscs-fix-show-errors nil)
  '(large-file-warning-threshold 1000000)
  '(magit-diff-highlight-trailing nil)
