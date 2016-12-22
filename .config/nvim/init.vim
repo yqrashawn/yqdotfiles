@@ -13,13 +13,8 @@ endif
 "                                  neoterm                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:neoterm_autoinsert = 1
-set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
-set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
-set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
-nmap <NUL> :Ttoggle<CR>
-nmap <C-space> :Ttoggle<CR>
+nmap <leader>' :Ttoggle<CR>
 " imap <NUL> <ESC>:Ttoggle<CR>
-tnoremap <NUL> <C-\><C-n>:Ttoggle<CR>
 " ----------------------------------------------------------------------------
 " EX | chmod +x
 " ----------------------------------------------------------------------------
@@ -244,9 +239,8 @@ tnoremap <C-w>h <C-\><C-n><C-w>h
 tnoremap <C-w>j <C-\><C-n><C-w>j
 tnoremap <C-w>k <C-\><C-n><C-w>k
 tnoremap <C-w>l <C-\><C-n><C-w>l
-tnoremap <C-space> <C-\><C-n>:Ttoggle<CR>
-nnoremap <silent> <leader>t :terminal<CR>
-nnoremap <leader><leader>t :te
+nnoremap <silent> <leader>' :terminal<CR>
+nnoremap <leader><leader>' :te
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             quicker ESC                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -326,51 +320,50 @@ command! Root call s:root()
 call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
-Plug 'flowtype/vim-flow',{ 'for': 'javascript' }
-Plug 'carlitux/deoplete-ternjs'
-Plug 'Shougo/deoplete.nvim'
+" Plug 'carlitux/deoplete-ternjs'
+" Plug 'Shougo/deoplete.nvim'
 Plug 'Shougo/neopairs.vim'
-Plug 'milkypostman/vim-togglelist'
-Plug 'mattn/webapi-vim'
+" Plug 'milkypostman/vim-togglelist'
+" Plug 'mattn/webapi-vim'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benjie/neomake-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'neomake/neomake'
-Plug 'moll/vim-node'
-Plug 'mhinz/vim-startify' "welcoming view
+" Plug 'moll/vim-node'
+" Plug 'mhinz/vim-startify' "welcoming view
 Plug 'ternjs/tern_for_vim',{'for': 'javascript'}
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
-Plug 'justinmk/vim-gtfo'
+Plug 'justinmk/vim-gtfo' "go to file manager
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'mattn/ctrlp-register'
+" Plug 'mattn/ctrlp-register'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'bling/vim-airline'
-Plug 'powerline/fonts'
+" Plug 'bling/vim-airline'
+" Plug 'powerline/fonts'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
-Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify', {'on':'SignifyToggle'} "show lines modified
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
-Plug 'godlygeek/tabular'
+Plug 'godlygeek/tabular', {'on':'Tabularize'}
 Plug 'luochen1990/rainbow'
 Plug 'honza/vim-snippets'
 Plug 'elzr/vim-json', { 'for': 'json' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
-Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
+" Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
+" Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
 Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
-Plug 'maksimr/vim-jsbeautify',
-Plug 'othree/html5.vim' , {'for': 'html'}
+" Plug 'maksimr/vim-jsbeautify',
+" Plug 'othree/html5.vim' , {'for': 'html'}
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
 Plug 'vim-scripts/mru.vim'
@@ -380,7 +373,7 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
 " Plug 'tomtom/quickfixsigns_vim'
 Plug 'justinmk/vim-sneak'
-Plug 'mxw/vim-jsx',{'for': 'javascript'}
+" Plug 'mxw/vim-jsx',{'for': 'javascript'}
 " Plug 'vim-utils/vim-man'
 " Plug 'Olical/vim-enmasse'
 " Plug 'majutsushi/tagbar'
@@ -441,7 +434,7 @@ Plug 'mxw/vim-jsx',{'for': 'javascript'}
 "Plug 'junegunn/goyo.vim'
 "Plug 'benmills/vimux'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
-Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
+" Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
 call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 vim-sneak                                  "
@@ -460,47 +453,6 @@ let g:vimjs#smartcomplete = 1
 
 let g:vimjs#chromeapis = 1
 " Disabled by default. Toggling this will enable completion for a number of Chrome's JavaScript extension APIs
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              deoplete                               "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use deoplete.
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#debugMode = 1
-let g:deoplete#enable_smart_case = 1
-let g:tern_request_timeout = 1
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-" let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
-autocmd CompleteDone * pclose!
-let g:deoplete#auto_complete_delay = 1
-let g:deoplete#auto_refresh_delay = 1
-let g:deoplete#enable_refresh_always = 0
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-endfunction
-function! StrTrim(txt)
-  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
-endfunction
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-endfunction
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-call deoplete#custom#set('_', 'matchers', ['matcher_length','matcher_full_fuzzy'])
-" call deoplete#enable_logging('DEBUG', 'd.log')
-let g:deoplete#sources = ['ultisnips','member', 'ternjs']
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete',
-  \ 'jspc#omni'
-  \]
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              vim-flow                               "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:flow#enable = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              vim-notes                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -557,8 +509,8 @@ nnoremap <tab>   <c-w>w
 nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz
 let leader='\'
-nmap <silent> <leader>l <Plug>(jsdoc)
-nmap <leader>,, :set wrap<CR>
+nmap <silent> <leader>jsd <Plug>(jsdoc)
+nmap <leader>tw :set wrap<CR>
 imap <C-j> <cr>
 nnoremap <C-w>= <C-w>+
 nnoremap <C-w><C-=> <C-w>+
@@ -577,6 +529,7 @@ nnoremap # #zz
 nnoremap * *zz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
+map <leader>bd :bd<CR>
 map <leader><leader>q :bd!<CR>
 map <leader><leader><leader>q :tabc<CR>
 nmap Q @q
@@ -584,18 +537,12 @@ imap <C-f> <Right>
 imap <C-b> <Left>
 imap <C-e> <Esc><S-A>
 imap <C-a> <Esc><S-I>
-nnoremap <leader>bn :bn<CR>
-nnoremap <leader>bp :bp<CR>
+nnoremap <leader>j :bn<CR>
+nnoremap <leader>k :bp<CR>
 map <leader><leader>- mzgg=G`z
 nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
 nnoremap <F5> :UndotreeToggle<cr>
 map <leader><F10> :QuickRun<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                     javascript-libraries-syntax                     "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:used_javascript_libs = 'chai,underscore'
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           vim-javascript                            "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -613,14 +560,12 @@ let g:jsdoc_access_descriptions = 1
 "                nerdcommenter too many unsless issue                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let NERDSpaceDelims = 1
-
+nmap <leader>;; <plug>NERDCommenterToggle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 ack                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-nnoremap <leader>ac :Ack
+nnoremap <leader>sk :Ack
 let g:ackprg = 'ag --vimgrep'
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                tmux                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -659,89 +604,8 @@ if exists('$ITERM_PROFILE')
   endif
 end
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                             vim-airline                             "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" enable/disable detection of whitespace errors. >
-let g:airline#extensions#whitespace#enabled = 0
-" enable/disable showing only non-zero hunks. >
-let g:airline#extensions#hunks#non_zero_only = 0
-" enable/disable word counting. >
-let g:airline#extensions#wordcount#enabled = 0
-let g:airline_inactive_collapse=0
-let g:airline_powerline_fonts=1
-let g:airline#extensions#branch#empty_message = 'NoBranch'
-
-let g:airline#extensions#tabline#buffer_nr_show = 0
-
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-
-let airline#extensions#tabline#ignore_bufadd_pat =
-          \ '\c\vgundo|undotree|vimfiler|tagbar|nerd_tree|ycm'
-
-:tnoremap <leader><leader> <C-\><C-n>
-:tnoremap <leader>1 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab1
-:tnoremap <leader>2 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab2
-:tnoremap <leader>3 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab3
-:tnoremap <leader>4 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab4
-:tnoremap <leader>5 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab5
-:tnoremap <leader>6 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab6
-:tnoremap <leader>7 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab7
-:tnoremap <leader>8 <C-\><C-n><C-\><C-n><Plug>AirlineSelectTab8
-
-" enable/disable enhanced tabline. (c)
-let g:airline#extensions#tabline#enabled = 1
-
-" enable/disable displaying open splits per tab (only when tabs are opened). >
-let g:airline#extensions#tabline#show_splits = 0
-
-" switch position of buffers and tabs on splited tabline (c)
-let g:airline#extensions#tabline#switch_buffers_and_tabs = 0
-
-" enable/disable displaying buffers with a single tab. (c)
-let g:airline#extensions#tabline#show_buffers = 1
-
-" enable/disable displaying tabs, regardless of number. (c)
-  let g:airline#extensions#tabline#show_tabs = 0
-
-" enable/disable display preview window buffer in the tabline. >
-let g:airline#extensions#tabline#exclude_preview = 1
-
-" configure how numbers are displayed in tab mode. >
-"let g:airline#extensions#tabline#tab_nr_type = 0 " # of splits (default)
-let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
-"let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
-
-" enable/disable displaying tab number in tabs mode. >
-let g:airline#extensions#tabline#show_tab_nr = 1
-
-" enable/disable displaying tab type (far right) >
-let g:airline#extensions#tabline#show_tab_type = 1
-
-" rename label for buffers (default: 'buffers') (c)
-let g:airline#extensions#tabline#buffers_label = 'buffers'
-
-" rename label for tabs (default: 'tabs') (c)
-let g:airline#extensions#tabline#tabs_label = 'tabs'
-
-" configure the minimum number of buffers needed to show the tabline. >
-  let g:airline#extensions#tabline#buffer_min_count = 1
-
-" configure whether close button should be shown: >
-let g:airline#extensions#tabline#show_close_button = 0
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 set                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 "fold depend on syntax
 set foldmethod=syntax
 set foldlevelstart=20
@@ -790,7 +654,6 @@ endtry
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                         command line alias                          "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " Smart mappings on the command line
 cno hhh ~/
 cno ddd ~/Desktop/
@@ -810,11 +673,11 @@ set ruler
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = '\'
-let g:mapleader = '\'
+let mapleader = ' '
+let g:mapleader = ' '
 
 " Fast saving
-nmap <leader>w :w!<cr>
+nmap <leader>fs :w!<cr>
 
 "command line autocompletion
 set wildmode=longest:full,full
@@ -827,7 +690,8 @@ set t_vb=
 set tm=500
 
 " <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
+map ^@ /
+map <NUL> /
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -848,10 +712,6 @@ nmap <leader><leader>u :UltiSnipsEdit<CR>
 "change this variables
 let g:returnApp = "iTerm"
 let g:returnAppFlag = 0
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              Startify                               "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:startify_bookmarks = ['~/workspace']
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             colorscheme                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -877,7 +737,7 @@ function! ToggleBG()
     set background=dark
   endif
 endfunction
-noremap <leader>bg :call ToggleBG()<CR>
+noremap <leader>Tn :call ToggleBG()<CR>
 
 filetype plugin indent on   " Automatically detect file types.
 set mouse=a                 " Automatically enable mouse usage
@@ -976,13 +836,12 @@ set splitbelow                  " Puts new split windows to the bottom of the cu
 "set matchpairs+=<:>             " Match, to be used with %
 "set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
 set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
-
 """""""""""""""""""
 "for edit vimrc
 """""""""""""""""""""
-let s:spf13_edit_config_mapping = '<leader>ec'
-let s:spf13_apply_config_mapping = '<leader>sc'
-nmap <leader>sc :source ~/.config/nvim/init.vim<CR>
+let s:spf13_edit_config_mapping = '<leader>fed'
+let s:spf13_apply_config_mapping = '<leader>feR'
+nmap <leader>feR :source ~/.config/nvim/init.vim<CR>
 execute "noremap " . s:spf13_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
 
 function! s:ExpandFilenameAndExecute(command, file)
@@ -1046,12 +905,17 @@ map <leader>ev :vsp ./
 map <leader><leader>ev :vsp ~/
 
 " Adjust viewports to the same size
-map <Leader>= <C-w>=
+map <Leader>w= <C-w>=
+map <Leader>wd <C-w>c
+map <Leader>wl <C-w>l
+map <Leader>wh <C-w>h
+map <Leader>wj <C-w>j
+map <Leader>wk <C-w>k
 
 " Easier horizontal scrolling
 map zl zL
 map zh zH
-nnoremap <silent> <leader>q ZZ
+nnoremap <silent> <leader>qq ZZ
 
 """""""""""omnicomplete
 autocmd Filetype *
@@ -1067,7 +931,7 @@ set fileformats=unix,dos,mac
 "                                  NerdTree                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <C-e> :NERDTreeToggle<CR>
-map <leader>e :NERDTreeFind<CR>
+map <leader>ft :NERDTreeFind<CR>
 
 let NERDTreeShowBookmarks=1
 let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
@@ -1077,27 +941,6 @@ let NERDTreeMouseMode=2
 let NERDTreeShowHidden=1
 let NERDTreeKeepTreeInNewTab=1
 let g:nerdtree_tabs_open_on_gui_startup=0
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-                                " Tabularize                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" nmap <Leader>a& :Tabularize /&<CR>
-" vmap <Leader>a& :Tabularize /&<CR>
-" vmap <Leader>a\ :Tabularize /\<CR>
-" nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
-" vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
-" nmap <Leader>a=> :Tabularize /=><CR>
-" vmap <Leader>a=> :Tabularize /=><CR>
-" nmap <Leader>a: :Tabularize /:<CR>
-" vmap <Leader>a: :Tabularize /:<CR>
-" nmap <Leader>a:: :Tabularize /:\zs<CR>
-" vmap <Leader>a:: :Tabularize /:\zs<CR>
-" nmap <Leader>a, :Tabularize /,<CR>
-" vmap <Leader>a, :Tabularize /,<CR>
-" nmap <Leader>a,, :Tabularize /,\zs<CR>
-" vmap <Leader>a,, :Tabularize /,\zs<CR>
-" nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-" vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              ctrlp fzf                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1105,13 +948,13 @@ let $FZF_DEFAULT_OPTS .= ' --inline-info'
 let g:fzf_files_options =
   \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 nnoremap <silent> <expr> <Leader>ff (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
-nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
-nnoremap <silent> <Leader>ct :CtrlPMRU<CR>
+nnoremap <silent> <Leader>sa :Ag <C-R><C-W><CR>
+nnoremap <silent> <Leadec>fr :CtrlPMRU<CR>
 nnoremap <silent> <C-p> :CtrlPBuffer<CR>
-nnoremap <silent> <leader>fgc :Gcommit<CR>
-nnoremap <silent> <leader>fbc :BGcommit<CR>
+nnoremap <silent> <leader>bb :CtrlPBuffer<CR>
 let g:fzf_buffers_jump = 1
 nmap <C-f> :Lines<CR>
+nmap <leader>sb :Lines<CR>
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\.git$\|\.hg$\|\.svn$',
       \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
@@ -1135,8 +978,6 @@ elseif executable('ack')
         \ }
 endif
 
-" TagBar
-nnoremap <silent> <leader>f :TagbarToggle<CR>
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
 nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
