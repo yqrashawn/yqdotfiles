@@ -171,8 +171,8 @@ endfunction
 let g:matchparen_insert_timeout=5
 " <space>x -> :X
 " For easier typing of custom commands
-nnoremap <leader>;      :call <SID>SpaceMapping(0)<cr>
-xnoremap <leader>; :<c-u>call <SID>SpaceMapping(1)<cr>
+" nnoremap <leader>;      :call <SID>SpaceMapping(0)<cr>
+" xnoremap <leader>; :<c-u>call <SID>SpaceMapping(1)<cr>
 function! s:SpaceMapping(visual)
   echo
   let c = nr2char(getchar())
@@ -340,7 +340,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 " Plug 'mattn/ctrlp-register'
 Plug 'terryma/vim-multiple-cursors'
-" Plug 'bling/vim-airline'
+Plug 'bling/vim-airline'
 " Plug 'powerline/fonts'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
@@ -363,7 +363,7 @@ Plug 'tpope/vim-repeat'
 " Plug 'maksimr/vim-jsbeautify',
 " Plug 'othree/html5.vim' , {'for': 'html'}
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
-" Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
 Plug 'vim-scripts/mru.vim'
@@ -530,8 +530,8 @@ nnoremap * *zz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
 map <leader>bd :bd<CR>
-map <leader><leader>q :bd!<CR>
-map <leader><leader><leader>q :tabc<CR>
+map <leader>bD :bd!<CR>
+map <leader><leader>q :tabc<CR>
 nmap Q @q
 imap <C-f> <Right>
 imap <C-b> <Left>
@@ -916,6 +916,7 @@ map <Leader>wk <C-w>k
 map zl zL
 map zh zH
 nnoremap <silent> <leader>qq ZZ
+nnoremap <silent> <leader>Q ZQ
 
 """""""""""omnicomplete
 autocmd Filetype *
@@ -949,7 +950,7 @@ let g:fzf_files_options =
   \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 nnoremap <silent> <expr> <Leader>ff (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 nnoremap <silent> <Leader>sa :Ag <C-R><C-W><CR>
-nnoremap <silent> <Leadec>fr :CtrlPMRU<CR>
+nnoremap <silent> <Leader>fr :CtrlPMRU<CR>
 nnoremap <silent> <C-p> :CtrlPBuffer<CR>
 nnoremap <silent> <leader>bb :CtrlPBuffer<CR>
 let g:fzf_buffers_jump = 1
