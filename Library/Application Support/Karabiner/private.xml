@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <root>
   <appdef>
+    <appname>Emacs</appname>
+    <equal>org.gnu.Emacs</equal>
+  </appdef>
+  <appdef>
     <appname>PdfExpert</appname>
     <equal>com.readdle.PDFExpert-Mac</equal>
   </appdef>
@@ -12,11 +16,49 @@
     <appname>atom</appname>
     <equal>com.github.atom</equal>
   </appdef>
+  <appdef>
+    <appname>Chrome</appname>
+    <equal>com.google.Chrome</equal>
+  </appdef>
+
+  <appdef>
+    <appname>Dash</appname>
+    <equal>com.kapeli.dashdoc</equal>
+  </appdef>
+  <appdef>
+    <appname>Xcode</appname>
+    <equal>com.apple.dt.Xcode</equal>
+  </appdef>
+
+  <replacementdef>
+    <replacementname>EMACS_MODE_IGNORE_APPS</replacementname>
+    <replacementvalue>
+      EMACS,
+      TERMINAL,
+      VI,
+    </replacementvalue>
+  </replacementdef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_Vim</name>
+    <url type="file">/usr/local/Cellar/macvim/7.4-99/MacVim.app</url>
+  </vkopenurldef>
 
   <windownamedef>
     <name>Chrome_Dev_Tool</name>
     <regex>Developer\ Tools+</regex>
   </windownamedef>
+
+  <devicevendordef>
+    <vendorname>HHKB</vendorname>
+    <vendorid>0x0853</vendorid>
+  </devicevendordef>
+  <deviceproductdef>
+    <productname>HHKB</productname>
+    <productid>0x0100</productid>
+  </deviceproductdef>
+
+
 
   <item>
     <name>KeyBinding in Chrome Dev Tool</name>
@@ -66,6 +108,7 @@
       KeyCode::BRACKET_RIGHT,ModifierFlag::COMMAND_L,
     </autogen>
   </item>
+
   <item>
     <name>Option to C-S-P in sublimetext</name>
     <identifier>sublimetext.option</identifier>
@@ -79,38 +122,6 @@
       KeyCode::P,ModifierFlag::SHIFT_L,ModifierFlag::COMMAND_L,
     </autogen>
   </item>
-  <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_APP_Vim</name>
-    <url type="file">/usr/local/Cellar/macvim/7.4-99/MacVim.app</url>
-  </vkopenurldef>
-  <appdef>
-    <appname>Xcode</appname>
-    <equal>com.apple.dt.Xcode</equal>
-  </appdef>
-
-  <item>
-    <name>hijk to cursor move in PdfExpert</name>
-    <identifier>xcode_arrow_key</identifier>
-    <only>PdfExpert</only>
-    <autogen>__KeyToKey__ KeyCode::J,ModifierFlag::D,KeyCode::CURSOR_DOWN</autogen>
-    <autogen>__KeyToKey__ KeyCode::K,ModifierFlag::D,KeyCode::CURSOR_UP</autogen>
-    <autogen>__KeyToKey__ KeyCode::SPACE,ModifierFlag::D,KeyCode::F,ModifierFlag::COMMAND_L</autogen>
-  </item>
-
-  <appdef>
-    <appname>Emacs</appname>
-    <equal>org.gnu.Emacs</equal>
-  </appdef>
-
-  <appdef>
-    <appname>Chrome</appname>
-    <equal>com.google.Chrome</equal>
-  </appdef>
-
-  <appdef>
-    <appname>Dash</appname>
-    <equal>com.kapeli.dashdoc</equal>
-  </appdef>
 
   <item>
     <name>Leader in Emcas insert mode</name>
@@ -120,11 +131,20 @@
   </item>
 
   <item>
+    <name>HHKB Leader in Emcas insert mode</name>
+    <identifier>emcas_insert_leader_hhkb</identifier>
+    <only>Emacs</only>
+    <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
+    <autogen>__KeyToKey__ KeyCode::COMMAND_R, KeyCode::M, ModifierFlag::OPTION_L</autogen>
+  </item>
+
+  <item>
     <name>button4 to define</name>
     <identifier>mouse_button4_to_define</identifier>
 
     <autogen>__KeyToKey__ PointingButton::BUTTON4,KeyCode::D,ModifierFlag::COMMAND_L,ModifierFlag::CONTROL_L</autogen>
   </item>
+
   <item>
     <name>Change C-jk to A-arrow key in dash</name>
     <identifier>Arrow_key_in_Dash</identifier>
@@ -145,18 +165,8 @@
       KeyCode::SPACE, ModifierFlag::OPTION_L,
     </autogen>
 
-
-
-
   </item>
 
-  <!-- <item>
-       <name>kana to command and w</name>
-       <identifier>private.switch_profile kana</identifier>
-       <autogen>__KeyToKey__ KeyCode::JIS_KANA, KeyCode::W, ModifierFlag::COMMAND_L</autogen>
-       </item>
-  -->
-  <!-- 把右边的KANA键改成option shift control 双击功能为 command w -->
   <item>
     <name>kana to F18</name>
     <identifier>private.switch_profile kana</identifier>
@@ -180,8 +190,9 @@
       KeyCode::W, ModifierFlag::COMMAND_L,
     </autogen>
   </item>
+
   <item>
-    <name>For HHKB change COMMAND_R to F18</name>
+    <name>COMMAND_R to C-w</name>
     <identifier>private.switch_profile COMMAND_R</identifier>
     <autogen>
       __KeyOverlaidModifier__
@@ -190,16 +201,6 @@
       KeyCode::W, ModifierFlag::COMMAND_L
     </autogen>
   </item>
-  <replacementdef>
-    <replacementname>EMACS_MODE_IGNORE_APPS</replacementname>
-    <replacementvalue>
-      EMACS,
-      TERMINAL,
-      VI,
-    </replacementvalue>
-  </replacementdef>
-
-
 
   <!-- 把F18改成右边的OPTION+SHIFT+CONTROL -->
   <item>
@@ -211,7 +212,7 @@
   </item>
 
   <item>
-    <name>F19 to F19</name>
+    <name>F19 to Hyper</name>
     <appendix>(F19 to Hyper (ctrl+shift+cmd+opt) + F19 Only, F19)</appendix>
     <identifier>private.f192f19</identifier>
     <autogen>
@@ -230,20 +231,7 @@
   </item>
 
   <item>
-    <name>Esc to Hyper</name>
-    <appendix>Esc</appendix>
-    <identifier>private.Esc</identifier>
-    <autogen>
-      __KeyOverlaidModifier__
-      KeyCode::ESCAPE,
-      KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-      KeyCode::ESCAPE,
-    </autogen>
-
-  </item>
-
-  <item>
-    <name>OPTION_L to command+opt+shif+ctrl+w quiver </name>
+    <name>OPTION_L to Hyper-w</name>
     <appendix>OPTION_L</appendix>
     <identifier>private.OPTION_L</identifier>
     <autogen>
@@ -252,37 +240,49 @@
       KeyCode::OPTION_L,
       KeyCode::W, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,ModifierFlag::COMMAND_L,
     </autogen>
-
   </item>
 
   <item>
-    <name>OPTION_R to Hyper and alfred </name>
+    <name>HHKB OPTION_R to Hyper-w</name>
+    <appendix>OPTION_R</appendix>
+    <identifier>private.OPTION_R_HHKB</identifier>
+        <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_R,
+      KeyCode::OPTION_R,
+      KeyCode::W, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>HHKB OPTION_R to Hyper</name>
     <appendix>OPTION_R</appendix>
     <identifier>private.OPTION_R</identifier>
+    <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
     <autogen>
       __KeyOverlaidModifier__
       KeyCode::OPTION_R,
       KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
       KeyCode::SPACE, ModifierFlag::OPTION_L,
     </autogen>
-
   </item>
 
   <item>
-    <name>option toggle vim</name>
-    <appendix>option</appendix>
-    <identifier>private.OPTION1</identifier>
+    <name>HHKB OPTION_L to Hyper</name>
+    <appendix>OPTION_L</appendix>
+    <identifier>private.OPTION_L_HHKB</identifier>
+    <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
     <autogen>
       __KeyOverlaidModifier__
       KeyCode::OPTION_L,
-      KeyCode::OPTION_L,
-      KeyCode::VK_OPEN_URL_APP_Vim,
-      <!-- KeyCode::F12, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L -->
+      KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::SPACE, ModifierFlag::OPTION_L,
     </autogen>
-
   </item>
+
   <item>
-    <name>command </name>
+    <name>COMMAND_L to Hyper-s </name>
     <appendix>command</appendix>
     <identifier>private.COMMAND</identifier>
     <autogen>
@@ -291,10 +291,10 @@
       KeyCode::COMMAND_L,
       KeyCode::S, ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L
     </autogen>
-
   </item>
+
   <item>
-    <name>command </name>
+    <name>Hold COMMAND_L to Hyper-l </name>
     <appendix>command</appendix>
     <identifier>private.COMMANDD</identifier>
     <autogen>
@@ -310,7 +310,6 @@
       @end
       Option::NOREPEAT,
     </autogen>
-
   </item>
 
   <item>
