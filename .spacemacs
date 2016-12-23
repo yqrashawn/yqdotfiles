@@ -219,7 +219,7 @@ values."
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.1
+   dotspacemacs-which-key-delay 0.01
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -389,10 +389,8 @@ you should place your code here."
   (spacemacs/set-leader-keys "gp" 'magit-push-popup)
   (spacemacs/set-leader-keys "gF" 'magit-fetch-popup)
   (spacemacs/set-leader-keys "gfe" 'magit-ediff-popup)
-  (spacemacs/set-leader-keys "gcc" 'magit-commit-popup)
+  (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
   (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
-  (spacemacs/set-leader-keys "gcs" 'magit-commit-squash)
-  (spacemacs/set-leader-keys "gcS" 'magit-commit-instant-squash)
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
   (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
