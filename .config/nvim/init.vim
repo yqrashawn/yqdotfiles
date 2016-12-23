@@ -19,14 +19,14 @@ nmap <leader>' :Ttoggle<CR>
 " EX | chmod +x
 " ----------------------------------------------------------------------------
 command! EX if !empty(expand('%'))
-         \|   write
-         \|   call system('chmod +x '.expand('%'))
-         \|   silent e
-         \| else
-         \|   echohl WarningMsg
-         \|   echo 'Save the file first'
-         \|   echohl None
-         \| endif
+      \|   write
+      \|   call system('chmod +x '.expand('%'))
+      \|   silent e
+      \| else
+        \|   echohl WarningMsg
+        \|   echo 'Save the file first'
+        \|   echohl None
+        \| endif
 " ----------------------------------------------------------------------------
 " ?ii / ?ai | indent-object
 " ?io       | strictly-indent-object
@@ -166,22 +166,6 @@ function! s:TabularizeReset()
   call setpos('.', original_cursor)
 endfunction
 " ----------------------------------------------------------------------------
-" MatchParen delay
-" ----------------------------------------------------------------------------
-let g:matchparen_insert_timeout=5
-" <space>x -> :X
-" For easier typing of custom commands
-" nnoremap <leader>;      :call <SID>SpaceMapping(0)<cr>
-" xnoremap <leader>; :<c-u>call <SID>SpaceMapping(1)<cr>
-function! s:SpaceMapping(visual)
-  echo
-  let c = nr2char(getchar())
-  if a:visual
-    normal! gv
-  endif
-  call feedkeys(':'.toupper(c))
-endfunction
-" ----------------------------------------------------------------------------
 " ?il | inner line
 " ----------------------------------------------------------------------------
 xnoremap <silent> il <Esc>^vg_
@@ -284,7 +268,7 @@ set ttimeoutlen=10
 function! s:todo() abort
   let entries = []
   for cmd in ['git grep -n -e TODO -e FIXME -e XXX 2> /dev/null',
-            \ 'grep -rn -e TODO -e FIXME -e XXX * 2> /dev/null']
+        \ 'grep -rn -e TODO -e FIXME -e XXX * 2> /dev/null']
     let lines = split(system(cmd), '\n')
     if v:shell_error != 0 | continue | endif
     for line in lines
@@ -320,17 +304,10 @@ command! Root call s:root()
 call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
-" Plug 'carlitux/deoplete-ternjs'
-" Plug 'Shougo/deoplete.nvim'
-Plug 'Shougo/neopairs.vim'
-" Plug 'milkypostman/vim-togglelist'
-" Plug 'mattn/webapi-vim'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'benjie/neomake-local-eslint.vim'
 Plug 'mileszs/ack.vim'
 Plug 'neomake/neomake'
-" Plug 'moll/vim-node'
-" Plug 'mhinz/vim-startify' "welcoming view
 Plug 'ternjs/tern_for_vim',{'for': 'javascript'}
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'justinmk/vim-gtfo' "go to file manager
@@ -338,14 +315,12 @@ Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
-" Plug 'mattn/ctrlp-register'
+Plug 'mhinz/vim-startify' "welcoming view
 Plug 'terryma/vim-multiple-cursors'
 Plug 'bling/vim-airline'
-" Plug 'powerline/fonts'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
-" Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
 Plug 'mhinz/vim-signify', {'on':'SignifyToggle'} "show lines modified
 Plug 'tpope/vim-fugitive'
@@ -355,13 +330,9 @@ Plug 'luochen1990/rainbow'
 Plug 'honza/vim-snippets'
 Plug 'elzr/vim-json', { 'for': 'json' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-" Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
-" Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
 Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
-" Plug 'maksimr/vim-jsbeautify',
-" Plug 'othree/html5.vim' , {'for': 'html'}
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
@@ -371,8 +342,20 @@ Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
-" Plug 'tomtom/quickfixsigns_vim'
 Plug 'justinmk/vim-sneak'
+" Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
+" Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
+" Plug 'maksimr/vim-jsbeautify',
+" Plug 'othree/html5.vim' , {'for': 'html'}
+" Plug 'tomtom/quickfixsigns_vim'
+" Plug 'carlitux/deoplete-ternjs'
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'Shougo/neopairs.vim'
+" Plug 'milkypostman/vim-togglelist'
+" Plug 'mattn/webapi-vim'
+" Plug 'moll/vim-node'
+" Plug 'mattn/ctrlp-register'
 " Plug 'mxw/vim-jsx',{'for': 'javascript'}
 " Plug 'vim-utils/vim-man'
 " Plug 'Olical/vim-enmasse'
@@ -462,6 +445,7 @@ let g:vimjs#chromeapis = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " let g:choosewin_overlay_enable = 1
 nmap  <C-w><C-f> <Plug>(choosewin)
+nmap <leader>wf <Plug>(choosewin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              Quickrun                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -491,6 +475,7 @@ let g:markdown_syntax_conceal = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             custom map                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let leader=' '
 command! -nargs=1 Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
 xnoremap <silent> <C-k> :move-2<cr>gv
 xnoremap <silent> <C-j> :move'>+<cr>gv
@@ -503,13 +488,9 @@ vnoremap gp %
 nnoremap ge $
 nnoremap ga ^
 nnoremap <tab>   <c-w>w
-" nnoremap <S-tab> <c-w>W
-" nnoremap <silent> <C-k> :move-2<cr>
-" nnoremap <silent> <C-j> :move+<cr>
 nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz
-let leader='\'
-nmap <silent> <leader>jsd <Plug>(jsdoc)
+nmap <silent> <leader>md <Plug>(jsdoc)
 nmap <leader>tw :set wrap<CR>
 imap <C-j> <cr>
 nnoremap <C-w>= <C-w>+
@@ -529,20 +510,19 @@ nnoremap # #zz
 nnoremap * *zz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
-map <leader>bd :bd<CR>
-map <leader>bD :bd!<CR>
-map <leader><leader>q :tabc<CR>
+nnoremap <silent> <leader>bd :bd<cr>
+nnoremap <silent> <leader>bD :bd!<CR>
 nmap Q @q
 imap <C-f> <Right>
 imap <C-b> <Left>
 imap <C-e> <Esc><S-A>
 imap <C-a> <Esc><S-I>
-nnoremap <leader>j :bn<CR>
-nnoremap <leader>k :bp<CR>
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>bp :bp<CR>
 map <leader><leader>- mzgg=G`z
 nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
-nnoremap <F5> :UndotreeToggle<cr>
-map <leader><F10> :QuickRun<CR>
+nnoremap <silent> <leader>xu :UndotreeToggle<cr>
+map <silent> <leader>xr :QuickRun<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           vim-javascript                            "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -555,7 +535,6 @@ let g:jsdoc_allow_input_prompt = 1
 let g:jsdoc_input_description = 1
 let g:jsdoc_underscore_private = 1
 let g:jsdoc_access_descriptions = 1
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                nerdcommenter too many unsless issue                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -634,12 +613,12 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 " let g:ycm_server_python_interpreter = '/usr/local/bin/python3.5'
 " let g:ycm_python_binary_path = '/usr/local/bin/python3.5'
 " let g:ycm_semantic_triggers =  {
-      " \   'c' : ['->', '.'],
-      " \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-      " \             're!\[.*\]\s'],
-      " \   'cpp,objcpp' : ['->', '.', '::'],
-      " \   'javascript,typescript,python,go' : ['.'],
-      " \ }
+" \   'c' : ['->', '.'],
+" \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+" \             're!\[.*\]\s'],
+" \   'cpp,objcpp' : ['->', '.', '::'],
+" \   'javascript,typescript,python,go' : ['.'],
+" \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on
@@ -808,7 +787,7 @@ set shiftround                  " Round indent to multiple of 'shiftwidth'.
 set magic
 set sidescrolloff=5
 set incsearch                   " Find as you type search
-set lazyredraw                  " the screen will not be redrawn while executing macros, registers and other commands that have not been typed" 
+set lazyredraw                  " the screen will not be redrawn while executing macros, registers and other commands that have not been typed"
 set linebreak                   " If on, Vim will wrap long lines at a character in 'breakat' rather
 set hlsearch                    " Highlight search terms
 set winminheight=0              " Windows can be 0 line high
@@ -911,18 +890,20 @@ map <Leader>wl <C-w>l
 map <Leader>wh <C-w>h
 map <Leader>wj <C-w>j
 map <Leader>wk <C-w>k
+map <Leader>wv <C-w>v
+map <Leader>ws <C-w>s
 
 " Easier horizontal scrolling
 map zl zL
 map zh zH
-nnoremap <silent> <leader>qq ZZ
-nnoremap <silent> <leader>Q ZQ
+nnoremap <silent> <leader>q :qa<cr>
+nnoremap <silent> <leader>Q :qa!<cr>
 
 """""""""""omnicomplete
 autocmd Filetype *
-  \if &omnifunc == "" |
-  \setlocal omnifunc=syntaxcomplete#Complete |
-  \endif
+      \if &omnifunc == "" |
+      \setlocal omnifunc=syntaxcomplete#Complete |
+      \endif
 
 " set completeopt=menu,preview,longest,menuone
 set completeopt-=i " Searching includes can be slow
@@ -947,7 +928,7 @@ let g:nerdtree_tabs_open_on_gui_startup=0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let $FZF_DEFAULT_OPTS .= ' --inline-info'
 let g:fzf_files_options =
-  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+      \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 nnoremap <silent> <expr> <Leader>ff (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 nnoremap <silent> <Leader>sa :Ag <C-R><C-W><CR>
 nnoremap <silent> <Leader>fr :CtrlPMRU<CR>
