@@ -1,8 +1,7 @@
 {
 "ecmaVersion": 6,
   "libs": [
-    "browser",
-    "ecma6"
+    "browser"
   ],
   "loadEagerly": [
     "importantfile.js"

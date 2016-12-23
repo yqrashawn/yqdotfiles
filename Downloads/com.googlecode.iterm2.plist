@@ -2312,10 +2312,12 @@
 	</dict>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>408 363 620 392 0 0 1440 877 </string>
+	<key>NSWindow Frame SessionsPreferences</key>
+	<string>269 139 606 456 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>260 326 796 473 0 0 1440 877 </string>
+	<string>260 287 796 473 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>2 11 1421 866 0 0 1440 877 </string>
+	<string>2 0 1417 877 0 0 1440 877 </string>
 	<key>NeverWarnAboutShortLivedSessions_F708A1E7-4DB2-4095-8F4A-CE821730CC54</key>
 	<true/>
 	<key>NeverWarnAboutSpaces</key>
@@ -2611,7 +2613,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string>ttmux</string>
+			<string></string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -6976,7 +6978,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-12-16T14:09:25Z</date>
+	<date>2016-12-22T02:04:18Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>

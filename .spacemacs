@@ -363,6 +363,13 @@ you should place your code here."
 
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
+  ;; (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+  ;; (setq undo-tree-auto-save-history t)
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
   (which-key-mode 0)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
@@ -378,7 +385,11 @@ you should place your code here."
   (global-set-key (kbd "M-%") 'phi-replace-query)
   (global-set-key (kbd "C-s") 'phi-search)
   (spacemacs/declare-prefix "c" "my-git-prefix")
-  (spacemacs/set-leader-keys "gcc" 'magit-commit)
+  (spacemacs/set-leader-keys "gff" 'magit-file-popup)
+  (spacemacs/set-leader-keys "gp" 'magit-push-popup)
+  (spacemacs/set-leader-keys "gF" 'magit-fetch-popup)
+  (spacemacs/set-leader-keys "gfe" 'magit-ediff-popup)
+  (spacemacs/set-leader-keys "gcc" 'magit-commit-popup)
   (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
   (spacemacs/set-leader-keys "gcs" 'magit-commit-squash)
   (spacemacs/set-leader-keys "gcS" 'magit-commit-instant-squash)
@@ -386,6 +397,8 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
   (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
   (evil-global-set-key 'normal (kbd "C-w z") 'zoom-window-zoom)
+  (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
+  (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
   (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
   (define-key evil-insert-state-map (kbd "C-k") 'backward-word)
   (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
@@ -572,6 +585,7 @@ you should place your code here."
     (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
                   (company-dabbrev-code company-gtags company-etags company-keywords)
                   company-oddmuse company-dabbrev)))
+ '(company-idle-delay 0.01)
  '(custom-safe-themes
    (quote
     ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "938d8c186c4cb9ec4a8d8bc159285e0d0f07bad46edf20aa469a89d0d2a586ea" "14f0fbf6f7851bfa60bf1f30347003e2348bf7a1005570fd758133c87dafe08f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
@@ -583,18 +597,30 @@ you should place your code here."
  '(evil-escape-unordered-key-sequence t)
  '(evil-want-Y-yank-to-eol t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(flycheck-checker-error-threshold 100)
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
+ '(flycheck-display-errors-delay 0.5)
+ '(flycheck-highlighting-mode (quote columns))
+ '(flycheck-idle-change-delay 0.0)
+ '(flycheck-standard-error-navigation t)
  '(gc-cons-threshold 800000)
  '(guide-key/guide-key-sequence (quote ("t")))
  '(helm-M-x-fuzzy-match t)
  '(helm-etags-fuzzy-match t)
+ '(idle-update-delay 0.01)
+ '(indent-guide-delay 0.1)
+ '(indent-guide-global-mode nil)
+ '(indent-guide-recursive t)
+ '(indent-guide-threshold 40)
  '(js2-mode-show-strict-warnings nil)
  '(jscs-fix-show-errors nil)
  '(large-file-warning-threshold 1000000)
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-fullcolumn-most-v1))
  '(magit-popup-show-common-commands t)
+ '(magit-refresh-verbose t)
  '(markdown-command "multimarkdown")
+ '(mouse-autoselect-window t)
  '(org-capture-templates
    (quote
     (("l" "Capture from the Internet with link" entry
@@ -633,6 +659,7 @@ Entered on %U")
  '(undo-tree-auto-save-history t)
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/.cache/undo"))))
  '(user-full-name "yqrashawn")
+ '(vc-handled-backends (quote (SVN Git)))
  '(visible-bell nil)
  '(vlf-application (quote dont-ask))
  '(which-key-allow-imprecise-window-fit t)
