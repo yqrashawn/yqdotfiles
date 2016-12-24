@@ -33,3 +33,4 @@
   (spacemacs/setup-startup-hook)
   (require 'server)
   (unless (server-running-p) (server-start)))
+(put 'narrow-to-page 'disabled nil)
