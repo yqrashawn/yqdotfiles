@@ -1,3 +1,6 @@
+let leader=' '
+let mapleader = ' '
+let g:mapleader = ' '
 let s:darwin = has('mac')
 if &nu == 1
   set rnu
@@ -475,7 +478,10 @@ let g:markdown_syntax_conceal = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             custom map                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let leader=' '
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+nnoremap <silent> <leader>bd :bd<CR>
+nnoremap <silent> <leader>bD :bd!<CR>
 command! -nargs=1 Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
 xnoremap <silent> <C-k> :move-2<cr>gv
 xnoremap <silent> <C-j> :move'>+<cr>gv
@@ -510,8 +516,6 @@ nnoremap # #zz
 nnoremap * *zz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
-nnoremap <silent> <leader>bd :bd<cr>
-nnoremap <silent> <leader>bD :bd!<CR>
 nmap Q @q
 imap <C-f> <Right>
 imap <C-b> <Left>
@@ -650,10 +654,6 @@ set autoread
 "Always show current position
 set ruler
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-let mapleader = ' '
-let g:mapleader = ' '
 
 " Fast saving
 nmap <leader>fs :w!<cr>
