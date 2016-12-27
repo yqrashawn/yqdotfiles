@@ -42,6 +42,11 @@ values."
      imenu-list
      ivy
      auto-completion
+     (auto-completion :variables
+                      auto-completion-complete-with-key-sequence "fd"
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip 'manual
+                      )
      better-defaults
      emacs-lisp
      git
@@ -361,16 +366,13 @@ you should place your code here."
   ;;  :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK"
   ;;  :tags '(work))
 
-
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  ;; (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-  ;; (setq undo-tree-auto-save-history t)
   (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer)
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
+  ;;(setq undo-tree-auto-save-history t
+  ;;     undo-tree-history-directory-alist
+  ;;     `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  ;;(unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+  ;; (make-directory (concat spacemacs-cache-directory "undo")))
   (which-key-mode 0)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
@@ -381,9 +383,41 @@ you should place your code here."
   (global-centered-cursor-mode  1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;; keychord ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (key-chord-define-global ";s" 'shell-pop)
+  (key-chord-define-global "xm" 'magit-dispatch-popup)
+  (key-chord-define-global ";f" 'counsel-find-file)
+  (key-chord-define-global "xb" 'ivy-switch-buffer)
+  (key-chord-define-global ";r" 'counsel-recentf)
+  (key-chord-define-global "p-" "~/")
+  (key-chord-define-global "e2" 'er/expand-region)
+  (key-chord-define-global "e3" 'phi-replace-query)
+  (key-chord-define-global "m," 'mc/mark-previous-like-this)
+  (key-chord-define-global "m." 'mc/mark-next-like-this)
+  (key-chord-define-global "s1" 'ispell-region)
+  (key-chord-define-global ";x" 'counsel-M-x)
+  (key-chord-define-global ";e" 'avy-goto-word-1)
+  (key-chord-define-global "1j" "!")
+  (key-chord-define-global "2j" "@")
+  (key-chord-define-global "3j" "#")
+  (key-chord-define-global "4j" "$")
+  (key-chord-define-global "5j" "%")
+  (key-chord-define-global "6f" "^")
+  (key-chord-define-global "7f" "&")
+  (key-chord-define-global "8f" "*")
+  (key-chord-define-global "9f" "(")
+  (key-chord-define-global "0f" ")")
+  (key-chord-define-global "-f" "_")
+  (key-chord-define-global "=f" "+")
+  (key-chord-define-global ";f" ":")
+  (key-chord-define-global "[f" "{")
+  (key-chord-define-global "]f" "}")
+  (key-chord-define-global "/f" "?")
+  (key-chord-define-global "\\f" "|")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (global-set-key (kbd "M-%") 'phi-replace-query)
   (global-set-key (kbd "C-s") 'phi-search)
   (spacemacs/declare-prefix "c" "my-git-prefix")
   (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
@@ -620,7 +654,6 @@ you should place your code here."
  '(magit-popup-show-common-commands t)
  '(magit-refresh-verbose t)
  '(markdown-command "multimarkdown")
- '(mouse-autoselect-window t)
  '(org-capture-templates
    (quote
     (("l" "Capture from the Internet with link" entry
@@ -652,12 +685,10 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (kite-mini helm-dash counsel-dash imenu-anywhere vimrc-mode dactyl-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme zenburn-theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (company-quickhelp kite-mini helm-dash counsel-dash imenu-anywhere vimrc-mode dactyl-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme zenburn-theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(rcirc-default-full-name "yqrashawn")
  '(rcirc-default-nick "yqrashawn")
  '(rcirc-default-user-name "yqrashawn")
- '(undo-tree-auto-save-history t)
- '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/.cache/undo"))))
  '(user-full-name "yqrashawn")
  '(vc-handled-backends (quote (SVN Git)))
  '(visible-bell nil)
