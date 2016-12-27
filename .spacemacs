@@ -385,7 +385,7 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keychord ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (key-chord-define-global ";s" 'shell-pop)
+  (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
   (key-chord-define-global "xm" 'magit-dispatch-popup)
   (key-chord-define-global ";f" 'counsel-find-file)
   (key-chord-define-global "xb" 'ivy-switch-buffer)
@@ -403,14 +403,13 @@ you should place your code here."
   (key-chord-define-global "3j" "#")
   (key-chord-define-global "4j" "$")
   (key-chord-define-global "5j" "%")
-  (key-chord-define-global "6f" "^")
+  (key-chord-define-global "6j" "^")
   (key-chord-define-global "7f" "&")
   (key-chord-define-global "8f" "*")
   (key-chord-define-global "9f" "(")
   (key-chord-define-global "0f" ")")
   (key-chord-define-global "-f" "_")
   (key-chord-define-global "=f" "+")
-  (key-chord-define-global ";f" ":")
   (key-chord-define-global "[f" "{")
   (key-chord-define-global "]f" "}")
   (key-chord-define-global "/f" "?")
