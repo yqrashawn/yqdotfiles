@@ -36,17 +36,12 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     windows-scripts
-     prodigy
-     rcirc
+     ;; windows-scripts
+     ;; prodigy
+     ;; rcirc
      imenu-list
      ivy
      auto-completion
-     (auto-completion :variables
-                      auto-completion-complete-with-key-sequence "fd"
-                      auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-help-tooltip 'manual
-                      )
      better-defaults
      emacs-lisp
      git
@@ -56,7 +51,8 @@ values."
      chrome
      (shell :variables
             shell-default-height 30
-            shell-default-position 'bottom)
+            shell-default-position 'bottom
+            shell-default-term-shell "/bin/zsh")
      ;; spell-checking
      syntax-checking
      version-control
@@ -72,7 +68,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(imenu-anywhere buffer-flip yasnippet saveplace phi-search js2-highlight-vars babel-repl jscs ivy-rich vlf eslint-fix slime js-comint)
+   dotspacemacs-additional-packages '(imenu-anywhere buffer-flip yasnippet saveplace phi-search js2-highlight-vars babel-repl jscs vlf eslint-fix slime js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -335,39 +331,7 @@ you should place your code here."
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
-  ;;;;;;;;;;;;;;;;;;;;; prodigy service ;;;;;;;;;;;;;;;;;;;;
-  ;; (prodigy-define-service
-  ;;  :name "Build BIMSDK"
-  ;;  :command "webpack"
-  ;;  :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK/BIMSDK"
-  ;;  :args '("--config webpack.bimsdk.js" "-w" "--lint" "--notify")
-  ;;  :tags '(work))
-
-  ;; (prodigy-define-service
-  ;;  :name "Build MixSDK"
-  ;;  :command "npm"
-  ;;  :args '("run" "build")
-  ;;  :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK"
-  ;;  :tags '(work))
-
-  ;; (prodigy-define-service
-  ;;  :name "BIMSDK http-server"
-  ;;  :command "http-server"
-  ;;  :args '("-p" "2323")
-  ;;  :port 2323
-  ;;  :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK/BIMSDK"
-  ;;  :tags '(work))
-
-  ;; (prodigy-define-service
-  ;;  :name "BIMSDK http-server"
-  ;;  :command "http-server"
-  ;;  :args '("-p" "2121")
-  ;;  :port 2121
-  ;;  :cwd "/Users/Rashawn/workspace/chenzhou/MixSDK"
-  ;;  :tags '(work))
-
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer)
   ;;(setq undo-tree-auto-save-history t
   ;;     undo-tree-history-directory-alist
   ;;     `(("." . ,(concat spacemacs-cache-directory "undo"))))
@@ -379,198 +343,20 @@ you should place your code here."
   (require 'vlf-setup)
   (yas-global-mode 1)
   (global-company-mode)
-  (global-evil-mc-mode 1)
+  ;; (global-evil-mc-mode 1)
   (global-centered-cursor-mode  1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keychord ;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
-  (key-chord-define-global "xm" 'magit-dispatch-popup)
-  (key-chord-define-global ";f" 'counsel-find-file)
-  (key-chord-define-global "xb" 'ivy-switch-buffer)
-  (key-chord-define-global ";r" 'counsel-recentf)
-  (key-chord-define-global "p-" "~/")
-  (key-chord-define-global "e2" 'er/expand-region)
-  (key-chord-define-global "e3" 'phi-replace-query)
-  (key-chord-define-global "m," 'mc/mark-previous-like-this)
-  (key-chord-define-global "m." 'mc/mark-next-like-this)
-  (key-chord-define-global "s1" 'ispell-region)
-  (key-chord-define-global ";x" 'counsel-M-x)
-  (key-chord-define-global ";e" 'avy-goto-word-1)
-  (key-chord-define-global "1j" "!")
-  (key-chord-define-global "2j" "@")
-  (key-chord-define-global "3j" "#")
-  (key-chord-define-global "4j" "$")
-  (key-chord-define-global "5j" "%")
-  (key-chord-define-global "6j" "^")
-  (key-chord-define-global "7f" "&")
-  (key-chord-define-global "8f" "*")
-  (key-chord-define-global "9f" "(")
-  (key-chord-define-global "0f" ")")
-  (key-chord-define-global "-f" "_")
-  (key-chord-define-global "=f" "+")
-  (key-chord-define-global "[f" "{")
-  (key-chord-define-global "]f" "}")
-  (key-chord-define-global "/f" "?")
-  (key-chord-define-global "\\f" "|")
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (global-set-key (kbd "C-s") 'phi-search)
-  (spacemacs/declare-prefix "c" "my-git-prefix")
-  (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
-  (spacemacs/set-leader-keys "ss" 'counsel-imenu)
-  (spacemacs/set-leader-keys "gff" 'magit-file-popup)
-  (spacemacs/set-leader-keys "gp" 'magit-push-popup)
-  (spacemacs/set-leader-keys "gF" 'magit-fetch-popup)
-  (spacemacs/set-leader-keys "gfe" 'magit-ediff-popup)
-  (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
-  (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
-  (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
-  (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-  (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
-  (evil-global-set-key 'normal (kbd "C-w z") 'zoom-window-zoom)
-  (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
-  (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
-  (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
-  (define-key evil-insert-state-map (kbd "C-k") 'backward-word)
-  (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
-  (define-key evil-insert-state-map (kbd "C-n") 'mc/mark-next-like-this-word)
-  (define-key evil-insert-state-map (kbd "C-p") 'mc/mark-previous-like-this-word)
-  (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
-  (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
-  (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
-  (define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
-  (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
-  (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
-  (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
-  (define-key evil-insert-state-map [(control return)] 'mc/mark-all-dwim)
-  (global-set-key (kbd "C-SPC") 'swiper)
-  (global-set-key (kbd "^@") 'swiper)
-  ;;;;;C-h
-  (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
-  (keyboard-translate ?\C-h ?\C-?)
-  (global-set-key [(control ?h)] 'delete-backward-char)
-  ;;;;;; jzz kzz
-  ;; (evil-define-motion evil-jzz (count)
-  ;;   "j to jzz"
-  ;;   :type line
-  ;;   (evil-next-line (or count 1))
-  ;;   (evil-scroll-line-to-center nil))
-  ;; (evil-define-motion evil-kzz (count)
-  ;;   "k to kzz"
-  ;;   :type line
-  ;;   (evil-previous-line (or count 1))
-  ;;   (evil-scroll-line-to-center nil))
-  ;; (define-key evil-normal-state-map (kbd "j") 'evil-jzz)
-  ;; (define-key evil-normal-state-map (kbd "k") 'evil-kzz)
-  (define-key evil-normal-state-map "zl" 'hs-hide-level)
-  (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
-  (define-key evil-visual-state-map (kbd "g<") 'mc/edit-beginnings-of-lines)
-  (define-key evil-visual-state-map (kbd "g>") 'mc/edit-ends-of-lines)
-
-  (with-eval-after-load 'helm
-    (dolist (keymap (list helm-find-files-map helm-read-file-map))
-      (define-key keymap (kbd "<DEL>") 'helm-find-files-up-one-level)))
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (load-file "~/.my_emacs/keychord.el")
+  (load-file "~/.my_emacs/keymap.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq-default dotspacemacs-configuration-layers
-                '((org :variables org-projectile-file "plans.org")))
-  ;; (setq org-projectile-file '("plans.org"))
-  (with-eval-after-load 'org-agenda
-    (require 'org-projectile)
-    (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files))))
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (load-file "~/.my_emacs/org.el")
   ;;;;;;;;;;;;;;;;;;;;;;;; javascript ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (eval-after-load 'js2-mode
-  ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
-  (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
-  (defun myfunc/js2-which-function ()
-    ;; clean the imenu cache
-    ;; @see http://stackoverflow.com/questions/13426564/how-to-force-a-rescan-in-imenu-by-a-function
-    (setq imenu--index-alist nil)
-    (which-function-mode t)
-    (which-function))
-
-  (defun my-js2-mode-hook ()
-    (lambda ()
-      (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-      (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-      (local-set-key (kbd "C-c b") 'js-send-buffer)
-      (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-      (local-set-key (kbd "C-c l") 'js-load-file-and-go)
-      ))
-
-  (add-hook 'js2-mode-hook 'my-js2-mode-hook)
-  (add-hook 'js2-mode-hook #'jscs-indent-apply)
-  ;; (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
-  (setq inferior-js-program-command "node")
-  (setq inferior-js-program-arguments '("--interactive"))
-  (setq inferior-js-mode-hook
-        (lambda ()
-          ;; We like nice colors
-          (ansi-color-for-comint-mode-on)))
-
-  (add-hook 'js2-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-              (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-              (local-set-key (kbd "C-c b") 'js-send-buffer)
-              (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-              (local-set-key (kbd "C-c l") 'js-load-file-and-go)
-              ))
-
-
-  ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
-  ;; adjust indents for web-mode to 2 spaces
-  (defun my-web-mode-hook ()
-    "Hooks for Web mode. Adjust indents"
-  ;;; http://web-mode.org/
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2))
-  (add-hook 'web-mode-hook  'my-web-mode-hook)
-  ;; for better jsx syntax-highlighting in web-mode
-  ;; - courtesy of Patrick @halbtuerke
-  (defadvice web-mode-highlight-part (around tweak-jsx activate)
-    (if (equal web-mode-content-type "jsx")
-        (let ((web-mode-enable-part-face nil))
-          ad-do-it)
-      ad-do-it))
-
-  ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
-  (setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
-  (setq-default save-place t)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-add-mode 'javascript-eslint 'js-mode)
-  ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
-  ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
-  (setq-default js2-basic-offset 2)
-  (setq-default js-indent-level 2)
-  ;; http://rejeep.github.io/emacs/javascript/js2-mode/yasnippet/2009/06/14/js2-mode-and-yasnippet.html
-  (eval-after-load 'js2-mode
-    '(progn
-       (define-key js2-mode-map (kbd "TAB")
-         (lambda()
-           (interactive)
-           (let ((yas/fallback-behavior 'return-nil))
-             (unless (yas/expand)
-               (indent-for-tab-command)
-               (if (looking-back "^\s*")
-                   (back-to-indentation))))))))
-
+  (load-file "~/.my_emacs/javascript.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -580,29 +366,19 @@ you should place your code here."
   (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
   (setq auto-indent-style 'conservative)
-
-  (setq org-directory '("~/Dropbox/org/*.org"))
-  (setq org-agenda-files '("~/Dropbox/org"))
-  (setq org-default-notes-file '("~/Dropbox/org/notes.org"))
   (setq auto-indent-on-visit-file t)
-  ;; TODO
   (setq-default dotspacemacs-configuration-layers
                 '((shell :variables shell-default-term-shell "/bin/zsh")))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; others ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; uncomment these to enable flx
-  ;; (setq ivy-re-builders-alist
-  ;;       '((t . ivy--regex-fuzzy)))
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (buffer-flip-mode)
   (buffer-flip-set-keys 'buffer-flip-keys "u8*")
   (setq edit-server-url-major-mode-alist
         '(("github\\.com" . org-mode)))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; irc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
   (load-file "~/Dropbox/org/auth.el")
   )
 
@@ -634,16 +410,13 @@ you should place your code here."
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
  '(flycheck-display-errors-delay 0.5)
  '(flycheck-highlighting-mode (quote columns))
- '(flycheck-idle-change-delay 0.0)
+ '(flycheck-idle-change-delay 0.1)
  '(flycheck-standard-error-navigation t)
  '(gc-cons-threshold 800000)
  '(guide-key/guide-key-sequence (quote ("t")))
- '(helm-M-x-fuzzy-match t)
- '(helm-etags-fuzzy-match t)
- '(idle-update-delay 0.01)
+ '(idle-update-delay 0.5)
  '(indent-guide-delay 0.1)
  '(indent-guide-global-mode nil)
- '(indent-guide-recursive t)
  '(indent-guide-threshold 40)
  '(js2-mode-show-strict-warnings nil)
  '(jscs-fix-show-errors nil)
@@ -684,10 +457,7 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (company-quickhelp kite-mini helm-dash counsel-dash imenu-anywhere vimrc-mode dactyl-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme zenburn-theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
- '(rcirc-default-full-name "yqrashawn")
- '(rcirc-default-nick "yqrashawn")
- '(rcirc-default-user-name "yqrashawn")
+    (company-quickhelp helm-dash imenu-anywhere vimrc-mode dactyl-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme zenburn-theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(user-full-name "yqrashawn")
  '(vc-handled-backends (quote (SVN Git)))
  '(visible-bell nil)
