@@ -385,7 +385,18 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keychord ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (key-chord-define-global ";s" 'shell-pop)
+  (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
+  (key-chord-define-global ";s" 'spacemacs/enter-ahs-forward)
+  (key-chord-define-global ";w" 'evil-window-next)
+  (key-chord-define-global ";0" 'select-window-0)
+  (key-chord-define-global ";1" 'select-window-1)
+  (key-chord-define-global ";2" 'select-window-2)
+  (key-chord-define-global ";3" 'select-window-3)
+  (key-chord-define-global ";4" 'select-window-4)
+  (key-chord-define-global ";5" 'select-window-5)
+  (key-chord-define-global ";d" 'spacemacs/kill-this-buffer)
+  (key-chord-define-global "xp" 'projectile-recentf)
+  (key-chord-define-global "zp" 'projectile-find-file)
   (key-chord-define-global "xm" 'magit-dispatch-popup)
   (key-chord-define-global ";f" 'counsel-find-file)
   (key-chord-define-global "xb" 'ivy-switch-buffer)
@@ -410,7 +421,6 @@ you should place your code here."
   (key-chord-define-global "0f" ")")
   (key-chord-define-global "-f" "_")
   (key-chord-define-global "=f" "+")
-  (key-chord-define-global ";f" ":")
   (key-chord-define-global "[f" "{")
   (key-chord-define-global "]f" "}")
   (key-chord-define-global "/f" "?")
