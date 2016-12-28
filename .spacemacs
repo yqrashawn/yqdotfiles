@@ -362,7 +362,6 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq evil-move-cursor-back nil) ;;cursor don't go back
   (setq save-place-file "~/.emacs.d/saveplace") ;;remeber cursor location on reoppening
-  (setq-default evil-escape-key-sequence "kj")
   (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
   (setq auto-indent-style 'conservative)
