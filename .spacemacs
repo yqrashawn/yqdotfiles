@@ -72,7 +72,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(adaptive-wrap aggressive-indent auto-highlight-symbol clean-aindent-mode column-enforce-mode dumb-jump eval-sexp-fu evil-tutor fancy-battery fill-column-inicator flx-ido google-translate highlight-numbers highlight-parentheses hungry-delete ido-vertical-mode move-text powerline rainbow-delimiters spaceline spinner volatile-highlights ws-butler uuidgen vi-tilde-fringe parent-mode persp-mode neotree linum-relative)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -342,6 +342,7 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (require 'vlf-setup)
   (yas-global-mode 1)
+  (evil-visual-mark-mode 1)
   (global-company-mode)
   ;; (global-evil-mc-mode 1)
   (global-centered-cursor-mode  1)
