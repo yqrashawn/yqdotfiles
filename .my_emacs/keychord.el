@@ -1,7 +1,7 @@
 (setq-default evil-escape-key-sequence "kj")
 (key-chord-define-global "z0" 'delete-other-windows)
 (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
-(key-chord-define-global ";g" 'spacemacs/enter-ahs-forward)
+(key-chord-define-global ";g" 'evil-search-word-forward)
 (key-chord-define-global ";w" 'evil-window-next)
 (key-chord-define-global "x0" 'select-window-0)
 (key-chord-define-global ";1" 'select-window-1)
