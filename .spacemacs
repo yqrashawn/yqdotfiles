@@ -72,7 +72,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(adaptive-wrap aggressive-indent auto-highlight-symbol clean-aindent-mode column-enforce-mode dumb-jump eval-sexp-fu evil-tutor fancy-battery fill-column-inicator flx-ido google-translate highlight-numbers highlight-parentheses hungry-delete ido-vertical-mode move-text powerline rainbow-delimiters spaceline spinner volatile-highlights ws-butler uuidgen vi-tilde-fringe parent-mode persp-mode neotree linum-relative)
+   dotspacemacs-excluded-packages '(adaptive-wrap aggressive-indent auto-highlight-symbol clean-aindent-mode column-enforce-mode dumb-jump eval-sexp-fu evil-tutor fancy-battery fill-column-inicator flx-ido google-translate highlight-numbers highlight-parentheses hungry-delete ido-vertical-mode move-text rainbow-delimiters spinner volatile-highlights ws-butler uuidgen vi-tilde-fringe parent-mode persp-mode neotree linum-relative)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -148,7 +148,7 @@ values."
                                :size 13
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -337,6 +337,7 @@ you should place your code here."
   ;;     `(("." . ,(concat spacemacs-cache-directory "undo"))))
   ;;(unless (file-exists-p (concat spacemacs-cache-directory "undo"))
   ;; (make-directory (concat spacemacs-cache-directory "undo")))
+  (menu-bar-mode 0)
   (which-key-mode 0)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
@@ -414,12 +415,31 @@ you should place your code here."
  '(flycheck-standard-error-navigation t)
  '(gc-cons-threshold 800000)
  '(guide-key/guide-key-sequence (quote ("t")))
- '(idle-update-delay 0.5)
+ '(hl-todo-keyword-faces
+   (quote
+    (("HOLD" . "#d0bf8f")
+     ("TODO" . "#cc9393")
+     ("NEXT" . "#dca3a3")
+     ("THEM" . "#dc8cc3")
+     ("PROG" . "#7cb8bb")
+     ("OKAY" . "#7cb8bb")
+     ("DONT" . "#5f7f5f")
+     ("FAIL" . "#8c5353")
+     ("DONE" . "#afd8af")
+     ("NOTE" . "#d0bf8f")
+     ("KLUDGE" . "#d0bf8f")
+     ("HACK" . "#d0bf8f")
+     ("FIXME" . "#cc9393")
+     ("XXX" . "#cc9393")
+     ("XXXX" . "#cc9393")
+     ("???" . "#cc9393")
+     ("DEBUG" . "#ff0000"))))
+ '(idle-update-delay 0.1)
  '(indent-guide-delay 0.1)
  '(indent-guide-global-mode nil)
  '(indent-guide-threshold 40)
  '(js2-mode-show-strict-warnings nil)
- '(jscs-fix-show-errors nil)
+ '(jscs-fix-show-errors (quote buffer))
  '(large-file-warning-threshold 1000000)
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-fullcolumn-most-v1))
@@ -458,6 +478,8 @@ Entered on %U")
  '(package-selected-packages
    (quote
     (company-quickhelp helm-dash imenu-anywhere vimrc-mode dactyl-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme zenburn-theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht js2-highlight-vars jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify vlf tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+ '(powerline-gui-use-vcs-glyph t)
+ '(powerline-height 4)
  '(user-full-name "yqrashawn")
  '(vc-handled-backends (quote (SVN Git)))
  '(visible-bell nil)

@@ -1,3 +1,4 @@
+;; -*- mode: emacs-lisp -*-
 (global-set-key (kbd "C-s") 'phi-search)
 (spacemacs/declare-prefix "c" "my-git-prefix")
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
@@ -12,7 +13,7 @@
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
-(evil-global-set-key 'normal (kbd "C-w z") 'zoom-window-zoom)
+(evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
 (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
@@ -33,7 +34,7 @@
 (global-set-key (kbd "^@") 'swiper)
 
 
-  ;;;;;C-h
+;;;;;C-h
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key [(control ?h)] 'delete-backward-char)
 
