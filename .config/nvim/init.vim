@@ -480,6 +480,8 @@ let g:markdown_syntax_conceal = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
+map <silent> <C-g> <esc>
+imap <silent> <C-g> <esc>
 nnoremap <silent> <leader>bd :bd<CR>
 nnoremap <silent> <leader>bD :bd!<CR>
 command! -nargs=1 Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
@@ -499,6 +501,9 @@ nnoremap [q :cprev<cr>zz
 nmap <silent> <leader>md <Plug>(jsdoc)
 nmap <leader>tw :set wrap<CR>
 imap <C-j> <cr>
+:imap kj <esc>
+:imap jk <esc>
+nnoremap <silent> zl @=(foldlevel('.')?'za':"\<Space>")<CR>
 nnoremap <C-w>= <C-w>+
 nnoremap <C-w><C-=> <C-w>+
 nnoremap <C-w><C--> <C-w>-
@@ -638,6 +643,7 @@ endtry
 "                         command line alias                          "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Smart mappings on the command line
+cmap <silent> <C-g> <esc>
 cno hhh ~/
 cno ddd ~/Desktop/
 cno kkk ./
