@@ -345,7 +345,7 @@ you should place your code here."
   (yas-global-mode 1)
   (evil-visual-mark-mode 1)
   (global-company-mode)
-  ;; (global-evil-mc-mode 1)
+  (global-evil-mc-mode 1)
   (global-centered-cursor-mode  1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;; keychord ;;;;;;;;;;;;;;;;;;;;;;;;;
