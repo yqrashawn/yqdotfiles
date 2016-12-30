@@ -18,6 +18,8 @@
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
 (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
+(define-key evil-normal-state-map (kbd "zz") 'evil-toggle-fold)
+(define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
 (define-key evil-insert-state-map (kbd "C-k") 'backward-word)
 (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)

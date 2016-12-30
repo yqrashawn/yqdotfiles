@@ -332,7 +332,7 @@ sys.stdout.write(query_split[1])</string>
 				<key>runningsubtext</key>
 				<string>searching...</string>
 				<key>script</key>
-				<string>gpython search.py "{query}"</string>
+				<string>python search.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
