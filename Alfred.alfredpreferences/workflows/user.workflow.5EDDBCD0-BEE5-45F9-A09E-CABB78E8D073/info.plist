@@ -109,7 +109,7 @@
 	<key>description</key>
 	<string>Search through Font Awesome icons</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Font Awesome 4.6.3.0</string>
 	<key>objects</key>

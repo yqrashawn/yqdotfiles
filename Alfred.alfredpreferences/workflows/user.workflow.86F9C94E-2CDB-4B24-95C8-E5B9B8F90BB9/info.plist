@@ -17,6 +17,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>82126C11-9FA3-4DFC-8917-FCD788552F38</key>
@@ -28,6 +30,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>85E562C1-0EB6-4234-B34E-BE1843D9E441</key>
@@ -39,6 +43,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -47,6 +53,8 @@
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -55,6 +63,8 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -63,6 +73,8 @@
 				<integer>131072</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -71,6 +83,8 @@
 				<integer>262144</integer>
 				<key>modifiersubtext</key>
 				<string>Show in Alfred</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>8F555CDC-0040-4F77-9ACF-DEDA171D11D7</key>
@@ -82,6 +96,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>90400F13-F9A6-46D0-95D6-F45BD7F8C733</key>
@@ -95,6 +111,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -103,7 +121,7 @@
 	<key>description</key>
 	<string>Manage Aria2 downloads with Alfred</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Ariafred</string>
 	<key>objects</key>
@@ -111,6 +129,8 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
@@ -129,6 +149,12 @@
 				<string>Connecting Aria2...</string>
 				<key>script</key>
 				<string>/usr/bin/python aria.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
 				<key>title</key>
 				<string>Manage Aria2 downloads</string>
 				<key>type</key>
@@ -141,7 +167,7 @@
 			<key>uid</key>
 			<string>85E562C1-0EB6-4234-B34E-BE1843D9E441</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -149,6 +175,10 @@
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
 				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
@@ -162,7 +192,7 @@
 			<key>uid</key>
 			<string>5BBBEF8D-B80D-471F-961F-886F344F1B9D</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -173,6 +203,10 @@
 				<integer>102</integer>
 				<key>script</key>
 				<string>/usr/bin/python aria_actions.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -181,7 +215,7 @@
 			<key>uid</key>
 			<string>8F555CDC-0040-4F77-9ACF-DEDA171D11D7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -195,6 +229,10 @@
 gid=${query#--*[ ]}
 command="--switch "
 /usr/bin/python aria_actions.py $command$gid</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -203,7 +241,7 @@ command="--switch "
 			<key>uid</key>
 			<string>60B41887-2E94-4CAF-8BFD-E3108279053A</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -212,13 +250,15 @@ command="--switch "
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
 			<string>032DABC0-4F0C-4875-A556-DF07D92D1563</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -232,6 +272,10 @@ command="--switch "
 gid=${query#--*[ ]}
 command="--rm "
 /usr/bin/python aria_actions.py $command$gid</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -240,7 +284,7 @@ command="--rm "
 			<key>uid</key>
 			<string>90400F13-F9A6-46D0-95D6-F45BD7F8C733</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -254,6 +298,10 @@ command="--rm "
 gid=${query#--*[ ]}
 command="--url "
 /usr/bin/python aria_actions.py $command$gid</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -262,7 +310,7 @@ command="--url "
 			<key>uid</key>
 			<string>82126C11-9FA3-4DFC-8917-FCD788552F38</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -276,6 +324,10 @@ command="--url "
 gid=${query#--*[ ]}
 command="--alfred "
 /usr/bin/python aria_actions.py $command$gid</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -284,7 +336,7 @@ command="--alfred "
 			<key>uid</key>
 			<string>F918CA67-023E-430D-9903-03DDE35F0E4E</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -303,7 +355,7 @@ command="--alfred "
 			<key>uid</key>
 			<string>F49892BB-5FD7-431B-98A6-C84DA5923E02</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -318,6 +370,10 @@ for file in ${files[@]}; do
 	filepath=$file
 	/usr/bin/python aria_actions.py --bt $filepath
 done</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -326,7 +382,7 @@ done</string>
 			<key>uid</key>
 			<string>063A4D9F-7D6A-43B5-9320-C8FC1FE80612</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -335,51 +391,71 @@ done</string>
 	<dict>
 		<key>032DABC0-4F0C-4875-A556-DF07D92D1563</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>240</real>
 		</dict>
 		<key>063A4D9F-7D6A-43B5-9320-C8FC1FE80612</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>710</real>
 		</dict>
 		<key>5BBBEF8D-B80D-471F-961F-886F344F1B9D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
 		<key>60B41887-2E94-4CAF-8BFD-E3108279053A</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>190</real>
 		</dict>
 		<key>82126C11-9FA3-4DFC-8917-FCD788552F38</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>450</real>
 		</dict>
 		<key>85E562C1-0EB6-4234-B34E-BE1843D9E441</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
 		<key>8F555CDC-0040-4F77-9ACF-DEDA171D11D7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
 		<key>90400F13-F9A6-46D0-95D6-F45BD7F8C733</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>320</real>
 		</dict>
 		<key>F49892BB-5FD7-431B-98A6-C84DA5923E02</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>710</real>
 		</dict>
 		<key>F918CA67-023E-430D-9903-03DDE35F0E4E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>580</real>
 		</dict>

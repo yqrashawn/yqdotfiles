@@ -15,6 +15,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>B162EE7D-E78A-450D-9CC1-788F79B6AE9B</key>
@@ -26,6 +28,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -34,7 +38,7 @@
 	<key>description</key>
 	<string>Faster and safer than typing a password.</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Knocktounlock App</string>
 	<key>objects</key>
@@ -54,7 +58,7 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>90B03B69-F2E2-4239-B2FB-05AA16FC0668</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -81,7 +85,7 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>B162EE7D-E78A-450D-9CC1-788F79B6AE9B</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -102,7 +106,7 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>7418877C-3767-44E5-A451-C46A034EAAF7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -111,16 +115,22 @@ end alfred_script</string>
 	<dict>
 		<key>7418877C-3767-44E5-A451-C46A034EAAF7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>200</real>
 		</dict>
 		<key>90B03B69-F2E2-4239-B2FB-05AA16FC0668</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>B162EE7D-E78A-450D-9CC1-788F79B6AE9B</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>

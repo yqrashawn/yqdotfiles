@@ -17,6 +17,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -25,6 +27,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>591D08A4-2B08-4DEB-B779-FA98A5EEEBB3</key>
@@ -36,6 +40,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -44,7 +50,7 @@
 	<key>description</key>
 	<string>Copy files' path in Finder to Clipboard.</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Copy Path</string>
 	<key>objects</key>
@@ -69,7 +75,7 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>0087609E-6564-4C39-A1BC-BC72E3EA0589</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -78,11 +84,7 @@ end alfred_script</string>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
 				<false/>
-				<key>output</key>
-				<integer>1</integer>
 				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
 				<false/>
 				<key>text</key>
 				<string>{query}</string>
@@ -94,7 +96,7 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>08407005-847B-487E-883A-A25B62CAC23E</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -121,7 +123,7 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>591D08A4-2B08-4DEB-B779-FA98A5EEEBB3</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -130,13 +132,15 @@ end alfred_script</string>
 				<false/>
 				<key>clipboardtext</key>
 				<string></string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
 			<string>BD967345-BC9A-498B-8D9A-53FBCD2AFD6D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -159,21 +163,29 @@ Copy files' path in Finder to Clipboard.
 	<dict>
 		<key>0087609E-6564-4C39-A1BC-BC72E3EA0589</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>08407005-847B-487E-883A-A25B62CAC23E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>591D08A4-2B08-4DEB-B779-FA98A5EEEBB3</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>BD967345-BC9A-498B-8D9A-53FBCD2AFD6D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>130</real>
 		</dict>

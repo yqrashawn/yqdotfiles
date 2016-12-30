@@ -17,6 +17,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -25,7 +27,7 @@
 	<key>description</key>
 	<string>Works in conjuction with Sticky Notifications (app).</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Create Sticky Notification</string>
 	<key>objects</key>
@@ -49,7 +51,7 @@
 			<key>uid</key>
 			<string>C541615E-0054-4A6F-A9CF-069E3DDB9A5A</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -60,6 +62,10 @@
 				<integer>126</integer>
 				<key>script</key>
 				<string>set inputStr to "{query}"set my text item delimiters to ":"if number of text items of inputStr = 1 then	set nMessage to last text item of inputStr	set urlScheme to "sticky-notifications://note?message=" &amp; nMessageend ifif number of text items of inputStr = 2 then	set nTitle to first text item of inputStr	set nMessage to last text item of inputStr	set urlScheme to "sticky-notifications://note?title=" &amp; nTitle &amp; "&amp;message=" &amp; nMessageend ifif number of text items of inputStr = 3 then	set nTitle to first text item of inputStr	set nSubtitle to second text item of inputStr	set nMessage to last text item of inputStr	set urlScheme to "sticky-notifications://note?title=" &amp; nTitle &amp; "&amp;subtitle= " &amp; nSubtitle &amp; "&amp;message=" &amp; nMessageend iftell application "System Events"	open location urlSchemeend tell</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -68,7 +74,7 @@
 			<key>uid</key>
 			<string>88D7FBA5-053C-462B-B447-E8E7A655C7E5</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -79,11 +85,15 @@
 	<dict>
 		<key>88D7FBA5-053C-462B-B447-E8E7A655C7E5</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>C541615E-0054-4A6F-A9CF-069E3DDB9A5A</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>

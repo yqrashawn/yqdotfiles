@@ -760,7 +760,7 @@
 	<key>description</key>
 	<string>Package Repo Search</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Package Managers (v3.12)</string>
 	<key>objects</key>
@@ -915,6 +915,10 @@ $cache-&gt;clear();</string>
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -1036,6 +1040,10 @@ echo $repo-&gt;search($query);</string>
 				<integer>1</integer>
 				<key>argument</key>
 				<integer>1</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # 
-# Copyright © 2016 ethan-funny (https://github.com/ethan-funny)
+# Copyright © 2016 ethan-funny (http://funhacks.net)
 #
 # MIT Licence. See http://opensource.org/licenses/MIT
 #
 # Created on 2016-06-18
-# Updated on 2016-10-16
+#
 
 import alfred
 from google import google
@@ -38,9 +38,8 @@ def alfred_items_for_query(query):
             subtitle=href,
             attributes={
                 'uid': alfred.uid(index),
-                'arg': title + ';' + href,
+                'arg': query + ';' + href,
             },
-            quicklookurl=href,
             icon='icon.png',
         ))
 
