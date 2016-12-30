@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildMachineOSBuild</key>
+	<string>14A389</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>Terminal</string>
+	<key>CFBundleExecutable</key>
+	<string>Terminal Plugin</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.blacktree.Quicksilver.QSTerminalPlugIn</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Terminal Plugin</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.4.2</string>
+	<key>CFBundleVersion</key>
+	<string>14E</string>
+	<key>DTCompiler</key>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTPlatformBuild</key>
+	<string>6A1052d</string>
+	<key>DTPlatformVersion</key>
+	<string>GM</string>
+	<key>DTSDKBuild</key>
+	<string>14A382</string>
+	<key>DTSDKName</key>
+	<string>macosx10.10</string>
+	<key>DTXcode</key>
+	<string>0610</string>
+	<key>DTXcodeBuild</key>
+	<string>6A1052d</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2004, Blacktree, Inc.</string>
+	<key>QSActions</key>
+	<dict>
+		<key>QSCLExecuteTextAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>executeText:</string>
+			<key>description</key>
+			<string>Run a Text Command in Shell</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>public.executable</string>
+				<string>public.script</string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>public.utf8-plain-text</string>
+				<string>public.data</string>
+			</array>
+			<key>displaysResult</key>
+			<true/>
+			<key>icon</key>
+			<string>ExecutableBinaryIcon</string>
+			<key>name</key>
+			<string>Run Command in Shell</string>
+		</dict>
+		<key>QSCLTermExecuteShellCommandAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>executeTextInTerminal:</string>
+			<key>directTypes</key>
+			<array>
+				<string>qs.shellcommand</string>
+			</array>
+			<key>icon</key>
+			<string>TerminalIcon</string>
+			<key>name</key>
+			<string>Run a Text Command in Terminal</string>
+		</dict>
+		<key>QSCLTermExecuteTextAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>executeTextInTerminal:</string>
+			<key>directTypes</key>
+			<array>
+				<string>public.utf8-plain-text</string>
+			</array>
+			<key>icon</key>
+			<string>TerminalIcon</string>
+			<key>name</key>
+			<string>Run a Text Command in Terminal</string>
+		</dict>
+		<key>QSCLTermExecuteWithArgsAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>executeObjectInTerm:arguments:</string>
+			<key>description</key>
+			<string>Run a Shell Script in the Terminal [with optional arguments]</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>public.executable</string>
+				<string>public.script</string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>icon</key>
+			<string>TerminalIcon</string>
+			<key>indirectOptional</key>
+			<true/>
+			<key>name</key>
+			<string>Run in Terminal […]</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSCLTermOpenParentAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>showParentDirectoryInTerminal:</string>
+			<key>directTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>icon</key>
+			<string>TerminalIcon</string>
+			<key>name</key>
+			<string>Open Parent Directory in Terminal</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSCLTermShowDirectoryAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>showDirectoryInTerminal:</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>public.directory</string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>icon</key>
+			<string>TerminalIcon</string>
+			<key>name</key>
+			<string>Open Directory in Terminal</string>
+		</dict>
+		<key>QSCLTermShowManPageAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>showManPage:</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>public.executable</string>
+				<string>public.script</string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>icon</key>
+			<string>TerminalIcon</string>
+			<key>name</key>
+			<string>Show Man Page</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSShellScriptRunWithArgsAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSCLExecutableProvider</string>
+			<key>actionSelector</key>
+			<string>executeObject:arguments:</string>
+			<key>description</key>
+			<string>Run a Shell Script [with optional arguments]</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>public.executable</string>
+				<string>public.script</string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>displaysResult</key>
+			<true/>
+			<key>icon</key>
+			<string>ExecutableBinaryIcon</string>
+			<key>indirectOptional</key>
+			<true/>
+			<key>name</key>
+			<string>Run […]</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>QSPlugIn</key>
+	<dict>
+		<key>author</key>
+		<string>Blacktree, Inc.</string>
+		<key>categories</key>
+		<array>
+			<string>System</string>
+			<string>Appications</string>
+			<string>Development</string>
+		</array>
+		<key>description</key>
+		<string>Allows running of shell scripts in Quicksilver or the Terminal</string>
+		<key>extendedDescription</key>
+		<string>&lt;h2&gt;Terminal Plugin for Quicksilver&lt;/h2&gt;
+&lt;p&gt;The Terminal plugin allows Quicksilver to interact with the OS X Terminal; run commands and shell scripts, open directories in Terminal and more.&lt;/p&gt;
+&lt;h3&gt;Actions&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt; Run […]&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This action takes any script in Quicksilver's first pane (.sh, .pl, .command, .php, .py, .rb) and runs it in a Shell. An indirect argument is optional, meaning you can run any script with an argument by inputting text in Quicksilver's third pane. This differs from the 'Run in Terminal […]' action in that it runs the script in a Shell, without opening a new Terminal window.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Run in Terminal […]&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The Run in Terminal […] action can be used on script files (for example, php, pl, sh, py files) to run these files as scripts in a new Terminal window. The action supports an optional extra argument, entered in Quicksilver's 3rd pane. This differs from the 'run […]' action in that it opens a Terminal window, as opposed to running the script in a Shell.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Run Command in Shell&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Runs the item in Quicksilver's first pane in a shell, without launching Terminal. The item in Quicksilver's first pane should be a string (entered in Text Mode) of your desired command. If the command returns an item (for example, &lt;code&gt;ls&lt;/code&gt; returns a list of files and folders) they are returned to Quicksilver as text.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Run a Text Command in Terminal&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Similar to the 'Run Command in Shell' action, but opens a new Terminal window and runs the command in the new window.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Open Directory in Terminal, Open Parent Directory in Terminal&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;These two actions open the folder or file selected in Quicksilver's first pane in Terminal. The name of the action depends on whether a folder or file is selected in Quicksilver's first pane.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Show Man Page&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The 'Show Man Page' action can be run on any executable file (typically found in &lt;code&gt;/usr/bin&lt;/code&gt; or &lt;code&gt;/usr/local/bin&lt;/code&gt;). It opens a new window with the 'man' page for the selected executable.&lt;/p&gt;
+&lt;h3&gt;Catalog Preset&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Bash Command History&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This &lt;a href="qs://preferences#QSCatalogPrefPane"&gt;Catalog&lt;/a&gt; Preset, found under 'Plugins &amp;gt; Bash Command History' adds your bash history to the Quicksilver catalog (more accurately, it adds the contents of &lt;code&gt;~/.bash_history&lt;/code&gt; to your catalog).&lt;/p&gt;</string>
+		<key>icon</key>
+		<string>com.apple.Terminal</string>
+		<key>relatedPaths</key>
+		<array>
+			<string>~/.ssh</string>
+			<string>~/.bash_profile</string>
+			<string>~/.bashrc</string>
+			<string>~/.viminfo</string>
+			<string>~/bin</string>
+			<string>~/.sh_history</string>
+		</array>
+	</dict>
+	<key>QSPresetAdditions</key>
+	<array>
+		<dict>
+			<key>ID</key>
+			<string>QSPresetBashHistory</string>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.apple.Terminal</string>
+			<key>name</key>
+			<string>Bash Command History</string>
+			<key>requiresSettingsPath</key>
+			<true/>
+			<key>settings</key>
+			<dict>
+				<key>lineContentType</key>
+				<string>qs.shellcommand</string>
+				<key>parser</key>
+				<string>QSTextLineParser</string>
+				<key>path</key>
+				<string>~/.bash_history</string>
+				<key>skipItem</key>
+				<true/>
+			</dict>
+			<key>source</key>
+			<string>QSFileSystemObjectSource</string>
+		</dict>
+	</array>
+	<key>QSRegistration</key>
+	<dict>
+		<key>QSActionProviders</key>
+		<dict>
+			<key>QSCLExecutableProvider</key>
+			<string>QSCLExecutableProvider</string>
+		</dict>
+		<key>QSObjectHandlers</key>
+		<dict>
+			<key>qs.shellcommand</key>
+			<string>QSCLExecutableProvider</string>
+		</dict>
+		<key>QSTerminalMediators</key>
+		<dict>
+			<key>com.apple.Terminal</key>
+			<string>QSAppleTerminalMediator</string>
+		</dict>
+	</dict>
+	<key>QSRegistryTables</key>
+	<dict>
+		<key>QSTerminalMediators</key>
+		<dict>
+			<key>name</key>
+			<string>Terminal</string>
+			<key>type</key>
+			<string>Mediator</string>
+		</dict>
+	</dict>
+	<key>QSRequirements</key>
+	<dict>
+		<key>version</key>
+		<string>400E</string>
+	</dict>
+</dict>
+</plist>
