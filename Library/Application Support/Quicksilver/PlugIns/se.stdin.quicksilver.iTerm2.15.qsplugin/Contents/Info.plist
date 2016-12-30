@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildMachineOSBuild</key>
+	<string>13C64</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>iTerm2 Plugin</string>
+	<key>CFBundleExecutable</key>
+	<string>iTerm2</string>
+	<key>CFBundleIdentifier</key>
+	<string>se.stdin.quicksilver.iTerm2</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>iTerm2 Plugin</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.7.2</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>15</string>
+	<key>DTCompiler</key>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTPlatformBuild</key>
+	<string>5B1008</string>
+	<key>DTPlatformVersion</key>
+	<string>GM</string>
+	<key>DTSDKBuild</key>
+	<string>13C64</string>
+	<key>DTSDKName</key>
+	<string>macosx10.9</string>
+	<key>DTXcode</key>
+	<string>0511</string>
+	<key>DTXcodeBuild</key>
+	<string>5B1008</string>
+	<key>QSActions</key>
+	<dict>
+		<key>QSiTerm2ExecuteScriptInCurrent</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>executeScriptInCurrent:withArguments:</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>sh</string>
+				<string>pl</string>
+				<string>command</string>
+				<string>php</string>
+				<string>pl</string>
+				<string>py</string>
+				<string>rb</string>
+				<string></string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>indirectOptional</key>
+			<true/>
+			<key>name</key>
+			<string>Run in the Current iTerm [...]</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2ExecuteScriptInTab</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>executeScriptInTab:withArguments:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2ExecuteScriptInWindow</string>
+			<key>description</key>
+			<string>In the current terminal</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>sh</string>
+				<string>pl</string>
+				<string>command</string>
+				<string>php</string>
+				<string>pl</string>
+				<string>py</string>
+				<string>rb</string>
+				<string></string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>indirectOptional</key>
+			<true/>
+			<key>name</key>
+			<string>Run in an iTerm Tab [...]</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2ExecuteScriptInWindow</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>executeScriptInWindow:withArguments:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2ExecuteScriptInTab</string>
+			<key>description</key>
+			<string>In a new terminal window</string>
+			<key>directFileTypes</key>
+			<array>
+				<string>sh</string>
+				<string>pl</string>
+				<string>command</string>
+				<string>php</string>
+				<string>pl</string>
+				<string>py</string>
+				<string>rb</string>
+				<string></string>
+			</array>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>indirectOptional</key>
+			<true/>
+			<key>name</key>
+			<string>Run in iTerm [...]</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2ExecuteTextInCurrent</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>executeTextInCurrent:</string>
+			<key>directTypes</key>
+			<array>
+				<string>qs.shellcommand</string>
+				<string>NSStringPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Run a Text Command in the Current iTerm</string>
+		</dict>
+		<key>QSiTerm2ExecuteTextInTab</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>executeTextInTab:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2ExecuteTextInWindow</string>
+			<key>description</key>
+			<string>In the current terminal</string>
+			<key>directTypes</key>
+			<array>
+				<string>qs.shellcommand</string>
+				<string>NSStringPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Run a Text Command in an iTerm Tab</string>
+		</dict>
+		<key>QSiTerm2ExecuteTextInWindow</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>executeTextInWindow:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2ExecuteTextInTab</string>
+			<key>description</key>
+			<string>In a new terminal window</string>
+			<key>directTypes</key>
+			<array>
+				<string>qs.shellcommand</string>
+				<string>NSStringPboardType</string>
+			</array>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Run a Text Command in iTerm</string>
+		</dict>
+		<key>QSiTerm2OpenDirInCurrent</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openDirInCurrent:</string>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open Directory in the Current iTerm</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2OpenDirInTab</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openDirInTab:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2OpenDirInWindow</string>
+			<key>description</key>
+			<string>In the current terminal</string>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open Directory in iTerm Tab</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2OpenDirInWindow</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openDirInWindow:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2OpenDirInTab</string>
+			<key>description</key>
+			<string>In a new terminal window</string>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open Directory in iTerm</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2OpenParentInCurrent</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openParentInCurrent:</string>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open Parent Directory in the Current iTerm</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2OpenParentInTab</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openParentInTab:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2OpenParentInWindow</string>
+			<key>description</key>
+			<string>In the current terminal</string>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>enabled</key>
+			<false/>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open Parent Directory in iTerm Tab</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2OpenParentInWindow</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openParentInWindow:</string>
+			<key>alternateAction</key>
+			<string>QSiTerm2OpenParentInTab</string>
+			<key>description</key>
+			<string>In a new terminal window</string>
+			<key>directTypes</key>
+			<array>
+				<string>NSFilenamesPboardType</string>
+			</array>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open Parent Directory in iTerm</string>
+			<key>validatesObjects</key>
+			<true/>
+		</dict>
+		<key>QSiTerm2OpenSessionTab</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openSessionTab:</string>
+			<key>directTypes</key>
+			<array>
+				<string>com.googlecode.iterm2.session</string>
+			</array>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open in New Tab</string>
+			<key>precedence</key>
+			<integer>4</integer>
+		</dict>
+		<key>QSiTerm2OpenSessionWindow</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSiTerm2ActionProvider</string>
+			<key>actionSelector</key>
+			<string>openSessionWindow:</string>
+			<key>directTypes</key>
+			<array>
+				<string>com.googlecode.iterm2.session</string>
+			</array>
+			<key>icon</key>
+			<string>com.googlecode.iterm2</string>
+			<key>name</key>
+			<string>Open in New Window</string>
+			<key>precedence</key>
+			<integer>4</integer>
+		</dict>
+	</dict>
+	<key>QSPlugIn</key>
+	<dict>
+		<key>author</key>
+		<string>Andreas Johansson</string>
+		<key>categories</key>
+		<array>
+			<string>System</string>
+			<string>Applications</string>
+			<string>Development</string>
+		</array>
+		<key>description</key>
+		<string>Provider for using iTerm2 with the Terminal plugin</string>
+		<key>extendedDescription</key>
+		<string>&lt;h2 id="quicksilver-iterm2-plugin"&gt;Quicksilver iTerm2 plugin&lt;/h2&gt;
+&lt;p&gt;This plugin provides functionality for having commands from the &lt;a href="http://github.com/quicksilver/Terminal-qsplugin"&gt;Terminal plugin&lt;/a&gt; work in &lt;a href="http://www.iterm2.com/"&gt;iTerm2&lt;/a&gt;. It does so by registering iTerm2 as a Command line interface.&lt;/p&gt;
+&lt;p&gt;When the iTerm2 plugin is installed, iTerm2 becomes available as a choice under Command Line Interface in the Handlers section of the Quicksilver preferences.&lt;/p&gt;
+&lt;p&gt;In addition, this plugin provides iTerm2-specific functionality.&lt;/p&gt;
+&lt;p&gt;This plugin contains adapted code from the &lt;a href="http://github.com/quicksilver/Terminal-qsplugin"&gt;Terminal plugin&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="types"&gt;Types&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;iTerm Session&lt;/strong&gt; - A representation of an iTerm session. Access all sessions by right-arrowing into iTerm2.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="actions"&gt;Actions&lt;/h3&gt;
+&lt;p&gt;This plugin supplies the following actions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open New Window&lt;/strong&gt; - Opens a new iTerm window. This action is available directly on the iTerm2 application in QS.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Run a Text Command in iTerm&lt;/strong&gt; - Runs a text command entered in Quicksilver's text mode in iTerm.&lt;/p&gt;
+&lt;p&gt;The action opens a new terminal. The alternate action is &lt;strong&gt;Run a Text Command in iTerm Tab&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Run a Text Command in iTerm Tab&lt;/strong&gt; - Runs a text command entered in Quicksilver's text mode in iTerm.&lt;/p&gt;
+&lt;p&gt;The action opens a new tab in the current terminal. The alternate action is &lt;strong&gt;Run a Text Command in iTerm&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Run a Text Command in Current iTerm&lt;/strong&gt; - Runs a text command entered in Quicksilver's text mode in iTerm.&lt;/p&gt;
+&lt;p&gt;The action runs the command in the frontmost tab in the frontmost iTerm window.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Run in iTerm [...]&lt;/strong&gt; - Runs the selected shell script/binary in iTerm.&lt;/p&gt;
+&lt;p&gt;The target either has to be an executable or a shell script with a #! declaration.&lt;/p&gt;
+&lt;p&gt;The action opens a new terminal. The alternate action is &lt;strong&gt;Run in iTerm Tab [...]&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Run in iTerm Tab [...]&lt;/strong&gt; - Runs the selected shell script/binary in iTerm.&lt;/p&gt;
+&lt;p&gt;The target either has to be an executable or a shell script with a #! declaration.&lt;/p&gt;
+&lt;p&gt;The action opens a new tab in the current terminal. The alternate action is &lt;strong&gt;Run in iTerm [...]&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Run in Current iTerm [...]&lt;/strong&gt; - Runs the selected shell script/binary in iTerm.&lt;/p&gt;
+&lt;p&gt;The target either has to be an executable or a shell script with a #! declaration.&lt;/p&gt;
+&lt;p&gt;The action runs the command in the frontmost tab in the frontmost iTerm window.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open Parent Directory in iTerm&lt;/strong&gt; - Opens the selected directory's parent in iTerm.&lt;/p&gt;
+&lt;p&gt;This action is only provided for targets that are neither directories nor runnables (Terminal plugin compatibility).&lt;/p&gt;
+&lt;p&gt;The action opens a new terminal. The alternate action is &lt;strong&gt;Open Parent Directory in iTerm Tab&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open Parent Directory in iTerm tab&lt;/strong&gt; - Opens the selected directory's parent in iTerm.&lt;/p&gt;
+&lt;p&gt;This action is only provided for targets that are neither directories nor runnables (Terminal plugin compatibility).&lt;/p&gt;
+&lt;p&gt;The action opens a new tab in the current terminal. The alternate action is &lt;strong&gt;Open Parent Directory in iTerm&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open Parent Directory in Current iTerm&lt;/strong&gt; - Opens the selected directory's parent in iTerm.&lt;/p&gt;
+&lt;p&gt;This action is only provided for targets that are neither directories nor runnables (Terminal plugin compatibility).&lt;/p&gt;
+&lt;p&gt;The action opens the directory in the frontmost tab in the frontmost iTerm window.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open Directory in iTerm&lt;/strong&gt; - Opens the selected directory in iTerm.&lt;/p&gt;
+&lt;p&gt;The action opens a new terminal. The alternate action is &lt;strong&gt;Open Directory in iTerm Tab&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open Directory in iTerm Tab&lt;/strong&gt; - Opens the selected directory in a new tab in iTerm.&lt;/p&gt;
+&lt;p&gt;The action opens a new tab in the current terminal. The alternate action is &lt;strong&gt;Open Directory in iTerm&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Open Directory in Current iTerm&lt;/strong&gt; - Opens the selected directory's parent in iTerm.&lt;/p&gt;
+&lt;p&gt;The action opens the directory in the frontmost tab in the frontmost iTerm window.&lt;/p&gt;
+&lt;p&gt;Disabled by default.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When configured as the Command Line Interface for Quicksilver, this plugin also supports the following actions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Run a Text Command in Terminal&lt;/strong&gt; - Runs a text command entered in Quicksilver's text mode in the terminal.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Run in Terminal [...]&lt;/strong&gt; - Runs the selected shell script/binary in the terminal.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Open Parent Directory in Terminal&lt;/strong&gt; - Opens the selected directory's parent in the terminal.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Open Directory in Terminal&lt;/strong&gt; - Opens the selected directory in the terminal.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following actions are available for iTerm sessions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Open in New Window&lt;/strong&gt; - Opens a new terminal window with the selected session&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Open in New Tab&lt;/strong&gt; - Opens a new tab with the selected session in the current terminal&lt;/li&gt;
+&lt;/ul&gt;</string>
+		<key>icon</key>
+		<string>com.googlecode.iterm2</string>
+		<key>relatedBundles</key>
+		<array>
+			<string>com.googlecode.iterm2</string>
+		</array>
+	</dict>
+	<key>QSRegistration</key>
+	<dict>
+		<key>QSActionProviders</key>
+		<dict>
+			<key>QSiTerm2ActionProvider</key>
+			<string>QSiTerm2ActionProvider</string>
+		</dict>
+		<key>QSApplicationActions</key>
+		<dict>
+			<key>com.googlecode.iterm2</key>
+			<dict>
+				<key>QSiTerm2OpenNewWindow</key>
+				<dict>
+					<key>actionClass</key>
+					<string>QSiTerm2ActionProvider</string>
+					<key>actionSelector</key>
+					<string>openNewWindow:</string>
+					<key>directTypes</key>
+					<array>
+						<string>NSFilenamesPboardType</string>
+					</array>
+					<key>icon</key>
+					<string>com.googlecode.iterm2</string>
+					<key>name</key>
+					<string>Open New Window</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>QSBundleChildHandlers</key>
+		<dict>
+			<key>com.googlecode.iterm2</key>
+			<string>QSiTerm2ObjectSource</string>
+		</dict>
+		<key>QSTerminalMediators</key>
+		<dict>
+			<key>com.googlecode.iterm2</key>
+			<string>QSiTerm2TerminalMediator</string>
+		</dict>
+		<key>QSTypeDefinitions</key>
+		<dict>
+			<key>com.googlecode.iterm2.session</key>
+			<dict>
+				<key>icon</key>
+				<string>com.googlecode.iterm2</string>
+				<key>name</key>
+				<string>iTerm Session</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>QSRequirements</key>
+	<dict>
+		<key>bundles</key>
+		<array>
+			<dict>
+				<key>id</key>
+				<string>com.googlecode.iterm2</string>
+				<key>name</key>
+				<string>iTerm</string>
+			</dict>
+		</array>
+		<key>plugins</key>
+		<array>
+			<dict>
+				<key>id</key>
+				<string>com.blacktree.Quicksilver.QSTerminalPlugIn</string>
+				<key>name</key>
+				<string>Terminal Plugin</string>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>
