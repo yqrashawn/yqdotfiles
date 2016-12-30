@@ -16,7 +16,7 @@
 	<key>description</key>
 	<string></string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Launch 2</string>
 	<key>objects</key>

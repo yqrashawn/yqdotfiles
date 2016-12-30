@@ -92,32 +92,11 @@
 	<key>description</key>
 	<string>This workflow starts or stops the MongoDb server</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>MongoDb Starter</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
-				<string>Started the MongoDb server</string>
-				<key>title</key>
-				<string>MongoDb</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>FA8C37E8-25FE-4468-832A-9B08B3854C68</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -172,6 +151,50 @@
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
+				<string>Started the MongoDb server</string>
+				<key>title</key>
+				<string>MongoDb</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>FA8C37E8-25FE-4468-832A-9B08B3854C68</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>/usr/local/bin/mongo --eval "db.shutdownServer();" admin; exit;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>362A969F-042F-4FAE-96F5-D2C41DD7F65A</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
 				<string>Stopped the MongoDb server</string>
 				<key>title</key>
 				<string>MongoDb</string>
@@ -210,9 +233,9 @@
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
-				<integer>102</integer>
+				<integer>0</integer>
 				<key>script</key>
-				<string>/usr/local/bin/mongo --eval "db.shutdownServer();" admin; exit;</string>
+				<string>if [[ $(ps aux | grep mongod | grep -vc grep)  &gt; 0 ]] ; then echo "Running"; else echo "Not running" ; fi</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -223,30 +246,9 @@
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>362A969F-042F-4FAE-96F5-D2C41DD7F65A</string>
+			<string>C56C39A4-202C-4545-927D-8752690A7408</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>mongo status</string>
-				<key>subtext</key>
-				<string></string>
-				<key>text</key>
-				<string>Shows MongoDb status</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>690EA147-0804-4179-8D83-8E92B550E0B6</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -272,25 +274,23 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>script</key>
-				<string>if [[ $(ps aux | grep mongod | grep -vc grep)  &gt; 0 ]] ; then echo "Running"; else echo "Not running" ; fi</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>mongo status</string>
+				<key>subtext</key>
 				<string></string>
-				<key>type</key>
-				<integer>0</integer>
+				<key>text</key>
+				<string>Shows MongoDb status</string>
+				<key>withspace</key>
+				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.script</string>
+			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
-			<string>C56C39A4-202C-4545-927D-8752690A7408</string>
+			<string>690EA147-0804-4179-8D83-8E92B550E0B6</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>

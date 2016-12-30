@@ -27,7 +27,7 @@
 	<key>description</key>
 	<string>Chrome</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Launch chrome</string>
 	<key>objects</key>
@@ -48,7 +48,7 @@
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>relatedAppsMode</key>
 				<integer>0</integer>
 			</dict>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>org.boneskull.npms</string>
+	<key>category</key>
+	<string>Internet</string>
+	<key>connections</key>
+	<dict>
+		<key>040BC8F5-12A7-4201-AFDE-9BA103A32846</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4C86AA06-5763-46EB-9B4B-79AFD0A2A546</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>5E7734FB-07E1-40E3-AC31-45BE5E3B94F5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6B48878E-66CE-440A-8193-54D4827BB661</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>BEDB8CF9-2CFD-47BC-937A-8FE99EDC28B7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5E7734FB-07E1-40E3-AC31-45BE5E3B94F5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Christopher Hiller</string>
+	<key>description</key>
+	<string>npms.io search</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>npms</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>4C86AA06-5763-46EB-9B4B-79AFD0A2A546</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>npm</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Searching...</string>
+				<key>script</key>
+				<string>python npms.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>npms.py</string>
+				<key>subtext</key>
+				<string>Search npms.io for '{query}'</string>
+				<key>title</key>
+				<string>Search npms.io</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>040BC8F5-12A7-4201-AFDE-9BA103A32846</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>npms cleardb</string>
+				<key>subtext</key>
+				<string>Remove all cached packages</string>
+				<key>text</key>
+				<string>Clear npms Cache</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>BEDB8CF9-2CFD-47BC-937A-8FE99EDC28B7</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>rm -f npms.cache</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5E7734FB-07E1-40E3-AC31-45BE5E3B94F5</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>npms cache cleared!</string>
+				<key>title</key>
+				<string>npms</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>6B48878E-66CE-440A-8193-54D4827BB661</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string># alfred-npms
+
+&gt; Alfred 3 workflow for [npms.io](https://npms.io)
+
+![screenshot](https://cldup.com/MIxtMSbnsL.png)
+
+## Commands
+
+- `npm &lt;query&gt;`: Search npms.io with `query`; open package on `npmjs.com`.
+  Example: `npm socket` will return a list of packages matching name "socket", keyword "socket", etc.
+
+  Modifiers:
+  - `⌘`: Open package repository.
+  - `⌥`: Open package homepage (this often roughly the same as the repository URL).
+
+- `npms cleardb`: Clears internal cache.  By default, search results are cached for one (1) day.
+
+## Environment Variables
+
+These are set within the workflow configuration and can be altered to better suit your usage.
+
+- `NPMS_CACHE_EXPIRATION`: Number of seconds to keep search results.  Defaults to `86400` (one day).
+
+## License
+
+Copyright 2016 [Christopher Hiller](https://boneskull.com).  Licensed MIT.</string>
+	<key>uidata</key>
+	<dict>
+		<key>040BC8F5-12A7-4201-AFDE-9BA103A32846</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>20</integer>
+		</dict>
+		<key>4C86AA06-5763-46EB-9B4B-79AFD0A2A546</key>
+		<dict>
+			<key>xpos</key>
+			<integer>180</integer>
+			<key>ypos</key>
+			<integer>20</integer>
+		</dict>
+		<key>5E7734FB-07E1-40E3-AC31-45BE5E3B94F5</key>
+		<dict>
+			<key>xpos</key>
+			<integer>180</integer>
+			<key>ypos</key>
+			<integer>140</integer>
+		</dict>
+		<key>6B48878E-66CE-440A-8193-54D4827BB661</key>
+		<dict>
+			<key>xpos</key>
+			<integer>340</integer>
+			<key>ypos</key>
+			<integer>140</integer>
+		</dict>
+		<key>BEDB8CF9-2CFD-47BC-937A-8FE99EDC28B7</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>140</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>NPMS_CACHE_EXPIRATION</key>
+		<string>86400</string>
+	</dict>
+	<key>version</key>
+	<string>0.3.3</string>
+	<key>webaddress</key>
+	<string>https://github.com/boneskull/alfred-npms</string>
+</dict>
+</plist>

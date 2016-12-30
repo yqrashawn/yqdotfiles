@@ -17,6 +17,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>2437A736-72E9-4EF5-BF97-8E72332B16BE</key>
@@ -28,6 +30,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>253F8E46-B4A0-4CDC-9824-189A7991D345</key>
@@ -39,6 +43,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</key>
@@ -50,6 +56,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>32711FD0-5C9A-4B0C-A567-B2179563F620</key>
@@ -61,6 +69,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>4A8E70CB-E302-4151-B4A5-DBF6E4173323</key>
@@ -72,6 +82,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>4B5F2BCF-1815-4F7E-9F91-9793AB9A8A5F</key>
@@ -83,6 +95,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>54FCA586-A198-4570-B9E0-9C4895743C09</key>
@@ -94,6 +108,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>5B728DF1-BC71-46AA-99B6-98FE86C906B4</key>
@@ -105,6 +121,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</key>
@@ -116,6 +134,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>6D6BFE92-FC29-4E39-BE71-B5350AEF3545</key>
@@ -127,6 +147,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>730AB895-E316-49A7-84F7-E08C883AB7B2</key>
@@ -138,6 +160,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>73E831D9-FB33-4834-B85C-33C70B5942D7</key>
@@ -149,6 +173,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</key>
@@ -160,6 +186,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -168,6 +196,8 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string>Move back to Desktop</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -176,6 +206,8 @@
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string>Reveal in DeskDrawer</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -184,6 +216,8 @@
 				<integer>262144</integer>
 				<key>modifiersubtext</key>
 				<string>Browse in Alfred</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -192,6 +226,8 @@
 				<integer>8388608</integer>
 				<key>modifiersubtext</key>
 				<string>Move to Trash</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>91C7C5A7-A288-44D9-8FBB-A76ACA9F33DA</key>
@@ -203,6 +239,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>92510403-CAD6-468F-A947-6A5E84E95054</key>
@@ -214,6 +252,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>960B66FD-B942-42FE-A87C-5B9DCA6E823E</key>
@@ -225,6 +265,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</key>
@@ -236,6 +278,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</key>
@@ -247,6 +291,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>A4851B7C-A3F0-4008-B795-36A8312027F3</key>
@@ -258,6 +304,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>C91593D9-0A32-44D3-85BD-14F5CCD3446A</key>
@@ -269,6 +317,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>D48D254E-FD2C-46A5-B2AD-677040418307</key>
@@ -280,6 +330,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>D7403C6F-7ADA-4859-ABF8-229730955C75</key>
@@ -293,6 +345,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>E2685298-C05D-4F24-B6E7-80C51763B528</key>
@@ -304,6 +358,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</key>
@@ -315,6 +371,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>F6EF4D4E-CE4A-4256-9988-C5EFA5650852</key>
@@ -326,6 +384,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>FB266892-D14C-4369-9696-A965A5E32475</key>
@@ -337,6 +397,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -345,7 +407,7 @@
 	<key>description</key>
 	<string>Keep your Desktop free of clutter</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>DeskDrawer</string>
 	<key>objects</key>
@@ -353,14 +415,30 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
 				<string>drawer</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
 				<key>script</key>
 				<string>./drawer_list.sh "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>subtext</key>
 				<string>Show files in your Desk Drawer</string>
 				<key>title</key>
@@ -375,11 +453,13 @@
 			<key>uid</key>
 			<string>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
@@ -391,6 +471,10 @@ if [ $arg = sweep ]; then
 else
 	open "$arg"
 fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -399,7 +483,7 @@ fi</string>
 			<key>uid</key>
 			<string>D7403C6F-7ADA-4859-ABF8-229730955C75</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -408,9 +492,15 @@ fi</string>
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
@@ -418,11 +508,13 @@ fi</string>
 			<key>uid</key>
 			<string>F6EF4D4E-CE4A-4256-9988-C5EFA5650852</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>4</integer>
 				<key>script</key>
@@ -433,6 +525,10 @@ mv "$item" $HOME/Desktop
 name=$(basename "$item")
 
 echo -n "\"$name\" moved back to your Desktop"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -441,7 +537,7 @@ echo -n "\"$name\" moved back to your Desktop"</string>
 			<key>uid</key>
 			<string>4A8E70CB-E302-4151-B4A5-DBF6E4173323</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>type</key>
@@ -449,21 +545,26 @@ echo -n "\"$name\" moved back to your Desktop"</string>
 			<key>uid</key>
 			<string>0F1B6767-AD28-40BE-A0B0-4625FBB216F7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
-			<dict/>
+			<dict>
+				<key>path</key>
+				<string></string>
+			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.browseinalfred</string>
 			<key>uid</key>
 			<string>323050EE-A47A-4981-9F1B-0B823FBB2F3F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>4</integer>
 				<key>script</key>
@@ -472,6 +573,10 @@ echo -n "\"$name\" moved back to your Desktop"</string>
 file=$(basename "{query}")
 
 echo -n "\"$file\" has been trashed."</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -480,15 +585,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>92510403-CAD6-468F-A947-6A5E84E95054</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
 				<string>./move_files.sh "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -497,7 +608,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -514,7 +625,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>6D6BFE92-FC29-4E39-BE71-B5350AEF3545</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -535,15 +646,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>2437A736-72E9-4EF5-BF97-8E72332B16BE</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
 				<string>./move_finder_selection.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -552,7 +669,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>73E831D9-FB33-4834-B85C-33C70B5942D7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -561,9 +678,15 @@ echo -n "\"$file\" has been trashed."</string>
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
@@ -571,7 +694,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>D7C65E8E-2A98-4E9E-A1A2-D85013323BFA</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -592,15 +715,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>D48D254E-FD2C-46A5-B2AD-677040418307</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>./undo.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -609,15 +738,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
 				<string>./protect.sh "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -626,7 +761,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>07211450-F7B0-4DC6-B08D-ECDF4A93CBAB</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -643,7 +778,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>91C7C5A7-A288-44D9-8FBB-A76ACA9F33DA</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -652,11 +787,7 @@ echo -n "\"$file\" has been trashed."</string>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
 				<true/>
-				<key>output</key>
-				<integer>0</integer>
 				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
 				<false/>
 				<key>text</key>
 				<string>{query}</string>
@@ -668,15 +799,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>6215F0CB-AE2C-47B9-B725-62409FB72FE8</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
 				<string>./protect_finder_selection.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -685,7 +822,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -706,7 +843,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>253F8E46-B4A0-4CDC-9824-189A7991D345</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -723,15 +860,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>5B728DF1-BC71-46AA-99B6-98FE86C906B4</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
 				<string>./unprotect.sh "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -740,7 +883,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>C91593D9-0A32-44D3-85BD-14F5CCD3446A</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -761,15 +904,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>E2685298-C05D-4F24-B6E7-80C51763B528</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
 				<string>./unprotect_finder_selection.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -778,7 +927,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -799,15 +948,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>4B5F2BCF-1815-4F7E-9F91-9793AB9A8A5F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
 				<string>./sweep.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -816,7 +971,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -837,15 +992,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>FB266892-D14C-4369-9696-A965A5E32475</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
 				<string>./restore.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -854,15 +1015,21 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>960B66FD-B942-42FE-A87C-5B9DCA6E823E</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
 				<string>./move_drawer.sh</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -871,7 +1038,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>54FCA586-A198-4570-B9E0-9C4895743C09</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -892,7 +1059,7 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>32711FD0-5C9A-4B0C-A567-B2179563F620</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -913,17 +1080,23 @@ echo -n "\"$file\" has been trashed."</string>
 			<key>uid</key>
 			<string>A4851B7C-A3F0-4008-B795-36A8312027F3</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>open "help_files/help.html"
 echo -n "Showing Documentation."
 </string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -932,7 +1105,7 @@ echo -n "Showing Documentation."
 			<key>uid</key>
 			<string>730AB895-E316-49A7-84F7-E08C883AB7B2</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -1023,156 +1196,218 @@ v1.0
 	<dict>
 		<key>07211450-F7B0-4DC6-B08D-ECDF4A93CBAB</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>810</real>
 		</dict>
 		<key>0F1B6767-AD28-40BE-A0B0-4625FBB216F7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
 		<key>2437A736-72E9-4EF5-BF97-8E72332B16BE</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>610</real>
 		</dict>
 		<key>253F8E46-B4A0-4CDC-9824-189A7991D345</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>910</real>
 		</dict>
 		<key>2A4CA0EC-072F-43E5-810C-6A6E98D13F91</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1110</real>
 		</dict>
 		<key>323050EE-A47A-4981-9F1B-0B823FBB2F3F</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>310</real>
 		</dict>
 		<key>32711FD0-5C9A-4B0C-A567-B2179563F620</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>1410</real>
 		</dict>
 		<key>4A8E70CB-E302-4151-B4A5-DBF6E4173323</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>110</real>
 		</dict>
 		<key>4B5F2BCF-1815-4F7E-9F91-9793AB9A8A5F</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>1210</real>
 		</dict>
 		<key>54FCA586-A198-4570-B9E0-9C4895743C09</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1410</real>
 		</dict>
 		<key>5B728DF1-BC71-46AA-99B6-98FE86C906B4</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1010</real>
 		</dict>
 		<key>5BACDCC6-E2B6-42D3-9B18-34BC4073B878</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1210</real>
 		</dict>
 		<key>6215F0CB-AE2C-47B9-B725-62409FB72FE8</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>870</real>
 		</dict>
 		<key>6D6BFE92-FC29-4E39-BE71-B5350AEF3545</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>510</real>
 		</dict>
 		<key>730AB895-E316-49A7-84F7-E08C883AB7B2</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1510</real>
 		</dict>
 		<key>73E831D9-FB33-4834-B85C-33C70B5942D7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>610</real>
 		</dict>
 		<key>8CF88C0E-006A-4008-AAC1-74ED86A7E36D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>91C7C5A7-A288-44D9-8FBB-A76ACA9F33DA</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>810</real>
 		</dict>
 		<key>92510403-CAD6-468F-A947-6A5E84E95054</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>410</real>
 		</dict>
 		<key>960B66FD-B942-42FE-A87C-5B9DCA6E823E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1310</real>
 		</dict>
 		<key>9CFB84D9-CF1A-4B73-9BD8-00144F6CFE86</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>510</real>
 		</dict>
 		<key>9E1DE4CC-B278-4619-8C4A-A5BC4AB4D528</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>910</real>
 		</dict>
 		<key>A4851B7C-A3F0-4008-B795-36A8312027F3</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>1510</real>
 		</dict>
 		<key>C91593D9-0A32-44D3-85BD-14F5CCD3446A</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1010</real>
 		</dict>
 		<key>D48D254E-FD2C-46A5-B2AD-677040418307</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>710</real>
 		</dict>
 		<key>D7403C6F-7ADA-4859-ABF8-229730955C75</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>D7C65E8E-2A98-4E9E-A1A2-D85013323BFA</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>660</real>
 		</dict>
 		<key>E2685298-C05D-4F24-B6E7-80C51763B528</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>1110</real>
 		</dict>
 		<key>E9C5D622-7843-4DEE-B720-7A8A59F2D1DA</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>710</real>
 		</dict>
 		<key>F6EF4D4E-CE4A-4256-9988-C5EFA5650852</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>FB266892-D14C-4369-9696-A965A5E32475</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>1310</real>
 		</dict>

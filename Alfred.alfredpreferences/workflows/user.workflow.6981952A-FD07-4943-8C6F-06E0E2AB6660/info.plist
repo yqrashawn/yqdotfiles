@@ -27,7 +27,7 @@
 	<key>description</key>
 	<string>Open local ip with port</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Localport v1.0.0</string>
 	<key>objects</key>

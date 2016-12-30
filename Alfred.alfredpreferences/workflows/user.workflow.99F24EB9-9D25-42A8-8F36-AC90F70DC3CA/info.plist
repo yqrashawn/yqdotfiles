@@ -27,7 +27,7 @@
 	<key>description</key>
 	<string>VimR</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Launch VimR</string>
 	<key>objects</key>
