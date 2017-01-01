@@ -1,4 +1,22 @@
 ;; -*- mode: emacs-lisp -*-
+(defun sr-speedbar-open-and-select ()
+  "Open sr-speedbar window and select it."
+  (interactive)
+  (sr-speedbar-open)
+  (sr-speedbar-select-window))
+
+(defun my-toggle-speedbar ()
+  "Toggle sr-speedbar window and select it.
+Toggle visibility of sr-speedbar by resizing
+the `sr-speedbar-window' to a minimal width
+or the last width when visible.
+Use this function to create or toggle visibility
+of a speedbar-window.  It will be created if necessary."
+  (interactive)
+  (if (sr-speedbar-exist-p)
+      (sr-speedbar-close)
+    (sr-speedbar-open-and-select)))
+
 (global-set-key (kbd "C-s") 'phi-search)
 (spacemacs/declare-prefix "c" "my-git-prefix")
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
@@ -9,6 +27,7 @@
 (spacemacs/set-leader-keys "gfe" 'magit-ediff-popup)
 (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
 (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
+(spacemacs/set-leader-keys "ft" 'my-toggle-speedbar)
 (spacemacs/set-leader-keys "wz"  'spacemacs/toggle-maximize-buffer)
 (define-key evil-normal-state-map (kbd "v") 'er/expand-region)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
@@ -35,7 +54,6 @@
 (define-key evil-insert-state-map [(control return)] 'mc/mark-all-dwim)
 (global-set-key (kbd "C-SPC") 'swiper)
 (global-set-key (kbd "^@") 'swiper)
-
 
 ;;;;;C-h
 (keyboard-translate ?\C-h ?\C-?)
