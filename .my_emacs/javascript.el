@@ -15,6 +15,8 @@
     (local-set-key (kbd "C-c b") 'js-send-buffer)
     (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
     (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+    (local-set-key (kbd "]q") 'flycheck-next-error)
+    (local-set-key (kbd "[q") 'flycheck-previous-error)
     ))
 
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
