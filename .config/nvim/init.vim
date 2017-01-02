@@ -515,8 +515,8 @@ inoremap <down> <C-n>
 inoremap <up> <C-p>
 nnoremap n nzz
 nnoremap N Nzz
-nnoremap j jzz
-nnoremap k kzz
+nnoremap j gjzz
+nnoremap k gkzz
 nnoremap # #zz
 nnoremap * *zz
 nnoremap <Down> jzz
