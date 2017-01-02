@@ -1,5 +1,5 @@
 (setq-default evil-escape-key-sequence "kj")
-(key-chord-define speedbar-mode-map "fl" 'evil-avy-goto-line)
+;; (key-chord-define speedbar-mode-map "fl" 'evil-avy-goto-line)
 (key-chord-define-global "z;" 'evil-toggle-fold)
 (key-chord-define-global "z0" 'delete-other-windows)
 (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
