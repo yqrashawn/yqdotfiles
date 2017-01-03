@@ -59,7 +59,6 @@ values."
      version-control
      scheme
      html
-     dash
      javascript
      evil-snipe
      (javascript :variables javascript-disable-tern-port-files nil)
