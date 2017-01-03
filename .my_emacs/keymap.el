@@ -27,7 +27,6 @@ of a speedbar-window.  It will be created if necessary."
 (spacemacs/set-leader-keys "gfe" 'magit-ediff-popup)
 (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
 (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
-(spacemacs/set-leader-keys "ft" 'my-toggle-speedbar)
 (spacemacs/set-leader-keys "wz"  'spacemacs/toggle-maximize-buffer)
 (define-key evil-normal-state-map (kbd "v") 'er/expand-region)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)

@@ -11,7 +11,7 @@
 	<key>description</key>
 	<string>Remote Control workflow for Alfred</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>VLC Remote Control</string>
 	<key>objects</key>
@@ -35,7 +35,7 @@
 			<key>uid</key>
 			<string>22C92C6D-45B6-4083-B4F9-7A7F6BA4157B</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -44,6 +44,8 @@
 	<dict>
 		<key>22C92C6D-45B6-4083-B4F9-7A7F6BA4157B</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
