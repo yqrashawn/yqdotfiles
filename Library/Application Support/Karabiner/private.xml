@@ -131,6 +131,13 @@
   </item>
 
   <item>
+    <name>COMMAND_R as OPTION_R in Emacs</name>
+    <identifier>emcas_option_l</identifier>
+    <only>Emacs</only>
+    <autogen>__KeyToKey__ KeyCode::COMMAND_R, KeyCode::OPTION_L</autogen>
+  </item>
+
+  <item>
     <name>HHKB Leader in Emcas insert mode</name>
     <identifier>emcas_insert_leader_hhkb</identifier>
     <only>Emacs</only>
