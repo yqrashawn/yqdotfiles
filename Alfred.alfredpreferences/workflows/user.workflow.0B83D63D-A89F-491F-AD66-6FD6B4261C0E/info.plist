@@ -15,6 +15,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>0813E001-8721-48F5-AC19-415CFAEC2C40</key>
@@ -26,6 +28,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>274E0A3D-D84E-4174-A602-372FFBEE1C4C</key>
@@ -37,6 +41,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>527CE03D-ADBD-44FA-B551-CC342304C757</key>
@@ -48,6 +54,8 @@
 				<integer>131072</integer>
 				<key>modifiersubtext</key>
 				<string>查看使用帮助</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -56,6 +64,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -64,6 +74,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -72,6 +84,8 @@
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string>打开 Web 端迅雷离线</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>55DC8224-C31F-4027-85F4-C91D24ECC0B7</key>
@@ -83,6 +97,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>7DC74A9F-AAC4-47C4-AFDF-2DB447A62E28</key>
@@ -94,6 +110,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>84018E32-67B0-4076-9633-D7F07C840120</key>
@@ -105,6 +123,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>894D28DB-28FA-45F8-AC44-11C42CF5C098</key>
@@ -116,6 +136,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -124,6 +146,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>934F0743-5C49-4415-BC7D-368A3082ED29</key>
@@ -135,6 +159,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -143,6 +169,8 @@
 				<integer>131072</integer>
 				<key>modifiersubtext</key>
 				<string>查看BT任务内容</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>E33B5484-FEA1-4151-B7CA-B32A8CDFC9EC</key>
@@ -154,6 +182,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -162,7 +192,7 @@
 	<key>description</key>
 	<string>添加任务到迅雷离线</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>XLixian</string>
 	<key>objects</key>
@@ -170,8 +200,10 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>plusspaces</key>
-				<false/>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
 				<key>url</key>
 				<string>https://github.com/CrazyApi/Alfred-XLixian/wiki/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E</string>
 				<key>utf8</key>
@@ -182,11 +214,26 @@
 			<key>uid</key>
 			<string>A8BE34DB-0F2A-49FF-AAE6-6F22D6EF9119</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>largetypetext</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.largetype</string>
+			<key>uid</key>
+			<string>6EC1EF9F-0201-40F5-B9AD-EB15AD7305FF</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
@@ -198,6 +245,10 @@ alias lx="python $LIXIAN_CLI_PATH"
 if [[ '{query}' =~ ^[help]* ]]; then
 	lx {query}
 fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -206,25 +257,27 @@ fi</string>
 			<key>uid</key>
 			<string>0813E001-8721-48F5-AC19-415CFAEC2C40</string>
 			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>type</key>
-			<string>alfred.workflow.output.largetype</string>
-			<key>uid</key>
-			<string>6EC1EF9F-0201-40F5-B9AD-EB15AD7305FF</string>
-			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
 				<string>lx</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
 				<key>runningsubtext</key>
 				<string>⏳ Waiting...</string>
 				<key>script</key>
@@ -253,6 +306,12 @@ fi</string>
 &lt;/items&gt;
 
 EOB</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
 				<key>title</key>
 				<string>迅雷离线</string>
 				<key>type</key>
@@ -265,11 +324,13 @@ EOB</string>
 			<key>uid</key>
 			<string>527CE03D-ADBD-44FA-B551-CC342304C757</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
@@ -311,6 +372,10 @@ case ${CMD[0]} in
 		lx ${CMD[@]}
 		;;
 esac</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -319,7 +384,7 @@ esac</string>
 			<key>uid</key>
 			<string>55DC8224-C31F-4027-85F4-C91D24ECC0B7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -339,7 +404,7 @@ esac</string>
 			<key>uid</key>
 			<string>7DC74A9F-AAC4-47C4-AFDF-2DB447A62E28</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -348,11 +413,7 @@ esac</string>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
 				<true/>
-				<key>output</key>
-				<integer>0</integer>
 				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
 				<false/>
 				<key>text</key>
 				<string>{query}</string>
@@ -364,13 +425,15 @@ esac</string>
 			<key>uid</key>
 			<string>A70A4E1E-712E-4575-967A-0AA64960904D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>plusspaces</key>
-				<false/>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
 				<key>url</key>
 				<string>http://lixian.vip.xunlei.com/task.html</string>
 				<key>utf8</key>
@@ -381,11 +444,13 @@ esac</string>
 			<key>uid</key>
 			<string>C15E06B5-D4D0-4626-BC13-9B8366477C1E</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
@@ -409,6 +474,10 @@ for IN_FILE in ${IN_FILES[@]}; do
 	lx add $ARG "$IN_FILE" | grep '^\d'
 done
 unset IFS</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -417,13 +486,15 @@ unset IFS</string>
 			<key>uid</key>
 			<string>E33B5484-FEA1-4151-B7CA-B32A8CDFC9EC</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
 				<key>anchorfields</key>
 				<true/>
+				<key>argumenttype</key>
+				<integer>0</integer>
 				<key>daterange</key>
 				<integer>0</integer>
 				<key>fields</key>
@@ -457,6 +528,8 @@ unset IFS</string>
 				<false/>
 				<key>keyword</key>
 				<string>lxf</string>
+				<key>runningsubtext</key>
+				<string></string>
 				<key>scopes</key>
 				<array>
 					<string>~/Desktop</string>
@@ -479,11 +552,13 @@ unset IFS</string>
 			<key>uid</key>
 			<string>84018E32-67B0-4076-9633-D7F07C840120</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
@@ -498,6 +573,10 @@ if [[ '{query}' =~ ^[0-9]+/$ ]]; then
 else
 	echo -n "{query}"
 fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -506,7 +585,7 @@ fi</string>
 			<key>uid</key>
 			<string>894D28DB-28FA-45F8-AC44-11C42CF5C098</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -515,23 +594,35 @@ fi</string>
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
 			<string>EB15D140-DC2C-49F1-A48E-E57C48AD797F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
 				<string>list</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
 				<key>runningsubtext</key>
 				<string>❗以 [@] 结尾开始搜索</string>
 				<key>script</key>
@@ -543,6 +634,10 @@ if [[ $inputStr == *@ ]]; then
 fi
 
 # python feedback.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>subtext</key>
 				<string>🔍 可使用 [ID]、[关键字]、[0-9]等方式，</string>
 				<key>title</key>
@@ -557,15 +652,21 @@ fi
 			<key>uid</key>
 			<string>934F0743-5C49-4415-BC7D-368A3082ED29</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
 				<string>tell application "Alfred 2"		set q to "{query}" as text	if q starts with "http" then		set the clipboard to q		return "单文件 " &amp; q	else		search "list " &amp; q &amp; "@"	end ifend tell</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -574,7 +675,7 @@ fi
 			<key>uid</key>
 			<string>08091057-FCAD-4712-B084-03E51AFB088D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -583,11 +684,7 @@ fi
 				<false/>
 				<key>onlyshowifquerypopulated</key>
 				<true/>
-				<key>output</key>
-				<integer>0</integer>
 				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
 				<false/>
 				<key>text</key>
 				<string>Copyed：{query}</string>
@@ -599,7 +696,7 @@ fi
 			<key>uid</key>
 			<string>902DF5E0-B040-4237-847F-154A84290301</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -620,7 +717,7 @@ fi
 			<key>uid</key>
 			<string>274E0A3D-D84E-4174-A602-372FFBEE1C4C</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -635,7 +732,7 @@ fi
 			<key>uid</key>
 			<string>F3C9F784-788A-49AA-98BE-B8A81D41BE8F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -644,86 +741,120 @@ fi
 	<dict>
 		<key>08091057-FCAD-4712-B084-03E51AFB088D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>860</real>
 		</dict>
 		<key>0813E001-8721-48F5-AC19-415CFAEC2C40</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>120</real>
 		</dict>
 		<key>274E0A3D-D84E-4174-A602-372FFBEE1C4C</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>1020</real>
 		</dict>
 		<key>527CE03D-ADBD-44FA-B551-CC342304C757</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
 		<key>55DC8224-C31F-4027-85F4-C91D24ECC0B7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>290</real>
 		</dict>
 		<key>6EC1EF9F-0201-40F5-B9AD-EB15AD7305FF</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>120</real>
 		</dict>
 		<key>7DC74A9F-AAC4-47C4-AFDF-2DB447A62E28</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>380</real>
 		</dict>
 		<key>84018E32-67B0-4076-9633-D7F07C840120</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>530</real>
 		</dict>
 		<key>894D28DB-28FA-45F8-AC44-11C42CF5C098</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>670</real>
 		</dict>
 		<key>902DF5E0-B040-4237-847F-154A84290301</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>860</real>
 		</dict>
 		<key>934F0743-5C49-4415-BC7D-368A3082ED29</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>760</real>
 		</dict>
 		<key>A70A4E1E-712E-4575-967A-0AA64960904D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>400</real>
 		</dict>
 		<key>A8BE34DB-0F2A-49FF-AAE6-6F22D6EF9119</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
 		<key>C15E06B5-D4D0-4626-BC13-9B8366477C1E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>410</real>
 		</dict>
 		<key>E33B5484-FEA1-4151-B7CA-B32A8CDFC9EC</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>530</real>
 		</dict>
 		<key>EB15D140-DC2C-49F1-A48E-E57C48AD797F</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>670</real>
 		</dict>
 		<key>F3C9F784-788A-49AA-98BE-B8A81D41BE8F</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1020</real>
 		</dict>

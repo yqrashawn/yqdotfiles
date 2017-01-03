@@ -222,7 +222,7 @@
 	<key>description</key>
 	<string>Add task to Things.app</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Things</string>
 	<key>objects</key>
@@ -248,7 +248,7 @@
 			<key>uid</key>
 			<string>918AA2D8-1CC6-4BE2-ABE3-D2D6C9159CB0</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -291,7 +291,7 @@
 			<key>uid</key>
 			<string>E8500725-1C3A-4A43-86F2-FC0A637E33CB</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -334,7 +334,7 @@
 			<key>uid</key>
 			<string>F41F577C-198B-49FE-B47B-BFF049B884DE</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -357,7 +357,7 @@
 			<key>uid</key>
 			<string>69D6D43A-5CE4-43E6-9AE6-7C7DF83E619A</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -400,7 +400,7 @@
 			<key>uid</key>
 			<string>32EFDDFE-65B4-4DA6-B8CA-5F31D6CBBD71</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -423,7 +423,7 @@
 			<key>uid</key>
 			<string>CB2B630E-2FE0-4991-B016-0FA5C31B2839</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -466,7 +466,7 @@
 			<key>uid</key>
 			<string>28A34660-EE6E-4B01-92C9-99DC393E9415</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -489,7 +489,7 @@
 			<key>uid</key>
 			<string>D2388BE6-FFC5-436B-A128-10413652FC25</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -510,7 +510,7 @@
 			<key>uid</key>
 			<string>A9202F3A-81A6-4517-AEF4-8D03C732EE8C</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -553,7 +553,7 @@
 			<key>uid</key>
 			<string>9C78EAB0-E85B-4810-AD3C-DEB71A22CC3D</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -576,7 +576,7 @@
 			<key>uid</key>
 			<string>33BB8C22-63C2-41A7-92D5-7F935D6D1577</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -595,7 +595,7 @@
 			<key>uid</key>
 			<string>80134C79-FFAA-4C16-9384-D4F67D5E5B7D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -608,7 +608,7 @@
 			<key>uid</key>
 			<string>91CE2698-7955-416F-95A3-44254F83F419</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -621,7 +621,7 @@
 			<key>uid</key>
 			<string>CC2700DA-BF54-4602-8BF7-624D4CEE109A</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -640,7 +640,7 @@
 			<key>uid</key>
 			<string>F1AB7A9B-60F4-4D87-B2DF-E6809A18600F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -663,7 +663,7 @@
 			<key>uid</key>
 			<string>FE864139-641F-41F2-99C7-5F6907183F66</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -682,7 +682,7 @@
 			<key>uid</key>
 			<string>7ED645C7-8C1F-4E16-8A23-1DEBA3758438</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -705,7 +705,7 @@
 			<key>uid</key>
 			<string>5837DDD2-0E3D-4DF7-BBE7-5042D8AF8AA6</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -718,7 +718,7 @@
 			<key>uid</key>
 			<string>D9B0D14F-A6F9-4BF4-93EF-BD647408EFB1</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -741,7 +741,7 @@
 			<key>uid</key>
 			<string>0C117274-8C07-4325-981B-126241EE9266</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -784,7 +784,7 @@
 			<key>uid</key>
 			<string>9B90779A-079D-432D-AC7F-C35A04F5C129</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>

@@ -17,6 +17,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>07CE70B2-24AA-42DD-BD94-F2853F501D82</key>
@@ -28,6 +30,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>0E578757-5F8B-463A-A70F-14E692CED091</key>
@@ -39,6 +43,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>14822207-5D27-4FCE-8854-A61F5AD895C7</key>
@@ -50,6 +56,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>17F53741-ECEE-48F9-8FAE-B909ECAC395B</key>
@@ -61,6 +69,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>19BE9318-92C0-480F-9DDD-AA569EFA0600</key>
@@ -72,6 +82,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>3292B0C1-ACFE-4E2A-B92E-37D9BEFD8384</key>
@@ -83,6 +95,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>36D8778B-F2FD-480C-B2E4-6AAFFD0D8404</key>
@@ -94,6 +108,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>4243F6B5-F57F-4144-8955-60BBF740B59E</key>
@@ -105,6 +121,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>4373E9CB-E41F-4705-806B-A5300600BA6D</key>
@@ -116,6 +134,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>43B5F7FF-4408-4587-902F-0F3BE14552C2</key>
@@ -127,6 +147,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>6112F542-6991-4465-B072-2356BB8ED281</key>
@@ -138,6 +160,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>7B2A53F7-9461-4260-A933-FE01E94BDD01</key>
@@ -149,6 +173,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>8D13FB53-E015-43C2-BF44-66A4BE79D2AF</key>
@@ -160,6 +186,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>8F2D2C06-BDEF-4C69-8420-6BA4C0E83E22</key>
@@ -171,6 +199,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>9B097D5C-8013-4C20-80DC-8AE89BB8706C</key>
@@ -182,6 +212,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>A3551FE6-45E2-489D-BB20-022B526B2817</key>
@@ -193,6 +225,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>ABC93083-9368-40E2-B0DA-C8B6BCF5DB3F</key>
@@ -204,6 +238,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>ADCA39EE-C951-4DC9-91ED-A3A842713305</key>
@@ -215,6 +251,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>BF4EFA41-1A7E-4D05-83D9-0C611F59243C</key>
@@ -226,6 +264,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>CC036CD7-51AC-48CB-AD72-809D8B5EBD47</key>
@@ -237,6 +277,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>E954C764-1273-45A3-AFA1-4928892CDCC2</key>
@@ -248,6 +290,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>EEFED882-3AB2-4D59-A75F-D817396236E0</key>
@@ -259,6 +303,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>FBB088B0-FDF0-4248-A3EF-EB78338A42BB</key>
@@ -270,6 +316,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -278,7 +326,7 @@
 	<key>description</key>
 	<string></string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Skim Remote</string>
 	<key>objects</key>
@@ -286,10 +334,16 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's single_page_continuous()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -298,7 +352,7 @@
 			<key>uid</key>
 			<string>53CA3F7A-76C7-4AE7-A43E-D110E8F5AEA7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -319,15 +373,21 @@
 			<key>uid</key>
 			<string>3292B0C1-ACFE-4E2A-B92E-37D9BEFD8384</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's single_page()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -336,7 +396,7 @@
 			<key>uid</key>
 			<string>5B116BEA-9667-4EA9-B43C-ADB48592EEF4</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -357,7 +417,7 @@
 			<key>uid</key>
 			<string>E954C764-1273-45A3-AFA1-4928892CDCC2</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -378,15 +438,21 @@
 			<key>uid</key>
 			<string>ADCA39EE-C951-4DC9-91ED-A3A842713305</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's double_page()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -395,7 +461,7 @@
 			<key>uid</key>
 			<string>FC769A79-73EB-4929-BE61-CCDB8815931E</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -416,15 +482,21 @@
 			<key>uid</key>
 			<string>9B097D5C-8013-4C20-80DC-8AE89BB8706C</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's double_page_continuous()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -433,15 +505,21 @@
 			<key>uid</key>
 			<string>00C9BA68-A8D1-4DCE-8EFB-3DC7BD907CF0</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's page_breaks_on()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -450,7 +528,7 @@
 			<key>uid</key>
 			<string>FEBE3536-DDC3-4AD0-B9A7-406E8CA51C0F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -471,7 +549,7 @@
 			<key>uid</key>
 			<string>07CE70B2-24AA-42DD-BD94-F2853F501D82</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -492,15 +570,21 @@
 			<key>uid</key>
 			<string>FBB088B0-FDF0-4248-A3EF-EB78338A42BB</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's page_breaks_off()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -509,15 +593,21 @@
 			<key>uid</key>
 			<string>22BD9BCB-4E05-45E9-BF24-21B59D824AA0</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's normal_mode()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -526,7 +616,7 @@
 			<key>uid</key>
 			<string>FDAC7E14-C84C-4E51-AAB3-EB7F680409C4</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -547,15 +637,21 @@
 			<key>uid</key>
 			<string>7B2A53F7-9461-4260-A933-FE01E94BDD01</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's full_screen_mode()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -564,7 +660,7 @@
 			<key>uid</key>
 			<string>D259BF71-156F-424E-911F-5BF9F882C445</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -585,15 +681,21 @@
 			<key>uid</key>
 			<string>8F2D2C06-BDEF-4C69-8420-6BA4C0E83E22</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's presentation_mode()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -602,7 +704,7 @@
 			<key>uid</key>
 			<string>E7D6AB3C-8F76-4C68-841A-A4380E705CCE</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -623,7 +725,7 @@
 			<key>uid</key>
 			<string>8D13FB53-E015-43C2-BF44-66A4BE79D2AF</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -644,15 +746,21 @@
 			<key>uid</key>
 			<string>BF4EFA41-1A7E-4D05-83D9-0C611F59243C</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's zoom_to_fit()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -661,15 +769,21 @@
 			<key>uid</key>
 			<string>E4BC58FC-BC85-46E6-A39D-4E17F8E568C2</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's zoom_in()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -678,7 +792,7 @@
 			<key>uid</key>
 			<string>459EB28B-5191-4B27-96AA-E5D4C24FBEE4</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -699,7 +813,7 @@
 			<key>uid</key>
 			<string>EEFED882-3AB2-4D59-A75F-D817396236E0</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -720,15 +834,21 @@
 			<key>uid</key>
 			<string>A3551FE6-45E2-489D-BB20-022B526B2817</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's zoom_out()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -737,7 +857,7 @@
 			<key>uid</key>
 			<string>C8FB99AD-1167-4C34-8EF8-1FD7591A4374</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -758,15 +878,21 @@
 			<key>uid</key>
 			<string>CC036CD7-51AC-48CB-AD72-809D8B5EBD47</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's zoom_to(1)</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -775,23 +901,34 @@
 			<key>uid</key>
 			<string>0C6F1FEA-D346-4314-AAB1-17D1CCA17108</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
+			<key>config</key>
+			<dict>
+				<key>largetypetext</key>
+				<string>{query}</string>
+			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.largetype</string>
 			<key>uid</key>
 			<string>37204E5B-4761-4F08-A95A-68BEFF2B66D0</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's pages()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -800,7 +937,7 @@
 			<key>uid</key>
 			<string>43B5F7FF-4408-4587-902F-0F3BE14552C2</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -821,7 +958,7 @@
 			<key>uid</key>
 			<string>4243F6B5-F57F-4144-8955-60BBF740B59E</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -842,15 +979,21 @@
 			<key>uid</key>
 			<string>6112F542-6991-4465-B072-2356BB8ED281</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's file_name()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -859,7 +1002,7 @@
 			<key>uid</key>
 			<string>ABC93083-9368-40E2-B0DA-C8B6BCF5DB3F</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -880,16 +1023,22 @@
 			<key>uid</key>
 			<string>17F53741-ECEE-48F9-8FAE-B909ECAC395B</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's file_name() &amp; "
 " &amp; sk's pages()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -898,7 +1047,7 @@
 			<key>uid</key>
 			<string>4373E9CB-E41F-4705-806B-A5300600BA6D</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -919,15 +1068,21 @@
 			<key>uid</key>
 			<string>36D8778B-F2FD-480C-B2E4-6AAFFD0D8404</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's goto_last_page()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -936,15 +1091,21 @@
 			<key>uid</key>
 			<string>97A64ECB-F766-43F2-9D16-29BCFD104BFB</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's goto_first_page()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -953,7 +1114,7 @@
 			<key>uid</key>
 			<string>B0EC58AD-5555-45F5-9A02-532BE92486F9</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -974,15 +1135,21 @@
 			<key>uid</key>
 			<string>14822207-5D27-4FCE-8854-A61F5AD895C7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's next_page()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -991,7 +1158,7 @@
 			<key>uid</key>
 			<string>4E584B7F-438B-46D5-8003-3681B5E3DEE7</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1012,15 +1179,21 @@
 			<key>uid</key>
 			<string>0E578757-5F8B-463A-A70F-14E692CED091</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's prev_page()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -1029,7 +1202,7 @@
 			<key>uid</key>
 			<string>879FF0CD-3E76-46F0-8B14-77FF3F0C0908</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1050,7 +1223,7 @@
 			<key>uid</key>
 			<string>19BE9318-92C0-480F-9DDD-AA569EFA0600</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1071,15 +1244,21 @@
 			<key>uid</key>
 			<string>01CB91B4-13FD-4243-8D5E-0093A2DF8444</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"set sk to load script POSIX file (workflowFolder &amp; "/SkimUI.scpt")sk's ESC()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
@@ -1088,7 +1267,7 @@
 			<key>uid</key>
 			<string>89DA2913-16E9-43C7-9B19-ED9F7BD8D44B</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -1097,216 +1276,302 @@
 	<dict>
 		<key>00C9BA68-A8D1-4DCE-8EFB-3DC7BD907CF0</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>490</real>
 		</dict>
 		<key>01CB91B4-13FD-4243-8D5E-0093A2DF8444</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>2520</real>
 		</dict>
 		<key>07CE70B2-24AA-42DD-BD94-F2853F501D82</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>610</real>
 		</dict>
 		<key>0C6F1FEA-D346-4314-AAB1-17D1CCA17108</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1560</real>
 		</dict>
 		<key>0E578757-5F8B-463A-A70F-14E692CED091</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>2280</real>
 		</dict>
 		<key>14822207-5D27-4FCE-8854-A61F5AD895C7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>2160</real>
 		</dict>
 		<key>17F53741-ECEE-48F9-8FAE-B909ECAC395B</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1920</real>
 		</dict>
 		<key>19BE9318-92C0-480F-9DDD-AA569EFA0600</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>2400</real>
 		</dict>
 		<key>22BD9BCB-4E05-45E9-BF24-21B59D824AA0</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>720</real>
 		</dict>
 		<key>3292B0C1-ACFE-4E2A-B92E-37D9BEFD8384</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>130</real>
 		</dict>
 		<key>36D8778B-F2FD-480C-B2E4-6AAFFD0D8404</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>2040</real>
 		</dict>
 		<key>37204E5B-4761-4F08-A95A-68BEFF2B66D0</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>1680</real>
 		</dict>
 		<key>4243F6B5-F57F-4144-8955-60BBF740B59E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1680</real>
 		</dict>
 		<key>4373E9CB-E41F-4705-806B-A5300600BA6D</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1920</real>
 		</dict>
 		<key>43B5F7FF-4408-4587-902F-0F3BE14552C2</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1680</real>
 		</dict>
 		<key>459EB28B-5191-4B27-96AA-E5D4C24FBEE4</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1320</real>
 		</dict>
 		<key>4E584B7F-438B-46D5-8003-3681B5E3DEE7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>2280</real>
 		</dict>
 		<key>53CA3F7A-76C7-4AE7-A43E-D110E8F5AEA7</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>130</real>
 		</dict>
 		<key>5B116BEA-9667-4EA9-B43C-ADB48592EEF4</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>250</real>
 		</dict>
 		<key>6112F542-6991-4465-B072-2356BB8ED281</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1800</real>
 		</dict>
 		<key>7B2A53F7-9461-4260-A933-FE01E94BDD01</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>840</real>
 		</dict>
 		<key>879FF0CD-3E76-46F0-8B14-77FF3F0C0908</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>2400</real>
 		</dict>
 		<key>89DA2913-16E9-43C7-9B19-ED9F7BD8D44B</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>2520</real>
 		</dict>
 		<key>8D13FB53-E015-43C2-BF44-66A4BE79D2AF</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1080</real>
 		</dict>
 		<key>8F2D2C06-BDEF-4C69-8420-6BA4C0E83E22</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>960</real>
 		</dict>
 		<key>97A64ECB-F766-43F2-9D16-29BCFD104BFB</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>2040</real>
 		</dict>
 		<key>9B097D5C-8013-4C20-80DC-8AE89BB8706C</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>490</real>
 		</dict>
 		<key>A3551FE6-45E2-489D-BB20-022B526B2817</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1440</real>
 		</dict>
 		<key>ABC93083-9368-40E2-B0DA-C8B6BCF5DB3F</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1800</real>
 		</dict>
 		<key>ADCA39EE-C951-4DC9-91ED-A3A842713305</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>370</real>
 		</dict>
 		<key>B0EC58AD-5555-45F5-9A02-532BE92486F9</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>2160</real>
 		</dict>
 		<key>BF4EFA41-1A7E-4D05-83D9-0C611F59243C</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1200</real>
 		</dict>
 		<key>C8FB99AD-1167-4C34-8EF8-1FD7591A4374</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1440</real>
 		</dict>
 		<key>CC036CD7-51AC-48CB-AD72-809D8B5EBD47</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1560</real>
 		</dict>
 		<key>D259BF71-156F-424E-911F-5BF9F882C445</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>960</real>
 		</dict>
 		<key>E4BC58FC-BC85-46E6-A39D-4E17F8E568C2</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1200</real>
 		</dict>
 		<key>E7D6AB3C-8F76-4C68-841A-A4380E705CCE</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>1080</real>
 		</dict>
 		<key>E954C764-1273-45A3-AFA1-4928892CDCC2</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>250</real>
 		</dict>
 		<key>EEFED882-3AB2-4D59-A75F-D817396236E0</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>1320</real>
 		</dict>
 		<key>FBB088B0-FDF0-4248-A3EF-EB78338A42BB</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>720</real>
 		</dict>
 		<key>FC769A79-73EB-4929-BE61-CCDB8815931E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>370</real>
 		</dict>
 		<key>FDAC7E14-C84C-4E51-AAB3-EB7F680409C4</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>840</real>
 		</dict>
 		<key>FEBE3536-DDC3-4AD0-B9A7-406E8CA51C0F</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>610</real>
 		</dict>
