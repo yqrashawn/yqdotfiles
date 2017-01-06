@@ -74,7 +74,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(zenburn color-theme-sanityinc-solarized vue-mode imenu-anywhere buffer-flip yasnippet saveplace phi-search babel-repl jscs pdf-tools eslint-fix slime js-comint)
+   dotspacemacs-additional-packages '(zenburn vue-mode imenu-anywhere buffer-flip yasnippet saveplace phi-search babel-repl jscs pdf-tools eslint-fix slime js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -145,7 +145,7 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
-                         sanityinc-solarized-dark)
+                         spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
