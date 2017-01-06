@@ -2,6 +2,10 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+  (setq url-proxy-services
+        '(("http" . "127.0.0.1:6152")
+          ("https" . "127.0.0.1:6152")))
+
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -328,9 +332,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq url-proxy-services
-        '(("http" . "127.0.0.1:6152")
-          ("https" . "127.0.0.1:6152")))
 
   ;; (setq debug-on-error t)
   ;; hack for GC, no freeze anymore
