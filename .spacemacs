@@ -345,11 +345,11 @@ you should place your code here."
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  ;;(setq undo-tree-auto-save-history t
-  ;;     undo-tree-history-directory-alist
-  ;;     `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  ;;(unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-  ;; (make-directory (concat spacemacs-cache-directory "undo")))
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
 
   (spacemacs/toggle-evil-cleverparens-on)
   (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
