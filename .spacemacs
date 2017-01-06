@@ -2,9 +2,9 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-  (setq url-proxy-services
-        '(("http" . "127.0.0.1:6152")
-          ("https" . "127.0.0.1:6152")))
+(setq url-proxy-services
+      '(("http" . "127.0.0.1:6152")
+        ("https" . "127.0.0.1:6152")))
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
