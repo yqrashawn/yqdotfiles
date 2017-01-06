@@ -53,7 +53,7 @@
 	<key>description</key>
 	<string>npms.io search</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>npms</string>
 	<key>objects</key>

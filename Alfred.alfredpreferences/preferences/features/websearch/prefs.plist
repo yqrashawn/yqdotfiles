@@ -67,7 +67,7 @@
 		<key>37B22197-7D2A-4EF9-8A58-3D14FCA2E651</key>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>keyword</key>
 			<string>npms</string>
 			<key>text</key>
