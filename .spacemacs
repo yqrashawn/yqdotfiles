@@ -352,6 +352,7 @@ you should place your code here."
     (make-directory (concat spacemacs-cache-directory "undo")))
 
   (spacemacs/toggle-evil-cleverparens-on)
+  (add-hook 'imenu-after-jump-hook #'centered-cursor-mode)
   (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
   (add-hook 'js2-mode-hook #'evil-cleverparens-mode)
   (add-hook 'org-mode-hook #'evil-cleverparens-mode)
