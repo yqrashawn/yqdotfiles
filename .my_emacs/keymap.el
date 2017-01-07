@@ -46,6 +46,8 @@ of a speedbar-window.  It will be created if necessary."
 (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
 (define-key evil-insert-state-map (kbd "C-n") 'mc/mark-next-like-this-word)
 (define-key evil-insert-state-map (kbd "C-p") 'mc/mark-previous-like-this-word)
+(define-key evil-insert-state-map (kbd "M-n") 'mc/mark-next-like-this)
+(define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
 (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
 (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
