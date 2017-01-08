@@ -240,7 +240,7 @@ several times cycle between the kill ring content.'")
   'dotspacemacs-enable-paste-transient-state
   "Old name of `dotspacemacs-enable-paste-transient-state'.")
 
-(defvar dotspacemacs-which-key-delay 0.0
+(defvar dotspacemacs-which-key-delay 0.4
   "Delay in seconds starting from the last keystroke after which
 the which-key buffer will be shown if you have not completed a
 key sequence. Setting this variable is equivalent to setting

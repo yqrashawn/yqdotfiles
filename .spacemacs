@@ -365,8 +365,6 @@ you should place your code here."
   (menu-bar-mode 0)
   (which-key-mode 0)
   (show-smartparens-global-mode 0)
-  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (yas-global-mode 1)
   (evil-visual-mark-mode 1)
   (global-company-mode)

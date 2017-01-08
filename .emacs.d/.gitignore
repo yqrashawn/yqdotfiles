@@ -51,3 +51,7 @@ private/
 !private/snippets/README.md
 !private/local/README.md
 /games/
+/saveplace
+/persp-confs
+/backup
+/.mc-lists.el
