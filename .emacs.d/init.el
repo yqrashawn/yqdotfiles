@@ -14,9 +14,9 @@
 
 ;; Increase gc-cons-threshold, depending on your system you may set it back to a
 ;; lower value in your dotfile (function `dotspacemacs/user-config')
-(setq gc-cons-threshold 600000000)
+(setq gc-cons-threshold 100000000)
 
-(defconst spacemacs-version          "0.200.5" "Spacemacs version.")
+(defconst spacemacs-version          "0.200.7" "Spacemacs version.")
 (defconst spacemacs-emacs-min-version   "24.4" "Minimal version of Emacs.")
 
 (if (not (version<= spacemacs-emacs-min-version emacs-version))
@@ -33,4 +33,3 @@
   (spacemacs/setup-startup-hook)
   (require 'server)
   (unless (server-running-p) (server-start)))
-(put 'narrow-to-page 'disabled nil)

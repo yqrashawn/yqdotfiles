@@ -18,6 +18,9 @@ of a speedbar-window.  It will be created if necessary."
     (sr-speedbar-open-and-select)))
 
 (global-set-key (kbd "C-s") 'phi-search)
+
+(define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+(define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 (spacemacs/declare-prefix "c" "my-git-prefix")
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
