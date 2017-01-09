@@ -308,9 +308,12 @@ call plug#begin('~/.vim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'kassio/neoterm'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'benjie/neomake-local-eslint.vim'
+" Plug 'benjie/neomake-local-eslint.vim'
+" Plug 'neomake/neomake'
+Plug 'w0rp/ale'
 Plug 'mileszs/ack.vim'
-Plug 'neomake/neomake'
+Plug 'rafi/vim-tinyline'
+Plug 'Shougo/vimproc.vim'
 Plug 'ternjs/tern_for_vim',{'for': 'javascript'}
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
 Plug 'justinmk/vim-gtfo' "go to file manager
@@ -320,7 +323,6 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'terryma/vim-multiple-cursors'
-Plug 'bling/vim-airline'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
 Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
@@ -337,15 +339,18 @@ Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
-Plug 'vim-airline/vim-airline-themes'
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
-Plug 'vim-scripts/mru.vim'
 Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
 Plug 'junegunn/seoul256.vim'
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 Plug 'morhetz/gruvbox'
 Plug 'justinmk/vim-sneak'
+Plug 'bogado/file-line'
+Plug 'Shougo/neomru.vim'
+" Plug 'vim-scripts/mru.vim'
+" Plug 'bling/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 " Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
@@ -414,7 +419,6 @@ Plug 'justinmk/vim-sneak'
 " Plug 'KabbAmine/vCoolor.vim'
 "Plug 'benmills/vimux'
 " Plug 'thinca/vim-quickrun'
-"Plug 'Shougo/vimproc.vim'
 " Plug 'vim-scripts/a.vim'
 "Plug 'rizzatti/dash.vim'
 "Plug 'junegunn/goyo.vim'
@@ -501,8 +505,6 @@ nnoremap [q :cprev<cr>zz
 nmap <silent> <leader>md <Plug>(jsdoc)
 nmap <leader>tw :set wrap<CR>
 imap <C-j> <cr>
-:imap kj <esc>
-:imap jk <esc>
 nnoremap <silent> zl @=(foldlevel('.')?'za':"\<Space>")<CR>
 nnoremap <C-w>= <C-w>+
 nnoremap <C-w><C-=> <C-w>+
@@ -976,7 +978,7 @@ let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 
 " Fugitive {
 cno gitfindcommit Glog --grep=
-set statusline+=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
+" set statusline+=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
 nnoremap <silent> <leader>gca :te git commit --all<CR>
 nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
 nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
@@ -998,3 +1000,5 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+
+imap <C-g> <Esc>
