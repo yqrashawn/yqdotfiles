@@ -60,6 +60,7 @@ of a speedbar-window.  It will be created if necessary."
 (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
 (define-key evil-insert-state-map [(control return)] 'mc/mark-all-dwim)
 (global-set-key (kbd "C-SPC") 'swiper)
+(global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
 (global-set-key (kbd "^@") 'swiper)
 
 ;;;;;C-h
@@ -75,9 +76,11 @@ of a speedbar-window.  It will be created if necessary."
 
 ;; remap s
 (define-key evil-normal-state-map "s" nil)
-(define-key evil-visual-state-map "sf" 'avy-goto-word-or-subword-1)
+(define-key evil-normal-state-map "sf" 'counsel-find-file)
+(define-key evil-visual-state-map "se" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "sj" 'evil-window-delete)
+(define-key evil-normal-state-map "sl" 'imenu-anywhere)
 (define-key evil-normal-state-map "sss" 'spacemacs/search-ack)
 (define-key evil-normal-state-map "sp" 'evil-jump-item)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
