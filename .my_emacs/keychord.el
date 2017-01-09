@@ -20,7 +20,7 @@
 (key-chord-define-global ";r" 'counsel-recentf)
 (key-chord-define-global "p-" "~/")
 (key-chord-define-global "z9" ".*")
-(key-chord-define-global "e3" 'phi-replace-query)
+(key-chord-define-global "e3" 'phi-replace)
 (key-chord-define-global "m," 'mc/mark-previous-like-this)
 (key-chord-define-global "m." 'mc/mark-next-like-this)
 (key-chord-define-global "s1" 'ispell-region)

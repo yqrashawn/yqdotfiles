@@ -31,12 +31,12 @@ of a speedbar-window.  It will be created if necessary."
 (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
 (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
 (spacemacs/set-leader-keys "wz"  'spacemacs/toggle-maximize-buffer)
-(define-key evil-normal-state-map (kbd "v") 'er/expand-region)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
+(define-key evil-normal-state-map (kbd "d") 'evil-delete)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
 (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-normal-state-map (kbd "zz") 'evil-toggle-fold)
@@ -68,5 +68,17 @@ of a speedbar-window.  It will be created if necessary."
 
 (define-key evil-normal-state-map "zl" 'hs-hide-level)
 (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
-(define-key evil-visual-state-map (kbd "g<") 'mc/edit-beginnings-of-lines)
-(define-key evil-visual-state-map (kbd "g>") 'mc/edit-ends-of-lines)
+
+;; ivy-minibuffer-map
+(define-key ivy-minibuffer-map (kbd "C-n") 'ivy-next-history-element)
+(define-key ivy-minibuffer-map (kbd "C-p") 'ivy-previous-history-element)
+
+;; remap s
+(define-key evil-normal-state-map "s" nil)
+(define-key evil-visual-state-map "sf" 'avy-goto-word-or-subword-1)
+(define-key evil-normal-state-map "sv" 'evil-window-vsplit)
+(define-key evil-normal-state-map (kbd "sk") 'spacemacs/kill-this-buffer)
+(define-key evil-normal-state-map (kbd "sj") 'evil-window-delete)
+(define-key evil-normal-state-map (kbd "sss") 'spacemacs/search-ack)
+(define-key evil-normal-state-map (kbd "sp") 'evil-jump-item)
+(define-key evil-normal-state-map (kbd "sv") 'er/expand-region)
