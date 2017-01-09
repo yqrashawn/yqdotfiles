@@ -19,8 +19,7 @@ of a speedbar-window.  It will be created if necessary."
 
 (global-set-key (kbd "C-s") 'phi-search)
 
-(define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-(define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+;; spacemacs leader
 (spacemacs/declare-prefix "c" "my-git-prefix")
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
@@ -31,10 +30,22 @@ of a speedbar-window.  It will be created if necessary."
 (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
 (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
 (spacemacs/set-leader-keys "wz"  'spacemacs/toggle-maximize-buffer)
+
+;; global
+(global-set-key (kbd "C-SPC") 'swiper)
+(global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
+(global-set-key (kbd "^@") 'swiper)
+(global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
+
+;; evil global
+(evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
+
+;; evil normal
+(define-key evil-normal-state-map "zl" 'hs-hide-level)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-(global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
-(evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
+(define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+(define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "d") 'evil-delete)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
@@ -44,6 +55,13 @@ of a speedbar-window.  It will be created if necessary."
 (define-key evil-normal-state-map (kbd "ga") 'evil-cp-insert-at-end-of-form)
 (define-key evil-normal-state-map (kbd "gi") 'evil-cp-insert-at-beginning-of-form)
 (define-key evil-normal-state-map (kbd "gI") 'evil-insert-resume)
+
+;; evil visual
+(define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
+(define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
+
+;; evil insert
+(define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
 (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
 (define-key evil-insert-state-map (kbd "C-k") 'backward-word)
 (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
@@ -53,22 +71,18 @@ of a speedbar-window.  It will be created if necessary."
 (define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
 (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
-(define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
-(define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
 (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
 (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
-(define-key evil-insert-state-map [(control return)] 'mc/mark-all-dwim)
-(global-set-key (kbd "C-SPC") 'swiper)
-(global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
-(global-set-key (kbd "^@") 'swiper)
+
+;; evil motion
+(define-key evil-motion-state-map "e" 'evil-cp-forward-symbol-end)
+(define-key evil-motion-state-map "w" 'evil-cp-forward-symbol-begin)
+(define-key evil-motion-state-map "b" 'evil-cp-backward-symbol-end)
 
 ;;;;;C-h
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key [(control ?h)] 'delete-backward-char)
-
-(define-key evil-normal-state-map "zl" 'hs-hide-level)
-(define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
 
 ;; ivy-minibuffer-map
 (define-key ivy-minibuffer-map (kbd "C-n") 'ivy-next-history-element)
@@ -77,7 +91,7 @@ of a speedbar-window.  It will be created if necessary."
 ;; remap s
 (define-key evil-normal-state-map "s" nil)
 (define-key evil-normal-state-map "sf" 'counsel-find-file)
-(define-key evil-visual-state-map "se" 'avy-goto-word-or-subword-1)
+(define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "sj" 'evil-window-delete)
 (define-key evil-normal-state-map "sl" 'imenu-anywhere)
