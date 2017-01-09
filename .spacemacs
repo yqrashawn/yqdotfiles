@@ -78,7 +78,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(ibuffer adaptive-wrap aggressive-indent auto-highlight-symbol clean-aindent-mode column-enforce-mode dumb-jump eval-sexp-fu evil-tutor fancy-battery fill-column-inicator google-translate highlight-numbers highlight-parentheses hungry-delete move-text rainbow-delimiters spinner volatile-highlights ws-butler uuidgen vi-tilde-fringe flx-ido ido-vertical-mode parent-mode neotree linum-relative)
+   dotspacemacs-excluded-packages '(speedbar eldoc ibuffer adaptive-wrap aggressive-indent auto-highlight-symbol clean-aindent-mode column-enforce-mode dumb-jump eval-sexp-fu evil-tutor fancy-battery fill-column-inicator google-translate highlight-numbers highlight-parentheses hungry-delete move-text rainbow-delimiters spinner volatile-highlights ws-butler uuidgen vi-tilde-fringe flx-ido ido-vertical-mode parent-mode neotree linum-relative)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -534,6 +534,7 @@ Entered on %U")
  '(sp-show-pair-delay 0.01)
  '(spacemacs-theme-custom-colors nil)
  '(spacemacs-theme-org-highlight t)
+ '(standard-indent 2)
  '(user-full-name "yqrashawn")
  '(user-mail-address "namy.19@gmail.com")
  '(vc-annotate-background "#2B2B2B")

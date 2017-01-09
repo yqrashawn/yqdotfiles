@@ -4,7 +4,7 @@
 (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
 (key-chord-define-global ";g" 'evil-search-word-forward)
 (key-chord-define-global ";w" 'save-buffer)
-(key-chord-define-global ";c" 'speedbar)
+(key-chord-define-global ";c" 'dired-jump-other-window)
 (key-chord-define-global "x0" 'select-window-0)
 (key-chord-define-global ";1" 'select-window-1)
 (key-chord-define-global ";2" 'select-window-2)
