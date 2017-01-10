@@ -12,13 +12,13 @@
 (setq osx-packages
       '(
         exec-path-from-shell
-        helm
-        launchctl
-        (osx-dictionary :toggle osx-use-dictionary-app)
+        ;; helm
+        ;; launchctl
+        ;; (osx-dictionary :toggle osx-use-dictionary-app)
+        ;; term
         osx-trash
         pbcopy
         reveal-in-osx-finder
-        term
         ))
 
 (when (spacemacs/system-is-mac)

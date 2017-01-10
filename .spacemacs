@@ -14,7 +14,7 @@ values."
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
-   dotspacemacs-distribution 'spacemacs
+   dotspacemacs-distribution 'spacemacs-base
    ;; Lazy installation of layers (i.e. layers are installed only when a file
    ;; with a supported type is opened). Possible values are `all', `unused'
    ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
@@ -42,27 +42,29 @@ values."
      ;; ----------------------------------------------------------------
      ;; windows-scripts
      ;; prodigy
-     vimscript
+     ;; vimscript
      imenu-list
-     rcirc
      ivy
      auto-completion
      better-defaults
-     emacs-lisp
+     ;; emacs-lisp
      git
+     spacemacs-evil
+     spacemacs-ui
+     spacemacs-completion
+     spacemacs-editing
      markdown
      org
      osx
-     chrome
      evil-cleverparens
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-term-shell "/bin/zsh")
-     spell-checking
+     ;; spell-checking
      syntax-checking
      version-control
-     scheme
+     ;; scheme
      html
      javascript
      evil-snipe
@@ -74,7 +76,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(imenu-anywhere buffer-flip saveplace phi-search babel-repl jscs eslint-fix slime js-comint)
+   dotspacemacs-additional-packages '(fzf imenu-anywhere buffer-flip saveplace phi-search babel-repl jscs eslint-fix slime js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -334,11 +336,8 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; (setq debug-on-error t)
-  ;; hack for GC, no freeze anymore
   (defun my-minibuffer-setup-hook ()
     (setq gc-cons-threshold most-positive-fixnum))
-
   (defun my-minibuffer-exit-hook ()
     (setq gc-cons-threshold 800000))
 
@@ -346,56 +345,47 @@ you should place your code here."
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
-
+  ;; (setq undo-tree-auto-save-history t
+  ;;       undo-tree-history-directory-alist
+  ;;       `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  ;; (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+  ;;   (make-directory (concat spacemacs-cache-directory "undo")))
   (spacemacs/toggle-evil-cleverparens-on)
   (add-hook 'imenu-after-jump-hook #'centered-cursor-mode)
   (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
   (add-hook 'js2-mode-hook #'evil-cleverparens-mode)
+  (add-hook 'web-mode #'evil-cleverparens-mode)
   (add-hook 'org-mode-hook #'evil-cleverparens-mode)
   (add-hook 'json-mode #'evil-cleverparens-mode)
   (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (when (> (buffer-size) 40000)
-                (turn-off-show-smartparens-mode))))
   (menu-bar-mode 0)
-  ;; (which-key-mode 0)
   (show-smartparens-global-mode 0)
   (global-eldoc-mode 0)
   (yas-global-mode 1)
-  (evil-visual-mark-mode 1)
+  ;; (evil-visual-mark-mode 1)
   (global-company-mode)
   (flyspell-mode 0)
   (global-evil-mc-mode 1)
   (global-centered-cursor-mode  1)
-  (setq tern-idle-time 1)
+  ;; (setq tern-idle-time 1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
   (load-file "~/.my_emacs/keychord.el")
   (load-file "~/.my_emacs/keymap.el")
   (load-file "~/.my_emacs/org.el")
   (load-file "~/.my_emacs/javascript.el")
-  (load-file "~/.my_emacs/layout.el")
+  ;; (load-file "~/.my_emacs/layout.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq evil-move-cursor-back nil) ;;cursor don't go back
   (setq save-place-file "~/.emacs.d/saveplace") ;;remeber cursor location on reoppening
   (setq auto-indent-indent-style 'conservative)
   (setq auto-indent-style 'conservative)
   (setq auto-indent-on-visit-file t)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; others ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (buffer-flip-mode)
   (buffer-flip-set-keys 'buffer-flip-keys "u8*")

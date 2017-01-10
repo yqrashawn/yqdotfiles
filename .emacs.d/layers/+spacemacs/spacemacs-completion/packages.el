@@ -11,10 +11,10 @@
 
 (setq spacemacs-completion-packages
       '(
-        (default-helm-config :location built-in)
+        ;; (default-helm-config :location built-in)
         (default-ivy-config :location built-in)
-        (ido :location built-in)
-        ido-vertical-mode
+        ;; (ido :location built-in)
+        ;; ido-vertical-mode
         ))
 
 (defun spacemacs-completion/init-default-helm-config ()
