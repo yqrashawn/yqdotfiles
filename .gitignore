@@ -19,6 +19,7 @@ aria2.conf
 bullet-train.zsh-theme
 npm-install-15963.sh
 ycm_extra_conf.objc.py
+.DS_Store
 /Startify
 /bin
 /go
