@@ -310,6 +310,7 @@ values."
    org-enable-github-support t
    better-defaults-move-to-end-of-code-first t
    evil-snipe-enable-alternate-f-and-t-behaviors t
+   shell-default-term-shell "/bin/zsh"
    ))
 
 (defun dotspacemacs/user-init ()
@@ -388,12 +389,9 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq evil-move-cursor-back nil) ;;cursor don't go back
   (setq save-place-file "~/.emacs.d/saveplace") ;;remeber cursor location on reoppening
-  (setq-default dotspacemacs-persistent-server t)
   (setq auto-indent-indent-style 'conservative)
   (setq auto-indent-style 'conservative)
   (setq auto-indent-on-visit-file t)
-  (setq-default dotspacemacs-configuration-layers
-                '((shell :variables shell-default-term-shell "/bin/zsh")))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; others ;;;;;;;;;;;;;;;;;;;;;;;;;;;
