@@ -11,13 +11,13 @@
 
 (setq version-control-packages
       '(
-        diff-mode
-        diff-hl
-        evil-unimpaired
-        git-gutter
+        ;; diff-mode
+        ;; diff-hl
+        ;; evil-unimpaired
+        ;; git-gutter
         git-gutter+
-        git-gutter-fringe
-        git-gutter-fringe+
+        ;; git-gutter-fringe
+        ;; git-gutter-fringe+
         ))
 
 (defun version-control/init-diff-mode ()

@@ -11,13 +11,13 @@
 
 (setq auto-completion-packages
       '(
-        auto-complete
-        ac-ispell
+        ;; auto-complete
+        ;; ac-ispell
         company
         (company-quickhelp :toggle auto-completion-enable-help-tooltip)
         company-statistics
-        (helm-company :toggle (configuration-layer/package-usedp 'helm))
-        (helm-c-yasnippet :toggle (configuration-layer/package-usedp 'helm))
+        ;; (helm-company :toggle (configuration-layer/package-usedp 'helm))
+        ;; (helm-c-yasnippet :toggle (configuration-layer/package-usedp 'helm))
         hippie-exp
         yasnippet
         auto-yasnippet

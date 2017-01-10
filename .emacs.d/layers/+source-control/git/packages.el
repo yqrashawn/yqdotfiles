@@ -13,16 +13,16 @@
       '(
         evil-magit
         fill-column-indicator
-        gitattributes-mode
-        gitconfig-mode
-        gitignore-mode
-        git-commit
-        git-link
+        ;; gitattributes-mode
+        ;; gitconfig-mode
+        ;; gitignore-mode
+        ;; git-commit
+        ;; git-link
         git-messenger
         git-timemachine
-        (helm-gitignore :toggle (configuration-layer/package-usedp 'helm))
+        ;; (helm-gitignore :toggle (configuration-layer/package-usedp 'helm))
         magit
-        magit-gitflow
+        ;; magit-gitflow
         ;; not compatible with magit 2.1 at the time of release
         ;; magit-svn
         orgit

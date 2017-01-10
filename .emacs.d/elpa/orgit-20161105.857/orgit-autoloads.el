@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "orgit" "orgit.el" (22594 47653 0 0))
+;;;### (autoloads nil "orgit" "orgit.el" (22644 44209 0 0))
 ;;; Generated autoloads from orgit.el
 
 (autoload 'orgit-link-set-parameters "orgit" "\

@@ -10,16 +10,18 @@
 ;;; License: GPLv3
 
 (setq spacemacs-ui-packages
-      '(ace-link
+      '(
+        ;; ace-link
         (centered-cursor :location local)
-        desktop
-        (doc-view :location built-in)
-        flx-ido
-        info+
+        ;; desktop
+        ;; (doc-view :location built-in)
+        ;; flx-ido
+        ;; info+
         open-junk-file
-        paradox
-        restart-emacs
-        window-numbering))
+        ;; paradox
+        ;; restart-emacs
+        ;; window-numbering
+        ))
 
 ;; Initialization of packages
 
