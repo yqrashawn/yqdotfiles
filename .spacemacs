@@ -59,7 +59,6 @@ values."
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-term-shell "/bin/zsh")
-     c-c++
      spell-checking
      syntax-checking
      version-control
@@ -75,7 +74,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(vue-mode imenu-anywhere buffer-flip yasnippet saveplace phi-search babel-repl jscs pdf-tools eslint-fix slime js-comint)
+   dotspacemacs-additional-packages '(imenu-anywhere buffer-flip saveplace phi-search babel-repl jscs eslint-fix slime js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -227,7 +226,7 @@ values."
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0
+   dotspacemacs-which-key-delay 0.4
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -367,6 +366,7 @@ you should place your code here."
   (menu-bar-mode 0)
   ;; (which-key-mode 0)
   (show-smartparens-global-mode 0)
+  (global-eldoc-mode 0)
   (yas-global-mode 1)
   (evil-visual-mark-mode 1)
   (global-company-mode)
@@ -447,6 +447,10 @@ you should place your code here."
  '(flycheck-standard-error-navigation t)
  '(flyspell-delay 1)
  '(gc-cons-threshold 800000)
+ '(glyphless-char-display-control
+   (quote
+    ((format-control . thin-space)
+     (no-font . hex-code))))
  '(guide-key/guide-key-sequence (quote ("t")))
  '(hl-todo-keyword-faces
    (quote
@@ -467,9 +471,9 @@ you should place your code here."
      ("XXXX" . "#cc9393")
      ("???" . "#cc9393")
      ("DEBUG" . "#ff0000"))))
- '(idle-update-delay 0.08)
+ '(idle-update-delay 0.01)
  '(imenu-list-minor-mode nil)
- '(indent-guide-delay 0.1)
+ '(indent-guide-delay 0.1 t)
  '(indent-guide-global-mode nil)
  '(indent-guide-threshold 40)
  '(js2-dynamic-idle-timer-adjust 0)
@@ -521,6 +525,7 @@ Entered on %U")
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(powerline-gui-use-vcs-glyph t)
  '(powerline-height 4)
+ '(scalable-fonts-allowed t)
  '(send-mail-function (quote sendmail-send-it))
  '(show-paren-delay 0.01)
  '(show-paren-mode t)
@@ -563,7 +568,6 @@ Entered on %U")
  '(which-key-allow-imprecise-window-fit t)
  '(which-key-dont-use-unicode t)
  '(which-key-echo-keystrokes 0.01)
- '(which-key-idle-delay 0.02)
  '(which-key-popup-type (quote minibuffer))
  '(which-key-show-prefix (quote bottom))
  '(which-key-sort-uppercase-first t))
@@ -572,5 +576,6 @@ Entered on %U")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :box (:line-width 1 :color "gray67" :style released-button)))))
  '(show-paren-match ((t (:background "gray55" :underline t))))
  '(sp-show-pair-match-face ((t (:inherit show-paren-match :background "sienna3")))))
