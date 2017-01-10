@@ -12,13 +12,13 @@
 (setq org-packages
   '(
     company
-    company-emoji
-    emoji-cheat-sheet-plus
+    ;; company-emoji
+    ;; emoji-cheat-sheet-plus
     (evil-org :location local)
     evil-surround
-    gnuplot
+    ;; gnuplot
     htmlize
-    mu4e
+    ;; mu4e
     ;; ob, org and org-agenda are installed by `org-plus-contrib'
     (ob :location built-in)
     (org :location built-in)
@@ -26,7 +26,7 @@
     org-download
     ;; org-mime is installed by `org-plus-contrib'
     (org-mime :location built-in)
-    org-pomodoro
+    ;; org-pomodoro
     org-present
     (org-projectile :toggle (configuration-layer/package-usedp 'projectile))
     (ox-twbs :toggle org-enable-bootstrap-support)

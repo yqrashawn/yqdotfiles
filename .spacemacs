@@ -153,7 +153,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Meslo LG S for Powerline"
+   dotspacemacs-default-font '("Source Code Pro Light"
                                :size 13
                                :weight normal
                                :width normal
@@ -351,7 +351,6 @@ you should place your code here."
   ;;       `(("." . ,(concat spacemacs-cache-directory "undo"))))
   ;; (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
   ;;   (make-directory (concat spacemacs-cache-directory "undo")))
-  (spacemacs/toggle-evil-cleverparens-on)
   (add-hook 'imenu-after-jump-hook #'centered-cursor-mode)
   (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
   (add-hook 'js2-mode-hook #'evil-cleverparens-mode)

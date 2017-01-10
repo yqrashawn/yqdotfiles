@@ -12,8 +12,8 @@
 (setq markdown-packages
   '(
     company
-    company-emoji
-    emoji-cheat-sheet-plus
+    ;; company-emoji
+    ;; emoji-cheat-sheet-plus
     gh-md
     markdown-mode
     markdown-toc

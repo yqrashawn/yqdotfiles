@@ -11,22 +11,22 @@
 
 (setq javascript-packages
   '(
-    coffee-mode
+    ;; coffee-mode
     company
     (company-tern :toggle (configuration-layer/package-usedp 'company))
     evil-matchit
     flycheck
     ggtags
-    helm-gtags
+    ;; helm-gtags
     js-doc
     js2-mode
-    js2-refactor
+    ;; js2-refactor
     json-mode
-    json-snatcher
+    ;; json-snatcher
     (tern :toggle (spacemacs//tern-detect))
-    web-beautify
-    skewer-mode
-    livid-mode
+    ;; web-beautify
+    ;; skewer-mode
+    ;; livid-mode
     ))
 
 (defun javascript/init-coffee-mode ()
