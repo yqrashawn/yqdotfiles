@@ -14,18 +14,18 @@
     company
     (company-web :toggle (configuration-layer/package-usedp 'company))
     css-mode
-    emmet-mode
+    ;; emmet-mode
     evil-matchit
     flycheck
-    haml-mode
-    (helm-css-scss :toggle (configuration-layer/package-usedp 'helm))
-    less-css-mode
-    pug-mode
-    sass-mode
-    scss-mode
-    slim-mode
+    ;; haml-mode
+    ;; (helm-css-scss :toggle (configuration-layer/package-usedp 'helm))
+    ;; less-css-mode
+    ;; pug-mode
+    ;; sass-mode
+    ;; scss-mode
+    ;; slim-mode
     smartparens
-    tagedit
+    ;; tagedit
     web-mode
     yasnippet
     ))
