@@ -27,7 +27,7 @@
 	<key>description</key>
 	<string>Chrome</string>
 	<key>disabled</key>
-	<true/>
+	<false/>
 	<key>name</key>
 	<string>Launch chrome</string>
 	<key>objects</key>

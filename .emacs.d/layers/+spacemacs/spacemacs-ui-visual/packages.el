@@ -12,16 +12,17 @@
 (setq spacemacs-ui-visual-packages
       '(
         (ansi-colors :location built-in)
-        fancy-battery
-        fill-column-indicator
+        ;; fancy-battery
+        ;; fill-column-indicator
         golden-ratio
-        hl-todo
-        neotree
-        popup
-        popwin
+        ;; hl-todo
+        ;; neotree
+        ;; popup
+        ;; popwin
         (smooth-scrolling :location built-in)
         spaceline
-        (zoom-frm :location local)))
+        ;; (zoom-frm :location local)
+        ))
 
 (defun spacemacs-ui-visual/init-ansi-colors ()
   (add-hook 'compilation-filter-hook

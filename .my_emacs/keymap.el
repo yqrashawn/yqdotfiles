@@ -30,6 +30,7 @@ of a speedbar-window.  It will be created if necessary."
 (spacemacs/set-leader-keys "gc" 'magit-commit-popup)
 (spacemacs/set-leader-keys "thV" 'js2-highlight-vars-mode)
 (spacemacs/set-leader-keys "wz"  'spacemacs/toggle-maximize-buffer)
+(spacemacs/set-leader-keys "t0"  'centered-cursor-mode)
 
 ;; global
 (global-set-key (kbd "C-SPC") 'swiper)

@@ -53,6 +53,7 @@ values."
      spacemacs-ui
      spacemacs-completion
      spacemacs-editing
+     spacemacs-ui-visual
      markdown
      org
      osx
@@ -566,6 +567,6 @@ Entered on %U")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :box (:line-width 1 :color "gray67" :style released-button)))))
+ '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
  '(show-paren-match ((t (:background "gray55" :underline t))))
  '(sp-show-pair-match-face ((t (:inherit show-paren-match :background "sienna3")))))
