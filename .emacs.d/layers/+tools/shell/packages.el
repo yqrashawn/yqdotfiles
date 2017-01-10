@@ -13,11 +13,11 @@
       '(
         (comint :location built-in)
         company
-        esh-help
-        (eshell :location built-in)
-        eshell-prompt-extras
-        eshell-z
-        helm
+        ;; esh-help
+        ;; (eshell :location built-in)
+        ;; eshell-prompt-extras
+        ;; eshell-z
+        ;; helm
         magit
         multi-term
         org
@@ -26,7 +26,7 @@
         shell-pop
         (term :location built-in)
         xterm-color
-        vi-tilde-fringe
+        ;; vi-tilde-fringe
         ))
 
 (defun shell/init-comint ()
