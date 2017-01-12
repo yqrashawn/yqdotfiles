@@ -380,6 +380,8 @@ you should place your code here."
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq magit-commit-show-diff t
+        magit-revert-buffers 1)
   (setq evil-move-cursor-back nil) ;;cursor don't go back
   (setq save-place-file "~/.emacs.d/saveplace") ;;remeber cursor location on reoppening
   (setq auto-indent-indent-style 'conservative)
@@ -467,15 +469,22 @@ you should place your code here."
  '(indent-guide-delay 0.1 t)
  '(indent-guide-global-mode nil)
  '(indent-guide-threshold 40)
+ '(js2-dynamic-idle-timer-adjust 30720)
  '(js2-idle-timer-delay 0)
  '(js2-mode-show-parse-errors nil)
  '(js2-mode-show-strict-warnings nil)
  '(jscs-fix-show-errors (quote buffer))
- u(large-file-warning-threshold 1000000)
+ '(large-file-warning-threshold 1000000)
+ '(magit-cherry-margin (quote (nil "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
  '(magit-diff-highlight-trailing nil)
  '(magit-display-buffer-function (quote magit-display-buffer-fullcolumn-most-v1))
+ '(magit-log-margin (quote (t "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
+ '(magit-log-select-margin (quote (t "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
  '(magit-popup-show-common-commands t)
- '(magit-refresh-verbose t)
+ '(magit-refresh-verbose nil)
+ '(magit-region-highlight-hook (quote (magit-diff-update-hunk-region)))
+ '(magit-section-highlight-hook nil)
+ '(magit-update-other-window-delay 0.1)
  '(mail-host-address "gmail.com")
  '(markdown-command "multimarkdown")
  '(nrepl-message-colors
