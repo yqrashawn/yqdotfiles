@@ -12,9 +12,9 @@
 (defconst nlinum-packages
   '(
     (linum :excluded t)
-    (linum-relative :excluded t)
+    ;; (linum-relative :excluded t)
     nlinum
-    nlinum-relative
+    ;; nlinum-relative
     ))
 
 (defun nlinum/init-nlinum ()
