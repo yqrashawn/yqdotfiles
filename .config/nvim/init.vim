@@ -2,6 +2,9 @@ let leader=' '
 let mapleader = ' '
 let g:mapleader = ' '
 let s:darwin = has('mac')
+" <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+map ^@ /
+map <NUL> /
 if &nu == 1
   set rnu
 elseif &rnu == 1
@@ -305,18 +308,18 @@ command! Root call s:root()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
-Plug 'Chiel92/vim-autoformat'
-Plug 'kassio/neoterm'
-Plug 'AndrewRadev/splitjoin.vim'
+" Plug 'Chiel92/vim-autoformat'
+" Plug 'kassio/neoterm'
+" Plug 'AndrewRadev/splitjoin.vim'
 " Plug 'benjie/neomake-local-eslint.vim'
 " Plug 'neomake/neomake'
 Plug 'w0rp/ale'
 Plug 'mileszs/ack.vim'
 Plug 'rafi/vim-tinyline'
-Plug 'Shougo/vimproc.vim'
+" Plug 'Shougo/vimproc.vim'
 Plug 'ternjs/tern_for_vim',{'for': 'javascript'}
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
-Plug 'justinmk/vim-gtfo' "go to file manager
+" Plug 'justinmk/vim-gtfo' "go to file manager
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
@@ -325,20 +328,18 @@ Plug 'mhinz/vim-startify' "welcoming view
 Plug 'terryma/vim-multiple-cursors'
 Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'flazz/vim-colorschemes'
-Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
+" Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
 Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
-Plug 'mhinz/vim-signify', {'on':'SignifyToggle'} "show lines modified
+" Plug 'mhinz/vim-signify', {'on':'SignifyToggle'} "show lines modified
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular', {'on':'Tabularize'}
-Plug 'luochen1990/rainbow'
+" Plug 'luochen1990/rainbow'
 Plug 'honza/vim-snippets'
-Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
+" Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+" Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
-Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin' "选择窗口
 Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
@@ -348,6 +349,9 @@ Plug 'morhetz/gruvbox'
 Plug 'justinmk/vim-sneak'
 Plug 'bogado/file-line'
 Plug 'Shougo/neomru.vim'
+Plug 'elzr/vim-json', { 'for': 'json' }
+" Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
+
 " Plug 'bling/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
 " Plug 'nathanaelkane/vim-indent-guides'
@@ -675,9 +679,6 @@ set virtualedit=block
 set t_vb=
 set tm=500
 
-" <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map ^@ /
-map <NUL> /
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Parenthesis/bracket
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
