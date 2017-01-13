@@ -1,17 +1,9 @@
+map <NUL> /
 let leader=' '
 let mapleader = ' '
 let g:mapleader = ' '
 let s:darwin = has('mac')
 " <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map ^@ /
-map <NUL> /
-if &nu == 1
-  set rnu
-elseif &rnu == 1
-  set nornu
-else
-  set nu
-endif
 
 " autoinsert in terminal buffer
 " :au BufEnter * if &buftype == 'terminal' | :startinsert | endif
@@ -601,6 +593,7 @@ end
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "fold depend on syntax
 set foldmethod=syntax
+set nonumber
 set foldlevelstart=20
 set foldnestmax=9      "deepest fold is 10 levels
 "set foldlevel=1         "this is just what i use
