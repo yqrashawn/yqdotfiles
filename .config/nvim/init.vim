@@ -642,8 +642,8 @@ endtry
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Smart mappings on the command line
 cmap <silent> <C-g> <esc>
-cno hhh ~/
 cno ddd ~/Desktop/
+cno hhh ~/
 cno kkk ./
 "cno $c e <C-\>eCurrentFileDir("e")<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

@@ -15,7 +15,7 @@
 (key-chord-define-global "xp" 'projectile-recentf)
 (key-chord-define-global "zp" 'projectile-find-file)
 (key-chord-define-global "xm" 'magit-dispatch-popup)
-(key-chord-define-global ";f" 'swiper)
+(key-chord-define-global ";f" 'evil-search-forward)
 (key-chord-define-global "xb" 'ivy-switch-buffer)
 (key-chord-define-global ";r" 'counsel-recentf)
 (key-chord-define-global "p-" "~/")
