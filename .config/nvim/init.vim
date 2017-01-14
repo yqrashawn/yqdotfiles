@@ -322,68 +322,6 @@ Plug 'jiangmiao/simple-javascript-indenter'
  " performace
 Plug 'itchyny/vim-cursorword'
 Plug 'jelera/vim-javascript-syntax'
-" Plug 'tpope/vim-fugitive'
-" Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
-" Plug 'flazz/vim-colorschemes'
-" Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
-" Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
-" Plug 'luochen1990/rainbow'
-" Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-" Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
-" Plug 'tpope/vim-unimpaired'
-" Plug 't9md/vim-choosewin' "选择窗口
-" Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
-" Plug 'Shougo/neomru.vim'
-" Plug 'elzr/vim-json', { 'for': 'json' }
-" Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
-" Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
-" Plug 'othree/html5.vim' , {'for': 'html'}
-" Plug 'tomtom/quickfixsigns_vim'
-" Plug 'milkypostman/vim-togglelist'
-" Plug 'mattn/webapi-vim'
-" Plug 'mattn/ctrlp-register'
-" Plug 'Olical/vim-enmasse'
-" Plug 'majutsushi/tagbar'
-" Plug 'git-time-metric/gtm-vim-plugin'
-" Plug 'othree/yajs.vim'
-" Plug 'Shougo/denite.nvim'
-" Plug 'kassio/neoterm'
-" Plug 'AndrewRadev/splitjoin.vim'
-" Plug 'Shougo/vimproc.vim'
-" Plug 'justinmk/vim-gtfo' "go to file manager
-" Plug 'othree/es.next.syntax.vim'
-" Plug 'sheerun/vim-polyglot',{'for':'javascript'}
-" Plug 'thinca/vim-prettyprint'
-" Plug 'tyru/open-browser.vim'
-" Plug 'junegunn/vim-peekaboo'
-" Plug 'jlanzarotta/bufexplorer'
-" Plug 'digitaltoad/vim-pug' ,{'for': 'jade'}
-"Plug 'rafi/vim-unite-issue'
-"Plug 'Shougo/unite.vim'
-" Plug 'vimoutliner/vimoutliner'
-" Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
-" Plug 'frankier/neovim-colors-solarized-truecolor-only'
-"Plug 'MarcWeber/vim-addon-mw-utils'
-"Plug 'altercation/vim-colors-solarized'
-" Plug 'vim-ctrlspace/vim-ctrlspace'
-"Plug 'itchyny/dictionary.vim'
-" Plug 'itchyny/vim-cursorword'
-" Plug 'tpope/vim-endwise'
-" Plug 'vim-scripts/sessionman.vim'
-" Plug 'xolox/vim-notes'
-" Plug 'xolox/vim-misc'
-" Plug 'tacahiroy/ctrlp-funky'
-"Plug 'matchit.zip'
-" Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'bling/vim-bufferline'
-"Plug 'gcmt/wildfire.vim' "press enter to select words
-"Plug 'reedes/vim-litecorrect'
-"Plug 'benmills/vimux'
-" Plug 'vim-scripts/a.vim'
-"Plug 'benmills/vimux'
-"Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
-" Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                nerdcommenter too many unsless issue                 "
