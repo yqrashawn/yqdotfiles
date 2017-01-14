@@ -1,21 +1,11 @@
 {
-"ecmaVersion": 6,
-  "libs": [
-    "browser"
-  ],
-  "loadEagerly": [
-    "importantfile.js"
-  ],
-  "plugins": {
-    "complete_strings":{},
-    "modules":{},
-    "node_resolve":{},
-    "webpack":{},
-    "es_modules":{},
-    "node":{},
-    "requirejs": {
-      "baseURL": "./",
-      "paths": {}
-    }
-  }
+    "plugins": {
+        "es_modules": {},
+        "node": {}
+    },
+    "libs": [
+        "ecma5",
+        "ecma6"
+    ],
+    "ecmaVersion": 6
 }

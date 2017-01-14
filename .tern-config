@@ -1,17 +1,11 @@
 {
-  "libs": [
-    "browser",
-    "jquery",
-    "threejs"
-  ],
-  "loadEagerly": [
-    "importantfile.js"
-  ],
-  "plugins": {
-    "threejs":{},
-    "requirejs": {
-      "baseURL": "./",
-      "paths": {}
-    }
-  }
+    "plugins": {
+        "es_modules": {},
+        "node": {}
+    },
+    "libs": [
+        "ecma5",
+        "ecma6"
+    ],
+    "ecmaVersion": 6
 }

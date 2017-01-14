@@ -1,9 +1,14 @@
-map <NUL> /
+map <NUL> <Plug>(incsearch-forward)
+map <C-space> <Plug>(incsearch-forward)
+map <C-s> <Plug>(expand_region_expand)
+nmap sw <Plug>(choosewin)
+nnoremap sv <C-w><C-v>
+nnoremap so :on<CR>
+nnoremap sc <C-w><C-c>
+nnoremap sk :bd<CR>
 let leader=' '
 let mapleader = ' '
 let g:mapleader = ' '
-let s:darwin = has('mac')
-" <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 
 " autoinsert in terminal buffer
 " :au BufEnter * if &buftype == 'terminal' | :startinsert | endif
@@ -11,8 +16,7 @@ let s:darwin = has('mac')
 "                                  neoterm                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:neoterm_autoinsert = 1
-nmap <leader>' :Ttoggle<CR>
-" imap <NUL> <ESC>:Ttoggle<CR>
+nnoremap <silent> <leader>' :Ttoggle<CR>
 " ----------------------------------------------------------------------------
 " EX | chmod +x
 " ----------------------------------------------------------------------------
@@ -238,28 +242,6 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <script> <silent> gh :call ToggleLocationList()<CR>
 nmap <script> <silent> g; :call ToggleQuickfixList()<CR>
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 neomake                                    "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" autocmd! BufWritePost * Neomake
-nmap <leader><leader>w :Neomake<cr>:w<cr>
-" let g:neomake_javascript_eslint_exe = '/usr/local/bin/eslint'
-" let g:neomake_javascript_jscs_exe = '/usr/local/bin/jscs'
-let g:neomake_javascript_eslint_maker = {
-      \ 'args': ['--no-color', '--format','compact'],
-      \ 'errorformat': '%f: line %l\, col %c\, %m'
-      \ }
-let g:neomake_javascript_jscs_maker = {
-      \ 'args': ['--no-colors', '--reporter', 'inline','--preset=aribnb'],
-      \ 'errorformat': '%E%f: line %l\, col %c\, %m',
-      \ }
-let g:neomake_javascript_enabled_makers = ['eslint','jscs']
-let g:neomake_enabled_makers=['eslint','jscs']
-" let g:neomake_logfile='~/Downloads/neomake.log'
-" let g:neomake_verbose=0
-
-set ttimeoutlen=10
-
 " ----------------------------------------------------------------------------
 " Todo
 " ----------------------------------------------------------------------------
@@ -298,89 +280,81 @@ command! Root call s:root()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               Plugins                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 call plug#begin('~/.vim/plugged')
-" Plug 'Chiel92/vim-autoformat'
-" Plug 'kassio/neoterm'
-" Plug 'AndrewRadev/splitjoin.vim'
-" Plug 'benjie/neomake-local-eslint.vim'
-" Plug 'neomake/neomake'
+Plug 'airblade/vim-rooter'
+Plug 'elzr/vim-json', { 'for': 'json'}
+Plug 't9md/vim-foldtext'
 Plug 'w0rp/ale'
-Plug 'mileszs/ack.vim'
-Plug 'rafi/vim-tinyline'
-" Plug 'Shougo/vimproc.vim'
-Plug 'ternjs/tern_for_vim',{'for': 'javascript'}
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
 Plug 'scrooloose/nerdtree' ,{ 'on': 'NERDTreeToggle' }
-" Plug 'justinmk/vim-gtfo' "go to file manager
+Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
+Plug 'gabesoft/vim-ags'
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
+Plug 'itchyny/lightline.vim'
+Plug 'itchyny/vim-gitbranch'
+Plug 'lambdalisue/vim-gita'
 Plug 'tpope/vim-surround'
-Plug 'jiangmiao/auto-pairs'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'haya14busa/incsearch.vim'
+Plug 'thinca/vim-ref' " don know what does this do
+Plug 'Raimondi/delimitMate'
+Plug 'terryma/vim-expand-region'
 Plug 'mhinz/vim-startify' "welcoming view
 Plug 'terryma/vim-multiple-cursors'
-Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
-Plug 'flazz/vim-colorschemes'
-" Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
-Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
-" Plug 'mhinz/vim-signify', {'on':'SignifyToggle'} "show lines modified
-Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdcommenter'
+Plug 'jnurmine/Zenburn'
 Plug 'godlygeek/tabular', {'on':'Tabularize'}
-" Plug 'luochen1990/rainbow'
+Plug 'kana/vim-textobj-user'
+Plug 't9md/vim-choosewin'
+Plug 'rhysd/vim-textobj-anyblock'
 Plug 'honza/vim-snippets'
+Plug 'kana/vim-textobj-function'
+Plug 'SirVer/ultisnips'
+Plug 'justinmk/vim-sneak'
+Plug 'rhysd/clever-f.vim'
+Plug 'carlitux/deoplete-ternjs'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+Plug 'bogado/file-line'
+Plug 'jiangmiao/simple-javascript-indenter'
+ " performace
+Plug 'itchyny/vim-cursorword'
+Plug 'jelera/vim-javascript-syntax'
+" Plug 'tpope/vim-fugitive'
+" Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
+" Plug 'flazz/vim-colorschemes'
+" Plug 'mbbill/undotree' , {'on':'UndotreeToggle'}
+" Plug 'vim-scripts/restore_view.vim' "restor cursor position and fold state
+" Plug 'luochen1990/rainbow'
 " Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 " Plug 'tpope/vim-markdown', { 'for': ['markdown', 'md'] }
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-repeat'
-Plug 'SirVer/ultisnips'
-Plug 't9md/vim-choosewin' "选择窗口
-Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
-Plug 'junegunn/seoul256.vim'
-Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-Plug 'morhetz/gruvbox'
-Plug 'justinmk/vim-sneak'
-Plug 'bogado/file-line'
-Plug 'Shougo/neomru.vim'
-Plug 'elzr/vim-json', { 'for': 'json' }
-" Plug 'tell-k/vim-browsereload-mac', {'for': ['javascript','css','html']}
-
-" Plug 'bling/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
+" Plug 'tpope/vim-unimpaired'
+" Plug 't9md/vim-choosewin' "选择窗口
+" Plug 'chrisbra/vim-zsh', {'for': 'zsh'}
+" Plug 'Shougo/neomru.vim'
+" Plug 'elzr/vim-json', { 'for': 'json' }
 " Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'hail2u/vim-css3-syntax', {'for': 'css'}
 " Plug 'gorodinskiy/vim-coloresque', {'for': 'css'}
-" Plug 'maksimr/vim-jsbeautify',
 " Plug 'othree/html5.vim' , {'for': 'html'}
 " Plug 'tomtom/quickfixsigns_vim'
-" Plug 'carlitux/deoplete-ternjs'
-" Plug 'Shougo/deoplete.nvim'
-" Plug 'Shougo/neopairs.vim'
 " Plug 'milkypostman/vim-togglelist'
 " Plug 'mattn/webapi-vim'
-" Plug 'moll/vim-node'
 " Plug 'mattn/ctrlp-register'
-" Plug 'mxw/vim-jsx',{'for': 'javascript'}
-" Plug 'vim-utils/vim-man'
 " Plug 'Olical/vim-enmasse'
 " Plug 'majutsushi/tagbar'
-" Plug 'jceb/vim-orgmode',{'for': 'org'}
-" Plug 'tpope/vim-speeddating',{'for': 'org'}
-" Plug 'vim-scripts/utl.vim',{'for': 'org'}
-" Plug 'chrisbra/NrrwRgn',{'for': 'org'}
-" Plug 'mattn/calendar-vim',{'for': 'org'}
-" Plug 'vim-scripts/taglist.vim',{'for': 'org'}
-" Plug 'vim-scripts/SyntaxRange',{'for': 'org'}
-" Plug 'easymotion/vim-easymotion'
-" Plug 'Valloric/YouCompleteMe'
-" Plug 'scrooloose/syntastic',{ 'for':'javascript' }
 " Plug 'git-time-metric/gtm-vim-plugin'
 " Plug 'othree/yajs.vim'
 " Plug 'Shougo/denite.nvim'
-" Plug 'Shougo/echodoc.vim'
+" Plug 'kassio/neoterm'
+" Plug 'AndrewRadev/splitjoin.vim'
+" Plug 'Shougo/vimproc.vim'
+" Plug 'justinmk/vim-gtfo' "go to file manager
 " Plug 'othree/es.next.syntax.vim'
 " Plug 'sheerun/vim-polyglot',{'for':'javascript'}
 " Plug 'thinca/vim-prettyprint'
-"Plug 'thinca/vim-ref'
 " Plug 'tyru/open-browser.vim'
 " Plug 'junegunn/vim-peekaboo'
 " Plug 'jlanzarotta/bufexplorer'
@@ -391,15 +365,11 @@ Plug 'elzr/vim-json', { 'for': 'json' }
 " Plug 'MattesGroeger/vim-bookmarks' "mm mi mn mp ma mc mx :BookMardSave
 " Plug 'frankier/neovim-colors-solarized-truecolor-only'
 "Plug 'MarcWeber/vim-addon-mw-utils'
-"Plug 'tomtom/tlib_vim'
-" Plug 'junegunn/gv.vim'
-"Plug 'ervandew/supertab'
 "Plug 'altercation/vim-colors-solarized'
 " Plug 'vim-ctrlspace/vim-ctrlspace'
 "Plug 'itchyny/dictionary.vim'
 " Plug 'itchyny/vim-cursorword'
 " Plug 'tpope/vim-endwise'
-" Plug 'groenewege/vim-less', { 'for': 'less' }
 " Plug 'vim-scripts/sessionman.vim'
 " Plug 'xolox/vim-notes'
 " Plug 'xolox/vim-misc'
@@ -409,49 +379,91 @@ Plug 'elzr/vim-json', { 'for': 'json' }
 " Plug 'bling/vim-bufferline'
 "Plug 'gcmt/wildfire.vim' "press enter to select words
 "Plug 'reedes/vim-litecorrect'
-"Plug 'tpope/vim-commentary'
-"Plug 'mattn/emmet-vim'
-" Plug 'KabbAmine/vCoolor.vim'
 "Plug 'benmills/vimux'
-" Plug 'thinca/vim-quickrun'
 " Plug 'vim-scripts/a.vim'
-"Plug 'rizzatti/dash.vim'
-"Plug 'junegunn/goyo.vim'
 "Plug 'benmills/vimux'
 "Plug 'wookiehangover/jshint.vim', {'for':'javascript'}
 " Plug '1995eaton/vim-better-javascript-completion',{'for': ['javascript','css','html','json']}
 call plug#end()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                nerdcommenter too many unsless issue                 "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <C-x>; :Commentary<CR>
+vnoremap <C-x>; :Commentary<CR>
+nnoremap <leader>;; :Commentary<CR>
+vnoremap <leader>;; :Commentary<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  deplete                                   "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <C-j> <cr>
+inoremap <expr> <C-j> pumvisible() ? '<C-n>' : '<C-j>'
+inoremap <expr> <C-k> pumvisible() ? '<C-p>' : '<C-k>'
+inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+inoremap <silent> <C-l> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function() abort
+  return deoplete#close_popup() . ""
+endfunction
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_refresh_delay=50
+let g:deoplete#auto_complete_delay=0
+let g:deoplete#file#enable_buffer_path=1
+let g:deoplete#sources = {}
+let g:deoplete#sources._ = []
+let g:deoplete#sources.javascript = ['buffer', 'ternjs']
+" let g:deoplete#omni#functions = {}
+" let g:deoplete#omni#functions.javascript = [
+"   \ 'tern#Complete',
+"   \ 'jspc#omni'
+"   \]
+let g:tern_request_timeout = 1
+let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
+
+"Add extra filetypes
+let g:tern#filetypes = [
+                \ 'jsx',
+                \ 'vue',
+                \ 'html'
+                \ ]
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 statusline                                 "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+" let g:lightline = {
+"       \ 'colorscheme': 'wombat',
+"       \ 'component': {
+"       \   'linter': '%{ALEGetStatusLine():""}',
+"       \ },
+"       \ 'component_visible_condition': {
+"       \   'linter': '1',
+"       \ },
+"       \ }
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                   rooter                                   "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rooter_silent_chdir = 1
+let g:rooter_change_directory_for_non_project_files = 'current'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                    ale                                     "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_linters = {
+\   'javascript': ['eslint','jscs'],
+\}
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 vim-sneak                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:sneak#streak = 0
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                  vim-better-javascript-completion                   "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:jsx_ext_required = 0
-let g:vimjs#casesensistive = 1
-" Enabled by default. flip the value to make completion matches case insensitive
-
-let g:vimjs#smartcomplete = 1
-" Disabled by default. Enabling this will let vim complete matches at any location
-" e.g. typing 'ocument' will suggest 'document' if enabled.
-
-let g:vimjs#chromeapis = 1
-" Disabled by default. Toggling this will enable completion for a number of Chrome's JavaScript extension APIs
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              vim-notes                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:let g:notes_directories = ['/Users/Rashawn/Library/Mobile\ Documents/com~apple~CloudDocs/']
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              choosewin                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:choosewin_overlay_enable = 1
-nmap  <C-w><C-f> <Plug>(choosewin)
-nmap <leader>wf <Plug>(choosewin)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              Quickrun                               "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:quickrun_config = {}
+nmap gs <Plug>Sneak_s
+nmap gs <Plug>Sneak_S
+" visual-mode
+xmap z <Plug>Sneak_s
+xmap Z <Plug>Sneak_S
+" operator-pending-mode
+omap z <Plug>Sneak_s
+omap Z <Plug>Sneak_S
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             Autoformat                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -465,7 +477,6 @@ let g:formatters_html = ['htmlbeautify']
 let g:formatters_css = ['css-beautify']
 let g:formatters_markdown = ['remark']
 let g:formatdef_jscs = '"jscs -x -c /Users/Rashawn/.jscsrc"'
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                            for markdown                             "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -480,16 +491,14 @@ let g:markdown_syntax_conceal = 1
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 map <silent> <C-g> <esc>
-imap <silent> <C-g> <esc>
+nnoremap <leader>skf :Ags 
+nnoremap <leader>fs :w!<cr>
+nnoremap <silent> <C-l> zz
+inoremap <silent> <C-g> <esc>
 nnoremap <silent> <leader>bd :bd<CR>
 nnoremap <silent> <leader>bD :bd!<CR>
-command! -nargs=1 Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
 xnoremap <silent> <C-k> :move-2<cr>gv
 xnoremap <silent> <C-j> :move'>+<cr>gv
-xnoremap <silent> <BS> <gv
-xnoremap <silent> <C-l> >gv
-xnoremap < <gv
-xnoremap > >gv
 nnoremap gp %
 vnoremap gp %
 nnoremap ge $
@@ -497,42 +506,29 @@ nnoremap ga ^
 nnoremap <tab>   <c-w>w
 nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz
-nmap <silent> <leader>md <Plug>(jsdoc)
-nmap <leader>tw :set wrap<CR>
-imap <C-j> <cr>
+nnoremap <silent> <leader>md <Plug>(jsdoc)
+nnoremap <leader>tw :set wrap<CR>
 nnoremap <silent> zl @=(foldlevel('.')?'za':"\<Space>")<CR>
 nnoremap <C-w>= <C-w>+
-nnoremap <C-w><C-=> <C-w>+
-nnoremap <C-w><C--> <C-w>-
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz
 nnoremap é <C-i>zz
 nnoremap <C-o> <C-o>zz
-inoremap <down> <C-n>
-inoremap <up> <C-p>
 nnoremap n nzz
 nnoremap N Nzz
-nnoremap j gjzz
-nnoremap k gkzz
 nnoremap # #zz
 nnoremap * *zz
 nnoremap <Down> jzz
 nnoremap <Up> kzz
-nmap Q @q
-imap <C-f> <Right>
-imap <C-b> <Left>
-imap <C-e> <Esc><S-A>
-imap <C-a> <Esc><S-I>
+inoremap <C-f> <Right>
+inoremap <C-b> <Left>
+inoremap <C-e> <Esc><S-A>
+inoremap <C-a> <Esc><S-I>
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>bp :bp<CR>
-map <leader><leader>- mzgg=G`z
-nmap <leader><leader>r :w!<CR>:ChromeReload<CR>
-nnoremap <silent> <leader>xu :UndotreeToggle<cr>
-map <silent> <leader>xr :QuickRun<CR>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           vim-javascript                            "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:javascript_plugin_jsdoc = 1
+nnoremap <leader><leader>- mzgg=G`z
+nmap <silent> [q <Plug>(ale_previous_wrap)
+nmap <silent> ]q <Plug>(ale_next_wrap)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   jsdoc                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -542,53 +538,6 @@ let g:jsdoc_input_description = 1
 let g:jsdoc_underscore_private = 1
 let g:jsdoc_access_descriptions = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                nerdcommenter too many unsless issue                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let NERDSpaceDelims = 1
-nmap <leader>;; <plug>NERDCommenterToggle
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 ack                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>sk :Ack
-let g:ackprg = 'ag --vimgrep'
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                tmux                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" for tmux to automatically set paste and nopaste mode at the time pasting (as
-" happens in VIM UI)
-function! WrapForTmux(s)
-  if !exists('$TMUX')
-    return a:s
-  endif
-
-  let tmux_start = "\<Esc>Ptmux;"
-  let tmux_end = "\<Esc>\\"
-
-  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
-endfunction
-
-let &t_SI .= WrapForTmux("\<Esc>[?2004h")
-let &t_EI .= WrapForTmux("\<Esc>[?2004l")
-
-function! XTermPasteBegin()
-  set pastetoggle=<Esc>[201~
-  set paste
-  return ""
-endfunction
-
-inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
-
-
-if exists('$ITERM_PROFILE')
-  if exists('$TMUX')
-    let &t_SI = "\<Esc>[3 q"
-    let &t_EI = "\<Esc>[0 q"
-  else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  endif
-end
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 set                                 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "fold depend on syntax
@@ -596,37 +545,8 @@ set foldmethod=syntax
 set nonumber
 set foldlevelstart=20
 set foldnestmax=9      "deepest fold is 10 levels
-"set foldlevel=1         "this is just what i use
 set wrap
 syntax on
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 ycm                                 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:ycm_autoclose_preview_window_after_completion = 1
-" let g:ycm_allow_changing_updatetime = 1
-" let g:ycm_min_num_of_chars_for_completion = 1
-" let g:ycm_use_ultisnips_completer = 1
-"let g:ycm_seed_identifiers_with_syntax = 1
-"compatible with UltiSnips (using supertab)
-" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-" let g:SuperTabDefaultCompletionType = '<C-n>'
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-"autocmd VimEnter  * silent! :split | term
-
-" let g:ycm_server_python_interpreter = '/usr/local/bin/python3.5'
-" let g:ycm_python_binary_path = '/usr/local/bin/python3.5'
-" let g:ycm_semantic_triggers =  {
-" \   'c' : ['->', '.'],
-" \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-" \             're!\[.*\]\s'],
-" \   'cpp,objcpp' : ['->', '.', '::'],
-" \   'javascript,typescript,python,go' : ['.'],
-" \ }
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on
 "    means that you can undo even when you close a buffer/VIM
@@ -640,12 +560,13 @@ endtry
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                         command line alias                          "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Smart mappings on the command line
-cmap <silent> <C-g> <esc>
-cno ddd ~/Desktop/
+cmap <C-g> <C-c>
+cmap <C-a> <home>
+cmap <C-e> <end>
+cmap <silent> <C-e> <end>
 cno hhh ~/
 cno kkk ./
-"cno $c e <C-\>eCurrentFileDir("e")<cr>
+cno xx .*
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -658,30 +579,15 @@ set autoread
 "Always show current position
 set ruler
 
-
-" Fast saving
-nmap <leader>fs :w!<cr>
-
-"command line autocompletion
-set wildmode=longest:full,full
-
 " No annoying sound on errors
 set noerrorbells
 set novisualbell
 set virtualedit=block
 set t_vb=
 set tm=500
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Parenthesis/bracket
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-inoremap $3 ()<left>
-inoremap $2 {}<left><C-j>
-inoremap $1 []<left>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              UltiSnips                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 let g:UltiSnipsSnippetsDir='~/.config/nvim/UltiSnips'
 let g:UltiSnipsUsePythonVersion = 3
 "let  g:UltiSnipsListSnippets ='<C-tab>'
@@ -698,14 +604,7 @@ let g:returnAppFlag = 0
 set termguicolors
 set background=dark " Assume a dark background
 " set background=light " Assume a dark background
-" colorscheme solarized
-" colorscheme seoul256
-" let g:seoul256_light_background = 252
-colorscheme gruvbox
-let g:gruvbox_italic=1
-let g:gruvbox_contrast_light = 'hard'
-let g:gruvbox_contrast_dark = 'hard'
-" let g:gruvbox_hls_cursor = 'white'
+colorscheme zenburn
 
 " Allow to trigger background
 function! ToggleBG()
@@ -718,12 +617,10 @@ function! ToggleBG()
   endif
 endfunction
 noremap <leader>Tn :call ToggleBG()<CR>
-
 filetype plugin indent on   " Automatically detect file types.
 set mouse=a                 " Automatically enable mouse usage
 set mousehide               " Hide the mouse cursor while typing
 scriptencoding utf-8
-
 if has('clipboard')
   if has('unnamedplus')  " When possible use + register for copy-paste
     set clipboard=unnamed,unnamedplus
@@ -731,17 +628,13 @@ if has('clipboard')
     set clipboard=unnamed
   endif
 endif
-"打开新buffer时 目录自动移动到新buffer文件的位置
-autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
 set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
 set virtualedit=onemore             " Allow for cursor beyond last character
-" set spell                           " Spell checking on
 set hidden                          " Allow buffer switching without saving
 set iskeyword-=.                    " '.' is an end of word designator
 set iskeyword-=#                    " '#' is an end of word designator
 set iskeyword-=-                    " '-' is an end of word designator
-
 " Instead of reverting the cursor to the last position in the buffer, we
 " set it to the first line when editing a git commit message
 au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
@@ -754,7 +647,6 @@ function! ResCur()
     return 1
   endif
 endfunction
-
 augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
@@ -764,22 +656,19 @@ augroup END
 if has('persistent_undo')
   set undofile                " So is persistent undo ...
   set undolevels=1000         " Maximum number of changes that can be undone
-  set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+  set undoreload=1000        " Maximum number lines to save for undo on a buffer reload
 endif
 
-set tabpagemax=15               " Only show 15 tabs
+set tabpagemax=10               " Only show 15 tabs
 set showmode                    " Display the current mode
 set cursorline                  " Highlight current line
-" set nocuc
 
 " highlight clear SignColumn      " SignColumn should match background
-highlight clear LineNr          " Current line number row will have same background color in relative mode
 " highlight clear CursorLineNr    " Remove highlight color from current line number
+highlight clear LineNr          " Current line number row will have same background color in relative mode
 
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
-set showcmd                 " Show partial commands in status line and
-" Selected characters/lines in visual mode
-
+set showcmd                 " Show partial commands in status line
 set laststatus=2
 set backspace=indent,eol,start  " Backspace for dummies
 set linespace=0                 " No extra spaces between rows
@@ -795,8 +684,8 @@ set winminheight=0              " Windows can be 0 line high
 set ignorecase                  " Case insensitive search
 set smartcase                   " Case sensitive when uc present
 set wildmenu                    " Show list instead of just completing
-" set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
-set wildmode=longest:full,full  " Command <Tab> completion, list matches, then longest common part, then all.
+set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
+" set wildmode=longest:full,full  " Command <Tab> completion, list matches, then longest common part, then all.
 set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
 set scrolljump=6                " Lines to scroll when cursor leaves screen
 set scrolloff=3                 " Minimum lines to keep above and below cursor
@@ -806,31 +695,19 @@ set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic white
 
 " Formatting {
 set autoindent                  " Indent at the same level of the previous line
-set shiftwidth=2                " Use indents of 4 spaces
+set shiftwidth=2                " Use indents of 2 spaces
 set expandtab                   " Tabs are spaces, not tabs
-set tabstop=4                   " An indentation every four columns
+set tabstop=2                   " An indentation every four columns
 set softtabstop=4               " Let backspace delete indent
 set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
 set splitright                  " Puts new vsplit windows to the right of the current
 set splitbelow                  " Puts new split windows to the bottom of the current
-"set matchpairs+=<:>             " Match, to be used with %
-"set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
 set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
 """""""""""""""""""
 "for edit vimrc
 """""""""""""""""""""
-let s:spf13_edit_config_mapping = '<leader>fed'
-let s:spf13_apply_config_mapping = '<leader>feR'
-nmap <leader>feR :source ~/.config/nvim/init.vim<CR>
-execute "noremap " . s:spf13_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
-
-function! s:ExpandFilenameAndExecute(command, file)
-  execute a:command . " " . expand(a:file, ":p")
-endfunction
-
-function! s:EditSpf13Config()
-  call <SID>ExpandFilenameAndExecute("tabedit", "~/.config/nvim/init.vim")
-endfunction
+nnoremap <leader>feR :source ~/.config/nvim/init.vim<CR>
+nnoremap <leader>fed :e ~/.config/nvim/init.vim<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                             vim indent guides                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -842,26 +719,25 @@ let g:indent_guides_enable_on_vim_startup = 1
 nnoremap Y y$
 
 " Code folding options
-nmap <leader>f0 :set foldlevel=0<CR>
-nmap <leader>f1 :set foldlevel=1<CR>
-nmap <leader>f2 :set foldlevel=2<CR>
-nmap <leader>f3 :set foldlevel=3<CR>
-nmap <leader>f4 :set foldlevel=4<CR>
-nmap <leader>f5 :set foldlevel=5<CR>
-nmap <leader>f6 :set foldlevel=6<CR>
-nmap <leader>f7 :set foldlevel=7<CR>
-nmap <leader>f8 :set foldlevel=8<CR>
-nmap <leader>f9 :set foldlevel=9<CR>
+nnoremap <leader>f0 :set foldlevel=0<CR>
+nnoremap <leader>f1 :set foldlevel=1<CR>
+nnoremap <leader>f2 :set foldlevel=2<CR>
+nnoremap <leader>f3 :set foldlevel=3<CR>
+nnoremap <leader>f4 :set foldlevel=4<CR>
+nnoremap <leader>f5 :set foldlevel=5<CR>
+nnoremap <leader>f6 :set foldlevel=6<CR>
+nnoremap <leader>f7 :set foldlevel=7<CR>
+nnoremap <leader>f8 :set foldlevel=8<CR>
+nnoremap <leader>f9 :set foldlevel=9<CR>
 
-nmap <silent> <leader>/ :set invhlsearch<CR>
+nnoremap <silent> <leader>/ :set invhlsearch<CR>
 
 " Find merge conflict markers
-map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
+map <leader>gm /\v^[<\|=>]{7}( .*\|$)<CR>
 
 " Shortcuts
 " Change Working Directory to that of the current file
 cmap cwd lcd %:p:h
-cmap cd. lcd %:p:h
 
 " Visual shifting (does not exit Visual mode)
 vnoremap < <gv
@@ -876,44 +752,35 @@ cmap w!! w !sudo tee % >/dev/null
 
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
-map <leader>ew :e ./
-map <leader><leader>ew :e ../
-map <leader><leader><leader>ew :e ~/
-map <leader>es :sp ./
-map <leader>ev :vsp ./
-map <leader><leader>ev :vsp ~/
+cnoremap kkk <C-R>=fnameescape(expand('%:h')).'/'<cr>
 
 " Adjust viewports to the same size
-map <Leader>w= <C-w>=
-map <Leader>wd <C-w>c
-map <Leader>wl <C-w>l
-map <Leader>wh <C-w>h
-map <Leader>wj <C-w>j
-map <Leader>wk <C-w>k
-map <Leader>wv <C-w>v
-map <Leader>ws <C-w>s
+nnoremap <Leader>w= <C-w>=
+nnoremap <Leader>wd <C-w>c
+nnoremap <Leader>wl <C-w>l
+nnoremap <Leader>wh <C-w>h
+nnoremap <Leader>wj <C-w>j
+nnoremap <Leader>wk <C-w>k
+nnoremap <Leader>wv <C-w>v
+nnoremap <Leader>ws <C-w>s
 
 " Easier horizontal scrolling
-map zl zL
-map zh zH
+nnoremap zl zL
+nnoremap zh zH
 nnoremap <silent> <leader>q :qa<cr>
 nnoremap <silent> <leader>Q :qa!<cr>
 
-"""""""""""omnicomplete
+" omnicomplete
 autocmd Filetype *
       \if &omnifunc == "" |
       \setlocal omnifunc=syntaxcomplete#Complete |
       \endif
-
-" set completeopt=menu,preview,longest,menuone
-set completeopt-=i " Searching includes can be slow
-set fileformats=unix,dos,mac
-
+set completeopt=menu,menuone,longest,preview,noselect " Searching includes can be slow
+set fileformats=unix,mac,dos
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  NerdTree                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <C-e> :NERDTreeToggle<CR>
+nmap sc :NERDTreeToggle<CR>
 map <leader>ft :NERDTreeFind<CR>
 
 let NERDTreeShowBookmarks=1
@@ -936,7 +803,7 @@ nnoremap <silent> <Leader>fr :CtrlPMRU<CR>
 nnoremap <silent> <C-p> :CtrlPBuffer<CR>
 nnoremap <silent> <leader>bb :CtrlPBuffer<CR>
 let g:fzf_buffers_jump = 1
-nmap <C-f> :Lines<CR>
+nnoremap <silent> <C-f> :Lines<CR>
 nmap <leader>sb :Lines<CR>
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\.git$\|\.hg$\|\.svn$',
@@ -963,28 +830,27 @@ endif
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
-nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+" nnoremap <Leader>tl :exe "tabn ".g:lasttab<CR>
+" nnoremap <Leader><tab> :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
 
-" Rainbow {
-let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
-
-" Fugitive {
+" Gita
 cno gitfindcommit Glog --grep=
-" set statusline+=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
 nnoremap <silent> <leader>gca :te git commit --all<CR>
 nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
 nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
 nnoremap <silent> <leader>gws :te git status --short<CR>
-nnoremap <silent> <leader>gs :Gstatus<CR>gg<C-n>
-nnoremap <silent> <leader>gd :Gvdiff<CR>
-nnoremap <silent> <leader>gc :Gcommit<CR>
-nnoremap <silent> <leader>gb :Gblame<CR>
-nnoremap <silent> <leader>gl :Glog<CR>
-nnoremap <silent> <leader>gp :Git push<CR>
-nnoremap <silent> <leader>gr :Gread<CR>
-nnoremap <silent> <leader>gw :Gwrite<CR>
-nnoremap <silent> <leader>ge :Gedit<CR>
+nnoremap <silent> <leader>gs :Gita status<CR>
+nnoremap <silent> <leader>gb :Gita blame<CR>
+" nnoremap <silent> <leader>gs :Gstatus<CR>gg<C-n>
+" nnoremap <silent> <leader>gd :Gvdiff<CR>
+" nnoremap <silent> <leader>gc :Gcommit<CR>
+" nnoremap <silent> <leader>gb :Gblame<CR>
+" nnoremap <silent> <leader>gl :Glog<CR>
+" nnoremap <silent> <leader>gp :Git push<CR>
+" nnoremap <silent> <leader>gr :Gread<CR>
+" nnoremap <silent> <leader>gw :Gwrite<CR>
+" nnoremap <silent> <leader>ge :Gedit<CR>
 " Mnemonic _i_nteractive
 nnoremap <silent> <leader>gi :Git add -p %<CR>
 nnoremap <silent> <leader>gg :SignifyToggle<CR>
@@ -993,5 +859,3 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-
-imap <C-g> <Esc>
