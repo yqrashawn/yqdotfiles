@@ -22,6 +22,7 @@ of a speedbar-window.  It will be created if necessary."
 ;; spacemacs leader
 (spacemacs/declare-prefix "c" "my-git-prefix")
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
+(spacemacs/set-leader-keys "sc" 'evil-window-delete)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
 (spacemacs/set-leader-keys "gff" 'magit-file-popup)
 (spacemacs/set-leader-keys "gp" 'magit-push-popup)
