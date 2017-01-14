@@ -31,9 +31,30 @@
 				<string>/Users/Rashawn/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/toggle_Emacs.scpt</string>
 			</dict>
 			<key>enabled</key>
-			<true/>
+			<false/>
 			<key>keyCode</key>
 			<integer>1</integer>
+			<key>modifiers</key>
+			<integer>1966379</integer>
+			<key>onPress</key>
+			<true/>
+			<key>type</key>
+			<string>QSHotKeyTrigger</string>
+		</dict>
+		<dict>
+			<key>ID</key>
+			<string>5D28CFB4-F4CE-49D6-9CA6-678CCB66B8FC</string>
+			<key>command</key>
+			<dict>
+				<key>actionID</key>
+				<string>AppleScriptRunAction</string>
+				<key>directID</key>
+				<string>/Users/Rashawn/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/toggle_iterm2.scpt</string>
+			</dict>
+			<key>enabled</key>
+			<false/>
+			<key>keyCode</key>
+			<integer>13</integer>
 			<key>modifiers</key>
 			<integer>1966379</integer>
 			<key>onPress</key>
@@ -64,9 +85,30 @@
 				<string>/Users/Rashawn/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/toggle_chrome.scpt</string>
 			</dict>
 			<key>enabled</key>
-			<true/>
+			<false/>
 			<key>keyCode</key>
-			<integer>8</integer>
+			<integer>13</integer>
+			<key>modifiers</key>
+			<integer>2031915</integer>
+			<key>onPress</key>
+			<true/>
+			<key>type</key>
+			<string>QSHotKeyTrigger</string>
+		</dict>
+		<dict>
+			<key>ID</key>
+			<string>4155A388-2107-4EAD-875A-4B1AF5C3FC31</string>
+			<key>command</key>
+			<dict>
+				<key>actionID</key>
+				<string>FileOpenAction</string>
+				<key>directID</key>
+				<string>/Applications/iTerm3.app</string>
+			</dict>
+			<key>enabled</key>
+			<false/>
+			<key>keyCode</key>
+			<integer>13</integer>
 			<key>modifiers</key>
 			<integer>1966379</integer>
 			<key>onPress</key>
@@ -76,18 +118,20 @@
 		</dict>
 		<dict>
 			<key>ID</key>
-			<string>5D28CFB4-F4CE-49D6-9CA6-678CCB66B8FC</string>
+			<string>B8371610-21A0-466F-BB2D-60EA581F2A0C</string>
+			<key>applicationScopeType</key>
+			<integer>0</integer>
 			<key>command</key>
 			<dict>
 				<key>actionID</key>
-				<string>AppleScriptRunAction</string>
+				<string>FileOpenAction</string>
 				<key>directID</key>
-				<string>/Users/Rashawn/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/toggle_iterm2.scpt</string>
+				<string>/usr/local/Cellar/emacs-plus/25.1/Emacs.app</string>
 			</dict>
 			<key>enabled</key>
 			<false/>
 			<key>keyCode</key>
-			<integer>13</integer>
+			<integer>1</integer>
 			<key>modifiers</key>
 			<integer>1966379</integer>
 			<key>onPress</key>
