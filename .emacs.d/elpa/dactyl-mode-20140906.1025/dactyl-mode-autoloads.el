@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "dactyl-mode" "dactyl-mode.el" (22648 21090
+;;;### (autoloads nil "dactyl-mode" "dactyl-mode.el" (22650 14641
 ;;;;;;  0 0))
 ;;; Generated autoloads from dactyl-mode.el
 

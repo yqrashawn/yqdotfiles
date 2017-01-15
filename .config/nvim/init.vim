@@ -294,8 +294,28 @@ Plug 'jistr/vim-nerdtree-tabs',{ 'on': 'NERDTreeToggle' }
 Plug 'gabesoft/vim-ags'
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }
 Plug 'itchyny/lightline.vim'
+
+Plug 'kana/vim-textobj-function'
+Plug 'AndrewRadev/dsf.vim'
+Plug 'osyo-manga/vim-textobj-multiblock'
+Plug 'kana/vim-operator-replace'
+Plug 'kana/vim-textobj-user'
+Plug 'rhysd/vim-operator-surround'
+Plug 'haya14busa/vim-operator-flashy'
+
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/denite.nvim'
+Plug 'chemzqm/unite-location'
+Plug 'Shougo/vimproc.vim'
+Plug 'kana/vim-operator-user'
+
+Plug 'junegunn/vim-peekaboo'
+Plug 'lambdalisue/vim-findent'
+Plug 'Konfekt/FastFold'
+Plug 'haya14busa/vim-asterisk'
 Plug 'itchyny/vim-gitbranch'
 Plug 'lambdalisue/vim-gita'
+Plug 'Shougo/vimfiler.vim'
 Plug 'tpope/vim-surround'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'haya14busa/incsearch.vim'
@@ -778,8 +798,8 @@ nnoremap <silent> <leader>gca :te git commit --all<CR>
 nnoremap <silent> <leader>gpp :te git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"<CR>
 nnoremap <silent> <leader>gcff :te git commit --amend --reuse-message HEAD --all<CR>
 nnoremap <silent> <leader>gws :te git status --short<CR>
-nnoremap <silent> <leader>gs :Gita status<CR>
-nnoremap <silent> <leader>gb :Gita blame<CR>
+" nnoremap <silent> <leader>gs :Gita status<CR>
+" nnoremap <silent> <leader>gb :Gita blame<CR>
 " nnoremap <silent> <leader>gs :Gstatus<CR>gg<C-n>
 " nnoremap <silent> <leader>gd :Gvdiff<CR>
 " nnoremap <silent> <leader>gc :Gcommit<CR>
@@ -797,3 +817,11 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+
+source ~/.config/nvim/config/general.vim
+source ~/.config/nvim/config/plugins/vimfiler.vim
+source ~/.config/nvim/config/filetype.vim
+source ~/.config/nvim/config/plugins/unite.vim
+source ~/.config/nvim/config/plugins/ydenite.vim
+source ~/.config/nvim/config/plugins/denite.vim
+set nonumber
