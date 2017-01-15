@@ -738,9 +738,6 @@ set fileformats=unix,mac,dos
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  NerdTree                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap sc :NERDTreeToggle<CR>
-map <leader>ft :NERDTreeFind<CR>
-
 let NERDTreeShowBookmarks=1
 let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
 let NERDTreeChDirMode=0
