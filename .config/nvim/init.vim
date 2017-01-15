@@ -2,6 +2,8 @@ map <NUL> <Plug>(incsearch-forward)
 map <C-space> <Plug>(incsearch-forward)
 map <C-s> <Plug>(expand_region_expand)
 nmap sw <Plug>(choosewin)
+nnoremap <C-a> ^
+nnoremap <C-e> $
 nnoremap sv <C-w><C-v>
 nnoremap so :on<CR>
 nnoremap sc <C-w><C-c>
@@ -285,6 +287,7 @@ Plug 'airblade/vim-rooter'
 Plug 'elzr/vim-json', { 'for': 'json'}
 Plug 't9md/vim-foldtext'
 Plug 'w0rp/ale'
+Plug 'pangloss/vim-javascript'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
@@ -449,6 +452,8 @@ let g:markdown_syntax_conceal = 1
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 map <silent> <C-g> <esc>
+nnoremap <leader><tab> <C-^>
+nnoremap <silent> zl :exe 'silent! normal! za'.(foldlevel('.') ? '' : 'l')<CR>
 nnoremap <leader>skf :Ags 
 nnoremap <leader>fs :w!<cr>
 nnoremap <silent> <C-l> zz
@@ -466,7 +471,6 @@ nnoremap ]q :cnext<cr>zz
 nnoremap [q :cprev<cr>zz
 nnoremap <silent> <leader>md <Plug>(jsdoc)
 nnoremap <leader>tw :set wrap<CR>
-nnoremap <silent> zl @=(foldlevel('.')?'za':"\<Space>")<CR>
 nnoremap <C-w>= <C-w>+
 nnoremap <C-d>  <C-d>zz
 nnoremap <C-u>  <C-u>zz

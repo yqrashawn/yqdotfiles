@@ -381,7 +381,6 @@ you should place your code here."
   ;; (setq tern-idle-time 1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
-  (load-file "~/.emacs.d/private/local/prettier-js.el")
   (load-file "~/.my_emacs/keychord.el")
   (load-file "~/.my_emacs/keymap.el")
   (load-file "~/.my_emacs/org.el")
@@ -539,9 +538,11 @@ Entered on %U")
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(powerline-gui-use-vcs-glyph t)
  '(powerline-height 4)
+ '(ranger-deer-show-details nil)
  '(ranger-footer-delay 0.4)
  '(ranger-hidden-filter
    "^.|.(?:pyc|pyo|bak|swp|DS_Store)$|^lost+found$|^__(py)?cache__$")
+ '(ranger-map-style (quote ranger))
  '(ranger-preview-file nil)
  '(scalable-fonts-allowed t)
  '(send-mail-function (quote sendmail-send-it))

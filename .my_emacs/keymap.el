@@ -42,6 +42,7 @@ of a speedbar-window.  It will be created if necessary."
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 
 ;; evil normal
+(define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map "zl" 'hs-hide-level)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)

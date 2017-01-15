@@ -119,6 +119,8 @@ let g:java_highlight_functions = 1
 " JavaScript {{{
 let g:SimpleJsIndenter_BriefMode = 1
 let g:SimpleJsIndenter_CaseIndentLevel = -1
+let g:javascript_syntax_folding = 1
+let g:javascript_fold_enabled = 1
 
 " }}}
 " Markdown {{{
