@@ -52,6 +52,7 @@ of a speedbar-window.  It will be created if necessary."
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
 (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-normal-state-map (kbd "zz") 'evil-toggle-fold)
+(define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-normal-state-map (kbd "ga") 'evil-cp-insert-at-end-of-form)
 (define-key evil-normal-state-map (kbd "gi") 'evil-cp-insert-at-beginning-of-form)
