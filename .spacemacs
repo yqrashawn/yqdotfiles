@@ -539,6 +539,7 @@ Entered on %U")
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(powerline-gui-use-vcs-glyph t)
  '(powerline-height 4)
+ '(ranger-deer-show-details nil)
  '(ranger-footer-delay 0.4)
  '(ranger-hidden-filter
    "^.|.(?:pyc|pyo|bak|swp|DS_Store)$|^lost+found$|^__(py)?cache__$")
