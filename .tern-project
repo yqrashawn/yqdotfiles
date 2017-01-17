@@ -1,11 +1,20 @@
 {
-    "plugins": {
-        "es_modules": {},
-        "node": {}
+  "plugins": {
+    "es_modules": {},
+    "node": {},
+    "complete_string": {},
+    "doc_comment": {},
+    "node_resolve": {},
+    "modules": {
+      "dontLond": ""
     },
-    "libs": [
-        "ecma5",
-        "ecma6"
-    ],
-    "ecmaVersion": 6
+    "webpack": {
+      "configPath": "./webpack.config.js"
+    }
+  },
+  "libs": [
+    "ecma5",
+    "ecma6"
+  ],
+  "ecmaVersion": 6
 }
