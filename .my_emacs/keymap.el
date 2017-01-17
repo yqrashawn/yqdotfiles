@@ -96,7 +96,7 @@ of a speedbar-window.  It will be created if necessary."
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "sj" 'evil-window-delete)
-(define-key evil-normal-state-map "sl" 'imenu-anywhere)
+(define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sss" 'spacemacs/search-ack)
 (define-key evil-normal-state-map "sp" 'evil-jump-item)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
