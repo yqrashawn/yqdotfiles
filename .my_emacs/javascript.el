@@ -1,12 +1,6 @@
 ;; (eval-after-load 'js2-mode
 ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
-(defun myfunc/js2-which-function ()
-  ;; clean the imenu cache
-  ;; @see http://stackoverflow.com/questions/13426564/how-to-force-a-rescan-in-imenu-by-a-function
-  (setq imenu--index-alist nil)
-  (which-function-mode t)
-  (which-function))
 
 (defun my-js2-mode-hook ()
   (lambda ()
@@ -39,7 +33,7 @@
             ))
 
 
-  ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
+;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
 ;; adjust indents for web-mode to 2 spaces
 (defun my-web-mode-hook ()
   "Hooks for Web mode. Adjust indents"
@@ -59,9 +53,9 @@
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
 (setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
 (setq-default save-place t)
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-(flycheck-add-mode 'javascript-eslint 'js2-mode)
-(flycheck-add-mode 'javascript-eslint 'js-mode)
+(spacemacs/add-flycheck-hook 'web-mode)
+(spacemacs/add-flycheck-hook 'js2-mode)
+(spacemacs/add-flycheck-hook 'js-mode)
 ;; customize flycheck temp file prefix
 (setq-default flycheck-temp-prefix ".flycheck")
   ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;

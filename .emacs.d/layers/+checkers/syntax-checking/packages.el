@@ -95,6 +95,7 @@ If the error list is visible, hide it.  Otherwise, show it."
         :mode flycheck-error-list-mode
         :bindings
         "RET" 'flycheck-error-list-goto-error
+        "l" 'flycheck-error-list-goto-error
         "j" 'flycheck-error-list-next-error
         "k" 'flycheck-error-list-previous-error)
 
@@ -103,7 +104,7 @@ If the error list is visible, hide it.  Otherwise, show it."
         "ec" 'flycheck-clear
         "eh" 'flycheck-describe-checker
         "el" 'spacemacs/toggle-flycheck-error-list
-        "eL" 'spacemacs/goto-flycheck-error-list
+        "ek" 'spacemacs/goto-flycheck-error-list
         "ee" 'flycheck-explain-error-at-point
         "es" 'flycheck-select-checker
         "eS" 'flycheck-set-checker-executable

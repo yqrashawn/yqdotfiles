@@ -278,7 +278,7 @@ values."
    dotspacemacs-folding-method 'evil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode t
+   dotspacemacs-smartparens-strict-mode nil
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
@@ -381,6 +381,7 @@ you should place your code here."
   (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
   (menu-bar-mode 0)
   (show-smartparens-global-mode 0)
+  (smartparens-global-mode 1)
   (global-eldoc-mode 0)
   (yas-global-mode 1)
   ;; (evil-visual-mark-mode 1)
@@ -391,7 +392,8 @@ you should place your code here."
   ;; (setq tern-idle-time 1)
   (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
-  (load-file "~/.emacs.d/private/local/prettier-js.el")
+  (load-file "~/.my_emacs/funcs.el")
+  (load-file "~/.emacs.d/private/local/hide-comnt.el")
   (load-file "~/.my_emacs/keychord.el")
   (load-file "~/.my_emacs/keymap.el")
   (load-file "~/.my_emacs/org.el")
@@ -498,13 +500,15 @@ you should place your code here."
  '(js2-mode-show-parse-errors nil)
  '(js2-mode-show-strict-warnings nil)
  '(jscs-fix-show-errors (quote buffer))
- '(large-file-warning-threshold 1000000)
+ '(large-file-warning-threshold 1048576)
  '(magit-cherry-margin (quote (nil "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
  '(magit-diff-highlight-trailing nil)
+ '(magit-dispatch-arguments nil)
  '(magit-display-buffer-function (quote magit-display-buffer-fullcolumn-most-v1))
  '(magit-log-margin (quote (t "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
  '(magit-log-select-margin (quote (t "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
  '(magit-popup-show-common-commands t)
+ '(magit-popup-show-help-echo nil)
  '(magit-refresh-verbose nil)
  '(magit-region-highlight-hook (quote (magit-diff-update-hunk-region)))
  '(magit-section-highlight-hook nil)
@@ -554,7 +558,7 @@ Entered on %U")
  '(ranger-footer-delay 0.4)
  '(ranger-hidden-filter
    "^.|.(?:pyc|pyo|bak|swp|DS_Store)$|^lost+found$|^__(py)?cache__$")
- '(ranger-override-dired t)
+ '(ranger-override-dired nil)
  '(ranger-preview-file nil)
  '(scalable-fonts-allowed t)
  '(send-mail-function (quote sendmail-send-it))
@@ -562,7 +566,6 @@ Entered on %U")
  '(show-paren-mode t)
  '(show-paren-when-point-in-periphery t)
  '(show-paren-when-point-inside-paren t)
- '(show-smartparens-global-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 587)
  '(smtpmail-smtp-user "yqrashawn")

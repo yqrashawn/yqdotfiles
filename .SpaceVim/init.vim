@@ -17,8 +17,13 @@ nnoremap <C-k> za
 nnoremap sp %
 imap jk <esc>
 imap kj <esc>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
 
 " edit
+nnoremap <Y> y$
 nnoremap <C-a> ^
 nnoremap <C-e> $
 nnoremap gy yyp

@@ -17,8 +17,9 @@
   (add-to-list (intern (format "spacemacs-jump-handlers-%S" mode))
             'tern-find-definition)
   (spacemacs/set-leader-keys-for-major-mode mode
-    "rrV" 'tern-rename-variable
+    "rv" 'tern-rename-variable
     "hd" 'tern-get-docs
+    "d" 'tern-find-definition
     "gG" 'tern-find-definition-by-name
     (kbd "C-g") 'tern-pop-find-definition
     "ht" 'tern-get-type))
