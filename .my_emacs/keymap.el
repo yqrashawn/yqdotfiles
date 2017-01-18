@@ -1,26 +1,25 @@
 ;; -*- mode: emacs-lisp -*-
-(defun sr-speedbar-open-and-select ()
-  "Open sr-speedbar window and select it."
-  (interactive)
-  (sr-speedbar-open)
-  (sr-speedbar-select-window))
+;; (defun sr-speedbar-open-and-select ()
+;;   "Open sr-speedbar window and select it."
+;;   (interactive)
+;;   (sr-speedbar-open)
+;;   (sr-speedbar-select-window))
 
-(defun my-toggle-speedbar ()
-  "Toggle sr-speedbar window and select it.
-Toggle visibility of sr-speedbar by resizing
-the `sr-speedbar-window' to a minimal width
-or the last width when visible.
-Use this function to create or toggle visibility
-of a speedbar-window.  It will be created if necessary."
-  (interactive)
-  (if (sr-speedbar-exist-p)
-      (sr-speedbar-close)
-    (sr-speedbar-open-and-select)))
+;; (defun my-toggle-speedbar ()
+;;   "Toggle sr-speedbar window and select it.
+;; Toggle visibility of sr-speedbar by resizing
+;; the `sr-speedbar-window' to a minimal width
+;; or the last width when visible.
+;; Use this function to create or toggle visibility
+;; of a speedbar-window.  It will be created if necessary."
+;;   (interactive)
+;;   (if (sr-speedbar-exist-p)
+;;       (sr-speedbar-close)
+;;     (sr-speedbar-open-and-select)))
 
 (global-set-key (kbd "C-s") 'phi-search)
 
 ;; spacemacs leader
-(spacemacs/declare-prefix "c" "my-git-prefix")
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
 (spacemacs/set-leader-keys "gf" 'magit-file-popup)
