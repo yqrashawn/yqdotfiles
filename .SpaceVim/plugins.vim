@@ -1,6 +1,7 @@
 call plug#begin('~/.vim/plugged')
+Plug 'Shougo/vimproc'
 Plug 'jnurmine/Zenburn'
-Plug 'rafi/vim-tinycomment'
+Plug 'tpope/vim-commentary'
 Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'sheerun/vim-polyglot'
 Plug 'w0rp/ale'
@@ -8,21 +9,24 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'airblade/vim-rooter'
 Plug 'Konfekt/FastFold'
 Plug 'lambdalisue/vim-gita', {'on': ['Gita']}
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/denite.nvim'
+Plug 't9md/vim-choosewin'
+Plug 'Shougo/vimfiler.vim'
 call plug#end()
 
 " zenburn
 colors zenburn
 
-" tinycomment
-nnoremap <C-x>; :TinyCommentLines<cr>
-vnoremap <C-x>; :<C-w>TinyCommentLines<cr>
-let g:tinycomment_disable_keymaps=0
+" commentary
+nnoremap <C-x>; :Commentary<cr>
+vnoremap <C-x>; :Commentary<cr>
 
 " CtrlP
-nnoremap <leader>fr :CtrlPMRUFiles<cr>
-nnoremap <leader>ff :CtrlPCurWD<cr>
-nnoremap <leader>bb :CtrlPBuffer<cr>
-nnoremap <leader>bq :CtrlPQuickfix<cr>
+" nnoremap <leader>fr :CtrlPMRUFiles<cr>
+" nnoremap <leader>ff :CtrlPCurWD<cr>
+" nnoremap <leader>bb :CtrlPBuffer<cr>
+" nnoremap <leader>bq :CtrlPQuickfix<cr>
 let g:ctrlp_working_path_mode = 'ra'
 
 " ale
@@ -61,3 +65,15 @@ nnoremap <leader>gs :Gita status<cr>
 nnoremap <leader>gg :Gita grep<cr>
 cmap blame Gita blame
 cmap Gdiff Gita diff-ls
+
+" Unite Dnite
+source ~/.config/nvim/unite.vim
+source ~/.config/nvim/denite.vim
+source ~/.config/nvim/nite-mapping.vim
+
+" chosewin
+source ~/.config/nvim/choosewin.vim
+
+" vimfiler
+let g:vimfiler_data_directory = $HOME.'/vimfiler'
+source ~/.config/nvim/vimfiler.vim
