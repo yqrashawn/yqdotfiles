@@ -1,5 +1,6 @@
 let mapleader=' '
 
+source ~/.config/nvim/filetype.vim
 source ~/.config/nvim/func.vim
 source ~/.config/nvim/plugins.vim
 source ~/.config/nvim/default.vim
@@ -26,7 +27,7 @@ cnoremap <C-f> <Right>
 xnoremap <C-r> :<C-u>call VSetSearch('/')<CR>:%s/\V<C-R>=@/<CR>//gc<Left><Left><Left>
 
 " edit
-nnoremap <Y> y$
+nnoremap Y y$
 nnoremap <C-a> ^
 nnoremap <C-e> $
 nnoremap gy yyp
