@@ -1,7 +1,9 @@
 let mapleader=' '
 
+source ~/.config/nvim/func.vim
 source ~/.config/nvim/plugins.vim
 source ~/.config/nvim/default.vim
+source ~/.config/nvim/ui.vim
 "source ~/.config/nvim/large-file.vim
 "" keymap
 
@@ -21,6 +23,7 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
+xnoremap <C-r> :<C-u>call VSetSearch('/')<CR>:%s/\V<C-R>=@/<CR>//gc<Left><Left><Left>
 
 " edit
 nnoremap <Y> y$
