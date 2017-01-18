@@ -11,7 +11,7 @@
 
 (setq spacemacs-evil-packages
       '(
-        ;; evil-anzu
+        evil-anzu
         evil-args
         evil-ediff
         ;; evil-exchange
