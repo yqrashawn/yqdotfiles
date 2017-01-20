@@ -11,10 +11,10 @@
 
 (setq spacemacs-layouts-packages
       '(eyebrowse
-        helm
+        ;; helm
         ivy
         persp-mode
-        spaceline
+        ;; spaceline
         swiper))
 
 

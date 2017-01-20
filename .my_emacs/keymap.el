@@ -19,6 +19,10 @@
 
 (global-set-key (kbd "C-s") 'phi-search)
 
+;; dired
+(define-key dired-mode-map (kbd "l") 'dired-find-file)
+(define-key dired-mode-map (kbd "h") 'dired-up-directory)
+
 ;; spacemacs leader
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
@@ -26,6 +30,12 @@
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
 (spacemacs/set-leader-keys "t0" 'centered-cursor-mode)
 (spacemacs/set-leader-keys "hc" 'hide/show-comments-toggle)
+
+(spacemacs/declare-prefix "o" "own-prefix")
+(spacemacs/declare-prefix "oe" "edit-prefix")
+(spacemacs/set-leader-keys "oey" 'evil-cp-yank-enclosing)
+(spacemacs/set-leader-keys "oed" 'evil-cp-delete-enclosing)
+(spacemacs/set-leader-keys "oec" 'evil-cp-change-enclosing)
 
 ;; global
 (global-set-key (kbd "C-SPC") 'swiper)
@@ -38,6 +48,7 @@
 
 ;; evil normal
 (define-key evil-normal-state-map "zl" 'hs-hide-level)
+(define-key evil-normal-state-map "gd" 'evil-goto-definition)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
