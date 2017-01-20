@@ -107,11 +107,6 @@ sexps or should lines be considered as well."
 (defvar evil-cp--inserted-space-after-round-open nil
   "Helper var for `evil-cp-insert'.")
 
-(defcustom evil-cleverparens-use-additional-bindings t
-  "Should additional bindings be enabled."
-  :type 'boolean
-  :group 'evil-cleverparens)
-
 (defcustom evil-cleverparens-use-additional-movement-keys t
   "Should additional movement keys, mostly those related to
   parentheses navigation, be enabled."
@@ -216,34 +211,6 @@ contained within the region."
        (t
         (delete-char 1)
         (cl-decf chars-left))))))
-
-(evil-define-operator evil-cp-delete-char-or-splice (beg end type register yank-handler)
-  "Deletes the region by splicing parentheses / string delimiters
-and deleting other characters. Can be overriden by
-`evil-cp-override' in visual-mode."
-  :motion evil-forward-char
-  (interactive "<R><x>")
-  (cond ((or (evil-cp--balanced-block-p beg end)
-             (evil-cp--override))
-         (evil-delete-char beg end type register))
-
-        ((eq type 'block)
-         (evil-cp--yank-rectangle beg end register yank-handler)
-         (evil-apply-on-block #'evil-cp-delete-or-splice-region beg end nil))
-
-        (t
-         (if evil-cleverparens-complete-parens-in-yanked-region
-             (evil-cp-yank beg end type register yank-handler)
-           (evil-yank beg end type register yank-handler))
-         (evil-cp-delete-or-splice-region beg end))))
-
-
-(evil-define-operator evil-cp-delete-char-or-splice-backwards
-  (beg end type register yank-handler)
-  "Just like `evil-cp-delete-char-or-splice' but acts on the preceding character."
-  :motion evil-backward-char
-  (interactive "<R><x>")
-  (evil-cp-delete-char-or-splice beg end type register yank-handler))
 
 (evil-define-command evil-cp-delete-backward-word ()
   "Like `evil-delete-backward-word' with added behavior when
@@ -765,16 +732,6 @@ kill-ring is determined by the
   (interactive "<R><x><y>")
   (evil-cp-change beg end type register yank-handler #'evil-cp-delete-line))
 
-(evil-define-operator evil-cp-change-whole-line (beg end type register yank-handler)
-  "Change whole line while respecting parentheses."
-  :motion evil-line
-  (interactive "<R><x>")
-  (if (sp-region-ok-p beg end)
-      (evil-change beg end type register yank-handler)
-    (evil-cp-first-non-blank-non-opening)
-    (evil-cp-change beg end type register yank-handler #'evil-cp-delete-line)))
-
-
 ;;; Movement ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (evil-define-motion evil-cp-forward-sexp (count)
@@ -788,22 +745,6 @@ kill-ring is determined by the
   :type exclusive
   (let ((count (or count 1)))
     (sp-backward-sexp count)))
-
-(evil-define-motion evil-cp-beginning-of-defun (count)
-  "Motion for moving to the beginning of a defun (i.e. a top
-level sexp)."
-  :type inclusive
-  (let ((count (or count 1)))
-    (beginning-of-defun count)))
-
-(evil-define-motion evil-cp-end-of-defun (count)
-  "Motion for moving to the end of a defun (i.e. a top level sexp)."
-  :type inclusive
-  (let ((count (or count 1)))
-    (if (evil-cp--looking-at-closing-p)
-        (forward-char 2))
-    (end-of-defun count)
-    (backward-char (if (eobp) 1 2))))
 
 ;; TODO: this looks ugly
 (defun evil-cp--paren-navigation-helper (move-dir paren-side)
@@ -1147,15 +1088,15 @@ regular forward-slurp."
           (sp-forward-sexp)
           (evil-cp-next-opening)))
        (t
-        (sp-forward-slurp-sexp))))))
+        (sp-forward-slurp-sexp)))))
 
 
-(defun evil-cp--symbol-bounds ()
-  (save-excursion
-    (if (looking-at-p "\\_<")
-        (evil-cp--sp-obj-bounds (sp-get-symbol))
-      (when (sp-point-in-symbol)
-        (evil-cp--sp-obj-bounds (sp-get-symbol))))))
+  (defun evil-cp--symbol-bounds ()
+    (save-excursion
+      (if (looking-at-p "\\_<")
+          (evil-cp--sp-obj-bounds (sp-get-symbol))
+        (when (sp-point-in-symbol)
+          (evil-cp--sp-obj-bounds (sp-get-symbol)))))))
 
 (defun evil-cp--cant-forward-sexp-p ()
   (save-excursion
@@ -1312,93 +1253,6 @@ that start with whitespace or a comment)."
             (when (evil-cp--comment-block?) (setq end (point)))))
         (cons beg end)))))
 
-(evil-define-command evil-cp-drag-forward (count)
-  "Drags the thing under point forward. The thing can be either a
-symbol, a form, a line or a comment block. Does not mess with the
-depth of expressions by slurping or barfing. If the thing under
-point is at the end of a form then tries to drag its \"parent\"
-thing forward instead. Maintains the location of point relative
-to the thing being dragged."
-  (interactive "<c>")
-  (if (evil-visual-state-p)
-      (let* ((v-range (evil-visual-range))
-             (linep   (eq 'line (evil-visual-type)))
-             (beg     (car v-range))
-             (end     (if linep (1- (cadr v-range)) (cadr v-range))))
-        (when (sp-region-ok-p beg end)
-          (evil-cp--swap-with-next (cons beg end) linep)))
-    (let (drag-by-line-p)
-      (evil-cp--swap-with-next
-       (let ((sym-bounds (evil-cp--symbol-bounds))
-             (in-form-p (evil-cp--inside-any-form-p)))
-         (cond
-          ((and sym-bounds
-                (not (evil-cp--point-in-string-or-comment))
-                (not (evil-cp--last-symbol-of-form-p)))
-           sym-bounds)
-          ((and in-form-p (evil-cp--point-in-comment))
-           (save-excursion
-             (evil-cp--backward-up-list)
-             (evil-cp--next-sexp-bounds)))
-          (in-form-p
-           (save-excursion
-             (while (evil-cp--last-form-of-form-p)
-               (when (evil-cp--looking-at-any-opening-p)
-                 (forward-char))
-               (evil-cp--up-list))
-             (evil-cp--get-enclosing-bounds t)))
-          (t
-           (setq drag-by-line-p t)
-           (if (and evil-cleverparens-drag-comment-blocks
-                    (evil-cp--comment-block?))
-               (evil-cp--comment-block-bounds)
-             (evil-cp--safe-line-bounds)))))
-       drag-by-line-p))))
-
-(evil-define-command evil-cp-drag-backward (count)
-  "Drags the thing under point backward. The thing can be either
-a symbol, a form, a line or a comment block. Does not mess with
-the depth of expressions by slurping or barfing. If the thing
-under point is at the beginning of a form then tries to drag its
-\"parent\" thing backward instead. Maintains the location of
-point relative to the thing being dragged."
-  (interactive "<c>")
-  (if (evil-visual-state-p)
-      (let* ((v-range (evil-visual-range))
-             (linep   (eq 'line (evil-visual-type)))
-             (beg     (car v-range))
-             (end     (if linep (1- (cadr v-range)) (cadr v-range))))
-        (when (sp-region-ok-p beg end)
-          (evil-cp--swap-with-previous (cons beg end) linep)))
-    (let (drag-by-line-p)
-      (evil-cp--swap-with-previous
-       (let ((sym-bounds (evil-cp--symbol-bounds))
-             (in-form-p (evil-cp--inside-any-form-p)))
-         (cond
-          ((and sym-bounds
-                (not (evil-cp--point-in-string-or-comment))
-                (not (evil-cp--first-symbol-of-form-p)))
-           sym-bounds)
-          ((and in-form-p (evil-cp--point-in-comment))
-           (save-excursion
-             (evil-cp--backward-up-list)
-             (evil-cp--next-sexp-bounds)))
-          (in-form-p
-           (save-excursion
-             (when (not (evil-cp--looking-at-any-opening-p))
-               (evil-cp--backward-up-list))
-             (while (evil-cp--first-form-of-form-p)
-               (evil-cp--backward-up-list))
-             (evil-cp--get-enclosing-bounds t)))
-          (t
-           (setq drag-by-line-p t)
-           (if (and evil-cleverparens-drag-comment-blocks
-                    (evil-cp--comment-block?))
-               (evil-cp--comment-block-bounds)
-             (evil-cp--safe-line-bounds)))))
-       drag-by-line-p))))
-
-
 (evil-define-operator evil-cp-substitute (beg end type register)
   "Parentheses safe version of `evil-substitute'."
   :motion evil-forward-char
@@ -1439,92 +1293,6 @@ of the top level form."
         (evil-insert 1)
       (evil-cp-insert 1))))
 
-(evil-define-command evil-cp-copy-paste-form (count)
-  "Copies the surrounding form and inserts it below itself. If
-called with a single prefix-argument, will copy the top-level
-sexp regardless of what level the point is currently at."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (evil-cp--inside-any-form-p)
-      (let* ((prefixp (consp current-prefix-arg))
-             (bounds
-              (if prefixp
-                  (evil-cp--top-level-bounds)
-                (evil-cp--get-enclosing-bounds t)))
-             (beg (car bounds))
-             (end (cdr bounds))
-             (offset (- end (point)))
-             (text (buffer-substring-no-properties beg end)))
-        (when (and beg end)
-          (if prefixp
-              (progn
-                (end-of-defun)
-                (insert "\n" text "\n"))
-            (when (evil-cp--looking-at-any-opening-p)
-              (forward-char))
-            (sp-up-sexp)
-            (dotimes (_ count)
-              (insert "\n")
-              (indent-according-to-mode)
-              (insert text)
-              (when (or (looking-at "\\b")
-                        (evil-cp--looking-at-any-opening-p))
-                (insert " ")
-                (cl-incf offset))))
-          (backward-char offset)))
-    (when (not (eobp))
-      (let* ((col-pos (current-column))
-             (end     (point-at-eol))
-             (line    (buffer-substring-no-properties (point-at-bol) end)))
-        (goto-char end)
-        (insert "\n" line)
-        (beginning-of-line)
-        (forward-char col-pos)))))
-
-
-(evil-define-command evil-cp-open-below-form (count)
-  "Move COUNT levels up from the current form and enter
-insert-state. If the last form is a top-level sexp then two
-newlines are inserted instead. If point is not inside a form,
-inserts two newlines and enters insert-state between them.
-
-Note thath the COUNT parameter doesn't affect the amount of
-times that the inserted text gets output into the buffer, unlike
-in `evil-open-below'."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (not (evil-cp--inside-any-form-p))
-      (progn
-        (insert "\n\n")
-        (forward-line -1)
-        (evil-insert-state))
-    (sp-up-sexp count)
-    (if (save-excursion
-          (backward-char)
-          (evil-cp--top-level-form-p))
-        (insert "\n\n")
-      (insert "\n"))
-    (indent-according-to-mode)
-    (evil-insert-state)))
-
-(evil-define-command evil-cp-open-above-form (count)
-  "Move COUNT levels backwards up from the current form and
-enter insert-state. If the form is a top-level sexp then two
-newlines are inserted instead.
-
-Note thath the COUNT parameter doesn't affect the amount of
-times that the inserted text gets output into the buffer, unlike
-in `evil-open-below'."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (sp-backward-up-sexp count)
-  (save-excursion
-    (if (evil-cp--top-level-form-p)
-        (insert "\n\n")
-      (insert "\n"))
-    (indent-according-to-mode)
-    (evil-insert 1)))
-
 (defun evil-cp--kill-sexp-range (count)
   (save-excursion
     (when (not (evil-cp--inside-any-form-p))
@@ -1550,45 +1318,6 @@ in `evil-open-below'."
 (defun evil-cp--del-characters (beg end &optional register yank-handler)
   (evil-yank-characters beg end register yank-handler)
   (delete-region beg end))
-
-(evil-define-command evil-cp-yank-sexp (count &optional register)
-  "Copies COUNT many sexps from point to the kill-ring.
-Essentially a less greedy version of `evil-cp-yank-line'. When
-called with \\[universal-argument], copies everything from point
-to the end of the the current form."
-  (interactive "<c><x>")
-  (if (and (consp current-prefix-arg)
-           (evil-cp--inside-any-form-p))
-      (sp-get (sp-get-enclosing-sexp)
-        (evil-yank-characters (point) (1- :end)))
-    (let* ((range (evil-cp--kill-sexp-range count))
-           (beg (car range))
-           (end (cdr range)))
-      (evil-yank-characters (car range) (cdr range) register))))
-
-(evil-define-command evil-cp-delete-sexp (count &optional register)
-  "Kills COUNT many sexps from point. Essentially a less greedy
-version of `evil-cp-delete-line'. When called with
-\\[universal-argument], deletes everything from point to the end
-of the the current form."
-  (interactive "<c><x>")
-  (if (and (consp current-prefix-arg)
-           (evil-cp--inside-any-form-p))
-      (sp-get (sp-get-enclosing-sexp)
-        (evil-cp--del-characters (point) (1- :end)))
-    (let* ((range (evil-cp--kill-sexp-range count))
-           (beg (car range))
-           (end (cdr range)))
-      (evil-cp--del-characters beg end register))))
-
-(evil-define-command evil-cp-change-sexp (count &optional register)
-  "Like `evil-cp-delete-sexp' but enters insert mode after the
-operation. When called with \\[universal-argument], deletes
-everything from point to the end of the the current form before
-entering insert-state."
-  (interactive "<c><x>")
-  (evil-cp-delete-sexp count register)
-  (evil-insert-state))
 
 (defun evil-cp-top-level-yank-handler (text)
   (insert (concat "\n" (string-trim text) "\n"))
@@ -1624,6 +1353,16 @@ and beginning of the copied top-level form."
     (or (evil-cp--looking-at-any-closing-p)
         (= (point) (point-at-eol)))))
 
+(evil-define-command evil-cp-change-enclosing (count &optional register)
+  "Calls `evil-cp-delete-enclosing' and enters insert-state."
+  (interactive "<c><x>")
+  (when (evil-cp--inside-any-form-p)
+    (evil-cp-delete-enclosing count register)
+    (when (consp current-prefix-arg)
+      (insert "\n\n")
+      (backward-char 1))
+    (evil-insert-state)))
+
 (evil-define-command evil-cp-delete-enclosing (count &optional register)
   "Kills the enclosing form. With COUNT, kills the nth form
 upwards instead. When called with a raw prefix argument, kills
@@ -1654,204 +1393,12 @@ the top-level form and deletes the extra whitespace."
       (when (looking-back "\s")
         (delete-backward-char 1)))))
 
-(evil-define-command evil-cp-change-enclosing (count &optional register)
-  "Calls `evil-cp-delete-enclosing' and enters insert-state."
-  (interactive "<c><x>")
-  (when (evil-cp--inside-any-form-p)
-    (evil-cp-delete-enclosing count register)
-    (when (consp current-prefix-arg)
-      (insert "\n\n")
-      (backward-char 1))
-    (evil-insert-state)))
-
-
-(defun evil-cp-raise-form (&optional count)
-  "Raises the form under point COUNT many times."
-  (interactive "P")
-  (let ((count (or count 1)))
-    (dotimes (_ count)
-      (when (evil-cp--inside-any-form-p)
-        (let ((orig (point)) offset)
-          (evil-cp--guard-point
-           (sp-beginning-of-sexp))
-          (backward-char)
-          (setq offset (- orig (point)))
-          (sp-raise-sexp)
-          (forward-char offset))))))
-
-
-(defun evil-cp--wrap-region-with-pair (pair start end)
-  "Helper that inserts a pair as indicated by PAIR at positions
-  START and END. Performs no safety checks on the regions."
-  (-when-let (this-pair (evil-cp-pair-for pair))
-    (let ((open (car this-pair))
-          (close (cdr this-pair)))
-      (save-excursion
-        (goto-char start)
-        (insert open)
-        (goto-char end)
-        (insert close)))))
-
-(defun evil-cp--wrap-next (pair count)
-  (let ((pt-orig (point))
-        (this-pair (evil-cp-pair-for pair)))
-    (when (sp-point-in-symbol)
-      (sp-get (sp-get-symbol)
-        (goto-char :beg)))
-    (let ((start   (point))
-          (open    (car this-pair))
-          (close   (cdr this-pair))
-          (enc-end (sp-get (sp-get-enclosing-sexp)
-                     (when :end (1- :end)))))
-      (sp-forward-sexp count)
-      (setq end (if enc-end (min (point) enc-end) (point)))
-      (if (= end pt-orig)
-          (goto-char pt-orig)
-        (goto-char start)
-        (insert open)
-        (goto-char (1+ end))
-        (insert close)
-        (goto-char start)
-        (indent-region start end)
-        (forward-char (1+ (- pt-orig start)))))))
-
-(defun evil-cp--wrap-previous (pair count)
-  (let ((pt-orig (point))
-        (this-pair (evil-cp-pair-for pair)))
-    (when (and (sp-point-in-symbol) (not (eobp))) ; bug in `sp-point-in-symbol'?
-      (sp-get (sp-get-symbol)
-        (goto-char :end)))
-    (let ((start   (point))
-          (open    (car this-pair))
-          (close   (cdr this-pair))
-          (enc-beg (sp-get (sp-get-enclosing-sexp)
-                     (when :beg (1+ :beg)))))
-      (sp-backward-sexp count)
-      (setq beg (if enc-beg (max (point) enc-beg) (point)))
-      (when (not (= pt-orig beg))
-        (goto-char beg)
-        (insert open)
-        (goto-char (1+ start))
-        (insert close)
-        (goto-char start)
-        (indent-region beg start)
-        (backward-char (- (point) pt-orig 1))))))
-
 (defun evil-cp-universal-invoke-arg-count ()
   "Gets the count for how many times the universal prefix
 argument was invoked, i.e. for \\[universal-argument]
 \\[universal-argument] it would return 2."
   (when (consp current-prefix-arg)
     (truncate (log (car current-prefix-arg) 4))))
-
-(evil-define-command evil-cp-wrap-next-round (count)
-  "Wraps the next COUNT sexps inside parentheses. If the point is
-inside a symbol, that symbol is treated as the first sexp to
-wrap.
-
-When called with \\[universal-argument], wraps the current
-enclosing form and the next N forms, where N is the count for how
-many times the \\[universal-argument] was invoked."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (consp current-prefix-arg)
-      (let ((count (evil-cp-universal-invoke-arg-count)))
-        (save-excursion
-          (sp-backward-up-sexp)
-          (evil-cp--wrap-next "(" count))
-        (evil-cp--backward-up-list))
-    (evil-cp--wrap-next "(" count)))
-
-(evil-define-command evil-cp-wrap-previous-round (count)
-  "Wraps the previous COUNT sexps inside parentheses. If the point is
-inside a symbol, that symbol is treated as the first sexp to
-wrap.
-
-When called with \\[universal-argument], wraps the current
-enclosing form and the previous N forms, where N is the count for how
-many times the \\[universal-argument] was invoked."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (consp current-prefix-arg)
-      (let ((count (evil-cp-universal-invoke-arg-count)))
-        (save-excursion
-          (sp-up-sexp)
-          (evil-cp--wrap-previous "(" count))
-        (evil-cp--up-list))
-    (evil-cp--wrap-previous "(" count)))
-
-(evil-define-command evil-cp-wrap-next-square (count)
-  "Wraps the next COUNT sexps inside square braces. If the point
-is inside a symbol, that symbol is treated as the first sexp to
-wrap.
-
-When called with \\[universal-argument], wraps the current
-enclosing form and the next N forms, where N is the count for how
-many times the \\[universal-argument] was invoked."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (consp current-prefix-arg)
-      (let ((count (evil-cp-universal-invoke-arg-count)))
-        (save-excursion
-          (sp-backward-up-sexp)
-          (evil-cp--wrap-next "[" count))
-        (evil-cp--backward-up-list))
-    (evil-cp--wrap-next "[" count)))
-
-(evil-define-command evil-cp-wrap-previous-square (count)
-  "Wraps the previous COUNT sexps inside square braces. If the
-point is inside a symbol, that symbol is treated as the first
-sexp to wrap.
-
-When called with \\[universal-argument], wraps the current
-enclosing form and the previous N forms, where N is the count for how
-many times the \\[universal-argument] was invoked."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (consp current-prefix-arg)
-      (let ((count (evil-cp-universal-invoke-arg-count)))
-        (save-excursion
-          (sp-up-sexp)
-          (evil-cp--wrap-previous "[" count))
-        (evil-cp--up-list))
-    (evil-cp--wrap-previous "[" count)))
-
-(evil-define-command evil-cp-wrap-next-curly (count)
-  "Wraps the next COUNT sexps inside curly braces. If the point
-is inside a symbol, that symbol is treated as the first sexp to
-wrap.
-
-When called with \\[universal-argument], wraps the current
-enclosing form and the next N forms, where N is the count for how
-many times the \\[universal-argument] was invoked."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (consp current-prefix-arg)
-      (let ((count (evil-cp-universal-invoke-arg-count)))
-        (save-excursion
-          (sp-backward-up-sexp)
-          (evil-cp--wrap-next "{" count))
-        (evil-cp--backward-up-list))
-    (evil-cp--wrap-next "{" count)))
-
-(evil-define-command evil-cp-wrap-previous-curly (count)
-  "Wraps the previous COUNT sexps inside curly braces. If the point is
-inside a symbol, that symbol is treated as the first sexp to
-wrap.
-
-When called with \\[universal-argument], wraps the current
-enclosing form and the previous N forms, where N is the count for
-how many times the \\[universal-argument] was invoked."
-  (interactive "<c>")
-  (setq count (or count 1))
-  (if (consp current-prefix-arg)
-      (let ((count (evil-cp-universal-invoke-arg-count)))
-        (save-excursion
-          (sp-up-sexp)
-          (evil-cp--wrap-previous "{" count))
-        (evil-cp--up-list))
-    (evil-cp--wrap-previous "{" count)))
-
 
 (defun evil-cp-insert (count &optional vcount skip-empty-lines)
   "Like `evil-insert', but tries to be helpful by automatically
@@ -1971,8 +1518,6 @@ and/or beginning."
 (defvar evil-cp-additional-movement-keys
   '(("L"   . evil-cp-forward-sexp)
     ("H"   . evil-cp-backward-sexp)
-    ("M-l" . evil-cp-end-of-defun)
-    ("M-h" . evil-cp-beginning-of-defun)
     ("["   . evil-cp-previous-opening)
     ("]"   . evil-cp-next-closing)
     ("{"   . evil-cp-next-opening)
@@ -1982,14 +1527,11 @@ and/or beginning."
 
 (defvar evil-cp-regular-bindings
   '(
-    ;; ("d"   . evil-cp-delete)
     ;; ("c"   . evil-cp-change)
     ("y"   . evil-cp-yank)
     ("D"   . evil-cp-delete-line)
     ("C"   . evil-cp-change-line)
     ("Y"   . evil-cp-yank-line)
-    ;; ("x"   . evil-cp-delete-char-or-splice)
-    ;; ("X"   . evil-cp-delete-char-or-splice-backwards)
     ;; (">"   . evil-cp->)
     ;; ("<"   . evil-cp-<)
     ("_"   . evil-cp-first-non-blank-non-opening)
@@ -1998,40 +1540,6 @@ and/or beginning."
     )
   "Alist containing the regular evil-cleverparens bindings that
   override evil's bindings in normal mode.")
-
-(defvar evil-cp-additional-bindings
-  '(
-    ;; ("M-t" . sp-transpose-sexp)
-    ;; ("M-k" . evil-cp-drag-backward)
-    ;; ("M-j" . evil-cp-drag-forward)
-    ;; ("M-J" . sp-join-sexp)
-    ;; ("M-s" . sp-splice-sexp)
-    ;; ("M-S" . sp-split-sexp)
-    ;; ("M-R" . evil-cp-raise-form)
-    ;; ("M-r" . sp-raise-sexp)
-    ;; ("M-a" . evil-cp-insert-at-end-of-form)
-    ;; ("M-i" . evil-cp-insert-at-beginning-of-form)
-    ;; ("M-w" . evil-cp-copy-paste-form)
-    ;; ("M-y" . evil-cp-yank-sexp)
-    ;; ("M-d" . evil-cp-delete-sexp)
-    ;; ("M-c" . evil-cp-change-sexp)
-    ;; ("M-Y" . evil-cp-yank-enclosing)
-    ;; ("M-D" . evil-cp-delete-enclosing)
-    ;; ("M-C" . evil-cp-change-enclosing)
-    ;; ("M-q" . sp-indent-defun)
-    ;; ("M-o" . evil-cp-open-below-form)
-    ;; ("M-O" . evil-cp-open-above-form)
-    ;; ("M-v" . sp-convolute-sexp)
-    ;; ("M-(" . evil-cp-wrap-next-round)
-    ;; ("M-)" . evil-cp-wrap-previous-round)
-    ;; ("M-[" . evil-cp-wrap-next-square)
-    ;; ("M-]" . evil-cp-wrap-previous-square)
-    ;; ("M-{" . evil-cp-wrap-next-curly)
-    ;; ("M-}" . evil-cp-wrap-previous-curly)
-    )
-  "Alist containing additional functionality for
-  evil-cleverparens via a modifier key (using the meta-key by
-  default). Only enabled in evil's normal mode.")
 
 (defun evil-cp--populate-mode-bindings-for-state (bindings state addp)
   "Helper function that defines BINDINGS for the evil-state
@@ -2095,16 +1603,6 @@ for normal, visual and operator states if
      evil-cleverparens-use-additional-movement-keys)))
 
 ;;;###autoload
-(defun evil-cp-set-additional-bindings ()
-  "Sets the movement keys is `evil-cp-additional-bindings' for
-normal-state if `evil-cleverparens-use-additional-bindings' is
-true."
-  (interactive)
-  (evil-cp--populate-mode-bindings-for-state
-   evil-cp-additional-bindings
-   'normal
-   evil-cleverparens-use-additional-bindings))
-
 (defun evil-cp--enable-C-w-delete ()
   (when evil-want-C-w-delete
     (evil-define-key 'insert evil-cleverparens-mode-map
@@ -2129,7 +1627,6 @@ true."
 (defvar evil-cleverparens-mode-map (make-sparse-keymap))
 (evil-cp-set-movement-keys)
 (evil-cp--enable-regular-bindings)
-(evil-cp-set-additional-bindings)
 (evil-cp-set-additional-movement-keys)
 (evil-cp--enable-C-w-delete)
 

@@ -23,4 +23,4 @@ endfunction
 
 setl foldmethod=expr
 setl foldexpr=JavascriptFoldMethod(v:lnum)
-setl foldlevel=1
+setl foldlevel=0

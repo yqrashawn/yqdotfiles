@@ -64,6 +64,7 @@ inoremap <C-U> <C-G>u<C-U>
 set ruler
 set wildmenu
 set incsearch
+set showfulltag
 set smartcase
 set textwidth=80    " Text width maximum chars before wrapping
 set expandtab     " Don't expand tabs to spaces.
@@ -99,7 +100,7 @@ endif
 set wildmode=list:longest,full
 set wildoptions=tagfile
 set wildignorecase
-set wildignore+=.git,.hg,.svn,.stversions,*.pyc,*.spl,*.o,*.out,*~,%*
+set wildignore+=.git,.hg,.svn,.stversions,*.pyc,*.spl,*.o,*.out,*~
 set wildignore+=*.jpg,*.jpeg,*.png,*.gif,*.zip,**/tmp/**,*.DS_Store
 set wildignore+=**/node_modules/**,**/bower_modules/**,*/.sass-cache/*
 
