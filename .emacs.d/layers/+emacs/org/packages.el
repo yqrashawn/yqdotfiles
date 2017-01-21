@@ -12,13 +12,9 @@
 (setq org-packages
   '(
     company
-    ;; company-emoji
-    ;; emoji-cheat-sheet-plus
     (evil-org :location local)
     evil-surround
-    ;; gnuplot
     htmlize
-    ;; mu4e
     ;; ob, org and org-agenda are installed by `org-plus-contrib'
     (ob :location built-in)
     (org :location built-in)
@@ -26,26 +22,18 @@
     org-download
     ;; org-mime is installed by `org-plus-contrib'
     (org-mime :location built-in)
-    ;; org-pomodoro
-    org-present
+    ;; org-present
     (org-projectile :toggle (configuration-layer/package-usedp 'projectile))
     (ox-twbs :toggle org-enable-bootstrap-support)
     ;; use a for of ox-gfm to fix index generation
     (ox-gfm :location (recipe :fetcher github :repo "syl20bnr/ox-gfm")
             :toggle org-enable-github-support)
     (ox-reveal :toggle org-enable-reveal-js-support)
-    persp-mode
     ))
 
 (defun org/post-init-company ()
   (spacemacs|add-company-hook org-mode)
   (push 'company-capf company-backends-org-mode))
-
-(defun org/post-init-company-emoji ()
-  (push 'company-emoji company-backends-org-mode))
-
-(defun org/post-init-emoji-cheat-sheet-plus ()
-  (add-hook 'org-mode-hook 'spacemacs/delay-emoji-cheat-sheet-hook))
 
 (defun org/init-evil-org ()
   (use-package evil-org
@@ -65,20 +53,9 @@
     (push '(?# . spacemacs//surround-code) evil-surround-pairs-alist))
   (add-hook 'org-mode-hook 'spacemacs/add-org-surrounds))
 
-(defun org/init-gnuplot ()
-  (use-package gnuplot
-    :defer t
-    :init (spacemacs/set-leader-keys-for-major-mode 'org-mode
-            "tp" 'org-plot/gnuplot)))
-
 (defun org/init-htmlize ()
   (use-package htmlize
     :defer t))
-
-(defun org/pre-init-mu4e ()
-  ;; Load org-mu4e when mu4e is actually loaded
-  (spacemacs|use-package-add-hook mu4e
-    :post-config (require 'org-mu4e nil 'noerror)))
 
 (defun org/init-ob ()
   (use-package ob
@@ -464,18 +441,6 @@ Headline^^            Visit entry^^               Filter^^                    Da
         "M" 'org-mime-htmlize)
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         "m" 'org-mime-org-buffer-htmlize))))
-
-(defun org/init-org-pomodoro ()
-  (use-package org-pomodoro
-    :defer t
-    :init
-    (progn
-      (when (spacemacs/system-is-mac)
-        (setq org-pomodoro-audio-player "/usr/bin/afplay"))
-      (spacemacs/set-leader-keys-for-major-mode 'org-mode
-        "p" 'org-pomodoro)
-      (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode
-        "p" 'org-pomodoro))))
 
 (defun org/init-org-present ()
   (use-package org-present

@@ -13,19 +13,18 @@
       '(
         evil-magit
         fill-column-indicator
-        ;; gitattributes-mode
-        ;; gitconfig-mode
-        ;; gitignore-mode
-        ;; git-commit
-        ;; git-link
+        gitattributes-mode
+        gitconfig-mode
+        gitignore-mode
+        git-commit
+        git-link
         git-messenger
         git-timemachine
         ;; (helm-gitignore :toggle (configuration-layer/package-usedp 'helm))
         magit
-        ;; magit-gitflow
+        magit-gitflow
         ;; not compatible with magit 2.1 at the time of release
-        ;; magit-svn
-        orgit
+        ;; orgit
         smeargle
         ))
 
@@ -370,18 +369,6 @@ Press [_b_] again to blame further in the history, [_q_] to go up or quit."
             (with-eval-after-load 'magit
               (define-key magit-mode-map "%" 'magit-gitflow-popup)))
     :config (spacemacs|diminish magit-gitflow-mode "Flow")))
-
-(defun git/init-magit-svn ()
-  (use-package magit-svn
-    :if git-enable-magit-svn-plugin
-    :commands turn-on-magit-svn
-    :init (add-hook 'magit-mode-hook 'turn-on-magit-svn)
-    :config
-    (progn
-      (evil-define-key 'emacs magit-status-mode-map
-        "N" 'magit-key-mode-popup-svn))))
-
-(defun git/init-orgit ())
 
 (defun git/init-smeargle ()
   (use-package smeargle

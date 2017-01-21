@@ -14,18 +14,9 @@
     company
     (company-web :toggle (configuration-layer/package-usedp 'company))
     css-mode
-    ;; emmet-mode
-    evil-matchit
+    ;; evil-matchit
     flycheck
-    ;; haml-mode
-    ;; (helm-css-scss :toggle (configuration-layer/package-usedp 'helm))
-    ;; less-css-mode
-    ;; pug-mode
-    ;; sass-mode
-    ;; scss-mode
-    ;; slim-mode
     smartparens
-    ;; tagedit
     web-mode
     yasnippet
     ))
@@ -82,71 +73,12 @@
         "zc" 'css-contract-statement
         "zo" 'css-expand-statement))))
 
-(defun html/init-emmet-mode ()
-  (use-package emmet-mode
-    :defer t
-    :init (spacemacs/add-to-hooks 'emmet-mode '(css-mode-hook
-                                                html-mode-hook
-                                                sass-mode-hook
-                                                scss-mode-hook
-                                                web-mode-hook))
-    :config
-    (progn
-      (evil-define-key 'insert emmet-mode-keymap (kbd "TAB") 'spacemacs/emmet-expand)
-      (evil-define-key 'insert emmet-mode-keymap (kbd "<tab>") 'spacemacs/emmet-expand)
-      (evil-define-key 'emacs emmet-mode-keymap (kbd "TAB") 'spacemacs/emmet-expand)
-      (evil-define-key 'emacs emmet-mode-keymap (kbd "<tab>") 'spacemacs/emmet-expand)
-      (evil-define-key 'hybrid emmet-mode-keymap (kbd "TAB") 'spacemacs/emmet-expand)
-      (evil-define-key 'hybrid emmet-mode-keymap (kbd "<tab>") 'spacemacs/emmet-expand)
-      (spacemacs|hide-lighter emmet-mode))))
-
 (defun html/post-init-evil-matchit ()
   (add-hook 'web-mode-hook 'turn-on-evil-matchit-mode))
 
 (defun html/post-init-flycheck ()
-  (dolist (mode '(haml-mode
-                  less-mode
-                  pug-mode
-                  sass-mode
-                  scss-mode
-                  slim-mode
-                  web-mode))
+  (dolist (mode '(web-mode))
     (spacemacs/add-flycheck-hook mode)))
-
-(defun html/init-haml-mode ()
-  (use-package haml-mode
-    :defer t))
-
-(defun html/init-helm-css-scss ()
-  (use-package helm-css-scss
-    :defer t
-    :init
-    (dolist (mode '(css-mode scss-mode))
-      (spacemacs/set-leader-keys-for-major-mode mode "gh" 'helm-css-scss))))
-
-(defun html/init-less-css-mode ()
-  (use-package less-css-mode
-    :defer t
-    :mode ("\\.less\\'" . less-css-mode)))
-
-(defun html/init-pug-mode ()
-  (use-package pug-mode
-    :defer t
-    :mode ("\\.pug$" . pug-mode)))
-
-(defun html/init-sass-mode ()
-  (use-package sass-mode
-    :defer t
-    :mode ("\\.sass\\'" . sass-mode)))
-
-(defun html/init-scss-mode ()
-  (use-package scss-mode
-    :defer t
-    :mode ("\\.scss\\'" . scss-mode)))
-
-(defun html/init-slim-mode ()
-  (use-package slim-mode
-    :defer t))
 
 (defun html/post-init-smartparens ()
   (spacemacs/add-to-hooks
@@ -156,15 +88,6 @@
    '(css-mode-hook scss-mode-hook sass-mode-hook less-css-mode-hook))
 
   (add-hook 'web-mode-hook 'spacemacs/toggle-smartparens-off))
-
-(defun html/init-tagedit ()
-  (use-package tagedit
-    :defer t
-    :config
-    (progn
-      (tagedit-add-experimental-features)
-      (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))
-      (spacemacs|diminish tagedit-mode " Ⓣ" " T"))))
 
 (defun html/init-web-mode ()
   (use-package web-mode
@@ -252,6 +175,4 @@
      ("\\.djhtml\\'"     . web-mode))))
 
 (defun html/post-init-yasnippet ()
-  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(css-mode-hook
-                                                      jade-mode
-                                                      slim-mode)))
+  (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(css-mode-hook)))

@@ -11,13 +11,8 @@
 
 (setq version-control-packages
       '(
-        ;; diff-mode
-        ;; diff-hl
-        ;; evil-unimpaired
-        ;; git-gutter
+        diff-mode
         git-gutter+
-        ;; git-gutter-fringe
-        ;; git-gutter-fringe+
         ))
 
 (defun version-control/init-diff-mode ()
@@ -42,69 +37,6 @@
         (spacemacs|do-after-display-system-init
          (setq diff-hl-side 'right)
          (diff-hl-margin-mode -1))))))
-
-(defun version-control/post-init-evil-unimpaired ()
-  (define-key evil-normal-state-map (kbd "[ h") 'spacemacs/vcs-previous-hunk)
-  (define-key evil-normal-state-map (kbd "] h") 'spacemacs/vcs-next-hunk))
-
-(defun version-control/init-git-gutter ()
-  (use-package git-gutter
-    :commands (global-git-gutter-mode git-gutter-mode)
-    :init
-    (progn
-      ;; If you enable global minor mode
-      (when (and (eq version-control-diff-tool 'git-gutter)
-                 version-control-global-margin)
-        (global-git-gutter-mode t))
-      ;; If you would like to use git-gutter.el and linum-mode
-      (if dotspacemacs-line-numbers
-          (git-gutter:linum-setup))
-      (setq git-gutter:update-interval 2
-            git-gutter:modified-sign " "
-            git-gutter:added-sign "+"
-            git-gutter:deleted-sign "-"
-            git-gutter:diff-option "-w"
-            git-gutter:hide-gutter t
-            git-gutter:ask-p nil
-            git-gutter:verbosity 0
-            git-gutter:handled-backends '(git hg bzr svn)
-            git-gutter:hide-gutter t))
-    :config
-    (spacemacs|hide-lighter git-gutter-mode)))
-
-(defun version-control/init-git-gutter-fringe ()
-  (use-package git-gutter-fringe
-    :commands git-gutter-mode
-    :init
-    (progn
-      (spacemacs|do-after-display-system-init
-       (with-eval-after-load 'git-gutter
-         (require 'git-gutter-fringe)))
-      (setq git-gutter-fr:side 'right-fringe))
-    :config
-    (progn
-      ;; custom graphics that works nice with half-width fringes
-      (fringe-helper-define 'git-gutter-fr:added nil
-        "..X...."
-        "..X...."
-        "XXXXX.."
-        "..X...."
-        "..X...."
-        )
-      (fringe-helper-define 'git-gutter-fr:deleted nil
-        "......."
-        "......."
-        "XXXXX.."
-        "......."
-        "......."
-        )
-      (fringe-helper-define 'git-gutter-fr:modified nil
-        "..X...."
-        ".XXX..."
-        "XX.XX.."
-        ".XXX..."
-        "..X...."
-        ))))
 
 (defun version-control/init-git-gutter+ ()
   (use-package git-gutter+
@@ -132,37 +64,3 @@
     ;; (set-face-background 'git-gutter+-added    "green4")
     ;; (set-face-background 'git-gutter+-deleted  "red3")
     ))
-
-(defun version-control/init-git-gutter-fringe+ ()
-  (use-package git-gutter-fringe+
-    :commands git-gutter+-mode
-    :init
-    (progn
-      (spacemacs|do-after-display-system-init
-       (with-eval-after-load 'git-gutter+
-         (require 'git-gutter-fringe+)))
-      (setq git-gutter-fr+-side 'right-fringe))
-    :config
-    (progn
-      ;; custom graphics that works nice with half-width fringes
-      (fringe-helper-define 'git-gutter-fr+-added nil
-        "..X...."
-        "..X...."
-        "XXXXX.."
-        "..X...."
-        "..X...."
-        )
-      (fringe-helper-define 'git-gutter-fr+-deleted nil
-        "......."
-        "......."
-        "XXXXX.."
-        "......."
-        "......."
-        )
-      (fringe-helper-define 'git-gutter-fr+-modified nil
-        "..X...."
-        ".XXX..."
-        "XX.XX.."
-        ".XXX..."
-        "..X...."
-        ))))

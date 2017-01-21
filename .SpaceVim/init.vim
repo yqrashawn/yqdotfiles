@@ -11,7 +11,7 @@ source ~/.config/nvim/ui.vim
 " gneral
 nnoremap <leader>fs :w<cr>
 nnoremap <leader>bd :bd<cr>
-nnoremap <leader>fed :e ~/.config/nvim/init.vim<cr>
+nnoremap <leader>fed :e ~/.config/nvim/init.vim<cr>:3<cr>
 nnoremap <leader>feR :source ~/.config/nvim/init.vim<cr>
 nnoremap <leader><tab> <C-^>
 nnoremap <leader>q :confirm quit<cr>

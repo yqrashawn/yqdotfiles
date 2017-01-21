@@ -2,7 +2,6 @@
       '(
         evil-snipe
         magit
-        ;; ranger
         ))
 
 (defun evil-snipe/init-evil-snipe ()

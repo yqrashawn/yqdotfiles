@@ -11,34 +11,18 @@
 
 (setq ivy-packages
       '(
-        ;; auto-highlight-symbol
         counsel
         (counsel-projectile :toggle (configuration-layer/package-usedp 'projectile))
         evil
         flx
-        ;; helm-make
         imenu
         ivy
         ivy-hydra
         (ivy-spacemacs-help :location local)
-        persp-mode
         projectile
         smex
         swiper
-        wgrep
         ))
-
-(defun ivy/pre-init-auto-highlight-symbol ()
-  (spacemacs|use-package-add-hook auto-highlight-symbol
-    :post-init
-    ;; add some functions to ahs transient states
-    (setq spacemacs--symbol-highlight-transient-state-doc
-          (concat spacemacs--symbol-highlight-transient-state-doc
-                  "  [_b_] search buffers [_/_] search proj [_f_] search files")
-          spacemacs-symbol-highlight-transient-state-add-bindings
-          '(("/" spacemacs/search-project-auto-region-or-symbol :exit t)
-            ("b" spacemacs/swiper-all-region-or-symbol :exit t)
-            ("f" spacemacs/search-auto-region-or-symbol :exit t)))))
 
 (defun ivy/init-counsel ()
   (use-package counsel
@@ -238,9 +222,3 @@
         "sb" 'swiper-all
         "sB" 'spacemacs/swiper-all-region-or-symbol)
       (global-set-key "\C-s" 'swiper))))
-
-(defun ivy/init-wgrep ()
-  (evil-define-key 'normal wgrep-mode-map ",," 'wgrep-finish-edit)
-  (evil-define-key 'normal wgrep-mode-map ",c" 'wgrep-finish-edit)
-  (evil-define-key 'normal wgrep-mode-map ",a" 'wgrep-abort-changes)
-  (evil-define-key 'normal wgrep-mode-map ",k" 'wgrep-abort-changes))

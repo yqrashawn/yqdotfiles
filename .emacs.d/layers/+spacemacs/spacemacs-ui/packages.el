@@ -11,54 +11,14 @@
 
 (setq spacemacs-ui-packages
       '(
-        ;; ace-link
         (centered-cursor :location local)
-        ;; desktop
-        ;; (doc-view :location built-in)
-        ;; flx-ido
-        ;; info+
+        (doc-view :location built-in)
         open-junk-file
-        ;; paradox
-        ;; restart-emacs
-        ;; window-numbering
+        restart-emacs
+        window-numbering
         ))
 
 ;; Initialization of packages
-
-(defun spacemacs-ui/init-ace-link ()
-  (use-package ace-link
-    :commands spacemacs/ace-buffer-links
-    :init
-    (progn
-      (define-key spacemacs-buffer-mode-map "o" 'spacemacs/ace-buffer-links)
-      (with-eval-after-load 'info
-        (define-key Info-mode-map "o" 'ace-link-info))
-      (with-eval-after-load 'help-mode
-        (define-key help-mode-map "o" 'ace-link-help))
-      (with-eval-after-load 'eww
-        (define-key eww-link-keymap "o" 'ace-link-eww)
-        (define-key eww-mode-map "o" 'ace-link-eww)))
-    :config
-    (progn
-      (defvar spacemacs--link-pattern "~?/.+\\|\s\\[")
-      (defun spacemacs//collect-spacemacs-buffer-links ()
-        (let ((end (window-end))
-              points)
-          (save-excursion
-            (goto-char (window-start))
-            (while (re-search-forward spacemacs--link-pattern end t)
-              (push (+ (match-beginning 0) 1) points))
-            (nreverse points))))
-      (defun spacemacs/ace-buffer-links ()
-        "Ace jump to links in `spacemacs' buffer."
-        (interactive)
-        (let ((res (avy-with spacemacs/ace-buffer-links
-                             (avy--process
-                              (spacemacs//collect-spacemacs-buffer-links)
-                              #'avy--overlay-pre))))
-          (when res
-            (goto-char (1+ res))
-            (widget-button-press (point))))))))
 
 (defun spacemacs-ui/init-centered-cursor ()
   (use-package centered-cursor-mode
@@ -145,19 +105,6 @@
               (doc-view-minor-mode))
           ad-do-it)))))
 
-(defun spacemacs-ui/init-flx-ido ()
-  (use-package flx-ido
-    :init (flx-ido-mode 1)))
-
-(defun spacemacs-ui/init-info+ ()
-  (use-package info+
-    :defer t
-    :init
-    (progn
-      (with-eval-after-load 'info
-        (require 'info+))
-      (setq Info-fontify-angle-bracketed-flag nil))))
-
 (defun spacemacs-ui/init-open-junk-file ()
   (use-package open-junk-file
     :defer t
@@ -190,40 +137,6 @@ When ARG is non-nil search in junk files."
                (let (helm-ff-newfile-prompt-p)
                  (helm-find-files-1 fname))))))
     (spacemacs/set-leader-keys "fJ" 'spacemacs/open-junk-file)))
-
-(defun spacemacs-ui/init-paradox ()
-  (use-package paradox
-    :commands paradox-list-packages
-    :init
-    (progn
-      (setq paradox-execute-asynchronously nil)
-      (defun spacemacs/paradox-list-packages ()
-        "Load depdendencies for auth and open the package list."
-        (interactive)
-        (require 'epa-file)
-        (require 'auth-source)
-        (when (and (not (boundp 'paradox-github-token))
-                   (file-exists-p "~/.authinfo.gpg"))
-          (let ((authinfo-result (car (auth-source-search
-                                       :max 1
-                                       :host "github.com"
-                                       :port "paradox"
-                                       :user "paradox"
-                                       :require '(:secret)))))
-            (let ((paradox-token (plist-get authinfo-result :secret)))
-              (setq paradox-github-token (if (functionp paradox-token)
-                                             (funcall paradox-token)
-                                           paradox-token)))))
-        (paradox-list-packages nil))
-
-      (evilified-state-evilify paradox-menu-mode paradox-menu-mode-map
-        "H" 'paradox-menu-quick-help
-        "J" 'paradox-next-describe
-        "K" 'paradox-previous-describe
-        "L" 'paradox-menu-view-commit-list
-        "o" 'paradox-menu-visit-homepage)
-      (spacemacs/set-leader-keys
-        "ak" 'spacemacs/paradox-list-packages))))
 
 (defun spacemacs-ui/init-restart-emacs()
   (use-package restart-emacs

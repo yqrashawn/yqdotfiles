@@ -11,5 +11,5 @@
 
 ;; Variables
 
-(defvar evil-snipe-enable-alternate-f-and-t-behaviors nil
+(defvar evil-snipe-enable-alternate-f-and-t-behaviors t
   "if non nil f/F/t/T behaviors are replaced by evil-snipe behavior.")
