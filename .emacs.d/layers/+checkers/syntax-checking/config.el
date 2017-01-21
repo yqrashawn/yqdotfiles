@@ -11,7 +11,7 @@
 
 ;; Variables
 
-(defvar syntax-checking-enable-tooltips t
+(defvar syntax-checking-enable-tooltips nil
   "If non nil some feedback are displayed in tooltips.")
 
 (defvar syntax-checking-enable-by-default t

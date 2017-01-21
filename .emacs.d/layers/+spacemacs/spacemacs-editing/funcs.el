@@ -11,7 +11,6 @@
 
 
 ;; smartparens
-
 (defun spacemacs/smartparens-pair-newline (id action context)
   (save-excursion
     (newline)
@@ -47,25 +46,3 @@
                       :inherit 'lazy-highlight
                       :background nil
                       :foreground nil))
-
-
-;; uuidgen
-;; TODO spacemacs/uuidgen-3 and spacemacs/uuidgen-5
-
-(defun spacemacs/uuidgen-1 (arg)
-  "Return a time based UUID (UUIDv1).
- If ARG is non nil then use CID format."
-  (interactive "P")
-  (let ((uuid (uuidgen-1)))
-    (if arg
-        (insert-uuid-cid uuid)
-      (insert uuid))))
-
-(defun spacemacs/uuidgen-4 (arg)
-  "Return an UUID from random numbers (UUIDv4).
- If ARG is non nil then use CID format."
-  (interactive "P")
-  (let ((uuid (uuidgen-4)))
-    (if arg
-        (insert-uuid-cid uuid)
-      (insert uuid))))

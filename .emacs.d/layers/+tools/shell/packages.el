@@ -13,11 +13,9 @@
       '(
         (comint :location built-in)
         company
-        ;; esh-help
-        ;; (eshell :location built-in)
-        ;; eshell-prompt-extras
-        ;; eshell-z
-        ;; helm
+        (eshell :location built-in)
+        eshell-prompt-extras
+        eshell-z
         magit
         multi-term
         org
@@ -26,7 +24,6 @@
         shell-pop
         (term :location built-in)
         xterm-color
-        ;; vi-tilde-fringe
         ))
 
 (defun shell/init-comint ()
@@ -46,12 +43,6 @@
       ;; terminal often are
       (add-hook 'eshell-mode-hook
                 'spacemacs//eshell-switch-company-frontend))))
-
-(defun shell/init-esh-help ()
-  (use-package esh-help
-    :defer t
-    :init (add-hook 'eshell-mode-hook 'eldoc-mode)
-    :config (setup-esh-help-eldoc)))
 
 (defun shell/init-eshell ()
   (use-package eshell
@@ -127,16 +118,6 @@
     :init
     (with-eval-after-load 'eshell
       (require 'eshell-z))))
-
-(defun shell/pre-init-helm ()
-  (spacemacs|use-package-add-hook helm
-    :post-init
-    (progn
-      ;; eshell
-      (add-hook 'eshell-mode-hook 'spacemacs/init-helm-eshell)
-      ;;shell
-      (spacemacs/set-leader-keys-for-major-mode 'shell-mode
-        "H" 'spacemacs/helm-shell-history))))
 
 (defun shell/pre-init-magit ()
   (spacemacs|use-package-add-hook magit

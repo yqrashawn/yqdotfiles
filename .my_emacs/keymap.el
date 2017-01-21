@@ -20,8 +20,9 @@
 (global-set-key (kbd "C-s") 'phi-search)
 
 ;; dired
-(define-key dired-mode-map (kbd "l") 'dired-find-file)
-(define-key dired-mode-map (kbd "h") 'dired-up-directory)
+(with-eval-after-load 'dired
+  (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
+  (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory))
 
 ;; spacemacs leader
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)

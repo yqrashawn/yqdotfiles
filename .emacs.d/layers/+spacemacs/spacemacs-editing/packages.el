@@ -11,73 +11,13 @@
 
 (setq spacemacs-editing-packages
       '(
-        ;; aggressive-indent
-        ;; avy
-        ;; (bracketed-paste :toggle (version<= emacs-version "25.0.92"))
-        ;; clean-aindent-mode
-        ;; eval-sexp-fu
         expand-region
-        ;; (hexl :location built-in)
-        ;; hungry-delete
-        ;; link-hint
-        ;; lorem-ipsum
-        ;; move-text
-        ;; (origami :toggle (eq 'origami dotspacemacs-folding-method))
-        ;; smartparens
-        ;; (spacemacs-whitespace-cleanup :location local)
-        ;; undo-tree
-        ;; uuidgen
-        ;; ws-butler
+        (hexl :location built-in)
+        smartparens
+        (origami :toggle (eq 'origami dotspacemacs-folding-method))
         ))
 
 ;; Initialization of packages
-
-(defun spacemacs-editing/init-aggressive-indent ()
-  (use-package aggressive-indent
-    :defer t
-    :init
-    (progn
-      (spacemacs|add-toggle aggressive-indent
-        :mode aggressive-indent-mode
-        :documentation "Always keep code indented."
-        :evil-leader "tI")
-      (spacemacs|add-toggle aggressive-indent-globally
-        :mode aggressive-indent-mode
-        :documentation "Always keep code indented globally."
-        :evil-leader "t C-I"))
-    :config
-    (progn
-      (add-hook 'diff-auto-refine-mode-hook 'spacemacs/toggle-aggressive-indent-off)
-      (spacemacs|diminish aggressive-indent-mode " Ⓘ" " I"))))
-
-(defun spacemacs-editing/init-avy ()
-  (use-package avy
-    :defer t
-    :commands (spacemacs/avy-open-url spacemacs/avy-goto-url avy-pop-mark)
-    :init
-    (progn
-      (setq avy-all-windows 'all-frames)
-      (setq avy-background t)
-      (spacemacs/set-leader-keys
-        "jb" 'avy-pop-mark
-        "jj" 'evil-avy-goto-char
-        "jJ" 'evil-avy-goto-char-2
-        "jl" 'evil-avy-goto-line
-        "ju" 'spacemacs/avy-goto-url
-        "jw" 'evil-avy-goto-word-or-subword-1
-        "xo" 'spacemacs/avy-open-url))
-    :config
-    (progn
-      (defun spacemacs/avy-goto-url()
-        "Use avy to go to an URL in the buffer."
-        (interactive)
-        (avy--generic-jump "https?://" nil 'pre))
-      (defun spacemacs/avy-open-url ()
-        "Use avy to select an URL in the buffer and open it."
-        (interactive)
-        (save-excursion
-          (spacemacs/avy-goto-url)
-          (browse-url-at-point))))))
 
 (defun spacemacs-editing/init-bracketed-paste ()
   (use-package bracketed-paste
@@ -85,10 +25,6 @@
     :init
     ;; Enable bracketed-paste for tty
     (add-hook 'tty-setup-hook 'bracketed-paste-enable)))
-
-(defun spacemacs-editing/init-clean-aindent-mode ()
-  (use-package clean-aindent-mode
-    :config (clean-aindent-mode)))
 
 (defun spacemacs-editing/init-eval-sexp-fu ()
   ;; ignore obsolete function warning generated on startup
@@ -153,54 +89,6 @@
         "^" 'hexl-beginning-of-line
         "0" 'hexl-beginning-of-line))))
 
-(defun spacemacs-editing/init-hungry-delete ()
-  (use-package hungry-delete
-    :defer t
-    :init
-    (spacemacs|add-toggle hungry-delete
-      :mode hungry-delete-mode
-      :documentation "Delete consecutive horizontal whitespace with a single key."
-      :evil-leader "td")
-    :config
-    (progn
-      (setq-default hungry-delete-chars-to-skip " \t\f\v") ; only horizontal whitespace
-      (define-key hungry-delete-mode-map (kbd "DEL") 'hungry-delete-backward)
-      (define-key hungry-delete-mode-map (kbd "S-DEL") 'delete-backward-char))))
-
-(defun spacemacs-editing/init-link-hint ()
-  (use-package link-hint
-    :defer t
-    :init
-    (spacemacs/set-leader-keys
-      "xo" 'link-hint-open-link
-      "xO" 'link-hint-open-multiple-links)))
-
-(defun spacemacs-editing/init-lorem-ipsum ()
-  (use-package lorem-ipsum
-    :commands (lorem-ipsum-insert-list
-               lorem-ipsum-insert-paragraphs
-               lorem-ipsum-insert-sentences)
-    :init
-    (progn
-      (spacemacs/declare-prefix "il" "lorem ipsum")
-      (spacemacs/set-leader-keys
-        "ill" 'lorem-ipsum-insert-list
-        "ilp" 'lorem-ipsum-insert-paragraphs
-        "ils" 'lorem-ipsum-insert-sentences))))
-
-(defun spacemacs-editing/init-move-text ()
-  (use-package move-text
-    :defer t
-    :init
-    (spacemacs|define-transient-state move-text
-      :title "Move Text Transient State"
-      :bindings
-      ("J" move-text-down "move down")
-      ("K" move-text-up "move up"))
-    (spacemacs/set-leader-keys
-      "xJ" 'spacemacs/move-text-transient-state/move-text-down
-      "xK" 'spacemacs/move-text-transient-state/move-text-up)))
-
 (defun spacemacs-editing/init-origami ()
   (use-package origami
     :defer t
@@ -260,9 +148,9 @@
     :init
     (progn
       ;; settings
-      (setq sp-show-pair-delay 0.2
+      (setq sp-show-pair-delay 0.02
             ;; fix paren highlighting in normal mode
-            sp-show-pair-from-inside t
+            sp-show-pair-from-inside nil
             sp-cancel-autoskip-on-backward-movement nil
             sp-highlight-pair-overlay nil
             sp-highlight-wrap-overlay nil
@@ -303,59 +191,3 @@
       (when dotspacemacs-smart-closing-parenthesis
         (define-key evil-insert-state-map ")"
           'spacemacs/smart-closing-parenthesis)))))
-
-(defun spacemacs-editing/init-spacemacs-whitespace-cleanup ()
-  (use-package spacemacs-whitespace-cleanup
-    :commands (spacemacs-whitespace-cleanup-mode
-               global-spacemacs-whitespace-cleanup-mode)
-    :init
-    (progn
-      (spacemacs|add-toggle whitespace-cleanup
-        :mode spacemacs-whitespace-cleanup-mode
-        :documentation "Automatic whitespace clean up."
-        :on-message (spacemacs-whitespace-cleanup/on-message)
-        :evil-leader "tW")
-      (spacemacs|add-toggle global-whitespace-cleanup
-        :mode global-spacemacs-whitespace-cleanup-mode
-        :status spacemacs-whitespace-cleanup-mode
-        :on (let ((spacemacs-whitespace-cleanup-globally t))
-              (spacemacs-whitespace-cleanup-mode))
-        :off (let ((spacemacs-whitespace-cleanup-globally t))
-               (spacemacs-whitespace-cleanup-mode -1))
-        :on-message (spacemacs-whitespace-cleanup/on-message t)
-        :documentation "Global automatic whitespace clean up."
-        :evil-leader "t C-S-w")
-      (with-eval-after-load 'ws-butler
-        (when dotspacemacs-whitespace-cleanup
-          (spacemacs/toggle-global-whitespace-cleanup-on))))
-    :config
-    (progn
-      (spacemacs|diminish spacemacs-whitespace-cleanup-mode " Ⓦ" " W")
-      (spacemacs|diminish global-spacemacs-whitespace-cleanup-mode
-                          " Ⓦ" " W"))))
-
-(defun spacemacs-editing/init-undo-tree ()
-  (use-package undo-tree
-    :init
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)
-    :config
-    (spacemacs|hide-lighter undo-tree-mode)))
-
-(defun spacemacs-editing/init-uuidgen ()
-  (use-package uuidgen
-    :commands (uuidgen-1 uuidgen-4)
-    :init
-    (progn
-      (spacemacs/declare-prefix "iU" "uuid")
-      (spacemacs/set-leader-keys
-        "iU1" 'spacemacs/uuidgen-1
-        "iU4" 'spacemacs/uuidgen-4
-        "iUU" 'spacemacs/uuidgen-4))))
-
-(defun spacemacs-editing/init-ws-butler ()
-  ;; not deferred on purpose, init-spacemacs-whitespace-cleanup need
-  ;; it to be loaded.
-  (use-package ws-butler
-    :config (spacemacs|hide-lighter ws-butler-mode)))

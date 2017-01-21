@@ -50,7 +50,7 @@ exists, then this is used. If ~/.spacemacs does not exist, then
 check for init.el in dotspacemacs-directory and use this if it
 exists. Otherwise, fallback to ~/.spacemacs"))
 
-(defvar dotspacemacs-distribution 'spacemacs
+(defvar dotspacemacs-distribution 'spacemacs-base
   "Base distribution to use. This is a layer contained in the directory
 `+distributions'. For now available distributions are `spacemacs-base'
 or `spacemacs'.")
@@ -90,7 +90,7 @@ that support lazy installation even the layers listed in
 and you have to explicitly list a layer in the variable
 `dotspacemacs-configuration-layers' to install it.")
 
-(defvar dotspacemacs-ask-for-lazy-installation t
+(defvar dotspacemacs-ask-for-lazy-installation nil
   "If non-nil then Spacemacs will ask for confirmation before installing
 a layer lazily.")
 
@@ -159,7 +159,7 @@ pressing `<leader> m`. Set it to `nil` to disable it.")
 (defvaralias 'dotspacemacs-emacs-command-key 'dotspacemacs-command-key
   "New official name for `dotspacemacs-command-key'")
 
-(defvar dotspacemacs-distinguish-gui-tab nil
+(defvar dotspacemacs-distinguish-gui-tab t
   "If non nil, distinguish C-i and tab in the GUI version of
 emacs.")
 
@@ -178,17 +178,17 @@ look not too crappy.
 
 Has no effect when running Emacs in terminal.")
 
-(defvar dotspacemacs-remap-Y-to-y$ nil
+(defvar dotspacemacs-remap-Y-to-y$ t
   "If non nil `Y' is remapped to `y$' in Evil states.")
 
 (defvar dotspacemacs-retain-visual-state-on-shift t
   "If non-nil, the shift mappings `<' and `>' retain visual state
 if used there.")
 
-(defvar dotspacemacs-visual-line-move-text nil
+(defvar dotspacemacs-visual-line-move-text t
   "If non-nil, J and K move lines up and down when in visual mode.")
 
-(defvar dotspacemacs-ex-substitute-global nil
+(defvar dotspacemacs-ex-substitute-global t
   "If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.")
 
 (defvar dotspacemacs-folding-method 'evil
@@ -251,7 +251,7 @@ key sequence. Setting this variable is equivalent to setting
 right, and right-then-bottom. The last one will display on the
 right if possible and fallback to bottom if not.")
 
-(defvar dotspacemacs-loading-progress-bar t
+(defvar dotspacemacs-loading-progress-bar nil
   "If non nil a progress bar is displayed when spacemacs is loading. This
 may increase the boot time on some systems and emacs builds, set it to nil
 to boost the loading time.")
@@ -286,7 +286,7 @@ can be toggled through `toggle-transparency'.")
 (defvar dotspacemacs-mode-line-unicode-symbols t
   "If non nil unicode symbols are displayed in the mode-line (eg. for lighters)")
 
-(defvar dotspacemacs-smooth-scrolling t
+(defvar dotspacemacs-smooth-scrolling nil
   "If non nil smooth scrolling (native-scrolling) is enabled.
 Smooth scrolling overrides the default behavior of Emacs which
 recenters point when it reaches the top or bottom of the
@@ -296,23 +296,23 @@ screen.")
   "If non nil line numbers are turned on in all `prog-mode' and `text-mode'
 derivatives. If set to `relative', also turns on relative line numbers.")
 
-(defvar dotspacemacs-persistent-server nil
+(defvar dotspacemacs-persistent-server t
   "If non nil advises quit functions to keep server open when quitting.")
 
-(defvar dotspacemacs-smartparens-strict-mode nil
+(defvar dotspacemacs-smartparens-strict-mode t
   "If non-nil smartparens-strict-mode will be enabled in programming modes.")
 
-(defvar dotspacemacs-smart-closing-parenthesis nil
+(defvar dotspacemacs-smart-closing-parenthesis t
   "If non-nil pressing the closing parenthesis `)' key in insert mode passes
   over any automatically added closing parenthesis, bracket, quote, etc…
   This can be temporary disabled by pressing `C-q' before `)'. (default nil)")
 
-(defvar dotspacemacs-highlight-delimiters 'all
+(defvar dotspacemacs-highlight-delimiters 'current
   "Select a scope to highlight delimiters. Possible values are `any',
 `current', `all' or `nil'. Default is `all' (highlight any scope and
  emphasis the current one.")
 
-(defvar dotspacemacs-whitespace-cleanup nil
+(defvar dotspacemacs-whitespace-cleanup t
   "delete whitespace while saving buffer. possible values are `all'
 to aggressively delete empty lines and long sequences of whitespace, `trailing'
 to delete only the whitespace at end of lines, `changed' to delete only

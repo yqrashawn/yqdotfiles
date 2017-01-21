@@ -11,58 +11,13 @@
 
 (setq auto-completion-packages
       '(
-        ;; auto-complete
-        ;; ac-ispell
         company
         (company-quickhelp :toggle auto-completion-enable-help-tooltip)
         company-statistics
-        ;; (helm-company :toggle (configuration-layer/package-usedp 'helm))
-        ;; (helm-c-yasnippet :toggle (configuration-layer/package-usedp 'helm))
-        hippie-exp
+        ;; hippie-exp
         yasnippet
-        auto-yasnippet
         smartparens
         ))
-
-;; TODO replace by company-ispell which comes with company
-;; to be moved to spell-checking layer as well
-(defun auto-completion/init-ac-ispell ()
-  (use-package ac-ispell
-    :defer t
-    :init
-    (progn
-      (setq ac-ispell-requires 4)
-      (with-eval-after-load 'auto-complete
-        (ac-ispell-setup))
-      ;; (add-hook 'markdown-mode-hook 'ac-ispell-ac-setup)
-      )))
-
-(defun auto-completion/init-auto-complete ()
-  (use-package auto-complete
-    :defer t
-    :init
-    (setq ac-auto-start 0
-          ac-delay 0.2
-          ac-quick-help-delay 1.
-          ac-use-fuzzy t
-          ac-fuzzy-enable t
-          ac-comphist-file (concat spacemacs-cache-directory "ac-comphist.dat")
-          ;; use 'complete when auto-complete is disabled
-          tab-always-indent 'complete
-          ac-dwim t)
-    :config
-    (progn
-      (require 'auto-complete-config)
-      (setq-default ac-sources '(ac-source-abbrev
-                                 ac-source-dictionary
-                                 ac-source-words-in-same-mode-buffers))
-      (when (configuration-layer/package-usedp 'yasnippet)
-        (push 'ac-source-yasnippet ac-sources))
-      (add-to-list 'completion-styles 'initials t)
-      (define-key ac-completing-map (kbd "C-j") 'ac-next)
-      (define-key ac-completing-map (kbd "C-k") 'ac-previous)
-      (define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
-      (spacemacs|diminish auto-complete-mode " ⓐ" " a"))))
 
 (defun auto-completion/init-company ()
   (use-package company
@@ -230,20 +185,6 @@
                                         shell-mode-hook
                                         eshell-mode-hook)))
     :config (spacemacs|diminish yas-minor-mode " ⓨ" " y")))
-
-(defun auto-completion/init-auto-yasnippet ()
-  (use-package auto-yasnippet
-    :defer t
-    :init
-    (progn
-      (setq aya-persist-snippets-dir
-            (or auto-completion-private-snippets-directory
-                (concat configuration-layer-private-directory "snippets/")))
-      (spacemacs/declare-prefix "iS" "auto-yasnippet")
-      (spacemacs/set-leader-keys
-        "iSc" 'aya-create
-        "iSe" 'spacemacs/auto-yasnippet-expand
-        "iSw" 'aya-persist-snippet))))
 
 (defun auto-completion/post-init-smartparens ()
   (with-eval-after-load 'smartparens

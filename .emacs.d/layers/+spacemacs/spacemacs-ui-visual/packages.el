@@ -12,32 +12,16 @@
 (setq spacemacs-ui-visual-packages
       '(
         (ansi-colors :location built-in)
-        ;; fancy-battery
-        ;; fill-column-indicator
+        fill-column-indicator
         golden-ratio
-        ;; hl-todo
-        ;; neotree
-        ;; popup
-        ;; popwin
-        (smooth-scrolling :location built-in)
+        hl-todo
+        popwin
         spaceline
-        ;; (zoom-frm :location local)
         ))
 
 (defun spacemacs-ui-visual/init-ansi-colors ()
   (add-hook 'compilation-filter-hook
             'spacemacs-ui-visual//compilation-buffer-apply-ansi-colors))
-
-(defun spacemacs-ui-visual/init-fancy-battery ()
-  (use-package fancy-battery
-    :defer t
-    :init
-    (progn
-      (spacemacs|add-toggle mode-line-battery
-        :mode fancy-battery-mode
-        :documentation "Display battery info in mode-line."
-        :evil-leader "tmb")
-      (setq-default fancy-battery-show-percentage t))))
 
 (defun spacemacs-ui-visual/init-fill-column-indicator ()
   (use-package fill-column-indicator
@@ -160,95 +144,6 @@
     :init (spacemacs/add-to-hooks 'hl-todo-mode '(text-mode-hook
                                                   prog-mode-hook))))
 
-(defun spacemacs-ui-visual/init-neotree ()
-  (use-package neotree
-    :defer t
-    :commands neo-global--window-exists-p
-    :init
-    (progn
-      (setq neo-window-width 32
-            neo-create-file-auto-open t
-            neo-banner-message "Press ? for neotree help"
-            neo-show-updir-line nil
-            neo-mode-line-type 'neotree
-            neo-smart-open t
-            neo-dont-be-alone t
-            neo-persist-show nil
-            neo-show-hidden-files t
-            neo-auto-indent-point t
-            neo-modern-sidebar t
-            neo-vc-integration nil)
-
-      (spacemacs|define-transient-state neotree
-        :title "NeoTree Key Hints"
-        :doc "
-Navigation^^^^             Actions^^         Visual actions/config^^^
-───────^^^^─────────────── ───────^^──────── ───────^^^────────────────
-[_L_]   next sibling^^     [_c_] create      [_TAB_] shrink/enlarge
-[_H_]   previous sibling^^ [_d_] delete      [_|_]   vertical split
-[_J_]   goto child^^       [_r_] rename      [_-_]   horizonatal split
-[_K_]   goto parent^^      [_R_] change root [_gr_]  refresh^
-[_l_]   open/expand^^      ^^                [_s_]   hidden:^^^ %s(if neo-buffer--show-hidden-file-p \"on\" \"off\")
-[_h_]   up/collapse^^      ^^                ^^^
-[_j_]   line down^^        ^^                ^^^
-[_k_]   line up^^          ^^                ^^
-[_RET_] open               ^^^^              [_?_]   close hints
-"
-        :bindings
-        ("RET" neotree-enter)
-        ("TAB" neotree-stretch-toggle)
-        ("|" neotree-enter-vertical-split)
-        ("-" neotree-enter-horizontal-split)
-        ("?" nil :exit t)
-        ("c" neotree-create-node)
-        ("d" neotree-delete-node)
-        ("gr" neotree-refresh)
-        ("h" spacemacs/neotree-collapse-or-up)
-        ("H" neotree-select-previous-sibling-node)
-        ("j" neotree-next-line)
-        ("J" neotree-select-down-node)
-        ("k" neotree-previous-line)
-        ("K" neotree-select-up-node)
-        ("l" spacemacs/neotree-expand-or-open)
-        ("L" neotree-select-next-sibling-node)
-        ("r" neotree-rename-node)
-        ("R" neotree-change-root)
-        ("s" neotree-hidden-file-toggle))
-
-      (defun spacemacs//neotree-key-bindings ()
-        "Set the key bindings for a neotree buffer."
-        (evilified-state-evilify-map neotree-mode-map
-          :mode neotree-mode
-          :bindings
-          (kbd "TAB")  'neotree-stretch-toggle
-          (kbd "RET") 'neotree-enter
-          (kbd "|") 'neotree-enter-vertical-split
-          (kbd "-") 'neotree-enter-horizontal-split
-          (kbd "c") 'neotree-create-node
-          (kbd "d") 'neotree-delete-node
-          (kbd "gr") 'neotree-refresh
-          (kbd "h") 'spacemacs/neotree-collapse-or-up
-          (kbd "H") 'neotree-select-previous-sibling-node
-          (kbd "j") 'neotree-next-line
-          (kbd "J") 'neotree-select-down-node
-          (kbd "k") 'neotree-previous-line
-          (kbd "K") 'neotree-select-up-node
-          (kbd "l") 'spacemacs/neotree-expand-or-open
-          (kbd "L") 'neotree-select-next-sibling-node
-          (kbd "q") 'neotree-hide
-          (kbd "r") 'neotree-rename-node
-          (kbd "R") 'neotree-change-root
-          (kbd "?") 'spacemacs/neotree-transient-state/body
-          (kbd "s") 'neotree-hidden-file-toggle))
-
-      (spacemacs/set-leader-keys
-        "ft" 'neotree-toggle
-        "pt" 'neotree-find-project-root))
-    :config
-    (spacemacs//neotree-key-bindings)))
-
-(defun spacemacs-ui-visual/init-popup ())
-
 (defun spacemacs-ui-visual/init-popwin ()
   (use-package popwin
     :config
@@ -263,6 +158,9 @@ Navigation^^^^             Actions^^         Visual actions/config^^^
       ;; buffers that we manage
       (push '("*Help*"                 :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
       (push '("*compilation*"          :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+      (push '("*Compile-Log*"          :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+      (push '("*Messages*"             :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+      (push '("*spacemacs*"            :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
       (push '("*Shell Command Output*" :dedicated t :position bottom :stick t :noselect nil            ) popwin:special-display-config)
       (push '("*Async Shell Command*"  :dedicated t :position bottom :stick t :noselect nil            ) popwin:special-display-config)
       (push '(" *undo-tree*"           :dedicated t :position bottom :stick t :noselect nil :height 0.4) popwin:special-display-config)
@@ -270,17 +168,6 @@ Navigation^^^^             Actions^^         Visual actions/config^^^
       (push '("*grep*"                 :dedicated t :position bottom :stick t :noselect nil            ) popwin:special-display-config)
       (push '("*nosetests*"            :dedicated t :position bottom :stick t :noselect nil            ) popwin:special-display-config)
       (push '("^\*WoMan.+\*$" :regexp t             :position bottom                                   ) popwin:special-display-config))))
-
-(defun spacemacs-ui-visual/init-smooth-scrolling ()
-  (setq scroll-preserve-screen-position t
-        scroll-margin 0
-        scroll-conservatively (if dotspacemacs-smooth-scrolling 101 0))
-  (spacemacs|add-toggle smooth-scrolling
-    :status (= 101 scroll-conservatively)
-    :on (spacemacs/enable-smooth-scrolling)
-    :off (spacemacs/disable-smooth-scrolling)
-    :documentation "Smooth scrolling."
-    :evil-leader "tv"))
 
 (defun spacemacs-ui-visual/init-spaceline ()
   (use-package spaceline-config
@@ -362,26 +249,3 @@ Navigation^^^^             Actions^^         Visual actions/config^^^
       ;; Enable spaceline for buffers created before the configuration of
       ;; spaceline
       (spacemacs//set-powerline-for-startup-buffers))))
-
-(defun spacemacs-ui-visual/init-zoom-frm ()
-  (use-package zoom-frm
-    :commands (zoom-frm-unzoom
-               zoom-frm-out
-               zoom-frm-in)
-    :init
-    (progn
-      (spacemacs|define-transient-state zoom-frm
-        :title "Zoom Frame Transient State"
-        :doc "
-[_+_/_=_] zoom frame in [_-_] zoom frame out [_0_] reset zoom [_q_] quit"
-        :bindings
-        ("+" spacemacs/zoom-frm-in)
-        ("=" spacemacs/zoom-frm-in)
-        ("-" spacemacs/zoom-frm-out)
-        ("0" spacemacs/zoom-frm-unzoom)
-        ("q" nil :exit t))
-      (spacemacs/set-leader-keys "zf" 'spacemacs/zoom-frm-transient-state/body)
-
-      ;; Font size, either with ctrl + mouse wheel
-      (global-set-key (kbd "<C-wheel-up>") 'spacemacs/zoom-frm-in)
-      (global-set-key (kbd "<C-wheel-down>") 'spacemacs/zoom-frm-out))))

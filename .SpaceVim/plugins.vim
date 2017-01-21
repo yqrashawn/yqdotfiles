@@ -29,6 +29,7 @@ Plug 'kmnk/vim-unite-giti'
 Plug 'Shougo/unite-outline'
 Plug 'tsukkee/unite-tag'
 Plug 'Shougo/neomru.vim'
+Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}
 call plug#end()
 " Plug
 cmap ;pi PlugInstall<cr>
@@ -156,5 +157,13 @@ if executable('ctags')
   cmap ;tu GutentagsUpdate<cr>
   nnoremap <leader>tT :<C-u>GutentagsToggleEnabled<cr>
 endif
+
 " neomru
 let g:neomru#do_validate = 0
+
+" tagbar
+nnoremap <silent><leader>bi :TagbarToggle<CR>
+let g:tagbar_iconchars = ['▷', '◢']
+let g:tagbar_map_openfold = ['l', '+', 'zo']
+let g:tagbar_map_closefold = ['h', '-', 'zc']
+let g:tagbar_updateonsave_maxlines=10000

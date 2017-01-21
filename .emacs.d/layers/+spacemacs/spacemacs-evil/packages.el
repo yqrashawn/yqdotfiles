@@ -14,28 +14,14 @@
         evil-anzu
         evil-args
         evil-ediff
-        ;; evil-exchange
         evil-iedit-state
-        ;; evil-indent-plus
-        ;; evil-lisp-state
-        ;; for testing purpose, contribute by reporting bugs and sending PRs
-        ;; to https://github.com/gabesoft/evil-mc
-        ;; To enable it add `(global-evil-mc-mode)' to user-config function
+        evil-indent-plus
         evil-mc
         evil-nerd-commenter
-        ;; evil-matchit
-        ;; evil-numbers
         evil-search-highlight-persist
         evil-surround
-        ;; Temporarily disabled, pending the resolution of
-        ;; https://github.com/7696122/evil-terminal-cursor-changer/issues/8
-        ;; evil-terminal-cursor-changer
-        ;; evil-tutor
-        ;; (evil-unimpaired :location (recipe :fetcher local))
-        ;; evil-visual-mark-mode
+        evil-terminal-cursor-changer
         (hs-minor-mode :location built-in)
-        ;; linum-relative
-        ;; vi-tilde-fringe
         ))
 
 (defun spacemacs-evil/init-evil-anzu ()
@@ -74,10 +60,6 @@
     :after (ediff)
     :if (memq dotspacemacs-editing-style '(hybrid vim))))
 
-(defun spacemacs-evil/init-evil-exchange ()
-  (use-package evil-exchange
-    :init (evil-exchange-install)))
-
 (defun spacemacs-evil/init-evil-iedit-state ()
   (use-package evil-iedit-state
     :commands (evil-iedit-state evil-iedit-state/iedit-mode)
@@ -98,11 +80,6 @@
 (defun spacemacs-evil/init-evil-indent-plus ()
   (use-package evil-indent-plus
     :init (evil-indent-plus-default-bindings)))
-
-(defun spacemacs-evil/init-evil-lisp-state ()
-  (use-package evil-lisp-state
-    :init (setq evil-lisp-state-global t)
-    :config (spacemacs/set-leader-keys "k" evil-lisp-state-map)))
 
 (defun spacemacs-evil/init-evil-mc ()
   (use-package evil-mc
@@ -178,27 +155,6 @@
         "cy" 'spacemacs/copy-and-comment-lines
         "cY" 'spacemacs/copy-and-comment-lines-inverse))))
 
-(defun spacemacs-evil/init-evil-matchit ()
-  (use-package evil-matchit
-    :defer t))
-
-(defun spacemacs-evil/init-evil-numbers ()
-  (use-package evil-numbers
-    :config
-    (progn
-      (spacemacs|define-transient-state evil-numbers
-        :title "Evil Numbers Transient State"
-        :doc "\n[_+_/_=_] increase number  [_-_] decrease  [0..9] prefix  [_q_] quit"
-        :bindings
-        ("+" evil-numbers/inc-at-pt)
-        ("=" evil-numbers/inc-at-pt)
-        ("-" evil-numbers/dec-at-pt)
-        ("q" nil :exit t)) 
-      (spacemacs/set-leader-keys
-        "n+" 'spacemacs/evil-numbers-transient-state/evil-numbers/inc-at-pt
-        "n=" 'spacemacs/evil-numbers-transient-state/evil-numbers/inc-at-pt
-        "n-" 'spacemacs/evil-numbers-transient-state/evil-numbers/dec-at-pt))))
-
 (defun spacemacs-evil/init-evil-search-highlight-persist ()
   (use-package evil-search-highlight-persist
     :init
@@ -229,64 +185,5 @@
                 evil-insert-state-cursor 'bar
                 evil-emacs-state-cursor 'hbar)))
 
-(defun spacemacs-evil/init-evil-tutor ()
-  (use-package evil-tutor
-    :commands (evil-tutor-start
-               evil-tutor-resume)
-    :init
-    (progn
-      (setq evil-tutor-working-directory
-            (concat spacemacs-cache-directory ".tutor/"))
-      (spacemacs/set-leader-keys "hT" 'evil-tutor-start))))
-
-(defun spacemacs-evil/init-evil-unimpaired ()
-  ;; No laziness here, unimpaired bindings should be available right away.
-  (use-package evil-unimpaired))
-
-(defun spacemacs-evil/init-evil-visual-mark-mode ()
-  (use-package evil-visual-mark-mode
-    :defer t
-    :init
-    (spacemacs|add-toggle evil-visual-mark-mode
-      :mode evil-visual-mark-mode
-      :documentation "Enable evil visual marks mode."
-      :evil-leader "t`")))
-
 (defun spacemacs-evil/init-hs-minor-mode ()
   (add-hook 'prog-mode-hook 'spacemacs//enable-hs-minor-mode))
-
-(defun spacemacs-evil/init-linum-relative ()
-  (use-package linum-relative
-    :commands (linum-relative-toggle linum-relative-on)
-    :init
-    (progn
-      (when (eq dotspacemacs-line-numbers 'relative)
-        (linum-relative-on))
-      (spacemacs/set-leader-keys "tr" 'spacemacs/linum-relative-toggle))
-    :config
-    (progn
-      (setq linum-relative-current-symbol ""))))
-
-(defun spacemacs-evil/init-vi-tilde-fringe ()
-  (spacemacs|do-after-display-system-init
-   (use-package vi-tilde-fringe
-     :init
-     (progn
-       (global-vi-tilde-fringe-mode)
-       (spacemacs|add-toggle vi-tilde-fringe
-         :mode global-vi-tilde-fringe-mode
-         :documentation
-         "Globally display a ~ on empty lines in the fringe."
-         :evil-leader "T~")
-       ;; don't enable it on some special buffers
-       (with-current-buffer spacemacs-buffer-name (spacemacs/disable-vi-tilde-fringe))
-       (add-hook 'which-key-init-buffer-hook 'spacemacs/disable-vi-tilde-fringe)
-       ;; after a major mode is loaded, check if the buffer is read only
-       ;; if so, disable vi-tilde-fringe-mode
-       (add-hook 'after-change-major-mode-hook
-                 'spacemacs/disable-vi-tilde-fringe-read-only)
-       ;; TODO move this hook if/when we have a layer for eww
-       (spacemacs/add-to-hooks 'spacemacs/disable-vi-tilde-fringe
-                               '(eww-mode-hook)))
-     :config
-     (spacemacs|hide-lighter vi-tilde-fringe-mode))))

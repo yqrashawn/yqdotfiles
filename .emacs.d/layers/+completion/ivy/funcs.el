@@ -317,54 +317,6 @@ To prevent this error we just wrap `describe-mode' to defeat the
   (insert (replace-regexp-in-string "\\^J" "\n"
                                     (substring-no-properties candidate 4))))
 
-;; Layouts
-
-(defun spacemacs/ivy-spacemacs-layouts ()
-  "Control Panel for Spacemacs layouts. Has many actions.
-If match is found
-\(default) Select layout
-c: Close Layout(s) <- mark with C-SPC to close more than one-window
-k: Kill Layout(s)
-
-If match is not found
-<enter> Creates layout
-
-Closing doesn't kill buffers inside the layout while killing layouts does."
-  (interactive)
-  (ivy-read "Layouts: "
-            (persp-names)
-            :caller 'spacemacs/ivy-spacemacs-layouts
-            :action (lambda (name)
-                      (let ((persp-reset-windows-on-nil-window-conf t))
-                        (persp-switch name)
-                        (unless
-                            (member name
-                                    (persp-names-current-frame-fast-ordered))
-                          (spacemacs/home))))))
-
-(defun spacemacs/ivy-spacemacs-layout-buffer ()
-  "Switch to layout buffer using ivy."
-  (interactive)
-  (let (ivy-use-virtual-buffers)
-    (with-persp-buffer-list ()
-                            (call-interactively 'ivy-switch-buffer))))
-
-(defun spacemacs/ivy-spacemacs-layout-close-other ()
-  "Kills layouts without killing the buffers"
-  (interactive)
-  (ivy-read (format "Close layout [current %s]: "
-                    (spacemacs//current-layout-name))
-            (persp-names)
-            :action 'persp-kill-without-buffers))
-
-(defun spacemacs/ivy-spacemacs-layout-kill-other ()
-  "Kills layouts with all their buffers"
-  (interactive)
-  (ivy-read (format "Kill layout [current %s]: "
-                    (spacemacs//current-layout-name))
-            (persp-names)
-            :action 'persp-kill))
-
 
 ;; Swiper
 

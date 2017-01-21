@@ -22,57 +22,6 @@
       (spacemacs/no-golden-ratio-for-buffers " *popwin-dummy*")))
 
 
-;; neotree
-
-(defun spacemacs/neotree-expand-or-open ()
-  "Expand or open a neotree node."
-  (interactive)
-  (let ((node (neo-buffer--get-filename-current-line)))
-    (when node
-      (if (file-directory-p node)
-          (progn
-            (neo-buffer--set-expand node t)
-            (neo-buffer--refresh t)
-            (when neo-auto-indent-point
-              (next-line)
-              (neo-point-auto-indent)))
-        (call-interactively 'neotree-enter)))))
-
-(defun spacemacs/neotree-collapse ()
-  "Collapse a neotree node."
-  (interactive)
-  (let ((node (neo-buffer--get-filename-current-line)))
-    (when node
-      (when (file-directory-p node)
-        (neo-buffer--set-expand node nil)
-        (neo-buffer--refresh t))
-      (when neo-auto-indent-point
-        (neo-point-auto-indent)))))
-
-(defun spacemacs/neotree-collapse-or-up ()
-  "Collapse an expanded directory node or go to the parent node."
-  (interactive)
-  (let ((node (neo-buffer--get-filename-current-line)))
-    (when node
-      (if (file-directory-p node)
-          (if (neo-buffer--expanded-node-p node)
-              (spacemacs/neotree-collapse)
-            (neotree-select-up-node))
-        (neotree-select-up-node)))))
-
-(defun neotree-find-project-root ()
-  (interactive)
-  (if (neo-global--window-exists-p)
-      (neotree-hide)
-    (let ((origin-buffer-file-name (buffer-file-name)))
-      (neotree-find (projectile-project-root))
-      (neotree-find origin-buffer-file-name))))
-
-(defun spacemacs//neotree-maybe-attach-window ()
-  (when (get-buffer-window (neo-global--get-buffer))
-    (neo-global--attach)))
-
-
 ;; popwin
 
 (defun spacemacs/remove-popwin-display-config (str)
@@ -81,19 +30,6 @@
         (-remove (lambda (x) (if (and (listp x) (stringp (car x)))
                                  (string-match str (car x))))
                  popwin:special-display-config)))
-
-
-;; smooth scrolling
-
-(defun spacemacs/enable-smooth-scrolling ()
-  "Enable smooth scrolling."
-  (interactive)
-  (setq scroll-conservatively 101))
-
-(defun spacemacs/disable-smooth-scrolling ()
-  "Disable smooth scrolling."
-  (interactive)
-  (setq scroll-conservatively 0))
 
 
 ;; spaceline
@@ -137,47 +73,6 @@
                             unicode
                           (if ascii ascii unicode))))
               (diminish mode dim))))))))
-
-
-;; zoom
-
-(defun spacemacs//zoom-frm-powerline-reset ()
-  (when (fboundp 'powerline-reset)
-    (setq-default powerline-height (spacemacs/compute-powerline-height))
-    (powerline-reset)))
-
-(defun spacemacs//zoom-frm-do (arg)
-  "Perform a zoom action depending on ARG value."
-  (let ((zoom-action (cond ((eq arg 0) 'zoom-frm-unzoom)
-                           ((< arg 0) 'zoom-frm-out)
-                           ((> arg 0) 'zoom-frm-in)))
-        (fm (cdr (assoc 'fullscreen (frame-parameters))))
-        (fwp (* (frame-char-width) (frame-width)))
-        (fhp (* (frame-char-height) (frame-height))))
-    (when (equal fm 'maximized)
-      (toggle-frame-maximized))
-    (funcall zoom-action)
-    (set-frame-size nil fwp fhp t)
-    (when (equal fm 'maximized)
-      (toggle-frame-maximized))))
-
-(defun spacemacs/zoom-frm-in ()
-  "zoom in frame, but keep the same pixel size"
-  (interactive)
-  (spacemacs//zoom-frm-do 1)
-  (spacemacs//zoom-frm-powerline-reset))
-
-(defun spacemacs/zoom-frm-out ()
-  "zoom out frame, but keep the same pixel size"
-  (interactive)
-  (spacemacs//zoom-frm-do -1)
-  (spacemacs//zoom-frm-powerline-reset))
-
-(defun spacemacs/zoom-frm-unzoom ()
-  "Unzoom current frame, keeping the same pixel size"
-  (interactive)
-  (spacemacs//zoom-frm-do 0)
-  (spacemacs//zoom-frm-powerline-reset))
 
 
 ;; ansi-colors
