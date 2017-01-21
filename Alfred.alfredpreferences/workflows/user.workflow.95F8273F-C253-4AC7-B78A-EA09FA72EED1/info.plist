@@ -64,7 +64,7 @@
 			<dict>
 				<key>paths</key>
 				<array>
-					<string>/usr/local/Cellar/emacs-plus/25.1/Emacs.app</string>
+					<string>~/Downloads/Emacs.app</string>
 				</array>
 				<key>toggle</key>
 				<true/>
