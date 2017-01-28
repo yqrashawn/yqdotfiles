@@ -6,6 +6,8 @@
 	<true/>
 	<key>restartConfirm</key>
 	<true/>
+	<key>screensaverKeywordEnabled</key>
+	<false/>
 	<key>showtrashKeywordEnabled</key>
 	<false/>
 	<key>shutdownConfirm</key>

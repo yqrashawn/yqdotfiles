@@ -109,7 +109,7 @@ echo "&lt;/items&gt;"</string>
 			<key>config</key>
 			<dict>
 				<key>browser</key>
-				<string></string>
+				<string>com.google.chrome</string>
 				<key>spaces</key>
 				<string></string>
 				<key>url</key>
