@@ -38,11 +38,18 @@
 (spacemacs/set-leader-keys "oed" 'evil-cp-delete-enclosing)
 (spacemacs/set-leader-keys "oec" 'evil-cp-change-enclosing)
 
+
 ;; global
 (global-set-key (kbd "C-SPC") 'swiper)
 (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
+(global-set-key (kbd "s-K") 'spacemacs/kill-other-buffers)
 (global-set-key (kbd "^@") 'swiper)
 (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-r") 'counsel-recentf)
+(global-set-key (kbd "C-x C-x") 'counsel-M-x)
+
 
 ;; evil global
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
@@ -70,6 +77,7 @@
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
+(define-key evil-visual-state-map (kbd "C-x C-;") 'evilnc-comment-or-uncomment-lines)
 
 ;; evil insert
 (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)

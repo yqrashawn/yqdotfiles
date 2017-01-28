@@ -14,7 +14,6 @@
         (ansi-colors :location built-in)
         fill-column-indicator
         golden-ratio
-        hl-todo
         popwin
         spaceline
         ))
@@ -138,12 +137,6 @@
 
       (spacemacs|diminish golden-ratio-mode " ⓖ" " g"))))
 
-(defun spacemacs-ui-visual/init-hl-todo ()
-  (use-package hl-todo
-    :defer t
-    :init (spacemacs/add-to-hooks 'hl-todo-mode '(text-mode-hook
-                                                  prog-mode-hook))))
-
 (defun spacemacs-ui-visual/init-popwin ()
   (use-package popwin
     :config
@@ -158,7 +151,8 @@
       ;; buffers that we manage
       (push '("*Help*"                 :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
       (push '("*compilation*"          :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
-      (push '("*Compile-Log*"          :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+      (push '("*compilation*"          :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
+      (push '("*Warnings*"          :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
       (push '("*Messages*"             :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
       (push '("*spacemacs*"            :dedicated t :position bottom :stick t :noselect t   :height 0.4) popwin:special-display-config)
       (push '("*Shell Command Output*" :dedicated t :position bottom :stick t :noselect nil            ) popwin:special-display-config)

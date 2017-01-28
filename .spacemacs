@@ -76,7 +76,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(key-chord
+   dotspacemacs-additional-packages '(ibuffer-vc
+                                      key-chord
                                       vlf
                                       company-flx
                                       fzf
@@ -384,6 +385,11 @@ you should place your code here."
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
   (spacemacs/toggle-fill-column-indicator-on)
   ;; (add-to-list 'load-path "~/Downloads/benchmark-init-el-master")
   ;; (require 'benchmark-init-loaddefs)
@@ -394,11 +400,6 @@ you should place your code here."
   (load-file "~/.emacs.d/private/local/tabbar-flip/tabbar-flip.el")
   (require 'tabbar-flip)
   (tabbar-flip-mode 1)
-  ;; (setq undo-tree-auto-save-history t
-  ;;       undo-tree-history-directory-alist
-  ;;       `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  ;; (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-  ;;   (make-directory (concat spacemacs-cache-directory "undo")))
   (require 'vlf-setup)
 
   ;; (add-hook 'find-file-hook 'vlf-large-file-hook)
@@ -438,6 +439,7 @@ you should place your code here."
   (load-file "~/.my_emacs/javascript.el")
   (load-file "~/.emacs.d/private/local/tabbar/tabbar.el")
   (load-file "~/.my_emacs/tabbar.el")
+  (load-file "~/.my_emacs/ibuffer.el")
   ;; (load-file "~/.my_emacs/layout.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
@@ -461,6 +463,7 @@ you should place your code here."
         '(("github\\.com" . org-mode)))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; irc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (load-file "~/Dropbox/org/auth.el")
+  (set-frame-parameter nil 'fullscreen 'fullboth)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -493,9 +496,16 @@ you should place your code here."
  '(evil-cleverparens-swap-move-by-word-and-symbol t)
  '(evil-cleverparens-use-additional-bindings t)
  '(evil-cleverparens-use-additional-movement-keys t)
+ '(evil-esc-delay 0)
  '(evil-escape-unordered-key-sequence t)
+ '(evil-ex-hl-update-delay 0)
+ '(evil-flash-delay 1)
+ '(evil-mode-line-format (quote before))
+ '(evil-vsplit-window-right t)
+ '(evil-want-C-i-jump t)
  '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "#383838" t)
+ '(evil-want-fine-undo t)
+ '(fci-rule-color "#383838")
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(flycheck-checker-error-threshold 1000)
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
@@ -589,7 +599,7 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed origami key-chord evil-terminal-cursor-changer benchmark-init tabbar-flip paredit evil-cleverparens switch-window tabbar vlf yaml-mode company-flx nlinum fasd ranger disaster company-c-headers cmake-mode clang-format glsl-mode color-theme-sanityinc-solarized ox-twbs ox-gfm dash-at-point counsel-dash flyspell-correct-ivy gitter pdf-tools company-quickhelp helm-dash imenu-anywhere vimrc-mode dactyl-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme -theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (ibuffer-vc dactyl-mode elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed origami key-chord evil-terminal-cursor-changer benchmark-init tabbar-flip paredit evil-cleverparens switch-window tabbar vlf yaml-mode company-flx nlinum fasd ranger disaster company-c-headers cmake-mode clang-format glsl-mode color-theme-sanityinc-solarized ox-twbs ox-gfm dash-at-point counsel-dash flyspell-correct-ivy gitter pdf-tools company-quickhelp helm-dash imenu-anywhere vimrc-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme -theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(powerline-gui-use-vcs-glyph t)
  '(powerline-height 4)
@@ -606,7 +616,9 @@ Entered on %U")
  '(spacemacs-theme-custom-colors nil)
  '(spacemacs-theme-org-highlight t)
  '(standard-indent 2)
+ '(tabbar-auto-scroll-flag nil)
  '(tabbar-background-color nil)
+ '(tabbar-separator (quote (0.1)))
  '(tabbar-use-images nil)
  '(user-full-name "yqrashawn")
  '(user-mail-address "namy.19@gmail.com")
@@ -646,12 +658,9 @@ Entered on %U")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-ex-lazy-highlight ((t (:inherit lazy-highlight :underline "gray68"))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
  '(show-paren-match ((t (:background "gray55" :underline t))))
  '(sp-show-pair-match-face ((t (:inherit show-paren-match :background "sienna3"))))
- '(tabbar-button ((t (:foreground "#DCDCCC"))))
- '(tabbar-default ((t (:inherit variable-pitch))))
- '(tabbar-modified ((t (:inherit tabbar-default :foreground "pink1"))))
- '(tabbar-selected ((t (:background "#3F3F3F" :foreground "#DCDCCC" :box nil))))
- '(tabbar-selected-modified ((t (:inherit tabbar-default :foreground "yellow1"))))
- '(tabbar-unselected ((t (:background "#4F4F4F" :foreground "#DCDCCC" :box nil)))))
+ '(tabbar-modified ((t (:inherit tabbar-unselected :foreground "yellow1"))))
+ '(tabbar-selected-modified ((t (:inherit tabbar-selected :foreground "yellow1")))))
