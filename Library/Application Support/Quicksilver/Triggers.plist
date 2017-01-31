@@ -129,7 +129,7 @@
 				<string>/usr/local/Cellar/emacs-plus/25.1/Emacs.app</string>
 			</dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>keyCode</key>
 			<integer>1</integer>
 			<key>modifiers</key>
