@@ -117,3 +117,4 @@
 (define-key evil-normal-state-map "sss" 'spacemacs/search-ack)
 (define-key evil-normal-state-map "sp" 'evil-jump-item)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
+(define-key evil-normal-state-map (kbd "C-;") 'er/expand-region)

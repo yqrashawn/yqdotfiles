@@ -49,8 +49,12 @@
 				<false/>
 				<key>modsmode</key>
 				<integer>2</integer>
+				<key>relatedApps</key>
+				<array>
+					<string>org.gnu.Emacs</string>
+				</array>
 				<key>relatedAppsMode</key>
-				<integer>0</integer>
+				<integer>2</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.hotkey</string>
@@ -64,10 +68,10 @@
 			<dict>
 				<key>paths</key>
 				<array>
-					<string>~/Downloads/Emacs.app</string>
+					<string>/usr/local/Cellar/emacs-plus/25.1/Emacs.app</string>
 				</array>
 				<key>toggle</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.launchfiles</string>
