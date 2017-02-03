@@ -1,0 +1,61 @@
+{
+  "alfredtheme" : {
+    "result" : {
+      "textSpacing" : 4,
+      "subtext" : {
+        "size" : 11,
+        "colorSelected" : "#DCDCCCFF",
+        "font" : "Helvetica Neue",
+        "color" : "#DCDCCCFF"
+      },
+      "shortcut" : {
+        "size" : 16,
+        "colorSelected" : "#7F9F7FFF",
+        "font" : "Helvetica Neue",
+        "color" : "#7F9F7FFF"
+      },
+      "backgroundSelected" : "#4F4F4FFF",
+      "text" : {
+        "size" : 16,
+        "colorSelected" : "#FFFFEFFF",
+        "font" : "Helvetica Neue",
+        "color" : "#FFFFEFFF"
+      },
+      "iconPaddingHorizontal" : 5,
+      "paddingVertical" : 2,
+      "iconSize" : 40
+    },
+    "search" : {
+      "paddingVertical" : 2,
+      "background" : "#2B2B2BFF",
+      "spacing" : 10,
+      "text" : {
+        "size" : 36,
+        "colorSelected" : "#000000FF",
+        "font" : "Helvetica Neue",
+        "color" : "#DCDCCCFF"
+      },
+      "backgroundSelected" : "#FFD281FF"
+    },
+    "window" : {
+      "color" : "#3F3F3FFF",
+      "paddingHorizontal" : 10,
+      "width" : 620,
+      "borderPadding" : 10,
+      "borderColor" : "#DCDCCC33",
+      "blur" : 0,
+      "roundness" : 12,
+      "paddingVertical" : 10
+    },
+    "credit" : "Andrew Schwartzmeyer",
+    "separator" : {
+      "color" : "#4F4F4FFF",
+      "thickness" : 1
+    },
+    "scrollbar" : {
+      "color" : "#DCDCCCFF",
+      "thickness" : 2
+    },
+    "name" : "Zenburn Dark (v2)"
+  }
+}

@@ -15,6 +15,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -23,6 +25,21 @@
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string>Kill all processes with this name.</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>FBA9998D-CC3C-4F70-AFEF-35CE2762398B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2A751056-87B7-4408-90D6-B868021760CE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -39,10 +56,29 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>triggerid</key>
+				<string>killProcess</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>FBA9998D-CC3C-4F70-AFEF-35CE2762398B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
 				<string>kill -9 {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -50,16 +86,28 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>31AD6783-08D4-48E0-B323-39292BF089D6</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
 				<string>kill</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
 				<key>runningsubtext</key>
 				<string>Finding processes...</string>
 				<key>script</key>
@@ -117,6 +165,10 @@ end
 # Finish off and echo the XML string to Alfred.
 xmlString += "&lt;/items&gt;"
 puts xmlString</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>subtext</key>
 				<string>Start typing a process name...</string>
 				<key>title</key>
@@ -130,14 +182,22 @@ puts xmlString</string>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>2A751056-87B7-4408-90D6-B868021760CE</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
 				<string>killall -- "$(ps -c -p {query} -o comm | tail -n 1)"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -145,6 +205,8 @@ puts xmlString</string>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>C4986824-5761-4F2E-A82F-E4EBC2CAF54C</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -191,18 +253,31 @@ The ruby script that powers Kill Process is `script.rb`. For testing, add a valu
 	<dict>
 		<key>2A751056-87B7-4408-90D6-B868021760CE</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>170</real>
 		</dict>
 		<key>31AD6783-08D4-48E0-B323-39292BF089D6</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>170</real>
 		</dict>
 		<key>C4986824-5761-4F2E-A82F-E4EBC2CAF54C</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>340</real>
+		</dict>
+		<key>FBA9998D-CC3C-4F70-AFEF-35CE2762398B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>130</integer>
+			<key>ypos</key>
+			<integer>160</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>

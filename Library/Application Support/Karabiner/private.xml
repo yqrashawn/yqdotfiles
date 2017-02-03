@@ -1,21 +1,30 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <root>
   <appdef>
     <appname>Emacs</appname>
     <equal>org.gnu.Emacs</equal>
   </appdef>
+
   <appdef>
     <appname>PdfExpert</appname>
     <equal>com.readdle.PDFExpert-Mac</equal>
   </appdef>
+
   <appdef>
     <appname>SublimeText</appname>
     <equal>com.sublimetext.3</equal>
   </appdef>
+
+  <appdef>
+    <appname>Alfred</appname>
+    <equal>com.runningwithcrayons.Alfred-3</equal>
+  </appdef>
+
   <appdef>
     <appname>atom</appname>
     <equal>com.github.atom</equal>
   </appdef>
+
   <appdef>
     <appname>Chrome</appname>
     <equal>com.google.Chrome</equal>
@@ -57,8 +66,6 @@
     <productname>HHKB</productname>
     <productid>0x0100</productid>
   </deviceproductdef>
-
-
 
   <item>
     <name>KeyBinding in Chrome Dev Tool</name>
@@ -169,7 +176,7 @@
       __KeyOverlaidModifier__
       KeyCode::JIS_EISUU,
       KeyCode::COMMAND_L,ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-      KeyCode::SPACE, ModifierFlag::OPTION_L,
+      KeyCode::SPACE, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L,
     </autogen>
 
   </item>
@@ -253,7 +260,7 @@
     <name>HHKB OPTION_R to Hyper-w</name>
     <appendix>OPTION_R</appendix>
     <identifier>private.OPTION_R_HHKB</identifier>
-        <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
+    <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
     <autogen>
       __KeyOverlaidModifier__
       KeyCode::OPTION_R,
@@ -331,6 +338,6371 @@
     </autogen>
   </item>
 
+  <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+  <!-- _modif def -->
+  <modifierdef>MY_CAPSLOCK</modifierdef>
+  <modifierdef>MY_OPTION_L</modifierdef>
+  <modifierdef>MY_CONTROL_L</modifierdef>
+
+  <!-- _profile def  -->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_SHELL_switchprofile_general</name>
+    <url type="shell">
+      <![CDATA[    /Applications/Karabiner.app/Contents/Library/bin/karabiner select_by_name general    ]]>
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_SHELL_switchprofile_wm</name>
+    <url type="shell">
+      <![CDATA[    /Applications/Karabiner.app/Contents/Library/bin/karabiner select_by_name wm    ]]>
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_SHELL_switchprofile_gaming</name>
+    <url type="shell">
+      <![CDATA[    /Applications/Karabiner.app/Contents/Library/bin/karabiner select_by_name gaming    ]]>
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_SHELL_switchprofile_scroller</name>
+    <url type="shell">
+      <![CDATA[    /Applications/Karabiner.app/Contents/Library/bin/karabiner select_by_name scroller    ]]>
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_SHELL_switchprofile_capslock</name>
+    <url type="shell">
+      <![CDATA[    /Applications/Karabiner.app/Contents/Library/bin/karabiner select_by_name capslock    ]]>
+    </url>
+  </vkopenurldef>
+
+  <!-- _app def  -->
+
+  <appdef>
+    <appname>DICTIONARY</appname>
+    <equal>com.apple.Dictionary</equal>
+  </appdef>
+
+  <appdef>
+    <appname>XCODE</appname>
+    <equal>com.apple.dt.Xcode</equal>
+  </appdef>
+
+  <appdef>
+    <appname>ITERM</appname>
+    <equal>com.googlecode.iterm2</equal>
+  </appdef>
+
+  <!-- _km urls -->
+  <!-- _km def-->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_LOWERCASE_SELECTED_TEXT</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: lowercase selected text"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_GET_BITLY_URL_FROM_SAFARI</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: get bitly url of current safari url"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_EDIT_KEYBOARD_SHORTCUTS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: edit keyboard shortcuts"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_CUT_CURRENT_LINE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: cut current line"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_GET_CURRENT_URL_FROM_SAFARI</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: get current url from safari"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_TEST</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "test"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_LIKE_AND_SAVE_CURRENT_UNSPLASH_WALLPAPER</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: like and save current unsplash wallpaper"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_NEW_SNIPPETSLAB_SNIPPET</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: new snippetslab snippet"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_UPPERCASE_SELECTED_TEXT</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: uppercase selected text"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_CUT_WORD_BEFORE_CURSOR</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: cut word before cursor"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_MAKE_MARKDOWN_LINK_FROM_SELECTION</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: make markdown link from selection"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_CUT_CURRENT_WORD</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: cut current word"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_MATCH_SYMBOLS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Keyboard Maestro Engine"
+      do script "a: match symbols"
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <!-- _km app def -->
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_DICTIONARY</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Dictionary"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_HAZEL</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Hazel"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_ACTIVITY_MONITOR</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Activity Monitor"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_FLUME</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Flume"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_SUBLIME_TEXT</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Sublime Text"
+
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_SYSTEM_PREFERENCES</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "System Preferences"
+
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_GITTER</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Gitter"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_MPV</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "mpv"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_1PASSWORD</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "1Password"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_IBOOKS</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "iBooks"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_KARABINER_PREFERENCES</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Karabiner Preferences"
+
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_LICECAP</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "LICEcap"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_DISCORD</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Discord"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_TOWER</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Tower"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_PAW</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Paw"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_REEDER</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Reeder"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_FINDER</name>
+    <url type="shell">
+      osascript -e '
+        set appName to "Finder"
+        set appID to bundle identifier of (info for (path to application appName))
+        tell application "System Events"
+          if exists process appName then
+            if frontmost of process appName then
+              set visible of process appName to false
+            else
+              set frontmost of process appName to true
+            end if
+          else
+            tell application appID to activate
+          end if
+        end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_CONTACTS</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Cantacts"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_FANTASTICAL</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Fantastical"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_BETTERTOUCHTOOL</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "BetterTouchTool"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_SAFARI</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Safari"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_XCODE</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Xcode"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_VS_CODE</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Visual Studio Code"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_CHROME</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Google Chrome"
+
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_EMACS</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Emacs"
+
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_ITERM</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "iTerm2"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_MAIL</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Mail"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_TELEGRAM</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Telegram"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_SLACK</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Slack"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_PDF_EXPERT</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "PDF Expert"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_ALFRED_PREFERENCES</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Alfred Preferences"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_DAY_ONE</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "Day One"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_TWEETBOT</name>
+    <url type="shell">
+      osascript -e '
+      set appName to "TweetBot"
+      set appID to bundle identifier of (info for (path to application appName))
+      tell application "System Events"
+      if not (exists process appName) then
+      tell application appID to activate
+      else
+      if frontmost of process appName then
+      set visible of process appName to false
+      else
+      set frontmost of process appName to true
+      end if
+      end if
+      end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_MULTI_SITE_LIST_FILTER</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "multiWebsiteListFilter" in workflow "nikivi.styaing.on.top" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB_REPOS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "githubRepoSearch" in workflow "com.pawelgrzybek.github" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_HACKER_NEWS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchHackerNews" in workflow "nikivi.search-the-web" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_KILL_PROCESS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "killProcess" in workflow "com.ngreenstein.alfred-process-killer" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_GITHUB_CODE_ISSUES_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchGithubCodeIssues" in workflow "nikivi.search-the-web" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_TOGGL</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "startToggl" in workflow "com.jason0x43.alfred-toggl" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchGithub" in workflow "nikivi.search-the-web" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SHOW_CALENDAR</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "showCalendar" in workflow "zmin.calendar" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_PAW_FILES</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchPawFIles" in workflow "nikivi.search.files" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_XCODE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchXcodeProjects" in workflow "nikivi.search.files" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GOOGLE_IMAGES</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchGoogleImages" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_HASTEBIN</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "hastebinFromClipboard" in workflow "co.jmes.hastebin" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_UNINSTALL_WITH_CLEANMYMAC</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "uninstallWithCleanMyMac" in workflow "fradser.uninstall.cleanmymac3" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <background/>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_RELOAD_KARABINER_XML</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "reloadKarabinerXML" in workflow "com.nikivi.karabiner" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_CLEAN_FOLDERS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "cleanFolders" in workflow "nikivi.clean.folders" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_SUBREDDITS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchRedditSubreddits" in workflow "net.deanishe.alfred-reddit" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_DICTIONARY_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "dictionarySearch" in workflow "nikivi.dictionary.lookup" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_TABS_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "browserTabs" in workflow "com.clintonstrong.SearchTabs" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_DISMISS_NOTIFICATIONS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "dismissNotifications" in workflow "shh" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_FORCE_EMPTY_TRASH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "forceEmptyTrash" in workflow "com.renegaed.force-empty-trash" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_REDDIT</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchReddit" in workflow "nikivi.search-the-web" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_MEDIUM</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchMedium" in workflow "nikivi.search-the-web" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_IDOPE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchIDOPE" in workflow "nikivi.search-the-web" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SNIPPETSLAB_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "snippetsLabSearch" in workflow "com.renfei.SnippetsLab.AlfredWorkflow" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "recentDownloads" in workflow "recentdownloads.ddjfreedom" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_NPM_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "npmSearch" in workflow "com.sindresorhus.npms" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_SAFARI_HISTORY</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchSafariHistory" in workflow "com.alfredapp.andrew.safari" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_VIEW_SAFARI_TABS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "viewSafariTabs" in workflow "net.deanishe.alfred.safari" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_WEATHER_TODAY</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "weatherToday" in workflow "com.jason0x43.alfred-weather" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_NEW_BITBAR_TASK</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "newBitBarTask" in workflow "nikivi.bitbar.create.task" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_ASK_CREATE_SHARE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "askCreateShare" in workflow "com.nikivi.ask" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_PDF</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchPDF" in workflow "nikivi.search.files" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_FOLDERS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "searchFolders" in workflow "nikivi.search.files" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_GITHUB</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "github" in workflow "de.gh01.alfred.github" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_KEYCLUE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "keyClue" in workflow "me.zhaocai.keylue" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_DUCKDUCKGO_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "duckduckgoSearch" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_WIKI_SIMPLE_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "wikiSimpleSearch" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_AMAZON_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "amazonSearch" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_WIKI_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "wikiSearch" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_GOOGLE_MAPS_SEARCH</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "googleMapsSearch" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_RESTART_WIFI</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "restartWifi" in workflow "nikivi.wifi.workflow" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_TOGGLE_WIFI</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "toggleWifi" in workflow "nikivi.wifi.workflow" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GOOGLE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "googleSearch" in workflow "net.deanishe.alfred-searchio" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <item>
+    <name>alfred jkl navigation</name>
+    <appendix>alfred jkl navigation</appendix>
+    <identifier>alfred_vim</identifier>
+    <only>Alfred</only>
+
+    <autogen>__KeyToKey__
+    KeyCode::J, ModifierFlag::CONTROL_L,
+    KeyCode::CURSOR_DOWN
+    </autogen>
+
+    <autogen>__KeyToKey__
+    KeyCode::K, ModifierFlag::CONTROL_L,
+    KeyCode::CURSOR_UP
+    </autogen>
+
+    <autogen>__KeyToKey__
+    KeyCode::L, ModifierFlag::CONTROL_L,
+    KeyCode::RETURN
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>test: space after comma</name>
+    <appendix>space after comma</appendix>
+    <identifier>space_after_comma</identifier>
+    <autogen>__KeyToKey__
+    KeyCode::COMMA, ModifierFlag::NONE,
+    KeyCode::COMMA, ModifierFlag::NONE,
+    KeyCode::SPACE, ModifierFlag::NONE
+    </autogen>
+  </item>
+
+  <!-- _language definitions -->
+  <inputsourcedef>
+    <name>US</name>
+    <inputsourceid_prefix>com.apple.keylayout.US</inputsourceid_prefix>
+  </inputsourcedef>
+
+  <inputsourcedef>
+    <name>RU</name>
+    <inputsourceid_prefix>com.apple.keylayout.RussianWin</inputsourceid_prefix>
+  </inputsourcedef>
+
+  <item>
+    <name>general: put {} () [] to a better place</name>
+    <identifier>private.brackets_around</identifier>
+    <inputsource_not>RU</inputsource_not>
+    <autogen>
+      __KeyToKey__
+      KeyCode::BACKSLASH, ModifierFlag::NONE,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::0, ModifierFlag::SHIFT_L,
+      KeyCode::BACKQUOTE, ModifierFlag::NONE,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::MINUS, ModifierFlag::SHIFT_L,
+      KeyCode::BACKSLASH, ModifierFlag::SHIFT_L
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT, ModifierFlag::NONE,
+      KeyCode::9, ModifierFlag::SHIFT_L
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_RIGHT, ModifierFlag::NONE,
+      KeyCode::0, ModifierFlag::SHIFT_L
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L,
+      KeyCode::BRACKET_LEFT, ModifierFlag::NONE
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::NONE
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: change colon to semicolon</name>
+    <identifier>private.colon_to_semicolon</identifier>
+    <inputsource_not>RU</inputsource_not>
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON, ModifierFlag::SHIFT_L,
+      KeyCode::SEMICOLON,
+    </autogen>
+  </item>
+
+  <item>
+    <name>sticky semicolon - chrome</name>
+    <identifier>private.launcher_mode_open_apps_v99</identifier>
+    <only>Chrome</only>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SEMICOLON,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v99, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::SEMICOLON
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v99</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__
+      KeyCode::SEMICOLON,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::BRACKET_LEFT, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::BRACKET_LEFT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::W, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::R, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::T, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>wm: main</name>
+    <identifier>private.wm_main remap</identifier>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::F8, ModifierFlag::COMMAND_L,
+      KeyCode::VK_OPEN_URL_SHELL_switchprofile_general
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::K, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::H, ModifierFlag::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::L, ModifierFlag::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: hyper function semicolon key</name>
+    <identifier>private.hyper.function.SEMICOLON.key</identifier>
+    <inputsource_not>RU</inputsource_not>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON, ModifierFlag::SHIFT_L,
+      KeyCode::SEMICOLON
+    </autogen>
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::SEMICOLON,
+
+      <!-- short press -->
+      @begin
+      KeyCode::SEMICOLON, ModifierFlag::SHIFT_L,
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::SHIFT_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: sticky s - essential things - NOT: iTerm</name>
+    <identifier>private.launcher_mode_open_apps_v23</identifier>
+    <not>ITERM</not>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::S,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v23, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::S,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v23</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::S,
+    </autogen>
+
+    <!-- send command-tab by m -->
+    <autogen>
+      __KeyToKey__
+      KeyCode::G,
+      KeyCode::TAB, ModifierFlag::COMMAND_L,
+      <!-- release command key to commit command-tab -->
+      KeyCode::COMMAND_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::CURSOR_LEFT, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::CURSOR_LEFT, ModifierFlag::OPTION_L,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::MINUS,
+      KeyCode::SPACE
+    </autogen>
+
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::T,
+      KeyCode::VK_OPEN_URL_KM_CUT_CURRENT_WORD
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT,
+      KeyCode::F7
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::DELETE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SHIFT_R,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::COMMAND_L | ModifierFlag::SHIFT_L,
+      KeyCode::X, ModifierFlag::COMMAND_L,
+      Option::NOREPEAT,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::TAB
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Y,
+      KeyCode::CURSOR_UP, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::U,
+      KeyCode::CURSOR_DOWN, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::F12, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::CURSOR_LEFT, ModifierFlag::COMMAND_L,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::SHIFT_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::SPACE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::VK_OPEN_URL_KM_CUT_CURRENT_LINE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::R,
+      KeyCode::TAB, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::RETURN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::COMMAND_L,
+      KeyCode::RETURN,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::D,
+      KeyCode::DELETE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SHIFT_L,
+      KeyCode::9, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::3, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V | ModifierFlag::SHIFT_L,
+      KeyCode::T, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::B,
+      KeyCode::CURSOR_LEFT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::CURSOR_LEFT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::CURSOR_RIGHT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::CURSOR_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::CURSOR_DOWN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BACKQUOTE,
+      KeyCode::F12, ModifierFlag::COMMAND_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky s - essential things - ONLY: iTerm</name>
+    <identifier>private.launcher_mode_open_apps_v25</identifier>
+    <only>ITERM</only>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::S,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v25, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::S,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v25</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::S,
+    </autogen>
+
+    <!-- send command-tab by m -->
+    <autogen>
+      __KeyToKey__
+      KeyCode::G,
+      KeyCode::TAB, ModifierFlag::COMMAND_L,
+      <!-- release command key to commit command-tab -->
+      KeyCode::COMMAND_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT,
+      KeyCode::F7
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::MINUS,
+      KeyCode::SPACE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SHIFT_R,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::COMMAND_L | ModifierFlag::SHIFT_L,
+      KeyCode::X, ModifierFlag::COMMAND_L,
+      Option::NOREPEAT,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::TAB
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::U,
+      KeyCode::F12, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::J, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::F6, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::D,
+      KeyCode::D
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::R,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::RETURN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::D,
+      KeyCode::DELETE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SHIFT_L,
+      KeyCode::F10, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::3, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V | ModifierFlag::SHIFT_L,
+      KeyCode::T, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::B,
+      KeyCode::CURSOR_LEFT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::CURSOR_LEFT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::CURSOR_RIGHT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::CURSOR_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::CURSOR_DOWN
+    </autogen>
+  </item>
+
+  <!-- sticky d for mouse movement  -->
+  <replacementdef>
+    <replacementname>MOUSE_KEYS_MODE_2_EXTRA</replacementname>
+    <replacementvalue>
+      <![CDATA[
+
+<autogen>
+__KeyToKey__
+KeyCode::U,
+KeyCode::VK_OPEN_URL_SHELL_warp_mouse_cursor_position_screen_center_0,
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::C,
+KeyCode::CURSOR_RIGHT, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::M,
+KeyCode::F2, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::F19,
+KeyCode::ESCAPE
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::SEMICOLON,
+KeyCode::F11, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::Q,
+KeyCode::3, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::G,
+KeyCode::VK_OPEN_URL_SHELL_warp_mouse_cursor_position_front_window_center
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::SPACE,
+KeyCode::F1, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::SHIFT_L,
+KeyCode::9, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::O,
+KeyCode::EQUAL, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::BACKQUOTE,
+KeyCode::CURSOR_LEFT, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::W,
+KeyCode::4, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::SPACE,
+KeyCode::SPACE
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::A,
+KeyCode::C, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::I,
+KeyCode::MINUS, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::Z,
+KeyCode::F11, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::DOT,
+KeyCode::F1, ModifierFlag::COMMAND_L
+</autogen>
+
+
+      ]]>
+    </replacementvalue>
+  </replacementdef>
+
+  <modifierdef>MY_LAUNCHER_MODE</modifierdef>
+
+
+  <!-- sticky o  -->
+  <replacementdef>
+    <replacementname>LAUNCHER_MODE_V2_EXTRA</replacementname>
+    <replacementvalue>
+      <![CDATA[
+
+<autogen>
+__KeyToKey__
+KeyCode::1,
+KeyCode::1, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::2,
+KeyCode::2, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::3,
+KeyCode::3, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::4,
+KeyCode::4, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::5,
+KeyCode::5, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::6,
+KeyCode::6, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::7,
+KeyCode::7, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::8,
+KeyCode::8, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::9,
+KeyCode::9, ModifierFlag::COMMAND_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::DOT,
+KeyCode::F7, ModifierFlag::COMMAND_L | ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::P,
+KeyCode::F2, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::G,
+KeyCode::VK_OPEN_URL_ALFRED_GITHUB
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::S,
+KeyCode::VK_OPEN_URL_ALFRED_SEARCH_XCODE
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::D,
+KeyCode::VK_OPEN_URL_ALFRED_SEARCH_PDF
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::P,
+KeyCode::F7, ModifierFlag::OPTION_L
+</autogen>
+
+<autogen>
+__KeyToKey__
+KeyCode::Q,
+KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
+</autogen>
+
+      ]]>
+    </replacementvalue>
+  </replacementdef>
+
+
+  <item>
+    <name>general: sticky slash - something</name>
+    <identifier>private.launcher_mode_open_apps_v19</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SLASH,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v19, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::SLASH,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v19</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::SLASH,
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>alfred C-w delete word backward</name>
+    <identifier>alfred_delete_word_backward</identifier>
+    <only>Alfred</only>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W, ModifierFlag::CONTROL_L,
+      KeyCode::DELETE, ModifierFlag::OPTION_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: sticky space - essentials</name>
+    <identifier>private.launcher_mode_open_apps_v34</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SPACE,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v34, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::SPACE,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v34</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::SPACE,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::VK_OPEN_URL_KM_OPEN_KARABINER_PREFERENCES
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::SPACE,
+      KeyCode::F,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::X,
+      KeyCode::X, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::A, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Q,
+      KeyCode::Q, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::CURSOR_LEFT, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::DELETE, ModifierFlag::OPTION_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky comma - one off scripts</name>
+    <identifier>private.launcher_mode_open_apps_v72</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMA,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v72, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::COMMA,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v72</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::COMMA,
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky n - web searches</name>
+    <identifier>private.launcher_mode_open_apps_v35</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::N,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v35, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::N,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v35</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::N,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_MEDIUM
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_SUBREDDITS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_HACKER_NEWS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::VK_OPEN_URL_ALFRED_ASK_CREATE_SHARE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::R,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_REDDIT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::VK_OPEN_URL_ALFRED_DICTIONARY_SEARCH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::TAB, ModifierFlag::COMMAND_L,
+      KeyCode::COMMAND_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::VK_OPEN_URL_ALFRED_MULTI_SITE_LIST_FILTER
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky m - handy utils</name>
+    <identifier>private.launcher_mode_open_apps_v17</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::M,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v17, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::M,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v17</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::M,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::T,
+      KeyCode::VK_OPEN_URL_ALFRED_FORCE_EMPTY_TRASH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BACKQUOTE,
+      KeyCode::F6, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::F3, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::VK_OPEN_URL_ALFRED_TOGGLE_WIFI
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::2, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::VK_OPEN_URL_ALFRED_WEATHER_TODAY
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::VK_OPEN_URL_SHELL_switchprofile_scroller
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::VK_OPEN_URL_ALFRED_UNINSTALL_WITH_CLEANMYMAC
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::VK_OPEN_URL_ALFRED_RESTART_WIFI
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>function keys sticky v</name>
+    <identifier>private.launcher_mode_open_apps_v26</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::V,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v26, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::V,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v26</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::V,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::V, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      ConsumerKeyCode::MUSIC_NEXT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      ConsumerKeyCode::MUSIC_PREV
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      ConsumerKeyCode::MUSIC_PLAY
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      ConsumerKeyCode::VOLUME_MUTE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      ConsumerKeyCode::BRIGHTNESS_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      ConsumerKeyCode::BRIGHTNESS_DOWN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      ConsumerKeyCode::VOLUME_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      ConsumerKeyCode::VOLUME_DOWN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Y,
+      ConsumerKeyCode::KEYBOARDLIGHT_LOW,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::U,
+      ConsumerKeyCode::KEYBOARDLIGHT_HIGH
+    </autogen>
+
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v16</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::V,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::V, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::V, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      ConsumerKeyCode::MUSIC_NEXT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::A, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      ConsumerKeyCode::MUSIC_PREV
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      ConsumerKeyCode::MUSIC_PLAY
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      ConsumerKeyCode::VOLUME_MUTE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      ConsumerKeyCode::BRIGHTNESS_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      ConsumerKeyCode::BRIGHTNESS_DOWN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      ConsumerKeyCode::VOLUME_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      ConsumerKeyCode::VOLUME_DOWN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::D,
+      ConsumerKeyCode::KEYBOARDLIGHT_OFF
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Z,
+      ConsumerKeyCode::KEYBOARDLIGHT_LOW,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      ConsumerKeyCode::KEYBOARDLIGHT_HIGH
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky b - window control</name>
+    <identifier>private.launcher_mode_open_apps_v13</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::B,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v13, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::B,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v13</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::B,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::C, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::F4, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::F11, ModifierFlag::COMMAND_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::L, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::H, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::K, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::J, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::H, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::F11, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::F9, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+
+  </item>
+
+  <item>
+    <name>general: sticky w - open top apps</name>
+    <identifier>private.launcher_mode_open_apps_v3</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::W,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v3, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::W,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v3</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::W,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::VK_OPEN_URL_KM_OPEN_SUBLIME_TEXT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::VK_OPEN_URL_KM_OPEN_FINDER
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::BACKQUOTE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::T,
+      KeyCode::VK_OPEN_URL_KM_OPEN_TOWER
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::VK_OPEN_URL_KM_OPEN_ITERM
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::D,
+      KeyCode::VK_OPEN_URL_KM_OPEN_ITERM
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::VK_OPEN_URL_KM_OPEN_MAIL
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::VK_OPEN_URL_KM_OPEN_MPV
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::VK_OPEN_URL_KM_OPEN_CHROME
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::VK_OPEN_URL_KM_OPEN_VS_CODE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::VK_OPEN_URL_KM_OPEN_EMACS
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: sticky quote - scripts</name>
+    <identifier>private.launcher_mode_open_apps_v32</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::QUOTE,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v32, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::QUOTE,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v32</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::QUOTE,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::G,
+      KeyCode::F2, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::F9, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::COMMA, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::COMMA, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::F7, ModifierFlag::COMMAND_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+  </item>
+
+  <item>
+    <name>general: sticky x - alfred</name>
+    <identifier>private.launcher_mode_open_apps_v43</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::X,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v43, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::X,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v43</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::X,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::VK_OPEN_URL_ALFRED_SHOW_CALENDAR
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Y,
+      KeyCode::VK_OPEN_URL_ALFRED_HASTEBIN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::VK_OPEN_URL_KM_OPEN_ALFRED_PREFERENCES
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::VK_OPEN_URL_ALFRED_KILL_PROCESS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::VK_OPEN_URL_ALFRED_RELOAD_KARABINER_XML
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky 1 - something</name>
+    <identifier>private.launcher_mode_open_apps_v80</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::1,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v80, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::1,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v80</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::1,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::F1, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: sticky c - websites</name>
+    <identifier>private.launcher_mode_open_apps_v41</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::C,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v41, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::C,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v41</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::C,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::D, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky 3 - something</name>
+    <identifier>private.launcher_mode_open_apps_v51</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::3,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v51, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::3,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v51</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::3,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::1, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+  </item>
+
+
+
+  <item>
+    <name>general: sticky g - symbols</name>
+    <identifier>private.launcher_mode_open_apps_v11</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::G,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v11, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::G,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v11</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::G,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::6, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::VK_OPEN_URL_KM_TEST
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::O, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::DOT,
+      KeyCode::SLASH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::W, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::F10, ModifierFlag::COMMAND_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::F12, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::COMMA, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::DOT, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::DOT,
+      KeyCode::SLASH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::F18
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::VK_OPEN_URL_ALFRED_DISMISS_NOTIFICATIONS
+    </autogen>
+
+  </item>
+
+
+  <item>
+    <name>general: sticky r - open other apps</name>
+    <identifier>private.launcher_mode_open_apps_v8</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::R,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v8, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::R,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v8</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::R,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BACKQUOTE,
+      KeyCode::VK_OPEN_URL_KM_EDIT_KEYBOARD_SHORTCUTS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::VK_OPEN_URL_KM_OPEN_SYSTEM_PREFERENCES
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::VK_OPEN_URL_KM_OPEN_ACTIVITY_MONITOR
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::VK_OPEN_URL_KM_OPEN_IBOOKS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::VK_OPEN_URL_KM_OPEN_DICTIONARY
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::VK_OPEN_URL_KM_OPEN_DICTIONARY
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::G, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::VK_OPEN_URL_KM_OPEN_DAY_ONE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Z,
+      KeyCode::VK_OPEN_URL_KM_OPEN_BETTERTOUCHTOOL
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::F10, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::VK_OPEN_URL_KM_OPEN_PDF_EXPERT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::G,
+      KeyCode::VK_OPEN_URL_KM_OPEN_REEDER
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::VK_OPEN_URL_KM_OPEN_IBOOKS
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky u - alfred and km macros</name>
+    <identifier>private.launcher_mode_open_apps_v33</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::U,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v33, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::U,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v33</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::U,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::F10, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::X, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::F3, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::G,
+      KeyCode::P, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::F1, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Z,
+      KeyCode::F2, ModifierFlag::OPTION_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky i - inserting symbols</name>
+    <identifier>private.launcher_mode_open_apps_v15</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::I,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v15, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::I,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v15</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::I,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::1,
+      KeyCode::1, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::2,
+      KeyCode::2, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::3,
+      KeyCode::3, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::4,
+      KeyCode::4, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::5,
+      KeyCode::5, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Q,
+      KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::9, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::BRACKET_LEFT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::R,
+      KeyCode::COMMA, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::MINUS, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::EQUAL
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::DOT,
+      KeyCode::8, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::DOT,
+      KeyCode::SLASH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::D,
+      KeyCode::BACKQUOTE, ModifierFlag::SHIFT_L,
+      KeyCode::SLASH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::DOT,
+      KeyCode::DOT,
+      KeyCode::SLASH
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky t - handy actions</name>
+    <identifier>private.launcher_mode_open_apps_v14</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::T,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v14, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::T,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v14</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::T,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::F, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::N, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::F1, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::U,
+      KeyCode::V, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::VK_OPEN_URL_KM_OPEN_HAZEL
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::F5
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky z - open chat apps</name>
+    <identifier>private.launcher_mode_open_apps_v9</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::Z,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v9, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::Z,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v9</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::Z,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::VK_OPEN_URL_KM_OPEN_TELEGRAM
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::P, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::VK_OPEN_URL_KM_OPEN_SLACK
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::VK_OPEN_URL_KM_OPEN_GITTER
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::VK_OPEN_URL_KM_OPEN_DISCORD
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::VK_OPEN_URL_KM_OPEN_TWEETBOT
+    </autogen>
+
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v5</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::Z,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Q,
+      KeyCode::Q, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::J,
+      KeyCode::M, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky f - essential keybinds</name>
+    <identifier>private.launcher_mode_open_apps_v2</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::F,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v2, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::F,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v2</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::F,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::T,
+      KeyCode::SPACE, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::VK_OPEN_URL_KM_MAKE_MARKDOWN_LINK_FROM_SELECTION
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::2,
+      KeyCode::VK_OPEN_URL_KM_UPPERCASE_SELECTED_TEXT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::B,
+      KeyCode::RETURN, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::3, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BACKQUOTE,
+      KeyCode::1, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::RETURN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::RETURN, ModifierFlag::FN
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::A,
+      KeyCode::F7
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_R,
+      KeyCode::RETURN, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::COMMAND_L | ModifierFlag::SHIFT_L,
+      KeyCode::X, ModifierFlag::COMMAND_L,
+      Option::NOREPEAT,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::O,
+      KeyCode::CURSOR_LEFT, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L,
+      KeyCode::X, ModifierFlag::COMMAND_L,
+      Option::NOREPEAT,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::VK_OPEN_URL_KM_LOWERCASE_SELECTED_TEXT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::RETURN, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_R,
+      KeyCode::RETURN, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::RETURN, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::RETURN, ModifierFlag::SHIFT_L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::RETURN, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::DELETE
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::D,
+      KeyCode::7, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::T, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::V, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>dictionary: sticky e</name>
+    <only>DICTIONARY</only>
+    <identifier>private.launcher_mode_open_apps_v92</identifier>
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::E,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v92, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::E,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v92</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::E,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::1, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::0,
+      KeyCode::0, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::QUOTE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::DOT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::SPACE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT,
+      KeyCode::BRACKET_LEFT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DANISH_DOLLAR,
+      KeyCode::DANISH_DOLLAR, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_RIGHT,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::SEMICOLON, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::1,
+      KeyCode::1, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::2,
+      KeyCode::2, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::3,
+      KeyCode::3, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::COMMA, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::4,
+      KeyCode::4, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::5,
+      KeyCode::5, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::6,
+      KeyCode::6, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::7,
+      KeyCode::7, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::8,
+      KeyCode::8, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::9,
+      KeyCode::9, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Q,
+      KeyCode::Q, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::R,
+      KeyCode::R, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::T,
+      KeyCode::T, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Y,
+      KeyCode::Y, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::U,
+      KeyCode::U, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::I,
+      KeyCode::I, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::O,
+      KeyCode::O, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::P,
+      KeyCode::P, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::A,
+      KeyCode::A, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::D,
+      KeyCode::D, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::F,
+      KeyCode::F, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::G,
+      KeyCode::G, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::H,
+      KeyCode::H, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::J,
+      KeyCode::J, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::K,
+      KeyCode::K, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::L,
+      KeyCode::L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::X,
+      KeyCode::X, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::B,
+      KeyCode::B, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::N, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::M, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::SLASH, ModifierFlag::COMMAND_L
+    </autogen>
+
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v91</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::E,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::1, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::0,
+      KeyCode::0, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::QUOTE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::DOT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::SPACE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::B, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT,
+      KeyCode::BRACKET_LEFT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DANISH_DOLLAR,
+      KeyCode::DANISH_DOLLAR, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_RIGHT,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::SEMICOLON, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::1,
+      KeyCode::1, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::2,
+      KeyCode::2, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::3,
+      KeyCode::3, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::COMMA, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::4,
+      KeyCode::4, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::5,
+      KeyCode::5, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::6,
+      KeyCode::6, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::7,
+      KeyCode::7, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::8,
+      KeyCode::8, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::9,
+      KeyCode::9, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Q,
+      KeyCode::Q, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::R,
+      KeyCode::R, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::T,
+      KeyCode::T, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Y,
+      KeyCode::Y, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::U,
+      KeyCode::U, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::I,
+      KeyCode::I, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::O,
+      KeyCode::O, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::P,
+      KeyCode::P, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::A,
+      KeyCode::A, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::D,
+      KeyCode::D, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::F,
+      KeyCode::F, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::G,
+      KeyCode::G, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::H,
+      KeyCode::H, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::J,
+      KeyCode::J, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::K,
+      KeyCode::K, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::L,
+      KeyCode::L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::X,
+      KeyCode::X, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::B,
+      KeyCode::B, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::N, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::M, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::SLASH, ModifierFlag::COMMAND_L
+    </autogen>
+
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v4</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::E,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19,
+      KeyCode::1, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::0,
+      KeyCode::0, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::QUOTE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::DOT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::SPACE, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT,
+      KeyCode::BRACKET_LEFT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DANISH_DOLLAR,
+      KeyCode::DANISH_DOLLAR, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_RIGHT,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::SEMICOLON, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::1,
+      KeyCode::1, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::2,
+      KeyCode::2, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::3,
+      KeyCode::3, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::COMMA, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::4,
+      KeyCode::4, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::5,
+      KeyCode::5, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::6,
+      KeyCode::6, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::7,
+      KeyCode::7, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::8,
+      KeyCode::8, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::9,
+      KeyCode::9, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Q,
+      KeyCode::Q, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::R,
+      KeyCode::R, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::T,
+      KeyCode::T, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Y,
+      KeyCode::Y, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::U,
+      KeyCode::U, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::I,
+      KeyCode::I, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::O,
+      KeyCode::O, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::P,
+      KeyCode::P, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::A,
+      KeyCode::A, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::D,
+      KeyCode::D, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::F,
+      KeyCode::F, ModifierFlag::COMMAND_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::G,
+      KeyCode::G, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::H,
+      KeyCode::H, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::J,
+      KeyCode::J, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::K,
+      KeyCode::K, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::L,
+      KeyCode::L, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::X,
+      KeyCode::X, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
+      KeyCode::C, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::V, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::B,
+      KeyCode::B, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::N,
+      KeyCode::N, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::M,
+      KeyCode::M, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::SLASH, ModifierFlag::COMMAND_L
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky q - command shift</name>
+    <identifier>private.launcher_mode_open_apps_v6</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::Q,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode_v6, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::Q,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode_v6</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::Q,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::1,
+      KeyCode::1, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::2,
+      KeyCode::2, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::3,
+      KeyCode::3, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::4,
+      KeyCode::4, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::5,
+      KeyCode::5, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::6,
+      KeyCode::6, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::7,
+      KeyCode::7, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::8,
+      KeyCode::8, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::9,
+      KeyCode::9, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::0,
+      KeyCode::0, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::MINUS,
+      KeyCode::MINUS, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::EQUAL,
+      KeyCode::EQUAL, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::X, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::SEMICOLON, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::QUOTE,
+      KeyCode::QUOTE, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::E,
+      KeyCode::E, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::R,
+      KeyCode::R, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::T,
+      KeyCode::T, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Y,
+      KeyCode::Y, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::U,
+      KeyCode::U, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::I,
+      KeyCode::I, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::O,
+      KeyCode::O, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::P,
+      KeyCode::P, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::A,
+      KeyCode::A, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::DOT, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::D,
+      KeyCode::D, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::F,
+      KeyCode::F, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::G,
+      KeyCode::G, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::H, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::J,
+      KeyCode::J, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::K,
+      KeyCode::K, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::X,
+      KeyCode::X, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::C,
+      KeyCode::C, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::V,
+      KeyCode::V, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::B,
+      KeyCode::B, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::N,
+      KeyCode::N, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::M,
+      KeyCode::M, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: sticky a - control modifier</name>
+    <identifier>private.launcher_mode_example</identifier>
+
+    <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
+    <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
+    <modifier_not>
+      ModifierFlag::COMMAND_L,
+      ModifierFlag::COMMAND_R,
+      ModifierFlag::CONTROL_L,
+      ModifierFlag::CONTROL_R,
+      ModifierFlag::FN,
+      ModifierFlag::OPTION_L,
+      ModifierFlag::OPTION_R,
+      ModifierFlag::SHIFT_L,
+      ModifierFlag::SHIFT_R,
+    </modifier_not>
+
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::A,
+
+      <!--
+          Use notsave.launcher_mode_v2 in order to be higher priority.
+          Use ModifierFlag::MY_LAUNCHER_MODE for __DropAllKeys__.
+      -->
+      @begin
+      KeyCode::VK_CONFIG_SYNC_KEYDOWNUP_notsave_private_launcher_mode, ModifierFlag::MY_LAUNCHER_MODE,
+      @end
+
+      @begin
+      KeyCode::A,
+      @end
+    </autogen>
+  </item>
+
+  <item hidden="true">
+    <identifier vk_config="true">notsave.private_launcher_mode</identifier>
+
+    <autogen>
+      __BlockUntilKeyUp__ KeyCode::A,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SPACE,
+      KeyCode::9, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::0,
+      KeyCode::0, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::SEMICOLON, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_LEFT,
+      KeyCode::BRACKET_LEFT, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::BRACKET_RIGHT,
+      KeyCode::BRACKET_RIGHT, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::R,
+      KeyCode::R, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::1,
+      KeyCode::1, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::DOT,
+      KeyCode::DOT, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMA,
+      KeyCode::COMMA, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::2,
+      KeyCode::2, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::3,
+      KeyCode::3, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Q,
+      KeyCode::Q, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::W,
+      KeyCode::W, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::E,
+      KeyCode::E, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::T,
+      KeyCode::T, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Y,
+      KeyCode::Y, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::U,
+      KeyCode::U, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::I,
+      KeyCode::I, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::O,
+      KeyCode::O, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::P,
+      KeyCode::P, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::S,
+      KeyCode::S, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::D,
+      KeyCode::D, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::F2, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::F,
+      KeyCode::F, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_L,
+      KeyCode::A, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::G,
+      KeyCode::G, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::H,
+      KeyCode::H, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::Z,
+      KeyCode::Z, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::X,
+      KeyCode::X, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::C,
+      KeyCode::C, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::V,
+      KeyCode::V, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::B,
+      KeyCode::B, ModifierFlag::CONTROL_L
+    </autogen>
+
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::N,
+      KeyCode::N, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::M,
+      KeyCode::M, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::K,
+      KeyCode::K, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::J,
+      KeyCode::J, ModifierFlag::CONTROL_L
+    </autogen>
+
+    <autogen>
+      __KeyDownUpToKey__
+      KeyCode::L,
+      KeyCode::L, ModifierFlag::CONTROL_L
+    </autogen>
+
+  </item>
+
+  <!-- added so that I can use vim emulation in iTerm too -->
+  <replacementdef>
+    <replacementname>VIM_EMU_ONLY_APPS</replacementname>
+    <replacementvalue></replacementvalue>
+  </replacementdef>
+  <replacementdef>
+    <replacementname>VIM_EMU_IGNORE_APPS</replacementname>
+    <replacementvalue>PASSWORD</replacementvalue>
+  </replacementdef>
+
+  <item>
+    <name>test: caps lock and a - two different hotkeys for quick and long press</name>
+    <identifier>private.caps_a_long_press</identifier>
+    <not>ITERM</not>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::A, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::A, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::5, ModifierFlag::COMMAND_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L,
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>general: right shift and return, two different hotkeys on long and short</name>
+    <identifier>private.right_shift_return_two_diff_actions</identifier>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::RETURN, ModifierFlag::SHIFT_R,
+
+      <!-- short press -->
+      @begin
+      KeyCode::RETURN, ModifierFlag::SHIFT_R
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::7, ModifierFlag::COMMAND_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L,
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>general: left option and a, two different hotkeys when held and when quickly pressed</name>
+    <identifier>private.left_opt_a_two_diff_actions</identifier>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::A, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+
+      <!-- short press -->
+      @begin
+      KeyCode::A, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::6, ModifierFlag::COMMAND_L, ModifierFlag::CONTROL_L, ModifierFlag::SHIFT_L,
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+  </item>
+
+
+  <!-- -simple rebinds  -->
+  <item>
+    <name>general: left option plus left shift to search documentation for selected text</name>
+    <identifier>private.left_option_plus_left_shift_to_hotkey</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::SHIFT_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::8, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: control plus left shift to search wiki with selection</name>
+    <identifier>private.control_shift_for_wiki_selection</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L,
+      KeyCode::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L,
+      KeyCode::7, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: command plus left shift to google selected text</name>
+    <identifier>private.command_plus_left_shift_to_hotkey</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L, ModifierFlag::COMMAND_L,
+      KeyCode::SHIFT_L, ModifierFlag::COMMAND_L,
+      KeyCode::9, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>test: caps lock, shift two times</name>
+    <identifier>private.caps_shift_two_times</identifier>
+    <autogen>
+      __DoublePressModifier__
+      KeyCode::SHIFT_L,
+      KeyCode::SHIFT_L,
+      KeyCode::CAPSLOCK,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>test: left control - left control and command</name>
+    <identifier>private.left_control_to_left_control_and_command</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::CONTROL_L,
+      KeyCode::CONTROL_L, ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>test: left option - control and command</name>
+    <identifier>private.left_option_to_control_and_command</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::OPTION_L,
+      KeyCode::OPTION_L,ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: left control - control and command - NOT: xcode</name>
+    <identifier>private.left_control_to_control_and_command</identifier>
+    <not>XCODE</not>
+    <autogen>
+      __KeyToKey__
+      KeyCode::CONTROL_L,
+      KeyCode::CONTROL_L, ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>general: caps lock as control + option and escape when alone not in iTerm</name>
+    <identifier>private.left_alt_caps_tab_search_snippets</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::F19, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::0, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::COMMAND_L,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::TAB, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::MY_CAPSLOCK | ModifierFlag::NONE,
+      KeyCode::W, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::COMMAND_L,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::CONTROL_L,
+      KeyCode::CONTROL_L, ModifierFlag::MY_CONTROL_L,
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::OPTION_L,
+      KeyCode::OPTION_L, ModifierFlag::MY_OPTION_L,
+    </autogen>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::F19,
+      KeyCode::OPTION_L, ModifierFlag::CONTROL_L | ModifierFlag::MY_CAPSLOCK,
+      KeyCode::ESCAPE,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>general: right option on single press as app switcher</name>
+    <identifier>private.right_opt_as_app_switch</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_R,
+      KeyCode::OPTION_R,
+      KeyCode::TAB, ModifierFlag::COMMAND_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: iTerm adjustments for better productivity</name>
+    <identifier>private.iterm_as_ide</identifier>
+    <only>ITERM</only>
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::L, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::S, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::S, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::S, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::A, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::A, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::A, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::Q, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::Q, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::Q, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::E, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::E, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::E, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::D, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::D, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::D, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+
+    <autogen>
+      __HoldingKeyToKey__
+      KeyCode::B, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L,
+
+      <!-- short press -->
+      @begin
+      KeyCode::B, ModifierFlag::CONTROL_L
+      @end
+
+      <!-- hold -->
+      @begin
+      KeyCode::B, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+      @end
+
+      Option::NOREPEAT,
+    </autogen>
+
+  </item>
+
+  <item>
+    <name>general: caps + left command + top delete to open Fantastical Calendar Input</name>
+    <identifier>private.caps_left_command_delete_open_fantastical_input</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::DELETE, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::E, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+  <!-- one more really nicely located app specific hotkey -->
+  <item>
+    <name>general: right shift and right command to app specific</name>
+    <identifier>private.right_shit_and_right_command_to_app_specific</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::COMMAND_R, ModifierFlag::SHIFT_R, ModifierFlag::COMMAND_L,
+      KeyCode::O, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L,
+    </autogen>
+  </item>
+
+
+  <!-- really useful as I use colon more often then semicolon except when coding javascript or java -->
+  <item>
+    <name>general: change colon to semicolon alone</name>
+    <identifier>private.colon_to_semicolon_alone</identifier>
+    <inputsource_only>US</inputsource_only>
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON, ModifierFlag::SHIFT_L,
+      KeyCode::SEMICOLON
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: change semicolon to colon</name>
+    <identifier>private.semicolon_to_colon_alone</identifier>
+    <inputsource_only>US</inputsource_only>
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::SEMICOLON, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>test: caps + right shift to a hotkey</name>
+    <identifier>private.caps_right_shift_hotkey</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::SHIFT_R, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L,
+      KeyCode::W, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>general: right shift to command and shift when together, delete when alone</name>
+    <identifier>private.right_shift_to_command_and_shift</identifier>
+    <autogen>
+      --KeyOverlaidModifier--
+      KeyCode::SHIFT_R,
+      KeyCode::SHIFT_R, ModifierFlag::COMMAND_L,
+      KeyCode::DELETE,
+      Option::KEYOVERLAIDMODIFIER_REPEAT,
+    </autogen>
+  </item>
+
+
+  <item>
+    <name>general: right shift and right command to option and command</name>
+    <identifier>private.right_shift_and_command_to_option_command</identifier>
+    <autogen>
+      --KeyOverlaidModifier--
+      KeyCode::SHIFT_R, ModifierFlag::COMMAND_R,
+      KeyCode::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::DELETE, ModifierFlag::COMMAND_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: left shift - switch app</name>
+    <identifier>private.left_shift_to_wm_mode</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L,
+      KeyCode::SHIFT_L,
+      KeyCode::TAB, ModifierFlag::COMMAND_L,
+      KeyCode::COMMAND_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: right shift - play / stop music</name>
+    <identifier>private.right_shift_play_music</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_R,
+      KeyCode::SHIFT_R,
+      ConsumerKeyCode::MUSIC_PLAY
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: left shift - switch to general mode</name>
+    <identifier>private.left_shift_to_general_mode</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L,
+      KeyCode::SHIFT_L,
+      KeyCode::F8, ModifierFlag::COMMAND_L,
+      KeyCode::VK_OPEN_URL_SHELL_switchprofile_general
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: left command = dash</name>
+    <identifier>private.left_command_to_dash</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_L,
+      KeyCode::COMMAND_L,
+      KeyCode::TAB, ModifierFlag::COMMAND_L,
+      KeyCode::COMMAND_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: right command = alfred</name>
+    <identifier>private.right_command_to_something</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_R,
+      KeyCode::CONTROL_R,
+      KeyCode::SPACE, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>test: fn shift to combination plus fn superkey</name>
+    <identifier>private.fn_shift_to_combination</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::SHIFT_L, ModifierFlag::FN,
+      KeyCode::1, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L,
+      KeyCode::F19, ModifierFlag::FN,
+      KeyCode::Z, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+    <autogen>
+      __KeyToKey__
+      KeyCode::FN,
+      KeyCode::COMMAND_L, ModifierFlag::CONTROL_L | ModifierFlag::OPTION_L, ModifierFlag::SHIFT_L,
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous jl = alfred</name>
+    <identifier>private.sim_jl_typinator</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::J, KeyCode::L,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::SPACE, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>scroller: simultaneous jk = google</name>
+    <identifier>private.sim_jk_google_scroller</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::J, KeyCode::K,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_SHELL_switchprofile_general,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GOOGLE
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous m, = some</name>
+    <identifier>private.sim_mcomma_some</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::COMMA, KeyCode::M,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GOOGLE
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous jk = google</name>
+    <identifier>private.sim_jk_google</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::J, KeyCode::K,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GOOGLE
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous kl = typinator</name>
+    <identifier>private.sim_kl_typinator</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::K, KeyCode::L,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::F11, ModifierFlag::OPTION_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>capslock: semicolon to turn off caps lock and go to general</name>
+    <identifier>private.semi_turn_off_caps</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::SEMICOLON,
+      KeyCode::VK_OPEN_URL_SHELL_switchprofile_general
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous hk = duckduckgo search</name>
+    <identifier>private.sim_hk_duck_search</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::H, KeyCode::K,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_DUCKDUCKGO_SEARCH
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous lm = safari bookmarks</name>
+    <identifier>private.sim_lm_bookmarks</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::L, KeyCode::M,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::E, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: sim :l = dictionary</name>
+    <identifier>private.sim_:l_dic</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::SEMICOLON, KeyCode::L,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_DICTIONARY_SEARCH
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneouse hl = browser tabs</name>
+    <identifier>private.sim_hl_dic</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::H, KeyCode::L,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_TABS_SEARCH
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous ij = equal</name>
+    <identifier>private.sim_ij_equal_sign</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::J, KeyCode::I,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::EQUAL
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous li = github search</name>
+    <identifier>private.sim_li_github_search</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::L, KeyCode::I,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB_REPOS
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous :m = safari tabs</name>
+    <identifier>private.sim_:m_safari_tabs</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::SEMICOLON, KeyCode::M,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_VIEW_SAFARI_TABS
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: sim :n = dictionary</name>
+    <identifier>private.sim_:n_dic</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::SEMICOLON, KeyCode::N,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_OPEN_URL_ALFRED_DICTIONARY_SEARCH
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous kn = normal mode</name>
+    <identifier>private.sim_kn_normal</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::K, KeyCode::N,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::VK_CONFIG_TOGGLE_notsave_ubiq_vimnormal,
+      {{ UBIQUITOUS_VIM_BINDINGS_CANCEL_OPERATOR_PENDING }}
+    </autogen>
+  </item>
 </root>
 
 

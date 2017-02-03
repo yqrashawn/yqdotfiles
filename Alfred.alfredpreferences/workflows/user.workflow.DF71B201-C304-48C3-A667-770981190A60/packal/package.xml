@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Github Search</name>
+  <version>1.0</version>
+  <bundle>com.pawelgrzybek.github</bundle>
+  <updated>1485339558</updated>
+  <file>github_search.alfredworkflow</file>
+</workflow>

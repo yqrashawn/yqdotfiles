@@ -1,0 +1,60 @@
+[
+    {
+        "name": "width",
+        "type": "int",
+        "keyword": "width",
+        "description": "Set width of the calendar",
+        "default": 10,
+        "min": 3
+    },
+    {
+        "name": "minus",
+        "type": "str", 
+        "keyword": "minus",
+        "description": "Set hotkey: showing previous month",
+        "default": "<"
+    }, 
+    {
+        "name": "plus",
+        "type": "str", 
+        "keyword": "plus",
+        "description": "Set hotkey: showing next month",
+        "default": ">"
+    },
+    {
+        "name": "first_day",
+        "type": "int",
+        "keyword": "week",
+        "description": "Set first day of a week",
+        "list": [
+            ["Monday", 0],
+            ["Tuesday", 1],
+            ["Wednesday", 2],
+            ["Thursday", 3],
+            ["Friday", 4],
+            ["Saturday", 5],
+            ["Sunday", 6]
+        ],
+        "default": 6
+    },  
+    {   
+        "name": "software",
+        "type": "str",
+        "keyword": "software",
+        "description": "Set default calendar software",
+        "list": [
+            ["BusyCal", "busycal"],
+            ["Fantastical 2", "fantastical"],
+            ["Google Calendar", "google"],
+            ["OS X Calendar", "calendar"]
+        ],
+        "default": "calendar"
+
+    },
+    {
+        "description": "Open config file",
+        "keyword": "config",
+        "action": "open"
+    }
+]
+
