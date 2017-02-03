@@ -1,0 +1,13 @@
+{
+    "preset": "airbnb",
+    "requireSpaceBeforeBlockStatements": 1,
+    "validateIndentation": 2,
+    "maximumLineLength": 300,
+    "requireArrowFunctions": true,
+    "requireShorthandArrowFunctions": true,
+    "requireSpaceBeforeKeywords": [
+    "else",
+    "while",
+    "catch"
+]
+}
