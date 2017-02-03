@@ -33,3 +33,5 @@ org
 /floobits
 vimfiler/
 tags/
+hacker_news_data.txt
+/bitbar/notifications.30s.py

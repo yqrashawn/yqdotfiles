@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>themes</key>
+	<dict>
+		<key>alfred.theme.dark</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.yosemite</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue Light</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.darkandsmooth</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.pistachio</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.lightlarge</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue</string>
+			<key>resultTextFontSize</key>
+			<integer>4</integer>
+		</dict>
+		<key>alfred.theme.lion</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.notepad</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Noteworthy</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.light</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+		<key>alfred.theme.yosemitedark</key>
+		<dict>
+			<key>resultTextFont</key>
+			<string>Helvetica Neue Light</string>
+			<key>resultTextFontSize</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+</dict>
+</plist>
