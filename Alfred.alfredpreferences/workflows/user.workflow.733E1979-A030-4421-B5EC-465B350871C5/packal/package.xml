@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Lazy Link</name>
+  <version>1.2.1</version>
+  <bundle>com.uniqon.lazylink</bundle>
+  <updated>1470591135</updated>
+  <file>lazy_link.alfredworkflow</file>
+</workflow>

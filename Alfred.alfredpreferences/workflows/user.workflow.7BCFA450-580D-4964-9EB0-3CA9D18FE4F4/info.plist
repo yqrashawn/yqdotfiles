@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.vitorgalvao.alfred.downvid</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>2D801B88-7E16-4D15-884D-CF189C66910E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3B69F416-A08B-4618-99B6-E2AED211C9D8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>3B69F416-A08B-4618-99B6-E2AED211C9D8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E46D269F-3FF9-4B6F-ACAC-6895E0BA46CC</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Restart current download at bottom of queue</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>C95B128B-0AD1-41F2-A2D6-42BE6FE84306</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Abort current download</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>6A286F10-FD49-4463-9540-0EECBE45438D</key>
+		<array/>
+		<key>B63C53CC-588B-476D-B85C-72FC8929D9E1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C3D0CBE7-F8E9-46FC-811D-FC53095A1262</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>D8524846-F942-4A77-9461-8BAED974B8CF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6A286F10-FD49-4463-9540-0EECBE45438D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>DC74421D-631A-44B1-AC86-ED7793CADE26</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6A286F10-FD49-4463-9540-0EECBE45438D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>FEFAAD3D-C8FF-491F-8FC9-0B5ACA7164C3</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>AE972882-C947-41D6-9934-98ED94A54F3E</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Download full playlist</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>E2E18310-059A-4E62-92D0-433499DCFE0B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>AE972882-C947-41D6-9934-98ED94A54F3E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Vítor Galvão</string>
+	<key>description</key>
+	<string>Download videos from popular sources</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>DownVid</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>new</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>D8524846-F942-4A77-9461-8BAED974B8CF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>bash downvid.sh '{query} playlist_false'</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6A286F10-FD49-4463-9540-0EECBE45438D</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>dv</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Please wait…</string>
+				<key>script</key>
+				<string># Prepare random file
+randfile="$(mktemp -t 'downvid')"
+echo -n "$(pbpaste)" &gt;&gt; "${randfile}"
+
+# Check if WatchList is being used, and show options accordingly
+watchlist="$(dirname "${alfred_workflow_data}")/com.vitorgalvao.alfred.watchlist/towatch"
+
+if [[ -f "${watchlist}" ]]; then
+cat &lt;&lt; EOF
+&lt;?xml version='1.0'?&gt;&lt;items&gt;
+	&lt;item uid='Regular Download' arg='${randfile} watchlist_false' valid='yes'&gt;
+		&lt;title&gt;DownVid&lt;/title&gt;
+		&lt;subtitle&gt;Downloads the video to your Desktop&lt;/subtitle&gt;
+		&lt;icon&gt;icon.png&lt;/icon&gt;
+	&lt;/item&gt;
+	&lt;item uid='Download To WatchList' arg='${randfile} watchlist_true' valid='yes'&gt;
+		&lt;title&gt;DownVid + WatchList&lt;/title&gt;
+		&lt;subtitle&gt;Downloads the video to ~/Downloads and adds it to your watchlist&lt;/subtitle&gt;
+		&lt;icon&gt;icon.png&lt;/icon&gt;
+	&lt;/item&gt;
+&lt;/items&gt;
+EOF
+else
+cat &lt;&lt; EOF
+&lt;?xml version='1.0'?&gt;&lt;items&gt;
+	&lt;item uid='Regular Download' arg='${randfile}' valid='yes'&gt;
+		&lt;title&gt;DownVid&lt;/title&gt;
+		&lt;subtitle&gt;Downloads the video to your Desktop&lt;/subtitle&gt;
+		&lt;icon&gt;icon.png&lt;/icon&gt;
+	&lt;/item&gt;
+&lt;/items&gt;
+EOF
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Download videos from popular sources (uses the URL in your clipboard)</string>
+				<key>title</key>
+				<string>DownVid</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>DC74421D-631A-44B1-AC86-ED7793CADE26</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>readonly remote_info_plist="https://raw.githubusercontent.com/vitorgalvao/alfred-workflows/master/${alfred_workflow_name}/source/info.plist"
+readonly workflow_url="https://raw.githubusercontent.com/vitorgalvao/alfred-workflows/master/${alfred_workflow_name}/${alfred_workflow_name}.alfredworkflow"
+readonly workflow_type='workflow'
+readonly frequency_check='15'
+
+# FROM HERE ON, CODE SHOULD BE LEFT UNTOUCHED UNLESS YOU KNOW WHAT YOU ARE DOING
+function abort {
+  echo "${1}" &gt;&amp;2
+  exit 1
+}
+
+function url_exists {
+  curl --silent --location --output /dev/null --fail --range 0-0 "${1}"
+}
+
+function notification {
+  local readonly terminal_notifier="$(find . -name terminal-notifier.app)"
+
+  if [[ -n "${terminal_notifier}" ]]; then
+    "${terminal_notifier}"/Contents/MacOS/terminal-notifier -title "${alfred_workflow_name}" -subtitle 'A new version is available' -message "${1}"
+  else
+    osascript -e "display notification \"${1}\" with title \"${alfred_workflow_name}\" subtitle \"A new version is available\""
+  fi
+}
+
+# Local sanity checks
+readonly local_info_plist='info.plist'
+readonly local_version="$(/usr/libexec/PlistBuddy -c 'print version' "${local_info_plist}")"
+
+[[ -n "${local_version}" ]] || abort 'You need to set a workflow version in the configuration sheet.'
+[[ "${workflow_type}" =~ ^(workflow|page)$ ]] || abort "'workflow_type' (${workflow_type}) needs to be one of 'workflow' or 'page'."
+[[ "${frequency_check}" =~ ^[0-9]+$ ]] || abort "'frequency_check' (${frequency_check}) needs to be a number."
+
+# Check for updates
+if [[ $(find "${local_info_plist}" -mtime +"${frequency_check}"d) ]]; then
+  if ! url_exists "${remote_info_plist}"; then abort "'remote_info_plist' (${remote_info_plist}) appears to not be reachable."; fi # Remote sanity check
+
+  readonly tmp_file="$(mktemp)"
+  curl --silent --location --output "${tmp_file}" "${remote_info_plist}"
+  readonly remote_version="$(/usr/libexec/PlistBuddy -c 'print version' "${tmp_file}")"
+
+  if [[ "${local_version}" != "${remote_version}" ]]; then
+    if [[ "${workflow_type}" == 'page' ]]; then
+      notification 'Opening download page…'
+      open "${workflow_url}"
+    else
+      if url_exists "${workflow_url}"; then
+        notification 'Downloading and installing…'
+        curl --silent --location --output "${HOME}/Downloads/${alfred_workflow_name}.alfredworkflow" "${workflow_url}"
+        open "${HOME}/Downloads/${alfred_workflow_name}.alfredworkflow"
+      else
+        abort "'workflow_url' (${workflow_url}) appears to not be reachable."
+      fi # url_exists
+    fi # workflow_type
+  else
+    touch "${local_info_plist}" # Reset timer by touching local file
+  fi # diff
+fi #find</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>FEFAAD3D-C8FF-491F-8FC9-0B5ACA7164C3</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>bash downvid.sh '{query} playlist_true'</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>AE972882-C947-41D6-9934-98ED94A54F3E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>new_with_playlist</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>E2E18310-059A-4E62-92D0-433499DCFE0B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>dvp</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Please wait…</string>
+				<key>script</key>
+				<string>queue_state="${state}"
+readonly progressfile='/tmp/downvidprogress'
+
+if [[ -f "${progressfile}" ]]; then
+  filename=$(cat "${progressfile}" | grep '\[download\] Destination: ' | sed 's/\[download\] Destination: //')
+  progress=$(cat "${progressfile}" | tail -1 | sed 's/^\[download\] *//')
+
+  echo "
+    &lt;?xml version='1.0'?&gt;&lt;output&gt;
+
+      &lt;rerun&gt;1&lt;/rerun&gt;
+
+      &lt;items&gt;
+        &lt;item valid='no'&gt;
+          &lt;title&gt;${alfred_workflow_name} Progress&lt;/title&gt;
+          &lt;subtitle&gt;${progress} | &lt;![CDATA[$(basename "${filename}")]]&gt;&lt;/subtitle&gt;
+          &lt;mod key='ctrl' valid='yes' /&gt;
+          &lt;mod key='cmd' valid='yes' /&gt;
+          &lt;icon&gt;icon.png&lt;/icon&gt;
+        &lt;/item&gt;
+      &lt;/items&gt;
+    &lt;/output&gt;
+  "
+else
+  if [[ -z "${queue_state}" ]]; then
+    echo "
+      &lt;?xml version='1.0'?&gt;&lt;output&gt;
+
+        &lt;rerun&gt;3&lt;/rerun&gt;
+        &lt;variables&gt;
+          &lt;variable name='state'&gt;stopped&lt;/variable&gt;
+        &lt;/variables&gt;
+
+        &lt;items&gt;
+          &lt;item valid='no'&gt;
+            &lt;title&gt;${alfred_workflow_name} Progress&lt;/title&gt;
+            &lt;subtitle&gt;Checking for downloads in queue…&lt;/subtitle&gt;
+            &lt;icon&gt;icon.png&lt;/icon&gt;
+          &lt;/item&gt;
+        &lt;/items&gt;
+      &lt;/output&gt;
+    "
+  else # ${state} == 'stopped'
+    echo "
+      &lt;?xml version='1.0'?&gt;&lt;output&gt;
+
+        &lt;rerun&gt;3&lt;/rerun&gt;
+
+        &lt;items&gt;
+          &lt;item valid='no'&gt;
+            &lt;title&gt;${alfred_workflow_name} Progress&lt;/title&gt;
+            &lt;subtitle&gt;All downloads finished!&lt;/subtitle&gt;
+            &lt;icon&gt;icon.png&lt;/icon&gt;
+          &lt;/item&gt;
+        &lt;/items&gt;
+      &lt;/output&gt;
+    "
+  fi
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Shows progress of the current DownVid download</string>
+				<key>title</key>
+				<string>DownVid Progress</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>3B69F416-A08B-4618-99B6-E2AED211C9D8</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>download_status</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>2D801B88-7E16-4D15-884D-CF189C66910E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>bash downvid_restart.sh restart_download_true</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E46D269F-3FF9-4B6F-ACAC-6895E0BA46CC</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>bash downvid_restart.sh restart_download_false</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>C95B128B-0AD1-41F2-A2D6-42BE6FE84306</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>:installdownvidservices</string>
+				<key>subtext</key>
+				<string>Installs OS X Services to allow you to download from urls without having to manually call Alfred</string>
+				<key>text</key>
+				<string>Install DownVid Services</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B63C53CC-588B-476D-B85C-72FC8929D9E1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>cp -r ./services/* "${HOME}/Library/Services/"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>C3D0CBE7-F8E9-46FC-811D-FC53095A1262</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Download videos from [a plethora of video sources](https://rg3.github.io/youtube-dl/supportedsites.html), even when embedded to other pages.
+
+Copy a link to your clipboard, run `dv`, and you’re done. The workflow will show you a notification when it starts downloading and another when finished.
+
+If you have [WatchList](https://github.com/vitorgalvao/alfred-workflows/tree/master/WatchList) you’ll see an option to automatically add the downloaded video to your watchlist.
+
+![](https://i.imgur.com/44IZmNI.png)
+ 
+Run with the ⌘ modifier, and the full playlist the video is part of will be downloaded.
+
+To see the download progress, run `dvp`. It will auto-refresh the progress. Actioning it with the ⌘ modifier will restart the current download (adding it to the back of the queue), while actioning with ⌃ will abort the current download.
+
+![](https://i.imgur.com/Za25OhO.png)
+ 
+You can also add DownVid actions to macOS Services, by running `:installdownvidservices` (if you ever want to remove them, simply delete them from the `~/Library/Services` directory). What this means is wherever you find a URL, you’ll be able to right click it and start the download right from the context menu.
+
+![](https://i.imgur.com/7yheG3N.png)
+
+The two Workflow Environment Variables represent the directories (relative to your home) where videos will download to.</string>
+	<key>uidata</key>
+	<dict>
+		<key>2D801B88-7E16-4D15-884D-CF189C66910E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<real>250</real>
+		</dict>
+		<key>3B69F416-A08B-4618-99B6-E2AED211C9D8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<real>250</real>
+		</dict>
+		<key>6A286F10-FD49-4463-9540-0EECBE45438D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>AE972882-C947-41D6-9934-98ED94A54F3E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>B63C53CC-588B-476D-B85C-72FC8929D9E1</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>490</integer>
+		</dict>
+		<key>C3D0CBE7-F8E9-46FC-811D-FC53095A1262</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>490</integer>
+		</dict>
+		<key>C95B128B-0AD1-41F2-A2D6-42BE6FE84306</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>370</integer>
+		</dict>
+		<key>D8524846-F942-4A77-9461-8BAED974B8CF</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>DC74421D-631A-44B1-AC86-ED7793CADE26</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<real>70</real>
+		</dict>
+		<key>E2E18310-059A-4E62-92D0-433499DCFE0B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>E46D269F-3FF9-4B6F-ACAC-6895E0BA46CC</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>250</integer>
+		</dict>
+		<key>FEFAAD3D-C8FF-491F-8FC9-0B5ACA7164C3</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>12</integer>
+			<key>note</key>
+			<string>OneUpdater</string>
+			<key>xpos</key>
+			<integer>640</integer>
+			<key>ypos</key>
+			<integer>70</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>download_dir</key>
+		<string>Desktop</string>
+		<key>watchlist_download_dir</key>
+		<string>Downloads</string>
+	</dict>
+	<key>version</key>
+	<string>1.19.2</string>
+	<key>webaddress</key>
+	<string>http://vitorgalvao.com/</string>
+</dict>
+</plist>

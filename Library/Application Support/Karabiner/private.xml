@@ -869,19 +869,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_REEDER</name>
     <url type="shell">
       osascript -e '
-      set appName to "Reeder"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchReeder" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -890,40 +878,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_FINDER</name>
     <url type="shell">
       osascript -e '
-        set appName to "Finder"
-        set appID to bundle identifier of (info for (path to application appName))
-        tell application "System Events"
-          if exists process appName then
-            if frontmost of process appName then
-              set visible of process appName to false
-            else
-              set frontmost of process appName to true
-            end if
-          else
-            tell application appID to activate
-          end if
-        end tell
-      '
-    </url>
-  </vkopenurldef>
-
-  <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_KM_OPEN_CONTACTS</name>
-    <url type="shell">
-      osascript -e '
-      set appName to "Cantacts"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchFinder" in workflow "yqrashawn.workflow.launcher" with argument "test"
       '
     </url>
   </vkopenurldef>
@@ -932,20 +887,8 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_FANTASTICAL</name>
     <url type="shell">
       osascript -e '
-      set appName to "Fantastical"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
-      '
+tell application "Alfred 3" to run trigger "launchFantastical" in workflow "yqrashawn.workflow.launcher" with argument ""
+'
     </url>
   </vkopenurldef>
 
@@ -953,19 +896,16 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_BETTERTOUCHTOOL</name>
     <url type="shell">
       osascript -e '
-      set appName to "BetterTouchTool"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchBetterTouchTool" in workflow "yqrashawn.workflow.launcher" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_BEARYCHAT</name>
+    <url type="shell">
+      osascript -e '
+tell application "Alfred 3" to run trigger "launchBearyChat" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -974,19 +914,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_SAFARI</name>
     <url type="shell">
       osascript -e '
-      set appName to "Safari"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchSafari" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1037,20 +965,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_CHROME</name>
     <url type="shell">
       osascript -e '
-      set appName to "Google Chrome"
-
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchChrome" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1059,20 +974,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_EMACS</name>
     <url type="shell">
       osascript -e '
-      set appName to "Emacs"
-
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchEmacs" in workflow "yqrashawn.workflow.launcher" with argument "test"
       '
     </url>
   </vkopenurldef>
@@ -1081,20 +983,8 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_ITERM</name>
     <url type="shell">
       osascript -e '
-      set appName to "iTerm2"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
-      '
+tell application "Alfred 3" to run trigger "launchIterm" in workflow "yqrashawn.workflow.launcher" with argument "test"
+    '
     </url>
   </vkopenurldef>
 
@@ -1102,19 +992,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_MAIL</name>
     <url type="shell">
       osascript -e '
-      set appName to "Mail"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.workflow.launcher" with argument "test"
       '
     </url>
   </vkopenurldef>
@@ -1122,42 +1000,14 @@
   <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_TELEGRAM</name>
     <url type="shell">
-      osascript -e '
-      set appName to "Telegram"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
-      '
+      osascript -e ''
     </url>
   </vkopenurldef>
 
   <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_SLACK</name>
     <url type="shell">
-      osascript -e '
-      set appName to "Slack"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
-      '
+      osascript -e ''
     </url>
   </vkopenurldef>
 
@@ -1165,20 +1015,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_PDF_EXPERT</name>
     <url type="shell">
       osascript -e '
-      set appName to "PDF Expert"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
-      '
+      tell application "Alfred 3" to run trigger "launchPDFExpert" in workflow "yqrashawn.workflow.launcher" with argument ""'
     </url>
   </vkopenurldef>
 
@@ -1204,44 +1041,25 @@
   </vkopenurldef>
 
   <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_KM_OPEN_DAY_ONE</name>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_HAZEL_PREFERENCES</name>
     <url type="shell">
       osascript -e '
-      set appName to "Day One"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+        tell application "Alfred 3" to run trigger "launchHazel" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_KM_OPEN_DAY_ONE</name>
+    <url type="shell">
+      osascript -e ''
     </url>
   </vkopenurldef>
 
   <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_TWEETBOT</name>
     <url type="shell">
-      osascript -e '
-      set appName to "TweetBot"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
-      '
+      osascript -e ''
     </url>
   </vkopenurldef>
 
@@ -1259,6 +1077,15 @@
     <url type="shell">
       osascript -e '
       tell application "Alfred 3" to run trigger "githubRepoSearch" in workflow "com.pawelgrzybek.github" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS</name>
+    <url type="shell">
+      osascript -e '
+      tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.customct.emacs" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1373,6 +1200,16 @@
   </vkopenurldef>
 
   <vkopenurldef>
+    <background/>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_COPY_BROWSER_URL</name>
+    <url type="shell">
+      osascript -e '
+        tell application "Alfred 3" to run trigger "copyBrowserUrl" in workflow "com.uniqon.lazylink" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_ALFRED_CLEAN_FOLDERS</name>
     <url type="shell">
       osascript -e '
@@ -1466,7 +1303,7 @@
     <name>KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS</name>
     <url type="shell">
       osascript -e '
-      tell application "Alfred 3" to run trigger "recentDownloads" in workflow "recentdownloads.ddjfreedom" with argument ""
+        tell application "Alfred 3" to run trigger "recentDownloads" in workflow "com.vitorgalvao.alfred.recentdownloads" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1633,6 +1470,13 @@
     </url>
   </vkopenurldef>
 
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_GITHUB_STARS</name>
+    <url type="shell">
+      osascript -e 'tell application "Alfred 3" to run trigger "ghmystars" in workflow "de.gh01.alfred.github" with argument " my stars"'
+    </url>
+  </vkopenurldef>
+
   <item>
     <name>alfred jkl navigation</name>
     <appendix>alfred jkl navigation</appendix>
@@ -1645,8 +1489,19 @@
     </autogen>
 
     <autogen>__KeyToKey__
+    KeyCode::G, ModifierFlag::CONTROL_L,
+    KeyCode::ESCAPE
+    </autogen>
+
+    <autogen>__KeyToKey__
     KeyCode::K, ModifierFlag::CONTROL_L,
     KeyCode::CURSOR_UP
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::W, ModifierFlag::CONTROL_L,
+      KeyCode::DELETE, ModifierFlag::OPTION_L
     </autogen>
 
     <autogen>__KeyToKey__
@@ -2620,11 +2475,6 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
     <identifier>alfred_delete_word_backward</identifier>
     <only>Alfred</only>
 
-    <autogen>
-      __KeyToKey__
-      KeyCode::W, ModifierFlag::CONTROL_L,
-      KeyCode::DELETE, ModifierFlag::OPTION_L
-    </autogen>
   </item>
 
   <item>
@@ -2684,6 +2534,18 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
+      KeyCode::G,
+      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
       KeyCode::COMMA,
       KeyCode::VK_OPEN_URL_KM_OPEN_KARABINER_PREFERENCES
     </autogen>
@@ -2723,6 +2585,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __KeyToKey__
       KeyCode::Q,
       KeyCode::Q, ModifierFlag::COMMAND_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::SLASH,
+      KeyCode::VK_OPEN_URL_KM_OPEN_HAZEL_PREFERENCES
     </autogen>
 
     <autogen>
@@ -3374,6 +3242,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
+      KeyCode::R,
+      KeyCode::VK_OPEN_URL_KM_OPEN_REEDER
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
       KeyCode::I,
       KeyCode::VK_OPEN_URL_KM_OPEN_ITERM
     </autogen>
@@ -3951,12 +3825,6 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::G,
-      KeyCode::VK_OPEN_URL_KM_OPEN_REEDER
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
       KeyCode::SLASH,
       KeyCode::VK_OPEN_URL_KM_OPEN_IBOOKS
     </autogen>
@@ -3964,7 +3832,7 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
-    <name>general: sticky u - alfred and km macros</name>
+    <name>general: sticky u - utilities</name>
     <identifier>private.launcher_mode_open_apps_v33</identifier>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
@@ -4008,31 +3876,25 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::SPACE,
-      KeyCode::F10, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L, ModifierFlag::COMMAND_L
+      KeyCode::L,
+      KeyCode::VK_OPEN_URL_ALFRED_COPY_BROWSER_URL
     </autogen>
 
     <autogen>
       __KeyToKey__
-      KeyCode::A,
-      KeyCode::X, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
+      KeyCode::D,
+      KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
     </autogen>
 
     <autogen>
       __KeyToKey__
-      KeyCode::S,
+      KeyCode::Z,
       KeyCode::F3, ModifierFlag::OPTION_L
     </autogen>
 
     <autogen>
       __KeyToKey__
-      KeyCode::G,
-      KeyCode::P, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::I,
+      KeyCode::Z,
       KeyCode::F1, ModifierFlag::OPTION_L
     </autogen>
 
@@ -4179,6 +4041,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       KeyCode::F,
       KeyCode::DOT,
       KeyCode::DOT,
+      KeyCode::SLASH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::C,
       KeyCode::SLASH
     </autogen>
 
@@ -6559,14 +6427,14 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
-    <name>general: simultaneous m, = some</name>
-    <identifier>private.sim_mcomma_some</identifier>
+    <name>general: simultaneous m, = github stars</name>
+    <identifier>private.github_stars</identifier>
 
     <autogen>
       __SimultaneousKeyPresses__
       KeyCode::COMMA, KeyCode::M,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
-      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GOOGLE
+      KeyCode::VK_OPEN_URL_ALFRED_GITHUB_STARS
     </autogen>
   </item>
 

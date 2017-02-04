@@ -17,6 +17,8 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string>Copy ":{query}:" to clipboard</string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -25,6 +27,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>E1633402-43A3-4B78-91D0-8A3EE378C20E</key>
@@ -36,6 +40,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>E3177611-6C51-4BC1-BE47-608823C1FE44</key>
@@ -47,6 +53,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -63,6 +71,8 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
@@ -81,6 +91,12 @@
 				<string>Loading results...</string>
 				<key>script</key>
 				<string>ruby emoji.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
 				<key>title</key>
 				<string>Search emoji codes</string>
 				<key>type</key>
@@ -93,7 +109,7 @@
 			<key>uid</key>
 			<string>48F47C79-01A7-4C1D-8239-1DAF1D54F7E6</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -102,13 +118,15 @@
 				<false/>
 				<key>clipboardtext</key>
 				<string>:{query}:</string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
 			<string>2404AE08-D4CF-4265-B7BB-44043DD356DD</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -116,6 +134,10 @@
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
 				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
@@ -129,7 +151,7 @@
 			<key>uid</key>
 			<string>E1633402-43A3-4B78-91D0-8A3EE378C20E</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -140,6 +162,10 @@
 				<integer>0</integer>
 				<key>script</key>
 				<string>ruby emoji_to_symbol.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -148,7 +174,7 @@
 			<key>uid</key>
 			<string>E3177611-6C51-4BC1-BE47-608823C1FE44</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -157,13 +183,15 @@
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
 			<string>143B793E-A860-474A-8BE3-F88BCEB134E1</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -172,26 +200,36 @@
 	<dict>
 		<key>143B793E-A860-474A-8BE3-F88BCEB134E1</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
 		<key>2404AE08-D4CF-4265-B7BB-44043DD356DD</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
 		<key>48F47C79-01A7-4C1D-8239-1DAF1D54F7E6</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
 		<key>E1633402-43A3-4B78-91D0-8A3EE378C20E</key>
 		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
 		<key>E3177611-6C51-4BC1-BE47-608823C1FE44</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>

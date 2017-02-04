@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <workflow>
   <name>npms</name>
-  <version>0.3.3</version>
+  <version>0.4.1</version>
   <bundle>org.boneskull.npms</bundle>
-  <updated>1478059755</updated>
+  <updated>1484636418</updated>
   <file>npms.alfredworkflow</file>
 </workflow>

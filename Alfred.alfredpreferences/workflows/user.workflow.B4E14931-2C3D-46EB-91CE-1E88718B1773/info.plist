@@ -53,7 +53,7 @@
 	<key>description</key>
 	<string>npms.io search</string>
 	<key>disabled</key>
-	<true/>
+	<false/>
 	<key>name</key>
 	<string>npms</string>
 	<key>objects</key>
@@ -257,7 +257,7 @@ Copyright 2016 [Christopher Hiller](https://boneskull.com).  Licensed MIT.</stri
 		<string>86400</string>
 	</dict>
 	<key>version</key>
-	<string>0.3.3</string>
+	<string>0.4.1</string>
 	<key>webaddress</key>
 	<string>https://github.com/boneskull/alfred-npms</string>
 </dict>

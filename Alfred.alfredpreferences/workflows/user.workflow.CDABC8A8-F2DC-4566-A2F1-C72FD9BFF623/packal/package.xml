@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Youdao Dict</name>
+  <version>1.2.3</version>
+  <bundle>whyliam.workflows.youdao</bundle>
+  <updated>1467088696</updated>
+  <file>whyliam.workflows.youdao.alfredworkflow</file>
+</workflow>

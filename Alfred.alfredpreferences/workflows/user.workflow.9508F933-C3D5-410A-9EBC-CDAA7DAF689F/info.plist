@@ -323,6 +323,33 @@ echo "Opening file {query}.";
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>
+/usr/local/bin/emacsclient -c -n "{query}";
+
+echo "Opening file {query}.";
+</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D0BA3C60-58E5-4625-B38D-C39135843AB7</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>anchorfields</key>
 				<true/>
 				<key>argumenttype</key>
@@ -391,33 +418,6 @@ echo "Opening file {query}.";
 			<string>3F5E6396-6D1C-4DA2-A72B-A6977C1609AE</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>script</key>
-				<string>
-/usr/local/bin/emacsclient -c -n "{query}";
-
-echo "Opening file {query}.";
-</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>5</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>D0BA3C60-58E5-4625-B38D-C39135843AB7</string>
-			<key>version</key>
-			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -541,7 +541,7 @@ echo "Opening file {query}.";
 			<key>xpos</key>
 			<integer>300</integer>
 			<key>ypos</key>
-			<real>470</real>
+			<integer>480</integer>
 		</dict>
 		<key>4B2AEEE2-BBFE-408F-97FB-0B495C24EF2B</key>
 		<dict>

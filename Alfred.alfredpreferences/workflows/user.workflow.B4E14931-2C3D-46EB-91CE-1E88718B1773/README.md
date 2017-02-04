@@ -1,4 +1,4 @@
-# alfred-npms ([download v0.3.2](https://github.com/boneskull/alfred-npms/releases/download/v0.3.2/npms.alfredworkflow))
+# alfred-npms ([download v0.3.3](https://github.com/boneskull/alfred-npms/releases/download/v0.3.3/npms.alfredworkflow))
 
 > Alfred 3 workflow for [npms.io](https://npms.io)
 

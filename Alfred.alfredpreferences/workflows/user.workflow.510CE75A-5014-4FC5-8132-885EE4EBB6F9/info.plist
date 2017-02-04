@@ -109,6 +109,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>ED33A73E-6D49-4B7C-900D-07251358BADA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</key>
 		<array>
 			<dict>
@@ -395,6 +408,19 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>ghmystars</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>ED33A73E-6D49-4B7C-900D-07251358BADA</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Changelog
@@ -545,6 +571,13 @@ Version 1.1 – 2015-01-10
 			<integer>30</integer>
 			<key>ypos</key>
 			<integer>40</integer>
+		</dict>
+		<key>ED33A73E-6D49-4B7C-900D-07251358BADA</key>
+		<dict>
+			<key>xpos</key>
+			<integer>90</integer>
+			<key>ypos</key>
+			<integer>410</integer>
 		</dict>
 		<key>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</key>
 		<dict>
