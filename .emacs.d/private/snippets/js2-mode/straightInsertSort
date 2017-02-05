@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: straightInsertSort
+# key: straightInsertSort
+# --
+const straightInsertSort = (sqList) => {
+  sqList.forEach((v, i) => {
+    const temp = sqList[i];
+    let j;
+    for (j = i - 1; j >= 0 && temp < sqList[j]; --j)
+      // smaller bigger, < bigger smaller
+      sqList[j + 1] = sqList[j];
+
+    sqList[j + 1] = temp;
+  });
+};
+

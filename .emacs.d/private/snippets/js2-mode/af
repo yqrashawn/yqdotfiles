@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: af
+# key: af
+# --
+(${1:vars}) => {
+  ${2:func}
+}

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: des
+# key: des
+# --
+describe('${1:name}, () => {
+  it('should ${2:should what}', (done) => {
+    ${3:func}
+    done();
+  });
+});

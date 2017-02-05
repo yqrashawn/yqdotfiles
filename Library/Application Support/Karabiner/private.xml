@@ -3278,6 +3278,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
+      KeyCode::B,
+      KeyCode::VK_OPEN_URL_KM_OPEN_BEARYCHAT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
       KeyCode::I,
       KeyCode::VK_OPEN_URL_KM_OPEN_ITERM
     </autogen>

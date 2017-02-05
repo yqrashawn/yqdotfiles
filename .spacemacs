@@ -308,7 +308,7 @@ values."
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling nil
+   dotspacemacs-smooth-scrolling t
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
@@ -456,7 +456,6 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; others ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (buffer-flip-mode)
   ;; (buffer-flip-set-keys 'buffer-flip-keys "u8*")
-  (setq-default evil-scroll-count 6)
   (setq edit-server-url-major-mode-alist
         '(("github\\.com" . org-mode)))
   )

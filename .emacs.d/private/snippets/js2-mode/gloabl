@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: global
+# key: global
+# --
+/* global ${1:global} */

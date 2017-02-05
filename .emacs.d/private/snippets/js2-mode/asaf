@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: asaf
+# key: asaf
+# --
+async (${1:vars}) => {
+  ${2:func}
+}
