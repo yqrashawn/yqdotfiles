@@ -60,11 +60,37 @@
 				<false/>
 			</dict>
 		</array>
+		<key>42747A25-501C-409E-B96A-DA7EC5DBAB19</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>37E42A8C-92C6-4B2C-9A47-32100508C88B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>4A15DFB7-B657-4E49-9E79-E2A4F7E4487B</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>04B7255A-49E1-423B-AE98-319E3B944069</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>4AA7CDAE-AB41-4585-9EDE-60962B33DF63</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>42747A25-501C-409E-B96A-DA7EC5DBAB19</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -493,10 +519,10 @@
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -822,10 +848,10 @@
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -1288,6 +1314,122 @@ end run</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>49</integer>
+				<key>hotmod</key>
+				<integer>524288</integer>
+				<key>hotstring</key>
+				<string>Space</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>4AA7CDAE-AB41-4585-9EDE-60962B33DF63</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>anchorfields</key>
+				<true/>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>daterange</key>
+				<integer>0</integer>
+				<key>fields</key>
+				<array>
+					<dict>
+						<key>field</key>
+						<string>kMDItemDisplayName</string>
+						<key>not</key>
+						<false/>
+						<key>split</key>
+						<true/>
+						<key>value</key>
+						<string>{query}</string>
+						<key>words</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>field</key>
+						<string>kMDItemAlternateNames</string>
+						<key>not</key>
+						<false/>
+						<key>split</key>
+						<true/>
+						<key>value</key>
+						<string>{query}</string>
+						<key>words</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>field</key>
+						<string>kMDItemFinderComment</string>
+						<key>not</key>
+						<false/>
+						<key>split</key>
+						<true/>
+						<key>value</key>
+						<string>{query}</string>
+						<key>words</key>
+						<true/>
+					</dict>
+				</array>
+				<key>includesystem</key>
+				<true/>
+				<key>keyword</key>
+				<string>workspacesearch</string>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>scopes</key>
+				<array>
+					<string>~/workspace</string>
+				</array>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>types</key>
+				<array/>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.filefilter</string>
+			<key>uid</key>
+			<string>42747A25-501C-409E-B96A-DA7EC5DBAB19</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>openwith</key>
+				<string></string>
+				<key>sourcefile</key>
+				<string></string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openfile</string>
+			<key>uid</key>
+			<string>37E42A8C-92C6-4B2C-9A47-32100508C88B</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>openwith</key>
 				<string></string>
 				<key>sourcefile</key>
@@ -1307,10 +1449,10 @@ end run</string>
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -1567,10 +1709,10 @@ end run</string>
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -1726,12 +1868,33 @@ end run</string>
 			<key>ypos</key>
 			<integer>1030</integer>
 		</dict>
+		<key>37E42A8C-92C6-4B2C-9A47-32100508C88B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1020</integer>
+			<key>ypos</key>
+			<integer>950</integer>
+		</dict>
+		<key>42747A25-501C-409E-B96A-DA7EC5DBAB19</key>
+		<dict>
+			<key>xpos</key>
+			<integer>850</integer>
+			<key>ypos</key>
+			<integer>950</integer>
+		</dict>
 		<key>4A15DFB7-B657-4E49-9E79-E2A4F7E4487B</key>
 		<dict>
 			<key>xpos</key>
 			<integer>120</integer>
 			<key>ypos</key>
 			<integer>140</integer>
+		</dict>
+		<key>4AA7CDAE-AB41-4585-9EDE-60962B33DF63</key>
+		<dict>
+			<key>xpos</key>
+			<integer>680</integer>
+			<key>ypos</key>
+			<integer>950</integer>
 		</dict>
 		<key>72273002-2C12-41AA-8B00-9BC70F458A51</key>
 		<dict>
