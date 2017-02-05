@@ -15,6 +15,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 		<key>5F1F2FEA-61CC-411D-82C7-5598143ECD09</key>
@@ -26,6 +28,8 @@
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
 			</dict>
 		</array>
 	</dict>
@@ -34,7 +38,7 @@
 	<key>description</key>
 	<string>A simple timer</string>
 	<key>disabled</key>
-	<false/>
+	<true/>
 	<key>name</key>
 	<string>Simple Timer</string>
 	<key>objects</key>
@@ -46,11 +50,7 @@
 				<false/>
 				<key>onlyshowifquerypopulated</key>
 				<false/>
-				<key>output</key>
-				<integer>0</integer>
 				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
 				<false/>
 				<key>text</key>
 				<string>Alarm</string>
@@ -62,7 +62,7 @@
 			<key>uid</key>
 			<string>C707B821-B4BE-45A5-B699-D4820B0CBA18</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -83,15 +83,21 @@
 			<key>uid</key>
 			<string>507588CD-5E20-4CEF-81B2-E77FA7793996</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
 				<string>/usr/bin/python scripts.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -100,7 +106,7 @@
 			<key>uid</key>
 			<string>5F1F2FEA-61CC-411D-82C7-5598143ECD09</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -127,16 +133,22 @@ but, I prefer the simplest formats.
 	<dict>
 		<key>507588CD-5E20-4CEF-81B2-E77FA7793996</key>
 		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
 			<key>ypos</key>
 			<real>60</real>
 		</dict>
 		<key>5F1F2FEA-61CC-411D-82C7-5598143ECD09</key>
 		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
 			<key>ypos</key>
 			<real>60</real>
 		</dict>
 		<key>C707B821-B4BE-45A5-B699-D4820B0CBA18</key>
 		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
 			<key>ypos</key>
 			<real>60</real>
 		</dict>
