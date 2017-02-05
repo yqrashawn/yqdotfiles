@@ -1,0 +1,72 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+	<html>
+	<head>
+		<title>About Rules</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="conceptual, concept, rules" />
+		<meta name="description" content="Learn about how Hazel uses rules." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+<h1>About Rules</h1>
+			</div>
+<br/>
+<h2>The Rules of Rules</h2>
+<p>Hazel's rule system works similarly to that of Apple Mail. Each folder has a rule list. When Hazel processes a file, it goes through each rule in order and when it finds a match (as specified by the rule's conditions), it runs the actions of that rule. There are some important points to keep in mind:</p>
+
+<ul>
+<li><b>The first rule that matches is the one and only one that is run.</b><br/>
+This means that if it finds a match, subsequent rules in the list are not looked at for that file. Note that this differs from how Apple Mail processes rules. If you want Hazel to continue evaluating rules for that file, you must use the "Continue matching rules" action.</li>
+
+<li><b>If a file is not moved from the folder, Hazel will continue to run the file through the rule list</b><br/>
+This allows you create rules that may not apply to a file now, but will at some future date.</li>
+
+<li><b>Hazel only processes folders and files directly in the folder being monitored.</b><br/>
+If you need Hazel to match against files and folders in subfolders of the main folder, see <a href="descendingIntoFolders.html">Processing subfolders</a></li>
+
+<li><b>If an action fails, subsequent actions are not run for that file.</b><br/>
+If you have five actions on a rule and the third one fails, actions four and five will not get run on that file. Hazel will attempt to re-execute the actions on subsequent runs until it succeeds (as long as the file still matches the rule.</li>
+
+<li><b>If a file matches the same rule it matched last time, it will not re-run its actions</b><br/>
+As an extension of the above. This is done for performance reasons (no use re-running the same actions time and time again if the file keeps matching the same rule). The upshot of this if Hazel colors a file red, for instance, and you change the color, Hazel will not re-color the file red if it matches the same rule. Note that if conditions change and the file starts matching a different rule instead, those actions will get executed.</li>
+
+<li><b>You can exclude files from subsequent rules using the "Ignore file" action</b><br/>
+If you want to make sure certain files are not acted upon by other rules, make the first rule one whose conditions match the files you want to exclude and make the action "Ignore file". Since Hazel only uses the first rule that matches, those files will not be processed by the rules coming after this one.</li>
+
+<li><b>You can have a rule be a catch-all for files that don't match any of the rules.</b><br/>
+If you want to have a default action run on files that don't match any of the other rules, make the last rule match "Any file" and supply whatever actions you like. Since "Any file" matches, as it says, any file, it will match anything that has gotten through all the rules preceding it.</li>
+</ul>
+			<h2 class="seealso">See also</h2>
+			<p class="seealso">
+				<a href="creatingRules.html">Creating rules</a><br />
+				<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+			</p>
+		</div>
+	</body>
+</html>

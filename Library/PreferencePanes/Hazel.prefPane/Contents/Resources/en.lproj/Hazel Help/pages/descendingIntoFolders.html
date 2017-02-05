@@ -1,0 +1,78 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+	<html>
+	<head>
+		<title>Processing subfolders</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="recursive, subfolders, descending" />
+		<meta name="description" content="How to make Hazel process folder contents." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+<A NAME="support"></A>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Processing subfolders</h1>
+			</div>
+			<p>Normally, Hazel treats files and folders the same. They are considered one unit when it comes to filtering and applying actions. For example, the "Move" action will move the whole folder.</p>
+			<p>Sometimes, though, you want Hazel to apply its rules to the contents of a subfolder. There are two ways to accomplish this. You can (a) add the subfolder to Hazel just like any other folder or (b) use the "Run rules on folder contents" action. Method (a) is fairly straightforward as you just treat a subfolder as you would any other folder that you have Hazel monitoring. But what about method (b)?</p>
+			<p>The "Run rules on folder contents" action does just that. When a folder matches the conditions of the rule, the action will take the rule list for the current folder and apply them to the files and folders in the folder that just matched. Think of it as a hand-off from the parent folder to the child folder. Depending on how you set up the conditions, this hand-off can be performed over and over therefore allowing Hazel to descend further down into subfolders.</p>
+			
+			<br/><h2>Limitations with using "Run rules on folder contents"</h2><br/>
+			<p>Note that this can get tricky so here are a few things you should keep in mind:</p>
+			<ul>
+			<li>The action will fail if is applied to anything besides a folder. Make sure you use a "Kind is Folder" condition to ensure that  non-folders do not match. If a regular file matches the rule, it will not be able to match any other rules which is probably not what you intended.</li>
+			<li>Descending into a folder goes from top down. The rule matches at the parent folder and gets handed off from parent to child. You need to be careful how you structure your conditions/rules such that it will go into the folders you want but not into the ones you do not.</li>
+			<li>Descending into large tree of folders is very resource intensive. Try to structure the rules such that they do not descend too deeply.</li>
+			</ul>
+
+			<br/><h2>When to add the folder to Hazel explicitly</h2><br/>
+			<ul>
+			<li>When the folder is somewhat permanent and known ahead of time.</li>
+			<li>When you require Hazel to monitor changes to it directly.</li>
+			<li>When there are a few of them.</li>
+			</ul>
+			
+			<br/><h2>When to use the "Run rules on folder contents" action.</h2><br/>
+			<ul>
+			<li>When the folders are created dynamically or the exact name are not known ahead of time.</li>
+			<li>When there are many of them.</li>
+			</ul>
+
+			<div summary="More Information" id="taskbox">
+		<p>
+		<img src="../gfx/orngbullet.png" /> For more information including downloadable sample rules, please see <a href="http://www.noodlesoft.com/forums/viewtopic.php?f=4&amp;t=470">this article</a> in the Noodlesoft forums.</p>
+			</div>
+
+			<h2 class="seealso">See also</h2>
+			<p class="seealso">
+				<a href="aboutRules.html">About rules</a><br/>
+				<a href="ruleReference.html">Rule Reference</a><br />
+				<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+			</p>
+		</div>
+	</body>
+</html>

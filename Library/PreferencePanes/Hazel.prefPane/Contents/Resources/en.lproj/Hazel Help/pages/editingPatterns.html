@@ -1,0 +1,64 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+	
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+	<head>
+		<title>Editing patterns</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="rename, name, subfolder, sort, message, combination" />
+		<meta name="description" content="How to specify patterns." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Editing patterns</h1>
+			</div>
+				<p>For certain actions, you need to specify a pattern. A pattern is a template of text and special attributes. It is used by the action to generate text when run. For instance, when renaming, you can add the file's added date. Since you don't know what the date will be until the rule runs and that the date will vary depending on the file, you can use an attribute in the pattern to represent that date. When the rule runs, it will substitute in the actual date.</p>
+				<p>When you edit a pattern, the interface will expand as shown here. Note that depending on the action, the attributes available will change.</p>
+				<p style="text-align: center;">
+				<img align="center" src="../gfx/pattern.png" alt="Pattern Interface" width="687" height="326" />
+				</p>
+
+				<p>To specify text, just type in the field as you normally would. Any text entered will be used as is. Below the field, you will find various attributes. These represent different attributes of the file being matched. By clicking on them or dragging them into the field, you tell the rule to substitute the actual value when it runs. The example field at the bottom shows a sample of how it will look when run (of course, the actual text will vary).</p>
+				<p>If you hover your mouse over an attribute after adding it to the field, you will see that an arrow appears. This indicates you can click on it for more formatting options. Depending on the type of attribute it is you will be given different options:</p>
+					<ul>
+					<li>For text-based attributes, you can change the capitalization. You can select between title case (the first letter of every word is capitalized), lowercase (all letters are set to lowercase), upper case (all letters are capitalized) and no change (leave the text as is). You can also do text replacement by specifying text that will be replaced with some other text.</li>
+					<li>For number-based attributes, you can set the minimum number of digits. Select "More…" to select more than 4 digits. If a number has fewer digits than what you set here, extra zeroes will be added to the left. For instance, if the number is "1" and you set this attribute to use a minimum of 3 digits, then the resulting number will be "001". This will never chop off digits if the number happens to have more digits than what you set. In addition to setting the digits, you can adjust the actual value of the number either up or down.</li>
+					<li>For attributes representing a list, you can choose to only use the first item, the last item or show all items, separated by commas. You also have the option of setting the format for the individual elements so if the attribute is a list of text items, you can also set capitalization. Note that this format applies across all items in the list.</li>
+					<li>For attributes representing dates, you can further edit the date format. See <a href="editingDates.html">Editing date formats</a> for more information. You can also adjust the date value itself, allowing you to, say, nudge the date a month ahead.</li>
+					<li>The domain attribute has special options to indicate how much of the domain to show.</li>
+					</ul>
+				<p>The "other" attribute is special. It is a stand-in for any available Spotlight attribute. When you drop it onto the field, you will be given the chance to select which Spotlight attribute you'd like that token to represent. Depending on the attribute, you may have more options when clicking on it after adding it to your pattern.</p>
+
+				<h2 class="seealso">See also</h2>
+				<p class="seealso">
+					<a href="editingDates.html">Editing date formats</a><br />
+					<a href="editingMatchPatterns.html">Using match patterns</a><br />
+					<a href="ruleReference.html">Rule Reference</a><br />
+					<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+				</p>
+			</div>
+		</body>
+		</html>

@@ -1,0 +1,627 @@
+<HTML><HEAD><TITLE></TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+
+<BR><BR><FONT COLOR="#000066"><H1><A NAME="//apple_ref/occ/cl/CURLHandle">CURLHandle</A></H1></FONT><BR>
+
+
+
+	<blockquote><DL><DT><B>Inherits From:</B></DT>  
+	<DD>NSURLHandle</DD>
+</DL></blockquote>
+
+
+
+
+
+	<blockquote><DL><DT><B>Declared In:</B></DT>
+	<DD>CURLHandle.h</DD>
+	</DL></blockquote>
+
+<BR><BR>
+
+
+<H2>Class Description</H2>
+CURLHandle is a wrapper around a CURL. 
+This is in the public domain, but please report any improvements back to the author 
+(dwood_karelia_com). 
+Be sure to be familiar with CURL and how it works; see http://curl.haxx.se/<P>
+
+The idea is to have it handle http and possibly other schemes too. At this time 
+we don't support writing data (via HTTP PUT) and special situations such as HTTPS and 
+firewall proxies haven't been tried out yet.<P>
+
+This class maintains only basic functionality, any &quot;bells and whistles&quot; should be 
+defined in a category to keep this file as simple as possible.<P>
+
+Each instance is created to be associated with a URL. But we can change the URL and 
+use the previous connection, as the CURL documentation says.<P>
+
+A URL cache is maintained as described in the <B>NSURLHandle</B> documentation. It's just a 
+mutable dictionary, which is apparently about as sophisticated as Apple does. In the 
+future, it might be nice to have some sort of LRU scheme....<P>
+
+Notifications are posted when the cache changes; it's possible for the client to track this 
+cache for debugging or other nefarious purposes.<P>
+
+<I><B>Note:</B> Comments in methods with this formatting indicate quotes from the headers and 
+documentation for <B>NSURLHandle</B> and are provided to help prove &quot;correctness.&quot; Some 
+come from an another document -- perhaps an earlier version of the documentation or release notes, 
+but I can't find the original source. These are marked &quot;(?source)&quot;</I><P>
+
+The comment &quot;<B>DO NOT INVOKE SUPERCLASS</B>&quot; indicates that <B>NSURLHandle</B> does not provide 
+an implementation available for overriding.
+
+
+
+
+
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Functions</H2>
+	<blockquote>
+	
+		
+		<H4>Synopsis:</H4>
+		
+			<CODE>size_t <B><A NAME="//apple_ref/c/func/curlBodyFunction">curlBodyFunction</A></B>(void *ptr, size_t size, size_t nmemb, void *inSelf);</CODE><BR>
+		
+			<CODE>size_t <B><A NAME="//apple_ref/c/func/curlHeaderFunction">curlHeaderFunction</A></B>(void *ptr, size_t size, size_t nmemb, void *inSelf);</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		Callbacks from reading a chunk of data. Since we pass &quot;<B>self</B>&quot; in as the &quot;data pointer&quot;, 
+we can use that to get back into Objective C and do the work with the class.
+		
+	
+	</blockquote>
+
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Global Variables</H2>
+	<blockquote>
+	
+		
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSString *<B><A NAME="//apple_ref/c/data/CURLHandleCacheDeleteNotification">CURLHandleCacheDeleteNotification</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		The cache has been removed
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSString *<B><A NAME="//apple_ref/c/data/CURLHandleCacheCreateNotification">CURLHandleCacheCreateNotification</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		The cache has been created
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSString *<B><A NAME="//apple_ref/c/data/CURLHandleCacheChangeNotification">CURLHandleCacheChangeNotification</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		The cache has been changed
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSString *<B><A NAME="//apple_ref/c/data/CURLHandleCreatedNotification">CURLHandleCreatedNotification</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		A handle has been created; the object is the handle itself.
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSMutableDictionary *<B><A NAME="//apple_ref/c/data/sCurlCache">sCurlCache</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		Cache of URL contents, keyed by URL
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSMutableSet *<B><A NAME="//apple_ref/c/data/sAcceptedURLs">sAcceptedURLs</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		Set of URLs that CURLHandle will process
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>BOOL <B><A NAME="//apple_ref/c/data/sAcceptAllHTTP">sAcceptAllHTTP</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		YES if CURLHandle will accept <I>all</I> HTTP
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>BOOL <B><A NAME="//apple_ref/c/data/sAllowsProxy">sAllowsProxy</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		YES if CURLHandle will allow use of a proxy server
+		
+	
+		<hr WIDTH=25% ALIGN=LEFT>
+		<H4>Synopsis:</H4>
+		
+			<CODE>NSString *<B><A NAME="//apple_ref/c/data/sProxyUserIDAndPassword">sProxyUserIDAndPassword</A></B>;</CODE><BR>
+		
+		
+		<H4>Description:</H4>
+		Proxy User ID:Password combo for all uses of CURL.
+		
+	
+	</blockquote>
+
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Instance Variables</H2>
+	<blockquote>
+	
+		<CODE>NSThread *<B>mMainThread</B>;</CODE><BR>
+		<CODE>CURL *<B>mCURL</B>;</CODE><BR>
+		<CODE>char <B>mErrorBuffer</B>[CURL_ERROR_SIZE];</CODE><BR>
+		<CODE>int <B>mResult</B>;</CODE><BR>
+		<CODE>NSURL *<B>mNSURL</B>;</CODE><BR>
+		<CODE>NSMutableData *<B>mHeaderBuffer</B>;</CODE><BR>
+		<CODE>NSString *<B>mHeaderString</B>;</CODE><BR>
+		<CODE>NSMutableDictionary *<B>mStringOptions</B>;</CODE><BR>
+		<CODE>NSDictionary *<B>mProxies</B>;</CODE><BR>
+		<CODE>NSMutableDictionary *<B>mHTTPHeaders</B>;</CODE><BR>
+		<CODE>id <B>mProgressIndicator</B>;</CODE><BR>
+		<CODE>NSPort *<B>mPort</B>;</CODE><BR>
+		<CODE>BOOL <B>mAbortBackground</B>;</CODE><BR>
+		<CODE>FILE *<B>mPutFile</B>;</CODE><BR>
+	<P><TABLE>
+	
+		<TR><TD>mMainThread</TD><TD>Reference to main thread so thread can determine if it's a background thread or not</TD></TR>
+	
+		<TR><TD>mCURL</TD><TD>Pointer to the actual CURL object that does all the hard work</TD></TR>
+	
+		<TR><TD>mErrorBuffer</TD><TD>Buffer to hold string generated by CURL; this is then converted to an NSString.</TD></TR>
+	
+		<TR><TD>mResult</TD><TD>Result after performing a CURL operation; it is displayed as an error code in case there was no error string generated.</TD></TR>
+	
+		<TR><TD>mNSURL</TD><TD>The instance of <B>NSURL</B> that is the URL to load</TD></TR>
+	
+		<TR><TD>mHeaderBuffer</TD><TD>The buffer that is filled with data from the header as the download progresses; it's appended to one line at a time.</TD></TR>
+	
+		<TR><TD>mHeaderString</TD><TD>The header buffer, converted into a string, upon demand.</TD></TR>
+	
+		<TR><TD>mStringOptions</TD><TD>Dictionary of keys(ints) &amp; values (NSStrings) for performing curl_easy_setopt. We store the options in a dictionary and then invoke <B>curl_easy_setopt</B> on each option right before the <B>curl_easy_perform</B> so that we can retain their memory until it is needed.</TD></TR>
+	
+		<TR><TD>mProxies</TD><TD>Dictionary of proxy information; it's released when the handle is deallocated since it's needed for the transfer.</TD></TR>
+	
+		<TR><TD>mHTTPHeaders</TD><TD>Dictionary of &amp; values (NSStrings) for additional HTTP headers. We store the options in a dictionary and then make use of them right before the <B>curl_easy_perform</B> so that we can retain their memory until it is needed.</TD></TR>
+	
+		<TR><TD>mProgressIndicator</TD><TD>A progress indicator, to animate during foreground loads. This will help give some indication of loading progress, though of course you're better off loading in the background.</TD></TR>
+	
+		<TR><TD>mPort</TD><TD>A port for communicating between the background thread and the foreground thread.</TD></TR>
+	
+		<TR><TD>mAbortBackground</TD><TD>A flag that is set by the foreground thread and read by the background thread; it's an indicator that the user has cancelled.</TD></TR>
+	
+		<TR><TD>mPutFile</TD><TD>The FILE stream if putFile: is used. It's only saved so it can be closed after perform</TD></TR>
+	
+	</TABLE>
+	</blockquote>
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Method Types</H2>
+	<blockquote>
+	
+		
+			CURLHandle-specific interfaces.
+		
+		<DL><DT></DT>
+		
+			<DD> <A HREF="#+ curlGoodbye">+ curlGoodbye</A></DD>
+		
+			<DD> <A HREF="#+ curlHelloSignature:acceptAll:">+ curlHelloSignature:acceptAll:</A></DD>
+		
+			<DD> <A HREF="#+ curlAcceptURL:">+ curlAcceptURL:</A></DD>
+		
+			<DD> <A HREF="#+ curlFlushEntireCache">+ curlFlushEntireCache</A></DD>
+		
+			<DD> <A HREF="#- curl">- curl</A></DD>
+		
+			<DD> <A HREF="#- setString:forKey:">- setString:forKey:</A></DD>
+		
+			<DD> <A HREF="#- setStringOrNumberObject:forKey:">- setStringOrNumberObject:forKey:</A></DD>
+		
+			<DD> <A HREF="#- setURL:">- setURL:</A></DD>
+		
+			<DD> <A HREF="#- url">- url</A></DD>
+		
+			<DD> <A HREF="#- setHTTPHeaders:">- setHTTPHeaders:</A></DD>
+		
+			<DD> <A HREF="#+ setProxyUserIDAndPassword:">+ setProxyUserIDAndPassword:</A></DD>
+		
+			<DD> <A HREF="#+ setAllowsProxy:">+ setAllowsProxy:</A></DD>
+		
+			<DD> <A HREF="#- setPutFile:">- setPutFile:</A></DD>
+		
+			<DD> <A HREF="#- setPutFileOffset:">- setPutFileOffset:</A></DD>
+		
+			<DD> <A HREF="#- getResponseCookies">- getResponseCookies</A></DD>
+		
+			<DD> <A HREF="#+ curlVersion">+ curlVersion</A></DD>
+		
+		</DL>
+	
+		
+			NSURLHandle overrides
+		
+		<DL><DT></DT>
+		
+			<DD> <A HREF="#+ canInitWithURL:">+ canInitWithURL:</A></DD>
+		
+			<DD> <A HREF="#+ cachedHandleForURL:">+ cachedHandleForURL:</A></DD>
+		
+			<DD> <A HREF="#- loadInForeground">- loadInForeground</A></DD>
+		
+			<DD> <A HREF="#- curlError">- curlError</A></DD>
+		
+			<DD> <A HREF="#- initWithURL:cached:">- initWithURL:cached:</A></DD>
+		
+			<DD> <A HREF="#- propertyForKey:">- propertyForKey:</A></DD>
+		
+			<DD> <A HREF="#- propertyForKeyIfAvailable:">- propertyForKeyIfAvailable:</A></DD>
+		
+			<DD> <A HREF="#- dealloc">- dealloc</A></DD>
+		
+			<DD> <A HREF="#- beginLoadInBackground">- beginLoadInBackground</A></DD>
+		
+			<DD> <A HREF="#- cancelLoadInBackground">- cancelLoadInBackground</A></DD>
+		
+			<DD> <A HREF="#- endLoadInBackground">- endLoadInBackground</A></DD>
+		
+		</DL>
+	
+		
+			Support Methods
+		
+		<DL><DT></DT>
+		
+			<DD> <A HREF="#- curlWritePtr:size:number:message:">- curlWritePtr:size:number:message:</A></DD>
+		
+			<DD> <A HREF="#- curlThreadBackgroundLoad:">- curlThreadBackgroundLoad:</A></DD>
+		
+			<DD> <A HREF="#- prepareAndPerformCurl">- prepareAndPerformCurl</A></DD>
+		
+			<DD> <A HREF="#- handlePortMessage:">- handlePortMessage:</A></DD>
+		
+			<DD> <A HREF="#- headerString">- headerString</A></DD>
+		
+		</DL>
+	
+	</blockquote>
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Class Methods</H2>
+ 
+	
+		
+		<A NAME="+ cachedHandleForURL:"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/cachedHandleForURL:">cachedHandleForURL:</A></H3>
+		<CODE>+ (NSURLHandle *)<B>cachedHandleForURL:</B>(NSURL *)<EM>anURL</EM>
+			
+		</CODE><P>
+		<I>Returns the URL handle from the cache that has serviced <I>anURL</I> or another identical URL. Subclasses of NSURLHandle must override this method. Returns <B>nil</B> if there is no such handle.</I><P>
+
+<I>cachedHandleForURL: should look in the cache (maintained by your subclass) for an existing handle that services an URL identical to the one passed. If so, the cached handle should be returned. If not, a new handle should be created for the URL, stored in the cache, then returned. (?source)</I> 
+We have <B>super</B> cache the handle as well, though it's only to cause the data not 
+to be flushed. Because the superclass is actually abstract (using the whole 
+class cluster mechanism), it's not like we're caching the URL and so is the parent.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ canInitWithURL:"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/canInitWithURL:">canInitWithURL:</A></H3>
+		<CODE>+ (BOOL)<B>canInitWithURL:</B>(NSURL *)<EM>anURL</EM>
+			
+		</CODE><P>
+		<I>Returns whether an URL handle can be initialized with <I>anURL</I>. If <I>anURL</I> uses an unsupported scheme, this method returns NO. Subclasses of NSURLHandle must override this method. to identify which URLs they can service.</I><P>
+
+Success if either the &quot;all HTTP&quot; switch is on and the URL is an HTTP url, 
+or if it's a member of the set of URLs accepted explicitly.<P>
+
+<B>DO NOT INVOKE SUPERCLASS</B>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ curlAcceptURL:"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/curlAcceptURL:">curlAcceptURL:</A></H3>
+		<CODE>+ (void)<B>curlAcceptURL:</B>(NSURL *)<EM>url</EM>
+			
+		</CODE><P>
+		Add an individual URL to the set of URLs that CURLHandle will accept. This is useful when you want 
+to accept only certain URLs but not others. If you want to have CURLHandle handle all HTTPs (which 
+seems to work just fine), just invoke <B>curlHelloSignature:acceptAll:</B> with YES instead of registering individual URLs.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ curlFlushEntireCache"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/curlFlushEntireCache">curlFlushEntireCache</A></H3>
+		<CODE>+ (void)<B>curlFlushEntireCache</B>
+		</CODE><P>
+		Flush the entire cache of URLs. There doesn't seem to be an NSURLHandle API to do this, so we provide our own.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ curlGoodbye"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/curlGoodbye">curlGoodbye</A></H3>
+		<CODE>+ (void)<B>curlGoodbye</B>
+		</CODE><P>
+		You must call <B>curlGoodbye</B> at end of program, for example in <B>[NSApplication applicationWillTerminate:]</B>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ curlHelloSignature:acceptAll:"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/curlHelloSignature:acceptAll:">curlHelloSignature:acceptAll:</A></H3>
+		<CODE>+ (void)<B>curlHelloSignature:</B>(NSString *)<EM>inSignature</EM> <B>acceptAll:</B>(BOOL)<EM>inAcceptAllHTTP</EM>
+			
+		</CODE><P>
+		Initialize CURLHandle and the underlying CURL. This can be invoked when the program is launched or before any loading is needed. 
+Parameter is YES if <I>all</I> http URLs should be handled by this; NO if only ones registered with <B>curlAcceptURL:</B><P>
+
+<I>Now all that remains is to inform NSURLHandle of your new subclass; you do this by sending the NSURLHandle class the registerURLHandleClass: message, passing your subclass as the argument. Once this message has been sent, as NSURLHandle is asked to create handles for a given URL, it will in turn ask your subclass if it wants to handle the URL. If your subclass responds YES, NSURLHandle will instantiate your subclass for the URL. (?source)</I>
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ curlVersion"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/curlVersion">curlVersion</A></H3>
+		<CODE>+ (NSString *)<B>curlVersion</B>
+		</CODE><P>
+		No method description.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ setAllowsProxy:"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/setAllowsProxy:">setAllowsProxy:</A></H3>
+		<CODE>+ (void)<B>setAllowsProxy:</B>(BOOL)<EM>inBool</EM>
+			
+		</CODE><P>
+		Set whether proxies are allowed or not. Default value is YES. If no, the proxy settings 
+are ignored.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="+ setProxyUserIDAndPassword:"></A><H3><A NAME="//apple_ref/occ/clm/CURLHandle/setProxyUserIDAndPassword:">setProxyUserIDAndPassword:</A></H3>
+		<CODE>+ (void)<B>setProxyUserIDAndPassword:</B>(NSString *)<EM>inString</EM>
+			
+		</CODE><P>
+		Set a proxy user <B>id</B> and password, used by all CURLHandle. This should be done before any transfers are made.
+	
+
+
+ 
+
+	<HR WIDTH=50% ALIGN=LEFT>
+	<H2>Instance Methods</H2>
+ 
+	
+		
+		<A NAME="- beginLoadInBackground"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/beginLoadInBackground">beginLoadInBackground</A></H3><P>
+		<CODE>- (void)<B>beginLoadInBackground</B>
+		</CODE><P>
+		<I>beginLoadInBackground should start a background load of the data, then return. (?source)</I> 
+<I>Called from -loadInBackground, above.</I> 
+<I>Called when a background load begins. This method is provided mainly for subclasses that wish to take advantage of the superclass' failure reporting mechanism.</I><P>
+
+<B>DO NOT INVOKE SUPERCLASS</B>.<P>
+
+We just set a couple of status flags and then detach the background thread at this point, 
+as long as it's not already happening.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- cancelLoadInBackground"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/cancelLoadInBackground">cancelLoadInBackground</A></H3><P>
+		<CODE>- (void)<B>cancelLoadInBackground</B>
+		</CODE><P>
+		<I>Called to cancel a load currently in progress. You should call <B>super</B>'s implementation at the end of your implementation of this method.</I><P>
+
+<I>Finally, your subclass should override cancelLoadInBackground to stop a background load in progress. Once a handle has received a <B>cancelLoadInBackground</B> message, it must not send any further <B>didLoadBytes:loadComplete:</B> or <B>backgroundLoadDidFailWithReason:</B> messages. (?source)</I> 
+This just sets a flag so that the next time the background thread is about to send a message, 
+it will not. However, all current operations will still execute. But we just won't do anything 
+with the results.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- curl"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/curl">curl</A></H3><P>
+		<CODE>- (CURL *)<B>curl</B>
+		</CODE><P>
+		Return the CURL object assocated with this, so categories can have other methods 
+that do curl-specific stuff like <B>curl_easy_getinfo</B>
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- curlError"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/curlError">curlError</A></H3><P>
+		<CODE>- (NSString *)<B>curlError</B>
+		</CODE><P>
+		Convert curl's error buffer into an NSString if possible, or return the result code number as a string. This is pass into <B>backgroundLoadDidFailWithReason</B> to set the failureReason string.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- curlThreadBackgroundLoad:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/curlThreadBackgroundLoad:">curlThreadBackgroundLoad:</A></H3><P>
+		<CODE>- (void)<B>curlThreadBackgroundLoad:</B>(id)<EM>inParam</EM>
+			
+		</CODE><P>
+		Method executed in new background thread to load the URL. It sets up an 
+autorelease pool, does the load (which has callbacks), and then sends a 
+port message to indicate that the load is done. 
+The CURLHandle is retained for the duration of this thread, so it won't be deallocated 
+until the thread is done executing.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- curlWritePtr:size:number:message:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/curlWritePtr:size:number:message:">curlWritePtr:size:number:message:</A></H3><P>
+		<CODE>- (size_t)<B>curlWritePtr:</B>(void *)<EM>inPtr</EM> <B>size:</B>(size_t)<EM>inSize</EM> <B>number:</B>(size_t)<EM>inNumber</EM> <B>message:</B>(int)<EM>inMessageID</EM>
+			
+		</CODE><P>
+		Continue the writing callback in Objective C; now we have our instance variables.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- dealloc"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/dealloc">dealloc</A></H3><P>
+		<CODE>- (void)<B>dealloc</B>
+		</CODE><P>
+		Make the CURLHandle go away.<P>
+
+This will only be invoked after the background thread has completed, since the 
+target of a thread detachment is retained.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- endLoadInBackground"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/endLoadInBackground">endLoadInBackground</A></H3><P>
+		<CODE>- (void)<B>endLoadInBackground</B>
+		</CODE><P>
+		<I>Called by cancelLoadInBackground to halt any background loading. You should call <B>super</B>'s implementation at the end of your implementation of this method.</I> 
+<B>DO NOT INVOKE SUPERCLASS</B>
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- getResponseCookies"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/getResponseCookies">getResponseCookies</A></H3><P>
+		<CODE>- (NSArray *)<B>getResponseCookies</B>
+		</CODE><P>
+		Return the cookie array from the latest request. Equivalent to getting a property of COOKIES.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- handlePortMessage:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/handlePortMessage:">handlePortMessage:</A></H3><P>
+		<CODE>- (void)<B>handlePortMessage:</B>(NSPortMessage *)<EM>portMessage</EM>
+			
+		</CODE><P>
+		NSPortDelegate method gets called in the foreground thread. Now we're ready to call our 
+data-processor, which is called from both head and body.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- headerString"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/headerString">headerString</A></H3><P>
+		<CODE>- (NSString *)<B>headerString</B>
+		</CODE><P>
+		Return the current header, as a string. This is meant to be invoked after all 
+the headers are read; the entire header is cached into a string after converting from raw data.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- initWithURL:cached:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/initWithURL:cached:">initWithURL:cached:</A></H3><P>
+		<CODE>- (id)<B>initWithURL:</B>(NSURL *)<EM>anURL</EM> <B>cached:</B>(BOOL)<EM>willCache</EM>
+			
+		</CODE><P>
+		<I>initWithURL:cached: is the designated initializer for NSURLHandle; the second argument specifies whether the handle will be placed in the cache. (?source)</I><P>
+
+<I>Initializes a newly created URL handle with the URL <I>anURL</I>. <I>willCache</I> controls whether the URL handle will cache its data and respond to requests from equivalent URLs for the cached data. Subclasses of NSURLHandle must override this method.</I><P>
+
+<B>TODO: initWithURL ought to clean up better if init failed; release what was allocated.</B> 
+Note that this will not actually look up a URL in the cache if you specify YES. 
+If you want to get an existing URL from the cache, use <B>cachedHandleForURL:</B>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- loadInForeground"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/loadInForeground">loadInForeground</A></H3><P>
+		<CODE>- (NSData *)<B>loadInForeground</B>
+		</CODE><P>
+		<I>The last three methods, loadInForeground, beginLoadInBackground, and endLoadInBackground do the meaty work of your subclass. They are called from resourceData, loadInBackground, and cancelLoadInBackground respectively, after checking the status of the handle. (For instance, resourceData will not call loadInForeground if the handle has already been loaded; it will simply return the existing data.) (?source)</I><P>
+
+<I>Loads the receiver's data in the synchronously. Called by resourceData. Subclasses of NSURLHandle must override this method.</I><P>
+
+<B>DO NOT INVOKE SUPERCLASS</B>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- prepareAndPerformCurl"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/prepareAndPerformCurl">prepareAndPerformCurl</A></H3><P>
+		<CODE>- (void)<B>prepareAndPerformCurl</B>
+		</CODE><P>
+		Actually set up for loading and do the perform. This happens in either 
+the foreground or background thread. Before doing the perform, we collect up 
+all the saved-up string-valued options, and set them right before the perform. 
+This is because we create temporary (autoreleased) c-strings.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- propertyForKey:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/propertyForKey:">propertyForKey:</A></H3><P>
+		<CODE>- (id)<B>propertyForKey:</B>(NSString *)<EM>propertyKey</EM>
+			
+		</CODE><P>
+		<I>Returns the property for key <I>propertyKey</I>; returns <B>nil</B> if there is no such key. Subclasses of NSURLHandle must override this method.</I><P>
+
+<B>DO NOT INVOKE SUPERCLASS</B>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- propertyForKeyIfAvailable:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/propertyForKeyIfAvailable:">propertyForKeyIfAvailable:</A></H3><P>
+		<CODE>- (id)<B>propertyForKeyIfAvailable:</B>(NSString *)<EM>propertyKey</EM>
+			
+		</CODE><P>
+		<I>Returns the property for key <I>propertyKey</I> only if the value is already available, i.e., the client doesn't need to do any work.</I><P>
+
+<B>DO NOT INVOKE SUPERCLASS</B>.<P>
+
+<B>TODO: We can't assume any encoding for header. Perhaps we could look for the encoding value in the header, and try again if it doesn't match?</B><P>
+
+<B>TODO: Apple defines some keys, but what the heck are they? &quot;Description Forthcoming&quot;....</B><P>
+
+This first attempts to handle the Apple-defined NSHTTPProperty... keys. Then if it's HEADER we just return the whole header string. If it's COOKIES, we return the cookie as an array; this can be further parsed with <B>parsedCookies:</B>.<P>
+
+Otherwise, we try to get it by just getting a header with that property name (case-insensitive).
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- setHTTPHeaders:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/setHTTPHeaders:">setHTTPHeaders:</A></H3><P>
+		<CODE>- (void)<B>setHTTPHeaders:</B>(NSDictionary *)<EM>inDict</EM>
+			
+		</CODE><P>
+		Add these to the list of HTTP headers (besides cookie, user agent, referer -- see CURLOPT_HTTPHEADER).
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- setPutFile:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/setPutFile:">setPutFile:</A></H3><P>
+		<CODE>- (void)<B>setPutFile:</B>(NSString *)<EM>path</EM>
+			
+		</CODE><P>
+		Set the file to be PUT
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- setPutFileOffset:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/setPutFileOffset:">setPutFileOffset:</A></H3><P>
+		<CODE>- (void)<B>setPutFileOffset:</B>(int)<EM>offset</EM>
+			
+		</CODE><P>
+		Set the file <I>offset</I> for performing the PUT.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- setString:forKey:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/setString:forKey:">setString:forKey:</A></H3><P>
+		<CODE>- (void)<B>setString:</B>(NSString *)<EM>inString</EM> <B>forKey:</B>(CURLoption)<EM>inCurlOption</EM>
+			
+		</CODE><P>
+		Set an option given a <CODE>CURLoption</CODE> key. Before transfer, the string will be used to invoke <I>curl_easy_setopt</I>. Categories with convenient APIs can make use of this.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- setStringOrNumberObject:forKey:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/setStringOrNumberObject:forKey:">setStringOrNumberObject:forKey:</A></H3><P>
+		<CODE>- (void)<B>setStringOrNumberObject:</B>(id)<EM>inString</EM> <B>forKey:</B>(CURLoption)<EM>inCurlOption</EM>
+			
+		</CODE><P>
+		Set an option given a <CODE>CURLoption</CODE> key. Before transfer, the object, which must be an NSString or an integer NSNumber will be used to invoke <I>curl_easy_setopt</I>. Categories with convenient APIs can make use of this.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- setURL:"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/setURL:">setURL:</A></H3><P>
+		<CODE>- (void)<B>setURL:</B>(NSURL *)<EM>inURL</EM>
+			
+		</CODE><P>
+		Set the URL related to this CURLHandle. This can actually be changed so the same CURL is used 
+for different URLs, though they must be done sequentially. (See libcurl documentation.) 
+Note that doing so will confuse the cache, since cache is still keyed by original URL.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- url"></A><H3><A NAME="//apple_ref/occ/instm/CURLHandle/url">url</A></H3><P>
+		<CODE>- (NSURL *)<B>url</B>
+		</CODE><P>
+		return the NSURL associated with this CURLHandle
+	
+
+
+
+
+<P>
+</BODY></HTML>

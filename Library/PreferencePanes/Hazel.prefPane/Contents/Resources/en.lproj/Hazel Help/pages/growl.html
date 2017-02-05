@@ -1,0 +1,76 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+	
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+	<head>
+		<title>Using Growl</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="growl, notifications, alerts" />
+		<meta name="description" content="Learn how to use Growl with Hazel." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Using Growl</h1>
+			</div>
+				<p><a href="http://www.growl.info" target="_blank">Growl</a> is a free notification system. With Growl installed, you can get notifications on your Desktop about what Hazel is doing.</p>
+				<p>Hazel has four types of notifications that it sends out:</p>
+				<ul>
+				<li>File Events<br/>
+				These notifications occur when a file is changed using Hazel's built-in actions. Significant actions such as moving, copying, archiving and unarchiving are considered file events.</li>
+				<li>Trash Events<br/>
+				These events relate to Trash events, usually when Hazel deletes something permanently from the Trash.</li>
+				<li>Errors<br/>
+				This covers any errors that occur while processing rules.</li>
+				<li>Custom Messages<br/>
+				Custom messages are sent by the "Send Growl notification" action in rules. The messages themselves can be defined by you.</li>
+				</ul>
+				<br/>
+				<div summary="How to enable Growl support" id="taskbox">
+					<p>
+						<strong>To enable Growl support:</strong>
+						<ol>
+							<li>Make sure Growl is installed. Download it from their <a href="http://www.growl.info" target="_blank">website</a> and follow the instructions there.</li>
+							<li>In Growl's preferences, navigate to the "Applications" tabs.</li>
+							<li>Select Hazel from the list.</li>
+							<li>Enable or disable the different types of notifications as you see fit.</li>
+						</ol>
+					</p>
+				</div>
+
+				<p>In addition to the standard messages that Hazel can send out, you can have your rules send out custom messages defined by you. To do this, just use the "Send Growl notification" action. Consult the <a href="ruleReference.html">Rule Reference</a> for more details.</p>
+
+				<h2>Clicking on Growl notifications</h2>
+				<p>For many alerts, clicking on a Growl notification will show you in Finder the file to which the notification pertains. If you would like to dismiss the notification window without showing the file, hold down the Option key while clicking on the notification.</p>
+
+				<h2 class="seealso">See also</h2>
+				<p class="seealso">
+					<a href="ruleReference.html">Rule Reference</a><br />
+					<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+				</p>
+			</div>
+		</body>
+		</html>

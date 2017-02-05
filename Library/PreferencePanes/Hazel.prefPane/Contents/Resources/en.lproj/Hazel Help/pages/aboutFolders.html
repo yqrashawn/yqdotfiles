@@ -1,0 +1,73 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+	<html>
+	<head>
+		<title>About Folders</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="conceptual, concept, folder, smart" />
+		<meta name="description" content="Find out what folders you can use with Hazel." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="folders"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+<h1>About Folders</h1>
+			</div>
+<br/>
+<h2>What folders can Hazel organize?</h2>
+			<p>Hazel can be used to organize most any folder, but the best candidates are ones that tend to collect files from the outside, such as where your browser downloads files or where Mail puts attachments.</p>
+
+<p>Note that not all folders are good candidates. Some programs (such as P2P and BitTorrent clients) download files over a long period of time. Hazel needs clues to know that the program has finished downloading otherwise it may end up moving the file out from underneath the other program. In general, Hazel needs special support for the program to prevent any conflicts.</p>
+
+<p>Hazel can also monitor Smart Folders. You can specify rules to operate on the contents of a Smart Folder as you would a regular folder. Note, though, that there are limitations. You cannot have rules that match on, or go into, sub-files and folders.</p>
+
+<h2>Supported Programs and Quick Folders</h2>
+<p>When selecting a folder, Hazel provides a "Quick Folder" list providing quick access to the folders used by various programs that Hazel supports. Here's the current list:</p>
+<ul>
+<li><b>Safari</b>: The folder where you set Safari to download to, settable in its preferences.</li>
+<li><b>Mail</b>: When you open an attachment, Mail stores a copy of it here. You can set this location in Mail's preferences.</li>
+<li><b>Firefox</b>: In Firefox, you have the option to have it automatically download everything to a folder. This setting as well as the download location are settable in Firefox's preferences.</li>
+<li><b>Opera</b>: Opera allows you to set the folder where all downloads go. This is settable in its preferences.</li>
+<li><b>Camino</b>: Camino has a single folder where all downloads go which is settable in its Preferences. Note that this is the same folder that Safari uses so when you change one, you change the other.</li>
+<li><b>Flock</b>: Like Firefox, you have the option to have Flock automatically download everything to a folder. This setting as well as the download location are settable in Flock's preferences.</li>
+<li><b>Transmission</b>: To prevent Hazel from intefering with Transmission downloads, you must set Transmission to keep incomplete files in a separate folder. When this is set in Transmission's preferences, the Quick Folder link will point to Transmission's "Default location" which is where completed downloads are kept.</li>
+</ul>
+
+<h2>What if my favorite app is not supported?</h2>
+
+<p>If your app is not supported, there are a couple things you can do:</p>
+<ul>
+<li>Tell us about it! We are constantly looking to improve Hazel so if we know what you are using, the more likely we will support it in the future.</li>
+<li>Some programs have an option to move the file somewhere else when it's done. For instance, Azureus has such options under "File: Completion Moving". In such a case, you can configure the program to move files to a folder that Hazel monitors. You should not have Hazel monitor the folder that the program actually downloads to because of the aforementioned likelihood of Hazel processing it prematurely.</li>
+</ul>
+			<h2 class="seealso">See also</h2>
+			<p class="seealso">
+				<a href="folderOptions.html">Folder options</a><br />
+				<a href="help:topic_list=folders bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Folder Topics">Folder Topics</a>
+			</p>
+		</div>
+	</body>
+</html>

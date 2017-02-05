@@ -1,0 +1,80 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+	
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+	<head>
+		<title>Using the source folder attribute</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="mirror, structure, folders" />
+		<meta name="description" content="Learn about the source folder attribute." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Using the source folder attribute</h1>
+			</div>
+				<p>When editing a pattern for the "Sort into subfolder" action, the source folder attribute becomes available.</p>
+				<p>This attribute represents the folder the file/folder is in at the time the rule is run. This value is set before any actions are run so any actions which move the file will not affect change this value for a particular run. You can use this attribute to mirror or copy over the folder structure from one place to another.</p>
+				<p>The source folder attribute has three different formatting options. You can access the options by clicking on its arrow after you have dragged it into your pattern. The options are as follows:</p>
+				<ul>
+				<li>Show folder name only</li>
+				<li>Show path from monitored folder</li>
+				<li>Show full path</li>
+				</ul>
+
+				<p>These options are best explained by example. If we take a folder structure like the following:</p>
+				<p><img src="../gfx/sourceFolderExample1.png"  width="317" height="72" /></p>
+				<p>For the purposes of this example, Folder B is the folder Hazel is monitoring and the rules are set up such that Hazel will <a href="descendingIntoFolders.html">descend into any subfolders</a>.</p>
+
+				<p>If processing File 1, the source folder attribute will expand out to the following values:</p>
+				<ul>
+				<li>Show folder name only: <b>Folder B</b></li>
+				<li>Show path from monitored folder: <i>nothing</i> (there are no folders in between File 1 and the monitored folder) </li>
+				<li>Show full path: <b>Macintosh HD &#x25B8; Folder A &#x25B8; Folder B &#x25B8;</b></li>
+				</ul>
+
+				<p>If processing File 2, the source folder attribute will expand out to the following values:</p>
+				<ul>
+				<li>Show folder name only: <b>Folder D</b></li>
+				<li>Show path from monitored folder: <b>Folder C &#x25B8; Folder D &#x25B8;</b></li>
+				<li>Show full path: <b>Macintosh HD &#x25B8; Folder A &#x25B8; Folder B &#x25B8; Folder C &#x25B8; Folder D &#x25B8;</b></li>
+				</ul>
+
+				<br/><h2>Mirroring folder structures</h2><br/>
+				<p>The source folder attribute can be used to mirror a folder structure. Let's say you want to copy files to a folder called Backup. Assuming you have another rule to tell Hazel to descend into subfolders, you can set up a rule to do the following:</p>
+				<p><img src="../gfx/sourceFolderRule.png" width="315" height="272" /></p>
+				<p>These actions will first copy the file to the Backup folder, then it will move it into a subfolder based on the folder structure it had at the source. In this case, we use the folder path only up to the monitored folder. When used against our sample folder structure above, we would get something like this:</p>
+				<p><img src="../gfx/sourceFolderExample2.png" width="180" height="114" /></p>
+				<p>Here, you can see that by getting the path up to the monitored folder, we get everything below Folder B. By using the source folder attribute in this way, you can mirror folder trees.</p>
+
+				<h2 class="seealso">See also</h2>
+				<p class="seealso">
+					<a href="editingPatterns.html">Editing patterns</a><br />
+					<a href="ruleReference.html">Rule Reference</a><br />
+					<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+				</p>
+			</div>
+		</body>
+		</html>

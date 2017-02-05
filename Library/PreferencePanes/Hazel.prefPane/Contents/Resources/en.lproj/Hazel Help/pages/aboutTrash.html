@@ -1,0 +1,92 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+	<html>
+	<head>
+		<title>Managing your Trash</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="conceptual, concept" />
+		<meta name="description" content="Find out how you can use Hazel to manage your Trash." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="trash"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+<h1>Time to take out the Trash&#8230;</h1>
+			</div>
+<br/>
+<p>In addition to file organization, Hazel also can manage your Trash by deleting files from the Trash based on different settings. It is important to note that deletion here means permanent deletion so it is wise to set the limits higher/longer than you think when you first try it out.</p>
+
+<ul>
+<li>Delete files sitting in the Trash too long<br/>
+Hazel can record how long files have been sitting in the Trash and when they have been there longer than a time you set, they are removed.</li>
+
+<li>Keep the total Trash size under a set limit<br/>
+This tells Hazel to keep the total size of all files in the Trash under a limit you set. If a file is added and the total size goes over the limit, Hazel will remove files in the order in which they entered (so first in, first out) until the total size is under the limit.</li>
+</ul>
+
+<h2>Oversize files</h2>
+
+<p>An oversized file is a file that, by itself, exceeds the Trash size limit. If you have Hazel enforcing a size limit, you have two options for deailng with these types of files:</p>
+
+<ul>
+<li>left as is<br/>
+The file will be left in the Trash but Hazel will ignore it when calculating the total Trash size (otherwise, the Trash will always be over the limit). If you have the "Delete files sitting in Trash for more than&#8230;" option checked above, the file will eventually be erased when its time limit is reached. Otherwise, it will only be removed if you manually empty the Trash. The text below the option will indicate what behavior to expect based on your settings.</li>
+
+<li>deleted immediately<br/>
+As it says, the file will be deleted immediately. There will be no chance for recovery.</li>
+</ul>
+
+<h2>Normal vs secure deletion</h2>
+<p>Normally, when files are deleted, their data is left intact. Deletion in this case merely makes the space the file is occupying available to be re-used. This is why file recovery and undelete tools exist as they can search the disk for these stranded files.</p>
+
+<p>The upshot of this is that if you have sensitive data, this data is still on your drive for some period of time. If security is a concern, you can tell Hazel to securely delete files. This is equivalent to shredding a document in the physical world. Hazel uses a 7-pass US Department of Defense algorithm to overwrite the file to ensure that the data is not recoverable. Note that this is the same mechanism that is used if you use Finder's "Secure Empty Trash" option.</p>
+
+<p>Which should you choose? Here's a breakdown of the pros and cons.</p>
+
+<p>Normal deletion:<br/>
++ Quick<br/>
++ Files may be able to be recovered through special software<br/>
+- Data may be available on the drive long after you have deleted the file<br/>
+</p>
+
+<p>Secure deletion:<br/>
++ Data is overwritten and unavailable to any snoopers.<br/>
+- Slow and resource heavy<br/>
+- Files cannot be recovered, even with special software.<br/>
+</p>
+
+<p>If in doubt, use the setting that corresponds to how you emptied the Trash before Hazel. If you just used the "Empty Trash" option in Finder then use normal deletion and if you used "Secure Empty Trash" then use secure deletion.</p>
+
+<h2>App Sweep</h2>
+<p>App Sweep is a feature where Hazel watches the Trash for thrown away applications and other software. When you throw away a piece of software, App Sweep can check for other support files and offer to throw them away as well. See the section on <a href="appSweep.html">App Sweep</a> for more details.</p>
+			<h2 class="seealso">See also</h2>
+			<p class="seealso">
+				<a href="appSweep.html">App Sweep</a><br />
+				<a href="help:topic_list=trash bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Trash Topics">Trash Topics</a>
+			</p>
+		</div>
+	</body>
+</html>

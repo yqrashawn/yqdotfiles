@@ -1,0 +1,91 @@
+<HTML><HEAD><TITLE></TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+
+<BR><BR><FONT COLOR="#000066"><H1><A NAME="//apple_ref/occ/cl/NSArray (CurlHTTPExtensions)">NSArray (CurlHTTPExtensions)</A></H1></FONT><BR>
+
+
+
+
+
+
+
+	<blockquote><DL><DT><B>Declared In:</B></DT>
+	<DD>CURLHandle.h</DD>
+	</DL></blockquote>
+
+<BR><BR>
+
+
+<H2>Category Description</H2>
+This category on NSArray adds methods for header and cookie access.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Method Types</H2>
+	<blockquote>
+	
+		
+		<DL><DT></DT>
+		
+			<DD> <A HREF="#- parsedCookies">- parsedCookies</A></DD>
+		
+		</DL>
+	
+	</blockquote>
+
+
+
+
+ 
+
+	<HR WIDTH=50% ALIGN=LEFT>
+	<H2>Instance Methods</H2>
+ 
+	
+		
+		<A NAME="- parsedCookies"></A><H3><A NAME="//apple_ref/occ/instm/NSArray (CurlHTTPExtensions)/parsedCookies">parsedCookies</A></H3><P>
+		<CODE>- (NSDictionary *)<B>parsedCookies</B>
+		</CODE><P>
+		Parse the array of cookie lines, turning it into a dictionary of key/values 
+(suitable for passing to <B>setRequestCookies:</B>).<P>
+
+For instance, this will turn<P>
+
+( &quot;B=96lr6csucjt99&amp;b=2; expires=Thu, 15 Apr 2010 20:00:00 GMT; path=/; domain=.yahoo.com&quot;; )<P>
+
+into<P>
+
+{ 
+B = { 
+value = &quot;96lr6csucjt99&amp;b=2&quot;; 
+expires = &quot;Thu, 15 Apr 2010 20:00:00 GMT&quot;; 
+path = &quot;/&quot;; 
+domain = &quot;.yahoo.com&quot;; 
+}
+}
+	
+
+
+
+
+<P>
+</BODY></HTML>

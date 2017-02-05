@@ -1,0 +1,95 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+	<html>
+	<head>
+		<title>Creating Rule Conditions</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="conceptual, concept, rules, condition, conditions, nest, nested, subcondition, subconditions" />
+		<meta name="description" content="Creating rule conditions." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+<h1>Creating rule conditions</h1>
+			</div>
+<br/>
+<p>Conditions are how you can tell Hazel which files or folders should match the rule. When the file passes the conditions you specify, the actions of the rule are executed on the file or folder in question. Hazel provides various powerful mechanisms to allow you to do this.</p>
+<img align="center" src="../gfx/conditions.png" alt="Conditions Interface" width="628" height="80" />
+
+<p>The pop-up allows you to indicate which of the conditions need to match for the file/folder to pass the conditions as a whole. Here you can specify "any" (at least one condition needs to match), "all" (all the conditions must match) or "none" (not a single one of the conditions can match).</p>
+
+<br/>
+<h2>Nested conditions</h2>
+<br/>
+
+<p>To add more power and flexibility to conditions, Hazel allows you to create nested conditions. This allows you to mix conditions using different specifiers and targets together into the same rule.</p>
+
+	<div summary="How to create a nested condition" id="taskbox">
+		<p>
+						<strong>To create a nested condition:</strong>
+						<ol>
+                        <li>Hold down the alt/option key. The plus (+) button will change to show ellipses (…).</li>
+                        <li>Click on the ellipses button above where you want to create the nested condition.</li>
+                        </ol>
+                        or
+                        <ol>
+                        <li>Hold down the plus button for the condition above where you want to create the nested condition. While holding the button down, you will see an indicator and then a menu with extra options.</li>
+                        <li>Select "Add nested condition".</li>
+                        </ol>
+                </p>
+     </div>
+
+<br/>
+<h2>Condition target</h2>
+<br/>
+
+<p>Nested conditions have a second pop-up that tells Hazel to which file or folder to apply the conditions. Most of the time, you want this set to "the current file or folder". There are cases, though, where you want a file or folder to be evaluated based on its subfiles or enclosing folder. The different targets are as follows:</p>
+<dl>
+<dt>the current file or folder</dt>
+<dd>This is the default. This refers to the file or folder referenced by the outer condition. If the outer condition is the top-level condition, then the conditions under this heading will match the file or folder currently being processed. If the outer condition is specified to match any sub-file, then the conditions under this heading will apply to those subfiles as well.</dd>
+
+<dt>any sub-file or folder</dt>
+<dd>This matches the folder being matched if at least one sub-file or sub-folder passes the conditions under this heading. For example, you can use this to match a folder if any of its subfiles are colored orange. Note that these conditions do not apply to the folder being processed itself. Also, if this target is applied to a file (not a folder), it will not match since files do not have sub-files.</dd>
+
+<dt>all sub-files and folders</dt>
+<dd>This matches the folder being matched if at every sub-file and sub-folder passes the conditions under this heading. You can use this, for example, to perform an action on a folder if all it's subfiles are older than a certain age. Note that these conditions do not apply to the folder being processed itself.  Also, if this target is applied to a file (not a folder), it will not match since files do not have sub-files.</dd>
+
+<dt>enclosing folder</dt>
+<dd>This matches the folder which contains the file or folder being matched. This can be used, for instance, to perform actions on a file based on whether its parent has a certain name.</dd>
+</dl>
+
+<p>Keep in mind that regardless of this setting, <strong>the actions are always performed on the file/folder currently being processed</strong>. So, even if the rule is being matched against folder A, and the conditions are being applied to its enclosing folder and its subfiles, the actions will always be applied to folder A. If you need to apply actions to a folder's subfiles, see the article <a href="descendingIntoFolders.html">Descending into Folders</a> for more information.</p>
+
+
+			<h2 class="seealso">See also</h2>
+			<p class="seealso">
+				<a href="folderOptions.html">Folder options</a><br />
+				<a href="help:topic_list=folders bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Folder Topics">Folder Topics</a>
+			</p>
+		</div>
+	</body>
+</html>

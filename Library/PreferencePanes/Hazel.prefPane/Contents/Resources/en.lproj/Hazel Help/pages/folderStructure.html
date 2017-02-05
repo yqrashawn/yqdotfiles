@@ -1,0 +1,83 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+	
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+	<head>
+		<title>Copying folder structure</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="mirror, structure, folders" />
+		<meta name="description" content="Learn about the copying the folder structure" />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Copying folder structure</h1>
+			</div>
+				<p>Certain actions, such as Move, Copy and Upload, have an option to copy the folder structure. This allows you to carry over some of the folder structure from the source to the destination, which can be useful for mirroring the folder structure.</p>
+
+				<p>You can find the options by clicking on the action's options button. By default, this option is not enabled and no folder structure is copied over. In such a case, if copying file A from folder 1 to folder 2, file A would appear directly in folder 2. When enabled, you have three options:</p>
+				<p><img src="../gfx/folderStructure.png" width="317" height="72" /></p>
+
+				<ul>
+				<li>parent folder only</li>
+				<li>from monitored folder</li>
+				<li>from root</li>
+				</ul>
+
+				<br/>
+				<p>These options are best explained by example. If we take a folder structure like the following:</p>
+				<p><img src="../gfx/sourceFolderExample1.png" width="193" height="131" /></p>
+				<p>For the purposes of this example, Folder B is the folder Hazel is monitoring and the rules are set up such that Hazel will <a href="descendingIntoFolders.html">descend into any subfolders</a>.</p>
+
+				<br/>
+				<p>If processing File 1, it will be copied/moved/uploaded underneath the destination as follows:</p>
+				<ul>
+				<li>parent folder only: <b>Folder B</b></li>
+				<li>from monitored folder: <i>directly in the destination folder</i> (there are no folders in between File 1 and the monitored folder) </li>
+				<li>from root: <b>Macintosh HD &#x25B8; Folder A &#x25B8; Folder B &#x25B8;</b></li>
+				</ul>
+
+				<br/>
+				<p>If processing File 2, it will be copied/moved/uploaded underneath the destination as follows:</p>
+				<ul>
+				<li>parent folder only: <b>Folder D</b></li>
+				<li>from monitored folder: <b>Folder C &#x25B8; Folder D &#x25B8;</b></li>
+				<li>from root: <b>Macintosh HD &#x25B8; Folder A &#x25B8; Folder B &#x25B8; Folder C &#x25B8; Folder D &#x25B8;</b></li>
+				</ul>
+	
+				<br/>
+				<p>So, if we are copying files to a folder called Backup and using the "from monitored folder" option, we would end up with a folder structure as follows:</p>
+				<p><img src="../gfx/sourceFolderExample2.png" width="180" height="114" /></p>
+				<p>Here, you can see that by getting the path up to the monitored folder, we get everything below Folder B. By using the folder structure option in this way, you can mirror folder trees.</p>
+
+				<h2 class="seealso">See also</h2>
+				<p class="seealso">
+					<a href="editingPatterns.html">Editing patterns</a><br />
+					<a href="ruleReference.html">Rule Reference</a><br />
+					<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+				</p>
+			</div>
+		</body>
+		</html>

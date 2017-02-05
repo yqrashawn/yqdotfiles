@@ -1,0 +1,52 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+	<html>
+	<head>
+		<title>About App Sweep</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="uninstall, application, support" />
+		<meta name="description" content="Learn how to use App Sweep." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="trash"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>App Sweep</h1>
+			</div>
+			<p>While software on the Mac is mostly self-contained, there are still support files that may get created. Your preferences for that application, for instance, are stored in a separate file. When your throw the app away, these support files remain on your system, creating clutter.</p>
+			<p>With App Sweep, you can fully uninstall software by just throwing it in the trash. Hazel will notice when applications and other software are thrown away and search for their support files. If it finds any, Hazel will offer to throw these support files as well, thus fully uninstalling the software.</p>
+			<p>Note that if the software in question has its own uninstaller, it is recommended that you use that to uninstall the software. While App Sweep can deal with most software installations, certain apps may require special steps that only it knows about. That goes for Hazel itself. While App Sweep can be used to uninstall it, the built-in uninstaller (read about <a href="uninstalling.html">uninstalling Hazel</a>) will do a better job as it also will terminate its background processes for you. In general, if you installed the application by dragging it to your disk (as opposed to running a special installer program or package), then it is a good candidate for App Sweep.</p>
+			<h2>Multi-user App Sweep</h2>
+			<p>App Sweep can also handle uninstalling across users on the same machine. If you check the "Enable multi-user sweep" option, Hazel will keep track of software you have thrown away. When other users on that machine log in, they will be given the option to likewise throw away support files as if they had thrown away the software themselves.</p>
+			<p>Note that this will only work across users that have enabled this option. Users opting out of this will not be given a chance to throw away support files for software other users have thrown away nor will other users be allowed to throw away support files for software they throw away themselves.</p>
+			<h2 class="seealso">See also</h2>
+			<p class="seealso">
+				<a href="uninstallingApps.html">Uninstalling applications using AppSweep</a><br />
+				<a href="help:topic_list=trash bookID=YOURAPP Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Trash Topics">Trash Topics</a>
+			</p>
+		</div>
+	</body>
+</html>

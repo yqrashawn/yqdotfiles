@@ -1,0 +1,111 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+	
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+	<head>
+		<title>Using match patterns</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="regular expressions, search, replace, wildcard, rename, reuse, substitute, capture, pattern matching" />
+		<meta name="description" content="How to specify match patterns." />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Using match patterns</h1>
+			</div>
+				<p>Hazel provides the ability to match against patterns. For certain attributes, you can specify "matches" or "does not match" in the condition. When you edit the pattern, the interface will appear as shown here:</p>
+				
+				<p style="text-align: center;">
+				<img align="center" src="../gfx/matchpattern.png" alt="Pattern Interface" width="754" height="291" />
+				</p>
+
+				<p>To specify text, just type in the field as you normally would. Any text entered will match that specific text. Below the field, you will find various tokens. You can use these tokens to specify different patterns of characters. Click on them or drag them into the field to specify the combination of characters that you want to match.</p>
+				
+				<p>For instance, in the image above, the pattern will specify a word (a bunch of letters) followed by a dash followed by a number (one or more numeric characters). Using the pattern above, the name <b>blah-123</b> will match but not <b>123-blah</b> (does not start with letters), <b>blah123</b> (no dash after the word) or <b>blah-</b> (no number at the end).</p>
+				
+				<br/>
+				<h3>The Ins and Outs of Match Patterns</h3>
+				
+				<p>Using patterns for matching is powerful but it helps to know how they work to utilize them fully. Here are some things to keep in mind when using them:</p>
+				
+				<ul>
+				<li>The "Anything" (&#8230;) pattern token matches any single character or group of characters, including nothing. If you have a pattern <b>(123)(&#8230;)</b>, then text like "456" will match. The "Number" pattern token will match the "456" and the "Anything" token will match nothing.</li>
+				<li>When using <i>matches</i>, patterns must match the whole text. If there is any text before or after the text you want to match and you don't care what that text is, use the "Anything" (&#8230;) pattern token before or after the pattern to match those arbitrary characters.
+					<p>Using the pattern above, the text "45blah-123" will not match because even though the last part after the "45" does match, the pattern has to start from the beginning and encompass everything until the end. Likewise, "blah-123ab" will also not match because of the "ab" at the end.</p></li>
+				<li>When using <i>contains matches</i>, the pattern only needs to match a part of the text. Also, a space in the pattern will match any number of spaces (or other invisible characters).</li>
+				<li>Matches do not take the case (uppercase, lowercase) into account. <b>a</b> is the same as <b>A</b>.</li>
+				</ul>
+				
+                <a name="customtokens"></a>
+				<br/>
+				<h3>Custom Attributes</h3>
+				
+				<p>If you notice in the image above that there's a special token in the lower right called "Custom". This  allows you to create your own custom attribute. This attribute, when created, will be available for any patterns in any subsequent conditions or actions in this rule. In addition, it will be available as an attribute that you can use on the left hand side of any conditions after this one.</p>
+				
+				 <p>This is useful in cases where you want to save some text and insert it somewhere else. For example, let's say you have a bunch of files whose name starts with the year . You can define a token that will match the name and call it "year." This new token can then be dropped in to a "Sort into Subfolders" pattern to sort it into a folder based on year.</p>
+				
+				<p>To create a custom token, just drag it into the field. This will pop up an editor:</p>
+				
+				<p style="text-align: center;">
+				<img align="center" src="../gfx/customtoken.png" alt="Pattern Interface" width="414" height="243" />
+				</p>
+
+				<p>Like the match pattern editor, you can specify a pattern here. In addition, you need provide a name to identify the token. You can think of it as a subpattern which you can attach special meaning to.</p>
+				<p>Here, the token is named "year" and it matches 4 consecutive numeric digits.</p>
+				
+				<p style="text-align: center;">
+				<img align="center" src="../gfx/customtoken-diagram.png" alt="Pattern Interface" width="660" height="325" />
+				</p>
+				
+				<p>When you are done editing, (1) the attribute will appear with the name you specified in the other pattern interfaces which you can then (2) drag and drop in to your patterns. When Hazel actually runs the rule, Hazel will keep track of what text matched this token and when the action patterns are used, it will drop in the text that was matched.</p>
+				<p>Using the "year" example above, if the file has the name "1998-Expenses", then Hazel will assign the "year" attribute the value "1998" (the "year" token matches 4 numeric digits in a row). When sorting into subfolders, the file will be put in a folder called "1998." As you can see, using custom attributes allow you to pick apart different pieces of text and recombine them, substitute or reuse them as needed.</p>
+
+				<br/>
+				<h3>Custom Date Attributes</h3>
+				
+				<p>In addition to regular custom attributes, you can also create custom date attributes. These will allow you to match dates in various formats. When a custom date attribute is then used in a pattern in an action, it will be treated as a date. There, you can re-format the date into any form you choose.</p>
+				<p>Using the above example, we can accomplish the same thing by using a date token. Just drag in the date token:</p>
+
+				<p style="text-align: center;">
+				<img align="center" src="../gfx/datetoken.png" alt="Pattern Interface" width="410" height="221" />
+				</p>
+				
+				<p>Note that the tokens here are geared towards matching date elements. Dragging in the year token will give you a token which will match a year. Clicking on it after dropping it will give you different possible formats. In this case, you can match 2 or 4 digit years.</p>
+
+				<p>When used in a pattern in an action, the custom date attribute acts like any other date attribute. You can re-format the date or adjust it as needed. One case where this is useful is when the original month is given as a number, such as "01". When you reformat it, you can have it output in textual form, such as "Jan" or "January". For more details on formatting dates, see <a href="editingDates.html">Editing dates</a>.</p>
+
+				<br />
+				<p>You can also re-use custom attributes in other conditions in the same rule. You can read more on it in <a href="customAttributes.html">Using Custom Attributes</a>.</p>
+
+				<h2 class="seealso">See also</h2>
+				<p class="seealso">
+					<a href="customAttributes.html">Using Custom Attributes</a><br />
+					<a href="editingPatterns.html">Editing patterns</a><br />
+					<a href="ruleReference.html">Rule Reference</a><br />
+					<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+				</p>
+			</div>
+		</body>
+		</html>

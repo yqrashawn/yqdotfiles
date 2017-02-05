@@ -1,0 +1,88 @@
+<!-- This Apple Help template put together by Andy Matuschak
+	http://www.andymatuschak.org
+	andy@andymatuschak.org
+	Version 1.0
+	
+	Adapted from the Safari help book-thanks, Apple!
+	Adapted more directly from Pixen's help book.
+	Licensed under MIT. -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+	<head>
+		<title>Custom Attributes</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="custom tokens, export tokens, custom attributes, custom dates, custom date attributes" />
+		<meta name="description" content="Custom Attributes" />
+		<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+	</head>
+	<body>
+		<A NAME="support"></A>
+		<A NAME="Custom Attributes"></A>
+
+		<div id="banner">
+			<div id="machelp">
+				<a name="rules"></a>
+				<!-- Specify a category in the anchor above; then you can
+					link to listings of every topic in a given category. -->
+				<a class="bread" href="help:anchor='access' bookID=Hazel Help">Hazel Help</a>
+				<!-- The above links back to the index page -->
+			</div>
+			<div id="index">
+				<a class="leftborder" href="index.html">Index</a>
+			</div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon">
+				<img class="icon" src="../gfx/icon.png" alt="Hazel Icon" />
+			</div>
+			<div id="pagetitle">
+				<h1>Custom Attributes</h1>
+			</div>
+				<p>In Hazel, you can create your own Custom Attributes. These behave much like the built-in attributes, like "Name" or "Date Added", except that you can use whatever name you want and fill it in with values from different places.</p>
+
+                
+                <br/>
+                <h2>Creating a Custom Attribute</h2>
+                <p>There are a couple ways to create your own attributes.</p>
+
+		<ul>
+			<li>From a match pattern. See <a href="editingMatchPatterns.html#customtokens">Custom Tokens (Pattern Matching)</a>.</li>
+			<li>Export attributes from an AppleScript or (on OS X 10.10 or later) JavaScript. See <a href="writingAppleScript.html#customtokens">Writing AppleScript</a> for more details on how to do this.</li>
+		</ul>
+
+		<br/>
+		<h2>Using a Custom Attribute</h2>		
+		<p>Once created, your Custom Attributes will appear in any conditions/actions afterwards wherever you find regular attributes. Examples include:</p>
+		<ul>
+			<li>On the left hand side of conditions. Custom Text Attributes can be matched like any other text-based attribute and date attribute can be likewise used in conditions like any other date. They can even be compared to other date attributes, regular or custom.</li>
+			<li>In other match patterns. When you use a Custom Attribute in another match pattern, note that it behaves a bit differently. Mainly, Custom Attributes are effectively shared between patterns. See <a href="#Sharing Custom Attributes">Re-using Custom Attributes</a> below.</li>
+			<li>For patterns in actions, Custom Attributes can be used just like any other attribute. They even have the formatting options regular attributes have.</li>
+		</ul>
+
+		<br />
+
+		<A NAME="Sharing Custom Attributes"></A>
+		<h2>Re-using Custom Attributes in Condition Patterns</h2>
+		<p>If you define a custom attribute in a condition, that attribute is available to subsequent conditions. The attribute is effectively shared between all the conditions that use it. You can even specify different patterns for each case.</p>
+ 		<p>The first time it successfully matches, it retains that value for the rest of the rule. That means that once a value is assigned to that Custom Attribute, subsequent uses of that attribute in the same rule for the same file, must match the same value.</p>
+		<p>For a text attribute, the exact text must match in subsequent usage. In such a case, the pattern for that token is ignored. For a date attribute, the pattern is still used to transform the text into a date. The resulting date, though, must match the previously matched date.</p>
+		<p>Take, for example, the following:</p>
+		<img src="../gfx/customattribute-any.png" width="666" height="102" />
+		<p>Here, though, you can't see it, each use of the custom attribute has a different date format. This allows you to match dates that may appear in different formats. So, you can match for dates like Dec 31, 2014 or 2014-12-31 in the same rule. Since we are matching "any", only one of the conditions needs to match so subsequent cases are ignored. When the custom attribute is used in an action, it will have the value captured from the first condition that matched.</p>
+		<p>Now let's look at another example:</p>
+		<img src="../gfx/customattribute-all.png" width="667" height="129" />
+		<p>Again, not shown, but the custom attribute here is defined as matching anything. The first instance matches the name of the file's parent folder, as indicated by the pop-up in the nested condition. The next instance matches the name of the file itself. The first time it matches, the name of the parent folder is captured into the custom attribute. When the custom attribute is used again in the next case, it must match the text that was captured before (note that the rule is set to match "all"). So, what this example essentially does is match a file if its name matches that of its parent folder.</p>
+		<p>Using custom attributes in this way opens up new possibilities in being able to correlate a file against its parents, it's siblings, or a folder against its sub-files.</p>
+
+
+
+
+				<h2 class="seealso">See also</h2>
+				<p class="seealso">
+		                        <a href="editingMatchPatterns.html#customtokens">Custom Tokens (Pattern Matching)</a><br/>
+					<a href="ruleReference.html">Rule Reference</a><br />
+					<a href="help:topic_list=rules bookID=Hazel Help template=css/genlist.html stylesheet=css/genlist_style.css Other=Rule Topics">Rule Topics</a>
+				</p>
+		</div>
+	</body>
+</html>

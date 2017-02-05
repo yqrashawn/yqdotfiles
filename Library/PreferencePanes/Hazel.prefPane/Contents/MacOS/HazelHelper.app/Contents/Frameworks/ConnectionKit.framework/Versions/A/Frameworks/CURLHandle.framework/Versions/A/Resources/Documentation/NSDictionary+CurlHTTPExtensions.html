@@ -1,0 +1,96 @@
+<HTML><HEAD><TITLE></TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+
+<BR><BR><FONT COLOR="#000066"><H1><A NAME="//apple_ref/occ/cl/NSDictionary (CurlHTTPExtensions)">NSDictionary (CurlHTTPExtensions)</A></H1></FONT><BR>
+
+
+
+
+
+
+
+	<blockquote><DL><DT><B>Declared In:</B></DT>
+	<DD>CURLHandle.h</DD>
+	</DL></blockquote>
+
+<BR><BR>
+
+
+<H2>Category Description</H2>
+This category adds methods for dealing with HTTP input and output to an <B>NSDictionary</B>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<P><HR WIDTH=50% ALIGN=LEFT>
+	<H2>Method Types</H2>
+	<blockquote>
+	
+		
+		<DL><DT></DT>
+		
+			<DD> <A HREF="#- formatForHTTP">- formatForHTTP</A></DD>
+		
+			<DD> <A HREF="#- formatForHTTPUsingEncoding:">- formatForHTTPUsingEncoding:</A></DD>
+		
+			<DD> <A HREF="#- formatForHTTPUsingEncoding:ordering:">- formatForHTTPUsingEncoding:ordering:</A></DD>
+		
+		</DL>
+	
+	</blockquote>
+
+
+
+
+ 
+
+	<HR WIDTH=50% ALIGN=LEFT>
+	<H2>Instance Methods</H2>
+ 
+	
+		
+		<A NAME="- formatForHTTP"></A><H3><A NAME="//apple_ref/occ/instm/NSDictionary (CurlHTTPExtensions)/formatForHTTP">formatForHTTP</A></H3><P>
+		<CODE>- (NSString *)<B>formatForHTTP</B>
+		</CODE><P>
+		Convert a dictionary to an HTTP-formatted string with 7-bit ASCII encoding; 
+see <B>formatForHTTPUsingEncoding</B>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- formatForHTTPUsingEncoding:"></A><H3><A NAME="//apple_ref/occ/instm/NSDictionary (CurlHTTPExtensions)/formatForHTTPUsingEncoding:">formatForHTTPUsingEncoding:</A></H3><P>
+		<CODE>- (NSString *)<B>formatForHTTPUsingEncoding:</B>(NSStringEncoding)<EM>inEncoding</EM>
+			
+		</CODE><P>
+		Convert a dictionary to an HTTP-formatted string with the given encoding. 
+Spaces are turned into <CODE>+</CODE>; other special characters are escaped with <CODE>%</CODE>; 
+keys and values are output as <I>key</I>=<I>value</I>; in between arguments is <CODE>&amp;</CODE>.
+	
+		<P><HR WIDTH=25% ALIGN=LEFT>
+		<A NAME="- formatForHTTPUsingEncoding:ordering:"></A><H3><A NAME="//apple_ref/occ/instm/NSDictionary (CurlHTTPExtensions)/formatForHTTPUsingEncoding:ordering:">formatForHTTPUsingEncoding:ordering:</A></H3><P>
+		<CODE>- (NSString *)<B>formatForHTTPUsingEncoding:</B>(NSStringEncoding)<EM>inEncoding</EM> <B>ordering:</B>(NSArray *)<EM>inOrdering</EM>
+			
+		</CODE><P>
+		Convert a dictionary to an HTTP-formatted string with the given encoding, as above. The <I>inOrdering</I> parameter specifies the order to place the inputs, for servers that care about this. (Note that keys in the dictionary that aren't in <I>inOrdering</I> will not be included.) If <I>inOrdering</I> is <B>nil</B>, all keys and values will be output in an unspecified order.
+	
+
+
+
+
+<P>
+</BODY></HTML>
