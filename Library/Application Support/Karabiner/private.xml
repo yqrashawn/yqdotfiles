@@ -872,19 +872,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_TOWER</name>
     <url type="shell">
       osascript -e '
-      set appName to "Tower"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+        tell application "Alfred 3" to run trigger "launchTower" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -893,19 +881,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_PAW</name>
     <url type="shell">
       osascript -e '
-      set appName to "Paw"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+        tell application "Alfred 3" to run trigger "launchPaw" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -968,19 +944,7 @@ tell application "Alfred 3" to run trigger "launchSafari" in workflow "yqrashawn
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_XCODE</name>
     <url type="shell">
       osascript -e '
-      set appName to "Xcode"
-      set appID to bundle identifier of (info for (path to application appName))
-      tell application "System Events"
-      if not (exists process appName) then
-      tell application appID to activate
-      else
-      if frontmost of process appName then
-      set visible of process appName to false
-      else
-      set frontmost of process appName to true
-      end if
-      end if
-      end tell
+        tell application "Alfred 3" to run trigger "launchXcode" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1493,6 +1457,15 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     <url type="shell">
       osascript -e '
       tell application "Alfred 3" to run trigger "restartWifi" in workflow "nikivi.wifi.workflow" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_LAUNCH_WECHAT</name>
+    <url type="shell">
+      osascript -e '
+        tell application "Alfred 3" to run trigger "launchWeChat" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -3277,6 +3250,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __KeyToKey__
       KeyCode::F,
       KeyCode::VK_OPEN_URL_KM_OPEN_FINDER
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::V,
+      KeyCode::VK_OPEN_URL_ALFRED_LAUNCH_WECHAT
     </autogen>
 
     <autogen>
@@ -6461,6 +6440,28 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       KeyCode::J, KeyCode::L,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
       KeyCode::SPACE, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous fl = fullScreen</name>
+    <identifier>private.sim_fl</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::F, KeyCode::L,
+      KeyCode::SEMICOLON, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous fj = clipboard</name>
+    <identifier>private.sim_fj</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::F, KeyCode::J,
+      KeyCode::X, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
     </autogen>
   </item>
 

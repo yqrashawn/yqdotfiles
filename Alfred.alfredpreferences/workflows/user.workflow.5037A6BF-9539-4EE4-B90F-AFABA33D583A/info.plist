@@ -86,6 +86,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>5F0F32D7-3B7D-4498-95B8-2985508DAC98</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E0B7AE7E-89B5-475E-9452-44857929B6B1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>6FF3A24F-34EA-466A-9964-A51E9E6D8172</key>
 		<array>
 			<dict>
@@ -156,6 +169,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>81295729-FF87-4AB9-84BE-7F9022B3A831</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>ED3263AE-5C28-4A64-AD89-1E9B424C1EF5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D396DD02-24B0-4375-B7C8-BC2F408CD29B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -578,6 +604,66 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>paths</key>
+				<array>
+					<string>/Applications/Tower.app</string>
+				</array>
+				<key>toggle</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.launchfiles</string>
+			<key>uid</key>
+			<string>E0B7AE7E-89B5-475E-9452-44857929B6B1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>launchTower</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>5F0F32D7-3B7D-4498-95B8-2985508DAC98</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>launchWeChat</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>ED3263AE-5C28-4A64-AD89-1E9B424C1EF5</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>paths</key>
+				<array>
+					<string>/Applications/WeChat.app</string>
+				</array>
+				<key>toggle</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.launchfiles</string>
+			<key>uid</key>
+			<string>D396DD02-24B0-4375-B7C8-BC2F408CD29B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -645,6 +731,13 @@
 			<integer>320</integer>
 			<key>ypos</key>
 			<integer>110</integer>
+		</dict>
+		<key>5F0F32D7-3B7D-4498-95B8-2985508DAC98</key>
+		<dict>
+			<key>xpos</key>
+			<integer>50</integer>
+			<key>ypos</key>
+			<integer>310</integer>
 		</dict>
 		<key>6FF3A24F-34EA-466A-9964-A51E9E6D8172</key>
 		<dict>
@@ -730,6 +823,13 @@
 			<key>ypos</key>
 			<integer>240</integer>
 		</dict>
+		<key>D396DD02-24B0-4375-B7C8-BC2F408CD29B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>320</integer>
+			<key>ypos</key>
+			<integer>330</integer>
+		</dict>
 		<key>D410359C-6F8C-4BE5-AF64-C2389482AD28</key>
 		<dict>
 			<key>xpos</key>
@@ -743,6 +843,20 @@
 			<integer>320</integer>
 			<key>ypos</key>
 			<integer>50</integer>
+		</dict>
+		<key>E0B7AE7E-89B5-475E-9452-44857929B6B1</key>
+		<dict>
+			<key>xpos</key>
+			<integer>320</integer>
+			<key>ypos</key>
+			<integer>310</integer>
+		</dict>
+		<key>ED3263AE-5C28-4A64-AD89-1E9B424C1EF5</key>
+		<dict>
+			<key>xpos</key>
+			<integer>50</integer>
+			<key>ypos</key>
+			<integer>330</integer>
 		</dict>
 		<key>F2C8A42A-179E-4BE3-B56C-C9C9C6064B7C</key>
 		<dict>
