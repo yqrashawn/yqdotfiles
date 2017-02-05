@@ -16,6 +16,11 @@
   </appdef>
 
   <appdef>
+    <appname>GitUp</appname>
+    <equal>co.gitup.mac</equal>
+  </appdef>
+
+  <appdef>
     <appname>Alfred</appname>
     <equal>com.runningwithcrayons.Alfred-3</equal>
   </appdef>
@@ -270,6 +275,37 @@
   </item>
 
   <item>
+    <name>GitUp Remap</name>
+    <identifier>gitup_remap</identifier>
+    <only>GitUp</only>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::J,
+      KeyCode::CURSOR_DOWN,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::K,
+      KeyCode::CURSOR_UP,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::L,
+      KeyCode::CURSOR_RIGHT
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::H,
+      KeyCode::CURSOR_LEFT
+    </autogen>
+
+  </item>
+
+  <item>
     <name>HHKB OPTION_R to Hyper</name>
     <appendix>OPTION_R</appendix>
     <identifier>private.OPTION_R</identifier>
@@ -406,6 +442,15 @@
       tell application "Keyboard Maestro Engine"
       do script "a: lowercase selected text"
       end tell
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_FINDER_TO_ITERM</name>
+    <url type="shell">
+      osascript -e '
+        tell application "Alfred 3" to run trigger "finderToIterm" in workflow "de.leenno.terminalfinder" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -2542,6 +2587,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __KeyToKey__
       KeyCode::E,
       KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      KeyCode::VK_OPEN_URL_ALFRED_FINDER_TO_ITERM
     </autogen>
 
     <autogen>
