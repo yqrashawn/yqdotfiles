@@ -1,4 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
+;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 (add-to-list 'load-path "/User/Rashawn/.emacs.d/private/local/")
@@ -426,7 +427,7 @@ you should place your code here."
   (flyspell-mode 0)
   (global-evil-mc-mode 1)
 
-  (set-variable 'ycmd-server-command '("python" "~/.vim/plugged/YouCompleteMe/third_party/ycmd"))
+  (set-variable 'ycmd-server-command '("python2" "/Users/Rashawn/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd"))
   (set-variable 'ycmd-global-config "~/.ycm_extra_conf.py")
 
   (require 'ycmd)
@@ -517,7 +518,7 @@ you should place your code here."
  '(evil-want-C-i-jump t)
  '(evil-want-Y-yank-to-eol t)
  '(evil-want-fine-undo t)
- '(fci-rule-color "#383838")
+ '(fci-rule-color "#383838" t)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(flycheck-checker-error-threshold 1000)
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))

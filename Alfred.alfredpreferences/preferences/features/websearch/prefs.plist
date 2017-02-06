@@ -10,12 +10,10 @@
 			<true/>
 			<key>keyword</key>
 			<string>yyts</string>
-			<key>plusSpaces</key>
-			<false/>
 			<key>text</key>
 			<string>Search {query} from 人人影视</string>
 			<key>url</key>
-			<string>http://www.zimuzu.tv/search/index?keyword={query}&amp;search_type=</string>
+			<string>http://www.zmz2017.com/search/index?keyword={query}&amp;search_type=</string>
 			<key>utf8</key>
 			<true/>
 		</dict>
