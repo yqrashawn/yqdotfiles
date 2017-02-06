@@ -6,6 +6,7 @@ source ~/.config/nvim/plugins.vim
 source ~/.config/nvim/default.vim
 source ~/.config/nvim/ui.vim
 "source ~/.config/nvim/large-file.vim
+
 "" keymap
 
 " gneral
@@ -15,6 +16,7 @@ nnoremap <leader>fed :e ~/.config/nvim/init.vim<cr>:3<cr>
 nnoremap <leader>feR :source ~/.config/nvim/init.vim<cr>
 nnoremap <leader><tab> <C-^>
 nnoremap <leader>q :confirm quit<cr>
+nnoremap ^@ /
 nnoremap <C-space> /
 nnoremap <C-k> za
 nnoremap sp %
@@ -29,6 +31,7 @@ nnoremap <leader>tn :<C-u>call ToggleNumber()<cr>
 nnoremap <leader>tN :<C-u>call ToggleRelativeNumber()<cr>
 nnoremap <leader>Tn :<C-u>call ToggleBG()<cr>
 " nnoremap <c-l> :call GetPotionFold(32)<cr>
+
 
 " edit
 nnoremap Y y$
