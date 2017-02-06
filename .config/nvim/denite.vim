@@ -1,0 +1,98 @@
+" denite.nvim
+" -----------
+
+" INTERFACE
+call denite#custom#option('default', 'prompt', 'λ:')
+call denite#custom#option('default', 'vertical_preview', 1)
+call denite#custom#option('default', 'short_source_names', 1)
+
+call denite#custom#option('grep', 'empty', 0)
+call denite#custom#option('grep', 'vertical_preview', 1)
+call denite#custom#option('grep', 'auto_highlight', 1)
+
+call denite#custom#option('list', 'quit', 0)
+call denite#custom#option('list', 'mode', 'normal')
+call denite#custom#option('list', 'winheight', 8)
+
+highlight deniteMatched ctermfg=243 guifg=#999999
+highlight deniteMatchedChar ctermfg=221 guifg=#f0c674
+highlight link deniteGrepInput Constant
+" MATCHERS
+let s:matchers = ['matcher_fuzzy']
+if &runtimepath =~# 'cpsm'
+	let s:matchers = ['matcher_cpsm', 'matcher_fuzzy']
+endif
+
+call denite#custom#source('file_mru,file_old,file_rec,grep', 'matchers',
+	\ s:matchers)
+
+call denite#custom#source('mark', 'matchers',
+	\ ['matcher_fuzzy', 'matcher_project_files'])
+
+" CONVERTERS
+call denite#custom#source('file_mru,file_old,mark', 'converters',
+	\ ['converter_relative_word'])
+
+" FIND and GREP COMMANDS
+if executable('ag')
+	" The Silver Searcher
+	call denite#custom#var('file_rec', 'command',
+		\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+
+	call denite#custom#var('grep', 'command', ['ag'])
+	call denite#custom#var('grep', 'recursive_opts', [])
+	call denite#custom#var('grep', 'pattern_opt', [])
+	call denite#custom#var('grep', 'separator', ['--'])
+	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', 'default_opts',
+		\ [ '--vimgrep', '--smart-case' ])
+
+elseif executable('ack')
+	" Ack command
+	call denite#custom#var('grep', 'command', ['ack'])
+	call denite#custom#var('grep', 'recursive_opts', [])
+	call denite#custom#var('grep', 'pattern_opt', ['--match'])
+	call denite#custom#var('grep', 'separator', ['--'])
+	call denite#custom#var('grep', 'final_opts', [])
+	call denite#custom#var('grep', 'default_opts',
+			\ ['--ackrc', $HOME.'/.config/ackrc', '-H',
+			\ '--nopager', '--nocolor', '--nogroup', '--column'])
+endif
+
+" KEY MAPPINGS
+let insert_mode_mappings = [
+	\  ['jj', '<denite:enter_mode:normal>', 'noremap'],
+	\  ['<Esc>', '<denite:enter_mode:normal>', 'noremap'],
+	\  ['<C-l>', '<denite:do_action:default>', 'noremap'],
+	\  ['<C-n>', '<denite:assign_next_matched_text>', 'noremap'],
+	\  ['<C-p>', '<denite:assign_previous_matched_text>', 'noremap'],
+	\  ['<C-j>', '<denite:move_to_next_line>', 'noremap'],
+	\  ['<C-k>', '<denite:move_to_previous_line>', 'noremap'],
+	\  ['<Up>', '<denite:assign_previous_text>', 'noremap'],
+	\  ['<Down>', '<denite:assign_next_text>', 'noremap'],
+	\  ['<C-Y>', '<denite:redraw>', 'noremap'],
+	\  ['<C-g>', '<denite:quit>', 'noremap'],
+	\ ]
+
+let normal_mode_mappings = [
+	\   ["'", '<denite:toggle_select_down>', 'noremap'],
+	\   ['<C-j>', '<denite:jump_to_next_source>', 'noremap'],
+	\   ['<C-k>', '<denite:jump_to_previous_source>', 'noremap'],
+	\   ['gg', '<denite:move_to_first_line>', 'noremap'],
+	\   ['st', '<denite:do_action:tabopen>', 'noremap'],
+	\   ['sg', '<denite:do_action:vsplit>', 'noremap'],
+	\   ['sv', '<denite:do_action:split>', 'noremap'],
+	\   ['sc', '<denite:quit>', 'noremap'],
+	\   ['q', '<denite:quit>', 'noremap'],
+	\   ['<C-g>', '<denite:quit>', 'noremap'],
+	\   ['r', '<denite:redraw>', 'noremap'],
+	\ ]
+
+for m in insert_mode_mappings
+	call denite#custom#map('insert', m[0], m[1], m[2])
+endfor
+for m in normal_mode_mappings
+	call denite#custom#map('normal', m[0], m[1], m[2])
+endfor
+
+" vim: set ts=2 sw=2 tw=80 noet :
