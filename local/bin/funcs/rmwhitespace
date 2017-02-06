@@ -1,0 +1,1 @@
+alias whitespace="sed -i'' 's/[ \t]*$//'"
