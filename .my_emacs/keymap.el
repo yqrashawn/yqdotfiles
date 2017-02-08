@@ -67,6 +67,8 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-normal-state-map (kbd "gI") 'evil-insert-resume)
+(define-key evil-normal-state-map (kbd "sQ") 'aya-create)
+(define-key evil-normal-state-map (kbd "sq") 'aya-expand)
 
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)

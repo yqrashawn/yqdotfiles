@@ -85,6 +85,7 @@ values."
                                       company-ycmd
                                       key-chord
                                       vlf
+                                      auto-yasnippet
                                       noxml-fold
                                       company-flx
                                       fzf
