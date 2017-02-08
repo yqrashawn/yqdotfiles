@@ -423,7 +423,7 @@ you should place your code here."
   (show-smartparens-global-mode 0)
   (global-eldoc-mode 0)
   (yas-global-mode 1)
-  ;; (evil-visual-mark-mode 1)
+  (evil-visual-mark-mode 1)
   (global-company-mode)
   (flyspell-mode 0)
   (global-evil-mc-mode 1)
