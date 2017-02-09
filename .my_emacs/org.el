@@ -1,4 +1,7 @@
-(setq org-directory '("~/Dropbox/org/*.org"))
+(setq org-directory "~/Dropbox/org")
+;; (setq org-mobile-directory "~/Dropbox/org/MobileOrg")
+(setq org-mobile-directory "~/Dropbox/应用/MobileOrg")
+(setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
 (setq org-agenda-files '("~/Dropbox/org"))
 (setq org-default-notes-file '("~/Dropbox/org/notes.org"))
 (setq-default dotspacemacs-configuration-layers
