@@ -22,12 +22,14 @@
 ;; dired
 (with-eval-after-load 'dired
   (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
+  (evil-define-key 'normal dired-mode-map "f" 'dired-goto-file)
   (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory))
 
 ;; spacemacs leader
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
 (spacemacs/set-leader-keys "gf" 'magit-file-popup)
+(spacemacs/set-leader-keys "gn" 'magit-gitflow-popup)
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
 (spacemacs/set-leader-keys "t0" 'centered-cursor-mode)
 (spacemacs/set-leader-keys "hc" 'hide/show-comments-toggle)
