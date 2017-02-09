@@ -85,6 +85,7 @@ values."
                                       company-ycmd
                                       key-chord
                                       vlf
+                                      evil-visual-mark-mode
                                       auto-yasnippet
                                       noxml-fold
                                       company-flx
