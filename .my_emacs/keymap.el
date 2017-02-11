@@ -70,8 +70,6 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-normal-state-map (kbd "gI") 'evil-insert-resume)
-(define-key evil-normal-state-map (kbd "sQ") 'aya-create)
-(define-key evil-normal-state-map (kbd "sq") 'aya-expand)
 
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
@@ -124,4 +122,6 @@
 (define-key evil-normal-state-map "sss" 'spacemacs/search-ack)
 (define-key evil-normal-state-map "sp" 'evil-jump-item)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
+(define-key evil-normal-state-map "sQ" 'aya-create)
+(define-key evil-normal-state-map "sq" 'aya-expand)
 (define-key evil-normal-state-map (kbd "C-;") 'er/expand-region)

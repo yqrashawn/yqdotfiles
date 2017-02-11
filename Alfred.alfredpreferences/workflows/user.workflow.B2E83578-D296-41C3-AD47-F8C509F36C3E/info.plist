@@ -103,7 +103,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152 php packal-controller-script.php "{query}"</string>
+				<string>php packal-controller-script.php "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>

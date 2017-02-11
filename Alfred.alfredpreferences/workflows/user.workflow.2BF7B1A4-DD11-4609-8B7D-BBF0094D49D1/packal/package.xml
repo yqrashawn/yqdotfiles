@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Alfred Browser Toolbox</name>
+  <version>1.6</version>
+  <bundle>com.customct.AlfredBrowser</bundle>
+  <updated>1449213014</updated>
+  <file>alfredbrowsertoolbox.alfredworkflow</file>
+</workflow>

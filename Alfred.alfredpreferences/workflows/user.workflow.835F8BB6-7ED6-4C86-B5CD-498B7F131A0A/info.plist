@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.stuartryan.alfred.rapidbrowsertabs</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>1D3AC690-8936-40C9-95DD-628CF2A811C6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3F137D40-7DF0-4E0F-8970-B523739F438A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>204CF60B-AA8E-4F35-B32A-10EF25E4325D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4230B96A-C369-44D6-B680-DC7D20FFFD9C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>3F137D40-7DF0-4E0F-8970-B523739F438A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>83D49CB5-6BB4-4FE2-A8E3-42341F96CCA9</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Load tab and force a refresh</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>1F537C5E-7F6F-4B71-987D-DAF5775545CF</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>Close Tab</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B3B0ECB1-B591-4E9A-B623-C2AFFF27E1F0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>4230B96A-C369-44D6-B680-DC7D20FFFD9C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>83D49CB5-6BB4-4FE2-A8E3-42341F96CCA9</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Load tab and force a refresh</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>1F537C5E-7F6F-4B71-987D-DAF5775545CF</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>Close Tab</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B3B0ECB1-B591-4E9A-B623-C2AFFF27E1F0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>845C936F-49E6-4DF0-B15B-2EF72619CB34</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8BF1F927-35BC-48BD-89CF-3EB9069A81C0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>8BF1F927-35BC-48BD-89CF-3EB9069A81C0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8B7316C0-EE3E-471C-9EDE-E10721BA4D2C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>99089902-95BC-4DA8-AFAD-F787099689DD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3F137D40-7DF0-4E0F-8970-B523739F438A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B3B0ECB1-B591-4E9A-B623-C2AFFF27E1F0</key>
+		<array/>
+	</dict>
+	<key>createdby</key>
+	<string>Stuart Ryan</string>
+	<key>description</key>
+	<string>Rapidly open and move between browser tabs in Safari and Chrome</string>
+	<key>disabled</key>
+	<true/>
+	<key>name</key>
+	<string>Rapid Browser Tabs</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>ruby actions/activateAndReload.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>83D49CB5-6BB4-4FE2-A8E3-42341F96CCA9</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>1D3AC690-8936-40C9-95DD-628CF2A811C6</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>rbt</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Retrieving tabs...</string>
+				<key>script</key>
+				<string>ruby load_list.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search tabs in Safari and Chrome</string>
+				<key>title</key>
+				<string>Search tabs...</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>3F137D40-7DF0-4E0F-8970-B523739F438A</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>ruby actions/close.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>1F537C5E-7F6F-4B71-987D-DAF5775545CF</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>99089902-95BC-4DA8-AFAD-F787099689DD</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>tabs</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Retrieving tabs...</string>
+				<key>script</key>
+				<string>ruby load_list.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search tabs in Safari and Chrome</string>
+				<key>title</key>
+				<string>Search tabs...</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>4230B96A-C369-44D6-B680-DC7D20FFFD9C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>ruby actions/activate.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B3B0ECB1-B591-4E9A-B623-C2AFFF27E1F0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>browserTabs</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>204CF60B-AA8E-4F35-B32A-10EF25E4325D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>rbtsetup</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Loading setup options</string>
+				<key>script</key>
+				<string>use strict;
+use warnings;
+
+print qq{&lt;?xml version="1.0" encoding="UTF-8" ?&gt;\n&lt;items&gt;\n};
+
+if ("{query}" eq "") {
+print qq{&lt;item uid="0001"&gt;&lt;arg&gt;sitesconfig&lt;/arg&gt;&lt;title&gt;Modify sites configuration&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/sites_config.png&lt;/icon&gt;&lt;/item&gt;\n};
+print qq{&lt;item uid="0002"&gt;&lt;arg&gt;configfolder&lt;/arg&gt;&lt;title&gt;Open configuration folder&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/config_folder.png&lt;/icon&gt;&lt;/item&gt;\n};
+print qq{&lt;item uid="0003"&gt;&lt;arg&gt;configfolderlocationsetup&lt;/arg&gt;&lt;title&gt;Set root config folder location (enable syncing)&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/cloud.png&lt;/icon&gt;&lt;/item&gt;\n};
+if ( -e glob('"~/Library/Application Support/Alfred 2/Workflow Data/com.stuartryan.alfred.rapidbrowsertabs/setup.yml"') ) {
+   print qq{&lt;item uid="0004"&gt;&lt;arg&gt;refreshconfig&lt;/arg&gt;&lt;title&gt;Refresh workflow configuration.&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/refresh_config.png&lt;/icon&gt;&lt;/item&gt;\n};
+
+} else {
+print qq{&lt;item uid="0004"&gt;&lt;arg&gt;refreshconfig&lt;/arg&gt;&lt;title&gt;Initialise workflow configuration.&lt;/title&gt;&lt;subtitle&gt;Config not found... you should run this first.&lt;/subtitle&gt;&lt;icon&gt;images/error_arrow.png&lt;/icon&gt;&lt;/item&gt;\n};
+}
+print qq{&lt;item uid="0005"&gt;&lt;arg&gt;iconsfolder&lt;/arg&gt;&lt;title&gt;Open icons storage folder&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/icons_folder.png&lt;/icon&gt;&lt;/item&gt;\n};
+} 
+if (index(lc('Modify Sites Configuration'), lc("{query}")) &amp;&amp; "{query}" ne "") {
+print qq{&lt;item uid="0001"&gt;&lt;arg&gt;sitesconfig&lt;/arg&gt;&lt;title&gt;Modify sites configuration&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/sites_config.png&lt;/icon&gt;&lt;/item&gt;\n};}
+if ((index(lc('Open configuration folder'), lc("{query}")) != -1) &amp;&amp; "{query}" ne "") {
+print qq{&lt;item uid="0002"&gt;&lt;arg&gt;configfolder&lt;/arg&gt;&lt;title&gt;Open configuration folder&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/config_folder.png&lt;/icon&gt;&lt;/item&gt;\n};}  
+if ((index(lc('Set root config folder location (enable syncing)'), lc("{query}")) != -1) &amp;&amp; "{query}" ne "") {
+print qq{&lt;item uid="0003"&gt;&lt;arg&gt;configfolderlocationsetup&lt;/arg&gt;&lt;title&gt;Set root config folder location (enable syncing)&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/cloud.png&lt;/icon&gt;&lt;/item&gt;\n};} 
+if (index(lc('Open icons storage folder'), lc("{query}")) &amp;&amp; "{query}" ne "") {
+print qq{&lt;item uid="0005"&gt;&lt;arg&gt;iconsfolder&lt;/arg&gt;&lt;title&gt;Open icons storage folder&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/icons_folder.png&lt;/icon&gt;&lt;/item&gt;\n};}
+if (((index(lc('Refresh workflow configuration'), lc("{query}")) != -1) || (index(lc('Initialise workflow configuration'), lc("{query}")) != -1)) &amp;&amp; "{query}" ne "") {
+if ( -e glob('"~/Library/Application Support/Alfred 2/Workflow Data/com.stuartryan.alfred.rapidbrowsertabs/setup.yml"')) {
+   print qq{&lt;item uid="0004"&gt;&lt;arg&gt;refreshconfig&lt;/arg&gt;&lt;title&gt;Refresh workflow configuration.&lt;/title&gt;&lt;subtitle&gt;&lt;/subtitle&gt;&lt;icon&gt;images/refresh_config.png&lt;/icon&gt;&lt;/item&gt;\n};
+
+} else {
+print qq{&lt;item uid="0004"&gt;&lt;arg&gt;refreshconfig&lt;/arg&gt;&lt;title&gt;Initialise workflow configuration.&lt;/title&gt;&lt;subtitle&gt;Config not found... you should run this first.&lt;/subtitle&gt;&lt;icon&gt;images/error_arrow.png&lt;/icon&gt;&lt;/item&gt;\n};
+}
+}
+print "&lt;/items&gt;\n";</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Configure Rapid Browser Tabs Workflow</string>
+				<key>type</key>
+				<integer>4</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>845C936F-49E6-4DF0-B15B-2EF72619CB34</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>ruby configure.rb "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8BF1F927-35BC-48BD-89CF-3EB9069A81C0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+				<key>title</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>8B7316C0-EE3E-471C-9EDE-E10721BA4D2C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>A workflow for Alfred based on the Search Tabs on Safari and Chrome workflow developed by Clinton Strong.
+
+Rapid Browser Tabs Workflow for Alfred has been forked from this workflow (with Clinton's blessing) and adds the ability to create favourites that can be searched and opened alongside already open tabs in Chrome and Safari.
+
+Command your browser tabs... don't let them command you!
+
+Donations
+
+This workflow represents many many hours effort of development, testing and rework. The images licensed for this workflow from DepositPhotos also needed a bit of my moolah. So if you love the workflow, and get use out of it every day, if you would like to donate as a thank you to buy me more caffeine giving Diet Coke, some Cake, or to put towards a shiny new gadget you can donate to me via Paypal (https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=JM6E65M2GLXHE)
+
+License
+
+All code in this workflow is released under the MIT License. Images used as part of the workflow are licensed only for use in this workflow and must be changed if the workflow is forked in the future.
+
+All images have been licensed from DepositPhotos to Stuart Ryan.</string>
+	<key>uidata</key>
+	<dict>
+		<key>1D3AC690-8936-40C9-95DD-628CF2A811C6</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<real>100</real>
+		</dict>
+		<key>1F537C5E-7F6F-4B71-987D-DAF5775545CF</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>210</real>
+		</dict>
+		<key>204CF60B-AA8E-4F35-B32A-10EF25E4325D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>90</integer>
+			<key>ypos</key>
+			<integer>380</integer>
+		</dict>
+		<key>3F137D40-7DF0-4E0F-8970-B523739F438A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<real>160</real>
+		</dict>
+		<key>4230B96A-C369-44D6-B680-DC7D20FFFD9C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>270</integer>
+			<key>ypos</key>
+			<integer>300</integer>
+		</dict>
+		<key>83D49CB5-6BB4-4FE2-A8E3-42341F96CCA9</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>845C936F-49E6-4DF0-B15B-2EF72619CB34</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<real>500</real>
+		</dict>
+		<key>8B7316C0-EE3E-471C-9EDE-E10721BA4D2C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>700</integer>
+			<key>ypos</key>
+			<real>500</real>
+		</dict>
+		<key>8BF1F927-35BC-48BD-89CF-3EB9069A81C0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>500</real>
+		</dict>
+		<key>99089902-95BC-4DA8-AFAD-F787099689DD</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<real>220</real>
+		</dict>
+		<key>B3B0ECB1-B591-4E9A-B623-C2AFFF27E1F0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<real>370</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>http://technicalnotebook.com</string>
+</dict>
+</plist>

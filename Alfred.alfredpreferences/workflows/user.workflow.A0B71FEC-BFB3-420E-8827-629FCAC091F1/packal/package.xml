@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Karabiner Elements Profile Switcher</name>
+  <version>1.2</version>
+  <bundle>com.alfred.karabinerelements.profileswitcher</bundle>
+  <updated>1485047358</updated>
+  <file>karabiner_elements_profile_switcher.alfredworkflow</file>
+</workflow>

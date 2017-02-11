@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Tower Repositories</name>
+  <version>2.6</version>
+  <bundle>net.cjlucas.alfred.tower</bundle>
+  <updated>1476151218</updated>
+  <file>tower-alfred-workflow.alfredworkflow</file>
+</workflow>

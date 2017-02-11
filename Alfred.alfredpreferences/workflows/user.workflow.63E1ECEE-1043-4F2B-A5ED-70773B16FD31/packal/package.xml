@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Edit With… A QuickCursor Alternative</name>
+  <version>3.0</version>
+  <bundle>com.sztoltz.editwith</bundle>
+  <updated>1393973769</updated>
+  <file>editwith30.alfredworkflow</file>
+</workflow>

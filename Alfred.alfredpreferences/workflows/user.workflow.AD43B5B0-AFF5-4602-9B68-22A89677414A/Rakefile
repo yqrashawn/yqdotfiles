@@ -1,0 +1,11 @@
+require 'rspec/core/rake_task'
+
+task :default => [:spec]
+task :test => :spec
+
+task :spec do
+  RSpec::Core::RakeTask.new do |task|
+    task.verbose = false
+    task.rspec_opts = '-I lib --color'
+  end
+end

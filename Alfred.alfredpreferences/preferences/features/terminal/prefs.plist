@@ -17,7 +17,7 @@ on alfred_script(q)
 	if application "iTerm2" is running or application "iTerm" is running then
 		run script "
 			on run {q}
-				tell application \":Applications:iTerm.app\"
+				tell application \":Applications:iTerm3.app\"
 					activate
 					try
 						select first window
@@ -31,23 +31,6 @@ on alfred_script(q)
 						if onlywindow is false then
 							create tab with default profile
 						end if
-						tell current session to write text q
-					end tell
-				end tell
-			end run
-		" with parameters {q}
-	else
-		run script "
-			on run {q}
-				tell application \":Applications:iTerm.app\"
-					activate
-					try
-						select first window
-					on error
-						create window with default profile
-						select first window
-					end try
-					tell the first window
 						tell current session to write text q
 					end tell
 				end tell

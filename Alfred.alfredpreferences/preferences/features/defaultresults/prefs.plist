@@ -8,8 +8,6 @@
 		<string>features.websearch.google.fallback</string>
 		<string>features.websearch.wiki.fallback</string>
 	</array>
-	<key>showBookmarks</key>
-	<true/>
 	<key>showContacts</key>
 	<false/>
 	<key>showFolders</key>

@@ -8,8 +8,6 @@
 	<array/>
 	<key>clearKeywordEnabled</key>
 	<false/>
-	<key>fastAppend</key>
-	<true/>
 	<key>hotkey</key>
 	<dict>
 		<key>key</key>

@@ -135,6 +135,19 @@
 			<key>utf8</key>
 			<true/>
 		</dict>
+		<key>9B7FCB07-40FB-4E5B-933D-FEBAB8F46F37</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>packal</string>
+			<key>text</key>
+			<string>Search {query} workflow in Packal</string>
+			<key>url</key>
+			<string>https://duckduckgo.com/?q=site%3A+packal.org+{query}e&amp;ia=web</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
 		<key>A8F13F1A-D1F9-4568-A1F9-9AAEFADAF888</key>
 		<dict>
 			<key>enabled</key>
@@ -153,7 +166,7 @@
 			<key>enabled</key>
 			<true/>
 			<key>keyword</key>
-			<string>g</string>
+			<string>github</string>
 			<key>text</key>
 			<string>Search {query} in Github</string>
 			<key>url</key>

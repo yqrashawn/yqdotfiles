@@ -12,6 +12,8 @@
 		<true/>
 		<key>alfred.action.findsimilar</key>
 		<true/>
+		<key>alfred.action.getinfo</key>
+		<true/>
 		<key>alfred.action.open</key>
 		<true/>
 		<key>alfred.action.revealinfinder</key>
@@ -19,23 +21,10 @@
 	</dict>
 	<key>escapeCopiedPath</key>
 	<true/>
-	<key>finderSelectionHotkey</key>
-	<dict>
-		<key>key</key>
-		<integer>49</integer>
-		<key>mod</key>
-		<integer>1966080</integer>
-		<key>string</key>
-		<string>Space</string>
-	</dict>
 	<key>showWithCtrl</key>
-	<false/>
-	<key>showWithFn</key>
 	<false/>
 	<key>showWithRightArrow</key>
 	<false/>
-	<key>showWithTab</key>
-	<true/>
 	<key>sortByUsage</key>
 	<true/>
 </dict>

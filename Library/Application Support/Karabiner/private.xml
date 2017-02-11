@@ -11,6 +11,11 @@
   </appdef>
 
   <appdef>
+    <appname>Finder</appname>
+    <equal>com.apple.finder</equal>
+  </appdef>
+
+  <appdef>
     <appname>SublimeText</appname>
     <equal>com.sublimetext.3</equal>
   </appdef>
@@ -207,17 +212,6 @@
       KeyCode::JIS_KANA,
       KeyCode::OPTION_L, ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
       KeyCode::W, ModifierFlag::COMMAND_L,
-    </autogen>
-  </item>
-
-  <item>
-    <name>COMMAND_R to C-w</name>
-    <identifier>private.switch_profile COMMAND_R</identifier>
-    <autogen>
-      __KeyOverlaidModifier__
-      KeyCode::COMMAND_R,
-      KeyCode::COMMAND_R,
-      KeyCode::W, ModifierFlag::COMMAND_L
     </autogen>
   </item>
 
@@ -450,8 +444,22 @@
     <name>KeyCode::VK_OPEN_URL_ALFRED_FINDER_TO_ITERM</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "finderToIterm" in workflow "de.leenno.terminalfinder" with argument ""
+      tell application "Alfred 3" to run trigger "finderToIterm" in workflow "de.leenno.terminalfinder" with argument ""
       '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACCS</name>
+    <url type="shell">
+      osascript -e 'tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.sztoltz.editwith" with argument ""'
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_TOWER_REPO</name>
+    <url type="shell">
+      osascript -e 'tell application "Alfred 3" to run trigger "towerRepo" in workflow "net.cjlucas.alfred.tower" with argument ""'
     </url>
   </vkopenurldef>
 
@@ -872,7 +880,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_TOWER</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "launchTower" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchTower" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -881,7 +889,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_PAW</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "launchPaw" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchPaw" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -890,7 +898,7 @@
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_REEDER</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchReeder" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchReeder" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -899,7 +907,7 @@ tell application "Alfred 3" to run trigger "launchReeder" in workflow "yqrashawn
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_FINDER</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchFinder" in workflow "yqrashawn.workflow.launcher" with argument "test"
+      tell application "Alfred 3" to run trigger "launchFinder" in workflow "yqrashawn.workflow.launcher" with argument "test"
       '
     </url>
   </vkopenurldef>
@@ -908,8 +916,8 @@ tell application "Alfred 3" to run trigger "launchFinder" in workflow "yqrashawn
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_FANTASTICAL</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchFantastical" in workflow "yqrashawn.workflow.launcher" with argument ""
-'
+      tell application "Alfred 3" to run trigger "launchFantastical" in workflow "yqrashawn.workflow.launcher" with argument ""
+      '
     </url>
   </vkopenurldef>
 
@@ -917,7 +925,7 @@ tell application "Alfred 3" to run trigger "launchFantastical" in workflow "yqra
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_BETTERTOUCHTOOL</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchBetterTouchTool" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchBetterTouchTool" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -926,7 +934,7 @@ tell application "Alfred 3" to run trigger "launchBetterTouchTool" in workflow "
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_BEARYCHAT</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchBearyChat" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchBearyChat" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -935,7 +943,7 @@ tell application "Alfred 3" to run trigger "launchBearyChat" in workflow "yqrash
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_SAFARI</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchSafari" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchSafari" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -944,7 +952,7 @@ tell application "Alfred 3" to run trigger "launchSafari" in workflow "yqrashawn
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_XCODE</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "launchXcode" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchXcode" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -974,7 +982,7 @@ tell application "Alfred 3" to run trigger "launchSafari" in workflow "yqrashawn
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_CHROME</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchChrome" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchChrome" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -983,7 +991,7 @@ tell application "Alfred 3" to run trigger "launchChrome" in workflow "yqrashawn
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_EMACS</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchEmacs" in workflow "yqrashawn.workflow.launcher" with argument "test"
+      tell application "Alfred 3" to run trigger "launchEmacs" in workflow "yqrashawn.workflow.launcher" with argument "test"
       '
     </url>
   </vkopenurldef>
@@ -992,8 +1000,8 @@ tell application "Alfred 3" to run trigger "launchEmacs" in workflow "yqrashawn.
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_ITERM</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchIterm" in workflow "yqrashawn.workflow.launcher" with argument "test"
-    '
+      tell application "Alfred 3" to run trigger "launchIterm" in workflow "yqrashawn.workflow.launcher" with argument "test"
+      '
     </url>
   </vkopenurldef>
 
@@ -1001,7 +1009,7 @@ tell application "Alfred 3" to run trigger "launchIterm" in workflow "yqrashawn.
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_MAIL</name>
     <url type="shell">
       osascript -e '
-tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.workflow.launcher" with argument "test"
+      tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.workflow.launcher" with argument "test"
       '
     </url>
   </vkopenurldef>
@@ -1053,7 +1061,7 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     <name>KeyCode::VK_OPEN_URL_KM_OPEN_HAZEL_PREFERENCES</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "launchHazel" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchHazel" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1085,16 +1093,16 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     <name>KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB_REPOS</name>
     <url type="shell">
       osascript -e '
-      tell application "Alfred 3" to run trigger "githubRepoSearch" in workflow "com.pawelgrzybek.github" with argument ""
+      tell application "Alfred 3" to run trigger "searchGithub" in workflow "nikivi.search-the-web" with argument ""
       '
     </url>
   </vkopenurldef>
 
   <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS</name>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_FINDER</name>
     <url type="shell">
       osascript -e '
-      tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.customct.emacs" with argument ""
+      tell application "Alfred 3" to run trigger "alfredFinder" in workflow "com.customct.AlfredBrowser" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1113,6 +1121,23 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     <url type="shell">
       osascript -e '
       tell application "Alfred 3" to run trigger "killProcess" in workflow "com.ngreenstein.alfred-process-killer" with argument ""
+      '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_FUZZY_SEARCH_HERE</name>
+    <url type="shell">
+      osascript -e '
+      tell application "System Events"
+      delay 0.1
+      keystroke "fuzzy"
+      key code 49
+      keystroke "search"
+      key code 49
+      keystroke "here"
+      key code 36
+      end tell
       '
     </url>
   </vkopenurldef>
@@ -1213,8 +1238,16 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     <name>KeyCode::VK_OPEN_URL_ALFRED_COPY_BROWSER_URL</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "copyBrowserUrl" in workflow "com.uniqon.lazylink" with argument ""
+      tell application "Alfred 3" to run trigger "copyBrowserUrl" in workflow "com.uniqon.lazylink" with argument ""
       '
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
+    <background/>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_COPY_BROWSER_MARKDOWN_URL</name>
+    <url type="shell">
+      osascript -e 'tell application "Alfred 3" to run trigger "copyBrowserMarkDown" in workflow "com.uniqon.lazylink" with argument ""'
     </url>
   </vkopenurldef>
 
@@ -1312,7 +1345,7 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     <name>KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "recentDownloads" in workflow "com.vitorgalvao.alfred.recentdownloads" with argument ""
+      tell application "Alfred 3" to run trigger "recentDownloads" in workflow "com.vitorgalvao.alfred.recentdownloads" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1462,10 +1495,17 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
   </vkopenurldef>
 
   <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_LOCK_SCREEN</name>
+    <url type="shell">
+      osascript -e ' tell application "Finder" to sleep'
+    </url>
+  </vkopenurldef>
+
+  <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_ALFRED_LAUNCH_WECHAT</name>
     <url type="shell">
       osascript -e '
-        tell application "Alfred 3" to run trigger "launchWeChat" in workflow "yqrashawn.workflow.launcher" with argument ""
+      tell application "Alfred 3" to run trigger "launchWeChat" in workflow "yqrashawn.workflow.launcher" with argument ""
       '
     </url>
   </vkopenurldef>
@@ -1507,6 +1547,11 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     </autogen>
 
     <autogen>__KeyToKey__
+    KeyCode::K, ModifierFlag::CONTROL_L,
+    KeyCode::CURSOR_UP
+    </autogen>
+
+    <autogen>__KeyToKey__
     KeyCode::G, ModifierFlag::CONTROL_L,
     KeyCode::ESCAPE
     </autogen>
@@ -1515,11 +1560,6 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     KeyCode::U, ModifierFlag::CONTROL_L,
     KeyCode::A, ModifierFlag::COMMAND_L,
     KeyCode::DELETE
-    </autogen>
-
-    <autogen>__KeyToKey__
-    KeyCode::K, ModifierFlag::CONTROL_L,
-    KeyCode::CURSOR_UP
     </autogen>
 
     <autogen>
@@ -2494,15 +2534,26 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
   </item>
 
-  <item>
-    <name>alfred C-w delete word backward</name>
-    <identifier>alfred_delete_word_backward</identifier>
-    <only>Alfred</only>
-
-  </item>
+  <!-- <item> -->
+  <!--   <name>alfred C-w delete word backward</name> -->
+  <!--   <identifier>alfred_delete_word_backward</identifier> -->
+  <!--   <only>Alfred</only> -->
+  <!-- </item> -->
 
   <item>
     <name>general: sticky space - essentials</name>
+    <appendix>space as modifier key for essential functions</appendix>
+    <appendix>c copy</appendix>
+    <appendix>y paste</appendix>
+    <appendix>w command+w</appendix>
+    <appendix>j backward word</appendix>
+    <appendix>k forward word</appendix>
+    <appendix>x backward delete word</appendix>
+    <appendix>i finder to iterm</appendix>
+    <appendix>t tower repo</appendix>
+    <appendix>slash hazel preferences</appendix>
+    <appendix>comma karabiner preferences</appendix>
+    <appendix></appendix>
     <identifier>private.launcher_mode_open_apps_v34</identifier>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
@@ -2558,18 +2609,6 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::G,
-      KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::E,
-      KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
       KeyCode::I,
       KeyCode::VK_OPEN_URL_ALFRED_FINDER_TO_ITERM
     </autogen>
@@ -2578,6 +2617,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __KeyToKey__
       KeyCode::COMMA,
       KeyCode::VK_OPEN_URL_KM_OPEN_KARABINER_PREFERENCES
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::T,
+      KeyCode::VK_OPEN_URL_ALFRED_TOWER_REPO,
     </autogen>
 
     <autogen>
@@ -2595,12 +2640,6 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::X,
-      KeyCode::X, ModifierFlag::COMMAND_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
       KeyCode::A,
       KeyCode::A, ModifierFlag::COMMAND_L
     </autogen>
@@ -2613,31 +2652,25 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::Q,
-      KeyCode::Q, ModifierFlag::COMMAND_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
       KeyCode::SLASH,
       KeyCode::VK_OPEN_URL_KM_OPEN_HAZEL_PREFERENCES
     </autogen>
 
     <autogen>
       __KeyToKey__
-      KeyCode::H,
-      KeyCode::CURSOR_LEFT, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::L,
-      KeyCode::CURSOR_RIGHT, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L
+      KeyCode::J,
+      KeyCode::CURSOR_LEFT, ModifierFlag::OPTION_L
     </autogen>
 
     <autogen>
       __KeyToKey__
       KeyCode::K,
+      KeyCode::CURSOR_RIGHT, ModifierFlag::OPTION_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::X,
       KeyCode::DELETE, ModifierFlag::OPTION_L
     </autogen>
 
@@ -2890,6 +2923,14 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   <item>
     <name>function keys sticky v</name>
     <identifier>private.launcher_mode_open_apps_v26</identifier>
+    <appendix>v as modifier key for media</appendix>
+    <appendix>h l voice down up</appendix>
+    <appendix>j k brightness down up</appendix>
+    <appendix>i o prev next music</appendix>
+    <appendix>y u keyboard light dark light</appendix>
+    <appendix>m mute</appendix>
+    <appendix>x lockscreen</appendix>
+    <appendix></appendix>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
     <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
@@ -2938,13 +2979,13 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::L,
+      KeyCode::I,
       ConsumerKeyCode::MUSIC_NEXT
     </autogen>
 
     <autogen>
       __KeyToKey__
-      KeyCode::H,
+      KeyCode::O,
       ConsumerKeyCode::MUSIC_PREV
     </autogen>
 
@@ -2974,13 +3015,13 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::O,
+      KeyCode::L,
       ConsumerKeyCode::VOLUME_UP
     </autogen>
 
     <autogen>
       __KeyToKey__
-      KeyCode::I,
+      KeyCode::H,
       ConsumerKeyCode::VOLUME_DOWN
     </autogen>
 
@@ -2994,6 +3035,12 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __KeyToKey__
       KeyCode::U,
       ConsumerKeyCode::KEYBOARDLIGHT_HIGH
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::X,
+      KeyCode::VK_OPEN_URL_LOCK_SCREEN
     </autogen>
 
   </item>
@@ -3205,6 +3252,19 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
   <item>
     <name>general: sticky w - open top apps</name>
+    <appendix></appendix>
+    <appendix>w as modifier key to toggle applications</appendix>
+    <appendix>e emacs</appendix>
+    <appendix>f finder</appendix>
+    <appendix>i and d iterm</appendix>
+    <appendix>c chrome</appendix>
+    <appendix>r reeder</appendix>
+    <appendix>b bearychat</appendix>
+    <appendix>m mail</appendix>
+    <appendix>t tower</appendix>
+    <appendix>s sublimetext</appendix>
+    <appendix>v wechat</appendix>
+    <appendix></appendix>
     <identifier>private.launcher_mode_open_apps_v3</identifier>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
@@ -3318,11 +3378,11 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       KeyCode::VK_OPEN_URL_KM_OPEN_CHROME
     </autogen>
 
-    <autogen>
-      __KeyToKey__
-      KeyCode::V,
-      KeyCode::VK_OPEN_URL_KM_OPEN_VS_CODE
-    </autogen>
+    <!-- <autogen> -->
+    <!--   __KeyToKey__ -->
+    <!--   KeyCode::V, -->
+    <!--   KeyCode::VK_OPEN_URL_KM_OPEN_VS_CODE -->
+    <!-- </autogen> -->
 
     <autogen>
       __KeyToKey__
@@ -3409,6 +3469,15 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
   <item>
     <name>general: sticky x - alfred</name>
+    <appendix></appendix>
+    <appendix>x as a modifier key</appendix>
+    <appendix>y clipboard to url</appendix>
+    <appendix>slash calendar</appendix>
+    <appendix>comma alred preferences</appendix>
+    <appendix>k kill process</appendix>
+    <appendix>dot reload karabiner configuration</appendix>
+    <appendix></appendix>
+
     <identifier>private.launcher_mode_open_apps_v43</identifier>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
@@ -3459,7 +3528,7 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
     <autogen>
       __KeyToKey__
       KeyCode::Y,
-      KeyCode::VK_OPEN_URL_ALFRED_HASTEBIN
+      KeyCode::VK_OPEN_URL_ALFRED_HASTEBIN,
     </autogen>
 
     <autogen>
@@ -3799,82 +3868,16 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __BlockUntilKeyUp__ KeyCode::R,
     </autogen>
 
-    <autogen>
-      __KeyToKey__
-      KeyCode::BACKQUOTE,
-      KeyCode::VK_OPEN_URL_KM_EDIT_KEYBOARD_SHORTCUTS
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::COMMA,
-      KeyCode::VK_OPEN_URL_KM_OPEN_SYSTEM_PREFERENCES
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::SLASH,
-      KeyCode::VK_OPEN_URL_KM_OPEN_ACTIVITY_MONITOR
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::F,
-      KeyCode::VK_OPEN_URL_KM_OPEN_IBOOKS
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::W,
-      KeyCode::VK_OPEN_URL_KM_OPEN_DICTIONARY
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::DOT,
-      KeyCode::VK_OPEN_URL_KM_OPEN_DICTIONARY
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::SPACE,
-      KeyCode::G, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::L,
-      KeyCode::VK_OPEN_URL_KM_OPEN_DAY_ONE
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::Z,
-      KeyCode::VK_OPEN_URL_KM_OPEN_BETTERTOUCHTOOL
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::O,
-      KeyCode::F10, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::K,
-      KeyCode::VK_OPEN_URL_KM_OPEN_PDF_EXPERT
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::SLASH,
-      KeyCode::VK_OPEN_URL_KM_OPEN_IBOOKS
-    </autogen>
-
   </item>
 
   <item>
     <name>general: sticky u - utilities</name>
+    <appendix>u as modifier key for utilities</appendix>
+    <appendix>l browser url to clipboard</appendix>
+    <appendix>m browser url to markdown clipboard</appendix>
+    <appendix>r recently download file</appendix>
+    <appendix></appendix>
+
     <identifier>private.launcher_mode_open_apps_v33</identifier>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
@@ -3924,7 +3927,25 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyToKey__
-      KeyCode::D,
+      KeyCode::M,
+      KeyCode::VK_OPEN_URL_ALFRED_COPY_BROWSER_MARKDOWN_URL
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::E,
+      KeyCode::F6, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      KeyCode::F7, ModifierFlag::SHIFT_L, ModifierFlag::OPTION_L,
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::R,
       KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
     </autogen>
 
@@ -3951,6 +3972,17 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   <item>
     <name>general: sticky i - inserting symbols</name>
     <identifier>private.launcher_mode_open_apps_v15</identifier>
+    <appendix>i as modifier key for insert symbols</appendix>
+    <appendix>1~5 !@#$%</appendix>
+    <appendix>qw {}</appendix>
+    <appendix>er ()</appendix>
+    <appendix>u "</appendix>
+    <appendix>o _</appendix>
+    <appendix>a .*</appendix>
+    <appendix>s ./</appendix>
+    <appendix>d ~/</appendix>
+    <appendix>f ../</appendix>
+    <appendix></appendix>
 
     <!-- condition: turn on launcher mode only when the trigger key is pressed without other keys. -->
     <pressingphysicalkeys_lessthan>2</pressingphysicalkeys_lessthan>
@@ -4030,31 +4062,43 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
     <autogen>
       __KeyToKey__
       KeyCode::W,
-      KeyCode::9, ModifierFlag::SHIFT_L
+      KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L
     </autogen>
 
     <autogen>
       __KeyToKey__
       KeyCode::E,
-      KeyCode::BRACKET_LEFT
+      KeyCode::9, ModifierFlag::SHIFT_L
     </autogen>
 
     <autogen>
       __KeyToKey__
       KeyCode::R,
+      KeyCode::0, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::T,
       KeyCode::COMMA, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::Y,
+      KeyCode::DOT, ModifierFlag::SHIFT_L
+    </autogen>
+
+    <autogen>
+      __KeyToKey__
+      KeyCode::U,
+      KeyCode::QUOTE, ModifierFlag::SHIFT_L
     </autogen>
 
     <autogen>
       __KeyToKey__
       KeyCode::O,
       KeyCode::MINUS, ModifierFlag::SHIFT_L
-    </autogen>
-
-    <autogen>
-      __KeyToKey__
-      KeyCode::J,
-      KeyCode::EQUAL
     </autogen>
 
     <autogen>
@@ -6527,14 +6571,14 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
-    <name>general: simultaneous kl = typinator</name>
-    <identifier>private.sim_kl_typinator</identifier>
+    <name>general: simultaneous kl = alfred finder</name>
+    <identifier>private.sim_kl_alfred_finder</identifier>
 
     <autogen>
       __SimultaneousKeyPresses__
       KeyCode::K, KeyCode::L,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
-      KeyCode::F11, ModifierFlag::OPTION_L
+      KeyCode::VK_OPEN_URL_ALFRED_FINDER
     </autogen>
   </item>
 
@@ -6582,33 +6626,35 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
-    <name>general: simultaneouse hl = browser tabs</name>
+    <name>general: simultaneouse hK = browser tabs</name>
     <identifier>private.sim_hl_dic</identifier>
     <autogen>
       __SimultaneousKeyPresses__
-      KeyCode::H, KeyCode::L,
+      KeyCode::H, KeyCode::K,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
       KeyCode::VK_OPEN_URL_ALFRED_TABS_SEARCH
     </autogen>
   </item>
 
   <item>
-    <name>general: simultaneous ij = equal</name>
-    <identifier>private.sim_ij_equal_sign</identifier>
+    <name>general: simultaneous ij = finder fuzzy</name>
+    <identifier>private.finder_ij</identifier>
+    <only>Finder</only>
     <autogen>
       __SimultaneousKeyPresses__
       KeyCode::J, KeyCode::I,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
-      KeyCode::EQUAL
+      KeyCode::BACKSLASH, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L,
+      KeyCode::VK_OPEN_URL_ALFRED_FUZZY_SEARCH_HERE,
     </autogen>
   </item>
 
   <item>
-    <name>general: simultaneous li = github search</name>
+    <name>general: simultaneous hl = github search</name>
     <identifier>private.sim_li_github_search</identifier>
     <autogen>
       __SimultaneousKeyPresses__
-      KeyCode::L, KeyCode::I,
+      KeyCode::H, KeyCode::L,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
       KeyCode::VK_OPEN_URL_ALFRED_SEARCH_GITHUB_REPOS
     </autogen>
@@ -6647,6 +6693,41 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       {{ UBIQUITOUS_VIM_BINDINGS_CANCEL_OPERATOR_PENDING }}
     </autogen>
   </item>
+
+  <item>
+    <name>general: simultaneous kn = finder</name>
+    <identifier>private.finder_kn</identifier>
+    <only>Finder</only>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::K, KeyCode::N,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::BACKSLASH, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>CMDR finder alfred file action</name>
+    <identifier>private.switch_profile commandr_finder</identifier>
+    <only>Finder</only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_R,
+      KeyCode::COMMAND_R,
+      KeyCode::BACKSLASH, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>CMDR chrome find</name>
+    <identifier>private.switch_profile commandr_chrome</identifier>
+    <only>Chrome</only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_R,
+      KeyCode::COMMAND_R,
+      KeyCode::F, ModifierFlag::COMMAND_L,
+    </autogen>
+  </item>
+
 </root>
-
-
