@@ -29,6 +29,7 @@
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
 (spacemacs/set-leader-keys "gf" 'magit-file-popup)
+(spacemacs/set-leader-keys "fp" 'counsel-git)
 (spacemacs/set-leader-keys "gn" 'magit-gitflow-popup)
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
 (spacemacs/set-leader-keys "t0" 'centered-cursor-mode)
@@ -91,6 +92,19 @@
 (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
 (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
 (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
+
+;; textobj
+(define-key evil-inner-text-objects-map "f" 'evil-textobj-anyblock-inner-block)
+(define-key evil-outer-text-objects-map "f" 'evil-textobj-anyblock-a-block)
+(define-key evil-inner-text-objects-map "c" 'evil-textobj-column-word)
+(define-key evil-inner-text-objects-map "C" 'evil-textobj-column-WORD)
+(add-hook 'lisp-mode-hook
+          (lambda ()
+            (setq-local evil-textobj-anyblock-blocks
+                        '(("(" . ")")
+                          ("{" . "}")
+                          ("\\[" . "\\]")
+                          ("\"" . "\"")))))
 
 ;;;;;C-h
 (keyboard-translate ?\C-h ?\C-?)

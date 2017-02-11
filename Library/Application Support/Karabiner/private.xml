@@ -1512,6 +1512,12 @@ tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.w
     </autogen>
 
     <autogen>__KeyToKey__
+    KeyCode::U, ModifierFlag::CONTROL_L,
+    KeyCode::A, ModifierFlag::COMMAND_L,
+    KeyCode::DELETE
+    </autogen>
+
+    <autogen>__KeyToKey__
     KeyCode::K, ModifierFlag::CONTROL_L,
     KeyCode::CURSOR_UP
     </autogen>
@@ -6445,7 +6451,19 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       __SimultaneousKeyPresses__
       KeyCode::J, KeyCode::L,
       KeyCode::VK_LOCK_ALL_FORCE_OFF,
-      KeyCode::SPACE, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+      KeyCode::0, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
+  </item>
+
+  <item>
+    <name>general: simultaneous fk = alfred file</name>
+    <identifier>private.sim_fk_alfred_file</identifier>
+
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::F, KeyCode::K,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::SLASH, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L
     </autogen>
   </item>
 
