@@ -1,0 +1,52 @@
+--- 
+Asana: 
+  aliases: "-asana"
+  icon: asana.png
+  url: "https://app.asana.com"
+Facebook: 
+  aliases: "-fb -facebook"
+  icon: facebook.png
+  url: "https://facebook.com"
+Gizmodo: 
+  aliases: "-gizmodo"
+  icon: gizmodo.png
+  url: "http://www.gizmodo.com.au"
+Grammarly: 
+  aliases: "-grammarly"
+  icon: grammarly.png
+  url: "https://www.grammarly.com/signin"
+LinkedIn: 
+  aliases: "-linkedin"
+  icon: linkedin.png
+  url: "https://www.linkedin.com/hp/"
+Netflix: 
+  aliases: "-netflix"
+  icon: netflix.jpg
+  url: "http://www.netflix.com/"
+RescueTime: 
+  aliases: "-rescuetime"
+  icon: rescuetime.png
+  url: "https://www.rescuetime.com/dashboard"
+Slashdot: 
+  aliases: "-slashdot"
+  icon: slashdot.png
+  url: "http://slashdot.org"
+? "Toggl Web"
+: 
+  aliases: "-tg"
+  icon: toggl.png
+  url: "https://toggl.com/app"
+? "Torguard.net VPN"
+: 
+  aliases: "-torguard"
+  icon: torguard.png
+  url: "https://torguard.net/clientarea.php"
+YouTube: 
+  aliases: "-yt"
+  icon: youtube.png
+  url: "https://www.youtube.com"
+? "YouTube Video Manager"
+: 
+  aliases: "-yta -ytvm -youtube admin"
+  icon: youtubeadmin.png
+  url: "https://www.youtube.com/my_videos"
