@@ -450,7 +450,7 @@
   </vkopenurldef>
 
   <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACCS</name>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS</name>
     <url type="shell">
       osascript -e 'tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.sztoltz.editwith" with argument ""'
     </url>
