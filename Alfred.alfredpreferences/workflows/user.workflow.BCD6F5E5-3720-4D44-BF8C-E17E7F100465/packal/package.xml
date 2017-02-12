@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>TerminalFinder</name>
-  <version>1.0</version>
-  <bundle>de.leenno.terminalfinder</bundle>
-  <updated>1450967423</updated>
-  <file>terminalfinder.alfredworkflow</file>
-</workflow>

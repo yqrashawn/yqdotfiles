@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Restart frontmost application</name>
-  <version>1.1</version>
-  <bundle>com.sebas89.restartapp</bundle>
-  <updated>1408803670</updated>
-  <file>restart_frontmost_application.alfredworkflow</file>
-</workflow>

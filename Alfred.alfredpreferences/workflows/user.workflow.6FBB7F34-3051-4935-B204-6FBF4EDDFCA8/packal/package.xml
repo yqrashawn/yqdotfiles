@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Set Resolution</name>
-  <version>1.0</version>
-  <bundle>com.tumblr.ramiroaraujo.alfred-set-resolution-workflow</bundle>
-  <updated>1395152742</updated>
-  <file>alfred-set-resolution.alfredworkflow</file>
-</workflow>

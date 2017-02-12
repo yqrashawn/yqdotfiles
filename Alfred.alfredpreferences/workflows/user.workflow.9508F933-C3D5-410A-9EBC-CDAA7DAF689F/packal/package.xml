@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Emacs Workflow</name>
-  <version>1.0</version>
-  <bundle>com.customct.emacs</bundle>
-  <updated>1451989262</updated>
-  <file>emacsworkflow.alfredworkflow</file>
-</workflow>

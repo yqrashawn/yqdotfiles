@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>RenameAction</name>
-  <version>1.0.2</version>
-  <bundle>com.vitorgalvao.alfred.renameaction</bundle>
-  <updated>1485999437</updated>
-  <file>renameaction.alfredworkflow</file>
-</workflow>

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Urban Dictionary</name>
-  <version>1.0</version>
-  <bundle>florian.urban</bundle>
-  <updated>1409825629</updated>
-  <file>urban_dictionary.alfredworkflow</file>
-</workflow>

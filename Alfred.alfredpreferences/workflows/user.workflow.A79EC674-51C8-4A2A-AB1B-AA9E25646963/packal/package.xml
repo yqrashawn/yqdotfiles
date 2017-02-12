@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Rolls</name>
-  <version>1.0.0</version>
-  <bundle>com.kyleclemens.alfred.rolls</bundle>
-  <updated>1478470276</updated>
-  <file>rolls.alfredworkflow</file>
-</workflow>

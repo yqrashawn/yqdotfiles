@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Force Empty Trash</name>
-  <version>1.0</version>
-  <bundle>com.renegaed.force-empty-trash</bundle>
-  <updated>1430281417</updated>
-  <file>force_empty_trash.alfredworkflow</file>
-</workflow>

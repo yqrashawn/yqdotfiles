@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Hastebin</name>
-  <version>1.0</version>
-  <bundle>co.jmes.hastebin</bundle>
-  <updated>1408981697</updated>
-  <file>hastebin.alfredworkflow</file>
-</workflow>
