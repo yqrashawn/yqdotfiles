@@ -1,9 +1,10 @@
+#!/bin/zsh -f
 for i in *
 do
   if test -f "$i"
 then
-    sed -i '' -e '1i\
-    /* eslint-disable */'  $i
+    echo "$i" && sed -i '' -e '1i\
+/* eslint-disable */'  "$i"
 
     # sed -i '' -e '$ a\
     # })()' $i
