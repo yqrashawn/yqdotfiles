@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Search Quora</name>
-  <version>1.0</version>
-  <bundle>searchquora</bundle>
-  <updated>1430886721</updated>
-  <file>search_quora.alfredworkflow</file>
-</workflow>

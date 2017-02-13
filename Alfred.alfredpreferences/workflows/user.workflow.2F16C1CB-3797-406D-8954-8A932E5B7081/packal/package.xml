@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Toggle Fn keys as standard keys</name>
-  <version>1.0</version>
-  <bundle>me.riyaz.fn.standardkeys</bundle>
-  <updated>1478418003</updated>
-  <file>toggle_fn_keys_as_standard_keys.alfredworkflow</file>
-</workflow>

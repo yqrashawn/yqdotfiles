@@ -1,114 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>bundleid</key>
-	<string>me.pasine.blockconnections</string>
-	<key>connections</key>
-	<dict>
-		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
-		<array/>
-		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
-	</dict>
-	<key>createdby</key>
-	<string>Paolo S.</string>
-	<key>description</key>
-	<string>Enable/Disable Block All Incoming Connections option</string>
-	<key>disabled</key>
-	<true/>
-	<key>name</key>
-	<string>Block All Incoming Connections - COPY</string>
-	<key>objects</key>
-	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>keyword</key>
-				<string>fw</string>
-				<key>text</key>
-				<string>Toggle Block All Incoming Connection</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>set theQuery to "{query}"
-set newState to false
-set shouldReopenPreferences to falseset notificationTitle to "Block All Incoming Connection"
-
-#Check if user has input a query
-set queryLength to the length of theQuery
-
-#If query is On set newState to 2
-if theQuery is "on" then
-	set newState to "2"
-end if
-
-#If query is Off set newState to 1
-if theQuery is "off" then
-	set newState to "1"
-end if
-
-#If the query is anything else show a notification with error and exit
-if (queryLength is greater than 0) and (newState is equal to false) then
-	tell application "System Events" to display notification with title "Query error" subtitle "Query must be on or off. Leave empty to toggle."
-	return
-end if
-
-#Get the current firewall state
-set firewallState to do shell script "defaults read /Library/Preferences/com.apple.alf globalstate"#If the preferences panel is open, prompt to close ittell application "System Events" to if (first application process whose name is "System Preferences") exists then  display dialog "System Preferences must be closed to apply the option: proceed?"	tell application "System Preferences"		quit    set shouldReopenPreferences to true		delay 1	end tellend if#If newState is not set, toggle current firewall stateif (newState is equal to false) and (firewallState is equal to "1") then	set newState to "2"end ifif (newState is equal to false) and (firewallState is equal to "2") then	set newState to "1"end if#Security check: the option is set just in case new state is 1 or 2if (newState is equal to "1") or (newState is equal to "2") then	do shell script ("defaults write /Library/Preferences/com.apple.alf globalstate -int " &amp; newState) with administrator privilegesend if#Get the firewall state after the script has runset firewallState to do shell script "defaults read /Library/Preferences/com.apple.alf globalstate"#Display a notification for the current state of the firewallif firewallState is "0" then	tell application "System Events" to display notification with title notificationTitle subtitle "Warning!!! The firewall is OFF!!!"end ifif firewallState is "1" then	tell application "System Events" to display notification with title notificationTitle subtitle "Disabled"end ifif firewallState is "2" then	tell application "System Events" to display notification with title notificationTitle subtitle "Enabled"end if#In case the preferences panel was open, reopen it showing the Firewall settingstell application "System Events" to if shouldReopenPreferences then	tell application "System Preferences"		activate		set current pane to pane "com.apple.preference.security"	end tellend if</string>
-				<key>type</key>
-				<integer>6</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-	</array>
-	<key>readme</key>
-	<string></string>
-	<key>uidata</key>
-	<dict>
-		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
-		<dict>
-			<key>ypos</key>
-			<real>60</real>
-		</dict>
-		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
-		<dict>
-			<key>ypos</key>
-			<real>60</real>
-		</dict>
-	</dict>
-	<key>webaddress</key>
-	<string>http://pasine.me</string>
-</dict>
-</plist>

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Bluetooth On/Off</name>
-  <version>1.0</version>
-  <bundle>leoflint.bluetoothonoff</bundle>
-  <updated>1441538704</updated>
-  <file>bluetooth_onoff.alfredworkflow</file>
-</workflow>

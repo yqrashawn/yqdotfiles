@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>QRCode Generator</name>
-  <version>1.0</version>
-  <bundle>zhxl.me.workflows.qrcode</bundle>
-  <updated>1390206528</updated>
-  <file>qrcodegenerator.alfredworkflow</file>
-</workflow>

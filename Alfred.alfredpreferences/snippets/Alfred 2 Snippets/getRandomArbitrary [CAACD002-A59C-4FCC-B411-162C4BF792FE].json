@@ -1,9 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "\/**\n * Returns a random number between min (inclusive) and max (exclusive)\n *\/\nfunction getRandomArbitrary(min, max) {\n    return Math.random() * (max - min) + min;\n}",
-    "dontautoexpand" : true,
-    "uid" : "CAACD002-A59C-4FCC-B411-162C4BF792FE",
-    "name" : "getRandomArbitrary",
-    "keyword" : "randa"
-  }
-}

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Create Sticky Notification</name>
-  <version>1.0</version>
-  <bundle>com.calebgrove.sn</bundle>
-  <updated>1394043032</updated>
-  <file>create_sticky_notification.alfredworkflow</file>
-</workflow>

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>IncognitoClone</name>
-  <version>1.0.3</version>
-  <bundle>com.vitorgalvao.alfred.incognitoclone</bundle>
-  <updated>1486001837</updated>
-  <file>incognitoclone.alfredworkflow</file>
-</workflow>

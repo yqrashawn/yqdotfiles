@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Searchio!</name>
-  <version>1.8.1</version>
-  <bundle>net.deanishe.alfred-searchio</bundle>
-  <updated>1456835652</updated>
-  <file>searchio-1.8.1.alfredworkflow</file>
-</workflow>

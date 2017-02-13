@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Packal Updater</name>
-  <version>1.0</version>
-  <bundle>com.packal</bundle>
-  <updated>1404327674</updated>
-  <file>packal.alfredworkflow</file>
-</workflow>
