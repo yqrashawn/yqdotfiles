@@ -450,7 +450,7 @@
   </vkopenurldef>
 
   <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACCS</name>
+    <name>KeyCode::VK_OPEN_URL_ALFRED_EDIT_IN_EMACS</name>
     <url type="shell">
       osascript -e 'tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.sztoltz.editwith" with argument ""'
     </url>
@@ -3468,9 +3468,9 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
-    <name>general: sticky x - alfred</name>
+    <name>general: sticky z - alfred</name>
     <appendix></appendix>
-    <appendix>x as a modifier key</appendix>
+    <appendix>x as a modifie key</appendix>
     <appendix>y clipboard to url</appendix>
     <appendix>slash calendar</appendix>
     <appendix>comma alred preferences</appendix>
@@ -3496,7 +3496,7 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
 
     <autogen>
       __KeyOverlaidModifier__
-      KeyCode::X,
+      KeyCode::Z,
 
       <!--
           Use notsave.launcher_mode_v2 in order to be higher priority.
@@ -3507,7 +3507,7 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       @end
 
       @begin
-      KeyCode::X,
+      KeyCode::Z,
       @end
     </autogen>
   </item>
@@ -3516,7 +3516,7 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
     <identifier vk_config="true">notsave.private_launcher_mode_v43</identifier>
 
     <autogen>
-      __BlockUntilKeyUp__ KeyCode::X,
+      __BlockUntilKeyUp__ KeyCode::Z,
     </autogen>
 
     <autogen>
