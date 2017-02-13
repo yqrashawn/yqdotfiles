@@ -1,0 +1,6 @@
+#!/bin/sh
+# Script to do a grep;find on
+#   $1 == 'text to find'
+#   $2 == path/files, i.e.  \*.R
+ 
+find . -iname "$2" | while read f; do grep -i -q "$1" "$f"; if [ $? -eq 0 ]; then echo $f; fi; done
