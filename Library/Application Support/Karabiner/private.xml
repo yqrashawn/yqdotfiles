@@ -6650,6 +6650,17 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
+    <name>general: simultaneous ij = app switcher</name>
+    <identifier>private.switcher_ij</identifier>
+    <autogen>
+      __SimultaneousKeyPresses__
+      KeyCode::J, KeyCode::I,
+      KeyCode::VK_LOCK_ALL_FORCE_OFF,
+      KeyCode::J, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L, ModifierFlag::CONTROL_L
+    </autogen>
+  </item>
+
+  <item>
     <name>general: simultaneous hl = github search</name>
     <identifier>private.sim_li_github_search</identifier>
     <autogen>
