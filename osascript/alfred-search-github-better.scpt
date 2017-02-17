@@ -1,0 +1,1 @@
+tell application "Alfred 3" to run trigger "searchGithub" in workflow "nikivi.search-the-web" with argument ""

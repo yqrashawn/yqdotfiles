@@ -1,0 +1,1 @@
+tell application "Alfred 3" to run trigger "alfredFinder" in workflow "com.customct.AlfredBrowser" with argument ""

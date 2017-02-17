@@ -1,0 +1,1 @@
+osascript -e 'tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.sztoltz.editwith" with argument ""'
