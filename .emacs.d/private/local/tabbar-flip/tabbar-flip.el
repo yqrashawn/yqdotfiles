@@ -91,9 +91,9 @@ See `tabbar-flip-mode' for more information."
   (interactive)
   (when (vectorp (this-command-keys)) (switch-to-buffer (current-buffer)))
   (set-transient-map                                   ; Read next key
-   `(keymap (,(elt tabbar-flip-keys 1) . tabbar-forward)  ; Flip forward
-            (,(elt tabbar-flip-keys 2) . tabbar-backward)) ; Flip backward
-   t (tabbar-forward)))
+   `(keymap (,(elt tabbar-flip-keys 1) . tabbar-forward-group)  ; Flip forward
+            (,(elt tabbar-flip-keys 2) . tabbar-backward-group)) ; Flip backward
+   t (tabbar-forward-group)))
 
 (provide 'tabbar-flip)
 ;;; tabbar-flip.el ends here

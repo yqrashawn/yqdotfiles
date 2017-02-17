@@ -94,8 +94,8 @@ See `tabbar-flip-mode' for more information."
   (interactive) ; ensure current buffer is on the top of the stack at outset
   (when (vectorp (this-command-keys)) (switch-to-buffer (current-buffer)))
   (set-transient-map                                   ; Read next key
-   `(keymap (,(elt tabbar-flip-keys 1) . tabbar-forward)  ; Flip forward
-            (,(elt tabbar-flip-keys 2) . tabbar-backward)) ; Flip backward
+   `(keymap (,(elt tabbar-flip-keys 1) . tabbar-forward-group)  ; Flip forward
+            (,(elt tabbar-flip-keys 2) . tabbar-backward-group)) ; Flip backward
    t (tabbar-forward)))
 
 (provide 'tabbar-flip)
