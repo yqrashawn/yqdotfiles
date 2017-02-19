@@ -590,7 +590,7 @@ you should place your code here."
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
- '(ns-antialias-text nil)
+ '(ns-antialias-text t)
  '(ns-use-title-bar nil)
  '(org-capture-templates
    (quote
