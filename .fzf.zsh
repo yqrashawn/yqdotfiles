@@ -19,6 +19,6 @@ bindkey '^E' jump
 # ------------
 
 # source "~/.fzf/shell/fzf-git.zsh"
-source "./.fzf/shell/marks.zsh"
-source "./.fzf/shell/key-bindings.zsh"
+source "${HOME}/.fzf/shell/marks.zsh"
+source "${HOME}/.fzf/shell/key-bindings.zsh"
 
