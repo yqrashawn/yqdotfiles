@@ -51,7 +51,7 @@
     ad-do-it))
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
-(setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
+(setq flycheck-eslint-rules-directories '("/Users/rashawnzhang"))
 (setq-default save-place t)
 (spacemacs/add-flycheck-hook 'web-mode)
 (spacemacs/add-flycheck-hook 'js2-mode)

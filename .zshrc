@@ -1,1 +1,1 @@
-/Users/Rashawn/.zprezto/runcoms/zshrc
+.zprezto/runcoms/zshrc

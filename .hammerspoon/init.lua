@@ -12,6 +12,7 @@ omh_go({
     -- "audio.headphones_watcher",
     -- "misc.clipboard",
     -- "keyboard.menubar_indicator",
+    "keyboard.hyper",
     -- "apps.universal_archive",
     -- "windows.screen_rotate",
     -- "windows.tabs",
