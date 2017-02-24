@@ -51,6 +51,7 @@
     ad-do-it))
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
+(setq flycheck-javascript-eslint-executable "eslint_d")
 (setq flycheck-eslint-rules-directories '("/Users/rashawnzhang"))
 (setq-default save-place t)
 (spacemacs/add-flycheck-hook 'web-mode)
@@ -72,3 +73,37 @@
              (indent-for-tab-command)
              (if (looking-back "^\s*")
                  (back-to-indentation))))))))
+
+(defun eslint-fix ()
+  (interactive)
+  (let ((current-point (point))
+        (line (count-screen-lines (window-start) (point)))
+        (command (concat
+                  "eslint_d"
+                  " --stdin"
+                  " --fix-to-stdout"
+                  " --stdin-filename " buffer-file-name))
+        (buffer (current-buffer))
+        (text (buffer-substring-no-properties (point-min) (point-max))))
+    (with-temp-buffer
+      (insert text)
+      (when (eq 0
+                (shell-command-on-region
+                 ;; Region
+                 (point-min)
+                 (point-max)
+                 ;; Command
+                 command
+                 ;; Output to current buffer
+                 t
+                 ;; Replace buffer
+                 t
+                 ;; Error buffer name
+                 "*eslint-fix error*"))
+        (let ((fixed-text (buffer-substring-no-properties (point-min) (point-max))))
+          (with-current-buffer buffer
+            (delete-region (point-min) (point-max))
+            (insert fixed-text)
+            ;; Restore point and scroll position
+            (goto-char current-point)
+            (recenter (- line 1))))))))
