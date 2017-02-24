@@ -30,6 +30,8 @@ xnoremap <C-r> :<C-u>call VSetSearch('/')<CR>:%s/\V<C-R>=@/<CR>//gc<Left><Left><
 nnoremap <leader>tn :<C-u>call ToggleNumber()<cr>
 nnoremap <leader>tN :<C-u>call ToggleRelativeNumber()<cr>
 nnoremap <leader>Tn :<C-u>call ToggleBG()<cr>
+nnoremap <C-l> zz
+nnoremap <C-k> za
 " nnoremap <c-l> :call GetPotionFold(32)<cr>
 
 
