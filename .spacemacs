@@ -15,7 +15,8 @@ values."
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
-   dotspacemacs-distribution 'spacemacs-base
+   ;; dotspacemacs-distribution 'spacemacs-base
+   dotspacemacs-distribution 'spacemacs
    ;; Lazy installation of layers (i.e. layers are installed only when a file
    ;; with a supported type is opened). Possible values are `all', `unused'
    ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
@@ -36,7 +37,6 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     asciidoc
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -51,17 +51,18 @@ values."
      auto-completion
      better-defaults
      git
-     spacemacs-evil
-     spacemacs-ui
-     spacemacs-language
-     spacemacs-editing-visual
-     spacemacs-completion
-     spacemacs-editing
-     spacemacs-misc
-     spacemacs-completion
-     spacemacs-layouts
-     spacemacs-ui-visual
+     ;; spacemacs-evil
+     ;; spacemacs-ui
+     ;; spacemacs-language
+     ;; spacemacs-editing-visual
+     ;; spacemacs-completion
+     ;; spacemacs-editing
+     ;; spacemacs-misc
+     ;; spacemacs-completion
+     ;; spacemacs-layouts
+     ;; spacemacs-ui-visual
      semantic
+     asciidoc
      markdown
      org
      osx
@@ -118,33 +119,35 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(speedbar
-                                    eldoc
-                                    adaptive-wrap
-                                    aggressive-indent
-                                    auto-highlight-symbol
-                                    clean-aindent-mode
-                                    column-enforce-mode
-                                    dumb-jump
-                                    eval-sexp-fu
-                                    evil-tutor
-                                    fancy-battery
-                                    google-translate
-                                    highlight-numbers
-                                    highlight-parentheses
-                                    hungry-delete
-                                    move-text
-                                    rainbow-delimiters
-                                    spinner
-                                    volatile-highlights
-                                    ws-butler
+   dotspacemacs-excluded-packages '(
+                                    speedbar
+                                    ;; eldoc
+                                    ;; adaptive-wrap
+                                    ;; aggressive-indent
+                                    ;; auto-highlight-symbol
+                                    ;; clean-aindent-mode
+                                    ;; column-enforce-mode
+                                    ;; dumb-jump
+                                    ;; eval-sexp-fu
+                                    ;; evil-tutor
+                                    ;; fancy-battery
+                                    ;; google-translate
+                                    ;; highlight-numbers
+                                    ;; highlight-parentheses
+                                    ;; hungry-delete
+                                    ;; move-text
+                                    ;; rainbow-delimiters
+                                    ;; spinner
+                                    ;; volatile-highlights
+                                    ;; ws-butler
                                     uuidgen
                                     vi-tilde-fringe
                                     flx-ido
                                     ido-vertical-mode
-                                    parent-mode
-                                    neotree
-                                    linum-relative)
+                                    ;; parent-mode
+                                    ;; neotree
+                                    ;; linum-relative
+                                    )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -216,7 +219,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro Light"
+   dotspacemacs-default-font '("Source Code Pro for Powerline"
                                :size 11
                                :weight normal
                                :width normal
@@ -546,7 +549,7 @@ you should place your code here."
  '(flycheck-idle-change-delay 0.1)
  '(flycheck-standard-error-navigation t)
  '(flyspell-delay 1)
- '(font-lock-maximum-decoration nil)
+ ;; '(font-lock-maximum-decoration nil)
  '(gc-cons-threshold 800000)
  '(glyphless-char-display-control
    (quote
