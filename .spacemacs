@@ -51,25 +51,15 @@ values."
      auto-completion
      better-defaults
      git
-     ;; spacemacs-evil
-     ;; spacemacs-ui
-     ;; spacemacs-language
-     ;; spacemacs-editing-visual
-     ;; spacemacs-completion
-     ;; spacemacs-editing
-     ;; spacemacs-misc
-     ;; spacemacs-completion
-     ;; spacemacs-layouts
-     ;; spacemacs-ui-visual
      semantic
      asciidoc
      markdown
      org
      osx
      (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom
-            shell-default-term-shell "/bin/zsh")
+      shell-default-height 30
+      shell-default-position 'bottom
+      shell-default-term-shell "/bin/zsh")
      spell-checking
      syntax-checking
      version-control
@@ -83,9 +73,13 @@ values."
      (c-c++ :variables c-c++-enable-clang-support t)
      go
      (go :variables
-         go-use-gometalinter t
-         go-tab-width 2)
+      go-use-gometalinter t
+      go-tab-width 2)
      vimscript
+     typescript
+     (typescript :variables
+      typescript-fmt-on-save t
+      typescript-fmt-tool 'typescript-formatter)
      javascript
      (javascript :variables javascript-disable-tern-port-files nil)
      python
@@ -100,13 +94,14 @@ values."
                                       key-chord
                                       vlf
                                       matlab-mode
-                                      ;; swiper-helm
                                       evil-textobj-anyblock
                                       evil-textobj-column
                                       evil-visual-mark-mode
                                       auto-yasnippet
+                                      golden-ratio-scroll-screen
                                       noxml-fold
                                       company-flx
+                                      vue-mode
                                       fzf
                                       imenu-anywhere
                                       saveplace
@@ -220,7 +215,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 11
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -421,6 +416,16 @@ you should place your code here."
   ;; (require 'benchmark-init-loaddefs)
   ;; (benchmark-init/activate)
   ;; (require 'magit-gitflow)
+
+  (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
+    (lambda () (golden-ratio-mode 1)))
+  (spacemacs/toggle-mode-line-minor-modes-off)
+  (spacemacs/toggle-mode-line-point-position-on)
+  (global-aggressive-indent-mode)
+  (global-golden-ratio-mode)
+  (global-auto-highlight-symbol-mode)
+  (add-hook 'prog-mode-hook 'fci-mode)
+  (aggressive-indent-mode 1)
   (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
   (add-hook 'nxml-mode-hook 'noxml-fold-mode)
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
@@ -469,12 +474,12 @@ you should place your code here."
   (load-file "~/.my_emacs/tabbar.el")
   (load-file "~/.my_emacs/ibuffer.el")
   (load-file "~/.my_emacs/erc.el")
+  (load-file "~/.my_emacs/popwin.el")
   ;; (load-file "~/.my_emacs/layout.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq jit-lock-defer-time 0.05)
   (defun disable-magit-highlight-in-buffer ()
     (face-remap-add-relative 'magit-item-highlight '()))
   (add-hook 'magit-status-mode-hook 'disable-magit-highlight-in-buffer)
@@ -509,8 +514,8 @@ you should place your code here."
  '(company-backends
    (quote
     (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
-                  (company-dabbrev-code company-keywords)
-                  company-oddmuse company-dabbrev)))
+     (company-dabbrev-code company-keywords)
+     company-oddmuse company-dabbrev)))
  '(company-idle-delay 0.01)
  '(custom-safe-themes
    (quote
@@ -549,12 +554,12 @@ you should place your code here."
  '(flycheck-idle-change-delay 0.1)
  '(flycheck-standard-error-navigation t)
  '(flyspell-delay 1)
- ;; '(font-lock-maximum-decoration nil)
  '(gc-cons-threshold 800000)
  '(glyphless-char-display-control
    (quote
     ((format-control . thin-space)
      (no-font . hex-code))))
+ '(golden-ratio-scroll-highlight-delay (quote (0.1 . 0.05)))
  '(guide-key/guide-key-sequence (quote ("t")))
  '(hl-todo-keyword-faces
    (quote
@@ -578,10 +583,6 @@ you should place your code here."
  '(ibuffer-mode-hook (quote (ibuffer-vc-set-filter-groups-by-vc-root)))
  '(idle-update-delay 0.01)
  '(imenu-list-minor-mode nil)
- '(indent-guide-delay 0.1)
- '(indent-guide-global-mode nil)
- '(indent-guide-threshold 40)
- '(jit-lock-chunk-size 501)
  '(js2-dynamic-idle-timer-adjust 20971)
  '(js2-idle-timer-delay 0.02)
  '(js2-mode-show-parse-errors nil)
@@ -610,22 +611,22 @@ you should place your code here."
  '(org-capture-templates
    (quote
     (("l" "Capture from the Internet with link" entry
-      (file "~/Dropbox/org/notes.org")
-      "* %? %^L      %^G
+          (file "~/Dropbox/org/notes.org")
+          "* %? %^L      %^G
 %c
 Entered on %U")
      ("n" "notes" entry
-      (file "~/Dropbox/org/notes.org")
-      "* %?
+          (file "~/Dropbox/org/notes.org")
+          "* %?
 Entered on %U")
      ("f" "file TODOs" entry
-      (file "~/Dropbox/org/gtd.org")
-      "* TODO %?           %^G
+          (file "~/Dropbox/org/gtd.org")
+          "* TODO %?           %^G
  %a
  %U")
      ("t" "TODOs" entry
-      (file "~/Dropbox/org/gtd.org")
-      "* TODO %?           %^G
+          (file "~/Dropbox/org/gtd.org")
+          "* TODO %?           %^G
  %U"))))
  '(org-datetree-add-timestamp (quote inactive))
  '(org-projectile:allow-tramp-projects t)
@@ -638,7 +639,7 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (adoc-mode markup-faces stickyfunc-enhance srefactor swiper-helm matlab-mode csv-mode hl-todo lua-mode names evil-textobj-column evil-textobj-anyblock ycmd request-deferred deferred company-ycmd noxml-fold erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks flycheck-gometalinter ibuffer-vc dactyl-mode elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed origami key-chord evil-terminal-cursor-changer benchmark-init tabbar-flip paredit switch-window tabbar vlf yaml-mode company-flx nlinum fasd ranger disaster company-c-headers cmake-mode clang-format glsl-mode color-theme-sanityinc-solarized ox-twbs ox-gfm dash-at-point counsel-dash flyspell-correct-ivy gitter pdf-tools company-quickhelp helm-dash imenu-anywhere vimrc-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme -theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (golden-ratio-scroll-screen tide typescript-mode adoc-mode markup-faces stickyfunc-enhance srefactor swiper-helm matlab-mode csv-mode hl-todo lua-mode names evil-textobj-column evil-textobj-anyblock ycmd request-deferred deferred company-ycmd noxml-fold erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks flycheck-gometalinter ibuffer-vc dactyl-mode elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed origami key-chord evil-terminal-cursor-changer benchmark-init tabbar-flip paredit switch-window tabbar vlf yaml-mode company-flx nlinum fasd ranger disaster company-c-headers cmake-mode clang-format glsl-mode color-theme-sanityinc-solarized ox-twbs ox-gfm dash-at-point counsel-dash flyspell-correct-ivy gitter pdf-tools company-quickhelp helm-dash imenu-anywhere vimrc-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme -theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(powerline-gui-use-vcs-glyph t)
  '(powerline-height 4)

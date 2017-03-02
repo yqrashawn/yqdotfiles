@@ -35,6 +35,8 @@
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
 (spacemacs/set-leader-keys "t0" 'centered-cursor-mode)
 (spacemacs/set-leader-keys "hc" 'hide/show-comments-toggle)
+(spacemacs/set-leader-keys "fl" 'counsel-locate)
+(spacemacs/set-leader-keys "fL" 'find-file-literally)
 
 (spacemacs/declare-prefix "o" "own-prefix")
 (spacemacs/declare-prefix "oe" "edit-prefix")
@@ -55,6 +57,8 @@
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 
 ;; evil normal
+(define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
+(define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
 (define-key evil-normal-state-map "zl" 'hs-hide-level)
 (define-key evil-normal-state-map "gd" 'evil-goto-definition)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
