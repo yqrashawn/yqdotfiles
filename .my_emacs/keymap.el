@@ -18,12 +18,20 @@
 ;;     (sr-speedbar-open-and-select)))
 
 (global-set-key (kbd "C-s") 'phi-search)
+(push 'evil-escape-mode evil-mc-incompatible-minor-modes)
+(setq evil-mc-undo-cursors-on-keyboard-quit t)
 
 ;; dired
 (with-eval-after-load 'dired
   (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
   (evil-define-key 'normal dired-mode-map "f" 'dired-goto-file)
   (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory))
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("M-." . mc/mark-next-like-this)
+         ("M-," . mc/unmark-next-like-this)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
 ;; spacemacs leader
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
@@ -35,6 +43,8 @@
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
 (spacemacs/set-leader-keys "t0" 'centered-cursor-mode)
 (spacemacs/set-leader-keys "hc" 'hide/show-comments-toggle)
+(spacemacs/set-leader-keys "fl" 'counsel-locate)
+(spacemacs/set-leader-keys "fL" 'find-file-literally)
 
 (spacemacs/declare-prefix "o" "own-prefix")
 (spacemacs/declare-prefix "oe" "edit-prefix")
@@ -55,6 +65,8 @@
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 
 ;; evil normal
+(define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
+(define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
 (define-key evil-normal-state-map "zl" 'hs-hide-level)
 (define-key evil-normal-state-map "gd" 'evil-goto-definition)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
@@ -71,21 +83,23 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-normal-state-map (kbd "gI") 'evil-insert-resume)
+(define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
+(define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
+(define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
 (define-key evil-visual-state-map (kbd "C-x C-;") 'evilnc-comment-or-uncomment-lines)
+(define-key evil-visual-state-map "gE" 'mc-edit-lines)
 
 ;; evil insert
 (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
 (define-key evil-insert-state-map (kbd "C-v") 'forward-word)
 (define-key evil-insert-state-map (kbd "C-k") 'backward-word)
 (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
-;; (define-key evil-insert-state-map (kbd "C-n") 'mc/mark-next-like-this-word)
-;; (define-key evil-insert-state-map (kbd "C-p") 'mc/mark-previous-like-this-word)
-(define-key evil-insert-state-map (kbd "M-n") 'mc/mark-next-like-this)
-(define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
+;; (define-key evil-insert-state-map (kbd "M-n") 'mc/mark-next-like-this)
+;; (define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
 (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)

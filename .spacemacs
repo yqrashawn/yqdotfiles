@@ -2,7 +2,7 @@
 ;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-(add-to-list 'load-path "/User/Rashawn/.emacs.d/private/local/")
+(add-to-list 'load-path "~/.emacs.d/private/local/")
 (setq url-proxy-services
       '(("http" . "127.0.0.1:6152")
         ("https" . "127.0.0.1:6152")))
@@ -15,7 +15,8 @@ values."
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
-   dotspacemacs-distribution 'spacemacs-base
+   ;; dotspacemacs-distribution 'spacemacs-base
+   dotspacemacs-distribution 'spacemacs
    ;; Lazy installation of layers (i.e. layers are installed only when a file
    ;; with a supported type is opened). Possible values are `all', `unused'
    ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
@@ -36,8 +37,6 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     lua
-     windows-scripts
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -46,21 +45,14 @@ values."
      erc
      elfeed
      (elfeed :variables rmh-elfeed-org-files (list "~/.emacs.d/private/elfeed.org"))
-     go
-     (go :variables
-         go-use-gometalinter t
-         go-tab-width 2)
-     vimscript
      imenu-list
      ivy
+     ;; helm
      auto-completion
      better-defaults
      git
-     spacemacs-evil
-     spacemacs-ui
-     spacemacs-completion
-     spacemacs-editing
-     spacemacs-ui-visual
+     semantic
+     asciidoc
      markdown
      org
      osx
@@ -68,16 +60,30 @@ values."
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-term-shell "/bin/zsh")
-     ;; spell-checking
+     spell-checking
      syntax-checking
      version-control
-     ;; scheme
-     html
-     javascript
      evil-snipe
+     html
+     windows-scripts
+     csv
+     octave
+     lua
+     c-c++
+     (c-c++ :variables c-c++-enable-clang-support t)
+     go
+     (go :variables
+         go-use-gometalinter t
+         go-tab-width 2)
+     vimscript
+     typescript
+     (typescript :variables
+                 typescript-fmt-on-save t
+                 typescript-fmt-tool 'typescript-formatter)
+     javascript
      (javascript :variables javascript-disable-tern-port-files nil)
-     ;; python
-     ;; (python :variables python-enable-yapf-format-on-save t)
+     python
+     (python :variables python-enable-yapf-format-on-save t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -87,13 +93,17 @@ values."
                                       company-ycmd
                                       key-chord
                                       vlf
+                                      matlab-mode
+                                      noccur
                                       evil-textobj-anyblock
                                       evil-textobj-column
                                       evil-visual-mark-mode
-                                      ggtags
                                       auto-yasnippet
+                                      golden-ratio-scroll-screen
                                       noxml-fold
+                                      nodejs-repl
                                       company-flx
+                                      vue-mode
                                       fzf
                                       imenu-anywhere
                                       saveplace
@@ -102,37 +112,42 @@ values."
                                       jscs
                                       eslint-fix
                                       slime
-                                      js-comint)
+                                      ;; js-comint
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(speedbar
-                                    eldoc
-                                    adaptive-wrap
-                                    aggressive-indent
-                                    auto-highlight-symbol
-                                    clean-aindent-mode
-                                    column-enforce-mode
-                                    dumb-jump
-                                    eval-sexp-fu
-                                    evil-tutor
-                                    fancy-battery
-                                    google-translate
-                                    highlight-numbers
-                                    highlight-parentheses
-                                    hungry-delete
-                                    move-text
-                                    rainbow-delimiters
-                                    spinner
-                                    volatile-highlights
-                                    ws-butler
+   dotspacemacs-excluded-packages '(
+                                    speedbar
+                                    stickyfunc-enhance
+                                    ;; eldoc
+                                    ;; adaptive-wrap
+                                    ;; aggressive-indent
+                                    ;; auto-highlight-symbol
+                                    ;; clean-aindent-mode
+                                    ;; column-enforce-mode
+                                    ;; dumb-jump
+                                    ;; eval-sexp-fu
+                                    ;; evil-tutor
+                                    ;; fancy-battery
+                                    ;; google-translate
+                                    ;; highlight-numbers
+                                    ;; highlight-parentheses
+                                    ;; hungry-delete
+                                    ;; move-text
+                                    ;; rainbow-delimiters
+                                    ;; spinner
+                                    ;; volatile-highlights
+                                    ;; ws-butler
+                                    stickyfunc-enhance
                                     uuidgen
                                     vi-tilde-fringe
                                     flx-ido
                                     ido-vertical-mode
-                                    parent-mode
-                                    neotree
-                                    linum-relative)
+                                    ;; parent-mode
+                                    ;; neotree
+                                    ;; linum-relative
+                                    )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -204,8 +219,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro Light"
-                               :size 11
+   dotspacemacs-default-font '("Source Code Pro for Powerline"
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -299,7 +314,7 @@ values."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -397,15 +412,15 @@ you should place your code here."
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  ;; (setq undo-tree-auto-save-history t
-  ;;       undo-tree-history-directory-alist
-  ;;       `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  ;; (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-  ;;   (make-directory (concat spacemacs-cache-directory "undo")))
-  ;; (add-to-list 'load-path "~/Downloads/benchmark-init-el-master")
-  ;; (require 'benchmark-init-loaddefs)
-  ;; (benchmark-init/activate)
-  ;; (require 'magit-gitflow)
+  (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
+    (lambda () (golden-ratio-mode 1)))
+  (spacemacs/toggle-mode-line-minor-modes-off)
+  (spacemacs/toggle-mode-line-point-position-on)
+  (global-aggressive-indent-mode)
+  (global-golden-ratio-mode)
+  (global-auto-highlight-symbol-mode t)
+  (add-hook 'prog-mode-hook 'fci-mode)
+  (aggressive-indent-mode 1)
   (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
   (add-hook 'nxml-mode-hook 'noxml-fold-mode)
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
@@ -434,7 +449,7 @@ you should place your code here."
   (flyspell-mode 0)
   (global-evil-mc-mode 1)
 
-  (set-variable 'ycmd-server-command '("python2" "/Users/Rashawn/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd"))
+  (set-variable 'ycmd-server-command '("python2" "/Users/rashawnzhang/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd"))
   (set-variable 'ycmd-global-config "~/.ycm_extra_conf.py")
 
   (require 'ycmd)
@@ -454,12 +469,12 @@ you should place your code here."
   (load-file "~/.my_emacs/tabbar.el")
   (load-file "~/.my_emacs/ibuffer.el")
   (load-file "~/.my_emacs/erc.el")
+  (load-file "~/.my_emacs/popwin.el")
   ;; (load-file "~/.my_emacs/layout.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (setq slime-contribs '(slime-fancy))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq jit-lock-defer-time 0.05)
   (defun disable-magit-highlight-in-buffer ()
     (face-remap-add-relative 'magit-item-highlight '()))
   (add-hook 'magit-status-mode-hook 'disable-magit-highlight-in-buffer)
@@ -494,7 +509,7 @@ you should place your code here."
  '(company-backends
    (quote
     (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
-                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  (company-dabbrev-code company-keywords)
                   company-oddmuse company-dabbrev)))
  '(company-idle-delay 0.01)
  '(custom-safe-themes
@@ -517,6 +532,7 @@ you should place your code here."
  '(erc-rename-buffers t)
  '(erc-user-full-name "yqrashawn")
  '(evil-esc-delay 0)
+ '(evil-escape-mode t)
  '(evil-escape-unordered-key-sequence t)
  '(evil-ex-hl-update-delay 0)
  '(evil-flash-delay 1)
@@ -525,7 +541,7 @@ you should place your code here."
  '(evil-want-C-i-jump t)
  '(evil-want-Y-yank-to-eol t)
  '(evil-want-fine-undo t)
- '(fci-rule-color "#383838" t)
+ '(fci-rule-color "#383838")
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(flycheck-checker-error-threshold 1000)
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
@@ -534,12 +550,14 @@ you should place your code here."
  '(flycheck-idle-change-delay 0.1)
  '(flycheck-standard-error-navigation t)
  '(flyspell-delay 1)
- '(font-lock-maximum-decoration nil)
  '(gc-cons-threshold 800000)
+ '(global-semantic-stickyfunc-mode nil)
  '(glyphless-char-display-control
    (quote
     ((format-control . thin-space)
      (no-font . hex-code))))
+ '(golden-ratio-scroll-highlight-delay (quote (0.07 . 0.03)))
+ '(golden-ratio-scroll-highlight-flag (quote (quote nil)))
  '(guide-key/guide-key-sequence (quote ("t")))
  '(hl-todo-keyword-faces
    (quote
@@ -563,10 +581,6 @@ you should place your code here."
  '(ibuffer-mode-hook (quote (ibuffer-vc-set-filter-groups-by-vc-root)))
  '(idle-update-delay 0.01)
  '(imenu-list-minor-mode nil)
- '(indent-guide-delay 0.1 t)
- '(indent-guide-global-mode nil)
- '(indent-guide-threshold 40)
- '(jit-lock-chunk-size 501)
  '(js2-dynamic-idle-timer-adjust 20971)
  '(js2-idle-timer-delay 0.02)
  '(js2-mode-show-parse-errors nil)
@@ -623,14 +637,10 @@ Entered on %U")
      ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (hl-todo lua-mode names ggtags evil-textobj-column evil-textobj-anyblock ycmd request-deferred deferred company-ycmd noxml-fold erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks flycheck-gometalinter ibuffer-vc dactyl-mode elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed origami key-chord evil-terminal-cursor-changer benchmark-init tabbar-flip paredit switch-window tabbar vlf yaml-mode company-flx nlinum fasd ranger disaster company-c-headers cmake-mode clang-format glsl-mode color-theme-sanityinc-solarized ox-twbs ox-gfm dash-at-point counsel-dash flyspell-correct-ivy gitter pdf-tools company-quickhelp helm-dash imenu-anywhere vimrc-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme -theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (noccur editorconfig nodejs-repl ivy-rich golden-ratio-scroll-screen tide typescript-mode adoc-mode markup-faces stickyfunc-enhance srefactor swiper-helm matlab-mode csv-mode hl-todo lua-mode names evil-textobj-column evil-textobj-anyblock ycmd request-deferred deferred company-ycmd noxml-fold erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks flycheck-gometalinter ibuffer-vc dactyl-mode elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed origami key-chord evil-terminal-cursor-changer benchmark-init tabbar-flip paredit switch-window tabbar vlf yaml-mode company-flx nlinum fasd ranger disaster company-c-headers cmake-mode clang-format glsl-mode color-theme-sanityinc-solarized ox-twbs ox-gfm dash-at-point counsel-dash flyspell-correct-ivy gitter pdf-tools company-quickhelp helm-dash imenu-anywhere vimrc-mode gmail-message-mode ham-mode html-to-markdown edit-server vue-mode geiser ample-theme -theme fzf buffer-flip rcirc-notify rcirc-color eslint-fix babel-repl slime which-key wgrep smex ivy-hydra counsel-projectile counsel swiper ivy prodigy imenu-list mu4e-maildirs-extension mu4e-alert ht jss jscs phi-search anything all-ext operate-on-number slim-mode elisp-slime-nav zoom-window js-comint go-guru go-eldoc company-go go-mode powershell solarized-theme reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl evil-snipe yapfify xterm-color web-mode web-beautify tagedit smeargle shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-anaconda company coffee-mode auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete spinner adaptive-wrap ws-butler window-numbering volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(powerline-gui-use-vcs-glyph t)
  '(powerline-height 4)
- '(projectile-tags-backend (quote ggtags))
- '(projectile-tags-command
-   "ctags -Re -f \"%s\" %sctags --exclude=migrations --exclude=dumps --exclude=media --exclude=assets --exclude=dist --exclude=release --exclude=build --exclude=.git --exclude=.vagrant --exclude=\\\"*.css\\\" --exclude=\\\"*.html\\\" --exclude=\\\"**.map\\\" --exclude=\\\"*.unmin.js\\\" --exclude=\\\"*.min.js\\\" --exclude=\\\"*.scss\\\" -Re -f \\\"%s\\\" %s")
- '(scalable-fonts-allowed t)
  '(send-mail-function (quote sendmail-send-it))
  '(show-paren-delay 0.01)
  '(show-paren-mode t)

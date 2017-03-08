@@ -4,11 +4,15 @@
 
 (defun my-js2-mode-hook ()
   (lambda ()
-    (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-    (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-    (local-set-key (kbd "C-c b") 'js-send-buffer)
-    (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-    (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+    ;; (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+    ;; (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
+    ;; (local-set-key (kbd "C-c b") 'js-send-buffer)
+    ;; (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
+    ;; (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+    (loccal-set-key (kbd "C-x C-e") 'nodejs-repl-send-last-sexp)
+    (loccal-set-key (kbd "C-c C-r") 'nodejs-repl-send-region)
+    (loccal-set-key (kbd "C-c C-l") 'nodejs-repl-load-file)
+    (loccal-set-key (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)
     (local-set-key (kbd "]q") 'flycheck-next-error)
     (local-set-key (kbd "[q") 'flycheck-previous-error)
     ))
@@ -16,21 +20,21 @@
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
 (add-hook 'js2-mode-hook #'jscs-indent-apply)
 ;; (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
-(setq inferior-js-program-command "node")
-(setq inferior-js-program-arguments '("--interactive"))
-(setq inferior-js-mode-hook
-      (lambda ()
-        ;; We like nice colors
-        (ansi-color-for-comint-mode-on)))
+;; (setq inferior-js-program-command "node")
+;; (setq inferior-js-program-arguments '("--interactive"))
+;; (setq inferior-js-mode-hook
+;;       (lambda ()
+;;         ;; We like nice colors
+;;         (ansi-color-for-comint-mode-on)))
 
-(add-hook 'js2-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-            (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-            (local-set-key (kbd "C-c b") 'js-send-buffer)
-            (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-            (local-set-key (kbd "C-c l") 'js-load-file-and-go)
-            ))
+;; (add-hook 'js2-mode-hook
+;;           (lambda ()
+;;             (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+;;             (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
+;;             (local-set-key (kbd "C-c b") 'js-send-buffer)
+;;             (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
+;;             (local-set-key (kbd "C-c l") 'js-load-file-and-go)
+;;             ))
 
 
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
@@ -51,7 +55,8 @@
     ad-do-it))
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
-(setq flycheck-eslint-rules-directories '("/Users/Rashawn"))
+(setq flycheck-javascript-eslint-executable "eslint_d")
+(setq flycheck-eslint-rules-directories '("/Users/rashawnzhang"))
 (setq-default save-place t)
 (spacemacs/add-flycheck-hook 'web-mode)
 (spacemacs/add-flycheck-hook 'js2-mode)
@@ -72,3 +77,37 @@
              (indent-for-tab-command)
              (if (looking-back "^\s*")
                  (back-to-indentation))))))))
+
+(defun eslint-fix ()
+  (interactive)
+  (let ((current-point (point))
+        (line (count-screen-lines (window-start) (point)))
+        (command (concat
+                  "eslint_d"
+                  " --stdin"
+                  " --fix-to-stdout"
+                  " --stdin-filename " buffer-file-name))
+        (buffer (current-buffer))
+        (text (buffer-substring-no-properties (point-min) (point-max))))
+    (with-temp-buffer
+      (insert text)
+      (when (eq 0
+                (shell-command-on-region
+                 ;; Region
+                 (point-min)
+                 (point-max)
+                 ;; Command
+                 command
+                 ;; Output to current buffer
+                 t
+                 ;; Replace buffer
+                 t
+                 ;; Error buffer name
+                 "*eslint-fix error*"))
+        (let ((fixed-text (buffer-substring-no-properties (point-min) (point-max))))
+          (with-current-buffer buffer
+            (delete-region (point-min) (point-max))
+            (insert fixed-text)
+            ;; Restore point and scroll position
+            (goto-char current-point)
+            (recenter (- line 1))))))))
