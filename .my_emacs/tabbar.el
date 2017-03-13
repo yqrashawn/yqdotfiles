@@ -51,10 +51,6 @@
 ;; Tabbar
 ;; Tabbar settings
 (set-face-attribute
- 'tabbar-default nil
- :background "gray20"
- :foreground "gray20")
-(set-face-attribute
  'tabbar-unselected nil
  :background "gray30"
  :foreground "white")
@@ -62,11 +58,6 @@
  'tabbar-selected nil
  :background "gray50"
  :foreground "black")
-(set-face-attribute
- 'tabbar-highlight nil
- :background "white"
- :foreground "black"
- :underline nil)
 (set-face-attribute
  'tabbar-button nil)
 (set-face-attribute
