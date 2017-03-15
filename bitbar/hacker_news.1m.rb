@@ -16,7 +16,7 @@
 
 # Configurations
 STORAGE_FILE = ENV['HOME'] + '/hacker_news_data.txt'
-STORAGE_TIME_OUT = 600 # file refresh in seconds
+STORAGE_TIME_OUT = 3600 # file refresh in seconds
 NUMBER_OF_NEWS = 12
 TITLE_LIMIT = 50 # character limit for title
 

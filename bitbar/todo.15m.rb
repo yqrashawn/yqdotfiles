@@ -10,7 +10,7 @@
 # <bitbar.dependencies>ruby</bitbar.dependencies>
 
 # Change to your todo directory path
-todo_directory = "#{Dir.home}/todo"
+todo_directory = "#{Dir.home}/Dropbox/todo"
 
 # Add further priority labels here
 priority_labels = [ "+Urgent" ]
