@@ -59,6 +59,7 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-x C-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-y") 'helm-show-kill-ring)
 
 
 ;; evil global
@@ -86,10 +87,11 @@
 (define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
+(define-key evil-normal-state-map (kbd "C-f") 'anything)
 
 ;; evil visual
-(define-key evil-visual-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
-(define-key evil-visual-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
+(define-key evil-visual-state-map (kbd "C-e") 'evil-first-non-blank)
+(define-key evil-visual-state-map (kbd "C-a") 'evil-end-of-line)
 (define-key evil-visual-state-map (kbd "C-x C-;") 'evilnc-comment-or-uncomment-lines)
 (define-key evil-visual-state-map "gE" 'mc-edit-lines)
 
@@ -139,4 +141,3 @@
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
-(define-key evil-normal-state-map (kbd "C-;") 'er/expand-region)

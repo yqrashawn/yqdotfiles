@@ -48,7 +48,7 @@ nnoremap <silent> <leader>rl  :<C-u>Denite -resume<CR>
 nnoremap <silent> <leader>ff  :<C-u>Denite file_rec<CR>
 nnoremap <silent> <leader>bb  :<C-u>Denite buffer<CR>
 nnoremap <silent> <leader>fq  :<C-u>Denite quickfix -buffer-name=list<CR>
-nnoremap <silent> <leader>skf  :<C-u>Denite grep -buffer-name=grep<CR>
+nnoremap <silent> <leader>sf  :<C-u>Denite grep -buffer-name=grep<CR>
 nnoremap <silent> <leader>sl  :<C-u>Denite line<CR>
 nnoremap <silent> <leader>sc  :<C-u>DeniteCursorWord line<CR>
 " nnoremap <silent> <leader>d  :<C-u>Denite directory_rec -default-action=cd<CR>
