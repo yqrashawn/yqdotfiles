@@ -44,7 +44,6 @@
       },
       "name": "Default profile",
       "one_to_many_mappings": {
-        "left_control": [ "left_command", "left_option", "left_control", "left_shift" ],
         "right_option": [ "left_command", "left_option", "left_control", "left_shift" ]
       },
       "selected": true,
