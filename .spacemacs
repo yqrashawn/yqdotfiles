@@ -507,7 +507,6 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(anything-completion-mode t)
  '(async-bytecomp-allowed-packages
    (quote
     (async helm helm-core helm-ls-git helm-ls-hg magit ivy)))
