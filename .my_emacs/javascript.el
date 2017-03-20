@@ -18,7 +18,7 @@
     ))
 
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
-(add-hook 'js2-mode-hook #'jscs-indent-apply)
+;; (add-hook 'js2-mode-hook #'jscs-indent-apply)
 ;; (add-hook 'js2-mode-hook #'jscs-fix-run-before-save)
 ;; (setq inferior-js-program-command "node")
 ;; (setq inferior-js-program-arguments '("--interactive"))
@@ -66,18 +66,6 @@
   ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
 (setq-default js2-basic-offset 2)
 (setq-default js-indent-level 2)
-;; http://rejeep.github.io/emacs/javascript/js2-mode/yasnippet/2009/06/14/js2-mode-and-yasnippet.html
-(eval-after-load 'js2-mode
-  '(progn
-     (define-key js2-mode-map (kbd "TAB")
-       (lambda()
-         (interactive)
-         (let ((yas/fallback-behavior 'return-nil))
-           (unless (yas/expand)
-             (indent-for-tab-command)
-             (if (looking-back "^\s*")
-                 (back-to-indentation))))))))
-
 (defun eslint-fix ()
   (interactive)
   (let ((current-point (point))

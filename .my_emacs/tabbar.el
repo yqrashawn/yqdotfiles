@@ -3,7 +3,6 @@
 (global-set-key (kbd "s-h") 'tabbar-backward)
 (global-set-key (kbd "s-L") 'tabbar-forward-group)
 (global-set-key (kbd "s-H") 'tabbar-backward-group)
-(setq tabbar-cycle-scope 'tabs)
 ;; Add a buffer modification state indicator in the tab label, and place a
 ;; space around the label to make it looks less crowd.
 (defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
@@ -86,3 +85,7 @@ That is, a string used to represent it on the tab bar."
                                 (tabbar-current-tabset)))))))))
 
 (tabbar-mode 1)
+(setq tabbar-use-images nil)
+(setq tabbar-separator (quote (0.1)))
+(setq tabbar-cycle-scope 'tabs)
+(setq tabbar-background-color nil)
