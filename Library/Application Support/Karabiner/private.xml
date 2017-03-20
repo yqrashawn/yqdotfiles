@@ -225,6 +225,28 @@
   </item>
 
   <item>
+    <name>Right command to F18</name>
+    <identifier>right.command.f18</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::COMMAND_R,
+      KeyCode::COMMAND_R,
+      KeyCode::F18,
+    </autogen>
+  </item>
+
+  <item>
+    <name>OPTION_L to F20</name>
+    <identifier>right.option.f20</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_R,
+      KeyCode::OPTION_R,
+      KeyCode::F17,
+    </autogen>
+  </item>
+
+  <item>
     <name>F19 to Hyper</name>
     <appendix>(F19 to Hyper (ctrl+shift+cmd+opt) + F19 Only, F19)</appendix>
     <identifier>private.f192f19</identifier>
