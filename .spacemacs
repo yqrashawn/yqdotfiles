@@ -2,10 +2,6 @@
 ;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-;;(add-to-list 'load-path "~/.emacs.d/private/local/")
-;;(setq url-proxy-services
-;;      '(("http" . "127.0.0.1:6152")
-;;        ("https" . "127.0.0.1:6152")))
 
 ; (setq package-check-signature nil)
 (defun dotspacemacs/layers ()
@@ -347,17 +343,12 @@ you should place your code here."
   (spacemacs/toggle-mode-line-point-position-on)
   (add-hook 'prog-mode-hook 'fci-mode)
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
-  (load-file "~/.emacs.d/private/local/tabbar-flip/tabbar-flip.el")
-  (require 'tabbar-flip)
-  (tabbar-flip-mode 1)
   (require 'vlf-setup)
 
   (with-eval-after-load 'company
     (company-flx-mode +1))
   (evil-visual-mark-mode 1)
   (global-evil-mc-mode 1)
-
-  ;; (require 'anything-config)
   ;; (global-golden-ratio-mode)
   ;; (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
   (require 'ycmd)
@@ -368,16 +359,9 @@ you should place your code here."
   (global-ycmd-mode)
   (require 'company-ycmd)
   (company-ycmd-setup)
-
-  ;; (global-company-mode)
-  ;; (define-global-minor-mode my-global-centered-cursor-mode centered-cursor-mode
-  ;;   (lambda ()
-  ;;     (when (not (memq major-mode
-  ;;                      (list 'magit-diff-mode 'slime-repl-mode 'shell-mode 'term-mode)))
-  ;;       (centered-cursor-mode))))
   (show-smartparens-global-mode 0)
+  (show-paren-mode 1)
 
-  ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
   (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.emacs.d/private/local/hide-comnt.el")
@@ -385,21 +369,16 @@ you should place your code here."
   (load-file "~/.my_emacs/keymap.el")
   (load-file "~/.my_emacs/org.el")
   (load-file "~/.my_emacs/javascript.el")
-  (load-file "~/.emacs.d/private/local/tabbar/tabbar.el")
-  (load-file "~/.my_emacs/tabbar.el")
   (load-file "~/.my_emacs/ibuffer.el")
-  ;; (load-file "~/.my_emacs/erc.el")
   (load-file "~/.my_emacs/popwin.el")
   (load-file "~/.my_emacs/modeline.el")
-  ;; (load-file "~/.my_emacs/anything.el")
-  ;; (load-file "~/.my_emacs/layout.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq helm-ff-auto-update-initial-value t)
   (setq company-idle-delay 0.01)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
-  (setq dired-use-ls-dired t)
+  (setq dired-use-ls-dired nil)
   (setq evil-esc-delay 0)
   (setq evil-escape-unordered-key-sequence t)
   (setq evil-ex-hl-update-delay 0.01)
@@ -585,7 +564,6 @@ static char *gnus-pointer[] = {
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
- '(tabbar-separator (quote (0.1)))
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83")
  '(vc-annotate-background "#2B2B2B")
@@ -626,6 +604,4 @@ static char *gnus-pointer[] = {
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 120 :width normal))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
- '(tabbar-modified ((t (:inherit tabbar-unselected :underline "orange red"))))
- '(tabbar-selected ((t (:inherit tabbar-unselected :inverse-video t))))
- '(tabbar-selected-modified ((t (:inherit tabbar-selected :underline "orange red" :weight extra-bold)))))
+ )
