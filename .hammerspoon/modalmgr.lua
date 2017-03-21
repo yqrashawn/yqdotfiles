@@ -42,7 +42,7 @@ if appM then
 end
 
 if alfredM then
-  alfredM_keys = alfredM_keys or {"", "F17"}
+  alfredM_keys = alfredM_keys or {"", "F20"}
   if string.len(alfredM_keys[2]) > 0 then
     modalmgr:bind(alfredM_keys[1], alfredM_keys[2], 'ALFRED', function() exit_others(alfredM) alfredM:enter() end)
   end

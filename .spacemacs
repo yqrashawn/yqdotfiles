@@ -1,11 +1,13 @@
 ;; -*- mode: emacs-lisp -*-
+;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-(add-to-list 'load-path "~/.emacs.d/private/local/")
-(setq url-proxy-services
-      '(("http" . "127.0.0.1:6152")
-        ("https" . "127.0.0.1:6152")))
+;;(add-to-list 'load-path "~/.emacs.d/private/local/")
+;;(setq url-proxy-services
+;;      '(("http" . "127.0.0.1:6152")
+;;        ("https" . "127.0.0.1:6152")))
 
+; (setq package-check-signature nil)
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -20,7 +22,8 @@ values."
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
    '(
-     helm
+     ;; helm
+     ivy
      ycmd
      imenu-list
      auto-completion
@@ -314,11 +317,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/"))
-  (package-initialize)
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-copy-env "LC_ALL")
-    (exec-path-from-shell-copy-env "TERM")
-    (exec-path-from-shell-initialize))
+  ;; (package-initialize)
+  ;; (when (memq window-system '(mac ns))
+  ;;   (exec-path-from-shell-copy-env "LC_ALL")
+  ;;   (exec-path-from-shell-copy-env "TERM")
+  ;;   (exec-path-from-shell-initialize))
   )
 
 (defun dotspacemacs/user-config ()
@@ -376,7 +379,6 @@ you should place your code here."
 
   ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;; turn on flychecking globally
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq package-check-signature nil)
   (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.emacs.d/private/local/hide-comnt.el")
   (load-file "~/.my_emacs/keychord.el")
@@ -524,8 +526,8 @@ static char *note[] = {
 \"######....\",
 \"#######..#\" };")))
  '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "#383838")
- '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")))
+ '(fci-rule-color "#383838" t)
+ '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")) t)
  '(gnus-mode-line-image-cache
    (quote
     (image :type xpm :ascent center :data "/* XPM */
@@ -548,7 +550,7 @@ static char *gnus-pointer[] = {
 \"######..###.######\",
 \"###....####.######\",
 \"###..######.######\",
-\"###########.######\" };")))
+\"###########.######\" };")) t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -578,7 +580,7 @@ static char *gnus-pointer[] = {
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (darktooth-theme 0blayout color-theme-sanityinc-solarized leuven-theme alect-themes moe-theme solarized-theme dracula-theme flycheck-ycmd zenburn-theme swiper-helm swiper ivy ox-twbs ox-gfm yapfify xterm-color web-mode web-beautify vue-mode vlf vimrc-mode tide typescript-mode tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements phi-search pbcopy osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download nodejs-repl noccur mwim multi-term mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow lua-mode livid-mode skewer-mode simple-httpd live-py-mode less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc imenu-list imenu-anywhere ibuffer-vc hy-mode htmlize helm-pydoc helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode golden-ratio-scroll-screen gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-textobj-column names evil-textobj-anyblock evil-snipe evil-magit magit magit-popup git-commit with-editor eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode diff-hl dactyl-mode cython-mode company-ycmd ycmd request-deferred deferred ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (yapfify xterm-color ws-butler window-numbering which-key wgrep web-mode web-beautify vue-mode volatile-highlights vlf vimrc-mode use-package toc-org tide typescript-mode tagedit spacemacs-theme spaceline powerline smex smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phi-search persp-mode pcre2el pbcopy paradox spinner ox-twbs ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file nodejs-repl noccur neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc ivy-hydra info+ indent-guide imenu-list imenu-anywhere ibuffer-vc hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core haml-mode google-translate golden-ratio-scroll-screen golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-ivy flyspell-correct flycheck-ycmd flycheck-pos-tip pos-tip flycheck fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-column names evil-textobj-anyblock evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-ycmd ycmd pkg-info request-deferred request deferred epl company-web web-completion-data company-tern dash-functional tern company-statistics company-flx flx company-anaconda company column-enforce-mode coffee-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed async anaconda-mode pythonic f dash s alect-themes aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup quelpa package-build zenburn-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
