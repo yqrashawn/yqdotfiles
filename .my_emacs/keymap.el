@@ -17,16 +17,16 @@
 
 ;; spacemacs leader
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
-;; (spacemacs/set-leader-keys "ss" 'counsel-imenu)
-;; (spacemacs/set-leader-keys "sn" 'spacemacs/swiper-region-or-symbol)
+(spacemacs/set-leader-keys "ss" 'counsel-imenu)
+(spacemacs/set-leader-keys "sn" 'spacemacs/swiper-region-or-symbol)
 (spacemacs/set-leader-keys "gf" 'magit-file-popup)
-;; (spacemacs/set-leader-keys "fp" 'counsel-git)
+(spacemacs/set-leader-keys "fp" 'counsel-git)
 (spacemacs/set-leader-keys "gn" 'magit-gitflow-popup)
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
 (spacemacs/set-leader-keys "t0" 'centered-cursor-mode)
 (spacemacs/set-leader-keys "hc" 'hide/show-comments-toggle)
-;; (spacemacs/set-leader-keys "fl" 'counsel-locate)
-;; (spacemacs/set-leader-keys "fL" 'find-file-literally)
+(spacemacs/set-leader-keys "fl" 'counsel-locate)
+(spacemacs/set-leader-keys "fL" 'find-file-literally)
 
 (spacemacs/declare-prefix "o" "own-prefix")
 (spacemacs/declare-prefix "oe" "edit-prefix")
@@ -42,8 +42,8 @@
 (global-set-key (kbd "S-s-<mouse-1>") 'mc/add-cursor-on-click)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-;; (global-set-key (kbd "C-x C-r") 'counsel-recentf)
-;; (global-set-key (kbd "C-x C-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-r") 'counsel-recentf)
+(global-set-key (kbd "C-x C-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-y") 'helm-show-kill-ring)
 
 
@@ -102,31 +102,31 @@
                           ("\\[" . "\\]")
                           ("\"" . "\"")))))
 
-(define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
+;; (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
 ;;;;;C-h
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key [(control ?h)] 'delete-backward-char)
 
 ;; ivy-minibuffer-map
-;; (define-key ivy-minibuffer-map (kbd "C-n") 'ivy-next-history-element)
-;; (define-key ivy-minibuffer-map (kbd "C-p") 'ivy-previous-history-element)
+(define-key ivy-minibuffer-map (kbd "C-n") 'ivy-next-history-element)
+(define-key ivy-minibuffer-map (kbd "C-p") 'ivy-previous-history-element)
 
 ;; remap s
 (define-key evil-normal-state-map "s" nil)
-;; (define-key evil-normal-state-map "sf" 'counsel-find-file)
+(define-key evil-normal-state-map "sf" 'counsel-find-file)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
-(define-key evil-normal-state-map "sj" 'helm-mini)
-(define-key evil-normal-state-map "sl" 'helm-imenu-in-all-buffers)
+(define-key evil-normal-state-map "sl" 'counsel-imenu)
+(define-key evil-normal-state-map "sj" 'ivy-switch-buffer)
 (define-key evil-normal-state-map "sss" 'spacemacs/search-ack)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
 
 ;; helm
-(define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
-(define-key helm-map (kbd "C-n") 'next-history-element)
-(define-key helm-map (kbd "C-p") 'previous-history-element)
-(define-key helm-find-files-map (kbd "C-w") 'helm-find-files-up-one-level)
-(define-key helm-read-file-map (kbd "C-w") 'helm-find-files-up-one-level)
+;; (define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
+;; (define-key helm-map (kbd "C-n") 'next-history-element)
+;; (define-key helm-map (kbd "C-p") 'previous-history-element)
+;; (define-key helm-find-files-map (kbd "C-w") 'helm-find-files-up-one-level)
+;; (define-key helm-read-file-map (kbd "C-w") 'helm-find-files-up-one-level)
 

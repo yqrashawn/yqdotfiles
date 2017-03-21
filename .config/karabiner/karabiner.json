@@ -55,7 +55,7 @@
         "left_control": "escape",
         "left_command": "f19",
         "right_command": "f18",
-        "right_option": "f17"
+        "right_option": "f20"
       },
       "virtual_hid_keyboard": {
         "caps_lock_delay_milliseconds": 0,
