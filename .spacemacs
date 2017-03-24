@@ -336,6 +336,7 @@ you should place your code here."
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
+  (which-function-mode)
   (setq mouse-wheel-scroll-amount '(0.001))
   (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
     (lambda () (golden-ratio-mode 1)))

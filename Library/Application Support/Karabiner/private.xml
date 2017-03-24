@@ -247,6 +247,17 @@
   </item>
 
   <item>
+    <name>CONTROL_L to ESC</name>
+    <identifier>control.left.esc</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::CONTROL_L,
+      KeyCode::CONTROL_L,
+      KeyCode::ESCAPE,
+    </autogen>
+  </item>
+
+  <item>
     <name>F19 to Hyper</name>
     <appendix>(F19 to Hyper (ctrl+shift+cmd+opt) + F19 Only, F19)</appendix>
     <identifier>private.f192f19</identifier>
