@@ -68,11 +68,13 @@
 (define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
+(define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
 ;; (define-key evil-normal-state-map (kbd "C-f") 'anything)
 
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-a") 'evil-first-non-blank)
 (define-key evil-visual-state-map (kbd "C-e") 'evil-end-of-line)
+(define-key evil-visual-state-map (kbd "C-m") 'evil-jump-item)
 (define-key evil-visual-state-map (kbd "C-x C-;") 'evilnc-comment-or-uncomment-lines)
 (define-key evil-visual-state-map "gE" 'mc-edit-lines)
 
@@ -130,3 +132,7 @@
 ;; (define-key helm-find-files-map (kbd "C-w") 'helm-find-files-up-one-level)
 ;; (define-key helm-read-file-map (kbd "C-w") 'helm-find-files-up-one-level)
 
+(use-package webpaste
+  :ensure t
+  :bind (("C-c C-p C-b" . webpaste-paste-buffer)
+         ("C-c C-p C-r" . webpaste-paste-region)))
