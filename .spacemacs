@@ -155,8 +155,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
-                         leuven)
+   dotspacemacs-themes '(leuven
+                         zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -371,8 +371,8 @@ you should place your code here."
   ;; (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
   (require 'ycmd)
   (add-hook 'js2-mode-hook #'ycmd-mode)
-  (set-variable 'ycmd-server-command '("python2" "/Users/rashawnzhang/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd/"))
-  (set-variable 'ycmd-extra-conf-whitelist '("/Users/rashawnzhang/.ycm_extra_conf.py"))
+  (set-variable 'ycmd-server-command (cons "python2" (cons (expand-file-name "~/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd") nil)))
+  (set-variable 'ycmd-global-config "~/.ycm_extra_conf.py")
   (setq ycmd-force-semantic-completion t)
   (global-ycmd-mode)
   (require 'company-ycmd)
