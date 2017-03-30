@@ -392,7 +392,7 @@ you should place your code here."
   (load-file "~/.my_emacs/modeline.el")
   (load-file "~/.my_emacs/untabify.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq helm-ff-auto-update-initial-value t)
+  ;; (setq helm-ff-auto-update-initial-value t)
   (setq company-idle-delay 0.01)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
