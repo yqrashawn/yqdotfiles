@@ -13,8 +13,8 @@
     (loccal-set-key (kbd "C-c C-r") 'nodejs-repl-send-region)
     (loccal-set-key (kbd "C-c C-l") 'nodejs-repl-load-file)
     (loccal-set-key (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)
-    (local-set-key (kbd "]q") 'flycheck-next-error)
-    (local-set-key (kbd "[q") 'flycheck-previous-error)
+    ;; (local-set-key (kbd "]q") 'flycheck-next-error)
+    ;; (local-set-key (kbd "[q") 'flycheck-previous-error)
     ))
 
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
@@ -59,8 +59,9 @@
 (setq flycheck-eslint-rules-directories '("/Users/rashawnzhang"))
 (setq-default save-place t)
 (spacemacs/add-flycheck-hook 'web-mode)
+(spacemacs/add-flycheck-hook 'vue-mode)
 (spacemacs/add-flycheck-hook 'js2-mode)
-(spacemacs/add-flycheck-hook 'js-mode)
+
 ;; customize flycheck temp file prefix
 (setq-default flycheck-temp-prefix ".flycheck")
   ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
