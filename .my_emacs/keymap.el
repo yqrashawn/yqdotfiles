@@ -74,6 +74,7 @@
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 (define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
+(define-key evil-normal-state-map "sn" 'spacemacs/swiper-region-or-symbol)
 ;; (define-key evil-normal-state-map (kbd "C-f") 'anything)
 
 ;; evil visual
