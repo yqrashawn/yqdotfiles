@@ -1,4 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
+(global-set-key (kbd "s-d") 'dired-jump)
+(global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "C-s") 'phi-search)
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
 (setq evil-mc-undo-cursors-on-keyboard-quit t)
@@ -7,6 +9,7 @@
 (with-eval-after-load 'dired
   (evil-define-key 'normal dired-mode-map "l" 'dired-find-file)
   (evil-define-key 'normal dired-mode-map "f" 'dired-goto-file)
+  (evil-define-key 'normal dired-mode-map "<C-return>" '(shell-command (concat "open " (shell-quote-argument filename))))
   (evil-define-key 'normal dired-mode-map "h" 'dired-up-directory))
 
 (use-package multiple-cursors
@@ -45,6 +48,7 @@
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-x C-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x C-j") 'dired-jump)
 
 
 ;; evil global
@@ -121,7 +125,6 @@
 (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sj" 'ivy-switch-buffer)
-(define-key evil-normal-state-map "sss" 'spacemacs/search-ack)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
@@ -137,3 +140,12 @@
   :ensure t
   :bind (("C-c C-p C-b" . webpaste-paste-buffer)
          ("C-c C-p C-r" . webpaste-paste-region)))
+
+(defun dired-do-shell-mac-open-vqn ()
+  (interactive)
+  (save-window-excursion
+    (dired-do-async-shell-command
+     "open" current-prefix-arg
+     (dired-get-marked-files t current-prefix-arg))))
+
+(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "RET") 'dired-do-shell-mac-open-vqn)))
