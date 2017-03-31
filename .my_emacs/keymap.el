@@ -8,7 +8,7 @@
 ;; dired
 (with-eval-after-load 'dired
   (evil-define-key 'normal dired-mode-map "l" 'diredp-find-file-reuse-dir-buffer)
-  (evil-define-key 'normal dired-mode-map "f" 'dired-goto-file)
+  (evil-define-key 'normal dired-mode-map "f" 'dired-narrow-fuzzy)
   (evil-define-key 'normal dired-mode-map "gk" 'dired-k)
   (evil-define-key 'normal dired-mode-map "<C-return>" '(shell-command (concat "open " (shell-quote-argument filename))))
   (evil-define-key 'normal dired-mode-map "h" 'diredp-up-directory-reuse-dir-buffer))
