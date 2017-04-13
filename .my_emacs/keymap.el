@@ -11,7 +11,7 @@
   (evil-define-key 'normal dired-mode-map "f" 'dired-narrow-fuzzy)
   (evil-define-key 'normal dired-mode-map "gk" 'dired-k)
   (evil-define-key 'normal dired-mode-map "e" 'ora-ediff-files)
-  (evil-define-key 'normal dired-mode-map "<C-return>" '(shell-command (concat "open " (shell-quote-argument filename))))
+  ;; (evil-define-key 'normal dired-mode-map (kbd "RET") '(shell-command (concat "open " (shell-quote-argument filename))))
   (evil-define-key 'normal dired-mode-map "h" 'diredp-up-directory-reuse-dir-buffer))
 
 (use-package multiple-cursors
@@ -49,7 +49,7 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-x C-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x C-y") 'counsel-yank-pop)
 (global-set-key (kbd "C-x C-j") 'dired-jump)
 
 
@@ -125,7 +125,7 @@
 (define-key evil-normal-state-map "sf" 'counsel-find-file)
 (define-key evil-normal-state-map "sd" 'dired-jump)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
-(define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
+;; (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sj" 'ivy-switch-buffer)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
