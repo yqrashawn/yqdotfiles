@@ -3,7 +3,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-                                        ; (setq package-check-signature nil)
+;; (setq package-check-signature nil)
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -18,7 +18,6 @@ values."
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
    '(
-     ;; helm
      ivy
      ycmd
      imenu-list
@@ -33,8 +32,9 @@ values."
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-term-shell "/bin/zsh")
-     spell-checking
+     ;; spell-checking
      evil-snipe
+     prodigy
      syntax-checking
      version-control
      html
@@ -75,7 +75,6 @@ values."
                                       swiper
                                       saveplace
                                       vlf
-                                      vue-mode
                                       webpaste
                                       zenburn-theme)
    ;; A list of packages that cannot be updated.
@@ -164,7 +163,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 14
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1)
@@ -355,12 +354,12 @@ you should place your code here."
   (ws-butler-global-mode)
   (dired-quick-sort-setup)
   (setq dumb-jump-prefer-searcher 'rg)
-  (which-function-mode)
+  ;; (which-function-mode)
   (setq mouse-wheel-scroll-amount '(0.001))
   (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
     (lambda () (golden-ratio-mode 1)))
   (spacemacs/toggle-mode-line-minor-modes-off)
-  (spacemacs/toggle-mode-line-point-position-on)
+  ;; (spacemacs/toggle-mode-line-point-position-on)
   (add-hook 'prog-mode-hook 'fci-mode)
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (require 'vlf-setup)
@@ -393,6 +392,7 @@ you should place your code here."
   (load-file "~/.my_emacs/popwin.el")
   (load-file "~/.my_emacs/modeline.el")
   (load-file "~/.my_emacs/untabify.el")
+  (load-file "~/.my_emacs/prodigy.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (setq helm-ff-auto-update-initial-value t)
   (setq company-idle-delay 0.01)
@@ -580,7 +580,7 @@ static char *gnus-pointer[] = {
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode slime-company slime common-lisp-snippets dired-hacks-utils dired-narrow dired+ winum unfill fuzzy webpaste restclient evil-lion elmacro dired-quick-sort ssass-mode vue-html-mode yapfify xterm-color ws-butler window-numbering which-key wgrep web-mode web-beautify vue-mode volatile-highlights vlf vimrc-mode use-package toc-org tide typescript-mode tagedit spacemacs-theme spaceline powerline smex smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phi-search persp-mode pcre2el pbcopy paradox spinner ox-twbs ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file nodejs-repl noccur neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc ivy-hydra info+ indent-guide imenu-list imenu-anywhere ibuffer-vc hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core haml-mode google-translate golden-ratio-scroll-screen golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-ivy flyspell-correct flycheck-ycmd flycheck-pos-tip pos-tip flycheck fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-column names evil-textobj-anyblock evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-ycmd ycmd pkg-info request-deferred request deferred epl company-web web-completion-data company-tern dash-functional tern company-statistics company-flx flx company-anaconda company column-enforce-mode coffee-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed async anaconda-mode pythonic f dash s alect-themes aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup quelpa package-build zenburn-theme)))
+    (prodigy vue-mode xref-js2 seq clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode slime-company slime common-lisp-snippets dired-hacks-utils dired-narrow dired+ winum unfill fuzzy webpaste restclient evil-lion elmacro dired-quick-sort ssass-mode vue-html-mode yapfify xterm-color ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights vlf vimrc-mode use-package toc-org tide typescript-mode tagedit spacemacs-theme spaceline powerline smex smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phi-search persp-mode pcre2el pbcopy paradox spinner ox-twbs ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file nodejs-repl noccur neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc ivy-hydra info+ indent-guide imenu-list imenu-anywhere ibuffer-vc hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core haml-mode google-translate golden-ratio-scroll-screen golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-ivy flyspell-correct flycheck-ycmd flycheck-pos-tip pos-tip flycheck fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-column names evil-textobj-anyblock evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-ycmd ycmd pkg-info request-deferred request deferred epl company-web web-completion-data company-tern dash-functional tern company-statistics company-flx flx company-anaconda company column-enforce-mode coffee-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed async anaconda-mode pythonic f dash s alect-themes aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup quelpa package-build zenburn-theme)))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
