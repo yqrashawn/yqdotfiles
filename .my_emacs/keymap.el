@@ -87,8 +87,7 @@
 
 ;; evil insert
 (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
-(define-key evil-insert-state-map (kbd "C-v") 'forward-word)
-(define-key evil-insert-state-map (kbd "C-k") 'backward-word)
+(define-key evil-insert-state-map (kbd "C-k") 'paredit-kill)
 (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
 ;; (define-key evil-insert-state-map (kbd "M-n") 'mc/mark-next-like-this)
 ;; (define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
@@ -123,6 +122,7 @@
 ;; remap s
 (define-key evil-normal-state-map "s" nil)
 (define-key evil-normal-state-map "sf" 'counsel-find-file)
+(define-key evil-normal-state-map "gl" 'paredit-kill)
 (define-key evil-normal-state-map "sd" 'dired-jump)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 ;; (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)

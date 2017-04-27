@@ -67,9 +67,7 @@ values."
                                       imenu-anywhere
                                       jscs
                                       key-chord
-                                      matlab-mode
                                       noccur
-                                      nodejs-repl
                                       phi-search
                                       restclient
                                       swiper
@@ -361,6 +359,7 @@ you should place your code here."
   (spacemacs/toggle-mode-line-minor-modes-off)
   ;; (spacemacs/toggle-mode-line-point-position-on)
   (add-hook 'prog-mode-hook 'fci-mode)
+  ;; (add-hook 'prog-mode-hook 'paredit-mode)
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (require 'vlf-setup)
 
