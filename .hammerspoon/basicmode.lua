@@ -183,6 +183,7 @@ if not applist then
     {shortcut = 'c',appname = 'Google Chrome'},
     {shortcut = 'r',appname = 'Reeder'},
     {shortcut = 'i',appname = 'iTerm'},
+    -- {shortcut = 'i',appname = 'Hyper'},
     {shortcut = 'v',appname = 'Wechat'},
     {shortcut = 'p',appname = 'mpv'},
     {shortcut = 'm',appname = 'Mail'},
