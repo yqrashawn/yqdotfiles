@@ -1,0 +1,5 @@
+#!/bin/sh
+# Script to do a grep;find on
+#   $1 == 'port num'
+
+live-server --browser=Google\ Chrome --port="$1"
