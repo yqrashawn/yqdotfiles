@@ -49,7 +49,7 @@ if not scriptList then
     -- {name = 'Edit in Emacs',shortcut = 'e',source = 'tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.sztoltz.editwith" with argument ""'},
     {name = 'Finder to Iterm',shortcut = 'i',source = ' tell application "Alfred 3" to run trigger "finderToIterm" in workflow "de.leenno.terminalfinder" with argument ""'},
     {name = 'Github Stars',shortcut = 'm',source = 'tell application "Alfred 3" to run trigger "ghmystars" in workflow "de.gh01.alfred.github" with argument " my stars"'},
-    {name = 'YouDao',shortcut = 'F20',source = 'tell application "Alfred 3" to run trigger "youdao" in workflow "whyliam.workflows.youdao" with argument ""'},
+    {name = 'YouDao',shortcut = 'F17',source = 'tell application "Alfred 3" to run trigger "youdao" in workflow "whyliam.workflows.youdao" with argument ""'},
     {name = 'BitBar todo',shortcut = 'd',source = 'tell application "Alfred 3" to run trigger "addtodo" in workflow "com.alfredapp.vero.examplelistfilter" with argument ""'},
   }
 end
