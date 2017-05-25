@@ -58,7 +58,7 @@
   :name "gbim-diff server"
   :command "npm"
   :cwd "~/workspace/OFFICE/gbim-diff"
-  :args '("run" "dev")
+  :args '("run" "local")
   :tags '(nodemon back)
   )
 
