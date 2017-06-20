@@ -50,7 +50,8 @@
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
 (setq flycheck-javascript-eslint-executable "eslint_d")
-(setq flycheck-eslint-rules-directories '("/Users/rashawnzhang"))
+;; (setq flycheck-eslint-rules-directories '("/Users/rashawnzhang"))
+
 (setq-default save-place t)
 (spacemacs/add-flycheck-hook 'web-mode)
 (spacemacs/add-flycheck-hook 'vue-mode)
