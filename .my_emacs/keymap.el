@@ -1,5 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
-(global-set-key (kbd "s-d") 'diredp-dired-recent-dirs)
+(global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "C-s") 'phi-search)
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
