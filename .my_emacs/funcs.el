@@ -24,3 +24,14 @@
                       (setq ediff-after-quit-hook-internal nil)
                       (set-window-configuration wnd))))
       (error "no more than 2 files should be marked"))))
+
+(define-key global-map (kbd "s-i") 'open-terminal-here)
+(defun open-terminal-here ()
+  (interactive)
+  (shell-command "open -a iTerm ."))
+
+(require 'butler)
+(add-to-list 'butler-server-list
+             '(jenkins "Jenkins"
+                       (server-address . "http://114.215.220.91:8080/")
+                       (auth-file . "~/.authinfo.gpg")))

@@ -8,9 +8,9 @@
 
 (prodigy-define-service
   :name "lmv front watch"
-  :command "webpack"
+  :command "cross-env"
   :cwd "~/workspace/OFFICE/gltflmvviewer/"
-  :args '("-w")
+  :args '("NODE_ENV=BUILD" "./node_modules/.bin/webpack" "-w" "--config" "webpack.config.js")
   :tags '(front lmv)
   )
 
