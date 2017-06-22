@@ -6,6 +6,199 @@
   },
   "profiles": [
     {
+      "complex_modifications": {
+        "rules": [
+          {
+            "manipulators": [
+              {
+                "description": "Change caps_lock to control when used as modifier, escape when used alone",
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_control"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change right_command to f18 when used alone",
+                "from": {
+                  "key_code": "right_command",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_command"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f18",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change left_command to f19 when used alone",
+                "from": {
+                  "key_code": "left_command",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_command"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f19",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change right_option to f19 when used alone",
+                "from": {
+                  "key_code": "right_option",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_option"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f17",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change left_shift to hyper+f16 when used alone",
+                "from": {
+                  "key_code": "left_shift",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_shift"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "open_bracket",
+                    "modifiers": [
+                      "left_command",
+                      "left_option",
+                      "left_control",
+                      "left_shift"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change right_shift to hyper+f17 when used alone",
+                "from": {
+                  "key_code": "right_shift",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_shift"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "close_bracket",
+                    "modifiers": [
+                      "left_command",
+                      "left_option",
+                      "left_control",
+                      "left_shift"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          }
+
+        ]
+      },
       "devices": [
         {
           "disable_built_in_keyboard_if_exists": false,
@@ -43,20 +236,8 @@
         "f9": "fastforward"
       },
       "name": "Default profile",
-      "one_to_many_mappings": {
-        "right_option": [ "left_command", "left_option", "left_control", "left_shift" ]
-      },
       "selected": true,
-      "simple_modifications": {
-        "caps_lock": "left_control"
-      },
-      "standalone_keys": {
-        "caps_lock": "escape",
-        "left_control": "escape",
-        "left_command": "f19",
-        "right_command": "f18",
-        "right_option": "f17"
-      },
+      "simple_modifications": {},
       "virtual_hid_keyboard": {
         "caps_lock_delay_milliseconds": 0,
         "keyboard_type": "ansi",

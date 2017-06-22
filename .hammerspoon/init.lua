@@ -1,3 +1,16 @@
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "]", function()
+    if hs.keycodes.currentMethod() ~= "Squirrel" then
+      hs.eventtap.keyStroke({}, "f16")
+    end
+end)
+
+hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "[", function()
+    if hs.keycodes.currentMethod() == "Squirrel" then
+      hs.eventtap.keyStroke({}, "f16")
+    end
+end)
+
+
 hs.hotkey.alertDuration=0
 hs.hints.showTitleThresh = 0
 hs.window.animationDuration = 0
