@@ -1,0 +1,15 @@
+# luna_pinyin.custom.yaml
+# 修改字典名爲 luna_pinyin.kunki
+# 其對應的用戶詞典名取句點之前部分即 luna_pinyin
+
+patch:
+    # translator/dictionary: 
+    # - luna_pinyin.sogou
+    # - luna_pinyin.basis
+  # translator/dictionary: luna_pinyin.sgcore
+  # translator/dictionary: luna_pinyin.sogou
+  # translator/dictionary: luna_pinyin.basis
+  translator/dictionary: luna_pinyin.extended
+  # translator/dictionary: luna_pinyin.sgcore
+  # translator/dictionary: luna_pinyin.sgcore
+  #   
