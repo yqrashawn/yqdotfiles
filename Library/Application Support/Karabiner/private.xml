@@ -236,6 +236,17 @@
   </item>
 
   <item>
+    <name>Left shift to F16</name>
+    <identifier>left.shift.f16</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::SHIFT_L,
+      KeyCode::SHIFT_L,
+      KeyCode::F16,
+    </autogen>
+  </item>
+
+  <item>
     <name>OPTION_L to F20</name>
     <identifier>right.option.f20</identifier>
     <autogen>
