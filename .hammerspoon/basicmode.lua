@@ -180,6 +180,7 @@ if not applist then
     {shortcut = 's',appname = 'Safari'},
     {shortcut = 'a',appname = 'Activity Monitor'},
     {shortcut = 'e',appname = 'Emacs'},
+    {shortcut = ';',appname = '/Applications/EmacsFork.app'},
     {shortcut = 'c',appname = 'Google Chrome'},
     {shortcut = 'r',appname = 'Reeder'},
     {shortcut = 'i',appname = 'iTerm'},
