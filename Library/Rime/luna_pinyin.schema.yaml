@@ -84,7 +84,7 @@ speller:
   delimiter: " '"
 switches:
   - name: ascii_mode
-    reset: 0
+    reset: 1
     states: ["中文", "西文"]
   - name: full_shape
     reset: 0
