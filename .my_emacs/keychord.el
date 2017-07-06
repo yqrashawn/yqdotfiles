@@ -2,10 +2,10 @@
 (setq key-chord-one-key-delay 0.01) ; default 0.2
 
 (setq-default evil-escape-key-sequence "kj")
-(key-chord-define-global "u9" 'tabbar-forward-group)
+;; (key-chord-define-global "u9" 'tabbar-forward-group)
 (key-chord-define-global "z0" 'delete-other-windows)
 (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
-(key-chord-define-global ";g" 'evil-search-word-forward)
+;; (key-chord-define-global ";g" 'evil-search-word-forward)
 (key-chord-define-global ";w" 'save-buffer)
 (key-chord-define-global ";c" 'dired)
 (key-chord-define-global "x0" 'select-window-0)
@@ -21,7 +21,7 @@
 (key-chord-define-global "xm" 'magit-dispatch-popup)
 (key-chord-define-global "xn" 'magit-gitflow-popup)
 (key-chord-define-global "xb" 'ivy-switch-buffer)
-(key-chord-define-global ";r" 'counsel-recentf)
+;; (key-chord-define-global ";r" 'counsel-recentf)
 (key-chord-define-global "p-" "~/")
 (key-chord-define-global "z9" ".*")
 (key-chord-define-global "e3" 'phi-replace)
