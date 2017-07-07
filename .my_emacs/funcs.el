@@ -84,5 +84,4 @@ switch to another frame."
        (snwob--current-window-or-buffer))
    (snwob--other-window-or-buffer))))
 
-(define-key evil-normal-state-map "sk" #'smart-next-window-or-buffer)
 (global-set-key (kbd "s-h") #'smart-next-window-or-buffer)
