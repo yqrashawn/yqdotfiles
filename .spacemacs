@@ -344,7 +344,14 @@ you should place your code here."
 
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+  (eval-after-load "projectile"
+    '(progn (setq magit-repo-dirs (mapcar (lambda (dir)
+                                            (substring dir 0 -1))
+                                          (remove-if-not (lambda (project)
+                                                           (file-directory-p (concat project "/.git/")))
+                                                         (projectile-relevant-known-projects)))
 
+                  magit-repo-dirs-depth 3)))
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
   (defun minibuffer-inactive-mode-hook-setup ()
     ;; make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer
