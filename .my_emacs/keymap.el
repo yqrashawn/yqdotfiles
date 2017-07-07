@@ -75,7 +75,6 @@
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 (define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
-(define-key evil-normal-state-map "sn" 'spacemacs/swiper-region-or-symbol)
 ;; (define-key evil-normal-state-map (kbd "C-f") 'anything)
 
 ;; evil visual
@@ -126,11 +125,13 @@
 (define-key evil-normal-state-map "sd" 'dired-jump)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 ;; (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
+(define-key evil-normal-state-map "sk" #'smart-next-window-or-buffer)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sj" 'ivy-switch-buffer)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
+(define-key evil-normal-state-map "sn" 'spacemacs/swiper-region-or-symbol)
 
 ;; helm
 ;; (define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
