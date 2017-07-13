@@ -27,6 +27,7 @@ Plug 'rhysd/vim-operator-surround'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'kmnk/vim-unite-giti'
 Plug 'Shougo/unite-outline'
+Plug 'pangloss/vim-javascript'
 Plug 'tsukkee/unite-tag'
 Plug 'Shougo/neomru.vim'
 Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}

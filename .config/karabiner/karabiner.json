@@ -131,37 +131,6 @@
                 "type": "basic"
               }
             ]
-          },
-          {
-            "manipulators": [
-              {
-                "description": "Change left_shift to hyper+f16 when used alone",
-                "from": {
-                  "key_code": "left_shift",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_shift"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f16",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
           }
         ]
       },
