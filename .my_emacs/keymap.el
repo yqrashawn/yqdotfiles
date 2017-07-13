@@ -57,6 +57,7 @@
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 
 ;; evil normal
+(define-key evil-normal-state-map (kbd "C-'") 'evil-avy-goto-word-1)
 (define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
 (define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
 (define-key evil-normal-state-map "zl" 'hs-hide-level)
