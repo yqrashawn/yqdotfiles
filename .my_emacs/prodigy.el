@@ -18,7 +18,7 @@
   :name "peacock front"
   :command "npm"
   :cwd "~/workspace/OFFICE/peacock/client"
-  :args '("run" "dev")
+  :args '("run" "local")
   :tags '(front peacock)
   )
 
@@ -26,7 +26,7 @@
   :name "peacock back"
   :command "npm"
   :cwd "~/workspace/OFFICE/peacock/server"
-  :args '("run" "dev")
+  :args '("run" "local")
   :tags '(back peacock)
   )
 
@@ -50,7 +50,7 @@
   :name "sso front"
   :command "npm"
   :cwd "~/workspace/OFFICE/BimsopSSO/sso-client"
-  :args '("run" "dev")
+  :args '("run" "local")
   :tags '(front webpack)
   )
 
