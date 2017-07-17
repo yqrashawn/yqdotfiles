@@ -42,14 +42,6 @@
   :name "sso front"
   :command "npm"
   :cwd "~/workspace/OFFICE/BimsopSSO/sso-client"
-  :args '("run" "dev")
-  :tags '(front webpack)
-  )
-
-(prodigy-define-service
-  :name "sso front"
-  :command "npm"
-  :cwd "~/workspace/OFFICE/BimsopSSO/sso-client"
   :args '("run" "local")
   :tags '(front webpack)
   )
