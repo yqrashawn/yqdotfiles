@@ -17,7 +17,7 @@
         "theme": "Dark",
 
         // Show dialogs as macOS sheet windows. Disable this if you hate the dialog animations
-        "sheetDialogs": true,
+        "sheetDialogs": false,
 
         // Always show overlay scroll bars (even if mouse is attached or if "Show scroll bars" is set to "Always")
         "forceOverlayScrollBars": false,
