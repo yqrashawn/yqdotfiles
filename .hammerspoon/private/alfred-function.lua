@@ -36,17 +36,18 @@ alfredM:bind('', 'tab', function() showavailableHotkey() end)
 
 if not scriptList then
   scriptList = {
+    {name = 'Open in Marta',shortcut = 'f',source = 'tell application "Alfred 3" to run trigger "openInMarta" in workflow "com.yqrashawn.open.in.marta" with argument ""'},
     {name = 'Browser Tabs',shortcut = 'b',source = 'tell application "Alfred 3" to run trigger "browserTabs" in workflow "com.clintonstrong.SearchTabs" with argument "" '},
     {name = 'Tower repo',shortcut = 't',source = 'tell application "Alfred 3" to run trigger "towerRepo" in workflow "net.cjlucas.alfred.tower" with argument ""'},
     {name = 'Kill process',shortcut = 'k',source = 'tell application "Alfred 3" to run trigger "killProcess" in workflow "com.ngreenstein.alfred-process-killer" with argument ""'},
     {name = 'Search Github',shortcut = 'g',source = ' tell application "Alfred 3" to run trigger "searchGithub" in workflow "nikivi.search-the-web" with argument ""'},
     {name = 'Recent Download',shortcut = 'r',source = 'tell application "Alfred 3" to run trigger "recentDownloads" in workflow "com.vitorgalvao.alfred.recentdownloads" with argument ""'},
     {name = 'Color',shortcut = 'c',source = 'tell application "Alfred 3" to run trigger "feedback" in workflow "tylereich.colors" with argument ""'},
-    {name = 'Files',shortcut = 'f',source = 'tell application "System Events"\
-      key code 49 using {command down}\
-      delay 0.1\
-      keystroke "f "\
-      end tell '},
+    -- {name = 'Files',shortcut = 'f',source = 'tell application "System Events"\
+    --   key code 49 using {command down}\
+    --   delay 0.1\
+    --   keystroke "f "\
+    --   end tell '},
     -- {name = 'Edit in Emacs',shortcut = 'e',source = 'tell application "Alfred 3" to run trigger "editInEmacs" in workflow "com.sztoltz.editwith" with argument ""'},
     {name = 'Finder to Iterm',shortcut = 'i',source = ' tell application "Alfred 3" to run trigger "finderToIterm" in workflow "de.leenno.terminalfinder" with argument ""'},
     {name = 'Github Stars',shortcut = 'm',source = 'tell application "Alfred 3" to run trigger "ghmystars" in workflow "de.gh01.alfred.github" with argument " my stars"'},
