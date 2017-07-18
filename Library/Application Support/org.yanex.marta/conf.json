@@ -4,193 +4,194 @@
 // To open it, run the "Open default configuration" action.
 
 {
-    "environment": {
-        // Current terminal application. Change to "iTerm" if you use iTerm
-        "terminal": "iTerm",
+  "environment": {
+    // Current terminal application. Change to "iTerm" if you use iTerm
+    "terminal": "iTerm",
 
-        // Current text editor
-        "textEditor": "Emacs"
+    // Current text editor
+    "textEditor": "Emacs"
+  },
+
+  "behavior": {
+    // Active theme
+    "theme": "Dark",
+
+    // Show dialogs as macOS sheet windows. Disable this if you hate the dialog animations
+    "sheetDialogs": true,
+
+    // Always show overlay scroll bars (even if mouse is attached or if "Show scroll bars" is set to "Always")
+    "forceOverlayScrollBars": false,
+
+    "actionBar": {
+      // Show action bar on the bottom/
+      "show": false
     },
 
-    "behavior": {
-        // Active theme
-        "theme": "Dark",
+    "quickSelect": {
+      // Match only the string prefix (instead of word matching)
+      "matchOnlyPrefix": false,
 
-        // Show dialogs as macOS sheet windows. Disable this if you hate the dialog animations
-        "sheetDialogs": true,
-
-        // Always show overlay scroll bars (even if mouse is attached or if "Show scroll bars" is set to "Always")
-        "forceOverlayScrollBars": false,
-
-        "actionBar": {
-            // Show action bar on the bottom/
-            "show": false
-        },
-
-        "quickSelect": {
-            // Match only the string prefix (instead of word matching)
-            "matchOnlyPrefix": false,
-
-            // Activate Quick Select on typing automatically (if `false`, you will need to firstly press '/')
-            "activateOnAnyCharacter": false
-        },
-
-        "actions": {
-            // Delete source files only copying to the target directory
-            "core.move.safeMove": false,
-
-            // Show confirmation before moving files to the Trash
-            "core.trash.confirm": false,
-
-            // Show confirmation before deleting items
-            "core.delete.confirm": true,
-
-            // Show pinned places in "Favorites" menu
-            "core.favorites.showPinnedPlaces": true,
-
-            // Allow to specify the target directory before copying or moving
-            "core.copy.askTargetPath": true
-        },
-
-        "table": {
-            // Show the ".." directory
-            "showGoUpDirectory": true,
-
-            // Select ".." on directory enter
-            "selectGoUpDirectoryOnEnter": false,
-
-            // Show the file icons
-            "showIcons": true,
-
-            // Use alternate row background
-            "useAlternateColor": true,
-
-            // File icon size
-            "iconSize": 16,
-
-            // Select the first item after the last
-            "circularSelection": false,
-
-            // The prefix of the directory names (e.g. "/", "[")
-            "directoryPrefix": "",
-
-            // The suffix of the directory names (e.g. "]")
-            "directorySuffix": ""
-        },
-
-        "files": {
-            // Update the list automatically using the file watcher if available
-            "fileWatcher": true,
-
-            // Support drag-drop in the file list
-            "dragDrop": true
-        }
+      // Activate Quick Select on typing automatically (if `false`, you will need to firstly press '/')
+      "activateOnAnyCharacter": false
     },
 
-    "fonts": {
-        // File list font
-        "files": ["Helvetica Neue", 13],
+    "actions": {
+      // Delete source files only copying to the target directory
+      "core.move.safeMove": false,
 
-        // Breadcrumbs font
-        "breadcrumbs": ["Helvetica Neue", 13],
+      // Show confirmation before moving files to the Trash
+      "core.trash.confirm": false,
 
-        // Table header font
-        "tableHeader": ["Helvetica Neue", 12],
+      // Show confirmation before deleting items
+      "core.delete.confirm": true,
 
-        // Status bar font
-        "statusBar": ["Helvetica Neue", 12],
+      // Show pinned places in "Favorites" menu
+      "core.favorites.showPinnedPlaces": true,
 
-        // Action bar button font
-        "actionBar": ["Helvetica Neue", 13],
-
-        // Tabs font
-        "tabs": ["Helvetica Neue", 12]
+      // Allow to specify the target directory before copying or moving
+      "core.copy.askTargetPath": true
     },
 
-    // Action key bindings. Each action may have several bindings, and several actions may share
-    // a common key binding (if more than one action is applicable, the menu will be shown).
-    "keyBindings": {
-        "core.change.current.pane": ["Tab"],
-        "core.move.up": ["K"],
-        "core.select.move.up": ["Shift+K"],
-        "core.move.down": ["J"],
-        "core.select.move.down": ["Shift+J"],
-        "core.move.left": ["Left"],
-        "core.select.move.left": ["Shift+Left"],
-        "core.move.right": ["Right"],
-        "core.select.move.right": ["Shift+Right"],
-        "core.open": ["Cmd+O", "L"],
-        "core.open.with": ["Cmd+Return"],
-        "core.go.up": ["Backspace", "H"],
-        "core.trash": ["F8", "Cmd+Backspace"],
-        "core.select.all": ["Cmd+A"],
-        "core.deselect.all": ["Escape"],
-        "core.toggle.show.hidden.files": ["Control+Shift+H"],
-        "core.preview": ["Cmd+Y"],
-        "core.open.terminal.here": ["F11"],
-        "core.edit": ["F4"],
-        "core.open.editor.here": ["Shift+F4"],
-        "core.copy.file.to.clipboard": ["Cmd+C"],
-        "core.paste": ["Cmd+V"],
-        "core.copy": ["F5"],
-        "core.move": ["F6"],
-        "core.rename": ["Return"],
-        "core.new.file": ["Shift+F7"],
-        "core.new.directory": ["F7"],
-        "core.refresh": ["F2"],
-        "core.get.info": ["Cmd+I"],
-        "core.copy.current.dir.path": ["F12"],
-        "core.copy.file.paths": ["Cmd+P"],
-        "core.delete": ["Shift+F8"],
-        "core.actions": ["Cmd+B", "Cmd+R"],
-        "core.history": ["Cmd+E"],
-        "core.back": ["Alt+Left"],
-        "core.forward": ["Alt+Right"],
-        "core.favorites": ["F3"],
-        "core.volumes": ["Cmd+Shift+R"],
-        "core.add.to.favorites.here": ["Shift+F3"],
-        "core.goto.path": ["Cmd+G"],
-        "core.clone.to.right": ["Cmd+Right"],
-        "core.clone.to.left": ["Cmd+Left"],
-        "core.clone.current.directory.to.right": ["Shift+Cmd+Right"],
-        "core.clone.current.directory.to.left": ["Shift+Cmd+Left"],
-        "core.new.tab": ["Cmd+T"],
-        "core.close.tab": ["Cmd+W"],
-        "core.activate.tab.1": ["Cmd+1"],
-        "core.activate.tab.2": ["Cmd+2"],
-        "core.activate.tab.3": ["Cmd+3"],
-        "core.activate.tab.4": ["Cmd+4"],
-        "core.activate.tab.5": ["Cmd+5"],
-        "core.activate.tab.6": ["Cmd+6"],
-        "core.activate.tab.7": ["Cmd+7"],
-        "core.activate.tab.8": ["Cmd+8"],
-        "core.activate.tab.9": ["Cmd+9"],
-        "core.activate.next.tab": ["Alt+Cmd+Right"],
-        "core.activate.previous.tab": ["Alt+Cmd+Left"]
+    "table": {
+      // Show the ".." directory
+      "showGoUpDirectory": true,
+
+      // Select ".." on directory enter
+      "selectGoUpDirectoryOnEnter": false,
+
+      // Show the file icons
+      "showIcons": true,
+
+      // Use alternate row background
+      "useAlternateColor": true,
+
+      // File icon size
+      "iconSize": 16,
+
+      // Select the first item after the last
+      "circularSelection": false,
+
+      // The prefix of the directory names (e.g. "/", "[")
+      "directoryPrefix": "",
+
+      // The suffix of the directory names (e.g. "]")
+      "directorySuffix": ""
     },
 
-    "setup": {
-        // Pinned places (shown above the favorite items).
-        "pinnedPlaces": [
-            {"path": "user.downloads"}
-        ],
+    "files": {
+      // Update the list automatically using the file watcher if available
+      "fileWatcher": true,
 
-        // Action buttons displayed in the action bar
-        "actionBar": [
-            "core.open.with",
-            "core.edit",
-            "core.rename",
-            "core.new.directory",
-            "core.delete",
-            "core.copy.file.paths"
-        ],
-
-        // Touch Bar items
-        "touchBar": [
-            { "action": "core.edit" },
-            { "action": "core.new.directory", "backgroundColor": "#624a2d" },
-            { "action": "core.trash", "backgroundColor": "#5f0405" },
-            { "action": "core.copy.file.paths", "mode": "text" }
-        ]
+      // Support drag-drop in the file list
+      "dragDrop": true
     }
+  },
+
+  "fonts": {
+    // File list font
+    "files": ["Helvetica Neue", 13],
+
+    // Breadcrumbs font
+    "breadcrumbs": ["Helvetica Neue", 13],
+
+    // Table header font
+    "tableHeader": ["Helvetica Neue", 12],
+
+    // Status bar font
+    "statusBar": ["Helvetica Neue", 12],
+
+    // Action bar button font
+    "actionBar": ["Helvetica Neue", 13],
+
+    // Tabs font
+    "tabs": ["Helvetica Neue", 12]
+  },
+
+  // Action key bindings. Each action may have several bindings, and several actions may share
+  // a common key binding (if more than one action is applicable, the menu will be shown).
+  "keyBindings": {
+    "core.change.current.pane": ["Tab"],
+    "core.move.up": ["K"],
+    "core.select.move.up": ["Shift+K"],
+    "core.move.down": ["J"],
+    "core.select.move.down": ["Shift+J"],
+    "core.move.left": ["Left"],
+    "core.select.move.left": ["Shift+Left"],
+    "core.move.right": ["Right"],
+    "core.select.move.right": ["Shift+Right"],
+    "core.open": ["Cmd+O", "L"],
+    "core.open.with": ["Cmd+Return"],
+    "core.go.up": ["Backspace", "H"],
+    "core.trash": ["Shift+D", "Cmd+Backspace"],
+    "core.select.all": ["Cmd+A"],
+    "core.deselect.all": ["Escape"],
+    "core.toggle.show.hidden.files": ["Control+Shift+H"],
+    "core.preview": ["Cmd+Y"],
+    "core.open.terminal.here": ["F11"],
+    "core.edit": ["F4"],
+    "core.open.editor.here": ["Shift+F4"],
+    "core.copy.file.to.clipboard": ["Cmd+C", "C"],
+    "core.locate.in.finder": ["Shift+F"],
+    "core.paste": ["Cmd+V", "V"],
+    "core.copy": ["F5"],
+    "core.move": ["F6"],
+    "core.rename": ["Return"],
+    "core.new.file": ["Shift+F7"],
+    "core.new.directory": ["F7"],
+    "core.refresh": ["F2"],
+    "core.get.info": ["Cmd+I"],
+    "core.copy.current.dir.path": ["F12"],
+    "core.copy.file.paths": ["Cmd+P"],
+    "core.delete": ["Shift+F8"],
+    "core.actions": ["Space", "Cmd+B", "Cmd+R"],
+    "core.history": ["Cmd+E"],
+    "core.back": ["Alt+Left", "Shift+H"],
+    "core.forward": ["Alt+Right", "Shift+L"],
+    "core.favorites": ["F3"],
+    "core.volumes": ["Cmd+Shift+R"],
+    "core.add.to.favorites.here": ["Shift+F3"],
+    "core.goto.path": ["Cmd+G"],
+    "core.clone.to.right": ["Cmd+Right"],
+    "core.clone.to.left": ["Cmd+Left"],
+    "core.clone.current.directory.to.right": ["Shift+Cmd+Right"],
+    "core.clone.current.directory.to.left": ["Shift+Cmd+Left"],
+    "core.new.tab": ["Cmd+T", "T"],
+    "core.close.tab": ["Cmd+W", "Q"],
+    "core.activate.tab.1": ["Cmd+1"],
+    "core.activate.tab.2": ["Cmd+2"],
+    "core.activate.tab.3": ["Cmd+3"],
+    "core.activate.tab.4": ["Cmd+4"],
+    "core.activate.tab.5": ["Cmd+5"],
+    "core.activate.tab.6": ["Cmd+6"],
+    "core.activate.tab.7": ["Cmd+7"],
+    "core.activate.tab.8": ["Cmd+8"],
+    "core.activate.tab.9": ["Cmd+9"],
+    "core.activate.next.tab": ["Alt+Cmd+Right"],
+    "core.activate.previous.tab": ["Alt+Cmd+Left"]
+  },
+
+  "setup": {
+    // Pinned places (shown above the favorite items).
+    "pinnedPlaces": [
+      {"path": "user.downloads"}
+    ],
+
+    // Action buttons displayed in the action bar
+    "actionBar": [
+      "core.open.with",
+      "core.edit",
+      "core.rename",
+      "core.new.directory",
+      "core.delete",
+      "core.copy.file.paths"
+    ],
+
+    // Touch Bar items
+    "touchBar": [
+      { "action": "core.edit" },
+      { "action": "core.new.directory", "backgroundColor": "#624a2d" },
+      { "action": "core.trash", "backgroundColor": "#5f0405" },
+      { "action": "core.copy.file.paths", "mode": "text" }
+    ]
+  }
 }
