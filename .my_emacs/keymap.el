@@ -2,6 +2,7 @@
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "C-s") 'phi-search)
+(spacemacs/set-leader-keys "fd" 'diredp-dired-recent-dirs)
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
 (setq evil-mc-undo-cursors-on-keyboard-quit t)
 
