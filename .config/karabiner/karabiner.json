@@ -7,6 +7,9 @@
   "profiles": [
     {
       "complex_modifications": {
+        "parameters": {
+          "basic.to_if_alone_timeout_milliseconds": 1000
+        },
         "rules": [
           {
             "manipulators": [
@@ -171,12 +174,195 @@
         "f9": "fastforward"
       },
       "name": "Default profile",
-      "selected": true,
+      "selected": false,
       "simple_modifications": {},
       "virtual_hid_keyboard": {
         "caps_lock_delay_milliseconds": 0,
         "keyboard_type": "ansi",
         "standalone_keys_delay_milliseconds": 70
+      }
+    },
+    {
+      "complex_modifications": {
+        "parameters": {
+          "basic.to_if_alone_timeout_milliseconds": 1000
+        },
+        "rules": [
+          {"manipulators": [
+            {
+              "description": "Change caps_lock to control when used as modifier, escape when used alone",
+              "from": {
+                "key_code": "left_command",
+                "modifiers": {
+                  "optional": [
+                    "any"
+                  ]
+                }
+              },
+              "to": [
+                {
+                  "key_code": "left_option"
+                }
+              ],
+              "to_if_alone": [
+                {
+                  "key_code": "left_option",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                }
+              ],
+              "type": "basic"
+            }
+          ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change caps_lock to control when used as modifier, escape when used alone",
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_control"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "manipulators": [
+              {
+                "description": "Change left_command to f19 when used alone",
+                "from": {
+                  "key_code": "left_option",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "left_command"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f19",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },{
+            "manipulators": [
+              {
+                "description": "Change right_option to f18 when used alone",
+                "from": {
+                  "key_code": "right_option",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_command"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f18",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },{
+            "manipulators": [
+              {
+                "description": "Change right_command to f19 when used alone",
+                "from": {
+                  "key_code": "right_command",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_option"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f17",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [],
+      "fn_function_keys": {
+        "f1": "display_brightness_decrement",
+        "f10": "mute",
+        "f11": "volume_decrement",
+        "f12": "volume_increment",
+        "f2": "display_brightness_increment",
+        "f3": "mission_control",
+        "f4": "launchpad",
+        "f5": "illumination_decrement",
+        "f6": "illumination_increment",
+        "f7": "rewind",
+        "f8": "play_or_pause",
+        "f9": "fastforward"
+      },
+      "name": "home",
+      "selected": true,
+      "simple_modifications": {},
+      "virtual_hid_keyboard": {
+        "caps_lock_delay_milliseconds": 0,
+        "keyboard_type": "ansi"
       }
     }
   ]
