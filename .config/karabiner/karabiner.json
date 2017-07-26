@@ -190,7 +190,7 @@
         "rules": [
           {"manipulators": [
             {
-              "description": "Change caps_lock to control when used as modifier, escape when used alone",
+              "description": "Change left command to left option",
               "from": {
                 "key_code": "left_command",
                 "modifiers": {
@@ -206,7 +206,7 @@
               ],
               "to_if_alone": [
                 {
-                  "key_code": "left_option",
+                  "key_code": "f16",
                   "modifiers": {
                     "optional": [
                       "any"
@@ -221,9 +221,9 @@
           {
             "manipulators": [
               {
-                "description": "Change caps_lock to control when used as modifier, escape when used alone",
+                "description": "Change left control to esc when press alone",
                 "from": {
-                  "key_code": "caps_lock",
+                  "key_code": "left_control",
                   "modifiers": {
                     "optional": [
                       "any"
@@ -252,7 +252,7 @@
           {
             "manipulators": [
               {
-                "description": "Change left_command to f19 when used alone",
+                "description": "Change left_option to f19 when used alone and left command as modifer key",
                 "from": {
                   "key_code": "left_option",
                   "modifiers": {
@@ -282,7 +282,37 @@
           },{
             "manipulators": [
               {
-                "description": "Change right_option to f18 when used alone",
+                "description": "Change right_application to f18 when used alone",
+                "from": {
+                  "key_code": "application",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "right_option"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f17",
+                    "modifiers": {
+                      "optional": [
+                        "any"
+                      ]
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },{
+            "manipulators": [
+              {
+                "description": "Change right_option to f19 when used alone",
                 "from": {
                   "key_code": "right_option",
                   "modifiers": {
@@ -309,55 +339,25 @@
                 "type": "basic"
               }
             ]
-          },{
-            "manipulators": [
-              {
-                "description": "Change right_command to f19 when used alone",
-                "from": {
-                  "key_code": "right_command",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_option"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f17",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
           }
         ]
       },
       "devices": [],
       "fn_function_keys": {
-        "f1": "display_brightness_decrement",
+        "f1": "f1",
         "f10": "mute",
         "f11": "volume_decrement",
         "f12": "volume_increment",
-        "f2": "display_brightness_increment",
+        "f2": "f2",
         "f3": "mission_control",
-        "f4": "launchpad",
-        "f5": "illumination_decrement",
-        "f6": "illumination_increment",
-        "f7": "rewind",
-        "f8": "play_or_pause",
-        "f9": "fastforward"
+        "f4": "f4",
+        "f5": "f5",
+        "f6": "f6",
+        "f7": "f7",
+        "f8": "f8",
+        "f9": "f9"
       },
-      "name": "home",
+      "name": "minila",
       "selected": true,
       "simple_modifications": {},
       "virtual_hid_keyboard": {
