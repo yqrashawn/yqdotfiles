@@ -129,15 +129,56 @@
   <item>
     <name>Filco left option to command</name>
     <identifier>filco.left_option.to.left_command</identifier>
-    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502<device_only>
-    <autogen>__KeyToKey__ KeyCode::OPTION_L, KeyCode::COMMAND_L</autogen>
+    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_L,
+      KeyCode::COMMAND_L,
+      KeyCode::0, ModifierFlag::CONTROL_L, ModifierFlag::OPTION_L, ModifierFlag::COMMAND_L, ModifierFlag::SHIFT_L
+    </autogen>
   </item>
 
   <item>
     <name>Filco left command to option</name>
     <identifier>filco.left_command.to.left_option</identifier>
-    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502<device_only>
+    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
     <autogen>__KeyToKey__ KeyCode::COMMAND_L, KeyCode::OPTION_L</autogen>
+  </item>
+
+  <item>
+    <name>Filco left control to esc when press alone</name>
+    <identifier>filco.left_control.alone.esc</identifier>
+    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::CONTROL_L,
+      KeyCode::CONTROL_L,
+      KeyCode::ESCAPE
+    </autogen>
+  </item>
+
+  <item>
+    <name>Filco right option to command and f18 when press alone</name>
+    <identifier>filco.right_option.to.right_command.alone.f19</identifier>
+    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::OPTION_R,
+      KeyCode::COMMAND_R,
+      KeyCode::F18
+    </autogen>
+  </item>
+
+  <item>
+    <name>Filco pc_application to right option and f19 when press alone</name>
+    <identifier>filco.pc_application.to.right_option.alone.f18</identifier>
+    <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::PC_APPLICATION,
+      KeyCode::OPTION_R,
+      KeyCode::F18
+    </autogen>
   </item>
 
   <item>
@@ -6804,5 +6845,4 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
       KeyCode::F, ModifierFlag::COMMAND_L,
     </autogen>
   </item>
-
 </root>

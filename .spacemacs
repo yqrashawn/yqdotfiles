@@ -324,6 +324,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/"))
+  (setq insert-directory-program "/usr/local/opt/coreutils/bin/gls")
+  (setq dired-listing-switches "-aBhl --group-directories-first")
   ;; (package-initialize)
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-copy-env "LC_ALL")
@@ -600,6 +602,7 @@ static char *gnus-pointer[] = {
  '(password-cache-expiry 3600)
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
+ '(recentf-auto-cleanup 300)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83")
