@@ -1,369 +1,372 @@
 {
-  "global": {
-    "check_for_updates_on_startup": true,
-    "show_in_menu_bar": true,
-    "show_profile_name_in_menu_bar": false
-  },
-  "profiles": [
-    {
-      "complex_modifications": {
-        "parameters": {
-          "basic.to_if_alone_timeout_milliseconds": 1000
-        },
-        "rules": [
-          {
-            "manipulators": [
-              {
-                "description": "Change caps_lock to control when used as modifier, escape when used alone",
-                "from": {
-                  "key_code": "caps_lock",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_control"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "escape",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "manipulators": [
-              {
-                "description": "Change right_command to f18 when used alone",
-                "from": {
-                  "key_code": "right_command",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_command"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f18",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "manipulators": [
-              {
-                "description": "Change left_command to f19 when used alone",
-                "from": {
-                  "key_code": "left_command",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_command"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f19",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "manipulators": [
-              {
-                "description": "Change right_option to f17 when used alone",
-                "from": {
-                  "key_code": "right_option",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_option"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f17",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          }
-        ]
-      },
-      "devices": [
-        {
-          "disable_built_in_keyboard_if_exists": false,
-          "identifiers": {
-            "is_keyboard": true,
-            "is_pointing_device": false,
-            "product_id": 631,
-            "vendor_id": 1452
-          },
-          "ignore": false
-        },
-        {
-          "disable_built_in_keyboard_if_exists": true,
-          "identifiers": {
-            "is_keyboard": true,
-            "is_pointing_device": false,
-            "product_id": 256,
-            "vendor_id": 2131
-          },
-          "ignore": false
-        }
-      ],
-      "fn_function_keys": {
-        "f1": "display_brightness_decrement",
-        "f10": "mute",
-        "f11": "volume_decrement",
-        "f12": "volume_increment",
-        "f2": "display_brightness_increment",
-        "f3": "mission_control",
-        "f4": "launchpad",
-        "f5": "illumination_decrement",
-        "f6": "illumination_increment",
-        "f7": "rewind",
-        "f8": "play_or_pause",
-        "f9": "fastforward"
-      },
-      "name": "Default profile",
-      "selected": false,
-      "simple_modifications": {},
-      "virtual_hid_keyboard": {
-        "caps_lock_delay_milliseconds": 0,
-        "keyboard_type": "ansi",
-        "standalone_keys_delay_milliseconds": 70
-      }
+    "global": {
+        "check_for_updates_on_startup": true,
+        "show_in_menu_bar": true,
+        "show_profile_name_in_menu_bar": false
     },
-    {
-      "complex_modifications": {
-        "parameters": {
-          "basic.to_if_alone_timeout_milliseconds": 1000
-        },
-        "rules": [
-          {"manipulators": [
-            {
-              "description": "Change left command to left option",
-              "from": {
-                "key_code": "left_command",
-                "modifiers": {
-                  "optional": [
-                    "any"
-                  ]
-                }
-              },
-              "to": [
+    "profiles": [
+        {
+            "complex_modifications": {
+                "parameters": {
+                    "basic.to_if_alone_timeout_milliseconds": 1000
+                },
+                "rules": [
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change caps_lock to control when used as modifier, escape when used alone",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "escape",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change right_command to f18 when used alone",
+                                "from": {
+                                    "key_code": "right_command",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_command"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f18",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change left_command to f19 when used alone",
+                                "from": {
+                                    "key_code": "left_command",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f19",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change right_option to f17 when used alone",
+                                "from": {
+                                    "key_code": "right_option",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_option"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f17",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "devices": [
                 {
-                  "key_code": "left_option"
-                }
-              ],
-              "to_if_alone": [
+                    "disable_built_in_keyboard_if_exists": false,
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 631,
+                        "vendor_id": 1452
+                    },
+                    "ignore": false
+                },
                 {
-                  "key_code": "f16",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
+                    "disable_built_in_keyboard_if_exists": true,
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 256,
+                        "vendor_id": 2131
+                    },
+                    "ignore": false
                 }
-              ],
-              "type": "basic"
+            ],
+            "fn_function_keys": {
+                "f1": "display_brightness_decrement",
+                "f10": "mute",
+                "f11": "volume_decrement",
+                "f12": "volume_increment",
+                "f2": "display_brightness_increment",
+                "f3": "mission_control",
+                "f4": "launchpad",
+                "f5": "illumination_decrement",
+                "f6": "illumination_increment",
+                "f7": "rewind",
+                "f8": "play_or_pause",
+                "f9": "fastforward"
+            },
+            "name": "macbook",
+            "selected": true,
+            "simple_modifications": {},
+            "virtual_hid_keyboard": {
+                "caps_lock_delay_milliseconds": 0,
+                "keyboard_type": "ansi",
+                "standalone_keys_delay_milliseconds": 70
             }
-          ]
-          },
-          {
-            "manipulators": [
-              {
-                "description": "Change left control to esc when press alone",
-                "from": {
-                  "key_code": "left_control",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
+        },
+        {
+            "complex_modifications": {
+                "parameters": {
+                    "basic.to_if_alone_timeout_milliseconds": 1000
                 },
-                "to": [
-                  {
-                    "key_code": "left_control"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "escape",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
+                "rules": [
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change left command to left option",
+                                "from": {
+                                    "key_code": "left_command",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_option"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f16",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change left control to esc when press alone",
+                                "from": {
+                                    "key_code": "left_control",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "escape",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change left_option to f19 when used alone and left command as modifer key",
+                                "from": {
+                                    "key_code": "left_option",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f19",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change right_application to f18 when used alone",
+                                "from": {
+                                    "key_code": "application",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_option"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f17",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "description": "Change right_option to f18 when used alone",
+                                "from": {
+                                    "key_code": "right_option",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_command"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f18",
+                                        "modifiers": {
+                                            "optional": [
+                                                "any"
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "manipulators": [
-              {
-                "description": "Change left_option to f19 when used alone and left command as modifer key",
-                "from": {
-                  "key_code": "left_option",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_command"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f19",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },{
-            "manipulators": [
-              {
-                "description": "Change right_application to f18 when used alone",
-                "from": {
-                  "key_code": "application",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_option"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f17",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },{
-            "manipulators": [
-              {
-                "description": "Change right_option to f18 when used alone",
-                "from": {
-                  "key_code": "right_option",
-                  "modifiers": {
-                    "optional": [
-                      "any"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "right_command"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f18",
-                    "modifiers": {
-                      "optional": [
-                        "any"
-                      ]
-                    }
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          }
-        ]
-      },
-      "devices": [],
-      "fn_function_keys": {
-        "f1": "f1",
-        "f10": "mute",
-        "f11": "volume_decrement",
-        "f12": "volume_increment",
-        "f2": "f2",
-        "f3": "mission_control",
-        "f4": "f4",
-        "f5": "f5",
-        "f6": "f6",
-        "f7": "f7",
-        "f8": "f8",
-        "f9": "f9"
-      },
-      "name": "minila",
-      "selected": true,
-      "simple_modifications": {},
-      "virtual_hid_keyboard": {
-        "caps_lock_delay_milliseconds": 0,
-        "keyboard_type": "ansi"
-      }
-    }
-  ]
+                ]
+            },
+            "devices": [],
+            "fn_function_keys": {
+                "f1": "f1",
+                "f10": "mute",
+                "f11": "volume_decrement",
+                "f12": "volume_increment",
+                "f2": "f2",
+                "f3": "mission_control",
+                "f4": "f4",
+                "f5": "f5",
+                "f6": "f6",
+                "f7": "f7",
+                "f8": "f8",
+                "f9": "f9"
+            },
+            "name": "minila",
+            "selected": false,
+            "simple_modifications": {},
+            "virtual_hid_keyboard": {
+                "caps_lock_delay_milliseconds": 0,
+                "keyboard_type": "ansi"
+            }
+        }
+    ]
 }
