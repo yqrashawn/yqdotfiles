@@ -107,7 +107,7 @@
           {
             "manipulators": [
               {
-                "description": "Change right_option to f19 when used alone",
+                "description": "Change right_option to f17 when used alone",
                 "from": {
                   "key_code": "right_option",
                   "modifiers": {

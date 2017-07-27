@@ -11,7 +11,7 @@
   </appdef>
 
   <appdef>
-    <appname>Finder</appname>
+7   <appname>Finder</appname>
     <equal>com.apple.finder</equal>
   </appdef>
 
@@ -159,7 +159,7 @@
 
   <item>
     <name>Filco right option to command and f18 when press alone</name>
-    <identifier>filco.right_option.to.right_command.alone.f19</identifier>
+    <identifier>filco.right_option.to.right_command.alone.f18</identifier>
     <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
     <autogen>
       __KeyOverlaidModifier__
@@ -171,13 +171,13 @@
 
   <item>
     <name>Filco pc_application to right option and f19 when press alone</name>
-    <identifier>filco.pc_application.to.right_option.alone.f18</identifier>
+    <identifier>filco.pc_application.to.right_option.alone.f19</identifier>
     <device_only>DeviceVendor::RawValue::0x0a5c, DeviceProduct::RawValue::0x8502</device_only>
     <autogen>
       __KeyOverlaidModifier__
       KeyCode::PC_APPLICATION,
       KeyCode::OPTION_R,
-      KeyCode::F18
+      KeyCode::F17
     </autogen>
   </item>
 
@@ -6676,7 +6676,7 @@ KeyCode::VK_OPEN_URL_ALFRED_RECENT_DOWNLOADS
   </item>
 
   <item>
-    <name>general: simultaneous kl = alfred finder</name>
+    <name>general: simultane7us kl = alfred finder</name>
     <identifier>private.sim_kl_alfred_finder</identifier>
 
     <autogen>
