@@ -8,7 +8,7 @@
         {
             "complex_modifications": {
                 "parameters": {
-                    "basic.to_if_alone_timeout_milliseconds": 1000
+                    "basic.to_if_alone_timeout_milliseconds": 100
                 },
                 "rules": [
                     {
@@ -665,11 +665,11 @@
                         ]
                     },
                     {
-                        "description": "Vi Mode [S as Trigger Key]",
+                        "description": "Vi Mode [D as Trigger Key] (recommended)",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "s",
+                                    "key_code": "d",
                                     "modifiers": {
                                         "optional": [
                                             "caps_lock"
@@ -694,7 +694,7 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     }
                                 ],
                                 "type": "basic"
@@ -1411,7 +1411,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "return_or_enter"
@@ -1440,7 +1440,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "spacebar"
@@ -1469,7 +1469,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "tab"
@@ -1498,7 +1498,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "hyphen"
@@ -1527,7 +1527,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "equal_sign"
@@ -1556,7 +1556,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "open_bracket"
@@ -1585,7 +1585,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "close_bracket"
@@ -1614,7 +1614,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "backslash"
@@ -1643,7 +1643,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "non_us_pound"
@@ -1672,7 +1672,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "semicolon"
@@ -1701,7 +1701,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "quote"
@@ -1730,7 +1730,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "grave_accent_and_tilde"
@@ -1759,7 +1759,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "comma"
@@ -1788,7 +1788,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "period"
@@ -1817,7 +1817,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "slash"
@@ -1846,7 +1846,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "non_us_backslash"
@@ -1875,7 +1875,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "1"
@@ -1904,7 +1904,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "2"
@@ -1933,7 +1933,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "3"
@@ -1962,7 +1962,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "5"
@@ -1991,7 +1991,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "6"
@@ -2020,7 +2020,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "7"
@@ -2049,7 +2049,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "8"
@@ -2078,7 +2078,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "9"
@@ -2107,7 +2107,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "a"
@@ -2136,7 +2136,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "b"
@@ -2165,39 +2165,10 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "c"
-                                    },
-                                    {
-                                        "key_code": "vk_none"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "vi_mode",
-                                        "type": "variable_if",
-                                        "value": 1
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "d",
-                                    "modifiers": {
-                                        "optional": [
-                                            "caps_lock"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "s"
-                                    },
-                                    {
-                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "vk_none"
@@ -2223,7 +2194,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "e"
@@ -2252,7 +2223,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "g"
@@ -2281,7 +2252,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "i"
@@ -2310,7 +2281,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "m"
@@ -2339,7 +2310,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "n"
@@ -2368,7 +2339,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "o"
@@ -2397,7 +2368,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "p"
@@ -2426,7 +2397,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "q"
@@ -2455,10 +2426,39 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "r"
+                                    },
+                                    {
+                                        "key_code": "vk_none"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "vi_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "d"
+                                    },
+                                    {
+                                        "key_code": "s"
                                     },
                                     {
                                         "key_code": "vk_none"
@@ -2484,7 +2484,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "t"
@@ -2513,7 +2513,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "u"
@@ -2542,7 +2542,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "w"
@@ -2571,7 +2571,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "x"
@@ -2600,7 +2600,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "y"
@@ -2629,10 +2629,405 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "s"
+                                        "key_code": "d"
                                     },
                                     {
                                         "key_code": "z"
+                                    },
+                                    {
+                                        "key_code": "vk_none"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Application mode",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "w",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "apl_mode",
+                                            "value": 1
+                                        }
+                                    }
+                                ],
+                                "to_after_key_up": [
+                                    {
+                                        "set_variable": {
+                                            "name": "apl_mode",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "w"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "i",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchIterm\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "c",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchChrome\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchSafari\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "m",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchMail\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "b",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchBearyChat\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "e",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "w"
+                                    },
+                                    {
+                                        "key_code": "e"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    },
+                                    {
+                                        "bundle_identifiers": [
+                                            "^org\\.gnu\\.Emacs$",
+                                            "^org\\.gnu\\.AquamacsEmacs$",
+                                            "^org\\.gnu\\.Aquamacs$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "u",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "9",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_control"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "u",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchEmacs\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchFinder\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "apl_second_level_mode",
+                                            "value": 1
+                                        }
+                                    }
+                                ],
+                                "to_after_key_up": [
+                                    {
+                                        "set_variable": {
+                                            "name": "apl_second_level_mode",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "vk_none"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "r",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"launchReeder\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+                                    },
+                                    {
+                                        "key_code": "vk_none"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"openInMarta\" in workflow \"com.yqrashawn.open.in.marta\" with argument \"\"'"
                                     },
                                     {
                                         "key_code": "vk_none"

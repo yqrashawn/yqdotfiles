@@ -1,4 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
+(global-set-key (kbd "C-s-9") 'ns-do-hide-emacs)
+(global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "C-s") 'phi-search)
