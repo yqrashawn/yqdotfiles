@@ -207,5 +207,5 @@ for i = 1, #applist do
   end)
 end
 
-appM:bind('', 'F18', 'WINDOWS', function() exit_others(nil) hs.hints.windowHints() end)
+appM:bind('', 'F13', 'WINDOWS', function() exit_others(nil) hs.hints.windowHints() end)
 appM:bind('shift','R', 'RESIZE', function() exit_others(resizeM) resizeM:enter() end)
