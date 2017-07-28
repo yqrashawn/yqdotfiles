@@ -3157,7 +3157,7 @@
                 "f9": "fastforward"
             },
             "name": "macbook",
-            "selected": false,
+            "selected": true,
             "simple_modifications": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
@@ -9496,7 +9496,7 @@
                 "f9": "f9"
             },
             "name": "hhkb",
-            "selected": true,
+            "selected": false,
             "simple_modifications": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
