@@ -38,7 +38,7 @@ end
 -- modalmgr:bind(modalmgr_keys[1], modalmgr_keys[2], "Toggle Modal Supervisor", function() modalmgr:exit() end)
 
 if appM then
-  modalmgr:bind("", "F18", 'APPLICAON', function() exit_others(appM) appM:enter() end)
+  modalmgr:bind("", "F13", 'APPLICAON', function() exit_others(appM) appM:enter() end)
 end
 
 if alfredM then
