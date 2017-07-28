@@ -412,15 +412,16 @@
   </item>
 
   <item>
-    <name>HHKB OPTION_L to Hyper</name>
+    <name>HHKB OPTION_L to F16</name>
     <appendix>OPTION_L</appendix>
-    <identifier>private.OPTION_L_HHKB</identifier>
+    <identifier>private.OPTION_L_HHKB.F16</identifier>
     <device_only>DeviceVendor::HHKB,DeviceProduct::HHKB</device_only>
     <autogen>
       __KeyOverlaidModifier__
       KeyCode::OPTION_L,
-      KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-      KeyCode::SPACE, ModifierFlag::OPTION_L,
+      <!-- KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L, -->
+      KeyCode::OPTION_L,
+      KeyCode::F16,
     </autogen>
   </item>
 

@@ -173,7 +173,7 @@ appM:bind('', 'Q', function() appM:exit() end)
 
 if not applist then
   applist = {
-    {shortcut = 'f',appname = 'Marta'},
+    {shortcut = 'f',appname = 'Finder'},
     {shortcut = '1',appname = 'Expressions'},
     {shortcut = 'd',appname = 'Dash'},
     {shortcut = 'x',appname = 'PDF Expert'},
