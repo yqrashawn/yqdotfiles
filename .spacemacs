@@ -26,6 +26,7 @@ values."
      emacs-lisp
      git
      osx
+     indium
      markdown
      org
      (shell :variables
@@ -327,7 +328,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
                '("melpa" . "https://melpa.org/packages/"))
   (setq insert-directory-program "/usr/local/opt/coreutils/bin/gls")
   (setq dired-listing-switches "-aBhl --group-directories-first")
-  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat user-home-directory "Dropbox/sync/undo"))))
+  (unless (file-exists-p (concat user-home-directory "Dropbox/sync/undo"))
+    (make-directory (concat user-home-directory "Dropbox/sync/undo")))
   ;; (package-initialize)
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-copy-env "LC_ALL")
