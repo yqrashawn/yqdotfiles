@@ -293,7 +293,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg' `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)

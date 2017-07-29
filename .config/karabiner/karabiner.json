@@ -3185,7 +3185,7 @@
                 "f9": "fastforward"
             },
             "name": "macbook",
-            "selected": true,
+            "selected": false,
             "simple_modifications": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
@@ -6381,8 +6381,11 @@
                 "f9": "f9"
             },
             "name": "minila",
-            "selected": false,
-            "simple_modifications": {},
+            "selected": true,
+            "simple_modifications": {
+                "backslash": "grave_accent_and_tilde",
+                "grave_accent_and_tilde": "backslash"
+            },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
                 "keyboard_type": "ansi"
