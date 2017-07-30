@@ -97,5 +97,5 @@ def clicked
   # This method gets called when a user clicks on your action
   $dz.finish("Open sampleModels folder")
   $dz.url(false)
-  %x`open #{$cpPath}`
+  `open #{$cpPath}`
 end
