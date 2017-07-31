@@ -2775,6 +2775,34 @@
                                     }
                                 ],
                                 "from": {
+                                    "key_code": "t",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchTower\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
                                     "key_code": "m",
                                     "modifiers": {
                                         "optional": [
@@ -3157,7 +3185,7 @@
                 "f9": "fastforward"
             },
             "name": "macbook",
-            "selected": true,
+            "selected": false,
             "simple_modifications": {},
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
@@ -5088,9 +5116,7 @@
                                 "from": {
                                     "key_code": "2",
                                     "modifiers": {
-                                        "optional": [
-                                            "caps_lock"
-                                        ]
+                                        "optional": []
                                     }
                                 },
                                 "to": [
@@ -5966,6 +5992,34 @@
                                     }
                                 ],
                                 "from": {
+                                    "key_code": "t",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchTower\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
                                     "key_code": "m",
                                     "modifiers": {
                                         "optional": [
@@ -6327,8 +6381,11 @@
                 "f9": "f9"
             },
             "name": "minila",
-            "selected": false,
-            "simple_modifications": {},
+            "selected": true,
+            "simple_modifications": {
+                "backslash": "grave_accent_and_tilde",
+                "grave_accent_and_tilde": "backslash"
+            },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
                 "keyboard_type": "ansi"
@@ -9117,6 +9174,34 @@
                                 "to": [
                                     {
                                         "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchSafari\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "apl_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "apl_second_level_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "t",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchTower\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
                                     }
                                 ],
                                 "type": "basic"
