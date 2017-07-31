@@ -19,8 +19,8 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 111,
-                                                "vendor_id": 1111
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
@@ -56,8 +56,8 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 111,
-                                                "vendor_id": 1111
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
@@ -91,15 +91,15 @@
                         ]
                     },
                     {
-                        "description": "MINILA Change left command to left option",
+                        "description": "MINILA Change left command to left option f18 if alone",
                         "manipulators": [
                             {
                                 "conditions": [
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 111,
-                                                "vendor_id": 1111
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
@@ -120,7 +120,7 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "f16",
+                                        "key_code": "f18",
                                         "modifiers": {
                                             "optional": [
                                                 "any"
@@ -139,8 +139,8 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 111,
-                                                "vendor_id": 1111
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
@@ -181,8 +181,8 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 111,
-                                                "vendor_id": 1111
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
@@ -223,8 +223,8 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 111,
-                                                "vendor_id": 1111
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
@@ -246,7 +246,7 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "f18",
+                                        "key_code": "f16",
                                         "modifiers": {
                                             "optional": [
                                                 "any"
@@ -267,6 +267,10 @@
                                             {
                                                 "product_id": 256,
                                                 "vendor_id": 2131
+                                            },
+                                            {
+                                                "product_id": 34050,
+                                                "vendor_id": 2652
                                             }
                                         ],
                                         "type": "device_if"
