@@ -40,7 +40,7 @@ if not scriptList then
     {name = 'Browser Tabs',shortcut = 'b',source = 'tell application "Alfred 3" to run trigger "browserTabs" in workflow "com.clintonstrong.SearchTabs" with argument "" '},
     {name = 'Tower repo',shortcut = 't',source = 'tell application "Alfred 3" to run trigger "towerRepo" in workflow "net.cjlucas.alfred.tower" with argument ""'},
     {name = 'Kill process',shortcut = 'k',source = 'tell application "Alfred 3" to run trigger "killProcess" in workflow "com.ngreenstein.alfred-process-killer" with argument ""'},
-    {name = 'Search Github',shortcut = 'g',source = ' tell application "Alfred 3" to run trigger "searchGithub" in workflow "nikivi.search-the-web" with argument ""'},
+    {name = 'Search Github',shortcut = 'g',source = 'tell application "Alfred 3" to run trigger "searchGithub" in workflow "nikivi.search-the-web" with argument ""'},
     {name = 'Recent Download',shortcut = 'r',source = 'tell application "Alfred 3" to run trigger "recentDownloads" in workflow "com.vitorgalvao.alfred.recentdownloads" with argument ""'},
     {name = 'Color',shortcut = 'c',source = 'tell application "Alfred 3" to run trigger "feedback" in workflow "tylereich.colors" with argument ""'},
     -- {name = 'Files',shortcut = 'f',source = 'tell application "System Events"\
