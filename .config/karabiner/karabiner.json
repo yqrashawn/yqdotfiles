@@ -28,27 +28,16 @@
                                 ],
                                 "from": {
                                     "key_code": "backslash",
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
+                                  "modifiers": {
+                                    "optional": "any"
+                                  }
                                 },
                                 "to": [
                                     {
                                         "key_code": "grave_accent_and_tilde"
                                     }
                                 ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "backslash",
-                                        "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
-                                        }
-                                    }
-                                ],
+                                "to_if_alone": [],
                                 "type": "basic"
                             },
                             {
@@ -66,9 +55,7 @@
                                 "from": {
                                     "key_code": "grave_accent_and_tilde",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -76,16 +63,7 @@
                                         "key_code": "backslash"
                                     }
                                 ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "grave_accent_and_tilde",
-                                        "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
-                                        }
-                                    }
-                                ],
+                                "to_if_alone": [],
                                 "type": "basic"
                             }
                         ]
@@ -108,9 +86,7 @@
                                 "from": {
                                     "key_code": "left_command",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -122,9 +98,7 @@
                                     {
                                         "key_code": "f18",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -150,9 +124,7 @@
                                 "from": {
                                     "key_code": "left_option",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -164,9 +136,7 @@
                                     {
                                         "key_code": "f19",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -192,9 +162,7 @@
                                 "from": {
                                     "key_code": "application",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -206,9 +174,7 @@
                                     {
                                         "key_code": "f17",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -234,9 +200,7 @@
                                 "from": {
                                     "key_code": "right_option",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -248,9 +212,7 @@
                                     {
                                         "key_code": "f16",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -280,9 +242,7 @@
                                 "from": {
                                     "key_code": "left_control",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -294,9 +254,7 @@
                                     {
                                         "key_code": "escape",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -322,9 +280,7 @@
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -336,9 +292,7 @@
                                     {
                                         "key_code": "escape",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -368,9 +322,7 @@
                                 "from": {
                                     "key_code": "right_command",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -382,9 +334,7 @@
                                     {
                                         "key_code": "f18",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -414,9 +364,7 @@
                                 "from": {
                                     "key_code": "left_command",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -428,9 +376,7 @@
                                     {
                                         "key_code": "f19",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -460,9 +406,7 @@
                                 "from": {
                                     "key_code": "right_option",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
@@ -474,9 +418,7 @@
                                     {
                                         "key_code": "f17",
                                         "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
+                                            "optional": "any"
                                         }
                                     }
                                 ],
@@ -1730,9 +1672,7 @@
                                 "from": {
                                     "any": "key_code",
                                     "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
+                                        "optional": "any"
                                     }
                                 },
                                 "to": [
