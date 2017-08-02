@@ -96,10 +96,10 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "f18",
-                                        "modifiers": {
-                                            "optional": "any"
-                                        }
+                                        "key_code": "tab",
+                                        "modifiers": [
+                                          "command"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -384,6 +384,51 @@
                             }
                         ]
                     },
+<<<<<<< HEAD
+=======
+                      {
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 256,
+                                                "vendor_id": 2131
+                                            },
+                                            {
+                                                "product_id": 631,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "Change left_option to C-tab if alone if not minila",
+                                "from": {
+                                    "key_code": "left_option",
+                                    "modifiers": {
+                                        "optional": "any"
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_option"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "tab",
+                                        "modifiers": [
+                                          "left_command"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+>>>>>>> 8ff3ed46d720c91af3e3666e0e1fd211eb4e436b
                     {
                         "manipulators": [
                             {
@@ -3607,9 +3652,12 @@
                                 "to": [
                                     {
                                         "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"youdao\" in workflow \"whyliam.workflows.youdao\" with argument \"\"'"
+<<<<<<< HEAD
                                     },
                                     {
                                         "key_code": "slash"
+=======
+>>>>>>> 8ff3ed46d720c91af3e3666e0e1fd211eb4e436b
                                     }
                                 ],
                                 "type": "basic"
@@ -3758,6 +3806,42 @@
                                         "name": "alf_mode",
                                         "type": "variable_if",
                                         "value": 1
+<<<<<<< HEAD
+=======
+                                    },
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.apple.finder"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "slash",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "slash",
+                                        "modifiers": [
+                                            "control",
+                                            "command"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+>>>>>>> 8ff3ed46d720c91af3e3666e0e1fd211eb4e436b
                                     }
                                 ],
                                 "from": {
