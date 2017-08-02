@@ -1,3 +1,80 @@
+(setq dired-listing-switches
+      (if (eq system-type 'windows-nt)
+          "-alh"
+        "-laGh1v --group-directories-first"))
+(setq directory-free-space-args "-Pmh")
+(setq dired-recursive-copies 'always)
+(setq dired-recursive-deletes 'always)
+(setq dired-omit-files
+      (format "\\(?:\\.%s\\'\\)\\|%s\\|\\`\\.[^.]\\|\\`_minted"
+              (regexp-opt
+               '("aux" "pickle" "synctex.gz" "bcf" "am" "in" "blx.bib"
+                 "vrb" "opt" "nav" "snm" "out"))
+              (regexp-opt
+               '("compile_commands.json"
+                 "__pycache__"))))
+(setq dired-omit-verbose nil)
+
+;;* advice
+(defadvice dired-advertised-find-file (around ora-dired-subst-directory activate)
+  "Replace current buffer if file is a directory."
+  (interactive)
+  (let* ((orig (current-buffer))
+         (filename (dired-get-filename t t))
+         (bye-p (file-directory-p filename)))
+    ad-do-it
+    (when (and bye-p (not (string-match "[/\\\\]\\.$" filename)))
+      (kill-buffer orig))))
+
+(defadvice dired-delete-entry (before ora-force-clean-up-buffers (file) activate)
+  (let ((buffer (get-file-buffer file)))
+    (when buffer
+      (kill-buffer buffer))))
+
+;;* rest
+(defun ora-dired-get-size ()
+  (interactive)
+  (let* ((cmd (concat "du -sch "
+                      (mapconcat (lambda (x) (shell-quote-argument (file-name-nondirectory x)))
+                                 (dired-get-marked-files) " ")))
+         (res (shell-command-to-string cmd)))
+    (if (string-match "\\(^[ 0-9.,]+[A-Za-z]+\\).*total$" res)
+        (message (match-string 1 res))
+      (error "unexpected output %s" res))))
+
+(defvar ora-dired-filelist-cmd
+  '(("vlc" "-L")))
+
+(require 'hydra)
+(defhydra hydra-marked-items (dired-mode-map "")
+  "
+Number of marked items: %(length (dired-get-marked-files))
+"
+  ("m" dired-mark "mark")
+  ("e" ora-ediff-files "ediff")
+  ("C" dired-do-copy "copy")
+  ("D" dired-do-delete "delete")
+  )
+
+(defun ora-ediff-files ()
+  (interactive)
+  (let ((files (dired-get-marked-files))
+        (wnd (current-window-configuration)))
+    (if (<= (length files) 2)
+        (let ((file1 (car files))
+              (file2 (if (cdr files)
+                         (cadr files)
+                       (read-file-name "file: "
+                                       (dired-dwim-target-directory)))))
+          (if (file-newer-than-file-p file1 file2)
+              (ediff-files file2 file1)
+            (ediff-files file1 file2))
+          (add-hook 'ediff-after-quit-hook-internal
+                    (lambda ()
+                      (setq ediff-after-quit-hook-internal nil)
+                      (set-window-configuration wnd))))
+      (error "no more than 2 files should be marked"))))
+
 (defun my-dired-imenu-prev-index-position (&optional arg)
   "Go to the header line of previous directory."
   (interactive "p")
@@ -37,4 +114,10 @@
   (require 'ivy-dired-history)
   ;; if you are using ido,you'd better disable ido for dired
   ;; (define-key (cdr ido-minor-mode-map-entry) [remap dired] nil) ;in ido-setup-hook
-  (define-key dired-mode-map "," 'dired))
+  (define-key dired-mode-map "," 'dired)
+  (define-key dired-mode-map "a" 'ora-dired-start-process)
+  (define-key dired-mode-map "e" 'ora-ediff-files)
+  )
+
+;; (require 'dired-quick-sort)
+;; (define-key dired-mode-map "S" ’hydra-dired-quick-sort/body)
