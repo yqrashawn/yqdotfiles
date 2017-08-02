@@ -389,7 +389,8 @@ you should place your code here."
   (require 'vlf-setup)
 
   (with-eval-after-load 'company
-    (company-flx-mode +1))
+    (company-flx-mode +1)
+    (company-mode 1))
   (evil-visual-mark-mode 1)
   (global-evil-mc-mode 1)
   (which-function-mode 1)
