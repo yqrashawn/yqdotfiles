@@ -384,8 +384,6 @@
                             }
                         ]
                     },
-<<<<<<< HEAD
-=======
                       {
                         "manipulators": [
                             {
@@ -428,7 +426,6 @@
                             }
                         ]
                     },
->>>>>>> 8ff3ed46d720c91af3e3666e0e1fd211eb4e436b
                     {
                         "manipulators": [
                             {
@@ -3652,12 +3649,6 @@
                                 "to": [
                                     {
                                         "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"youdao\" in workflow \"whyliam.workflows.youdao\" with argument \"\"'"
-<<<<<<< HEAD
-                                    },
-                                    {
-                                        "key_code": "slash"
-=======
->>>>>>> 8ff3ed46d720c91af3e3666e0e1fd211eb4e436b
                                     }
                                 ],
                                 "type": "basic"
@@ -3806,8 +3797,6 @@
                                         "name": "alf_mode",
                                         "type": "variable_if",
                                         "value": 1
-<<<<<<< HEAD
-=======
                                     },
                                     {
                                         "bundle_identifiers": [
@@ -3841,7 +3830,6 @@
                                         "name": "alf_mode",
                                         "type": "variable_if",
                                         "value": 1
->>>>>>> 8ff3ed46d720c91af3e3666e0e1fd211eb4e436b
                                     }
                                 ],
                                 "from": {
