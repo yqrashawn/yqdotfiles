@@ -3607,9 +3607,6 @@
                                 "to": [
                                     {
                                         "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"youdao\" in workflow \"whyliam.workflows.youdao\" with argument \"\"'"
-                                    },
-                                    {
-                                        "key_code": "slash"
                                     }
                                 ],
                                 "type": "basic"
