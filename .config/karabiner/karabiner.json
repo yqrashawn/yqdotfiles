@@ -3979,6 +3979,80 @@
                                     }
                                 ],
                                 "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "open_bracket"
+                                },
+                                "to": [
+                                    {
+                                      "key_code": "open_bracket",
+                                      "modifiers":[
+                                        "left_command",
+                                        "left_control",
+                                        "left_shift",
+                                        "left_option"
+                                      ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "close_bracket"
+                                },
+                                "to": [
+                                    {
+                                      "key_code": "close_bracket",
+                                      "modifiers":[
+                                        "left_command",
+                                        "left_control",
+                                        "left_shift",
+                                        "left_option"
+                                      ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "a",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                      "key_code": "z"
+                                    },
+                                    {
+                                      "key_code": "a"
+                                    }
+                                ],
+                                "type": "basic"
                             }
                         ]
                     },
