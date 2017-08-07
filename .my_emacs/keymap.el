@@ -79,6 +79,18 @@
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 (define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
+(defun evil-search-next-recenter ()
+  "evil search next and recenter"
+  (interactive)
+  (evil-search-next)
+  (recenter))
+(defun evil-search-previous-recenter ()
+  "evil search next and recenter"
+  (interactive)
+  (evil-search-previous)
+  (recenter))
+(define-key evil-normal-state-map (kbd "n") 'evil-search-next-recenter)
+(define-key evil-normal-state-map (kbd "N") 'evil-search-previous-recenter)
 ;; (define-key evil-normal-state-map (kbd "C-f") 'anything)
 
 ;; evil visual
