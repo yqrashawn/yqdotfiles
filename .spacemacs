@@ -32,7 +32,7 @@ values."
      org
      (shell :variables
             shell-default-height 30
-            shell-default-position 'bottom
+            shell-default-position 'right
             shell-default-term-shell "/bin/zsh")
      ;; spell-checking
      evil-snipe
@@ -350,11 +350,13 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
   (defun my-minibuffer-setup-hook ()
     (setq gc-cons-threshold most-positive-fixnum))
   (defun my-minibuffer-exit-hook ()
     (setq gc-cons-threshold 800000))
 
+  (setq system-uses-terminfo nil)
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
   (eval-after-load "projectile"
@@ -654,6 +656,7 @@ static char *gnus-pointer[] = {
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  ;; '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 120 :width normal))))
+ '(term ((t (:inherit default))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
  '(company-tooltip-common
    ((t (:inherit company-tooltip :weight bold :underline nil))))
