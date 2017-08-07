@@ -3989,17 +3989,11 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "open_bracket"
+                                    "key_code": "q"
                                 },
                                 "to": [
                                     {
-                                      "key_code": "open_bracket",
-                                      "modifiers":[
-                                        "left_command",
-                                        "left_control",
-                                        "left_shift",
-                                        "left_option"
-                                      ]
+                                      "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"52C9953F-E34D-474C-A497-14CFE32F8F49\"'"
                                     }
                                 ],
                                 "type": "basic"
@@ -4017,13 +4011,7 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "close_bracket",
-                                      "modifiers":[
-                                        "left_command",
-                                        "left_control",
-                                        "left_shift",
-                                        "left_option"
-                                      ]
+                                      "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"FAB8BA6F-AD8A-40E6-9826-7FE892C2A809\"'"
                                     }
                                 ],
                                 "type": "basic"
