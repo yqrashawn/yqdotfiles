@@ -1,0 +1,43 @@
+#!/usr/local/bin/ruby
+
+require 'json'
+require 'uri'
+
+# url = 'http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
+
+url = ARGV[0]
+if !url
+  puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
+elsif url.respond_to?(:to_s)
+  puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
+else
+  if url.end_with? '.gbim'
+    decoded = URI.decode(url)
+    arr = decoded.split('/')
+    name = arr[arr.length - 1].sub('.gbim', '')
+    infoUrl = decoded.sub('.gbim', '.sum.json')
+    basePath = decoded.sub(name + '.gbim', '')
+    # puts infoUrl
+    download_output = system("wget #{infoUrl} -P '#{ENV["HOME"]}/Downloads/models'")
+    if download_output
+      # File.open(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json', 'r') { |file| puts JSON.parse(file) }
+      infoStr = File.read(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json')
+      info = JSON.parse(infoStr)
+      ref = info["References"]["LIntegrated"]
+      for fileName in ref do
+        # puts basePath + fileName
+        `wget #{URI.encode(basePath + fileName)} -P '#{ENV["HOME"]}/Downloads/models'`
+      end
+      gbim = URI.encode(basePath + info["ToGbims"]["LIntegrated"])
+      # puts gbim.inspect
+      `wget #{gbim} -P '#{ENV["HOME"]}/Downloads/models'`
+      pi = URI.encode(basePath + info["Properties"]["LIntegrated"])
+      # puts pi
+      `wget #{pi} -P '#{ENV["HOME"]}/Downloads/models'`
+      png = URI.encode(basePath + info["Thumbnail"])
+      # puts png
+      `wget #{png} -P '#{ENV["HOME"]}/Downloads/models'`
+      puts '------------------Finished-------------------'
+    end
+  end
+end
