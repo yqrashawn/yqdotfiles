@@ -1,7 +1,7 @@
-!.my_emacs
-!.config
-!.emacs.d/private
 *
 .*
 **
 /local/bin/light
+!.my_emacs
+!.config
+!.emacs.d/private
