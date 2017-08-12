@@ -41,8 +41,8 @@
 (spacemacs/declare-prefix "oe" "edit-prefix")
 
 ;; global
-(global-set-key (kbd "C-SPC") 'swiper)
-(global-set-key (kbd "^@") 'swiper)
+(global-set-key (kbd "C-SPC") 'counsel-grep-or-swiper)
+(global-set-key (kbd "^@") 'counsel-grep-or-swiper)
 ;; (global-set-key (kbd "C-SPC") 'evil-search-forward)
 ;; (global-set-key (kbd "^@") 'evil-search-forward)
 
@@ -72,6 +72,7 @@
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 (define-key evil-normal-state-map (kbd "gy") 'duplicate-line)
+(define-key evil-normal-state-map (kbd "gl") 'dumb-jump-quick-look)
 (define-key evil-normal-state-map (kbd "gY") 'spacemacs/copy-and-comment-lines)
 (define-key evil-normal-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-normal-state-map (kbd "zz") 'evil-toggle-fold)
