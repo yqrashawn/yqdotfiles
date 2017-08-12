@@ -206,7 +206,7 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    dotspacemacs-visual-line-move-text t
    dotspacemacs-ex-substitute-global t
-   dotspacemacs-default-layout-name "Default"
+   dotspacemacs-default-layout-name "Global"
    dotspacemacs-display-default-layout t
    dotspacemacs-auto-resume-layouts nil
    ;; Size (in MB)
@@ -352,7 +352,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
+  (setq counsel-grep-base-command
+        "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
   (defun my-minibuffer-setup-hook ()
     (setq gc-cons-threshold most-positive-fixnum))
   (defun my-minibuffer-exit-hook ()
