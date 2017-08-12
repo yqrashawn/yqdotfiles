@@ -145,6 +145,7 @@
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 ;; (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "sk" #'smart-next-window-or-buffer)
+(define-key evil-normal-state-map "sh" 'dumb-jump-quick-look)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sj" 'ivy-switch-buffer)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
