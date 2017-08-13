@@ -173,7 +173,9 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro for Powerline"
+   dotspacemacs-default-font '(;;"DejaVu Sans Mono for Powerline"
+                               "Inconsolata-g for Powerline"
+                               ;; "Source Code Pro for Powerline"
                                :size 15
                                :weight normal
                                :width normal
@@ -437,6 +439,8 @@ you should place your code here."
   (setq evil-ex-hl-update-delay 0.01)
   (setq evil-vsplit-window-right t)
   (setq evil-want-C-i-jump t)
+  ;; (setq mac-allow-anti-aliasing nil)
+  (setq mac-allow-anti-aliasing t)
   ;; (setq evil-want-fine-undo t)
   (setq flycheck-check-syntax-automatically (quote (save mode-enabled)))
   (setq flycheck-checker-error-threshold 1000)
