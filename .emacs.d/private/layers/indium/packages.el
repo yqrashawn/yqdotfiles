@@ -15,6 +15,9 @@
         "iR" 'indium-connect-to-nodejs
         "iC" 'indium-run-chrome
         "ic" 'indium-connect-to-chrome
+        "ibb" 'indium-add-breakpoint
+        "ibk" 'indium-remove-breakpoint
+        "ibl" 'indium-list-breakpoint
         )
 
       (defvar indium-repl-mode-map
