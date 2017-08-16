@@ -176,7 +176,7 @@ values."
                                "InconsolataG for Powerline"
                                ;; "Anonymous Pro for Powerline"
                                ;; "Source Code Pro for Powerline"
-                               :size 16
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1)
