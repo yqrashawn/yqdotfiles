@@ -1040,6 +1040,37 @@
                   }
                 ],
                 "from": {
+                  "key_code": "f",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "d"
+                  },
+                  {
+                    "key_code": "f"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "vi_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  },
+                  {
+                    "name": "vi_visual_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  }
+                ],
+                "from": {
                   "key_code": "h",
                   "modifiers": {
                     "optional": [
