@@ -7,6 +7,22 @@
   )
 
 (prodigy-define-service
+  :name "perf-tree dev"
+  :command "npm"
+  :cwd "~/workspace/HOME/perf-tree/"
+  :args '("run" "dev")
+  :tags '(front perf-tree)
+  )
+
+(prodigy-define-service
+  :name "perf-tree start"
+  :command "npm"
+  :cwd "~/workspace/HOME/perf-tree/"
+  :args '("start")
+  :tags '(front perf-tree)
+  )
+
+(prodigy-define-service
   :name "lmv front watch"
   :command "cross-env"
   :cwd "~/workspace/OFFICE/gltflmvviewer/"
