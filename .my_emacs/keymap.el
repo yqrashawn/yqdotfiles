@@ -94,7 +94,6 @@
   (recenter))
 (define-key evil-normal-state-map (kbd "n") 'evil-search-next-recenter)
 (define-key evil-normal-state-map (kbd "N") 'evil-search-previous-recenter)
-;; (define-key evil-normal-state-map (kbd "C-f") 'anything)
 
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-a") 'evil-first-non-blank)
@@ -139,11 +138,13 @@
 
 ;; remap s
 (define-key evil-normal-state-map "s" nil)
+(define-key evil-normal-state-map "sg" 'magit-dispatch-popup)
 (define-key evil-normal-state-map "sf" 'spacemacs/search-auto)
 (define-key evil-normal-state-map "sF" 'spacemacs/search-auto-region-or-symbol)
 (define-key evil-normal-state-map "sk" 'counsel-grep-or-swiper)
+(define-key evil-normal-state-map "sK" 'spacemacs/swiper-region-or-symbol)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
-(define-key evil-normal-state-map "sd" 'smart-next-window-or-buffer)
+(define-key evil-normal-state-map "sh" 'smart-next-window-or-buffer)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sL" 'imenu-anywhere)
 (define-key evil-normal-state-map "sb" 'ivy-switch-buffer)
@@ -151,7 +152,6 @@
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
-(define-key evil-normal-state-map "sK" 'spacemacs/swiper-region-or-symbol)
 
 ;; helm
 ;; (define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
