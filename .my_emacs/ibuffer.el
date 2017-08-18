@@ -7,7 +7,6 @@
 (define-key ibuffer-mode-map (kbd "n") 'ibuffer-forward-filter-group)
 (define-key ibuffer-mode-map (kbd "p") 'ibuffer-backward-filter-group)
 
-
 (defadvice ibuffer-update-title-and-summary (after remove-column-titles)
   (save-excursion
     (set-buffer "*Ibuffer*")
@@ -47,16 +46,16 @@
 
 (defadvice ibuffer (after collapse-helm)
   (dolist (group mp/ibuffer-collapsed-groups)
-	  (progn
-	    (goto-char 1)
-	    (when (search-forward (concat "[ " group " ]") (point-max) t)
-	      (progn
+    (progn
+      (goto-char 1)
+      (when (search-forward (concat "[ " group " ]") (point-max) t)
+        (progn
           (move-beginning-of-line nil)
           (ibuffer-toggle-filter-group)
           )
-	      )
-	    )
-	  )
+        )
+      )
+    )
   (goto-char 1)
   (search-forward "[ " (point-max) t)
   )

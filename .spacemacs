@@ -44,15 +44,13 @@ values."
      version-control
      html
      lua
-     clojure
      docker
      vimscript
      (typescript :variables
                  typescript-fmt-on-save t
                  typescript-fmt-tool 'typescript-formatter)
      javascript
-     python
-     (python :variables python-enable-yapf-format-on-save t)
+     ;; (python :variables python-enable-yapf-format-on-save t)
      )
    dotspacemacs-additional-packages '(alect-themes
                                       auto-yasnippet
@@ -60,32 +58,31 @@ values."
                                       company-flx
                                       docker-tramp
                                       dired+
-                                      dired-quick-sort
+                                      ;; dired-quick-sort
                                       dired-narrow
                                       dired-details+
                                       editorconfig
                                       elmacro
                                       cheat-sh
                                       eslint-fix
-                                      evil-lion
                                       evil-textobj-anyblock
                                       evil-textobj-column
                                       evil-visual-mark-mode
-                                      fzf
                                       glsl-mode
                                       golden-ratio-scroll-screen
                                       ibuffer-vc
                                       indium
                                       ivy-dired-history
                                       imenu-anywhere
-                                      jscs
                                       key-chord
                                       noccur
                                       phi-search
                                       swiper
                                       saveplace
                                       vlf
-                                      vue-mode
+                                      (vue-mode :location (recipe
+                                                           :fetcher github
+                                                           :repo "codefalling/vue-mode"))
                                       visual-ascii-mode
                                       webpaste
                                       zenburn-theme)
@@ -340,7 +337,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
         `(("." . ,(concat user-home-directory "Dropbox/sync/undo"))))
   (unless (file-exists-p (concat user-home-directory "Dropbox/sync/undo"))
     (make-directory (concat user-home-directory "Dropbox/sync/undo")))
-  ;; (package-initialize)
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-copy-env "LC_ALL")
   ;;   (exec-path-from-shell-copy-env "TERM")
@@ -354,24 +350,31 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (defun dotspacemacs/init-vue-mode ()
+    (use-package vue-mode))
+
   (setq-default evil-escape-key-sequence "jl")
+
+  ;; rg for swiper
   (setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+
+  ;; fix buffer gc problem
   (defun my-minibuffer-setup-hook ()
     (setq gc-cons-threshold most-positive-fixnum))
   (defun my-minibuffer-exit-hook ()
     (setq gc-cons-threshold 800000))
-
-  (setq system-uses-terminfo nil)
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+
+  ;; fix shell color
+  (setq system-uses-terminfo nil)
   (eval-after-load "projectile"
     '(progn (setq magit-repo-dirs (mapcar (lambda (dir)
                                             (substring dir 0 -1))
                                           (remove-if-not (lambda (project)
                                                            (file-directory-p (concat project "/.git/")))
                                                          (projectile-relevant-known-projects)))
-
                   magit-repo-dirs-depth 3)))
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
   (global-company-mode)
@@ -383,16 +386,14 @@ you should place your code here."
                         table)))
   (add-hook 'minibuffer-inactive-mode-hook 'minibuffer-inactive-mode-hook-setup)
   (setq tramp-default-method "ssh")
-  (require 'dired-quick-sort)
+  ;; (require 'dired-quick-sort)
+  ;; (dired-quick-sort-setup)
   (ws-butler-global-mode)
-  (dired-quick-sort-setup)
   (setq dumb-jump-prefer-searcher 'rg)
-  ;; (which-function-mode)
   (setq mouse-wheel-scroll-amount '(0.001))
   (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
     (lambda () (golden-ratio-mode 1)))
   (spacemacs/toggle-mode-line-minor-modes-off)
-  ;; (spacemacs/toggle-mode-line-point-position-on)
   (add-hook 'prog-mode-hook 'fci-mode)
   ;; (add-hook 'prog-mode-hook 'paredit-mode)
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
@@ -400,7 +401,7 @@ you should place your code here."
 
   (with-eval-after-load 'company
     (company-flx-mode +1))
-  (evil-visual-mark-mode 1)
+  ;; (evil-visual-mark-mode 1)
   (global-evil-mc-mode 1)
   (which-function-mode 1)
   ;; (global-golden-ratio-mode)
@@ -430,15 +431,15 @@ you should place your code here."
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq company-idle-delay 0.5)
+  (setq company-idle-delay 0.4)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
   (setq dired-use-ls-dired nil)
   (setq evil-esc-delay 0)
   (setq evil-escape-unordered-key-sequence t)
-  (setq evil-ex-hl-update-delay 0.01)
-  (setq evil-vsplit-window-right t)
+  ;; (setq evil-ex-hl-update-delay 0.01)
+  (setq evil-vsplit-window-right nil)
   (setq evil-want-C-i-jump t)
   ;; (setq mac-allow-anti-aliasing nil)
   (setq mac-allow-anti-aliasing t)
@@ -448,25 +449,21 @@ you should place your code here."
   (setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
   (setq flycheck-display-errors-delay 0)
   (setq flycheck-standard-error-navigation t)
-  ;; (setq flycheck-highlighting-mode (quote symbols))
   (setq golden-ratio-scroll-highlight-delay (quote (0.07 . 0.03)))
   (setq golden-ratio-scroll-highlight-flag (quote (quote nil)))
   (setq ibuffer-mode-hook (quote (ibuffer-vc-set-filter-groups-by-vc-root)))
-  (setq idle-update-delay 0.03)
-  (setq js2-mode-show-parse-errors t)
-  (setq js2-mode-show-strict-warnings nil)
-  (setq magit-popup-show-common-commands t)
+  ;; (setq idle-update-delay 0.03)
   ;; (setq large-file-warning-threshold 1048576)
+  (setq magit-popup-show-common-commands t)
   (setq locate-command "mdfind -onlyin /Users/rashawnzhang -name ")
   (defun disable-magit-highlight-in-buffer ()
     (face-remap-add-relative 'magit-item-highlight '()))
-  (add-hook 'magit-status-mode-hook 'disable-magit-highlight-in-buffer)
-  (setq magit-commit-show-diff t
-        magit-revert-buffers 1)
+  ;; (add-hook 'magit-status-mode-hook 'disable-magit-highlight-in-buffer)
+  ;; (setq magit-commit-show-diff t
+  ;; magit-revert-buffers 1)
   (setq evil-move-cursor-back nil) ;;cursor don't go back
   (setq save-place-file "~/.emacs.d/saveplace") ;;remeber cursor location on reoppening
 
-  ;; (setq auth-source-netrc-use-gpg-tokens (quote (t gpg)))
   (setq edit-server-url-major-mode-alist
         '(("github\\.com" . org-mode)))
   (setq org-capture-templates
@@ -498,12 +495,8 @@ Entered on %U")
   (setq vlf-batch-size 314572)
   (setq which-key-allow-imprecise-window-fit t)
   (setq which-key-popup-type (quote minibuffer))
-  ;; (setq auto-indent-indent-style 'conservative)
-  ;; (setq auto-indent-style 'conservative)
-  ;; (setq auto-indent-on-visit-file t)
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (setq inferior-lisp-program "/usr/local/bin/sbcl")
-  ;; (setq slime-contribs '(slime-fancy))
   (setq hl-todo-keyword-faces
         (quote
          (("HOLD" . "#d0bf8f")
@@ -565,7 +558,7 @@ static char *note[] = {
 \"######....\",
 \"#######..#\" };")))
  '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "#383838")
+ '(fci-rule-color "#383838" t)
  '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")) t)
  '(gnus-mode-line-image-cache
    (quote
@@ -619,7 +612,7 @@ static char *gnus-pointer[] = {
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (glsl-mode indium pdf-tools company-quickhelp operate-on-number dired-details dired-sort dired-details+ d-mode company-dcd flycheck-dmd-dub rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby undohist visual-ascii-mode unidecode cheat-sh treemacs-evil treemacs gited git yaml-mode ivy-dired-history seoul256-theme ob-restclient ob-http company-restclient know-your-http-well dockerfile-mode docker tablist butler dired-k editorconfig csv-mode docker-tramp websocket prodigy vue-mode xref-js2 seq clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode slime-company slime common-lisp-snippets dired-hacks-utils dired-narrow dired+ winum unfill fuzzy webpaste restclient evil-lion elmacro dired-quick-sort ssass-mode vue-html-mode yapfify xterm-color ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights vlf vimrc-mode use-package toc-org tide typescript-mode tagedit spacemacs-theme spaceline powerline smex smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phi-search persp-mode pcre2el pbcopy paradox spinner ox-twbs ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file nodejs-repl noccur neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc ivy-hydra info+ indent-guide imenu-list imenu-anywhere ibuffer-vc hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core haml-mode google-translate golden-ratio-scroll-screen golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-ivy flyspell-correct flycheck-ycmd flycheck-pos-tip pos-tip flycheck fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-column names evil-textobj-anyblock evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-ycmd pkg-info request-deferred request deferred epl company-web web-completion-data company-tern dash-functional tern company-statistics company-flx flx company-anaconda company column-enforce-mode coffee-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed async anaconda-mode pythonic f dash s alect-themes aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup quelpa package-build zenburn-theme)))
+    (org-category-capture sourcemap memoize glsl-mode indium pdf-tools company-quickhelp operate-on-number dired-details dired-sort dired-details+ d-mode company-dcd flycheck-dmd-dub rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby undohist visual-ascii-mode unidecode cheat-sh treemacs-evil treemacs gited git yaml-mode ivy-dired-history seoul256-theme ob-restclient ob-http company-restclient know-your-http-well dockerfile-mode docker tablist butler dired-k editorconfig csv-mode docker-tramp websocket prodigy vue-mode xref-js2 seq clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode slime-company slime common-lisp-snippets dired-hacks-utils dired-narrow dired+ winum unfill fuzzy webpaste restclient evil-lion elmacro dired-quick-sort ssass-mode vue-html-mode yapfify xterm-color ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights vlf vimrc-mode use-package toc-org tide typescript-mode tagedit spacemacs-theme spaceline powerline smex smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phi-search persp-mode pcre2el pbcopy paradox spinner ox-twbs ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file nodejs-repl noccur neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc ivy-hydra info+ indent-guide imenu-list imenu-anywhere ibuffer-vc hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core haml-mode google-translate golden-ratio-scroll-screen golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-ivy flyspell-correct flycheck-ycmd flycheck-pos-tip pos-tip flycheck fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-column names evil-textobj-anyblock evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-ycmd pkg-info request-deferred request deferred epl company-web web-completion-data company-tern dash-functional tern company-statistics company-flx flx company-anaconda company column-enforce-mode coffee-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed async anaconda-mode pythonic f dash s alect-themes aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup quelpa package-build zenburn-theme)))
  '(password-cache-expiry 3600)
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
@@ -663,6 +656,7 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
