@@ -430,7 +430,7 @@ you should place your code here."
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq company-idle-delay 0.01)
+  (setq company-idle-delay 0.5)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
@@ -663,7 +663,6 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F" :family "Anonymous Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 150 :width normal))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
