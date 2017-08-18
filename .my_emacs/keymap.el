@@ -144,7 +144,6 @@
 (define-key evil-normal-state-map "sk" 'counsel-grep-or-swiper)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sd" 'smart-next-window-or-buffer)
-(define-key evil-normal-state-map "sh" 'dumb-jump-quick-look)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sL" 'imenu-anywhere)
 (define-key evil-normal-state-map "sb" 'ivy-switch-buffer)
