@@ -1,10 +1,9 @@
 ;; (eval-after-load 'js2-mode
 ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
-
-(require 'indium)
 (add-hook 'js2-mode-hook #'indium-interaction-mode)
 
+;; (add-to-list 'spacemacs-jump-handlers-js2-mode '(dumb-jump-go :async t))
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
 ;; adjust indents for web-mode to 2 spaces
 ;; (defun my-web-mode-hook ()

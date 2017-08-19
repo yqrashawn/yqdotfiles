@@ -452,6 +452,42 @@ you should place your code here."
   (setq golden-ratio-scroll-highlight-delay (quote (0.07 . 0.03)))
   (setq golden-ratio-scroll-highlight-flag (quote (quote nil)))
   (setq ibuffer-mode-hook (quote (ibuffer-vc-set-filter-groups-by-vc-root)))
+  (evil-define-motion evil-goto-definition ()
+    "Go to definition or first occurrence of symbol under point."
+    :jump t
+    :type exclusive
+    (let* ((string (evil-find-symbol t))
+           (search (format "\\_<%s\\_>" (regexp-quote string)))
+           ientry ipos)
+      ;; load imenu if available
+      (unless (featurep 'imenu)
+        (condition-case nil
+            (require 'imenu)
+          (error nil)))
+      (if (null string)
+          (user-error "No symbol under cursor")
+        (setq isearch-forward t)
+        ;; if imenu is available, try it
+        (cond
+         ((fboundp 'imenu--make-index-alist)
+          (condition-case nil
+              (setq ientry (imenu--make-index-alist))
+            (error nil))
+          (setq ientry (assoc string ientry))
+          (setq ipos (cdr ientry))
+          (when (and (markerp ipos)
+                     (eq (marker-buffer ipos) (current-buffer)))
+            (setq ipos (marker-position ipos)))
+          (cond
+           ;; imenu found a position, so go there and
+           ;; highlight the occurrence
+           ((numberp ipos)
+            (evil-search search t t ipos))
+           (t
+            (evil-search search t t (point-min)))))
+         ;; otherwise just go to first occurrence in buffer
+         (t
+          (evil-search search t t (point-min)))))))
   ;; (setq idle-update-delay 0.03)
   ;; (setq large-file-warning-threshold 1048576)
   (setq magit-popup-show-common-commands t)
