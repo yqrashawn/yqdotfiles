@@ -46,9 +46,9 @@ values."
      lua
      docker
      vimscript
-     (typescript :variables
-                 typescript-fmt-on-save t
-                 typescript-fmt-tool 'typescript-formatter)
+     ;; (typescript :variables
+     ;;             typescript-fmt-on-save t
+     ;;             typescript-fmt-tool 'typescript-formatter)
      javascript
      ;; (python :variables python-enable-yapf-format-on-save t)
      )
@@ -594,7 +594,7 @@ static char *note[] = {
 \"######....\",
 \"#######..#\" };")))
  '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "#383838" t)
+ '(fci-rule-color "#383838")
  '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")) t)
  '(gnus-mode-line-image-cache
    (quote
@@ -652,6 +652,7 @@ static char *gnus-pointer[] = {
  '(password-cache-expiry 3600)
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
+ '(projectile-tags-command nil)
  '(recentf-auto-cleanup 300)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(term-default-bg-color "#fdf6e3")
