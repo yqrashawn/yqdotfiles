@@ -2,8 +2,8 @@
 ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
 
-(require 'indium)
-(add-hook 'js2-mode-hook #'indium-interaction-mode)
+;; (require 'indium)
+;; (add-hook 'js2-mode-hook #'indium-interaction-mode)
 
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
 ;; adjust indents for web-mode to 2 spaces
@@ -36,6 +36,7 @@
 (setq-default flycheck-temp-prefix ".flycheck")
   ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
 (setq-default js-indent-level 2)
+
 (defun eslint-fix ()
   (interactive)
   (let ((current-point (point))

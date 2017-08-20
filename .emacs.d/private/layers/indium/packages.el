@@ -5,6 +5,7 @@
 (defun indium/init-indium ()
   (use-package indium
     :init
+    :defer
     (progn
       ;; add hook for js2 mode
       ;; (add-hook 'js2-mode-hook 'init-indium)
