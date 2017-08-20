@@ -30,7 +30,7 @@ values."
      osx
      indium
      markdown
-     nodejs
+     ;; nodejs
      org
      (shell :variables
             shell-default-height 30

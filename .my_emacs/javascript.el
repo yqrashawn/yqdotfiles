@@ -2,8 +2,6 @@
 ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
 
-;; (add-hook 'js2-mode-hook #'indium-interaction-mode)
-
 ;; (add-to-list 'spacemacs-jump-handlers-js2-mode '(dumb-jump-go :async t))
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
 ;; adjust indents for web-mode to 2 spaces
@@ -22,6 +20,11 @@
 ;;         ad-do-it)
 ;;     ad-do-it))
 
+(defun nodejs-repl-real-quit ()
+  (interactive)
+  (nodejs-repl-quit-or-cancel)
+  (nodejs-repl-quit-or-cancel)
+  )
 (defun nodejs-repl-resend-buffer ()
   (interactive)
   (nodejs-repl-quit-or-cancel)
@@ -38,7 +41,7 @@
       "nj" 'nodejs-repl-send-line
       "nf" 'nodejs-repl-load-file
       "n," 'nodejs-repl-send-buffer
-      "n." 'nodejs-repl-quit-or-cancel
+      "n." 'nodejs-repl-real-quit
       "nl" 'nodejs-repl-switch-to-repl
       "nn" 'nodejs-repl-resend-buffer
       )
