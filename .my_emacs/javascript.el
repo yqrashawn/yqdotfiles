@@ -2,7 +2,7 @@
 ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
 
-(add-hook 'js2-mode-hook #'indium-interaction-mode)
+;; (add-hook 'js2-mode-hook #'indium-interaction-mode)
 
 ;; (add-to-list 'spacemacs-jump-handlers-js2-mode '(dumb-jump-go :async t))
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
