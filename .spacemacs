@@ -30,6 +30,7 @@ values."
      osx
      indium
      markdown
+     nodejs
      org
      (shell :variables
             shell-default-height 30
@@ -56,6 +57,7 @@ values."
                                       auto-yasnippet
                                       butler
                                       company-flx
+                                      cheat-sh
                                       docker-tramp
                                       dired+
                                       ;; dired-quick-sort
@@ -63,7 +65,6 @@ values."
                                       dired-details+
                                       editorconfig
                                       elmacro
-                                      cheat-sh
                                       eslint-fix
                                       evil-textobj-anyblock
                                       evil-textobj-column
@@ -71,7 +72,6 @@ values."
                                       glsl-mode
                                       golden-ratio-scroll-screen
                                       ibuffer-vc
-                                      indium
                                       ivy-dired-history
                                       imenu-anywhere
                                       key-chord
@@ -80,6 +80,7 @@ values."
                                       swiper
                                       saveplace
                                       vlf
+                                      nodejs-repl
                                       (vue-mode :location (recipe
                                                            :fetcher github
                                                            :repo "codefalling/vue-mode"))
