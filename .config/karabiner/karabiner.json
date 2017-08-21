@@ -3704,7 +3704,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"youdao\" in workflow \"whyliam.workflows.youdao\" with argument \"\"'"
+                    "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"youdao\" in workflow \"Youdao Translate\" with argument \"\"'"
                   }
                 ],
                 "type": "basic"
