@@ -3308,7 +3308,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "i",
+                  "key_code": "j",
                   "modifiers": {
                     "optional": [
                       "caps_lock"
@@ -3336,7 +3336,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "c",
+                  "key_code": "l",
                   "modifiers": {
                     "optional": [
                       "caps_lock"
@@ -3364,7 +3364,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "k",
+                  "key_code": "c",
                   "modifiers": {
                     "optional": [
                       "caps_lock"
@@ -3515,7 +3515,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "u",
+                  "key_code": "k",
                   "modifiers": {
                     "optional": [
                       "caps_lock"
@@ -3547,7 +3547,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "u",
+                  "key_code": "k",
                   "modifiers": {
                     "optional": [
                       "caps_lock"
