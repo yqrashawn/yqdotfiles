@@ -7,7 +7,7 @@
     :init
     (progn
       ;; add hook for js2 mode
-      (add-hook 'js2-mode-hook 'init-indium)
+      ;; (add-hook 'js2-mode-hook 'init-indium)
       (spacemacs/declare-prefix-for-mode 'js2-mode "mi" "indium")
       (setq indium-chrome-executable "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
