@@ -15,6 +15,8 @@
 (setq mu4e-compose-auto-include-date t
       mu4e-compose-keep-self-cc t)
 (setq message-send-mail-function 'message-send-mail-with-sendmail)
+(with-eval-after-load 'mu4e
+  (setq message-send-mail-function 'message-send-mail-with-sendmail))
 
 ;; Call EWW to display HTML messages
 (defun jcs-view-in-eww (msg)

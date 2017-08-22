@@ -434,7 +434,7 @@ you should place your code here."
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq company-idle-delay 0.4)
+  (setq company-idle-delay 0.2)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
@@ -597,7 +597,7 @@ static char *note[] = {
 \"######....\",
 \"#######..#\" };")))
  '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "#383838" t)
+ '(fci-rule-color "#383838")
  '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")) t)
  '(gnus-mode-line-image-cache
    (quote
@@ -657,6 +657,10 @@ static char *gnus-pointer[] = {
  '(pos-tip-foreground-color "#586e75")
  '(projectile-tags-command nil)
  '(recentf-auto-cleanup 300)
+ '(safe-local-variable-values
+   (quote
+    ((projectile-globally-ignored-directories . "study")
+     (projectile-globally-ignored-directories . study))))
  '(send-mail-function (quote mailclient-send-it))
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(term-default-bg-color "#fdf6e3")

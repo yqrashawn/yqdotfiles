@@ -1,5 +1,8 @@
 ;; -*- mode: emacs-lisp -*-
-;; (global-set-key (kbd "C-s-9") 'ns-do-hide-emacs)
+(defun hide-emacs ()
+  (interactive)
+  (call-process "osascript" nil nil nil "-e" "tell application \"Finder\"" "-e" "set visible of process \"Emacs\" to false" "-e" "end tell"))
+(global-set-key (kbd "C-s-9") 'hide-emacs)
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-b") 'bookmark-jump)
@@ -82,6 +85,7 @@
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 (define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
+
 (defun evil-search-next-recenter ()
   "evil search next and recenter"
   (interactive)
@@ -94,6 +98,19 @@
   (recenter))
 (define-key evil-normal-state-map (kbd "n") 'evil-search-next-recenter)
 (define-key evil-normal-state-map (kbd "N") 'evil-search-previous-recenter)
+
+(defun evil-jump-backward-recenter ()
+  "evil search next and recenter"
+  (interactive)
+  (evil-jump-backward)
+  (recenter))
+(defun evil-jump-forward-recenter ()
+  "evil search next and recenter"
+  (interactive)
+  (evil-jump-forward)
+  (recenter))
+(define-key evil-motion-state-map (kbd "C-o") 'evil-jump-backward-recenter)
+(define-key evil-motion-state-map (kbd "C-i") 'evil-jump-forward-recenter)
 
 ;; evil visual
 (define-key evil-visual-state-map (kbd "C-a") 'evil-first-non-blank)
