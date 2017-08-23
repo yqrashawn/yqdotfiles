@@ -1,18 +1,6 @@
 (require 'ibuffer-vc)
 ;; simple layout, increase window height
 
-(setq bs-max-window-height 30
-      bs-attributes-list (quote (("" 2 2 left " ")
-                                 ("" 1 1 left bs--get-marked-string)
-                                 ("" 1 1 left " ")
-                                 ("Buffer" bs--get-name-length 10 left bs--get-name))))
-
-;; filter buffers to current perspective
-
-;; (make-ace-jump-buffer-function "normal"
-  ;; (with-current-buffer buffer
-    ;; (not (eq name 'shell-mode))))
-
 (setq ibuffer-show-empty-filter-groups nil)
 
 (add-hook 'ibuffer-mode-hook
