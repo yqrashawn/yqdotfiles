@@ -24,6 +24,7 @@ values."
      pdf-tools
      auto-completion
      better-defaults
+     navigation
      undohist
      (mu4e :variables mu4e-account-alist t)
      emacs-lisp
@@ -55,7 +56,6 @@ values."
      ;; (python :variables python-enable-yapf-format-on-save t)
      )
    dotspacemacs-additional-packages '(alect-themes
-                                      ace-jump-buffer
                                       auto-yasnippet
                                       butler
                                       company-flx
@@ -74,7 +74,6 @@ values."
                                       glsl-mode
                                       golden-ratio-scroll-screen
                                       ibuffer-vc
-                                      iflipb
                                       ivy-dired-history
                                       imenu-anywhere
                                       key-chord
@@ -438,7 +437,7 @@ you should place your code here."
   (load-file "~/.my_emacs/prodigy.el")
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (buffer-flip-mode)
-  (setq company-idle-delay 0.2)
+  (setq company-idle-delay 0.25)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
