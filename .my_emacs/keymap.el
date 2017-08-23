@@ -149,6 +149,8 @@
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key [(control ?h)] 'delete-backward-char)
 
+(global-set-key (kbd "M-l") 'iflipb-next-buffer)
+(global-set-key (kbd "M-h") 'iflipb-previous-buffer)
 ;; ivy-minibuffer-map
 (define-key ivy-minibuffer-map (kbd "C-n") 'ivy-next-history-element)
 (define-key ivy-minibuffer-map (kbd "C-p") 'ivy-previous-history-element)
@@ -164,7 +166,7 @@
 (define-key evil-normal-state-map "sh" 'smart-next-window-or-buffer)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
 (define-key evil-normal-state-map "sL" 'imenu-anywhere)
-(define-key evil-normal-state-map "sb" 'ivy-switch-buffer)
+(define-key evil-normal-state-map "sb" 'ace-jump-buffer)
 (define-key evil-normal-state-map "sj" 'counsel-recentf)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 (define-key evil-normal-state-map "sQ" 'aya-create)
