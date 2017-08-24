@@ -422,11 +422,11 @@ you should place your code here."
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (load-file "~/.my_emacs/buffer-flip.el")
-  (load-file "~/.my_emacs/mail.el")
   (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.emacs.d/private/local/hide-comnt.el")
   (load-file "~/.my_emacs/keychord.el")
   (load-file "~/.my_emacs/keymap.el")
+  (load-file "~/.my_emacs/mail.el")
   (load-file "~/.my_emacs/layout.el")
   (load-file "~/.my_emacs/org.el")
   (load-file "~/.my_emacs/javascript.el")
