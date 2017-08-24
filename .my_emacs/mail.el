@@ -85,9 +85,11 @@
       '(("gmail"
          ;; Under each account, set the account-specific variables you want.
          (mu4e-sent-messages-behavior delete)
-         (mu4e-sent-folder "/gmail/Sent")
-         (mu4e-drafts-folder "/gmail/Drafts")
          (user-mail-address "namy.19@gmail.com")
+         ;; (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
+         ;; (mu4e-sent-folder "/Gmail/[Gmail].Sent")
+         ;; (mu4e-trash-folder "/Gmail/[Gmail].Trash")
+         ;; (mu4e-refile-folder "/Gmail/[Gmail].Archive")
          (user-full-name "yqrashawn"))
         ("bimsop"
          (mu4e-sent-messages-behavior sent)
@@ -98,13 +100,11 @@
         ("zoho"
          (mu4e-sent-messages-behavior sent)
          (mu4e-sent-folder "/zoho/Sent")
-         (mu4e-drafts-folder "/zoho/Drafts")
          (user-mail-address "hi@yqrashawn.com")
          (user-full-name "yqrashawn"))
         ("qq"
          (mu4e-sent-messages-behavior sent)
          (mu4e-sent-folder "/qq/Sent Messages")
-         (mu4e-drafts-folder "/qq/Drafts")
          (user-mail-address "254651372@qq.com")
          (user-full-name "yqrashawn"))
         ))
