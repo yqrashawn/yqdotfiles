@@ -174,5 +174,5 @@
 ;; compose with the current context if no context matches;
 (setq mu4e-compose-context-policy nil)
 
-(require mu4e)
-(require mu4e-alert)
+;; (require mu4e)
+;; (require mu4e-alert)
