@@ -210,7 +210,7 @@ values."
    dotspacemacs-ex-substitute-global t
    dotspacemacs-default-layout-name "Global"
    dotspacemacs-display-default-layout t
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB)
    dotspacemacs-large-file-size 1
    ;; Location where to auto-save files. Possible values are `original' to
