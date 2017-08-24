@@ -123,6 +123,7 @@
 (with-eval-after-load 'mu4e-alert
   ;; Arrange to view messages in either the default browser or EWW
   (add-to-list 'mu4e-view-actions '("Eww view" . jcs-view-in-eww) t)
+  (add-to-list 'mu4e-view-actions '("jView in browser" . mu4e-action-view-in-browser) t)
   ;; Contexts: One for each mail personality.
   (setq mu4e-contexts
         `( ,(make-mu4e-context
