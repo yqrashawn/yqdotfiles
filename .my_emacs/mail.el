@@ -12,10 +12,12 @@
       mu4e-change-filenames-when-moving t
       mu4e-use-fancy-chars t
       mu4e-view-show-addresses t)
+
 (setq mu4e-compose-auto-include-date t
       mu4e-compose-keep-self-cc t)
 (setq message-send-mail-function 'message-send-mail-with-sendmail)
 (with-eval-after-load 'mu4e
+  (setq org-mu4e-convert-to-html t)
   (setq message-send-mail-function 'message-send-mail-with-sendmail))
 
 ;; Call EWW to display HTML messages
@@ -173,6 +175,3 @@
 
 ;; compose with the current context if no context matches;
 (setq mu4e-compose-context-policy nil)
-
-;; (require mu4e)
-;; (require mu4e-alert)
