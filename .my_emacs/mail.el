@@ -86,10 +86,10 @@
          ;; Under each account, set the account-specific variables you want.
          (mu4e-sent-messages-behavior delete)
          (user-mail-address "namy.19@gmail.com")
-         (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
-         (mu4e-sent-folder "/Gmail/[Gmail].Sent")
-         (mu4e-trash-folder "/Gmail/[Gmail].Trash")
-         (mu4e-refile-folder "/Gmail/[Gmail].Archive")
+         ;; (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
+         ;; (mu4e-sent-folder "/Gmail/[Gmail].Sent")
+         ;; (mu4e-trash-folder "/Gmail/[Gmail].Trash")
+         ;; (mu4e-refile-folder "/Gmail/[Gmail].Archive")
          (user-full-name "yqrashawn"))
         ("bimsop"
          (mu4e-sent-messages-behavior sent)
