@@ -2,6 +2,8 @@
 ;; simple layout, increase window height
 
 (setq ibuffer-show-empty-filter-groups nil)
+(setq ibuffer-expert t)
+
 
 (add-hook 'ibuffer-mode-hook
           '(lambda ()
