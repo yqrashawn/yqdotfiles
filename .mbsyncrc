@@ -14,7 +14,7 @@ Account gmail
 
 MaildirStore gmail-local
 Path ~/Maildir/gmail/
-Inbox ~/Maildir/gmail/inbox
+Inbox ~/Maildir/gmail/Inbox
 Trash Trash
 
 # Channels and Groups
@@ -23,7 +23,9 @@ Trash Trash
 Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
-Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+# Patterns "Inbox" "Saved" "Drafts" "All Mail" "Sent Mail" "Trash" "Important"
+Patterns *
+Patterns %
 Create Both
 Expunge Both
 SyncState *
@@ -58,7 +60,9 @@ Trash Trash
 Channel icloud-folders
 Master :icloud-remote:
 Slave :icloud-local:
-Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+Patterns *
+Patterns %
 Create Both
 Expunge Both
 SyncState *
@@ -91,7 +95,9 @@ Trash Trash
 Channel bimsop-folders
 Master :bimsop-remote:
 Slave :bimsop-local:
-Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+Patterns *
+Patterns %
+# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
 Create Both
 Expunge Both
 SyncState *
@@ -124,7 +130,9 @@ Trash Trash
 Channel qq-folders
 Master :qq-remote:
 Slave :qq-local:
-Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+Patterns *
+Patterns %
 Create Both
 Expunge Both
 SyncState *
@@ -157,7 +165,9 @@ Trash Trash
 Channel zoho-folders
 Master :zoho-remote:
 Slave :zoho-local:
-Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+Patterns *
+Patterns %
 Create Both
 Expunge Both
 SyncState *

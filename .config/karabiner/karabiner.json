@@ -3071,6 +3071,32 @@
                   }
                 ],
                 "from": {
+                  "key_code": "slash",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "period"
+                  },
+                  {
+                    "key_code": "slash"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "qi_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
                   "key_code": "g",
                   "modifiers": {
                     "optional": [
