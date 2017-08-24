@@ -3,7 +3,7 @@
       mu4e-refile-folder "/Archive"
       mu4e-attachment-dir "/Attachments"
       mu4e-get-mail-command "mbsync -a"
-      mu4e-update-interval 108000 ;; 30 min
+      mu4e-update-interval 300 ;; 30 min
       mu4e-compose-signature-auto-include t
       mu4e-view-show-images t
       mu4e-enable-mode-line t
@@ -85,9 +85,11 @@
       '(("gmail"
          ;; Under each account, set the account-specific variables you want.
          (mu4e-sent-messages-behavior delete)
-         (mu4e-sent-folder "/gmail/Sent")
-         (mu4e-drafts-folder "/gmail/Drafts")
          (user-mail-address "namy.19@gmail.com")
+         ;; (mu4e-drafts-folder "/Gmail/[Gmail].Drafts")
+         ;; (mu4e-sent-folder "/Gmail/[Gmail].Sent")
+         ;; (mu4e-trash-folder "/Gmail/[Gmail].Trash")
+         ;; (mu4e-refile-folder "/Gmail/[Gmail].Archive")
          (user-full-name "yqrashawn"))
         ("bimsop"
          (mu4e-sent-messages-behavior sent)
@@ -98,13 +100,11 @@
         ("zoho"
          (mu4e-sent-messages-behavior sent)
          (mu4e-sent-folder "/zoho/Sent")
-         (mu4e-drafts-folder "/zoho/Drafts")
          (user-mail-address "hi@yqrashawn.com")
          (user-full-name "yqrashawn"))
         ("qq"
          (mu4e-sent-messages-behavior sent)
          (mu4e-sent-folder "/qq/Sent Messages")
-         (mu4e-drafts-folder "/qq/Drafts")
          (user-mail-address "254651372@qq.com")
          (user-full-name "yqrashawn"))
         ))
@@ -120,7 +120,6 @@
 
 (with-eval-after-load 'mu4e-alert
   ;; Arrange to view messages in either the default browser or EWW
-  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
   (add-to-list 'mu4e-view-actions '("Eww view" . jcs-view-in-eww) t)
   ;; Contexts: One for each mail personality.
   (setq mu4e-contexts
@@ -174,3 +173,6 @@
 
 ;; compose with the current context if no context matches;
 (setq mu4e-compose-context-policy nil)
+
+(require mu4e)
+(require mu4e-alert)
