@@ -8,7 +8,7 @@ require 'uri'
 url = ARGV[0]
 if !url
   puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
-elsif url.respond_to?(:to_s)
+elsif !url.respond_to?(:to_s)
   puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
 else
   if url.end_with? '.gbim'
