@@ -3334,6 +3334,37 @@
                   }
                 ],
                 "from": {
+                  "key_code": "i",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "w"
+                  },
+                  {
+                    "key_code": "i"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "apl_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  },
+                  {
+                    "name": "apl_second_level_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  }
+                ],
+                "from": {
                   "key_code": "j",
                   "modifiers": {
                     "optional": [
