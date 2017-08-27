@@ -8,7 +8,7 @@ require 'uri'
 url = ARGV[0]
 if !url
   puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
-elsif url.respond_to?(:to_s)
+elsif !url.respond_to?(:to_s)
   puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
 else
   if url.end_with? '.gbim'
@@ -18,7 +18,7 @@ else
     infoUrl = decoded.sub('.gbim', '.sum.json')
     basePath = decoded.sub(name + '.gbim', '')
     # puts infoUrl
-    download_output = system("wget #{infoUrl} -P '#{ENV["HOME"]}/Downloads/models'")
+    download_output = system("wget #{URI.encode(infoUrl)} -P '#{ENV["HOME"]}/Downloads/models'")
     if download_output
       # File.open(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json', 'r') { |file| puts JSON.parse(file) }
       infoStr = File.read(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json')
