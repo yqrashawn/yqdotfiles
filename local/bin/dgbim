@@ -18,7 +18,7 @@ else
     infoUrl = decoded.sub('.gbim', '.sum.json')
     basePath = decoded.sub(name + '.gbim', '')
     # puts infoUrl
-    download_output = system("wget #{infoUrl} -P '#{ENV["HOME"]}/Downloads/models'")
+    download_output = system("wget #{URI.encode(infoUrl)} -P '#{ENV["HOME"]}/Downloads/models'")
     if download_output
       # File.open(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json', 'r') { |file| puts JSON.parse(file) }
       infoStr = File.read(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json')
