@@ -72,7 +72,6 @@ values."
                                       evil-textobj-column
                                       evil-visual-mark-mode
                                       glsl-mode
-                                      ggtags
                                       golden-ratio-scroll-screen
                                       ibuffer-vc
                                       ivy-dired-history
