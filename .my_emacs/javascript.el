@@ -12,6 +12,7 @@
 ;;   (setq web-mode-css-indent-offset 2)
 ;;   (setq web-mode-code-indent-offset 2))
 ;; (add-hook 'web-mode-hook  'my-web-mode-hook)
+
 ;; for better jsx syntax-highlighting in web-mode
 ;; - courtesy of Patrick @halbtuerke
 ;; (defadvice web-mode-highlight-part (around tweak-jsx activate)
@@ -19,6 +20,20 @@
 ;;       (let ((web-mode-enable-part-face nil))
 ;;         ad-do-it)
 ;;     ad-do-it))
+(setq standard-indent 2)
+(setq web-mode-enable-current-element-highlight t)
+(setq web-mode-enable-element-content-fontification t)
+(setq web-mode-enable-element-tag-fontification t)
+(setq web-mode-enable-html-entities-fontification t)
+(setq web-mode-enable-part-face t)
+(setq web-mode-enable-block-face t)
+(setq web-mode-enable-auto-expanding t)
+(setq web-mode-code-indent-offset 2)
+(setq web-mode-indent-style 2)
+(setq web-mode-css-indent-offset 2)
+(setq web-mode-markup-indent-offset 2)
+(setq web-mode-attr-indent-offset 2)
+(setq web-mode-attr-value-indent-offset 2)
 
 (defun nodejs-repl-real-quit ()
   (interactive)
@@ -56,6 +71,7 @@
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
 (setq flycheck-javascript-eslint-executable "eslint_d")
+(setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
 
 ;; (setq-default save-place t)
 (setq js2-mode-show-parse-errors t)

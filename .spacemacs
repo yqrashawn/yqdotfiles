@@ -452,7 +452,6 @@ you should place your code here."
   ;; (setq evil-want-fine-undo t)
   (setq flycheck-check-syntax-automatically (quote (save mode-enabled)))
   (setq flycheck-checker-error-threshold 1000)
-  (setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
   (setq flycheck-display-errors-delay 0)
   (setq flycheck-standard-error-navigation t)
   (setq golden-ratio-scroll-highlight-delay (quote (0.07 . 0.03)))
