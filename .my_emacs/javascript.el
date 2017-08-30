@@ -20,6 +20,10 @@
 ;;       (let ((web-mode-enable-part-face nil))
 ;;         ad-do-it)
 ;;     ad-do-it))
+
+(defun my-web-mode-hook ()
+  (smartparens-mode 0))
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 (setq standard-indent 2)
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-enable-element-content-fontification t)
@@ -34,6 +38,8 @@
 (setq web-mode-markup-indent-offset 2)
 (setq web-mode-attr-indent-offset 2)
 (setq web-mode-attr-value-indent-offset 2)
+(setq web-mode-script-padding 2)
+(setq web-mode-style-padding 2)
 
 (defun nodejs-repl-real-quit ()
   (interactive)
