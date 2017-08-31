@@ -179,7 +179,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn spacemacs-light)
+   dotspacemacs-themes '(spacemacs-light zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -713,8 +713,9 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
+ ;; '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
- '(term ((t (:inherit default)))))
+ '(term ((t (:inherit default))))
+ )
