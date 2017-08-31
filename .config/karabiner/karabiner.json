@@ -4173,6 +4173,29 @@
                   }
                 ],
                 "from": {
+                  "key_code": "semicolon",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"localport\" in workflow \"in.fech.localport\" with argument \"\" '"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "alf_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
                   "key_code": "q"
                 },
                 "to": [
