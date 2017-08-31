@@ -416,9 +416,8 @@ you should place your code here."
 
   (with-eval-after-load 'company
     (company-flx-mode +1))
-  ;; (evil-visual-mark-mode 1)
   (global-evil-mc-mode 1)
-  (which-function-mode 1)
+  ;; (which-function-mode 1)
   ;; (global-golden-ratio-mode)
   ;; (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
   ;; (require 'ycmd)
