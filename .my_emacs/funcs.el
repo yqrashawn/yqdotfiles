@@ -5,6 +5,11 @@
   (yank)
   (yank))
 
+(defun untabify-all ()
+  (interactive)
+  "Untabify the current buffer, unless `untabify-this-buffer' is nil."
+  (and untabify-this-buffer (untabify (point-min) (point-max))))
+
 (define-key global-map (kbd "s-i") 'open-terminal-here)
 (defun open-terminal-here ()
   (interactive)
