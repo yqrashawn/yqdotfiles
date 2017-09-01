@@ -371,11 +371,15 @@ you should place your code here."
   (sml/setup)
   (setq sml/theme 'respectful)
   (setq sml/show-trailing-N 'nil)
+  (setq mu4e-alert-mode-line t)
+  (setq mac-frame-tabbing t)
   (setq-default evil-escape-key-sequence "jl")
 
   ;; rg for swiper
   (setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+
+  (setq evil-mode-line-format '(before . mode-line-front-space))
 
   ;; fix buffer gc problem
   (defun my-minibuffer-setup-hook ()
@@ -441,10 +445,8 @@ you should place your code here."
   (load-file "~/.my_emacs/keychord.el")
   (load-file "~/.my_emacs/keymap.el")
   (load-file "~/.my_emacs/mail.el")
-  ;; (load-file "~/.my_emacs/layout.el")
   (load-file "~/.my_emacs/org.el")
   (load-file "~/.my_emacs/javascript.el")
-  ;; (load-file "~/.my_emacs/ibuffer.el")
   (load-file "~/.my_emacs/popwin.el")
   (load-file "~/.my_emacs/modeline.el")
   (load-file "~/.my_emacs/dired.el")
@@ -599,52 +601,8 @@ Entered on %U")
    (quote
     ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5e3fc08bcadce4c6785fc49be686a4a82a356db569f55d411258984e952f194a" "6fc0ae7cc2abd82d8add1140874ccf8773feaaae73a704981d52fdf357341038" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" default)))
  '(diary-entry-marker (quote font-lock-variable-name-face))
- '(emms-mode-line-icon-image-cache
-   (quote
-    (image :type xpm :ascent center :data "/* XPM */
-static char *note[] = {
-/* width height num_colors chars_per_pixel */
-\"    10   11        2            1\",
-/* colors */
-\". c #1fb3b3\",
-\"# c None s None\",
-/* pixels */
-\"###...####\",
-\"###.#...##\",
-\"###.###...\",
-\"###.#####.\",
-\"###.#####.\",
-\"#...#####.\",
-\"....#####.\",
-\"#..######.\",
-\"#######...\",
-\"######....\",
-\"#######..#\" };")))
  '(evil-want-Y-yank-to-eol t)
  '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")) t)
- '(gnus-mode-line-image-cache
-   (quote
-    (image :type xpm :ascent center :data "/* XPM */
-static char *gnus-pointer[] = {
-/* width height num_colors chars_per_pixel */
-\"    18    13        2            1\",
-/* colors */
-\". c #1fb3b3\",
-\"# c None s None\",
-/* pixels */
-\"##################\",
-\"######..##..######\",
-\"#####........#####\",
-\"#.##.##..##...####\",
-\"#...####.###...##.\",
-\"#..###.######.....\",
-\"#####.########...#\",
-\"###########.######\",
-\"####.###.#..######\",
-\"######..###.######\",
-\"###....####.######\",
-\"###..######.######\",
-\"###########.######\" };")) t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -725,6 +683,7 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
