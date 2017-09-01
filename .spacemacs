@@ -370,6 +370,7 @@ you should place your code here."
 
   (sml/setup)
   (setq sml/theme 'respectful)
+  (setq sml/show-trailing-N 'nil)
   (setq-default evil-escape-key-sequence "jl")
 
   ;; rg for swiper
@@ -724,8 +725,8 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :underline "turquoise1" :weight ultra-bold))))
- '(term ((t (:inherit default)))))
+ '(term ((t (:inherit default))))
+ '(web-mode-block-face ((t (:inherit default)))))
