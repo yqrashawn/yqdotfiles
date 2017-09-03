@@ -1,0 +1,594 @@
+#!/usr/bin/env bash
+# Version: master
+
+# This script uses the unofficial strict mode as explained in
+# http://redsymbol.net/articles/unofficial-bash-strict-mode
+#
+# Also checks have been done with www.shellcheck.net to have a level of
+# confidence that this script will be free of loopholes.. or is it? :)
+#
+# This file is tangled from https://github.com/kaushalmodi/eless/blob/master/eless.org
+#   Do NOT edit this manually.
+
+eless_version='master'
+eless_git_hash='b995b24'
+
+h="
+Script to run emacs in view-mode with some sane defaults in attempt to replace
+less, diff, man, (probably ls too).
+
+* Options to this script
+|--------+--------------------------|
+| Option | Description              |
+|--------+--------------------------|
+| -h     | Show this help  and quit |
+| --gui  | Run emacs in GUI mode    |
+| -V     | Print version and quit   |
+| -D     | Run with debug messages  |
+|--------+--------------------------|
+
+* Common bindings in 'view-mode'
+|--------------+------------------------------------------------------------------------------|
+| Binding      | Description                                                                  |
+|--------------+------------------------------------------------------------------------------|
+| SPC          | Scroll forward 'page size' lines. With prefix scroll forward prefix lines.   |
+| DEL or S-SPC | Scroll backward 'page size' lines. With prefix scroll backward prefix lines. |
+|              | (If your terminal does not support this, use xterm instead or using C-h.)    |
+| RET          | Scroll forward one line. With prefix scroll forward prefix line(s).          |
+| y            | Scroll backward one line. With prefix scroll backward prefix line(s).        |
+| s            | Do forward incremental search.                                               |
+| r            | Do reverse incremental search.                                               |
+| e            | Quit the 'view-mode' and use that emacs session as usual to modify           |
+|              | the opened file if needed.                                                   |
+|--------------+------------------------------------------------------------------------------|
+
+** Custom bindings
+|--------------+------------------------------------------------------------|
+| Binding      | Description                                                |
+|--------------+------------------------------------------------------------|
+| ! or K       | Delete lines matching regexp                               |
+| & or k       | Keep lines matching regexp                                 |
+| 0            | Delete this window                                         |
+| 1            | Keep only this window                                      |
+| A            | Auto-revert Tail Mode (like tail -f on current buffer)     |
+| D            | Dired                                                      |
+| N            | Next error (next line in *occur*)                          |
+| P            | Previous error (previous line in *occur*)                  |
+| a            | Auto-revert Mode                                           |
+| g or F5      | Revert buffer (probably after keep/delete lines)           |
+| n            | Next line                                                  |
+| o            | Occur                                                      |
+| p            | Previous line                                              |
+| q            | Quit emacs if at most one buffer is open, else kill buffer |
+| t            | Toggle line truncation                                     |
+| = or + or -  | Adjust font size (in GUI mode)                             |
+| C-down/up    | Inc/Dec frame height (in GUI mode)                         |
+| C-right/left | Inc/Dec frame width (in GUI mode)                          |
+|--------------+------------------------------------------------------------|
+
+** Do 'C-h b' and search for 'view-mode' to see more bindings in this mode.
+
+* Set the environment variable PAGER to 'eless' to use it for viewing man pages.
+  'man grep' will then show the grep man page in eless.
+
+* Usage Examples
+
+    eless foo.txt               # Open foo.txt in eless in terminal (-nw) mode by default.
+    eless foo.txt --gui         # Open foo.txt in eless in GUI mode.
+    echo 'foo' | eless          #
+    echo 'foo' | eless -        # Same as above. The hyphen after eless does not matter; is anyways discarded.
+    grep 'bar' foo.txt | eless  #
+    PAGER=eless man grep        # Launches man pages in eless (terminal mode), if the environment variable PAGER is set to eless.
+    PAGER=eless man grep --gui  # Launches man pages in eless (GUI mode), if the environment variable PAGER is set to eless.
+    diff foo bar | eless        # Colored diff!
+    diff -u foo bar | eless     # Colored diff for unified diff format
+    eless .                     # Open dired in the current directory (enhanced 'ls')
+    ls --color=always | eless   # Auto-detect ANSI color codes and convert those to colors
+    PAGER=eless git diff        # Show git diff with ANSI coded colors
+    eless -h | eless            # See eless help ;-)
+    info emacs | eless          # Read emacs Info manual in eless
+    eless foo.tar.xz            # Read the contents of archives; emacs does the unarchiving automatically
+"
+
+set -o pipefail
+set -e # Error out and exit the script when any line in this script returns an error
+set -u # Error out when unbound variables are found
+
+# IFS=$'\n\t' # Separate fields in a sequence only at newlines and tab characters
+IFS=$' ' # Separate each field in a sequence at space characters
+
+help=0
+debug=0
+no_window_arg="-nw"
+emacs_args=("${no_window_arg}") # Run emacs with -nw by default
+piped_data=''
+tempfile=''
+cmd=''
+
+input_from_pipe_flag=0
+output_to_pipe_flag=0
+
+function debug {
+    if [[ $debug -eq 1 ]]
+    then
+        function debug {
+            echo -e "DEBUG: $*" >&2
+        }
+        debug "$@"
+    else
+        function debug {
+            true
+        }
+    fi
+}
+
+function eless_print_version {
+    if [[ "${eless_version}" == "master" ]]
+    then
+        echo "Eless Version ${eless_git_hash} (commit hash of current master~1)"
+        echo "https://github.com/kaushalmodi/eless/tree/${eless_version}"
+    else
+        echo "Eless Version ${eless_version}"
+        echo "https://github.com/kaushalmodi/eless/tree/${eless_version}"
+    fi
+}
+
+for var in "$@"
+do
+    if [[ "${var}" == '-D' ]]
+    then
+        eless_print_version
+        debug=1
+    fi
+done
+
+# https://gist.github.com/davejamesmiller/1966557
+if [[ -t 0 ]] # Script is called normally - Terminal input (keyboard) - interactive
+then
+    # eless foo
+    # eless foo | cat -
+    debug "--> Input from terminal"
+    input_from_pipe_flag=0
+else # Script is getting input from pipe or file - non-interactive
+    # echo bar | eless foo
+    # echo bar | eless foo | cat -
+    piped_data="$(cat)"
+    debug "--> Input from pipe/file"
+    input_from_pipe_flag=1
+fi
+
+# http://stackoverflow.com/a/911213/1219634
+if [[ -t 1 ]] # Output is going to the terminal
+then
+    # eless foo
+    # echo bar | eless foo
+    debug "    Output to terminal -->"
+    output_to_pipe_flag=0
+else # Output is going to a pipe, file?
+    # eless foo | cat -
+    # echo bar | eless foo | cat -
+    debug "    Output to a pipe -->"
+    output_to_pipe_flag=1
+fi
+
+for var in "$@"
+do
+    debug "var : $var"
+
+    if [[ "${var}" == '-D' ]]
+    then
+        : # Put just a colon to represent null operation # https://unix.stackexchange.com/a/133976/57923
+          # Do not pass -D option to emacs.
+    elif [[ "${var}" == '-V' ]]
+    then
+        eless_print_version
+        exit 0
+    elif [[ "${var}" == '-' ]]
+    then
+        : # Discard the '-'; it does nothing. (for the cases where a user might do "echo foo | eless -")
+    elif [[ "${var}" == '-nw' ]]
+    then
+        : # Ignore the user-passed "-nw" option; we are adding it by default.
+    elif [[ "${var}" == '-h' ]]  # Do not hijack --help; use that to show emacs help
+    then
+        help=1
+    elif [[ "${var}" == '--gui' ]]
+    then
+        # Delete the ${no_window_arg} from ${emacs_args[@]} array if user passed "--gui" option
+        # http://stackoverflow.com/a/16861932/1219634
+        emacs_args=("${emacs_args[@]/${no_window_arg}}")
+    else
+        # Collect all other arguments passed to eless and forward them to emacs.
+        emacs_args=("${emacs_args[@]}" "${var}")
+    fi
+done
+
+if [[ ${help} -eq 1 ]]
+then
+    eless_print_version
+    echo "${h}"
+    exit 0
+fi
+
+debug "Raw Args                       : $*" # https://github.com/koalaman/shellcheck/wiki/SC2145
+debug "Emacs Args                     : ${emacs_args[*]}"
+debug "Pipe Contents (up to 10 lines) : $(echo "${piped_data}" | head -n 10)"
+
+function emacs_Q_view_mode {
+
+    # Here $@ is the list of arguments passed specifically to emacs_Q_view_mode,
+    # not to eless.
+    debug "Args passed to emacs_Q_view_mode : $*"
+
+    exec emacs -Q "$@" \
+               --eval '(progn
+                          ;; Keep the default-directory to be the same from where
+                          ;; this script was launched from; useful during C-x C-f
+                          (setq default-directory "'"$(pwd)"'/")
+
+                          ;; No clutter
+                          (menu-bar-mode -1)
+                          (if (fboundp (function tool-bar-mode)) (tool-bar-mode -1))
+
+                          ;; Show line and column numbers in the mode-line
+                          (line-number-mode 1)
+                          (column-number-mode 1)
+
+                          (setq-default indent-tabs-mode nil) ;Use spaces instead of tabs for indentation
+                          (setq x-select-enable-clipboard t)
+                          (setq x-select-enable-primary t)
+                          (setq save-interprogram-paste-before-kill t)
+                          (setq require-final-newline t)
+                          (setq visible-bell t)
+                          (setq load-prefer-newer t)
+                          (setq ediff-window-setup-function (function ediff-setup-windows-plain))
+
+                          (setq org-src-fontify-natively t)       ;Syntax-highlight source blocks in org
+
+                          (fset (quote yes-or-no-p) (quote y-or-n-p)) ;Use y or n instead of yes or no
+
+                          (setq ido-save-directory-list-file nil) ;Do not save ido history
+                          (ido-mode 1)
+                          (setq ido-enable-flex-matching t)       ;Enable fuzzy search
+                          (setq ido-everywhere t)
+                          (setq ido-create-new-buffer (quote always)) ;Create a new buffer if no buffer matches substringv
+                          (setq ido-use-filename-at-point (quote guess)) ;Find file at point using ido
+                          (add-to-list (quote ido-ignore-buffers) "*Messages*")
+
+                          (setq isearch-allow-scroll t) ;Allow scrolling using isearch
+                          ;; DEL during isearch should edit the search string, not jump back to the previous result.
+                          (define-key isearch-mode-map [remap isearch-delete-char] (function isearch-del-char))
+
+                          ;; Truncate long lines by default
+                          (setq truncate-partial-width-windows nil) ;Respect the value of truncate-lines
+                          (toggle-truncate-lines +1)
+
+                          (global-hl-line-mode 1)
+
+                          (defun eless/keep-lines ()
+                            (interactive)
+                            (let ((inhibit-read-only t)) ;Ignore read-only status of buffer
+                              (save-excursion
+                                (goto-char (point-min))
+                                (call-interactively (function keep-lines)))))
+
+                          (defun eless/delete-matching-lines ()
+                            (interactive)
+                            (let ((inhibit-read-only t)) ;Ignore read-only status of buffer
+                              (save-excursion
+                                (goto-char (point-min))
+                                (call-interactively (function delete-matching-lines)))))
+
+                          (defun eless/frame-width-half (double)
+                            (interactive "P")
+                            (let ((frame-resize-pixelwise t) ;Do not round frame sizes to character h/w
+                                  (factor (if double 2 0.5)))
+                              (set-frame-size nil (round (* factor (frame-text-width))) (frame-text-height) :pixelwise)))
+                          (defun eless/frame-width-double ()
+                            (interactive)
+                            (eless/frame-width-half :double))
+
+                          (defun eless/frame-height-half (double)
+                            (interactive "P")
+                            (let ((frame-resize-pixelwise t) ;Do not round frame sizes to character h/w
+                                  (factor (if double 2 0.5)))
+                              (set-frame-size nil  (frame-text-width) (round (* factor (frame-text-height))) :pixelwise)))
+                          (defun eless/frame-height-double ()
+                            (interactive)
+                            (eless/frame-height-half :double))
+
+                          (defun eless/revert-buffer-retain-view-mode ()
+                            (interactive)
+                            (let ((view-mode-state view-mode)) ;save the current state of view-mode
+                              (revert-buffer)
+                              (when view-mode-state
+                                (view-mode 1))))
+
+                          (defun eless/enable-diff-mode-maybe ()
+                            (let* ((max-line 10)                ;Search first MAX-LINE lines of the buffer
+                                   (bound (save-excursion
+                                            (goto-char (point-min))
+                                            (forward-line max-line)
+                                            (point))))
+                              (save-excursion
+                                (let ((diff-mode-enable))
+                                  (goto-char (point-min))
+                                  (when (and ;First header line of unified/context diff begins with "--- "/"*** "
+                                         (thing-at-point (quote line)) ;Prevent error in string-match-p if the buffer is empty
+                                         (string-match-p "^\\(---\\|\\*\\*\\*\\) " (thing-at-point (quote line)))
+                                         ;; Second header line of unified/context diff begins with "+++ "/"--- "
+                                         (progn
+                                           (forward-line 1)
+                                           (string-match-p "^\\(\\+\\+\\+\\|---\\) " (thing-at-point (quote line)))))
+                                    (setq diff-mode-enable t))
+                                  ;; Check if the diff format is neither context nor unified
+                                  (unless diff-mode-enable
+                                    (goto-char (point-min))
+                                    (when (re-search-forward "^\\(?:[0-9]+,\\)?[0-9]+\\(?1:[adc]\\)\\(?:[0-9]+,\\)?[0-9]+$" bound :noerror)
+                                      (forward-line 1)
+                                      (let ((diff-type (match-string-no-properties 1)))
+                                        (cond
+                                         ;; Line(s) added
+                                         ((string= diff-type "a")
+                                          (when (re-search-forward "^> " nil :noerror)
+                                            (setq diff-mode-enable t)))
+                                         ;; Line(s) deleted or changed
+                                         (t
+                                          (when (re-search-forward "^< " nil :noerror)
+                                            (setq diff-mode-enable t)))))))
+                                  (when diff-mode-enable
+                                    (message "Auto-enabling diff-mode")
+                                    (diff-mode)
+                                    (rename-buffer "*Diff*" :unique)
+                                    (view-mode 1))))))            ;Re-enable view-mode
+
+                          (setq whitespace-style
+                                (quote (face                      ;Enable all visualization via faces
+                                        trailing                  ;Show white space at end of lines
+                                        tabs                      ;Show tabs using faces
+                                        spaces space-mark         ;space-mark shows spaces as dots
+                                        space-before-tab space-after-tab ;mix of tabs and spaces
+                                        indentation))) ;Highlight spaces/tabs at BOL depending on indent-tabs-mode
+                          (add-hook (quote diff-mode-hook) (function whitespace-mode))
+
+                          (defun eless/enable-ansi-color-maybe ()
+                            (save-excursion
+                              (let* ((max-line 100) ;Search first MAX-LINE lines of the buffer
+                                     (bound (progn
+                                              (goto-char (point-min))
+                                              (forward-line max-line)
+                                              (point)))
+                                     (ESC "\u001b")
+                                     ;; Example ANSI codes: ^[[0;36m, or ^[[0m where ^[ is the ESC char
+                                     (ansi-regexp (concat ESC "\\[" "[0-9]+\\(;[0-9]+\\)*m")))
+                                (goto-char (point-min))
+                                (when (re-search-forward ansi-regexp bound :noerror)
+                                  (let ((inhibit-read-only t)) ;Ignore read-only status of buffer
+                                    (message "Auto-converting ANSI codes to colors")
+                                    (require (quote ansi-color))
+                                    (ansi-color-apply-on-region (point-min) (point-max)))))))
+
+                          (defun eless/kill-emacs-or-buffer (&optional kill-emacs)
+                            (interactive "P")
+                            (let ((num-non-special-buffers 0))
+                              (dolist (buf (buffer-list))
+                                (unless (string-match-p "\\`[ *]" (buffer-name buf)) ;Do not count buffers with names starting with space or *
+                                  (setq num-non-special-buffers (+ 1 num-non-special-buffers)))
+                                (with-current-buffer buf
+                                  ;; Mark all view-mode buffers as "not modified" to prevent save prompt on
+                                  ;; quitting.
+                                  (when view-mode
+                                    (set-buffer-modified-p nil)
+                                    (when (local-variable-p (quote kill-buffer-hook))
+                                      (setq kill-buffer-hook nil)))))
+                              (if (or kill-emacs
+                                      (<= num-non-special-buffers 1))
+                                  (save-buffers-kill-emacs)
+                                (kill-buffer (current-buffer))))) ;Else only kill the current buffer
+
+                          (defun eless/save-buffers-maybe-and-kill-emacs ()
+                            (interactive)
+                            (eless/kill-emacs-or-buffer :kill-emacs))
+
+                          (defun eless/dired-mode-customization ()
+                            ;; dired-find-file is bound to "f" and "RET" by default
+                            ;; So changing the "RET" binding to dired-view-file so that the file opens
+                            ;; in view-mode in the spirit of eless.
+                            (define-key dired-mode-map (kbd "RET") (function dired-view-file))
+                            (define-key dired-mode-map (kbd "E") (function wdired-change-to-wdired-mode))
+                            (define-key dired-mode-map (kbd "Q") (function quit-window))
+                            (define-key dired-mode-map (kbd "q") (function eless/kill-emacs-or-buffer)))
+                          (add-hook (quote dired-mode-hook) (function eless/dired-mode-customization))
+
+                          (defun eless/Man-mode-customization ()
+                            (define-key Man-mode-map (kbd "Q") (function quit-window))
+                            (define-key Man-mode-map (kbd "q") (function eless/kill-emacs-or-buffer)))
+                          (add-hook (quote Man-mode-hook) (function eless/Man-mode-customization))
+
+                          (defun eless/Info-mode-customization ()
+                            (define-key Info-mode-map (kbd "Q") (function quit-window))
+                            (define-key Info-mode-map (kbd "q") (function eless/kill-emacs-or-buffer)))
+                          (add-hook (quote Info-mode-hook) (function eless/Info-mode-customization))
+
+                          (defun eless/tar-mode-customization ()
+                            (define-key tar-mode-map (kbd "RET") (function tar-view))
+                            (define-key tar-mode-map (kbd "Q") (function quit-window))
+                            (define-key tar-mode-map (kbd "q") (function eless/kill-emacs-or-buffer)))
+                          (add-hook (quote tar-mode-hook) (function eless/tar-mode-customization))
+
+                          (cond
+                           ((derived-mode-p (quote dired-mode)) (eless/dired-mode-customization))
+                           ((derived-mode-p (quote Man-mode)) (eless/Man-mode-customization))
+                           ((derived-mode-p (quote Info-mode)) (eless/Info-mode-customization))
+                           ((derived-mode-p (quote tar-mode)) (eless/tar-mode-customization))
+                           (t     ;Enable view-mode if none of the above major-modes are active
+                            ;; Auto-enable diff-mode. For example, when doing "diff foo bar | eless"
+                            (eless/enable-diff-mode-maybe)
+                            ;; Auto-convert ANSI codes to colors. For example, when doing "ls --color=always | eless"
+                            (eless/enable-ansi-color-maybe)
+                            (view-mode 1)))
+
+                          (with-eval-after-load (quote view)
+                            (define-key view-mode-map (kbd "!") (function eless/delete-matching-lines))
+                            (define-key view-mode-map (kbd "&") (function eless/keep-lines))
+                            (define-key view-mode-map (kbd "0") (function delete-window))
+                            (define-key view-mode-map (kbd "1") (function delete-other-windows))
+                            (define-key view-mode-map (kbd "A") (function auto-revert-tail-mode))
+                            (define-key view-mode-map (kbd "D") (function dired))
+                            (define-key view-mode-map (kbd "N") (function next-error)) ;Next line in *occur*
+                            (define-key view-mode-map (kbd "P") (function previous-error)) ;Previous line in *occur*
+                            (define-key view-mode-map (kbd "K") (function eless/delete-matching-lines))
+                            (define-key view-mode-map (kbd "a") (function auto-revert-mode))
+                            (define-key view-mode-map (kbd "g") (function eless/revert-buffer-retain-view-mode))
+                            ;; (define-key view-mode-map (kbd "k") (function eless/keep-lines))
+                            (define-key view-mode-map (kbd "j") (function next-line))
+                            (define-key view-mode-map (kbd "o") (function occur))
+                            (define-key view-mode-map (kbd "k") (function previous-line))
+                            (define-key view-mode-map (kbd "q") (function eless/kill-emacs-or-buffer))
+                            (define-key view-mode-map (kbd "t") (function toggle-truncate-lines)))
+
+                          ;; Global custom bindings
+                          (global-set-key (kbd "M-/") (function hippie-expand))
+                          (global-set-key (kbd "C-x C-b") (function ibuffer))
+                          (global-set-key (kbd "C-x C-c") (function eless/save-buffers-maybe-and-kill-emacs))
+                          (global-set-key (kbd "C-x C-f") (function view-file))
+                          (global-set-key (kbd "C-c q") (function query-replace-regexp))
+                          (global-set-key (kbd "<f5>") (function eless/revert-buffer-retain-view-mode))
+
+                          (when (display-graphic-p)
+                            (define-key view-mode-map (kbd "+") (function text-scale-adjust))
+                            (define-key view-mode-map (kbd "-") (function text-scale-adjust))
+                            (define-key view-mode-map (kbd "=") (function text-scale-adjust))
+                            (global-set-key (kbd "C-<right>") (function eless/frame-width-double))
+                            (global-set-key (kbd "C-<left>") (function eless/frame-width-half))
+                            (global-set-key (kbd "C-<down>") (function eless/frame-height-double))
+                            (global-set-key (kbd "C-<up>") (function eless/frame-height-half)))
+
+                          (unless (load (locate-user-emacs-file "elesscfg") :noerror)
+                            (load-theme (quote tango-dark) :no-confirm)
+                            ;; The tango-dark theme is good except for the bright yellow hl-line face
+                            (custom-theme-set-faces
+                             (quote user)
+                             (quote (hl-line ((t (:background "color-238")))))))
+                       )' 2>/dev/null </dev/tty
+}
+
+# Below if condition is reached if you try to do this:
+#   eless foo.txt | grep bar .. Not allowed!
+if [[ ${output_to_pipe_flag} -eq 1 ]]
+then
+    echo "This script is not supposed to send output to a pipe"
+    exit 1
+else
+    # Below if condition is reached when you do this:
+    #   grep 'foo' bar.txt | eless, or
+    #   grep 'foo' bar.txt | eless -
+    # i.e. Input to eless is coming through a pipe (from grep, in above example)
+    if [[ ${input_from_pipe_flag} -eq 1 ]]
+    then
+        tempfile="$(mktemp emacs-stdin-"$USER".XXXXXXX --tmpdir)" # https://github.com/koalaman/shellcheck/wiki/SC2086
+        debug "Temp File : $tempfile"
+        echo "${piped_data}" > "${tempfile}" # https://github.com/koalaman/shellcheck/wiki/SC2086
+
+        # Parse the first line of the piped data to check if it's a man page
+        first_line_piped_data=$(head -n 1 "${tempfile}")
+        debug "first_line_piped_data = ${first_line_piped_data}"
+
+        # The first line of man pages is assumed to be
+        #   FOO(1)  optional something something FOO(1)
+        # It is not mandatory for the below grep to always pass, so OR it with
+        # "true" so that "set -e" does not kill the script at this point.
+        # For some odd reason, the "BASH_BUILTINS" man page is just "builtins", so
+        # deal with that corner case.. faced this when trying to do "man read".
+        man_page=$(echo "${first_line_piped_data}" \
+                       | grep -Po '^([A-Za-z-_]+\([0-9]+\))(?=\s+.*?\1$)' \
+                       | sed -r 's/bash_builtins/builtins/I' \
+                       || true)
+
+        # The first line of Python package MODULE help is assumed to be
+        #   Help on package MODULE:
+        python_module_help=$(echo "${first_line_piped_data}" \
+                                 | grep -Po '^Help on package \K(.*)(?=:$)' \
+                                 || true)
+
+        # The first line of info manuals is assumed to be
+        #   /path/to/some.info or /path/to/some.info.gz
+        # It is not mandatory for the below grep to always pass, so OR it with
+        # "true" so that "set -e" does not kill the script at this point.
+        info_man=$(echo "${first_line_piped_data}" \
+                       | grep -Po '^(.*/)*\K[^/]+(?=\.info(\-[0-9]+)*(\.gz)*$)' \
+                       || true)
+
+        if [[ ! -z ${man_page} ]]
+        then
+            # After setting PAGER variable to eless, try something like `man grep'.
+            # That will launch the man page in eless.
+            debug "Man Page = ${man_page}"
+
+            cmd="emacs_Q_view_mode \
+                         ${emacs_args[*]} \
+                         --eval '(progn
+                                   (man (downcase \"${man_page}\"))
+                                   ;; Below workaround is only for emacs 24.5.x and older releases
+                                   ;; where the man page takes some time to load.
+                                   ;; 1-second delay before killing the *scratch* window
+                                   ;; seems to be sufficient
+                                   (when (version<= emacs-version \"24.5.99\")
+                                      (sit-for 1))
+                                   (delete-window))'"
+        elif [[ ! -z ${python_module_help} ]]
+        then
+            debug "Python Module = ${python_module_help}"
+
+            cmd="emacs_Q_view_mode \
+                         ${emacs_args[*]} \
+                         --eval '(progn
+                                   (man \"${tempfile}\")
+                                   ;; Below workaround is only for emacs 24.5.x and older releases
+                                   ;; where the man page takes some time to load.
+                                   ;; 1-second delay before killing the *scratch* window
+                                   ;; seems to be sufficient
+                                   (when (version<= emacs-version \"24.5.99\")
+                                      (sit-for 1))
+                                   (delete-window)
+                                   (rename-buffer \"${python_module_help}\"))'"
+        elif [[ ! -z ${info_man} ]]
+        then
+            # Try something like `info emacs | eless'.
+            # That will launch the Info manual in eless.
+            debug "Info Manual = ${info_man}"
+
+            cmd="emacs_Q_view_mode \
+                         ${emacs_args[*]} \
+                         --eval '(progn
+                                   (info (downcase \"${info_man}\")))'"
+        else # No man page or info manual detected
+            debug "No man page or info manual detected"
+
+            cmd="emacs_Q_view_mode ${tempfile} \
+                         ${emacs_args[*]} \
+                         --eval '(progn
+                                   (set-visited-file-name nil)
+                                   (rename-buffer \"*Stdin*\" :unique))'"
+        fi
+        # Below else condition is reached when you do this:
+        #   eless foo.txt
+    else
+        cmd="emacs_Q_view_mode ${emacs_args[*]}"
+    fi
+fi
+
+debug "Eless Command : $cmd"
+
+eval "$cmd"
+
+if [[ ! -z "${tempfile}" ]] && [[ ${debug} -eq 0 ]]
+then
+    rm -f "${tempfile}"
+fi
+
+# References:
+#  http://superuser.com/a/843744/209371
+#  http://stackoverflow.com/a/15330784/1219634 - /dev/stdin (Kept just for
+#    reference, not using this in this script any more.)
+#  https://github.com/dj08/utils-generic/blob/master/eless
