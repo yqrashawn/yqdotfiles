@@ -3042,6 +3042,119 @@
                   }
                 ],
                 "from": {
+                  "key_code": "comma",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "qi_se_mode",
+                      "value": 1
+                    }
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "qi_se_mode",
+                      "value": 0
+                    }
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "comma"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "qi_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  },
+                  {
+                    "bundle_identifiers": [
+                      "^org\\.gnu\\.Emacs$",
+                      "^org\\.gnu\\.AquamacsEmacs$",
+                      "^org\\.gnu\\.Aquamacs$"
+                    ],
+                    "type": "frontmost_application_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "tab",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "tab",
+                    "modifiers": [
+                      "left_control"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "qi_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  },
+                  {
+                    "name": "qi_se_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  },
+                  {
+                    "bundle_identifiers": [
+                      "^org\\.gnu\\.Emacs$",
+                      "^org\\.gnu\\.AquamacsEmacs$",
+                      "^org\\.gnu\\.Aquamacs$"
+                    ],
+                    "type": "frontmost_application_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "tab",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "tab",
+                    "modifiers": [
+                      "left_control",
+                      "left_shift"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "qi_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
                   "key_code": "a",
                   "modifiers": {
                     "optional": [
