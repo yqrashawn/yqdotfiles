@@ -211,3 +211,36 @@
   (evil-define-key 'insert term-raw-map (kbd "C-d") 'term-send-eof)
   (evil-define-key 'insert term-raw-map (kbd "C-q") 'term-pager-toggle)
   (evil-define-key 'insert term-raw-map (kbd "C-e") 'term-send-end))
+
+(defun switch-to-nth-buffer (n)
+  "Switches to nth most recent buffer. Ignores a bunch of stuff."
+  (catch 'tag
+    (mapcar (lambda (b)
+              (unless
+                  (or
+                   (minibufferp b)
+                   (string-match "^ " (buffer-name b))
+                   (equal b (current-buffer)))
+                (if (= n 1)
+                    (progn
+                      (switch-to-buffer b)
+                      (throw 'tag nil))
+                  (setq n (- n 1)))))
+            (buffer-list))))
+
+(defun switch-to-most-recent-buffer ()
+  (interactive)
+  (switch-to-nth-buffer 1))
+(defun switch-to-second-most-recent-buffer ()
+  (interactive)
+  (switch-to-nth-buffer 2))
+(defun switch-to-third-most-recent-buffer ()
+  (interactive)
+  (switch-to-nth-buffer 3))
+
+;;fast switching between two buffers
+(define-key evil-normal-state-map (kbd "<tab>") 'switch-to-most-recent-buffer)
+
+;;fast switching between three buffers
+(define-key evil-normal-state-map (kbd "<C-tab>") 'switch-to-second-most-recent-buffer)
+(define-key evil-normal-state-map (kbd "<C-s-tab>") 'switch-to-third-most-recent-buffer)

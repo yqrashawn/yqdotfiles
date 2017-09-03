@@ -459,6 +459,8 @@ you should place your code here."
                '("^~/workspace/OFFICE/" ":WORK:"))
   (add-to-list 'sml/replacer-regexp-list
                '("^~/workspace/OFFICE/gltflmvviewer" ":LMV:"))
+  (add-to-list 'sml/replacer-regexp-list
+               '("^~/\\.emacs\\.d/" ":CONF:"))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq company-idle-delay 0.25)
   (setq diary-file "~/Dropbox/org/diary")

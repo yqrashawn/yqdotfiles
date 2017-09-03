@@ -1,20 +1,22 @@
 {
   "plugins": {
-    "es_modules": {},
-    "node": {},
     "complete_string": {},
     "doc_comment": {},
+    "es_modules": {},
+    "node": {},
     "node_resolve": {},
     "modules": {
-      "dontLond": ""
+      "dontLond": "//"
     },
     "webpack": {
       "configPath": "./webpack.config.js"
     }
   },
   "libs": [
+    "browser",
     "ecma5",
     "ecma6"
   ],
+  "loadEagerly": ["*.js", "*/*.js", "*/*/*.js", "*/*/*/*.js", "./**/*.js"],
   "ecmaVersion": 6
 }
