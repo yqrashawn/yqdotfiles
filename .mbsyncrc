@@ -24,7 +24,7 @@ Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
 # Patterns "Inbox" "Saved" "Drafts" "All Mail" "Sent Mail" "Trash" "Important"
-Patterns *
+Patterns * "!Trash" "!Spam" "!&XeVPXJCuTvY-" "!&ZTZjbg-" "!&ZcWITHb4UXM-"
 Patterns %
 Create Both
 Expunge Both
