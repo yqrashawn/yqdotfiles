@@ -17,6 +17,5 @@
     "ecma5",
     "ecma6"
   ],
-  "loadEagerly": ["*.js", "*/*.js", "*/*/*.js", "*/*/*/*.js", "./**/*.js"],
   "ecmaVersion": 6
 }
