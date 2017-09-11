@@ -1,6 +1,7 @@
 ;; (eval-after-load 'js2-mode
 ;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
+(setq vue-html-color-interpolations t)
 
 ;; (add-to-list 'spacemacs-jump-handlers-js2-mode '(dumb-jump-go :async t))
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
