@@ -3674,46 +3674,6 @@
                     "name": "apl_second_level_mode",
                     "type": "variable_if",
                     "value": 0
-                  },
-                  {
-                    "bundle_identifiers": [
-                      "^org\\.gnu\\.Emacs$",
-                      "^org\\.gnu\\.AquamacsEmacs$",
-                      "^org\\.gnu\\.Aquamacs$"
-                    ],
-                    "type": "frontmost_application_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "k",
-                  "modifiers": {
-                    "optional": [
-                      "caps_lock"
-                    ]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "9",
-                    "modifiers": [
-                      "left_command",
-                      "left_control"
-                    ]
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "apl_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  },
-                  {
-                    "name": "apl_second_level_mode",
-                    "type": "variable_if",
-                    "value": 0
                   }
                 ],
                 "from": {
