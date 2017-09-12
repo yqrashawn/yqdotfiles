@@ -7,6 +7,7 @@
 (global-set-key (kbd "s-k") 'spacemacs/kill-this-buffer)
 (global-set-key (kbd "s-j") 'ivy-switch-buffer)
 (global-set-key (kbd "s-b") 'bookmark-jump)
+(global-set-key (kbd "s-m") 'magit-dispatch-popup)
 (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
 (global-set-key (kbd "C-;") 'spacemacs/default-pop-shell)
 (spacemacs/set-leader-keys "fd" 'diredp-dired-recent-dirs)

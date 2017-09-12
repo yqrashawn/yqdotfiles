@@ -39,6 +39,9 @@ values."
      auto-completion
      better-defaults
      navigation
+     c-c++
+     cscope
+     semantic
      undohist
      (mu4e :variables mu4e-account-alist t)
      emacs-lisp
@@ -94,6 +97,7 @@ values."
                                       phi-search
                                       quickrun
                                       saveplace
+                                      quickrun
                                       vlf
                                       nodejs-repl
                                       (vue-mode :location (recipe
