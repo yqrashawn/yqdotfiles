@@ -24,6 +24,7 @@ values."
      spacemacs-org
      spacemacs-ui
      spacemacs-ui-visual
+     spacemacs-layouts
      spacemacs-misc
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
