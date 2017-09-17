@@ -27,3 +27,30 @@
   (if (string= "" current-file-reference)
       (message "No current file/line/column set!")
     (insert current-file-reference)))
+(setq org-opml-src (concat user-home-directory ".my_emacs/org-opml/"))
+
+(setq org-capture-templates
+      (quote
+       (("l" "Capture from the Internet with link" entry
+         (file+olp "~/Dropbox/org/notes.org" "capture" "read later")
+         "*** TODO %? %^L %^G\n%U")
+        ("s" "Some day" entry
+         (file+olp "~/Dropbox/org/notes.org" "capture" "some day")
+         "*** TODO %? %^L %^G\n%U")
+        ("n" "notes" entry
+         (file+olp "~/Dropbox/org/notes.org" "capture" "note")
+         "*** %?\n%U")
+        ("f" "file TODOs" entry
+         (file "~/Dropbox/org/gtd.org")
+         "* TODO %? %^G\n %a\n%U")
+        ("t" "TODOs" entry
+         (file "~/Dropbox/org/gtd.org")
+         "* TODO %? %^G\n%U"))))
+;; (use-package ox-opml
+;;   :ensure t
+;;   :mode "\\.org\\'"
+;;   :load-path org-opml-src)
+
+;; (use-package org-opml
+;;   :ensure t
+;;   :load-path org-opml-src)
