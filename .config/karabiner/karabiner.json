@@ -3941,7 +3941,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                            "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4002,7 +4002,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                          "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4064,7 +4064,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                            "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4166,7 +4166,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                          "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4229,7 +4229,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                          "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4292,7 +4292,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                          "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4355,7 +4355,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                          "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
@@ -4418,7 +4418,7 @@
                                             "^com\\.2X\\.Client\\.Mac$",
                                             "^com\\.apple\\.Terminal$",
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^net\\.kovidgoyal\\.kitty$"
+                                          "^net\\.kovidgoyal\\.kitty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$",
                                             "^org\\.vim\\.",
