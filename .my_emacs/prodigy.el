@@ -77,3 +77,11 @@
   :args '("-dbpath" "./dbpath")
   :tags '(mongod back)
   )
+
+(prodigy-define-service
+  :name "lmv to honywell"
+  :command "reflex"
+  :cwd "~/workspace/OFFICE/gltflmvviewer/build/"
+  :args '("-r" "'\\.*min'" "-s" "cp" "viewer.*.**" "../../honeywell-iot/client/dist")
+  :tags '(reflex)
+  )
