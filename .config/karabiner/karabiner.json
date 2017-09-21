@@ -3784,7 +3784,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"52C9953F-E34D-474C-A497-14CFE32F8F49\"'"
+                                        "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"
                                     }
                                 ],
                                 "type": "basic"
