@@ -12,79 +12,79 @@
         },
         "rules": [
           {
-            "description": "MINILA Swap grave_accent_and_tilde and backslash",
+            "description": "slash mode",
             "manipulators": [
               {
-                "description": "slash mode",
-                "manipulators": [
+                "from": {
+                  "key_code": "slash",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
                   {
-                    "from": {
-                      "key_code": "slash",
-                      "modifiers": {
-                        "optional": [
-                          "caps_lock"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "set_variable": {
-                          "name": "slash_mode",
-                          "value": 1
-                        }
-                      }
-                    ],
-                    "to_after_key_up": [
-                      {
-                        "set_variable": {
-                          "name": "slash_mode",
-                          "value": 0
-                        }
-                      }
-                    ],
-                    "to_if_alone": [
-                      {
-                        "key_code": "slash"
-                      }
-                    ],
-                    "type": "basic"
+                    "set_variable": {
+                      "name": "slash_mode",
+                      "value": 1
+                    }
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "slash_mode",
+                      "value": 0
+                    }
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "slash"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "slash_mode",
+                    "type": "variable_if",
+                    "value": 1
                   },
                   {
-                    "conditions": [
-                      {
-                        "name": "slash_mode",
-                        "type": "variable_if",
-                        "value": 1
-                      },
-                      {
-                        "name": "slash_s_mode",
-                        "type": "variable_if",
-                        "value": 0
-                      }
-                    ],
-                    "from": {
-                      "key_code": "tab",
-                      "modifiers": {
-                        "optional": [
-                          "caps_lock"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "tab",
-                        "modifiers": [
-                          "left_command"
-                        ]
-                      },
-                      {
-                        "key_code": "return_or_enter"
-                      }
-                    ],
-                    "type": "basic"
+                    "name": "slash_s_mode",
+                    "type": "variable_if",
+                    "value": 0
                   }
-                ]
-              },
+                ],
+                "from": {
+                  "key_code": "tab",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "tab",
+                    "modifiers": [
+                      "left_command"
+                    ]
+                  },
+                  {
+                    "key_code": "return_or_enter"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "MINILA Swap grave_accent_and_tilde and backslash",
+            "manipulators": [
               {
                 "conditions": [
                   {
