@@ -2,7 +2,7 @@
 (defun hide-emacs ()
   (interactive)
   (call-process "osascript" nil nil nil "-e" "tell application \"Finder\"" "-e" "set visible of process \"Emacs\" to false" "-e" "end tell"))
-(define-key ivy-mode-map (kbd "C-s-9") 'minibuffer-keyboard-quit)
+;; (define-key ivy-mode-map (kbd "C-s-9") 'minibuffer-keyboard-quit)
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-l") 'spacemacs/workspaces-transient-state/body)
 (global-set-key (kbd "s-k") 'spacemacs/kill-this-buffer)
@@ -66,8 +66,8 @@
 ;; evil global
 (evil-global-set-key 'normal (kbd "C-w z") 'spacemacs/toggle-maximize-buffer)
 
-(define-key evil-normal-state-map (kbd "C-s-9") 'ivy-switch-buffer)
-(define-key evil-insert-state-map (kbd "C-s-9") 'ivy-switch-buffer)
+;; (define-key evil-normal-state-map (kbd "C-s-9") 'ivy-switch-buffer)
+;; (define-key evil-insert-state-map (kbd "C-s-9") 'ivy-switch-buffer)
 ;; evil normal
 (define-key evil-normal-state-map (kbd "C-'") 'evil-avy-goto-word-1)
 (define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
