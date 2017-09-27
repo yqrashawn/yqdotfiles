@@ -3873,7 +3873,13 @@
                 },
                 "to": [
                   {
-                    "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"FAB8BA6F-AD8A-40E6-9826-7FE892C2A809\"'"
+                    "key_code": "close_bracket",
+                    "modifiers": [
+                      "left_control",
+                      "left_command",
+                      "left_shift",
+                      "left_option"
+                    ]
                   }
                 ],
                 "type": "basic"
@@ -8066,42 +8072,6 @@
                 "to": [
                   {
                     "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"localport\" in workflow \"in.fech.localport\" with argument \"\" '"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "alf_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  }
-                ],
-                "from": {
-                  "key_code": "q"
-                },
-                "to": [
-                  {
-                    "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"52C9953F-E34D-474C-A497-14CFE32F8F49\"'"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "alf_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  }
-                ],
-                "from": {
-                  "key_code": "close_bracket"
-                },
-                "to": [
-                  {
-                    "shell_command": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"FAB8BA6F-AD8A-40E6-9826-7FE892C2A809\"'"
                   }
                 ],
                 "type": "basic"
