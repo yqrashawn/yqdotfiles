@@ -1,21 +1,25 @@
 {
   "plugins": {
-    "complete_string": {},
-    "doc_comment": {},
+    "complete_string": {
+      "maxLength": 15
+    },
     "es_modules": {},
+    "jsx": {},
+    "commonjs": {},
     "node": {},
     "node_resolve": {},
     "modules": {
-      "dontLond": "//"
-    },
-    "webpack": {
-      "configPath": "./webpack.config.js"
+      "dontLond": "/unmin|min|build/"
     }
   },
   "libs": [
-    "browser",
     "ecma5",
-    "ecma6"
+    "ecma6",
+    "browser",
+    "jquery",
+    "ecmascript",
+    "react",
+    "underscore"
   ],
   "ecmaVersion": 6
 }

@@ -299,6 +299,10 @@
                         "vendor_id": 2131
                       },
                       {
+                        "product_id": 514,
+                        "vendor_id": 1278
+                      },
+                      {
                         "product_id": 34050,
                         "vendor_id": 2652
                       }
@@ -379,6 +383,10 @@
                         "vendor_id": 2131
                       },
                       {
+                        "product_id": 514,
+                        "vendor_id": 1278
+                      },
+                      {
                         "product_id": 631,
                         "vendor_id": 1452
                       }
@@ -419,6 +427,10 @@
                       {
                         "product_id": 256,
                         "vendor_id": 2131
+                      },
+                      {
+                        "product_id": 514,
+                        "vendor_id": 1278
                       },
                       {
                         "product_id": 631,
@@ -463,6 +475,10 @@
                         "vendor_id": 2131
                       },
                       {
+                        "product_id": 514,
+                        "vendor_id": 1278
+                      },
+                      {
                         "product_id": 631,
                         "vendor_id": 1452
                       }
@@ -500,6 +516,10 @@
                       {
                         "product_id": 256,
                         "vendor_id": 2131
+                      },
+                      {
+                        "product_id": 514,
+                        "vendor_id": 1278
                       },
                       {
                         "product_id": 631,
@@ -4613,6 +4633,10 @@
                         "vendor_id": 2131
                       },
                       {
+                        "product_id": 514,
+                        "vendor_id": 1278
+                      },
+                      {
                         "product_id": 631,
                         "vendor_id": 1452
                       }
@@ -4638,48 +4662,6 @@
                     "modifiers": [
                       "left_command"
                     ]
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "identifiers": [
-                      {
-                        "product_id": 256,
-                        "vendor_id": 2131
-                      },
-                      {
-                        "product_id": 631,
-                        "vendor_id": 1452
-                      }
-                    ],
-                    "type": "device_if"
-                  }
-                ],
-                "description": "Change left_command to f19 if alone if not minila",
-                "from": {
-                  "key_code": "left_command",
-                  "modifiers": {
-                    "optional": "any"
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "left_command"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "f19",
-                    "modifiers": {
-                      "optional": "any"
-                    }
                   }
                 ],
                 "type": "basic"
