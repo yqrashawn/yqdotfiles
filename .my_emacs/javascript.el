@@ -22,9 +22,13 @@
 ;;         ad-do-it)
 ;;     ad-do-it))
 
-(defun my-web-mode-hook ()
-  (smartparens-mode 0))
-(add-hook 'web-mode-hook  'my-web-mode-hook)
+;; (defun my-web-mode-hook ()
+  ;; (smartparens-mode 0))
+;; (add-hook 'web-mode-hook  'my-web-mode-hook)
+(with-eval-after-load 'web-mode
+  (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+  (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+  (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
 (setq standard-indent 2)
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-enable-element-content-fontification t)
@@ -129,7 +133,6 @@
 ;; Enable JavaScript completion between <script>...</script> etc.
 (defadvice company-tern (before web-mode-set-up-ac-sources activate)
   "Set `tern-mode' based on current language before running company-tern."
-  (message "advice")
   (if (equal major-mode 'web-mode)
       (let ((web-mode-cur-language
              (web-mode-language-at-pos)))
