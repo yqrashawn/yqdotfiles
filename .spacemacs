@@ -42,6 +42,8 @@ values."
      navigation
      c-c++
      cscope
+     (typescript :variables
+                 typescript-fmt-on-save t)
      semantic
      undohist
      (mu4e :variables mu4e-account-alist t)
@@ -64,6 +66,7 @@ values."
      syntax-checking
      version-control
      html
+     react
      ;; docker
      ;; vimscript
      ;; (typescript :variables
@@ -97,7 +100,6 @@ values."
                                       key-chord
                                       noccur
                                       phi-search
-                                      quickrun
                                       saveplace
                                       quickrun
                                       vlf

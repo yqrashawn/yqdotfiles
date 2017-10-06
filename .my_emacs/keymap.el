@@ -226,6 +226,7 @@
                   (or
                    (minibufferp b)
                    (string-match "^ " (buffer-name b))
+                   (string-match "\*" (buffer-name b))
                    (equal b (current-buffer)))
                 (if (= n 1)
                     (progn
@@ -250,3 +251,8 @@
 ;;fast switching between three buffers
 (define-key evil-normal-state-map (kbd "<C-tab>") 'switch-to-second-most-recent-buffer)
 (define-key evil-normal-state-map (kbd "<C-s-tab>") 'switch-to-third-most-recent-buffer)
+
+(global-set-key (kbd "C-c r") 'quickrun)
+(global-set-key (kbd "C-c R") 'quickrun-region)
+(global-set-key (kbd "C-c s") 'quickrun-shell)
+;; (global-set-key (kbd "C-c a") 'quickrun-with-arg)
