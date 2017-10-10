@@ -15,7 +15,7 @@ fi
 [[ $- == *i* ]] && source "${HOME}.fzf/shell/completion.zsh" 2> /dev/null
 
 # Key bindings
-bindkey '^E' jump
+# bindkey '^E' jump
 # ------------
 
 # source "~/.fzf/shell/fzf-git.zsh"
