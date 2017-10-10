@@ -87,9 +87,9 @@
 ;; (setq-default save-place t)
 (setq js2-mode-show-parse-errors t)
 (setq js2-mode-show-strict-warnings nil)
-(spacemacs/add-flycheck-hook 'web-mode)
-(spacemacs/add-flycheck-hook 'vue-mode)
-(spacemacs/add-flycheck-hook 'js2-mode)
+;; (spacemacs/add-flycheck-hook 'web-mode)
+;; (spacemacs/add-flycheck-hook 'vue-mode)
+;; (spacemacs/add-flycheck-hook 'js2-mode)
 
 ;; customize flycheck temp file prefix
 (setq-default flycheck-temp-prefix ".flycheck")

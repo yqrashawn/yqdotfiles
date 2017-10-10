@@ -110,7 +110,7 @@
          (user-mail-address "254651372@qq.com")
          (user-full-name "yqrashawn"))
         ))
-(mu4e/mail-account-reset)
+;; (mu4e/mail-account-reset)
 (with-eval-after-load 'mu4e-alert
   ;; Enable Desktop notifications
   ;; (mu4e-alert-set-default-style 'notifications)) ; For linux

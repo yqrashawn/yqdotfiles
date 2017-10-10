@@ -159,7 +159,13 @@
 (define-key ivy-minibuffer-map (kbd "C-p") 'ivy-previous-history-element)
 
 ;; remap s
+
+(evil-define-key* '(normal motion) evil-snipe-local-mode-map
+                  "s" nil
+                  "S" nil)
+(setq evil-snipe-auto-disable-substitute nil)
 (define-key evil-normal-state-map "s" nil)
+(define-key evil-normal-state-map "S" nil)
 (define-key evil-normal-state-map "sg" 'magit-dispatch-popup)
 (define-key evil-normal-state-map "sf" 'spacemacs/search-auto)
 (define-key evil-normal-state-map "sF" 'spacemacs/search-auto-region-or-symbol)
