@@ -17,27 +17,38 @@ else
     name = arr[arr.length - 1].sub('.gbim', '')
     infoUrl = decoded.sub('.gbim', '.sum.json')
     basePath = decoded.sub(name + '.gbim', '')
+    # puts decoded
     # puts infoUrl
-    download_output = system("wget #{URI.encode(infoUrl)} -P '#{ENV["HOME"]}/Downloads/models'")
+    # download_output = system("wget #{URI.encode(infoUrl)} -P '#{ENV["HOME"]}/Downloads/models'")
+    download_output = system("wget #{URI.encode(decoded)} -P '#{ENV["HOME"]}/Downloads/models'")
     if download_output
-      # File.open(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json', 'r') { |file| puts JSON.parse(file) }
-      infoStr = File.read(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json')
-      info = JSON.parse(infoStr)
-      ref = info["References"]["LIntegrated"]
-      for fileName in ref do
-        # puts basePath + fileName
-        `wget #{URI.encode(basePath + fileName)} -P '#{ENV["HOME"]}/Downloads/models'`
+      `wget #{URI.encode(decoded.sub('.gbim', '.pi'))} -P '#{ENV["HOME"]}/Downloads/models'`
+      `wget #{URI.encode(decoded.sub('.gbim', '.pc'))} -P '#{ENV["HOME"]}/Downloads/models'`
+      count = 0
+      while download_output
+        count = count + 1
+        bin = ".#{count}.bin"
+        download_output = system("wget #{URI.encode(decoded.sub('.gbim', bin))} -P '#{ENV["HOME"]}/Downloads/models'")
       end
-      gbim = URI.encode(basePath + info["ToGbims"]["LIntegrated"])
-      # puts gbim.inspect
-      `wget #{gbim} -P '#{ENV["HOME"]}/Downloads/models'`
-      pi = URI.encode(basePath + info["Properties"]["LIntegrated"])
-      # puts pi
-      `wget #{pi} -P '#{ENV["HOME"]}/Downloads/models'`
-      png = URI.encode(basePath + info["Thumbnail"])
-      # puts png
-      `wget #{png} -P '#{ENV["HOME"]}/Downloads/models'`
-      puts '------------------Finished-------------------'
+      # File.open(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json', 'r') { |file| puts JSON.parse(file) }
+      # infoStr = File.read(ENV["HOME"] + '/Downloads/models/' + name + '.sum.json')
+      # info = JSON.parse(infoStr)
+      # puts info
+      # ref = info["References"]["LIntegrated"]
+      # for fileName in ref do
+      #   # puts basePath + fileName
+      #   `wget #{URI.encode(basePath + fileName)} -P '#{ENV["HOME"]}/Downloads/models'`
+      # end
+      # gbim = URI.encode(basePath + info["ToGbims"]["LIntegrated"])
+      # # puts gbim.inspect
+      # `wget #{gbim} -P '#{ENV["HOME"]}/Downloads/models'`
+      # pi = URI.encode(basePath + info["Properties"]["LIntegrated"])
+      # # puts pi
+      # `wget #{pi} -P '#{ENV["HOME"]}/Downloads/models'`
+      # png = URI.encode(basePath + info["Thumbnail"])
+      # # puts png
+      # `wget #{png} -P '#{ENV["HOME"]}/Downloads/models'`
+      # puts '------------------Finished-------------------'
     end
   end
 end

@@ -112,7 +112,14 @@ Number of marked items: %(length (dired-get-marked-files))
 
 (with-eval-after-load 'dired
   (require 'ivy-dired-history)
-  ;; (require 'dired-quick-sort)
-  ;; (dired-quick-sort-setup)
+  (require 'dired-quick-sort)
+  (dired-quick-sort-setup)
+  (define-key dired-mode-map "S" 'dired-do-symlink)
+  (define-key dired-mode-map "s" 'hydra-dired-quick-sort/body)
   (define-key dired-mode-map "," 'dired))
 
+(use-package dired-subtree
+  :config
+  (bind-keys :map dired-mode-map
+             ("i" . dired-subtree-insert)
+             (";;" . dired-subtree-remove)))
