@@ -32,18 +32,18 @@ zle     -N   fzf-file-widget
 bindkey '\ec' fzf-file-widget
 
 # ALT-C - cd into the selected directory
-fzf-cd-widget() {
-  local cmd="${FZF_ALT_C_COMMAND:-"command find -L . \\( -path '*/\\.*' -o -fstype 'dev' -o -fstype 'proc' \\) -prune \
-    -o -type d -print 2> /dev/null | sed 1d | cut -b3-"}"
-  setopt localoptions pipefail 2> /dev/null
-  cd "${$(eval "$cmd | $(__fzfcmd) +m $FZF_ALT_C_OPTS"):-.}"
-  local ret=$?
-  zle reset-prompt
-  typeset -f zle-line-init >/dev/null && zle zle-line-init
-  return $ret
-}
-zle     -N    fzf-cd-widget
-bindkey '^T' fzf-cd-widget
+# fzf-cd-widget() {
+#   local cmd="${FZF_ALT_C_COMMAND:-"command find -L . \\( -path '*/\\.*' -o -fstype 'dev' -o -fstype 'proc' \\) -prune \
+#     -o -type d -print 2> /dev/null | sed 1d | cut -b3-"}"
+#   setopt localoptions pipefail 2> /dev/null
+#   cd "${$(eval "$cmd | $(__fzfcmd) +m $FZF_ALT_C_OPTS"):-.}"
+#   local ret=$?
+#   zle reset-prompt
+#   typeset -f zle-line-init >/dev/null && zle zle-line-init
+#   return $ret
+# }
+# zle     -N    fzf-cd-widget
+# bindkey '^T' fzf-cd-widget
 
 # CTRL-R - Paste the selected command from history into the command line
 fzf-history-widget() {
@@ -62,7 +62,7 @@ fzf-history-widget() {
   return $ret
 }
 zle     -N   fzf-history-widget
-bindkey '^R' fzf-history-widget
+bindkey '^X^R' fzf-history-widget
 
 fi
 
