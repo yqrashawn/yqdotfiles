@@ -473,7 +473,6 @@ you should place your code here."
   (setq flycheck-standard-error-navigation t)
   (setq golden-ratio-scroll-highlight-delay (quote (0.07 . 0.03)))
   (setq golden-ratio-scroll-highlight-flag (quote (quote nil)))
-  (setq ibuffer-mode-hook (quote (ibuffer-vc-set-filter-groups-by-vc-root)))
   (evil-define-motion evil-goto-definition ()
     "Go to definition or first occurrence of symbol under point."
     :jump t
