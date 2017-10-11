@@ -404,6 +404,7 @@ you should place your code here."
   ;; (global-visual-line-mode)
   (setq mc/always-run-for-all t)
   (global-company-mode)
+  (setq eshell-aliases-file "/Users/rashawnzhang/.my_emacs/aliases")
   (defun minibuffer-inactive-mode-hook-setup ()
     ;; make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer
     ;; @see `he-dabbrev-beg', so we need re-define syntax for '/'
