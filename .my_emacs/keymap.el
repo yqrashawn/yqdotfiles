@@ -1,4 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
+(setq mac-command-modifier 'super)
 (defun hide-emacs ()
   (interactive)
   (call-process "osascript" nil nil nil "-e" "tell application \"Finder\"" "-e" "set visible of process \"Emacs\" to false" "-e" "end tell"))
