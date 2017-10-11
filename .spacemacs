@@ -30,22 +30,18 @@ values."
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy
-     semantic
-     cscope
-     c-c++
-     (c-c++ :variables
-            c-c++-default-mode-for-headers 'c++-mode
-            c-c++-enable-clang-support t)
+     ;; semantic
+     ;; cscope
+     ;; (c-c++ :variables
+     ;;        c-c++-default-mode-for-headers 'c++-mode
+     ;;        c-c++-enable-clang-support t)
      imenu-list
      pdf-tools
      auto-completion
      better-defaults
      navigation
-     c-c++
-     cscope
      (typescript :variables
                  typescript-fmt-on-save t)
-     semantic
      undohist
      (mu4e :variables mu4e-account-alist t)
      emacs-lisp
