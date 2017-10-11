@@ -406,7 +406,7 @@ you should place your code here."
                                                          (projectile-relevant-known-projects)))
                   magit-repo-dirs-depth 3)))
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
-  (global-visual-line-mode)
+  ;; (global-visual-line-mode)
   (global-company-mode)
   (defun minibuffer-inactive-mode-hook-setup ()
     ;; make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer
