@@ -375,15 +375,10 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (defun dotspacemacs/init-vue-mode ()
-    (use-package vue-mode))
-
   (sml/setup)
   (setq sml/theme 'respectful)
   (setq sml/show-trailing-N 'nil)
   (setq mac-frame-tabbing t)
-  (setq-default evil-escape-key-sequence "jl")
-
   ;; rg for swiper
   (setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
@@ -407,6 +402,7 @@ you should place your code here."
                   magit-repo-dirs-depth 3)))
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
   ;; (global-visual-line-mode)
+  (setq mc/always-run-for-all t)
   (global-company-mode)
   (defun minibuffer-inactive-mode-hook-setup ()
     ;; make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer
