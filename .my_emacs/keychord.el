@@ -1,7 +1,6 @@
 (setq key-chord-two-keys-delay 0.04) ; default 0.1
 (setq key-chord-one-key-delay 0.01) ; default 0.2
 
-(setq-default evil-escape-key-sequence "kj")
 (key-chord-define-global "z0" 'delete-other-windows)
 (key-chord-define-global ";q" 'spacemacs/default-pop-shell)
 ;; (key-chord-define-global ";g" 'evil-search-word-forward)
