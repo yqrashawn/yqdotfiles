@@ -159,10 +159,13 @@
 (define-key ivy-minibuffer-map (kbd "C-p") 'ivy-previous-history-element)
 
 ;; remap s
-
+;; use t as evil-snipe-s in normal mode
 (evil-define-key* '(normal motion) evil-snipe-local-mode-map
                   "s" nil
-                  "S" nil)
+                  "S" nil
+                  "t" #'evil-snipe-s
+                  "T" #'evil-snipe-S
+                  )
 (setq evil-snipe-auto-disable-substitute nil)
 (define-key evil-normal-state-map "s" nil)
 (define-key evil-normal-state-map "S" nil)
