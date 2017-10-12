@@ -184,8 +184,10 @@
 (define-key evil-normal-state-map "sb" 'ace-jump-code-buffers)
 (define-key evil-normal-state-map "sj" 'counsel-recentf)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
+
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
+(define-key evil-normal-state-map "s1q" 'aya-persist-snippet)
 
 ;; helm
 ;; (define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
@@ -268,3 +270,5 @@
 (global-set-key (kbd "C-c R") 'quickrun-region)
 (global-set-key (kbd "C-c s") 'quickrun-shell)
 ;; (global-set-key (kbd "C-c a") 'quickrun-with-arg)
+
+(evil-global-set-key 'insert (kbd "C-l") 'hippie-expand)
