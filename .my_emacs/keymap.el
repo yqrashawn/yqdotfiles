@@ -11,7 +11,7 @@
 (global-set-key (kbd "H-j") 'ivy-switch-buffer)
 (global-set-key (kbd "H-b") 'bookmark-jump)
 (global-set-key (kbd "H-m") 'magit-dispatch-popup)
-(global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
+;; (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
 (global-set-key (kbd "C-;") 'spacemacs/default-pop-shell)
 (spacemacs/set-leader-keys "fd" 'diredp-dired-recent-dirs)
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
@@ -55,7 +55,6 @@
 ;; (global-set-key (kbd "^@") 'evil-search-forward)
 
 (global-set-key (kbd "H-/") 'evilnc-comment-or-uncomment-lines)
-(global-set-key (kbd "H-k") 'spacemacs/kill-other-buffers)
 (global-set-key (kbd "S-H-<mouse-1>") 'mc/add-cursor-on-click)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
