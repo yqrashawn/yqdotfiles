@@ -93,6 +93,7 @@ values."
                                       evil-textobj-column
                                       glsl-mode
                                       golden-ratio-scroll-screen
+                                      hackernews
                                       ivy-dired-history
                                       imenu-anywhere
                                       key-chord
