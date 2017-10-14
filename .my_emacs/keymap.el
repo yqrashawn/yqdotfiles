@@ -51,6 +51,7 @@
 ;; global
 (global-set-key (kbd "C-SPC") 'counsel-grep-or-swiper)
 (global-set-key (kbd "^@") 'counsel-grep-or-swiper)
+(global-set-key (kbd "C-@") 'counsel-grep-or-swiper)
 ;; (global-set-key (kbd "C-SPC") 'evil-search-forward)
 ;; (global-set-key (kbd "^@") 'evil-search-forward)
 
