@@ -1,6 +1,7 @@
 ;; (require 'ibuffer-vc)
 ;; simple layout, increase window height
 
+;; (setq ibuffer-mode-hook (quote (ibuffer-vc-set-filter-groups-by-vc-root)))
 (setq ibuffer-show-empty-filter-groups nil)
 (setq ibuffer-expert t)
 

@@ -11,7 +11,7 @@
 (global-set-key (kbd "H-j") 'ivy-switch-buffer)
 (global-set-key (kbd "H-b") 'bookmark-jump)
 (global-set-key (kbd "H-m") 'magit-dispatch-popup)
-(global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
+;; (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
 (global-set-key (kbd "C-;") 'spacemacs/default-pop-shell)
 (spacemacs/set-leader-keys "fd" 'diredp-dired-recent-dirs)
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
@@ -55,7 +55,6 @@
 ;; (global-set-key (kbd "^@") 'evil-search-forward)
 
 (global-set-key (kbd "H-/") 'evilnc-comment-or-uncomment-lines)
-(global-set-key (kbd "H-k") 'spacemacs/kill-other-buffers)
 (global-set-key (kbd "S-H-<mouse-1>") 'mc/add-cursor-on-click)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -130,13 +129,15 @@
 (define-key evil-insert-state-map (kbd "C-j") 'evil-ret-and-indent)
 (define-key evil-insert-state-map (kbd "C-k") 'paredit-kill)
 (define-key evil-insert-state-map (kbd "C-d") 'delete-forward-char)
-;; (define-key evil-insert-state-map (kbd "M-n") 'mc/mark-next-like-this)
-;; (define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
+(define-key evil-insert-state-map (kbd "M-n") 'mc/mark-next-like-this)
+(define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
 (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
-(define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
-(define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
+(define-key evil-insert-state-map (kbd "C-n") 'next-line)
+(define-key evil-insert-state-map (kbd "C-p") 'previous-line)
+;; (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
+;; (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
 
 ;; textobj
 (define-key evil-inner-text-objects-map "f" 'evil-textobj-anyblock-inner-block)
@@ -183,8 +184,10 @@
 (define-key evil-normal-state-map "sb" 'ace-jump-code-buffers)
 (define-key evil-normal-state-map "sj" 'counsel-recentf)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
+
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
+(define-key evil-normal-state-map "s1q" 'aya-persist-snippet)
 
 ;; helm
 ;; (define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
@@ -267,3 +270,5 @@
 (global-set-key (kbd "C-c R") 'quickrun-region)
 (global-set-key (kbd "C-c s") 'quickrun-shell)
 ;; (global-set-key (kbd "C-c a") 'quickrun-with-arg)
+
+(evil-global-set-key 'insert (kbd "C-l") 'hippie-expand)
