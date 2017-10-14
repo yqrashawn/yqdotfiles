@@ -62,3 +62,5 @@ if modalmgr then
   if launch_modalmgr == nil then launch_modalmgr = true end
   if launch_modalmgr == true then modalmgr:enter() end
 end
+
+require("command-q-twice")
