@@ -1,0 +1,11 @@
+(defalias 'gws 'magit-status "matgit status")
+(defalias 'fundm 'fundamental-mode "fundamental mode")
+(defalias 'js2 'js2-mode "js2 mode")
+(defalias 'reactm 'react-mode "react mode")
+(defalias 'tsm 'typescript-mode "typescript mode")
+(defalias 'vue 'vue-mode "vue mode")
+(defalias 'recc 'recentf-cleanup "recent file cleanup")
+(defalias 'yasi 'yas-insert-snippet "insert snippets")
+(defalias 'yasl 'yas-reload-all "reload yas")
+
+(use-package hackernews :commands (hackernews))
