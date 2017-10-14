@@ -17,7 +17,8 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(yaml
+   '(
+     yaml
      spacemacs-evil
      spacemacs-editing
      spacemacs-editing-visual
@@ -384,6 +385,7 @@ you should place your code here."
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
 
 
+  (setq projectile-globally-ignored-directories "study")
   (when (executable-find "remacsclient")
     (setq with-editor-emacsclient-executable (executable-find "remacsclient")))
   ;; fix buffer gc problem
@@ -564,68 +566,22 @@ This function is called at the very end of Spacemacs initialization."
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(compilation-message-face (quote default))
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#657b83")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
     ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5e3fc08bcadce4c6785fc49be686a4a82a356db569f55d411258984e952f194a" "6fc0ae7cc2abd82d8add1140874ccf8773feaaae73a704981d52fdf357341038" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" default)))
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(evil-want-Y-yank-to-eol t)
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(hl-bg-colors
-   (quote
-    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
- '(hl-fg-colors
-   (quote
-    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
- '(imenu-list-minor-mode nil)
- '(magit-diff-use-overlays nil)
- '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
     (highlight-symbol ido-hacks hackernews yasnippet-snippets uuidgen counsel-projectile ivy-dired-history symon flx-ido vmd-mode ruby-refactor org-brain impatient-mode evil-terminal-cursor-changer evil-org browse-at-remote ivy-purpose window-purpose dired-subtree dired-filter edit-indirect org-opml ox-opml org-mind-map git-commit xcscope srefactor disaster company-c-headers cmake-mode clang-format quickrun vue-html-mode vue-mode rich-minority smart-mode-line ibuffer-projectile esxml org-mime ggtags ace-jump-buffer mu4e-maildirs-extension mu4e-alert ht org-category-capture sourcemap memoize glsl-mode indium pdf-tools company-quickhelp operate-on-number dired-details dired-sort dired-details+ d-mode company-dcd flycheck-dmd-dub rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby undohist visual-ascii-mode unidecode cheat-sh treemacs-evil treemacs gited git yaml-mode seoul256-theme ob-restclient ob-http company-restclient know-your-http-well dockerfile-mode docker tablist butler dired-k editorconfig csv-mode docker-tramp websocket prodigy xref-js2 seq clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode slime-company slime common-lisp-snippets dired-hacks-utils dired-narrow dired+ winum unfill fuzzy webpaste restclient evil-lion elmacro dired-quick-sort ssass-mode yapfify xterm-color ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights vlf vimrc-mode use-package toc-org tide typescript-mode tagedit spacemacs-theme spaceline powerline smex smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phi-search persp-mode pcre2el pbcopy paradox spinner ox-twbs ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file nodejs-repl noccur neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint less-css-mode launchctl key-chord json-mode json-snatcher json-reformat jscs js2-refactor multiple-cursors js2-mode js-doc ivy-hydra info+ indent-guide imenu-list imenu-anywhere ibuffer-vc hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core haml-mode google-translate golden-ratio-scroll-screen golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fzf flyspell-correct-ivy flyspell-correct flycheck-ycmd flycheck-pos-tip pos-tip flycheck fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-column names evil-textobj-anyblock evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eslint-fix eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump diminish diff-hl dactyl-mode cython-mode projectile ivy company-ycmd pkg-info request-deferred request deferred epl company-web web-completion-data company-tern dash-functional tern company-statistics company-flx flx company-anaconda company column-enforce-mode coffee-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed async anaconda-mode pythonic f dash s alect-themes aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup quelpa package-build zenburn-theme)))
  '(password-cache-expiry 3600)
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
- '(pos-tip-background-color "#eee8d5")
- '(pos-tip-foreground-color "#586e75")
  '(recentf-auto-cleanup 300)
  '(rm-whitelist (quote ("haha")))
- '(safe-local-variable-values
-   (quote
-    ((projectile-globally-ignored-directories . "study")
-     (projectile-globally-ignored-directories . study))))
  '(send-mail-function (quote mailclient-send-it))
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83")
  '(tramp-syntax (quote default) nil (tramp))
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
- '(vc-annotate-very-old-color "#DC8CC3")
  '(xterm-color-names
    ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
  '(xterm-color-names-bright
