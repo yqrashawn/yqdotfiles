@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name:js block
+# key: js
+# --
+#+BEGIN_SRC javascript
+$1
+#+END_SRC
