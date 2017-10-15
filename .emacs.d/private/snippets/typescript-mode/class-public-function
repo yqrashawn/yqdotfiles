@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: class-public-function
+# key: pub
+# --
+public ${1:func name} (${2:arg}: ${3:type})
