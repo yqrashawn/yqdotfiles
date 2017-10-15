@@ -344,6 +344,8 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (setq exec-path-from-shell-check-startup-files nil) ;; only from .zshenv
+  (setq exec-path-from-shell-arguments '("-l"))  ;; remove -i read form .zshenv
   (add-to-list 'package-archives
                '("melpa-china" . "http://elpa.emacs-china.org/melpa/"))
   ;; (add-to-list 'package-archives
