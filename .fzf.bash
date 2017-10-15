@@ -1,8 +1,8 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */Users/Rashawn/.fzf/bin* ]]; then
-  export PATH="$PATH:/Users/Rashawn/.fzf/bin"
-fi
+# if [[ ! "$PATH" == */Users/Rashawn/.fzf/bin* ]]; then
+#   export PATH="$PATH:/Users/Rashawn/.fzf/bin"
+# fi
 
 # Man path
 # --------
