@@ -190,6 +190,65 @@
 (define-key evil-normal-state-map "sq" 'aya-expand)
 (define-key evil-normal-state-map "s1q" 'aya-persist-snippet)
 
+;; smartparens
+(defun yq-kill-sexp-and-insert ()
+  "using sp kill sexp and change to evil insert state"
+  (interactive)
+  (sp-kill-sexp)
+  (evil-insert 1 nil nil))
+(define-key evil-visual-state-map (kbd "C-s c") 'sp-rewrap-sexp)
+(define-key evil-visual-state-map (kbd "C-s d") 'sp-splice-sexp)
+(define-key evil-insert-state-map (kbd "C-q") 'sp-kill-sexp)
+(define-key evil-normal-state-map (kbd "C-q") 'sp-kill-sexp)
+(define-key evil-normal-state-map "sd" 'sp-kill-sexp)
+(define-key evil-normal-state-map "si" 'yq-kill-sexp-and-insert)
+(define-key evil-normal-state-map (kbd "C-S-k") 'sp-kill-sexp)
+(define-key evil-normal-state-map (kbd "}") 'sp-next-sexp)
+(define-key evil-normal-state-map (kbd "{") 'sp-previous-sexp)
+(define-key evil-normal-state-map (kbd "gJ") 'evil-join)
+(define-key evil-normal-state-map (kbd "L") 'sp-forward-parallel-sexp)
+(define-key evil-normal-state-map (kbd "H") 'sp-backward-parallel-sexp)
+(define-key evil-normal-state-map (kbd "J") 'sp-down-sexp)
+(define-key evil-normal-state-map (kbd "K") 'sp-backward-up-sexp)
+
+(defun wh/smartparens-wrap-round (arg)
+  "Smartparens equivalent of `paredit-wrap-round'."
+  (interactive "P")
+  (sp-wrap-with-pair "("))
+
+(define-key evil-normal-state-map "ss(" #'wh/smartparens-wrap-round)
+(define-key evil-normal-state-map "ss)" #'wh/smartparens-wrap-round)
+
+(defun wh/smartparens-wrap-square-bracket (arg)
+  "[] equivalent of `wh/smartparens-wrap-round'."
+  (interactive "P")
+  (sp-wrap-with-pair "["))
+
+(define-key evil-normal-state-map "ss[" #'wh/smartparens-wrap-square-bracket)
+(define-key evil-normal-state-map "ss]" #'wh/smartparens-wrap-square-bracket)
+
+(defun wh/smartparens-wrap-curly-paren (arg)
+  "{} equivalent of `wh/smartparens-wrap-round'."
+  (interactive "P")
+  (sp-wrap-with-pair "{"))
+
+(define-key evil-normal-state-map "ss{" #'wh/smartparens-wrap-curly-paren)
+(define-key evil-normal-state-map "ss}" #'wh/smartparens-wrap-curly-paren)
+
+(defun wh/smartparens-wrap-singlequote (arg)
+  "As `wh/smartparens-wrap-round' but for wrapping with single quotes."
+  (interactive "P")
+  (sp-wrap-with-pair "'"))
+
+(define-key evil-normal-state-map "ss'" #'wh/smartparens-wrap-singlequote)
+
+(defun wh/smartparens-wrap-doublequote (arg)
+  "As `wh/smartparens-wrap-round' but for wrapping with single quotes."
+  (interactive "P")
+  (sp-wrap-with-pair "\""))
+
+(define-key evil-normal-state-map "ss\"" #'wh/smartparens-wrap-doublequote)
+
 ;; helm
 ;; (define-key helm-map (kbd "C-w") 'evil-delete-backward-word)
 ;; (define-key helm-map (kbd "C-n") 'next-history-element)
