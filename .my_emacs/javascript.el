@@ -23,7 +23,7 @@
 ;;     ad-do-it))
 
 ;; (defun my-web-mode-hook ()
-  ;; (smartparens-mode 0))
+;; (smartparens-mode 0))
 ;; (add-hook 'web-mode-hook  'my-web-mode-hook)
 (with-eval-after-load 'web-mode
   (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
@@ -81,54 +81,20 @@
     ))
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
+(add-hook 'js2-mode-hook 'eslintd-fix-mode)
+(setq eslintd-fix-executable (concat user-home-directory ".npm-packages/bin/eslint_d"))
 (setq flycheck-javascript-eslint-executable "eslint_d")
 (setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
 
 ;; (setq-default save-place t)
 (setq js2-mode-show-parse-errors t)
 (setq js2-mode-show-strict-warnings nil)
-;; (spacemacs/add-flycheck-hook 'web-mode)
-;; (spacemacs/add-flycheck-hook 'vue-mode)
-;; (spacemacs/add-flycheck-hook 'js2-mode)
 
 ;; customize flycheck temp file prefix
 (setq-default flycheck-temp-prefix ".flycheck")
-  ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
-(setq-default js-indent-level 2)
 
-(defun eslint-fix ()
-  (interactive)
-  (let ((current-point (point))
-        (line (count-screen-lines (window-start) (point)))
-        (command (concat
-                  "eslint_d"
-                  " --stdin"
-                  " --fix-to-stdout"
-                  " --stdin-filename " buffer-file-name))
-        (buffer (current-buffer))
-        (text (buffer-substring-no-properties (point-min) (point-max))))
-    (with-temp-buffer
-      (insert text)
-      (when (eq 0
-                (shell-command-on-region
-                 ;; Region
-                 (point-min)
-                 (point-max)
-                 ;; Command
-                 command
-                 ;; Output to current buffer
-                 t
-                 ;; Replace buffer
-                 t
-                 ;; Error buffer name
-                 "*eslint-fix error*"))
-        (let ((fixed-text (buffer-substring-no-properties (point-min) (point-max))))
-          (with-current-buffer buffer
-            (delete-region (point-min) (point-max))
-            (insert fixed-text)
-            ;; Restore point and scroll position
-            (goto-char current-point)
-            (recenter (- line 1))))))))
+;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
+(setq-default js-indent-level 2)
 
 ;; Enable JavaScript completion between <script>...</script> etc.
 (defadvice company-tern (before web-mode-set-up-ac-sources activate)

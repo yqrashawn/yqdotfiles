@@ -1,10 +1,45 @@
+
+;;; Code:
+;; http://www.wilfred.me.uk/.emacs.d/init.html#org1752acf
+(defun yq/start-scratch-html-file (file-name)
+  "Create a test HTML file in ~/Downloads/scratch/FILE-NAME to play around with."
+  (interactive "sName of scratch HTML file: ")
+  (yq/start-scratch-file (format "%s.html" file-name))
+  (erase-buffer)
+  (insert "<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+        <title>
+        </title>
+        <style type=\"text/css\">
+        </style>
+    </head>
+    <body>
+
+    </body>
+</html>")
+  (forward-line -2)
+  (move-end-of-line nil))
+
+(defun start--file (path)
+  "Create a file at PATH, creating any containing directories as necessary.
+Visit the file after creation."
+  (make-directory (file-name-directory path) t)
+  (find-file path))
+
+(defun yq/start-scratch-file (file-name)
+  "Create a file in ~/scratch for the given FILE-NAME."
+  (interactive "sName of scratch file: ")
+  (start--file (expand-file-name (format "~Downloads/scratch/%s" file-name))))
+
 (defun ivy-insert-org-entity ()
   "Insert an org-entity using ivy."
   (interactive)
   (ivy-read "Entity: " (loop for element in (append org-entities org-entities-user)
                              when (not (stringp element))
                              collect
-                             (cons 
+                             (cons
                               (format "%10s | %s | %s | %s"
                                       (car element) ;name
                                       (nth 1 element) ; latex
@@ -19,18 +54,18 @@
                       ("h" (lambda (element) (insert (nth 3 (cdr element)))) "html"))))
 
 (defun duplicate-line ()
-  "Duplicate current line"
+  "Duplicate current line."
   (interactive)
   (kill-whole-line)
   (yank)
   (yank))
 
 (defun untabify-all ()
-  (interactive)
   "Untabify the current buffer, unless `untabify-this-buffer' is nil."
-  (and untabify-this-buffer (untabify (point-min) (point-max))))
+  (interactive)
+  (untabify (point-min) (point-max)))
 
-(define-key global-map (kbd "s-i") 'open-terminal-here)
+(define-key global-map (kbd "H-i") 'open-terminal-here)
 (defun open-terminal-here ()
   (interactive)
   (shell-command "open -a iTerm ."))
@@ -52,41 +87,8 @@ Otherwise, return the selected window."
     (current-buffer)
   (selected-window)))
 
-(defun snwob--other-frame-or-window-or-buffer ()
-  "Switch to the other frame if there is more than one.
-Otherwise, call `snwob--other-window-or-buffer'."
-  (if (snwob-single-frame-p)
-    (snwob--other-window-or-buffer)
-  (other-frame 1)
-  (setq this-command #'other-frame)))
-
-(defun snwob--other-window-or-buffer ()
-  "Switch to another window if there is one.
-Otherwise, switch to the other buffer."
-  (cond ((one-window-p)
-   (switch-to-buffer (other-buffer (current-buffer) t (selected-frame))))
-  (t
-   (other-window 1))))
-
-(defun smart-next-window-or-buffer ()
-  "Switch to the other buffer if there is one window only.
-Otherwise, switch to another window.  After a full cycle of two
-buffers (or as many windows as there are in the selected frame)
-switch to another frame."
-  (interactive)
-  (cond ((eq last-command #'smart-next-window-or-buffer)
-   (if (eq snwob-starting-window-or-buffer (snwob--current-window-or-buffer))
-     (snwob--other-frame-or-window-or-buffer)
-     (snwob--other-window-or-buffer)))
-  (t
-   (setq snwob-starting-window-or-buffer
-       (snwob--current-window-or-buffer))
-   (snwob--other-window-or-buffer))))
-
-(global-set-key (kbd "s-h") #'smart-next-window-or-buffer)
-
-(defun yqrashawn-copy-file-name-on-clipboard ()
-  "Put the current file name on the clipboard"
+(defun yqrashawn-copy-file-name-to-clipboard ()
+  "Put the current file name into the clipboard."
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
                       default-directory
