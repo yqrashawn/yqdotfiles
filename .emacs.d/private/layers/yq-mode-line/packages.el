@@ -5,6 +5,7 @@
   )
 
 (defun yq-mode-line/init-zilong-mode-line ()
+
   ;; (defun yq/display-mode-indent-width ()
   ;;   (let ((mode-indent-level
   ;;          (catch 'break
@@ -110,8 +111,7 @@
                  '(:eval (when (> (window-width) 120)
                            `(vc-mode vc-mode)))
 
-                 " "
-
+                 ;; " "
                  ;; global-mode-string goes in mode-line-misc-info
                  '(:eval (when (> (window-width) 120)
                            mode-line-misc-info))
