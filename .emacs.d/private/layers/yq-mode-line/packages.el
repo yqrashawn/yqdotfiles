@@ -188,3 +188,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
       (setq-default mode-line-format '("%e" (:eval (spaceline-ml-zilong))))
       )))
+
+(setq projectile-mode-line
+      '(:eval (format " Projectile[%s(%s)]"
+                      (projectile-project-name))))
