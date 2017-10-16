@@ -3,6 +3,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
 ;; (setq package-check-signature nil)
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -45,7 +46,7 @@ values."
      navigation
      (typescript :variables
                  typescript-fmt-on-save t)
-     undohist
+     ;; undohist
      (mu4e :variables mu4e-account-alist t)
      emacs-lisp
      git
@@ -75,8 +76,6 @@ values."
      ;; (python :variables python-enable-yapf-format-on-save t)
      )
    dotspacemacs-additional-packages '(
-                                      ;; alect-themes
-                                      ;; auto-yasnippet
                                       ;; butler
                                       company-flx
                                       smart-mode-line
@@ -104,9 +103,6 @@ values."
                                       quickrun
                                       vlf
                                       nodejs-repl
-                                      ;; (vue-mode :location (recipe
-                                      ;;                      :fetcher github
-                                      ;;                      :repo "codefalling/vue-mode"))
                                       ;; visual-ascii-mode
                                       webpaste
                                       zenburn-theme
