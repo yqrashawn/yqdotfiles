@@ -399,9 +399,7 @@ you should place your code here."
   (defun my-minibuffer-exit-hook ()
     ;; (setq gc-cons-threshold 1000000)
     ;; DEBUG
-    (setq gc-cons-threshold (* 10 1024 1024))
-
-    )
+    (setq gc-cons-threshold (* 10 1024 1024)))
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
@@ -446,6 +444,7 @@ you should place your code here."
   (show-paren-mode 1)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (load-file "~/.my_emacs/el.el")
   (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.my_emacs/aliases.el")
   (load-file "~/.emacs.d/private/local/hide-comnt.el")
