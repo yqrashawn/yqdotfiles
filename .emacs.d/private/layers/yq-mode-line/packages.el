@@ -118,6 +118,7 @@
 
                  (mode-line-fill 'mode-line 20)
 
+
                  ;; '(:eval (yq/display-mode-indent-width))
 
                  ;; line and column
@@ -132,6 +133,8 @@
 
                  mode-line-end-spaces
                  ;; add the time, with the date and the emacs uptime in the tooltip
+
+                 ;; (propertize (format-time-string "%a, %b %d %Y, %H:%M") 'face 'font-lock-constant-face)
                  '(:eval (propertize (format-time-string "%H:%M")
                                      'help-echo
                                      (concat (format-time-string "%c; ")
