@@ -2,10 +2,7 @@
 ;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . 'nil)) ; or 'dark, to switch to white title text
 
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
 ;; (setq package-check-signature nil)
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
