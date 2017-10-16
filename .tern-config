@@ -1,10 +1,9 @@
 {
   "plugins": {
-    "complete_string": {
+    "complete_strings": {
       "maxLength": 15
     },
     "es_modules": {},
-    "jsx": {},
     "commonjs": {},
     "node": {},
     "node_resolve": {},
@@ -16,10 +15,7 @@
     "ecma5",
     "ecma6",
     "browser",
-    "jquery",
-    "ecmascript",
-    "react",
-    "underscore"
+    "ecmascript"
   ],
   "ecmaVersion": 6
 }

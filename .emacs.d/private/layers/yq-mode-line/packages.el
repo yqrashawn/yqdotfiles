@@ -111,7 +111,7 @@
                  '(:eval (when (> (window-width) 120)
                            `(vc-mode vc-mode)))
 
-                 ;; " "
+                 " "
                  ;; global-mode-string goes in mode-line-misc-info
                  '(:eval (when (> (window-width) 120)
                            mode-line-misc-info))
