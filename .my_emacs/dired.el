@@ -110,8 +110,8 @@ Number of marked items: %(length (dired-get-marked-files))
 
 (add-hook 'dired-mode-hook 'my-dired-imenu-init)
 
-(add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)
-(savehist-mode 1)
+;; (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)
+;; (savehist-mode)
 
 (with-eval-after-load 'dired
   (require 'ivy-dired-history)

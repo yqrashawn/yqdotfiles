@@ -2,6 +2,8 @@
 ;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . 'nil)) ; or 'dark, to switch to white title text
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
 ;; (setq package-check-signature nil)
@@ -51,7 +53,7 @@ values."
      emacs-lisp
      git
      osx
-     indium
+     ;; indium
      (markdown :variables
                markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c" "c++" "python" "scala" ("elisp" "emacs-lisp") ("javascript" "js2-mode")))
@@ -387,8 +389,8 @@ you should place your code here."
   ;; rg for swiper
   (setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
-  (when (executable-find "remacsclient")
-    (setq with-editor-emacsclient-executable (executable-find "remacsclient")))
+  ;; (when (executable-find "remacsclient")
+  ;;   (setq with-editor-emacsclient-executable (executable-find "remacsclient")))
   ;; fix buffer gc problem
   (defun my-minibuffer-setup-hook ()
     (setq gc-cons-threshold most-positive-fixnum))
@@ -428,8 +430,8 @@ you should place your code here."
   ;; (ws-butler-global-mode)
   (setq dumb-jump-prefer-searcher 'rg)
   (setq mouse-wheel-scroll-amount '(0.001))
-  (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
-    (lambda () (golden-ratio-mode 1)))
+  ;; (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
+    ;; (lambda () (golden-ratio-mode 1)))
   (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (require 'vlf-setup)
 
@@ -471,6 +473,7 @@ you should place your code here."
   (setq flycheck-checker-error-threshold 1000)
   (setq flycheck-display-errors-delay 0.1)
   (setq flycheck-standard-error-navigation t)
+
   (setq golden-ratio-scroll-highlight-delay (quote (0.07 . 0.03)))
   (setq golden-ratio-scroll-highlight-flag (quote (quote nil)))
   (evil-define-motion evil-goto-definition ()
