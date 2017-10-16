@@ -3049,7 +3049,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchAlacritty\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchIterm\" in workflow \"yqrashawn.workflow.launcher\" with argument \"test\"'"
                                     }
                                 ],
                                 "type": "basic"
@@ -3573,6 +3573,29 @@
                                 ],
                                 "from": {
                                     "key_code": "k",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"itermTTY\" in workflow \"net.isometry.alfred.tty\" with argument \"\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "x",
                                     "modifiers": {
                                         "optional": [
                                             "caps_lock"
