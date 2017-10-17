@@ -113,6 +113,7 @@ Number of marked items: %(length (dired-get-marked-files))
 ;; (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)
 ;; (savehist-mode)
 
+(setq diredp-hide-details-initially-flag nil)
 (with-eval-after-load 'dired+
   (diredp-make-find-file-keys-reuse-dirs))
 
