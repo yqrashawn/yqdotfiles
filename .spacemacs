@@ -77,8 +77,6 @@ values."
      ;; (python :variables python-enable-yapf-format-on-save t)
      )
    dotspacemacs-additional-packages '(
-                                      ;; alect-themes
-                                      ;; auto-yasnippet
                                       ;; butler
                                       company-flx
                                       circe
@@ -108,9 +106,6 @@ values."
                                       quickrun
                                       vlf
                                       nodejs-repl
-                                      ;; (vue-mode :location (recipe
-                                      ;;                      :fetcher github
-                                      ;;                      :repo "codefalling/vue-mode"))
                                       ;; visual-ascii-mode
                                       webpaste
                                       zenburn-theme
