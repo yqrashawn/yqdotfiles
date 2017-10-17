@@ -1,3 +1,5 @@
+(setq ls-lisp-dirs-first t)
+
 (setq dired-listing-switches
       (if (eq system-type 'windows-nt)
           "-alh"
