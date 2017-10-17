@@ -66,7 +66,7 @@ values."
      ;; spell-checking
      evil-snipe
      prodigy
-     (restclient :variables restclient-use-org t)
+     ;;(restclient :variables restclient-use-org t)
      syntax-checking
      version-control
      html
