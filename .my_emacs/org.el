@@ -4,6 +4,11 @@
 (setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
 (setq org-agenda-files '("~/Dropbox/org"))
 (setq org-default-notes-file '("~/Dropbox/org/notes.org"))
+(with-eval-after-load 'org-projectile
+  (setq org-projectile:allow-tramp-projects t)
+  (setq org-projectile:capture-template "*** TODO %?\n%a")
+  (setq org-projectile:projects-file "~/Dropbox/org/projects.org"))
+
 (with-eval-after-load 'org-agenda
   (require 'org-projectile)
   (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files))))

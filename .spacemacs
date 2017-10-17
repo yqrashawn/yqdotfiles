@@ -528,10 +528,6 @@ you should place your code here."
 
   (setq edit-server-url-major-mode-alist
         '(("github\\.com" . org-mode)))
-  (setq org-projectile:allow-tramp-projects t)
-  (setq org-projectile:capture-template "*** TODO %?
-%a")
-  (setq org-projectile:projects-file "~/Dropbox/org/projects.org")
   (setq spacemacs-theme-org-highlight t)
   (setq user-full-name "yqrashawn")
   (setq vlf-batch-size 314572)
