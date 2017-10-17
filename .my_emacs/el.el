@@ -31,7 +31,6 @@
 
 ;;; Code:
 
-(diredp-make-find-file-keys-reuse-dirs)
 (defun buffer-string* (buffer)
   (with-current-buffer buffer
     (buffer-string)))
@@ -51,18 +50,27 @@
   (el-shell (concat  "fasd " str) #'dired))
 
 
-(defun evil-ex-fasd-eval (orign-func str)
+(defun evil-ex-fasd-eval (orig-fun str)
   "docstring"
   (interactive "P")
+  (message "args %S" str)
   (if (string-prefix-p "j " str)
       (el-fasd (string-remove-prefix "j " str))
-    (orign-func str)
-    ))
+    (funcall orig-fun str)
+  ))
 
 (advice-add 'evil-ex-execute :around 'evil-ex-fasd-eval)
-;; (evil-ex-execute "j lmv")
+;; (evil-ex-execute "kk")
 
+(defun his-tracing-function (orig-fun &rest args)
+  (message "display-buffer called with args %S" args)
+  (let ((res (apply orig-fun args)))
+    (message "display-buffer returned %S" res)
+    res))
 
+(advice-add 'display-buffer :around #'his-tracing-function)
+
+;; circe
 (defun circe-network-connected-p (network)
   "Return non-nil if there's any Circe server-buffer whose
 `circe-server-netwok' is NETWORK."
