@@ -37,6 +37,9 @@
          "*** TODO %? %^L %^G\n%U")
         ("n" "notes" entry
          (file+olp "~/Dropbox/org/notes.org" "capture" "note")
+         "*** %?\n   %U")
+        ("c" "code snipptes" entry
+         (file+olp "~/Dropbox/org/snipptes.org" "snipptes")
          "*** %?\n%U")
         ("f" "file TODOs" entry
          (file "~/Dropbox/org/gtd.org")
