@@ -224,7 +224,7 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    dotspacemacs-visual-line-move-text t
    dotspacemacs-ex-substitute-global t
-   dotspacemacs-default-layout-name "General"
+   dotspacemacs-default-layout-name "1:1"
    dotspacemacs-display-default-layout t
    dotspacemacs-auto-resume-layouts t
    ;; Size (in MB)
