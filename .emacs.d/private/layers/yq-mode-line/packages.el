@@ -81,130 +81,129 @@
 
   ;; (setq mode-line-format
   (setq-default mode-line-format
-                (list
-                 " %1"
-                 '(:eval (propertize
-                          (concat "<" (window-number-mode-line) ">")
-                          'face 'custom-rogue))
+        (list
+         " %1"
+         '(:eval (propertize
+                  (concat "<" (window-number-mode-line) ">")
+                  'face 'custom-rogue))
 
 
-                 ;; insert vs overwrite mode, input-method in a tooltip
-                 ;; evil state
-                 '(:eval evil-mode-line-tag)
-                 ;; '(:eval (propertize (if overwrite-mode "R" "I")
-                 ;;                     'face 'font-lock-preprocessor-face
-                 ;;                     'help-echo (concat "Buffer is in "
-                 ;;                                        (if overwrite-mode
-                 ;;                                            "overwrite"
-                 ;;                                          "insert") " mode")))
+         ;; insert vs overwrite mode, input-method in a tooltip
+         ;; evil state
+         '(:eval evil-mode-line-tag)
+         ;; '(:eval (propertize (if overwrite-mode "R" "I")
+         ;;                     'face 'font-lock-preprocessor-face
+         ;;                     'help-echo (concat "Buffer is in "
+         ;;                                        (if overwrite-mode
+         ;;                                            "overwrite"
+         ;;                                          "insert") " mode")))
 
-                 ;; was this buffer modified since the last save?
-                 '(:eval (when (buffer-modified-p)
-                           (propertize "+"
-                                       'face 'diff-refine-removed
-                                       'help-echo "Buffer has been modified")))
+         ;; was this buffer modified since the last save?
+         '(:eval (when (buffer-modified-p)
+                   (propertize "+"
+                               'face 'diff-refine-removed
+                               'help-echo "Buffer has been modified")))
 
-                 ;; is this buffer read-only?
-                 '(:eval (when buffer-read-only
-                           (propertize "RO"
-                                       'face 'font-lock-type-face
-                                       'help-echo "Buffer is read-only")))
+         ;; is this buffer read-only?
+         '(:eval (when buffer-read-only
+                   (propertize "RO"
+                               'face 'font-lock-type-face
+                               'help-echo "Buffer is read-only")))
 
-                 "%1 "
-                 ;; the buffer name; the file name as a tool tip
-                 '(:eval (propertize "%b " 'face 'font-lock-keyword-face
-                                     'help-echo (buffer-file-name)))
+         "%1 "
+         ;; the buffer name; the file name as a tool tip
+         '(:eval (propertize "%b " 'face 'font-lock-keyword-face
+                             'help-echo (buffer-file-name)))
 
-                 ;; anzu
-                 anzu--mode-line-format
+         ;; anzu
+         anzu--mode-line-format
 
-                 ;; relative position, size of file
-                 "["
-                 (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
-                 "/"
-                 (propertize "%I" 'face 'font-lock-constant-face) ;; size
-                 "] "
+         ;; relative position, size of file
+         "["
+         (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
+         "/"
+         (propertize "%I" 'face 'font-lock-constant-face) ;; size
+         "] "
 
-                 ;; the current major mode for the buffer.
-                 '(:eval (propertize "%m" 'face 'font-lock-string-face
-                                     'help-echo buffer-file-coding-system))
+         ;; the current major mode for the buffer.
+         '(:eval (propertize "%m" 'face 'font-lock-string-face
+                             'help-echo buffer-file-coding-system))
 
-                 "%1 "
-                 my-flycheck-mode-line
-                 "%1 "
+         "%1 "
+         my-flycheck-mode-line
+         "%1 "
 
-                 ;; minor modes
-                 ;; '(:eval (when (> (window-width) 90)
-                 ;;           minor-mode-alist))
-                 ;; " "
+         ;; minor modes
+         ;; '(:eval (when (> (window-width) 90)
+         ;;           minor-mode-alist))
+         ;; " "
 
-                 ;; git info
-                 '(:eval (when (> (window-width) 120)
-                           `(vc-mode vc-mode)))
+         ;; git info
+         '(:eval (when (> (window-width) 120)
+                   `(vc-mode vc-mode)))
 
-                 " "
-                 ;; global-mode-string goes in mode-line-misc-info
-                 '(:eval (when (> (window-width) 120)
-                           mode-line-misc-info))
+         " "
+         ;; global-mode-string goes in mode-line-misc-info
+         '(:eval (when (> (window-width) 120)
+                   mode-line-misc-info))
 
-                 (mode-line-fill 'mode-line 30)
+         (mode-line-fill 'mode-line 30)
 
-                 ;; workspace eyebrowse
-                 '(:eval (let* ((num (eyebrowse--get 'current-slot))
-                                (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
-                                (str (when spaceline-workspace-numbers-unicode
-                                       (concat "[" (spaceline--unicode-number)
-                                               (if (and tag (< 0 (length tag)))
-                                                   tag
-                                                 (when num (int-to-string num)))) "|")))
-                           (propertize str 'face 'custom-rogue)))
+         ;; workspace eyebrowse
+         '(:eval (let* ((num (eyebrowse--get 'current-slot))
+                        (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
+                        (str (when spaceline-workspace-numbers-unicode
+                               (concat "[" (spaceline--unicode-number
+                                            (if (and tag (< 0 (length tag))) tag
+                                              (when num (int-to-string num)))) "|"))))
+                   (propertize str 'face 'custom-rogue)))
 
 
-                 ;; layout function may update later
-                 ;; '(:eval (yq/update-persp-name)) ;; layout name
-                 ;; layout
-                 '(:eval (when (and (bound-and-true-p persp-mode)
-                                    ;; There are multiple implementations of
-                                    ;; persp-mode with different APIs
-                                    (fboundp 'safe-persp-name)
-                                    (fboundp 'get-frame-persp)
-                                    ;; Display the nil persp only if specified
-                                    (or (not (string= persp-nil-name (safe-persp-name (get-frame-persp))))
-                                        dotspacemacs-display-default-layout))
+         ;; layout function may update later
+         ;; '(:eval (yq/update-persp-name)) ;; layout name
+         ;; layout
+         '(:eval (when (and (bound-and-true-p persp-mode)
+                            ;; There are multiple implementations of
+                            ;; persp-mode with different APIs
+                            (fboundp 'safe-persp-name)
+                            (fboundp 'get-frame-persp)
+                            ;; Display the nil persp only if specified
+                            (or (not (string= persp-nil-name (safe-persp-name (get-frame-persp))))
+                                dotspacemacs-display-default-layout))
 
-                           (let ((name (safe-persp-name (get-frame-persp))))
-                             (propertize
-                              (if (file-directory-p name)
-                                  (concat (file-name-nondirectory (directory-file-name name)) "|")
-                                (concat name "|"))
-                              'face 'custom-rogue))))
+                   (let ((name (safe-persp-name (get-frame-persp))))
+                     (propertize
+                      (if (file-directory-p name)
+                          (concat (file-name-nondirectory (directory-file-name name)) "|")
+                        (concat name "|"))
+                      'face 'custom-rogue))))
 
-                 ;;window-purpose
-                 '(:eval (when (bound-and-true-p purpose-mode)
-                           (propertize (concat (substring (purpose--modeline-string) 2 -1) "]")
-                                       'face 'custom-rogue
-                                       'help-echo "Window purpose")))
+         ;;window-purpose
+         '(:eval (when (bound-and-true-p purpose-mode)
+                   (propertize (concat (substring (purpose--modeline-string) 2 -1) "]")
+                               'face 'custom-rogue
+                               'help-echo "Window purpose")))
 
-                 ;; '(:eval (yq/display-mode-indent-width))
+         ;; '(:eval (yq/display-mode-indent-width))
 
-                 ;; line and column
-                 " (" ;; '%02' to set to 2 chars at least; prevents flickering
-                 (propertize "%02l" 'face 'font-lock-type-face) ","
-                 (propertize "%02c" 'face 'font-lock-type-face)
-                 ") "
+         ;; line and column
+         " (" ;; '%02' to set to 2 chars at least; prevents flickering
+         (propertize "%02l" 'face 'font-lock-type-face) ","
+         (propertize "%02c" 'face 'font-lock-type-face)
+         ") "
 
-                 ;; buffre encoding
-                 ;; '(:eval (when (> (window-width) 80)
-                 ;; (buffer-encoding-abbrev)))
+         ;; buffre encoding
+         ;; '(:eval (when (> (window-width) 80)
+         ;; (buffer-encoding-abbrev)))
 
-                 mode-line-end-spaces
-                 ;; add the time, with the date and the emacs uptime in the tooltip
+         mode-line-end-spaces
+         ;; add the time, with the date and the emacs uptime in the tooltip
 
-                 ;; (propertize (format-time-string "%a, %b %d %Y, %H:%M") 'face 'font-lock-constant-face)
-                 '(:eval (propertize (format-time-string "%H:%M")
-                                     'help-echo
-                                     (concat (format-time-string "%c; ")
-                                             (emacs-uptime "Uptime:%hh")))))))
+         ;; (propertize (format-time-string "%a, %b %d %Y, %H:%M") 'face 'font-lock-constant-face)
+         '(:eval (propertize (format-time-string "%H:%M")
+                             'help-echo
+                             (concat (format-time-string "%c; ")
+                                     (emacs-uptime "Uptime:%hh")))))))
 
 
 

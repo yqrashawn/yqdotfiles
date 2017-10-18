@@ -91,7 +91,7 @@
 (define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
-(define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
+;; (define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
 
 (defun evil-search-next-recenter ()
   "evil search next and recenter"
@@ -134,7 +134,7 @@
 (define-key evil-insert-state-map (kbd "M-p") 'mc/mark-previous-like-this)
 (define-key evil-insert-state-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (define-key evil-insert-state-map (kbd "C-a") 'mwim-beginning-of-code-or-line)
-(define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
+;; (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
 (define-key evil-insert-state-map (kbd "C-n") 'next-line)
 (define-key evil-insert-state-map (kbd "C-p") 'previous-line)
 ;; (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
