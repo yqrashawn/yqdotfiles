@@ -224,9 +224,10 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    dotspacemacs-visual-line-move-text t
    dotspacemacs-ex-substitute-global t
-   dotspacemacs-default-layout-name "1:1"
+   dotspacemacs-default-layout-name "Gneral"
    dotspacemacs-display-default-layout t
    dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-generate-layout-names t
    ;; Size (in MB)
    dotspacemacs-large-file-size 1
    ;; Location where to auto-save files. Possible values are `original' to
