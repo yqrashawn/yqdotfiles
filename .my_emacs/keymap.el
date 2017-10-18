@@ -201,6 +201,7 @@
 (define-key evil-insert-state-map (kbd "C-q") 'sp-kill-sexp)
 (define-key evil-normal-state-map (kbd "C-q") 'sp-kill-sexp)
 (define-key evil-normal-state-map "sd" 'sp-kill-sexp)
+(define-key evil-normal-state-map "sc" 'sp-copy-sexp)
 (define-key evil-normal-state-map "si" 'yq-kill-sexp-and-insert)
 (define-key evil-normal-state-map (kbd "C-S-k") 'sp-kill-sexp)
 ;; (define-key evil-normal-state-map (kbd "}") 'sp-next-sexp)
