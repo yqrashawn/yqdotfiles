@@ -1,10 +1,42 @@
 (defconst yq-mode-line-packages
   '(
-    (zilong-mode-line :location built-in)
-    )
-  )
+    (yq-mode-line :location built-in)))
 
-(defun yq-mode-line/init-zilong-mode-line ()
+;; dev use
+;; (defconst list-faces-sample-text
+;;   "➊➋➌abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+;;   "Text string to display as the sample text for `list-faces-display'.")
+
+(defvar yq-mode-line-display-default-perspective t
+  "If non-nil, the default perspective name is displayed in the mode-line.")
+(defvar spaceline-workspace-numbers-unicode t
+  "Set to true to enable unicode display in the `workspace-number' segment.")
+
+(defface spaceline-highlight-face
+  `((t (:background "DarkGoldenrod2"
+                    :foreground "#3E3D31"
+                    :inherit 'mode-line)))
+  "Default highlight face for spaceline."
+  :group 'spaceline)
+
+;; Define various other highlight faces
+(dolist (s '((spaceline-evil-normal "DarkGoldenrod2" "Evil normal state face.")
+             (spaceline-evil-insert "chartreuse3" "Evil insert state face.")
+             (spaceline-evil-emacs "SkyBlue2" "Evil emacs state face.")
+             (spaceline-evil-replace "chocolate" "Evil replace state face.")
+             (spaceline-evil-visual "gray" "Evil visual state face.")
+             (spaceline-evil-motion "plum3" "Evil motion state face.")
+             (spaceline-unmodified "DarkGoldenrod2" "Unmodified buffer face.")
+             (spaceline-modified "SkyBlue2" "Modified buffer face.")
+             (spaceline-read-only "plum3" "Read-only buffer face.")))
+  (eval `(defface ,(nth 0 s)
+           `((t (:background ,(nth 1 s)
+                             :foreground "#3E3D31"
+                             :inherit 'mode-line)))
+           ,(nth 2 s)
+           :group 'spaceline)))
+
+(defun yq-mode-line/init-yq-mode-line ()
 
   ;; (defun yq/display-mode-indent-width ()
   ;;   (let ((mode-indent-level
@@ -47,14 +79,13 @@
   (setq-default mode-line-misc-info
                 (assq-delete-all 'which-func-mode mode-line-misc-info))
 
+  ;; (setq mode-line-format
   (setq-default mode-line-format
                 (list
                  " %1"
                  '(:eval (propertize
-                          (window-number-mode-line)
-                          'face
-                          'font-lock-type-face))
-                 ;; '(:eval (yq/update-persp-name)) ;; layout name
+                          (concat "<" (window-number-mode-line) ">")
+                          'face 'custom-rogue))
 
 
                  ;; insert vs overwrite mode, input-method in a tooltip
@@ -70,7 +101,7 @@
                  ;; was this buffer modified since the last save?
                  '(:eval (when (buffer-modified-p)
                            (propertize "+"
-                                       'face 'font-lock-warning-face
+                                       'face 'diff-refine-removed
                                        'help-echo "Buffer has been modified")))
 
                  ;; is this buffer read-only?
@@ -116,8 +147,43 @@
                  '(:eval (when (> (window-width) 120)
                            mode-line-misc-info))
 
-                 (mode-line-fill 'mode-line 20)
+                 (mode-line-fill 'mode-line 30)
 
+                 ;; workspace eyebrowse
+                 '(:eval (let* ((num (eyebrowse--get 'current-slot))
+                                (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
+                                (str (when spaceline-workspace-numbers-unicode
+                                       (concat "[" (spaceline--unicode-number)
+                                               (if (and tag (< 0 (length tag)))
+                                                   tag
+                                                 (when num (int-to-string num)))) "|")))
+                           (propertize str 'face 'custom-rogue)))
+
+
+                 ;; layout function may update later
+                 ;; '(:eval (yq/update-persp-name)) ;; layout name
+                 ;; layout
+                 '(:eval (when (and (bound-and-true-p persp-mode)
+                                    ;; There are multiple implementations of
+                                    ;; persp-mode with different APIs
+                                    (fboundp 'safe-persp-name)
+                                    (fboundp 'get-frame-persp)
+                                    ;; Display the nil persp only if specified
+                                    (or (not (string= persp-nil-name (safe-persp-name (get-frame-persp))))
+                                        dotspacemacs-display-default-layout))
+
+                           (let ((name (safe-persp-name (get-frame-persp))))
+                             (propertize
+                              (if (file-directory-p name)
+                                  (concat (file-name-nondirectory (directory-file-name name)) "|")
+                                (concat name "|"))
+                              'face 'custom-rogue))))
+
+                 ;;window-purpose
+                 '(:eval (when (bound-and-true-p purpose-mode)
+                           (propertize (concat (substring (purpose--modeline-string) 2 -1) "]")
+                                       'face 'custom-rogue
+                                       'help-echo "Window purpose")))
 
                  ;; '(:eval (yq/display-mode-indent-width))
 
@@ -138,56 +204,9 @@
                  '(:eval (propertize (format-time-string "%H:%M")
                                      'help-echo
                                      (concat (format-time-string "%c; ")
-                                             (emacs-uptime "Uptime:%hh"))))
-                 )))
+                                             (emacs-uptime "Uptime:%hh")))))))
 
-(defun yq-mode-line/post-init-spaceline ()
-  (use-package spaceline-config
-    :config
-    (progn
-      (defvar spaceline-org-clock-format-function
-        'org-clock-get-clock-string
-        "The function called by the `org-clock' segment to determine what to show.")
 
-      (spaceline-define-segment org-clock
-                                "Show information about the current org clock task.  Configure
-`spaceline-org-clock-format-function' to configure. Requires a currently running
-org clock.
-
-This segment overrides the modeline functionality of `org-mode-line-string'."
-                                (when (and (fboundp 'org-clocking-p)
-                                           (org-clocking-p))
-                                  (substring-no-properties (funcall spaceline-org-clock-format-function)))
-                                :global-override org-mode-line-string)
-
-      (spaceline-compile
-       'zilong
-       ;; Left side of the mode line (all the important stuff)
-       '(((persp-name
-           workspace-number
-           window-number
-           )
-          :separator "|"
-          :face highlight-face)
-         ((buffer-modified buffer-size input-method))
-         anzu
-         '(buffer-id remote-host buffer-encoding-abbrev)
-         ((point-position line-column buffer-position selection-info)
-          :separator " | ")
-         major-mode
-         process
-         (flycheck-error flycheck-warning flycheck-info)
-         ;; (python-pyvenv :fallback python-pyenv)
-         ;; ((minor-modes :separator spaceline-minor-modes-separator) :when active)
-         (org-pomodoro :when active)
-         (org-clock :when active)
-         nyan-cat)
-       ;; Right segment (the unimportant stuff)
-       '((version-control :when active)
-         battery))
-
-      (setq-default mode-line-format '("%e" (:eval (spaceline-ml-zilong))))
-      )))
 
 (setq projectile-mode-line
       '(:eval (format " Projectile[%s(%s)]"

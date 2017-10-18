@@ -4,9 +4,9 @@
     ;; persp-mode with different APIs
     (progn
       (or (not (string= persp-nil-name (safe-persp-name (get-frame-persp))))
-          "Default")
+          dotspacemacs-default-layout-name)
       (let ((name (safe-persp-name (get-frame-persp))))
-        (propertize (concat "[" name "] ")
+        (propertize name
                     'face 'font-lock-preprocessor-face
                     'help-echo "Current Layout name.")))))
 
@@ -30,6 +30,7 @@
     (let* ((num (winum-get-number))
            (str (when num (int-to-string num))))
       (spaceline--unicode-number str))))
+      ;; str)))
 
 (defun mode-line-fill (face reserve)
   "Return empty space using FACE and leaving RESERVE space on the right."
