@@ -6,7 +6,7 @@
 ;; (define-key ivy-mode-map (kbd "C-s-9") 'minibuffer-keyboard-quit)
 ;; mac port set command to hyper
 (global-set-key (kbd "H-d") 'dired)
-(global-set-key (kbd "H-l") 'spacemacs/workspaces-transient-state/body)
+(global-set-key (kbd "H-l") 'spacemacs/layouts-transient-state/body)
 (global-set-key (kbd "H-k") 'spacemacs/kill-this-buffer)
 (global-set-key (kbd "H-j") 'ivy-switch-buffer)
 (global-set-key (kbd "H-b") 'bookmark-jump)
