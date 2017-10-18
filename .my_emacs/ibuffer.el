@@ -68,7 +68,6 @@
     (goto-char 1)
     (search-forward "[ " (point-max) t)
     )
-
   )
 
 (ad-activate 'ibuffer)
