@@ -102,7 +102,7 @@ values."
                                       hackernews
                                       ivy-dired-history
                                       imenu-anywhere
-                                      key-chord
+                                      ;; key-chord
                                       keyfreq
                                       noccur
                                       phi-search
@@ -383,6 +383,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (setq evil-want-Y-yank-to-eol t)
   (setq keyfreq-file "~/Dropbox/sync/emacs.keyfreq")
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1)
@@ -436,8 +437,8 @@ you should place your code here."
   (setq dumb-jump-prefer-searcher 'rg)
   (setq mouse-wheel-scroll-amount '(0.001))
   ;; (define-global-minor-mode global-golden-ratio-mode golden-ratio-mode
-    ;; (lambda () (golden-ratio-mode 1)))
-  (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
+  ;; (lambda () (golden-ratio-mode 1)))
+  ;; (key-chord-mode 1) ;; if you're not already enabling key-chord-mode
   (require 'vlf-setup)
 
   (with-eval-after-load 'company
@@ -451,16 +452,16 @@ you should place your code here."
   (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.my_emacs/aliases.el")
   (load-file "~/.emacs.d/private/local/hide-comnt.el")
-  (load-file "~/.my_emacs/keychord.el")
+  ;; (load-file "~/.my_emacs/keychord.el")
   (load-file "~/.my_emacs/keymap.el")
   (load-file "~/.my_emacs/mail.el")
   (load-file "~/.my_emacs/org.el")
   (load-file "~/.my_emacs/javascript.el")
   (load-file "~/.my_emacs/popwin.el")
-  ;; (load-file "~/.my_emacs/modeline.el")
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (load-file "~/.my_emacs/modeline.el")
+  ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq company-idle-delay 0.15)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
@@ -531,10 +532,6 @@ you should place your code here."
 
   (setq edit-server-url-major-mode-alist
         '(("github\\.com" . org-mode)))
-  (setq org-projectile:allow-tramp-projects t)
-  (setq org-projectile:capture-template "*** TODO %?
-%a")
-  (setq org-projectile:projects-file "~/Dropbox/org/projects.org")
   (setq spacemacs-theme-org-highlight t)
   (setq user-full-name "yqrashawn")
   (setq vlf-batch-size 314572)
@@ -575,14 +572,9 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(ansi-color-faces-vector
-     [default default default italic underline success warning error])
-   '(compilation-message-face (quote default))
    '(custom-safe-themes
      (quote
       ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5e3fc08bcadce4c6785fc49be686a4a82a356db569f55d411258984e952f194a" "6fc0ae7cc2abd82d8add1140874ccf8773feaaae73a704981d52fdf357341038" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" default)))
-   '(diary-entry-marker (quote font-lock-variable-name-face))
-   '(evil-want-Y-yank-to-eol t)
    '(fci-rule-color "#383838")
    '(imenu-list-minor-mode nil)
    '(nrepl-message-colors
@@ -595,40 +587,12 @@ This function is called at the very end of Spacemacs initialization."
    '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
    '(recentf-auto-cleanup 300)
    '(rm-whitelist (quote ("haha")))
-   '(send-mail-function (quote mailclient-send-it))
-   '(term-default-bg-color "#fdf6e3")
-   '(term-default-fg-color "#657b83")
-   '(vc-annotate-background "#2B2B2B")
-   '(vc-annotate-color-map
-     (quote
-      ((20 . "#BC8383")
-       (40 . "#CC9393")
-       (60 . "#DFAF8F")
-       (80 . "#D0BF8F")
-       (100 . "#E0CF9F")
-       (120 . "#F0DFAF")
-       (140 . "#5F7F5F")
-       (160 . "#7F9F7F")
-       (180 . "#8FB28F")
-       (200 . "#9FC59F")
-       (220 . "#AFD8AF")
-       (240 . "#BFEBBF")
-       (260 . "#93E0E3")
-       (280 . "#6CA0A3")
-       (300 . "#7CB8BB")
-       (320 . "#8CD0D3")
-       (340 . "#94BFF3")
-       (360 . "#DC8CC3"))))
-   '(vc-annotate-very-old-color "#DC8CC3")
-   '(xterm-color-names
-     ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
-   '(xterm-color-names-bright
-     ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(term ((t (:inherit default))))
- '(web-mode-block-face ((t (:inherit highlight)))))
-)
+   '(send-mail-function (quote mailclient-send-it)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(term ((t (:inherit default))))
+   '(web-mode-block-face ((t (:inherit highlight)))))
+  )
