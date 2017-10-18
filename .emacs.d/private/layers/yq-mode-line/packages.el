@@ -147,7 +147,7 @@
                  '(:eval (when (> (window-width) 120)
                            mode-line-misc-info))
 
-                 (mode-line-fill 'mode-line 30)
+                 (mode-line-fill 'mode-line 40)
 
                  ;; workspace eyebrowse
                  '(:eval (if (setq-local yq-eyebrowse-config-name
