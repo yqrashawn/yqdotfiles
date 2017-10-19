@@ -7,6 +7,7 @@
 
 ;; purpose setting
 (add-to-list 'purpose-user-mode-purposes '(prog-mode . prog))
+(add-to-list 'purpose-user-mode-purposes '(typescript-mode . prog))
 (add-to-list 'purpose-user-mode-purposes '(circe-mode . irc))
 (add-to-list 'purpose-user-mode-purposes '(circe-chat-mode . irc))
 (add-to-list 'purpose-user-mode-purposes '(circe-query-mode . irc))
