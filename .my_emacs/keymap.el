@@ -44,6 +44,7 @@
 (spacemacs/set-leader-keys "hc" 'hide/show-comments-toggle)
 (spacemacs/set-leader-keys "fl" 'counsel-locate)
 (spacemacs/set-leader-keys "fL" 'find-file-literally)
+(spacemacs/set-leader-keys "FM" 'toggle-frame-maximized)
 
 (spacemacs/declare-prefix "o" "own-prefix")
 (spacemacs/declare-prefix "oe" "edit-prefix")
