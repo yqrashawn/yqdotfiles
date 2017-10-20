@@ -1,5 +1,12 @@
 ;; -*- mode: emacs-lisp -*-
 (setq mac-command-modifier 'hyper)
+
+(define-key evil-window-map "\C-l" 'evil-window-right)
+(define-key evil-window-map "\C-j" 'evil-window-down)
+(define-key evil-window-map "\C-k" 'evil-window-up)
+(define-key evil-window-map "\C-h" 'evil-window-left)
+(define-key evil-window-map (kbd "DEL") 'evil-window-left)
+
 (defun hide-emacs ()
   (interactive)
   (call-process "osascript" nil nil nil "-e" "tell application \"Finder\"" "-e" "set visible of process \"Emacs\" to false" "-e" "end tell"))
