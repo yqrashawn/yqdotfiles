@@ -589,6 +589,11 @@ This function is called at the very end of Spacemacs initialization."
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(recentf-auto-cleanup 300)
  '(rm-whitelist (quote ("haha")))
+ '(safe-local-variable-values
+   (quote
+    ((DISABLEDeval ispell-change-dictionary "en_US")
+     (DISABLEDmode . flyspell)
+     (eval ispell-change-dictionary "en_US"))))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
