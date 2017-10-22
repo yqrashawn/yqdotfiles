@@ -22,11 +22,11 @@ values."
    dotspacemacs-configuration-layers
    '(
      yq-mode-line
-     parinfer
-     nlinum
+     ;; parinfer
+     ;; nlinum
      bm
      github
-     command-log
+     ;; command-log
      spacemacs-evil
      spacemacs-editing
      spacemacs-editing-visual

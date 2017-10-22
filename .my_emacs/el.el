@@ -53,11 +53,10 @@
 (defun evil-ex-fasd-eval (orig-fun str)
   "docstring"
   (interactive "P")
-  (message "args %S" str)
   (if (string-prefix-p "j " str)
       (el-fasd (string-remove-prefix "j " str))
     (funcall orig-fun str)
-  ))
+    ))
 
 (advice-add 'evil-ex-execute :around 'evil-ex-fasd-eval)
 ;; (evil-ex-execute "kk")
