@@ -81,7 +81,7 @@
     ))
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
-(add-hook 'js2-mode-hook 'eslintd-fix-mode)
+;; (add-hook 'js2-mode-hook 'eslintd-fix-mode)
 (setq eslintd-fix-executable (concat user-home-directory ".npm-packages/bin/eslint_d"))
 (setq flycheck-javascript-eslint-executable "eslint_d")
 (setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
@@ -96,14 +96,15 @@
 ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
 (setq-default js-indent-level 2)
 
+
 ;; Enable JavaScript completion between <script>...</script> etc.
-(defadvice company-tern (before web-mode-set-up-ac-sources activate)
-  "Set `tern-mode' based on current language before running company-tern."
-  (if (equal major-mode 'web-mode)
-      (let ((web-mode-cur-language
-             (web-mode-language-at-pos)))
-        (if (or (string= web-mode-cur-language "javascript")
-                (string= web-mode-cur-language "jsx")
-                )
-            (unless tern-mode (tern-mode))
-          (if tern-mode (tern-mode -1))))))
+;; (defadvice company-tern (before web-mode-set-up-ac-sources activate)
+;;   "Set `tern-mode' based on current language before running company-tern."
+;;   (if (equal major-mode 'web-mode)
+;;       (let ((web-mode-cur-language
+;;              (web-mode-language-at-pos)))
+;;         (if (or (string= web-mode-cur-language "javascript")
+;;                 (string= web-mode-cur-language "jsx")
+;;                 )
+;;             (unless tern-mode (tern-mode))
+;;           (if tern-mode (tern-mode -1))))))
