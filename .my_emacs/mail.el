@@ -1,3 +1,5 @@
+(setq smtpmail-default-smtp-server "smtp.gmail.com")
+
 (setq mu4e-maildir "~/Maildir"
       mu4e-trash-folder "/Trash"
       mu4e-refile-folder "/Archive"

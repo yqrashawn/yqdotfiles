@@ -1,5 +1,46 @@
 
 ;;; Code:
+;; Get current system's name
+(defun my-insert-system-name()
+  (interactive)
+  "Get current system's name"
+  (insert (format "%s" system-name))
+  )
+
+;; Get current system type
+(defun my-insert-system-type()
+  (interactive)
+  "Get current system type"
+  (insert (format "%s" system-type))
+  )
+
+;; Check if system is Darwin/Mac OS X
+(defun my-system-type-is-darwin ()
+  "Return true if system is darwin-based (Mac OS X)"
+  (string-equal system-type "darwin")
+  )
+
+;; Check if system is Microsoft Windows
+(defun my-system-type-is-windows ()
+  "Return true if system is Windows-based (at least up to Win7)"
+  (string-equal system-type "windows-nt")
+  )
+
+(when (my-system-type-is-darwin)
+  (defun locate-make-mdfind-command-line (search-string)
+    (list "mdfind" (concat "kMDItemDisplayName=*" search-string "*")))
+  (defun spotlight ()
+    "Search for files by name using spotlight"
+    (interactive)
+    (let ((locate-command "mdfind")
+          (locate-make-command-line 'locate-make-mdfind-command-line))
+      (call-interactively 'locate nil)))
+  (defun spotlight-full ()
+    "Search using spotlight"
+    (interactive)
+    (let ((locate-command "mdfind"))
+      (call-interactively 'locate nil)))
+  )
 ;; http://www.wilfred.me.uk/.emacs.d/init.html#org1752acf
 (defun yq/start-scratch-html-file (file-name)
   "Create a test HTML file in ~/Downloads/scratch/FILE-NAME to play around with."
