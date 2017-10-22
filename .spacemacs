@@ -24,8 +24,8 @@ values."
      yq-mode-line
      parinfer
      nlinum
-     ruby-on-rails
      bm
+     github
      command-log
      spacemacs-evil
      spacemacs-editing
