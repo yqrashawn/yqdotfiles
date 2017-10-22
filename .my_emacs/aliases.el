@@ -7,5 +7,18 @@
 (defalias 'recc 'recentf-cleanup "recent file cleanup")
 (defalias 'yasi 'yas-insert-snippet "insert snippets")
 (defalias 'yasl 'yas-reload-all "reload yas")
+(defalias 'reload 'reload-spacemacs-configuration "reload config")
+
+(defun reload-spacemacs-configuration ()
+  "reload spacemacs configuration"
+  (interactive)
+  (load-file (concat (file-name-directory spacemacs-core-directory)
+                     "core-load-paths.el"))
+  ;; (require 'core-spacemacs)
+  ;; (spacemacs/init)
+  (configuration-layer/load)
+  ;; (spacemacs/setup-startup-hook)
+  (require 'server)
+  (unless (server-running-p) (server-start)))
 
 (use-package hackernews :commands (hackernews))

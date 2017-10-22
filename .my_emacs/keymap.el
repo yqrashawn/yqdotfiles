@@ -43,7 +43,7 @@
 (spacemacs/set-leader-keys "sj" 'imenu-anywhere)
 (spacemacs/set-leader-keys "ss" 'counsel-imenu)
 (spacemacs/set-leader-keys "sn" 'spacemacs/swiper-region-or-symbol)
-(spacemacs/set-leader-keys "gf" 'magit-file-popup)
+;; (spacemacs/set-leader-keys "gf" 'magit-file-popup)
 (spacemacs/set-leader-keys "fp" 'counsel-git)
 (spacemacs/set-leader-keys "gn" 'magit-gitflow-popup)
 (spacemacs/set-leader-keys "wz" 'spacemacs/toggle-maximize-buffer)
