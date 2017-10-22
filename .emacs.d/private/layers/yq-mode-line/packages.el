@@ -147,8 +147,6 @@
                  '(:eval (when (> (window-width) 120)
                            mode-line-misc-info))
 
-                 (mode-line-fill 'mode-line 40)
-
                  ;; workspace eyebrowse
                  '(:eval (if (setq-local yq-eyebrowse-config-name
                                        (mapconcat 'identity
@@ -198,6 +196,7 @@
 
                  ;; '(:eval (yq/display-mode-indent-width))
 
+                 (mode-line-fill 'mode-line 16)
                  ;; line and column
                  " (" ;; '%02' to set to 2 chars at least; prevents flickering
                  (propertize "%02l" 'face 'font-lock-type-face) ","
