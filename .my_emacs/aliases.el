@@ -8,6 +8,12 @@
 (defalias 'yasi 'yas-insert-snippet "insert snippets")
 (defalias 'yasl 'yas-reload-all "reload yas")
 (defalias 'reload 'reload-spacemacs-configuration "reload config")
+(defalias 'cd 'dired-to-home "dired home directory")
+
+(defun dired-to-home ()
+  "open dired in home directory"
+  (interactive)
+  (dired "~/"))
 
 (defun reload-spacemacs-configuration ()
   "reload spacemacs configuration"

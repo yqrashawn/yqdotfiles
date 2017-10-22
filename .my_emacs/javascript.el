@@ -1,5 +1,3 @@
-;; (eval-after-load 'js2-mode
-;;   '(add-hook 'js2-mode-hook (lambda () (add-hook 'after-save-hook 'eslint-fix))))
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
 (setq vue-html-color-interpolations t)
 
@@ -81,7 +79,6 @@
     ))
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
-;; (add-hook 'js2-mode-hook 'eslintd-fix-mode)
 (setq eslintd-fix-executable (concat user-home-directory ".npm-packages/bin/eslint_d"))
 (setq flycheck-javascript-eslint-executable "eslint_d")
 (setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
@@ -95,7 +92,6 @@
 
 ;;;;;;;;;;;; settings ;;;;;;;;;;;;;;
 (setq-default js-indent-level 2)
-
 
 ;; Enable JavaScript completion between <script>...</script> etc.
 ;; (defadvice company-tern (before web-mode-set-up-ac-sources activate)
