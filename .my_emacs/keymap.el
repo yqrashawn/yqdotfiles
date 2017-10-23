@@ -1,6 +1,10 @@
 ;; -*- mode: emacs-lisp -*-
 (setq mac-command-modifier 'hyper)
 
+(eval-after-load 'magit
+  '(evil-define-key 'normal magit-mode-map "v"
+     #'endless/visit-pull-request-url))
+
 (define-key evil-window-map "\C-l" 'evil-window-right)
 (define-key evil-window-map "\C-j" 'evil-window-down)
 (define-key evil-window-map "\C-k" 'evil-window-up)
