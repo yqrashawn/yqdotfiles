@@ -1,6 +1,7 @@
 (push '("*Messages*" :dedicated t :position bottom :stick nil :noselect nil) popwin:special-display-config)
 (push '("*ycmd-server*" :dedicated t :position bottom :stick nil :noselect t) popwin:special-display-config)
 (push '("*Flycheck errors*" :dedicated t :position bottom :stick nil :noselect t) popwin:special-display-config)
+(push '("*prettier errors*" :dedicated t :position bottom :stick nil :noselect t) popwin:special-display-config)
 (push '("*Compile-Log*" :dedicated t :position bottom :stick nil :noselect t) popwin:special-display-config)
 (push '("*quickrun*" :dedicated t :position bottom :stick t :noselect t) popwin:special-display-config)
 (push '("*warnings*" :dedicated t :position bottom :stick nil :noselect t) popwin:special-display-config)
