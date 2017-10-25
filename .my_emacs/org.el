@@ -1,3 +1,9 @@
+;; no confirm before evaluate code in src block
+(setq org-confirm-babel-evaluate nil)
+
+;; src block have same indentation with #+BEGIN_SRC
+(setq org-edit-src-content-indentation 0)
+
 ;; Insert immediate timestamp
 (defun my-insert-timestamp()
   "Insert the current time in yyyy-mm-dd format."
