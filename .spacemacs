@@ -56,7 +56,7 @@ values."
      emacs-lisp
      git
      osx
-     ;; indium
+     indium
      (markdown :variables
                markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c" "c++" "python" "scala" ("elisp" "emacs-lisp") ("javascript" "js2-mode")))
@@ -86,6 +86,7 @@ values."
      )
    dotspacemacs-additional-packages '(
                                       ;; butler
+                                      anti-zenburn-theme
                                       company-flx
                                       circe
                                       circe-notifications
@@ -102,6 +103,7 @@ values."
                                       evil-textobj-anyblock
                                       evil-textobj-column
                                       glsl-mode
+                                      gruvbox-theme
                                       golden-ratio-scroll-screen
                                       hackernews
                                       ivy-dired-history
@@ -113,9 +115,9 @@ values."
                                       quickrun
                                       ;; vlf
                                       nodejs-repl
+                                      sunburn-theme
                                       ;; visual-ascii-mode
                                       webpaste
-                                      zenburn-theme
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -188,7 +190,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-light zenburn)
+   dotspacemacs-themes '(spacemacs-light sunburn anti-zenburn gruvbox-light-soft gruvbox-light-medium)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
