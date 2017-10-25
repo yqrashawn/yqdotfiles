@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: deepClone
+# key: deepClone
+# --
+function clone(obj) {
+  if (obj === null || typeof obj !== "object")
+    return obj;
+  const props = Object.getOwnPropertyDescriptors(obj);
+  for (const prop in props) {
+    props[prop].value = clone(props[prop].value);
+  }
+
+  return Object.create(
+    Object.getPrototypeOf(obj),
+    props
+  );
+}
