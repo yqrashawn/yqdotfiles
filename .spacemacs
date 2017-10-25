@@ -2,6 +2,7 @@
 ;; vim:filetype=lisp
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
+(setq scroll-bar-background nil)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . 'dark)) ; or 'dark, to switch to white title text
 
@@ -56,7 +57,7 @@ values."
      emacs-lisp
      git
      osx
-     ;; indium
+     indium
      (markdown :variables
                markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c" "c++" "python" "scala" ("elisp" "emacs-lisp") ("javascript" "js2-mode")))
