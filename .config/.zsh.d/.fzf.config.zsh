@@ -1,3 +1,5 @@
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # fkill - kill process
 fkill() {
     pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
