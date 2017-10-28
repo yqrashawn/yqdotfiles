@@ -1,5 +1,14 @@
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Feed the output of rg into fzf
+rg --files | fzf
+
+# Setting rg as the default source for fzf
+export FZF_DEFAULT_COMMAND='rg --files'
+
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
 # fkill - kill process
 fkill() {
     pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
