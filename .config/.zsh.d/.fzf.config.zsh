@@ -1,8 +1,5 @@
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Feed the output of rg into fzf
-rg --files | fzf
-
 # Setting rg as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files'
 
