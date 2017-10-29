@@ -35,7 +35,7 @@ values."
      spacemacs-org
      spacemacs-visual
      spacemacs-layouts
-     spacemacs-purpose
+     ;; spacemacs-purpose
      spacemacs-misc
      spacemacs-navigation
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
