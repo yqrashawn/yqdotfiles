@@ -221,3 +221,4 @@
 (setq projectile-mode-line
       '(:eval (format " Projectile[%s(%s)]"
                       (projectile-project-name))))
+
