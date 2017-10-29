@@ -1,5 +1,4 @@
 
-alias c='fasd_cd -i'
 alias d='cd ~/Downloads/'
 alias w='cd ~/workspace/'
 alias rg="rg --smart-case"
