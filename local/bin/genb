@@ -32,5 +32,7 @@ cp $HOME/blog/lazyblorg/templates/public_voit.css $HOME/workspace/HOME/yqrashawn
 cp $HOME/blog/lazyblorg/templates/menu.js $HOME/workspace/HOME/yqrashawn.github.io/public/js/menu.js
 cp -r $HOME/blog/build/blog/* $HOME/workspace/HOME/yqrashawn.github.io/
 cd $HOME/workspace/HOME/yqrashawn.github.io/
+git pull origin master
+git add .
 git commit --all -m "new post"
 git push origin master
