@@ -1,6 +1,7 @@
 #!/bin/sh
 
-export YQ_BLOG_DEV_MODE="false"
+export YQ_BLOG_DEV_MODE="true"
+
 rm -rf $HOME/blog/build/blog
 
 # create the output directory (and parents):
@@ -28,9 +29,12 @@ PYTHONPATH="~/blog/lazyblorg:" $HOME/blog/lazyblorg/lazyblorg.py \
 
 #END
 
-cp $HOME/blog/lazyblorg/templates/public_voit.css $HOME/workspace/HOME/yqrashawn.github.io/public/css/YQ.css
-cp $HOME/blog/lazyblorg/templates/menu.js $HOME/workspace/HOME/yqrashawn.github.io/public/js/menu.js
-cp -r $HOME/blog/build/blog/* $HOME/workspace/HOME/yqrashawn.github.io/
-cd $HOME/workspace/HOME/yqrashawn.github.io/
-git commit --all -m "new post"
-git push origin master
+live-server --port=8089 ~/blog/ --open="build/blog/"
+# cp $HOME/blog/lazyblorg/templates/public_voit.css $HOME/blog/build/blog/
+# cp $HOME/blog/lazyblorg/templates/menu.js $HOME/blog/build/blog/
+# cp $HOME/blog/lazyblorg/templates/public_voit.css $HOME/workspace/HOME/yqrashawn.github.io/public/css/YQ.css
+# cp $HOME/blog/lazyblorg/templates/menu.js $HOME/workspace/HOME/yqrashawn.github.io/public/js/menu.js
+# cp -r $HOME/blog/build/blog/* $HOME/workspace/HOME/yqrashawn.github.io/
+# cd $HOME/workspace/HOME/yqrashawn.github.io/
+# git commit --all -m "new post"
+# git push origin master
