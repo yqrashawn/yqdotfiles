@@ -10,10 +10,16 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 bindkey "^P" up-line-or-beginning-search # C-p
 bindkey "^N" down-line-or-beginning-search # C-n
 
+# c() {
+#     local dir
+#     dir="$(fasd -Rdl "$1" | fzy)" && cd "${dir}" || return 1
+# }
 c() {
     local dir
-    dir="$(fasd -Rdl "$1" | fzy)" && cd "${dir}" && ls || return 1
+    dir="$(fasd -Rl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
+zle -N c
+bindkey  c
 
 EmailID="namy.19@gmail.com"
 
@@ -44,8 +50,6 @@ _colorize_mail() {
 	  done
 }
 zle -N checkgmail
-zle -N c
-bindkey  c
 
 fe() {
     local files
