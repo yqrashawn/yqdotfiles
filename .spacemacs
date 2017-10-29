@@ -398,7 +398,7 @@ you should place your code here."
   (setq recentf-auto-cleanup 300)
   (setq rm-whitelist (quote ("haha")))
   (setq evil-want-Y-yank-to-eol t)
-  (setq keyfreq-file "~/Dropbox/sync/emacs.keyfreq")
+  (setq keyfreq-file (concat spacemacs-cache-directory "emacs.keyfreq"))
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1)
   ;; (sml/setup)
