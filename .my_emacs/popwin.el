@@ -8,15 +8,13 @@
 (push '("*git-messenger*" :dedicated t :position bottom :stick nil :noselect nil) popwin:special-display-config)
 
 ;; purpose setting
-(add-to-list 'purpose-user-mode-purposes '(prog-mode . prog))
-(add-to-list 'purpose-user-mode-purposes '(json-mode . prog))
-(add-to-list 'purpose-user-mode-purposes '(web-mode . prog))
-(add-to-list 'purpose-user-mode-purposes '(typescript-mode . prog))
-(add-to-list 'purpose-user-mode-purposes '(circe-mode . irc))
-(add-to-list 'purpose-user-mode-purposes '(circe-chat-mode . irc))
-(add-to-list 'purpose-user-mode-purposes '(circe-query-mode . irc))
-(add-to-list 'purpose-user-mode-purposes '(circe-lagmon-mode . irc))
-(add-to-list 'purpose-user-mode-purposes '(circe-server-mode . irc))
-(purpose-compile-user-configuration)
-
-
+;; (add-to-list 'purpose-user-mode-purposes '(prog-mode . prog))
+;; (add-to-list 'purpose-user-mode-purposes '(json-mode . prog))
+;; (add-to-list 'purpose-user-mode-purposes '(web-mode . prog))
+;; (add-to-list 'purpose-user-mode-purposes '(typescript-mode . prog))
+;; (add-to-list 'purpose-user-mode-purposes '(circe-mode . irc))
+;; (add-to-list 'purpose-user-mode-purposes '(circe-chat-mode . irc))
+;; (add-to-list 'purpose-user-mode-purposes '(circe-query-mode . irc))
+;; (add-to-list 'purpose-user-mode-purposes '(circe-lagmon-mode . irc))
+;; (add-to-list 'purpose-user-mode-purposes '(circe-server-mode . irc))
+;; (purpose-compile-user-configuration)

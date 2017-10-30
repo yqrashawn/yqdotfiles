@@ -5549,6 +5549,29 @@
                                     }
                                 ],
                                 "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"chromeHistory\" in workflow \"thomasupton.chrome-history\" with argument \"\"'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
                                     "key_code": "t",
                                     "modifiers": {
                                         "optional": [
