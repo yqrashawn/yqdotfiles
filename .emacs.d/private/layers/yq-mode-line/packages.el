@@ -184,15 +184,23 @@
                            (let ((name (safe-persp-name (get-frame-persp))))
                              (propertize
                               (if (file-directory-p name)
-                                  (concat (file-name-nondirectory (directory-file-name name)) "|")
-                                (concat name "|"))
-                              'face 'font-lock-type-face))))
+                                  (file-name-nondirectory (directory-file-name name))
+                                (concat name ""))
+                              'face 'font-lock-type-face))
+                           ;; (let ((name (safe-persp-name (get-frame-persp))))
+                           ;;   (propertize
+                           ;;    (if (file-directory-p name)
+                           ;;        (concat (file-name-nondirectory (directory-file-name name)) "|")
+                           ;;      (concat name "|"))
+                           ;;    'face 'font-lock-type-face))
+                           ))
 
                  ;;window-purpose
-                 '(:eval (when (bound-and-true-p purpose-mode)
-                           (propertize (concat (substring (purpose--modeline-string) 2 -1) "]")
-                                       'face 'font-lock-type-face
-                                       'help-echo "Window purpose")))
+                 ;; '(:eval (when (bound-and-true-p purpose-mode)
+                 ;;           (propertize (concat (substring (purpose--modeline-string) 2 -1) "]")
+                 ;;                       'face 'font-lock-type-face
+                 ;;                       'help-echo "Window purpose")))
+                 "]"
 
                  ;; '(:eval (yq/display-mode-indent-width))
 
@@ -221,3 +229,4 @@
 (setq projectile-mode-line
       '(:eval (format " Projectile[%s(%s)]"
                       (projectile-project-name))))
+
