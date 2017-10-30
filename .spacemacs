@@ -393,6 +393,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (setq source-directory (concat user-home-directory "emacs/src"))
   (global-hl-line-mode -1)
   (setq send-mail-function 'mailclient-send-it)
   (setq password-cache-expiry 3600)
