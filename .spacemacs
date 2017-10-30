@@ -66,9 +66,10 @@ values."
      (org :variables org-projectile-file "plans.org")
      (shell :variables
             shell-default-height 30
-            ;; shell-default-position 'right
-            shell-default-position 'bottom
-            shell-default-term-shell "/bin/zsh")
+            shell-default-position 'right
+            ;; shell-default-position 'bottom
+            shell-default-term-shell "/bin/zsh"
+            shell-default-full-span nil)
      ;; spell-checking
      evil-snipe
      prodigy
@@ -393,6 +394,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+  (add-to-list 'load-path "~/workspace/THIRD/emacs-libvterm")
   (setq source-directory (concat user-home-directory "emacs/src"))
   (global-hl-line-mode -1)
   (setq send-mail-function 'mailclient-send-it)

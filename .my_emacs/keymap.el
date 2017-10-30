@@ -110,6 +110,7 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
+(define-key evil-normal-state-map (kbd "C-x k") 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 
