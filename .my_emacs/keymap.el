@@ -99,7 +99,7 @@
 (define-key evil-normal-state-map "gn" 'evil-goto-definition)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-(define-key evil-normal-state-map (kbd "C-f") 'counsel-find-file)
+(define-key evil-normal-state-map (kbd "C-f") 'ivy-switch-buffer)
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 (define-key evil-normal-state-map (kbd "gy") 'duplicate-line)
@@ -112,7 +112,6 @@
 (define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
-;; (define-key evil-normal-state-map (kbd "C-h") 'dumb-jump-quick-look)
 
 (defun evil-search-next-recenter ()
   "evil search next and recenter"
