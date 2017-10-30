@@ -55,6 +55,7 @@ alias ee='fasd -f -e emacsclient'
 alias t='emacsclient -t'
 alias vvv='vimr'
 alias m='mvim'
+alias wdired='roamera'
 
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias chromed='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222'
