@@ -24,7 +24,6 @@ PYTHONPATH="~/blog/lazyblorg:" $HOME/blog/lazyblorg/lazyblorg.py \
           --new-metadata $HOME/blog/lazyblorg/2del-metadata.pk \
           --logfile $HOME/blog/2del-logfile.org \
           --orgfiles $HOME/Dropbox/ORG/writes.org \
-          $HOME/Dropbox/ORG/about.org \
           $HOME/blog/lazyblorg/templates/blog-format.org $@
 
 #END
