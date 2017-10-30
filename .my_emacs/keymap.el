@@ -14,6 +14,15 @@
 (defun hide-emacs ()
   (interactive)
   (call-process "osascript" nil nil nil "-e" "tell application \"Finder\"" "-e" "set visible of process \"Emacs\" to false" "-e" "end tell"))
+
+(defadvice diredp-dired-recent-dirs (before recentf-cleanup (dir args) activate)
+  "ignore find-args, hard code \"-iname '**'\"")
+
+;; (defadvice yq-cleanup-before-dired-recent (before ora-force-clean-up-buffers (file) activate)
+;;   (let ((buffer (get-file-buffer file)))
+;;     (when buffer
+;;       (kill-buffer buffer))))
+
 ;; (define-key ivy-mode-map (kbd "C-s-9") 'minibuffer-keyboard-quit)
 ;; mac port set command to hyper
 (global-set-key (kbd "H-d") 'dired)
