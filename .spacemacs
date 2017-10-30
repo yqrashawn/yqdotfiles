@@ -36,7 +36,7 @@ values."
      spacemacs-org
      spacemacs-visual
      spacemacs-layouts
-     ;; spacemacs-purpose
+     spacemacs-purpose
      spacemacs-misc
      spacemacs-navigation
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
@@ -347,7 +347,7 @@ values."
    org-enable-github-support t
    better-defaults-move-to-end-of-code-first t
    evil-snipe-enable-alternate-f-and-t-behaviors t
-   dotspacemacs-switch-to-buffer-prefers-purpose t
+   dotspacemacs-switch-to-buffer-prefers-purpose nil
    ))
 
 (defun dotspacemacs/user-init ()
