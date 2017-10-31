@@ -297,6 +297,7 @@
   (evil-define-key 'insert term-raw-map (kbd "C-c") 'term-send-raw)
   (evil-define-key 'insert term-raw-map (kbd "C-m") 'term-send-input)
   (evil-define-key 'insert term-raw-map (kbd "C-z") 'term-stop-subjob)
+  (evil-define-key 'insert term-raw-map (kbd "C-y") 'term-paste)
   (evil-define-key 'insert term-raw-map (kbd "C-a") 'term-send-home)
   (evil-define-key 'insert term-raw-map (kbd "<tab>") 'term-send-tab)
   (evil-define-key 'insert term-raw-map (kbd "RET") 'term-send-input)
