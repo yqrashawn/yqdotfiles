@@ -42,12 +42,13 @@
     (defvar fasd-buffer "*fasd-buffer*")
     (shell-command command fasd-buffer)
     (funcall func (buffer-string* fasd-buffer))
-    (diredp-find-file-reuse-dir-buffer)))
+    (diredp-find-file-reuse-dir-buffer)
+    (kill-buffer fasd-buffer)))
 
 (defun el-fasd (str)
   "fasd dired to the directory returned by fasd"
   (interactive "P")
-  (el-shell (concat  "fasd " str) #'dired))
+  (el-shell (concat  "fasd -d " str) #'dired))
 
 
 (defun evil-ex-fasd-eval (orig-fun str)
