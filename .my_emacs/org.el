@@ -230,7 +230,7 @@
          (file "~/Dropbox/org/gtd.org")
          "* TODO %? %^G\n %a\n%U")
         ("t" "TODOs" entry
-         (file "~/Dropbox/org/gtd.org")
+         (file+olp "~/Dropbox/org/gtd.org" "misc")
          "* TODO %? %^G\n%U"))))
 ;; (use-package ox-opml
 ;;   :ensure t
