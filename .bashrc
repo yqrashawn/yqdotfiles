@@ -8,3 +8,9 @@ jd() {
   local projDir=$(pro search $1)
   cd ${projDir}
 }
+
+# pro cd function
+jd() {
+  local projDir=$(pro search $1)
+  cd ${projDir}
+}
