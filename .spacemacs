@@ -51,6 +51,7 @@ values."
      auto-completion
      better-defaults
      navigation
+     (rust :variable rust-format-on-save t)
      (typescript :variables
                  typescript-fmt-on-save t)
      ;; undohist
@@ -89,6 +90,7 @@ values."
      )
    dotspacemacs-additional-packages '(
                                       ;; butler
+                                      bug-hunter
                                       company-flx
                                       circe
                                       circe-notifications
