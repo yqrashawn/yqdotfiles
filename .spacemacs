@@ -117,7 +117,7 @@ values."
                                       quickrun
                                       ;; vlf
                                       nodejs-repl
-                                      zunburn-theme
+                                      zenburn-theme
                                       ;; visual-ascii-mode
                                       webpaste
                                       )
