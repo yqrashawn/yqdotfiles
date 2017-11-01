@@ -101,7 +101,7 @@
                  ;; was this buffer modified since the last save?
                  '(:eval (when (buffer-modified-p)
                            (propertize "+"
-                                       'face 'diff-refine-removed
+                                       'face 'warning
                                        'help-echo "Buffer has been modified")))
 
                  ;; is this buffer read-only?
