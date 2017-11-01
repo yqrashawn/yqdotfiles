@@ -610,21 +610,21 @@
                                     "key_code": "w",
                                     "modifiers": {
                                         "mandatory": [
-                                          "control"
+                                            "control"
                                         ],
                                         "optional": [
-                                          "caps_lock",
-                                          "shift",
-                                          "option"
+                                            "caps_lock",
+                                            "shift",
+                                            "option"
                                         ]
                                     }
                                 },
                                 "to": [
                                     {
-                                      "key_code": "delete_or_backspace",
-                                      "modifiers": [
-                                        "option"
-                                      ]
+                                        "key_code": "delete_or_backspace",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -676,8 +676,8 @@
                                     "key_code": "b",
                                     "modifiers": {
                                         "mandatory": [
-                                          "option",
-                                          "shift"
+                                            "option",
+                                            "shift"
                                         ],
                                         "optional": [
                                             "caps_lock"
@@ -686,11 +686,11 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "left_arrow",
-                                      "modifiers": [
-                                        "option",
-                                        "shift"
-                                      ]
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "option",
+                                            "shift"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -742,8 +742,8 @@
                                     "key_code": "f",
                                     "modifiers": {
                                         "mandatory": [
-                                          "option",
-                                          "shift"
+                                            "option",
+                                            "shift"
                                         ],
                                         "optional": [
                                             "caps_lock"
@@ -752,11 +752,11 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "right_arrow",
-                                      "modifiers": [
-                                        "option",
-                                        "shift"
-                                      ]
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "option",
+                                            "shift"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -817,10 +817,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "right_arrow",
-                                      "modifiers": [
-                                        "option"
-                                      ]
+                                        "key_code": "right_arrow",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -881,10 +881,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "left_arrow",
-                                      "modifiers": [
-                                        "option"
-                                      ]
+                                        "key_code": "left_arrow",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -5751,7 +5751,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "k",
+                                    "key_code": "t",
                                     "modifiers": {
                                         "optional": [
                                             "caps_lock"
@@ -5760,7 +5760,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"chromeHistory\" in workflow \"thomasupton.chrome-history\" with argument \"\"'"
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"repos\" in workflow \"net.deanishe.alfred-git-repos\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
@@ -5774,7 +5774,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "t",
+                                    "key_code": "k",
                                     "modifiers": {
                                         "optional": [
                                             "caps_lock"
@@ -5783,7 +5783,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"towerRepo\" in workflow \"net.cjlucas.alfred.tower\" with argument \"\"'"
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"chromeHistory\" in workflow \"thomasupton.chrome-history\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
