@@ -89,7 +89,6 @@ values."
      )
    dotspacemacs-additional-packages '(
                                       ;; butler
-                                      anti-zenburn-theme
                                       company-flx
                                       circe
                                       circe-notifications
@@ -118,7 +117,7 @@ values."
                                       quickrun
                                       ;; vlf
                                       nodejs-repl
-                                      sunburn-theme
+                                      zunburn-theme
                                       ;; visual-ascii-mode
                                       webpaste
                                       )
@@ -193,7 +192,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-light sunburn anti-zenburn gruvbox-light-soft gruvbox-light-medium)
+   dotspacemacs-themes '(spacemacs-light zenburn gruvbox-light-soft gruvbox-light-medium)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
