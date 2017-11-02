@@ -39,6 +39,7 @@ values."
      spacemacs-purpose
      spacemacs-misc
      spacemacs-navigation
+     (rcirc :variables rcirc-enable-authinfo-support t)
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy

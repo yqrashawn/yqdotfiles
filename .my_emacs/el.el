@@ -141,6 +141,8 @@ already been connected to."
 
 (defun my-freenode-password (server)
   (my-fetch-password :user "yqrashawn" :host "irc.freenode.net"))
+(defun my-gitter-token (server)
+  (my-fetch-password :user "yqrashawn" :host "irc.gitter.im"))
 
 (setq circe-network-options
       '(("Freenode"
@@ -151,6 +153,13 @@ already been connected to."
          :sasl-username "yqrashawn"
          :sasl-password my-freenode-password
          :channels ("#emacs")
+         )
+        ("Mozilla"
+         :host "irc.mozilla.org"
+         :port (6667 . 6697)
+         :tls t
+         :nick "yqrashawn"
+         :channels ("#xi")
          )
         ("Gitter"
          :host "irc.gitter.im"
