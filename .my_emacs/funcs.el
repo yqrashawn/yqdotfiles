@@ -186,3 +186,11 @@ Otherwise, return the selected window."
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
+
+(defun xah-css-insert-random-color-hsl ()
+  "Insert a random color string of CSS HSL format.
+Sample output: hsl(100,24%,82%);
+URL `http://ergoemacs.org/emacs/emacs_CSS_colors.html'
+Version 2015-06-11"
+  (interactive)
+  (insert (format "hsl(%d,%d%%,%d%%);" (random 360) (random 100) (random 100))))
