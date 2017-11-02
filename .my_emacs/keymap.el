@@ -1,6 +1,9 @@
 ;; -*- mode: emacs-lisp -*-
 (setq mac-command-modifier 'hyper)
 
+(global-set-key (kbd "H-]") 'multi-term-next)
+(global-set-key (kbd "H-[") 'multi-term-prev)
+(global-set-key (kbd "H-p") 'multi-term)
 (eval-after-load 'magit
   '(evil-define-key 'normal magit-mode-map "v"
      #'endless/visit-pull-request-url))

@@ -31,10 +31,10 @@ values."
      ;; command-log
      spacemacs-evil
      spacemacs-editing
-     spacemacs-editing-visual
      spacemacs-completion
      spacemacs-org
      spacemacs-visual
+     spacemacs-editing-visual
      spacemacs-layouts
      spacemacs-purpose
      spacemacs-misc
@@ -65,7 +65,9 @@ values."
                markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c" "c++" "python" "scala" ("elisp" "emacs-lisp") ("javascript" "js2-mode")))
      ;; node
-     (org :variables org-projectile-file "plans.org")
+     (org :variables
+          org-want-todo-bindings t
+          org-projectile-file "plans.org")
      (shell :variables
             shell-default-height 30
             shell-default-position 'right
@@ -73,7 +75,7 @@ values."
             shell-default-term-shell "/bin/zsh"
             shell-default-full-span nil)
      ;; spell-checking
-     evil-snipe
+     (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
      prodigy
      (restclient :variables restclient-use-org t)
      syntax-checking
