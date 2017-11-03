@@ -409,6 +409,13 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (add-hook
+   'company-completion-started-hook
+   (lambda (&rest ignore)
+     (when evil-mode
+       (when (evil-insert-state-p)
+         (define-key evil-insert-state-map (kbd "C-j") nil)
+         (define-key evil-insert-state-map (kbd "C-k") nil)))))
   (global-diff-hl-mode)
   (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
   (add-to-list 'load-path "~/workspace/THIRD/emacs-libvterm")
@@ -466,6 +473,7 @@ you should place your code here."
                         table)))
   (add-hook 'minibuffer-inactive-mode-hook 'minibuffer-inactive-mode-hook-setup)
   ;; (setq projectile-tags-command "ctags -Re --languages=javascript --exclude=.git --exclude=log --exclude=build --exclude=sampleModels --exclude=study --exclude=node_modules --exclude=release --exclude=\\*.min.\\* %s %s .")
+  (setq projectile-tags-file-name nil)
   (setq projectile-tags-command nil)
   (setq tramp-default-method "ssh")
   ;; (ws-butler-global-mode)
