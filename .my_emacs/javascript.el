@@ -80,7 +80,7 @@
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
 (setq eslintd-fix-executable (concat user-home-directory ".npm-packages/bin/eslint_d"))
-(setq flycheck-javascript-eslint-executable "eslint_d")
+(setq flycheck-javascript-eslint-executable "eslint")
 (setq flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
 
 ;; (setq-default save-place t)
