@@ -392,9 +392,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq dired-listing-switches "-aBhl --group-directories-first")
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
-        `(("." . ,(concat user-home-directory "Dropbox/sync/undo"))))
-  (unless (file-exists-p (concat user-home-directory "Dropbox/sync/undo"))
-    (make-directory (concat user-home-directory "Dropbox/sync/undo")))
+        `(("." . ,(concat user-emacs-directory ".cache/undo"))))
+  (unless (file-exists-p (concat user-emacs-directory ".cache/undo"))
+    (make-directory (concat user-emacs-directory "./cache/undo")))
+
   ;; (when (memq window-system '(mac ns))
   ;;   (exec-path-from-shell-copy-env "LC_ALL")
   ;;   (exec-path-from-shell-copy-env "TERM")
