@@ -129,7 +129,17 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    evil-tutor
+                                    evil-visualstar
+                                    lorem-ipsum
+                                    uuidgen
+                                    password-generator
+                                    helm-make
+                                    spinner
+                                    helm-core
+                                    helm
+                                    )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -342,12 +352,12 @@ values."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup t
    spell-checking-enable-by-default nil
-   syntax-checking-enable-tooltips nil
    auto-completion-complete-with-key-sequence-delay 0.01
    auto-completion-enable-snippets-in-popup t
    auto-completion-enable-sort-by-usage t
    auto-completion-private-snippets-directory "~/.emacs.d/private/snippets"
-   auto-completion-enable-help-tooltip nil
+   syntax-checking-enable-tooltips t
+   auto-completion-enable-help-tooltip t
    org-enable-bootstrap-support t
    org-enable-github-support t
    better-defaults-move-to-end-of-code-first t
@@ -398,6 +408,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (global-diff-hl-mode)
   (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
   (add-to-list 'load-path "~/workspace/THIRD/emacs-libvterm")
   (setq source-directory (concat user-home-directory "emacs/src"))
