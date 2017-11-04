@@ -21,8 +21,7 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(python
-     artist
+   '(artist
      yq-mode-line
      ;; parinfer
      ;; nlinum
@@ -40,7 +39,6 @@ values."
      spacemacs-misc
      spacemacs-navigation
      (rcirc :variables rcirc-enable-authinfo-support t)
-     ;; ibuffer
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy
@@ -94,7 +92,7 @@ values."
      ;; docker
      ;; vimscript
      javascript
-     ;; (python :variables python-enable-yapf-format-on-save t)
+     (python :variables python-enable-yapf-format-on-save t)
      )
    dotspacemacs-additional-packages '(
                                       ;; butler
@@ -470,9 +468,6 @@ you should place your code here."
                         (modify-syntax-entry ?/ "." table)
                         table)))
   (add-hook 'minibuffer-inactive-mode-hook 'minibuffer-inactive-mode-hook-setup)
-  ;; (setq projectile-tags-command "ctags -Re --languages=javascript --exclude=.git --exclude=log --exclude=build --exclude=sampleModels --exclude=study --exclude=node_modules --exclude=release --exclude=\\*.min.\\* %s %s .")
-  ;; (setq projectile-tags-file-name nil)
-  ;; (setq projectile-tags-command nil)
   (setq tramp-default-method "ssh")
   ;; (ws-butler-global-mode)
   (setq dumb-jump-prefer-searcher 'rg)
