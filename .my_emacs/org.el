@@ -177,21 +177,25 @@
         (isearch . lineage)
         (default . ancestors)))
 
+;; (setq org-journal-file-format "%Y-%m-%d")
 
-(setq org-directory "~/Dropbox/org")
-;; (setq org-mobile-directory "~/Dropbox/org/MobileOrg")
+(setq org-barin-path "~/Dropbox/ORG/brain")
+(setq org-brain-visualize-default-choices 'root)
+;; (setq org-brain-show-resources nil)
+;; (setq org-brain-show-text nil)
+
+(setq org-directory "~/Dropbox/ORG")
 (setq org-mobile-directory "~/Dropbox/应用/MobileOrg")
-(setq org-mobile-inbox-for-pull "~/Dropbox/org/flagged.org")
-(setq org-agenda-files '("~/Dropbox/org"))
-(setq org-default-notes-file '("~/Dropbox/org/notes.org"))
+(setq org-mobile-inbox-for-pull "~/Dropbox/ORG/flagged.org")
+(setq org-default-notes-file '("~/Dropbox/ORG/notes.org"))
+
 (with-eval-after-load 'org-projectile
   (setq org-projectile:allow-tramp-projects t)
-  (setq org-projectile:capture-template "*** TODO %?\n%a")
-  (setq org-projectile:projects-file "~/Dropbox/org/projects.org"))
+  (setq org-projectile:capture-template "*** TODO %?\n%a"))
 
 (with-eval-after-load 'org-agenda
-  (require 'org-projectile)
-  (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files))))
+  (setq org-agenda-files '("~/Dropbox/ORG/"))
+  (setq org-agenda-skip-unavailable-files t))
 
 (defvar current-file-reference ""  "Global variable to store the current file reference")
 
@@ -215,28 +219,24 @@
 (setq org-capture-templates
       (quote
        (("l" "Capture from the Internet with link" entry
-         (file+olp "~/Dropbox/org/notes.org" "capture" "read later")
+         (file+olp "~/Dropbox/ORG/notes.org" "capture" "read later")
          "*** TODO %? %^L %^G\n%U")
         ("s" "Some day" entry
-         (file+olp "~/Dropbox/org/notes.org" "capture" "some day")
+         (file+olp "~/Dropbox/ORG/notes.org" "capture" "some day")
          "*** TODO %? %^L %^G\n%U")
         ("n" "notes" entry
-         (file+olp "~/Dropbox/org/notes.org" "capture" "note")
+         (file+olp "~/Dropbox/ORG/notes.org" "capture" "note")
          "*** %?\n   %U")
         ("c" "code snipptes" entry
-         (file+olp "~/Dropbox/org/snipptes.org" "snipptes")
+         (file+olp "~/Dropbox/ORG/snipptes.org" "snipptes")
          "*** %?\n%U")
         ("f" "file TODOs" entry
-         (file "~/Dropbox/org/gtd.org")
-         "* TODO %? %^G\n %a\n%U")
+         (file "~/Dropbox/ORG/gtd.org")
+         "* TODO %? \n %a\n%U")
         ("t" "TODOs" entry
-         (file+olp "~/Dropbox/org/gtd.org" "misc")
-         "* TODO %? %^G\n%U"))))
-;; (use-package ox-opml
-;;   :ensure t
-;;   :mode "\\.org\\'"
-;;   :load-path org-opml-src)
+         (file+olp "~/Dropbox/ORG/gtd.org" "misc")
+         "* TODO %? \n%U"))))
 
-;; (use-package org-opml
-;;   :ensure t
-;;   :load-path org-opml-src)
+(push '("b" "Brain" plain (function org-brain-goto-end)
+        "* %i%?" :empty-lines 1)
+      org-capture-templates)
