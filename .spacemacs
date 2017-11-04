@@ -67,7 +67,10 @@ values."
      ;; node
      (org :variables
           org-want-todo-bindings t
-          org-projectile-file "plans.org")
+          org-enable-org-journal-support t
+          org-journal-dir "~/Dropbox/ORG/journal"
+          org-enable-github-support t
+          org-projectile-file "~/Dropbox/ORG/projects.org")
      (shell :variables
             shell-default-height 30
             shell-default-position 'right
