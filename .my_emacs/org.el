@@ -185,17 +185,15 @@
 ;; (setq org-brain-show-text nil)
 
 (setq org-directory "~/Dropbox/ORG")
+(setq org-agenda-files (list "~/Dropbox/ORG"))
+(setq org-agenda-skip-unavailable-files t)
 (setq org-mobile-directory "~/Dropbox/应用/MobileOrg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/ORG/flagged.org")
 (setq org-default-notes-file '("~/Dropbox/ORG/notes.org"))
 
-(with-eval-after-load 'org-projectile
-  (setq org-projectile:allow-tramp-projects t)
-  (setq org-projectile:capture-template "*** TODO %?\n%a"))
-
 (with-eval-after-load 'org-agenda
-  (setq org-agenda-files '("~/Dropbox/ORG/"))
-  (setq org-agenda-skip-unavailable-files t))
+  (require 'org-projectile)
+  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
 
 (defvar current-file-reference ""  "Global variable to store the current file reference")
 

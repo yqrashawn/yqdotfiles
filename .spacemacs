@@ -40,6 +40,7 @@ values."
      spacemacs-misc
      spacemacs-navigation
      (rcirc :variables rcirc-enable-authinfo-support t)
+     ;; ibuffer
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy
@@ -70,7 +71,8 @@ values."
           org-enable-org-journal-support t
           org-journal-dir "~/Dropbox/ORG/journal"
           org-enable-github-support t
-          org-projectile-file "~/Dropbox/ORG/projects.org")
+          org-projectile-file "TODOs.org"
+          )
      (shell :variables
             shell-default-height 30
             shell-default-position 'right
@@ -411,6 +413,7 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
   (add-hook
    'company-completion-started-hook
    (lambda (&rest ignore)
@@ -456,13 +459,6 @@ you should place your code here."
 
   ;; fix shell color
   (setq system-uses-terminfo nil)
-  (eval-after-load "projectile"
-    '(progn (setq magit-repo-dirs (mapcar (lambda (dir)
-                                            (substring dir 0 -1))
-                                          (remove-if-not (lambda (project)
-                                                           (file-directory-p (concat project "/.git/")))
-                                                         (projectile-relevant-known-projects)))
-                  magit-repo-dirs-depth 3)))
   ;;;;;;;;;;;;;;;;;;;;; global ;;;;;;;;;;;;;;;;;;;;
   (setq mc/always-run-for-all t)
   (global-company-mode)
@@ -475,8 +471,8 @@ you should place your code here."
                         table)))
   (add-hook 'minibuffer-inactive-mode-hook 'minibuffer-inactive-mode-hook-setup)
   ;; (setq projectile-tags-command "ctags -Re --languages=javascript --exclude=.git --exclude=log --exclude=build --exclude=sampleModels --exclude=study --exclude=node_modules --exclude=release --exclude=\\*.min.\\* %s %s .")
-  (setq projectile-tags-file-name nil)
-  (setq projectile-tags-command nil)
+  ;; (setq projectile-tags-file-name nil)
+  ;; (setq projectile-tags-command nil)
   (setq tramp-default-method "ssh")
   ;; (ws-butler-global-mode)
   (setq dumb-jump-prefer-searcher 'rg)
@@ -505,7 +501,6 @@ you should place your code here."
   (load-file "~/.my_emacs/popwin.el")
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
-  ;; (load-file "~/.my_emacs/modeline.el")
   ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq company-idle-delay 0.15)
   (setq diary-file "~/Dropbox/org/diary")
