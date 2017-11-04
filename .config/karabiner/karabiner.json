@@ -416,6 +416,7 @@
                                             "^com\\.nulana\\.remotixmac$",
                                             "^com\\.p5sys\\.jump\\.mac\\.viewer$",
                                             "^com\\.p5sys\\.jump\\.mac\\.viewer\\.web$",
+                                            "^com\\.sublimetext\\.3$",
                                             "^com\\.teamviewer\\.TeamViewer$",
                                             "^com\\.vmware\\.horizon$",
                                             "^com\\.2X\\.Client\\.Mac$",
