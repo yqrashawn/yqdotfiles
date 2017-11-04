@@ -133,7 +133,6 @@ values."
                                     evil-tutor
                                     evil-visualstar
                                     lorem-ipsum
-                                    uuidgen
                                     password-generator
                                     helm-make
                                     spinner
