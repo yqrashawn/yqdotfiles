@@ -1,6 +1,7 @@
 ;; -*- mode: emacs-lisp -*-
 (setq mac-command-modifier 'hyper)
 
+(global-set-key (kbd "C-x k") 'spacemacs/kill-this-buffer)
 (global-set-key (kbd "H-]") 'multi-term-next)
 (global-set-key (kbd "H-[") 'multi-term-prev)
 (global-set-key (kbd "H-p") 'multi-term)
@@ -113,7 +114,6 @@
 (define-key evil-normal-state-map (kbd "C-k") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "za") 'evil-scroll-line-to-center)
 (define-key evil-normal-state-map (kbd "C-m") 'evil-jump-item)
-(define-key evil-normal-state-map (kbd "C-x k") 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map (kbd "M-j") 'evil-mc-make-cursor-move-next-line)
 (define-key evil-normal-state-map (kbd "M-k") 'evil-mc-make-cursor-move-prev-line)
 
@@ -200,7 +200,7 @@
 (define-key evil-normal-state-map "sg" 'magit-dispatch-popup)
 (define-key evil-normal-state-map "sf" 'spacemacs/search-auto)
 (define-key evil-normal-state-map "sF" 'spacemacs/search-auto-region-or-symbol)
-(define-key evil-normal-state-map "sk" 'phi-search)
+(define-key evil-normal-state-map "sk" 'kill-this-buffer)
 (define-key evil-normal-state-map "sK" 'spacemacs/swiper-region-or-symbol)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sh" 'save-buffer)
@@ -358,3 +358,7 @@
 ;; (global-set-key (kbd "C-c a") 'quickrun-with-arg)
 
 (evil-global-set-key 'insert (kbd "C-l") 'hippie-expand)
+
+
+(spacemacs/set-leader-keys "fs" nil)
+(spacemacs/set-leader-keys "bd" nil)

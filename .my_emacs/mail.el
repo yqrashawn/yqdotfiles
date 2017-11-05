@@ -1,3 +1,4 @@
+(setq user-mail-address "namy.19@gmail.com")
 (setq smtpmail-default-smtp-server "smtp.gmail.com")
 
 (setq mu4e-maildir "~/Maildir"

@@ -1,5 +1,10 @@
 ;; no confirm before evaluate code in src block
 (setq org-confirm-babel-evaluate nil)
+(add-hook 'org-agenda-mode-hook 'spacemacs/org-agenda-transient-state/body)
+
+(setq org-tag-alist '((:startgroup . nil)
+                      ("work" . ?w) ("home" . ?h)
+                      (:endgroup . nil)))
 
 ;; src block have same indentation with #+BEGIN_SRC
 (setq org-edit-src-content-indentation 0)
@@ -190,8 +195,80 @@
 (setq org-mobile-directory "~/Dropbox/应用/MobileOrg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/ORG/flagged.org")
 (setq org-default-notes-file '("~/Dropbox/ORG/notes.org"))
-
+(setq org-projectile-capture-template "* TODO %? \n%U")
 (with-eval-after-load 'org-agenda
+  (add-to-list 'org-agenda-custom-commands
+        '("P" "Printed agenda"
+           ((agenda "" ((org-agenda-ndays 7)                      ;; overview of appointments
+                        (org-agenda-start-on-weekday nil)         ;; calendar begins today
+                        (org-agenda-repeating-timestamp-show-all t)
+                        (org-agenda-entry-types '(:timestamp :sexp))))
+            (agenda "" ((org-agenda-ndays 1)                      ;; daily agenda
+                        (org-deadline-warning-days 7)             ;; 7 day advanced warning for deadlines
+                        (org-agenda-todo-keyword-format "[ ]")
+                        (org-agenda-scheduled-leaders '("" ""))
+                        (org-agenda-prefix-format "%t%s")))
+            (todo "TODO"                                          ;; todos sorted by context
+                  ((org-agenda-prefix-format "[ ] %T: ")
+                   (org-agenda-sorting-strategy '(tag-up priority-down))
+                   (org-agenda-todo-keyword-format "")
+                   (org-agenda-overriding-header "\nTasks by Context\n------------------\n"))))
+           ((org-agenda-with-colors nil)
+            (org-agenda-compact-blocks t)
+            (org-agenda-remove-tags t)
+            (ps-number-of-columns 2)
+            (ps-landscape-mode t))
+           ("~/Downloads/agenda.ps")))
+  (add-to-list 'org-agenda-custom-commands
+               '("d" "Upcoming deadlines" agenda ""
+                 ((org-agenda-entry-types '(:deadline))
+                  (org-agenda-ndays 1)
+                  (org-deadline-warning-days 30)
+                  (org-agenda-time-grid nil))))
+  (add-to-list 'org-agenda-custom-commands '("w" . "Work stuff"))
+  (add-to-list 'org-agenda-custom-commands '("wt" "Agenda and work todo" ((agenda "") (tags-todo "work"))))
+  (add-to-list 'org-agenda-custom-commands
+               '("ww" "Working Weekly Review"
+                 ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
+                  ;; type "l" in the agenda to review logged items
+                  (stuck "work" ((org-agenda-files (org-projectile-todo-files)))) ;; review stuck projects
+                  (tags-todo "work")
+                  (tags-todo "MAYBE+work") ;; review someday/maybe items
+                  (tags-todo "WAITING+work")))) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("wp" . "Working Priority")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("wpa" "Working Priority A" tags-todo "+PRIORITY=\"A\"+work")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("wpb" "Working Priority B" tags-todo "+PRIORITY=\"B\"+work")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("wpb" "Working Priority C" tags-todo "+PRIORITY=\"C\"+work")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands '("h" . "Home stuff"))
+  (add-to-list 'org-agenda-custom-commands '("ht" "Agenda and home todo" ((agenda "") (tags-todo "home"))))
+  (add-to-list 'org-agenda-custom-commands
+               '("hw" "Home Weekly Review"
+                 ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
+                  ;; type "l" in the agenda to review logged items
+                  (stuck "" ((org-agenda-files "~/Dropbox/ORG"))) ;; review stuck projects
+                  (tags-todo "home")
+                  (tags-todo "MAYBE+home") ;; review someday/maybe items
+                  (tags-todo "WAITING+home")))) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("hp" . "Home Priority")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("hpa" "Home Priority A" tags-todo "+PRIORITY=\"A\"+home")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("hpb" "Home Priority B" tags-todo "+PRIORITY=\"B\"+home")) ;; review waiting items
+  (add-to-list 'org-agenda-custom-commands
+               '("hpb" "Home Priority C" tags-todo "+PRIORITY=\"C\"+home")) ;; review waiting items
+  (setq org-agenda-custom-commands
+        '(("p" . "Priorities")
+          ("pa" "A items" tags-todo "+PRIORITY=\"A\"")
+          ("pb" "B items" tags-todo "+PRIORITY=\"B\"")
+          ("pc" "C items" tags-todo "+PRIORITY=\"C\"")
+          ))
+  (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((agenda "") (tags-todo "read"))))
+
   (require 'org-projectile)
   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
 
@@ -217,17 +294,17 @@
 (setq org-capture-templates
       (quote
        (("l" "Capture from the Internet with link" entry
-         (file+olp "~/Dropbox/ORG/notes.org" "capture" "read later")
+         (file+olp "~/Dropbox/ORG/notes.org" "notes" "read")
          "*** TODO %? %^L %^G\n%U")
         ("s" "Some day" entry
-         (file+olp "~/Dropbox/ORG/notes.org" "capture" "some day")
+         (file+olp "~/Dropbox/ORG/notes.org" "notes" "some day")
          "*** TODO %? %^L %^G\n%U")
         ("n" "notes" entry
-         (file+olp "~/Dropbox/ORG/notes.org" "capture" "note")
+         (file+olp "~/Dropbox/ORG/notes.org" "notes" "note")
          "*** %?\n   %U")
         ("c" "code snipptes" entry
          (file+olp "~/Dropbox/ORG/snipptes.org" "snipptes")
-         "*** %?\n%U")
+         "**** %?\n%U")
         ("f" "file TODOs" entry
          (file "~/Dropbox/ORG/gtd.org")
          "* TODO %? \n %a\n%U")
@@ -238,3 +315,84 @@
 (push '("b" "Brain" plain (function org-brain-goto-end)
         "* %i%?" :empty-lines 1)
       org-capture-templates)
+
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-log-note-clock-out t)
+
+(setq org-clock-idle-time 10)
+(bind-key "C-c w" 'hydra-org-clock/body) ;; may bind to other keys
+(defhydra hydra-org-clock (:color blue :hint nil)
+  "
+^Clock:^ ^In/out^     ^Edit^   ^Summary^    | ^Timers:^ ^Run^           ^Insert
+-^-^-----^-^----------^-^------^-^----------|--^-^------^-^-------------^------
+(_?_)    _i_n         _e_dit   _g_oto entry | (_z_)     _r_elative      ti_m_e
+^ ^      _c_ontinue   _q_uit   _d_isplay    |  ^ ^      cou_n_tdown     i_t_em
+^ ^      _o_ut        ^ ^      _r_eport     |  ^ ^      _p_ause toggle
+^ ^      ^ ^          ^ ^      ^ ^          |  ^ ^      _s_top
+"
+   ("i" org-clock-in)
+   ("o" org-clock-out)
+   ("c" org-clock-in-last)
+   ("e" org-clock-modify-effort-estimate)
+   ("q" org-clock-cancel)
+   ("g" org-clock-goto)
+   ("d" org-clock-display)
+   ("r" org-clock-report)
+   ("?" (org-info "Clocking commands"))
+
+  ("r" org-timer-start)
+  ("n" org-timer-set-timer)
+  ("p" org-timer-pause-or-continue)
+  ;; ("a" (org-timer 16)) ; double universal argument
+  ("s" org-timer-stop)
+
+  ("m" org-timer)
+  ("t" org-timer-item)
+  ("z" (org-info "Timers")))
+
+;; (define-key flyspell-mode-map (kbd "C-M-i") nil)
+;; (bind-key "C-M-i" 'complete-symbol org-mode-map)
+(evil-define-key 'insert 'org-mode-map "C-M-i" 'complete-symbol)
+(setq completion-at-point-functions
+      '(org-completion-symbols
+        ora-cap-filesystem
+        org-completion-refs))
+
+(defun org-completion-symbols ()
+  (when (looking-back "=[a-zA-Z]+")
+    (let (cands)
+      (save-match-data
+        (save-excursion
+          (goto-char (point-min))
+          (while (re-search-forward "=\\([a-zA-Z]+\\)=" nil t)
+            (cl-pushnew
+             (match-string-no-properties 0) cands :test 'equal))
+          cands))
+      (when cands
+        (list (match-beginning 0) (match-end 0) cands)))))
+
+(defun ora-cap-filesystem ()
+  (let (path)
+    (when (setq path (ffap-string-at-point))
+      (let ((compl
+             (all-completions path #'read-file-name-internal)))
+        (when compl
+          (let ((offset (ivy-completion-common-length (car compl))))
+            (list (- (point) offset) (point) compl)))))))
+
+(defun org-completion-refs ()
+  (when (looking-back "\\\\\\(?:ref\\|label\\){\\([^\n{}]\\)*")
+    (let (cands beg end)
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward "\\label{\\([^}]+\\)}" nil t)
+          (push (match-string-no-properties 1) cands)))
+      (save-excursion
+        (up-list)
+        (setq end (1- (point)))
+        (backward-list)
+        (setq beg (1+ (point))))
+      (list beg end
+            (delete (buffer-substring-no-properties beg end)
+                    (nreverse cands))))))

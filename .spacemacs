@@ -23,10 +23,13 @@ values."
    dotspacemacs-configuration-layers
    '(artist
      yq-mode-line
+     (elfeed :variables rmh-elfeed-org-files (list "~/Dropbox/ORG/feed/feedly.org"
+                                                   "~/Dropbox/ORG/feed/local.org"))
      ;; parinfer
      ;; nlinum
      bm
      github
+     color
      ;; command-log
      spacemacs-evil
      spacemacs-editing
@@ -96,6 +99,7 @@ values."
      )
    dotspacemacs-additional-packages '(
                                       ;; butler
+                                      beacon
                                       bug-hunter
                                       company-flx
                                       circe
@@ -109,9 +113,14 @@ values."
                                       dired-quick-sort
                                       dired-narrow
                                       dired-details+
+                                      peep-dired
                                       ;; elmacro
+                                      elfeed-goodies
                                       evil-textobj-anyblock
                                       evil-textobj-column
+                                      helpful
+                                      langtool
+                                      suggest
                                       glsl-mode
                                       gruvbox-theme
                                       golden-ratio-scroll-screen
@@ -123,11 +132,14 @@ values."
                                       noccur
                                       phi-search
                                       quickrun
+                                      twittering-mode
                                       ;; vlf
                                       nodejs-repl
-                                      zenburn-theme
                                       ;; visual-ascii-mode
+                                      writegood-mode
+                                      web-narrow-mode
                                       webpaste
+                                      zenburn-theme
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -214,8 +226,10 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '(;; "Anonymous Pro for Powerline"
-                               "InconsolataG for Powerline"
+   dotspacemacs-default-font '("Hack"
+                               ;;"Menlo"
+                               ;; "Anonymous Pro for Powerline"
+                               ;; "InconsolataG for Powerline"
                                ;; "Source Code Pro for Powerline"
                                :size 16
                                :weight normal
@@ -411,7 +425,23 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
+  (put 'narrow-to-defun  'disabled nil)
+  (put 'narrow-to-page   'disabled nil)
+  (put 'narrow-to-region 'disabled nil)
+  ;; kill process on exit
+  (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+    (flet ((process-list ())) ad-do-it))
+  (defadvice kill-emacs (around no-query-kill-emacs activate)
+    (flet ((process-list ())) ad-do-it))
+  ;; undo buffer too large waring
+  (setq warning-suppress-types (quote ((undo discard-info))))
+  (setq-default x-stretch-cursor t) ;; cursor show tab width (stresh)
+  ;; don't let the cursor go into minibuffer prompt
+  (setq minibuffer-prompt-properties
+        (quote (read-only t point-entered minibuffer-avoid-prompt
+                          face minibuffer-prompt)))
+  (setq scroll-margin 3)
+  (setq use-dialog-box nil) ;; use mini-buffer message
   (add-hook
    'company-completion-started-hook
    (lambda (&rest ignore)
@@ -446,9 +476,7 @@ you should place your code here."
   (defun my-minibuffer-setup-hook ()
     (setq gc-cons-threshold most-positive-fixnum))
   (defun my-minibuffer-exit-hook ()
-    ;; (setq gc-cons-threshold 1000000)
-    ;; DEBUG
-    (setq gc-cons-threshold (* 10 1024 1024)))
+    (setq gc-cons-threshold (* 8 1024 1024)))
   (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
   (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
@@ -484,6 +512,7 @@ you should place your code here."
   (show-paren-mode 1)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (load-file "~/.my_emacs/modeline.el")
   (load-file "~/.my_emacs/el.el")
   (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.my_emacs/aliases.el")
@@ -496,6 +525,8 @@ you should place your code here."
   (load-file "~/.my_emacs/popwin.el")
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
+  (load-file "~/.my_emacs/eacl.el")
+  (setq eacl-grep-program "ggrep")
   ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq company-idle-delay 0.15)
   (setq diary-file "~/Dropbox/org/diary")

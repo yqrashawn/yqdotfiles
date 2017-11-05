@@ -128,7 +128,15 @@ Number of marked items: %(length (dired-get-marked-files))
   (define-key dired-mode-map "," 'dired))
 
 (use-package dired-subtree
+  :mode "dired-mode"
+  :defer
   :config
-  (bind-keys :map dired-mode-map
+  :bind (:map dired-mode-map
              ("i" . dired-subtree-insert)
              (";;" . dired-subtree-remove)))
+
+(use-package peep-dired
+  :defer
+  :config
+  :commands dred-mode-map
+  :bind(:map dired-mode-map ("p" . peep-dired)))
