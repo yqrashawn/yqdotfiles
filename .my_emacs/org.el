@@ -1,4 +1,5 @@
 ;; no confirm before evaluate code in src block
+(setq org-clock-idle-time 10)
 (setq org-confirm-babel-evaluate nil)
 (add-hook 'org-agenda-mode-hook 'spacemacs/org-agenda-transient-state/body)
 
@@ -396,3 +397,32 @@
       (list beg end
             (delete (buffer-substring-no-properties beg end)
                     (nreverse cands))))))
+(bind-key "C-c w" 'hydra-org-clock/body)
+(defhydra hydra-org-clock (:color blue :hint nil)
+  "
+^Clock:^ ^In/out^     ^Edit^   ^Summary^    | ^Timers:^ ^Run^           ^Insert
+-^-^-----^-^----------^-^------^-^----------|--^-^------^-^-------------^------
+(_?_)    _i_n         _e_dit   _g_oto entry | (_z_)     _r_elative      ti_m_e
+^ ^      _c_ontinue   _q_uit   _d_isplay    |  ^ ^      cou_n_tdown     i_t_em
+^ ^      _o_ut        ^ ^      _r_eport     |  ^ ^      _p_ause toggle
+^ ^      ^ ^          ^ ^      ^ ^          |  ^ ^      _s_top
+"
+   ("i" org-clock-in)
+   ("o" org-clock-out)
+   ("c" org-clock-in-last)
+   ("e" org-clock-modify-effort-estimate)
+   ("q" org-clock-cancel)
+   ("g" org-clock-goto)
+   ("d" org-clock-display)
+   ("r" org-clock-report)
+   ("?" (org-info "Clocking commands"))
+
+  ("r" org-timer-start)
+  ("n" org-timer-set-timer)
+  ("p" org-timer-pause-or-continue)
+  ;; ("a" (org-timer 16)) ; double universal argument
+  ("s" org-timer-stop)
+
+  ("m" org-timer)
+  ("t" org-timer-item)
+  ("z" (org-info "Timers")))
