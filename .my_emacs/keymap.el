@@ -41,6 +41,7 @@
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
 (setq evil-mc-undo-cursors-on-keyboard-quit t)
 
+(evil-define-key 'insert company-active-map "C-l" 'company-complete-selection)
 ;; dired
 (with-eval-after-load 'dired
   (evil-define-key 'normal dired-mode-map "l" 'diredp-find-file-reuse-dir-buffer)
@@ -208,6 +209,7 @@
 (define-key evil-normal-state-map "sL" 'imenu-anywhere)
 (define-key evil-normal-state-map "sb" 'ace-jump-code-buffers)
 (define-key evil-normal-state-map "sj" 'counsel-recentf)
+(define-key evil-normal-state-map "so" 'counsel-find-file)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
 
 (define-key evil-normal-state-map "sQ" 'aya-create)

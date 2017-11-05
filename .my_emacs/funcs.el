@@ -359,8 +359,8 @@ Version 2015-06-11"
           ;;      (spacemacs/set-leader-keys "hdj" 'helpful-command)
           ;;      (spacemacs/set-leader-keys "hdh" 'helpful-callable)
           ;;      (spacemacs/set-leader-keys "hdi" 'helpful-symbol)
-               (evil-define-key 'normal helpful-mode-map "q" 'kill-this-buffer)
-               ))
+          (evil-define-key 'normal helpful-mode-map "q" 'kill-this-buffer)
+          ))
 
 (use-package beacon
   :diminish ""

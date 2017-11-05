@@ -431,7 +431,6 @@ you should place your code here."
     (setq super-save-auto-save-when-idle t)
     (setq super-save-idle-duration 30)  ; def 5 sec
     :config (super-save-initialize))
-
   (setq backup-directory-alist (quote ((".*" . "~/.emacs.d/.cache/backups/"))))
   (setq make-backup-files t      ; backup of a file the first time it is saved.
         backup-by-copying t      ; don't clobber symlinks
@@ -467,6 +466,7 @@ you should place your code here."
    (lambda (&rest ignore)
      (when evil-mode
        (when (evil-insert-state-p)
+         (define-key evil-insert-state-map (kbd "C-l") nil)
          (define-key evil-insert-state-map (kbd "C-j") nil)
          (define-key evil-insert-state-map (kbd "C-k") nil)))))
   (global-diff-hl-mode)
