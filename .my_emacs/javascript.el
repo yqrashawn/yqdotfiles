@@ -1,7 +1,18 @@
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
 (setq vue-html-color-interpolations t)
 
-;; (add-to-list 'spacemacs-jump-handlers-js2-mode '(dumb-jump-go :async t))
+(add-hook 'js2-mode-hook 'prettier-js-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
+(add-hook 'react-mode-hook 'prettier-js-mode)
+(defun enable-minor-mode (my-pair)
+  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+  (if (buffer-file-name)
+      (if (string-match (car my-pair) buffer-file-name)
+          (funcall (cdr my-pair)))))
+(add-hook 'web-mode-hook #'(lambda ()
+                             (enable-minor-mode
+                              '("\\.jsx?\\'" . prettier-js-mode))))
+
 ;;;;;;;;;;;;; web-mode ;;;;;;;;;;;;;
 ;; adjust indents for web-mode to 2 spaces
 ;; (defun my-web-mode-hook ()
@@ -104,3 +115,13 @@
 ;;                 )
 ;;             (unless tern-mode (tern-mode))
 ;;           (if tern-mode (tern-mode -1))))))
+
+(add-hook 'web-mode-hook 'web-narrow-mode)
+(use-package web-narrow-mode
+  :mode (("\\.vue\\'" . web-mode)("\\.html\\'" . web-mode) ("\\.jsx\\'" . react-mode))
+  :commands (web-narrow-to-element
+             web-narrow-to-region
+             web-narrow-to-block
+             web-narrow-mode)
+  :defer
+  :config)
