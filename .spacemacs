@@ -121,6 +121,7 @@ values."
                                       helpful
                                       langtool
                                       suggest
+                                      super-save
                                       glsl-mode
                                       gruvbox-theme
                                       golden-ratio-scroll-screen
@@ -425,6 +426,25 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (use-package super-save
+    :init
+    (setq super-save-auto-save-when-idle t)
+    (setq super-save-idle-duration 30)  ; def 5 sec
+    :config (super-save-initialize))
+
+  (setq backup-directory-alist (quote ((".*" . "~/.emacs.d/.cache/backups/"))))
+  (setq make-backup-files t      ; backup of a file the first time it is saved.
+        backup-by-copying t      ; don't clobber symlinks
+        version-control t        ; version numbers for backup files
+        delete-old-versions t    ; delete excess backup files silently
+        kept-old-versions 2      ; oldest versions to keep when a new numbered backup is made (default: 2)
+        kept-new-versions 2     ; newest versions to keep when a new numbered backup is made (default: 2)
+        auto-save-default t      ; auto-save every buffer that visits a file
+        auto-save-timeout 60     ; number of seconds idle time before auto-save (default: 30)
+        auto-save-interval 1000   ; number of keystrokes between auto-saves (default: 300)
+        )
+  (setq create-lockfiles nil)
+
   (put 'narrow-to-defun  'disabled nil)
   (put 'narrow-to-page   'disabled nil)
   (put 'narrow-to-region 'disabled nil)
