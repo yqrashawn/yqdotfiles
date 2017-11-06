@@ -63,6 +63,7 @@ values."
      git
      osx
      indium
+     parinfer
      (markdown :variables
                markdown-live-preview-engine 'vmd
                markdown-mmm-auto-modes '("c" "c++" "python" "scala" ("elisp" "emacs-lisp") ("javascript" "js2-mode")))

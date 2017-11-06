@@ -199,27 +199,28 @@
 (setq org-projectile-capture-template "* TODO %? \n%U")
 (with-eval-after-load 'org-agenda
   (add-to-list 'org-agenda-custom-commands
-        '("P" "Printed agenda"
-           ((agenda "" ((org-agenda-ndays 7)                      ;; overview of appointments
-                        (org-agenda-start-on-weekday nil)         ;; calendar begins today
-                        (org-agenda-repeating-timestamp-show-all t)
-                        (org-agenda-entry-types '(:timestamp :sexp))))
-            (agenda "" ((org-agenda-ndays 1)                      ;; daily agenda
-                        (org-deadline-warning-days 7)             ;; 7 day advanced warning for deadlines
-                        (org-agenda-todo-keyword-format "[ ]")
-                        (org-agenda-scheduled-leaders '("" ""))
-                        (org-agenda-prefix-format "%t%s")))
-            (todo "TODO"                                          ;; todos sorted by context
-                  ((org-agenda-prefix-format "[ ] %T: ")
-                   (org-agenda-sorting-strategy '(tag-up priority-down))
-                   (org-agenda-todo-keyword-format "")
-                   (org-agenda-overriding-header "\nTasks by Context\n------------------\n"))))
-           ((org-agenda-with-colors nil)
-            (org-agenda-compact-blocks t)
-            (org-agenda-remove-tags t)
-            (ps-number-of-columns 2)
-            (ps-landscape-mode t))
-           ("~/Downloads/agenda.ps")))
+               '("P" "Printed agenda"
+                 ((agenda "" ((org-agenda-ndays 7)                      ;; overview of appointments
+                              (org-agenda-start-on-weekday nil)         ;; calendar begins today
+                              (org-agenda-repeating-timestamp-show-all t)
+                              (org-agenda-entry-types '(:timestamp :sexp))))
+                  (agenda "" ((org-agenda-ndays 1)                      ;; daily agenda
+                              (org-deadline-warning-days 7)             ;; 7 day advanced warning for deadlines
+                              (org-agenda-todo-keyword-format "[ ]")
+                              (org-agenda-scheduled-leaders '("" ""))
+                              (org-agenda-prefix-format "%t%s")))
+                  (todo "TODO"                                          ;; todos sorted by context
+                        ((org-agenda-files (org-projectile-todo-files))
+                         (org-agenda-prefix-format "[ ] %T: ")
+                         (org-agenda-sorting-strategy '(tag-up priority-down))
+                         (org-agenda-todo-keyword-format "")
+                         (org-agenda-overriding-header "\nTasks by Context\n------------------\n"))))
+                 ((org-agenda-with-colors nil)
+                  (org-agenda-compact-blocks t)
+                  (org-agenda-remove-tags t)
+                  (ps-number-of-columns 2)
+                  (ps-landscape-mode t))
+                 ("~/Downloads/agenda.ps")))
   (add-to-list 'org-agenda-custom-commands
                '("d" "Upcoming deadlines" agenda ""
                  ((org-agenda-entry-types '(:deadline))
@@ -250,28 +251,31 @@
                '("hw" "Home Weekly Review"
                  ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
                   ;; type "l" in the agenda to review logged items
-                  (stuck "" ((org-agenda-files "~/Dropbox/ORG"))) ;; review stuck projects
+                  (stuck "" ((org-agenda-files (list "~/Dropbox/ORG")))) ;; review stuck projects
                   (tags-todo "home")
                   (tags-todo "MAYBE+home") ;; review someday/maybe items
                   (tags-todo "WAITING+home")))) ;; review waiting items
-  (add-to-list 'org-agenda-custom-commands
-               '("hp" . "Home Priority")) ;; review waiting items
-  (add-to-list 'org-agenda-custom-commands
-               '("hpa" "Home Priority A" tags-todo "+PRIORITY=\"A\"+home")) ;; review waiting items
-  (add-to-list 'org-agenda-custom-commands
-               '("hpb" "Home Priority B" tags-todo "+PRIORITY=\"B\"+home")) ;; review waiting items
-  (add-to-list 'org-agenda-custom-commands
-               '("hpb" "Home Priority C" tags-todo "+PRIORITY=\"C\"+home")) ;; review waiting items
-  (setq org-agenda-custom-commands
-        '(("p" . "Priorities")
-          ("pa" "A items" tags-todo "+PRIORITY=\"A\"")
-          ("pb" "B items" tags-todo "+PRIORITY=\"B\"")
-          ("pc" "C items" tags-todo "+PRIORITY=\"C\"")
-          ))
-  (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((agenda "") (tags-todo "read"))))
 
-  (require 'org-projectile)
-  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
+  ;; (add-to-list 'org-agenda-custom-commands
+  ;;              '("hp" . "Home Priority")) ;; review waiting items
+  ;; (add-to-list 'org-agenda-custom-commands
+  ;;              '("hpa" "Home Priority A" tags-todo "+PRIORITY=\"A\"+home")) ;; review waiting items
+  ;; (add-to-list 'org-agenda-custom-commands
+  ;;              '("hpb" "Home Priority B" tags-todo "+PRIORITY=\"B\"+home")) ;; review waiting items
+  ;; (add-to-list 'org-agenda-custom-commands
+  ;;              '("hpc" "Home Priority C" tags-todo "+PRIORITY=\"C\"+home")) ;; review waiting items
+  ;; (add-to-list org-agenda-custom-commands
+  ;;              '("p" . "Priorities"))
+  ;; (add-to-list org-agenda-custom-commands
+  ;;              '("pa" "A items" tags-todo "+PRIORITY=\"A\""))
+  ;; (add-to-list org-agenda-custom-commands
+  ;;              '("pb" "B items" tags-todo "+PRIORITY=\"B\""))
+  ;; (add-to-list org-agenda-custom-commands
+  ;;              '("pc" "C items" tags-todo "+PRIORITY=\"C\""))
+(add-to-list 'org-agenda-custom-commands '("r" "Read later" ((agenda "") (tags-todo "read"))))
+
+(require 'org-projectile)
+(setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
 
 (defvar current-file-reference ""  "Global variable to store the current file reference")
 

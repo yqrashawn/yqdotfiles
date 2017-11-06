@@ -125,3 +125,4 @@
              web-narrow-mode)
   :defer
   :config)
+(setq js-doc-author "yqrashawn")
