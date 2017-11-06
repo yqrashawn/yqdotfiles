@@ -193,27 +193,27 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
 (defun my-insert-system-name()
   (interactive)
   "Get current system's name"
-  (insert (format "%s" system-name))
-  )
+  (insert (format "%s" system-name)))
+  
 
 ;; Get current system type
 (defun my-insert-system-type()
   (interactive)
   "Get current system type"
-  (insert (format "%s" system-type))
-  )
+  (insert (format "%s" system-type)))
+  
 
 ;; Check if system is Darwin/Mac OS X
 (defun my-system-type-is-darwin ()
   "Return true if system is darwin-based (Mac OS X)"
-  (string-equal system-type "darwin")
-  )
+  (string-equal system-type "darwin"))
+  
 
 ;; Check if system is Microsoft Windows
 (defun my-system-type-is-windows ()
   "Return true if system is Windows-based (at least up to Win7)"
-  (string-equal system-type "windows-nt")
-  )
+  (string-equal system-type "windows-nt"))
+  
 
 (when (my-system-type-is-darwin)
   (defun locate-make-mdfind-command-line (search-string)
@@ -228,8 +228,8 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
     "Search using spotlight"
     (interactive)
     (let ((locate-command "mdfind"))
-      (call-interactively 'locate nil)))
-  )
+      (call-interactively 'locate nil))))
+  
 ;; http://www.wilfred.me.uk/.emacs.d/init.html#org1752acf
 (defun yq/start-scratch-html-file (file-name)
   "Create a test HTML file in ~/Downloads/scratch/FILE-NAME to play around with."
@@ -359,8 +359,8 @@ Version 2015-06-11"
           ;;      (spacemacs/set-leader-keys "hdj" 'helpful-command)
           ;;      (spacemacs/set-leader-keys "hdh" 'helpful-callable)
           ;;      (spacemacs/set-leader-keys "hdi" 'helpful-symbol)
-          (evil-define-key 'normal helpful-mode-map "q" 'kill-this-buffer)
-          ))
+          (evil-define-key 'normal helpful-mode-map "q" 'kill-this-buffer)))
+          
 
 (use-package beacon
   :diminish ""
@@ -426,8 +426,8 @@ Version 2015-06-11"
         (setq langtool-buffer-process proc)
         (setq langtool-mode-line-message
               (list " LanguageTool"
-                    (propertize ":run" 'face compilation-info-face))))))
-  )
+                    (propertize ":run" 'face compilation-info-face)))))))
+  
 
 (use-package ssh-config-mode
   :mode (("\\.ssh/config\\'"      . ssh-config-mode)
