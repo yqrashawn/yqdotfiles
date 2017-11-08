@@ -1,4 +1,10 @@
 ;;; Code:
+(defun my/what-face (point)
+  "Reveal face at POINT."
+  (interactive "d")
+  (let ((face (or (get-char-property (point) 'read-face-name)
+                  (get-char-property (point) 'face))))
+    (if face (message "Face: %s" face) (message "No face at %d" point))))
 ;; word-count
 (defun word-count nil "Count words in buffer" (interactive)
        (shell-command-on-region (point-min) (point-max) "wc -w"))
@@ -48,11 +54,15 @@ Single Capitals as you type."
           (kill-buffer))))))
 (bind-key "C-c d" 'delete-file-and-buffer)
 
+
+
 (defun align-whitespace (start end)
   "Align columns by whitespace"
   (interactive "r")
   (align-regexp start end
                 "\\(\\s-*\\)\\s-" 1 0 t))
+
+
 
 (defun edit-current-file-as-root ()
   "Edit as root the file associated with the current buffer"
@@ -62,6 +72,8 @@ Single Capitals as you type."
         (setq file (concat "/sudo:root@localhost:" (buffer-file-name)))
         (find-file file))
     (message "Buffer is not associated to a file.")))
+
+
 
 (defun move-file (new-location)
   "Write this file to NEW-LOCATION, and delete the old one."
@@ -79,6 +91,7 @@ Single Capitals as you type."
                (file-exists-p new-location)
                (not (string-equal old-location new-location)))
       (delete-file old-location))))
+
 ;; start directory
 (defvar my/move-file-here-start-dir (expand-file-name "~/Downloads"))
 
@@ -141,6 +154,8 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
 
 (defalias 'mfh 'my/move-file-here "move file from download directory to cwd")
 
+
+
 (defun endless/visit-pull-request-url ()
   "Visit the current branch's PR on Github."
   (interactive)
@@ -179,6 +194,8 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
   '(define-key magit-mode-map "v"
      #'endless/visit-pull-request-url))
 
+
+
 ;; as tower C-u SPC-g-s
 (eval-after-load "projectile"
   '(setq magit-repository-directories
@@ -189,31 +206,32 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
                   (projectile-relevant-known-projects)))
          magit-repository-directories-depth 1))
 
+
+
 ;; Get current system's name
 (defun my-insert-system-name()
   (interactive)
   "Get current system's name"
   (insert (format "%s" system-name)))
-  
+
 
 ;; Get current system type
 (defun my-insert-system-type()
   (interactive)
   "Get current system type"
   (insert (format "%s" system-type)))
-  
+
 
 ;; Check if system is Darwin/Mac OS X
 (defun my-system-type-is-darwin ()
   "Return true if system is darwin-based (Mac OS X)"
   (string-equal system-type "darwin"))
-  
+
 
 ;; Check if system is Microsoft Windows
 (defun my-system-type-is-windows ()
   "Return true if system is Windows-based (at least up to Win7)"
   (string-equal system-type "windows-nt"))
-  
 
 (when (my-system-type-is-darwin)
   (defun locate-make-mdfind-command-line (search-string)
@@ -229,7 +247,9 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
     (interactive)
     (let ((locate-command "mdfind"))
       (call-interactively 'locate nil))))
-  
+
+
+
 ;; http://www.wilfred.me.uk/.emacs.d/init.html#org1752acf
 (defun yq/start-scratch-html-file (file-name)
   "Create a test HTML file in ~/Downloads/scratch/FILE-NAME to play around with."
@@ -283,6 +303,8 @@ Visit the file after creation."
                       ("l" (lambda (element) (insert (nth 1 (cdr element)))) "latex")
                       ("h" (lambda (element) (insert (nth 3 (cdr element)))) "html"))))
 
+
+
 (defun duplicate-line ()
   "Duplicate current line."
   (interactive)
@@ -290,12 +312,16 @@ Visit the file after creation."
   (yank)
   (yank))
 
+
+
 (defun untabify-all ()
   "Untabify the current buffer, unless `untabify-this-buffer' is nil."
   (interactive)
   (untabify (point-min) (point-max)))
 
 (define-key global-map (kbd "H-i") 'open-terminal-here)
+
+
 
 (defun open-terminal-here ()
   "Go to present working dir and focus iterm"
@@ -313,22 +339,7 @@ Visit the file after creation."
     " end tell\n"
     " do shell script \"open -a iTerm\"\n")))
 
-(defvar snwob-starting-window-or-buffer nil)
-
-(defun snwob-single-buffer-p ()
-  "Return non-nil if the current frame has one buffer only."
-  (null (cdr (buffer-list (selected-frame)))))
-
-(defun snwob-single-frame-p ()
-  "Return non-nil if the selected frame is the only one."
-  (null (cdr (frame-list))))
-
-(defun snwob--current-window-or-buffer ()
-  "Return the current buffer if there is a single window.
-Otherwise, return the selected window."
-  (if (one-window-p)
-      (current-buffer)
-    (selected-window)))
+
 
 (defun yqrashawn-copy-file-name-to-clipboard ()
   "Put the current file name into the clipboard."
@@ -341,6 +352,8 @@ Otherwise, return the selected window."
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
+
+
 
 (defun xah-css-insert-random-color-hsl ()
   "Insert a random color string of CSS HSL format.
@@ -360,7 +373,8 @@ Version 2015-06-11"
           ;;      (spacemacs/set-leader-keys "hdh" 'helpful-callable)
           ;;      (spacemacs/set-leader-keys "hdi" 'helpful-symbol)
           (evil-define-key 'normal helpful-mode-map "q" 'kill-this-buffer)))
-          
+
+
 
 (use-package beacon
   :diminish ""
@@ -371,9 +385,13 @@ Version 2015-06-11"
   (setq beacon-blink-when-focused t)
   (beacon-mode 1))
 
+
+
 (use-package writegood-mode
   :defer
   :commands (writegood-grade-level writegood-reading-ease))
+
+
 
 (use-package langtool
   :bind (("C-x 4 w" . langtool-check)
@@ -427,7 +445,8 @@ Version 2015-06-11"
         (setq langtool-mode-line-message
               (list " LanguageTool"
                     (propertize ":run" 'face compilation-info-face)))))))
-  
+
+
 
 (use-package ssh-config-mode
   :mode (("\\.ssh/config\\'"      . ssh-config-mode)
@@ -440,6 +459,8 @@ Version 2015-06-11"
   :defer t
   :config
   (add-hook 'ssh-config-mode-hook 'turn-on-font-lock))
+
+
 
 ;; http://endlessparentheses.com/emacs-narrow-or-widen-dwim.html
 (defun narrow-or-widen-dwim (p)
@@ -469,6 +490,8 @@ already narrowed."
 
 ;; replace downcase region
 (global-set-key "\C-x\C-l" 'narrow-or-widen-dwim)
+
+
 
 (use-package twittering-mode
   :defer t
@@ -586,3 +609,5 @@ already narrowed."
              ("y" . twittering-push-uri-onto-kill-ring)
              ("Y" . twittering-push-tweet-onto-kill-ring)
              ("a" . twittering-toggle-activate-buffer)))
+
+
