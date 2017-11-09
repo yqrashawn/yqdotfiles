@@ -120,6 +120,7 @@ values."
                                       evil-textobj-anyblock
                                       evil-textobj-column
                                       helpful
+                                      js-codemod
                                       langtool
                                       suggest
                                       super-save
