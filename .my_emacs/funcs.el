@@ -1,4 +1,11 @@
 ;;; Code:
+(defun yq/what-major-mode ()
+  "Reveal current major mode."
+  (interactive)
+  (message "%s" major-mode))
+
+
+
 (defun my/what-face (point)
   "Reveal face at POINT."
   (interactive "d")
@@ -609,5 +616,10 @@ already narrowed."
              ("y" . twittering-push-uri-onto-kill-ring)
              ("Y" . twittering-push-tweet-onto-kill-ring)
              ("a" . twittering-toggle-activate-buffer)))
+
+
+
+(use-package js-codemod
+  :commands (js-codemod-mod-region))
 
 
