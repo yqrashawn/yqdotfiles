@@ -376,7 +376,7 @@ values."
    auto-completion-enable-sort-by-usage t
    auto-completion-private-snippets-directory "~/.emacs.d/private/snippets"
    syntax-checking-enable-tooltips t
-   auto-completion-enable-help-tooltip t
+   auto-completion-enable-help-tooltip nil
    org-enable-bootstrap-support t
    org-enable-github-support t
    better-defaults-move-to-end-of-code-first t
@@ -463,14 +463,14 @@ you should place your code here."
                           face minibuffer-prompt)))
   (setq scroll-margin 3)
   (setq use-dialog-box nil) ;; use mini-buffer message
-  (add-hook
-   'company-completion-started-hook
-   (lambda (&rest ignore)
-     (when evil-mode
-       (when (evil-insert-state-p)
-         (define-key evil-insert-state-map (kbd "C-l") nil)
-         (define-key evil-insert-state-map (kbd "C-j") nil)
-         (define-key evil-insert-state-map (kbd "C-k") nil)))))
+  ;; (add-hook
+  ;;  'company-completion-started-hook
+  ;;  (lambda (&rest ignore)
+  ;;    (when evil-mode
+  ;;      (when (evil-insert-state-p)
+  ;;        (define-key evil-insert-state-map (kbd "C-l") nil)
+  ;;        (define-key evil-insert-state-map (kbd "C-j") nil)
+  ;;        (define-key evil-insert-state-map (kbd "C-k") nil)))))
   (global-diff-hl-mode)
   (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
   (add-to-list 'load-path "~/workspace/THIRD/emacs-libvterm")

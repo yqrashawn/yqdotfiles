@@ -12,6 +12,31 @@
                 },
                 "rules": [
                     {
+                        "description": "Mouse button 4 to define",
+                        "manipulators": [
+                            {
+                                "from": {
+                                  "pointing_button": "button4",
+                                  "modifiers": {
+                                    "optional": [
+                                      "any"
+                                    ]
+                                  }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "d",
+                                        "modifiers": [
+                                          "command",
+                                          "control"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "FILCO MINILA Swap grave_accent_and_tilde and backslash",
                         "manipulators": [
                             {
