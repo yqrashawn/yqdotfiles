@@ -43,7 +43,7 @@ alias rbservp='ruby -run -e httpd . -p '
 alias ttmux='tmuxinator start projects'
 alias server='http-server'
 alias serverp='http-server -p'
-alias serv="live-server --port=8081 --browser='Google Chrome'"
+alias serv="live-server --port=8081'"
 
 # editors
 alias e='emacsclient'

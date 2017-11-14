@@ -13,6 +13,27 @@
                 },
                 "rules": [
                     {
+                        "description": "Mouse button 5 to define",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    },
+                                    "pointing_button": "button5"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "mission_control"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Mouse button 4 to define",
                         "manipulators": [
                             {
@@ -26,11 +47,79 @@
                                 },
                                 "to": [
                                     {
+                                        "set_variable": {
+                                            "name": "mouse_button4_mode",
+                                            "value": 1
+                                        }
+                                    }
+                                ],
+                                "to_after_key_up": [
+                                    {
+                                        "set_variable": {
+                                            "name": "mouse_button4_mode",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
                                         "key_code": "d",
                                         "modifiers": [
                                             "command",
                                             "control"
                                         ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    },
+                                    "pointing_button": "button2"
+                                },
+                                "conditions": [
+                                    {
+                                        "name": "mouse_button4_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "to": [
+                                    {
+                                      "key_code": "f18"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    },
+                                    "pointing_button": "button1"
+                                },
+                                "conditions": [
+                                    {
+                                        "name": "mouse_button4_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "to": [
+                                    {
+                                      "key_code": "tab",
+                                      "modifiers": [
+                                        "command"
+                                      ]
+                                    },
+                                    {
+                                      "key_code": "left_command"
                                     }
                                 ],
                                 "type": "basic"
@@ -5653,6 +5742,19 @@
                         "is_pointing_device": false,
                         "product_id": 256,
                         "vendor_id": 2131
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": false,
+                    "simple_modifications": []
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "identifiers": {
+                        "is_keyboard": false,
+                        "is_pointing_device": true,
+                        "product_id": 22,
+                        "vendor_id": 5426
                     },
                     "ignore": false,
                     "manipulate_caps_lock_led": false,
