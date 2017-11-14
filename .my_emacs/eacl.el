@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2017 Chen Bin
 ;;
-;; Version: 1.0.2
+;; Version: 1.0.3
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: http://github.com/redguardtoo/eacl
 ;; Package-Requires: ((emacs "24.3") (ivy "0.9.1"))
@@ -46,12 +46,46 @@
 ;; `eacl-complete-tag' completes HTML tag which ends with ">".
 ;; For example, input "<div" and run this command.
 ;;
-;; GNU Grep, Emacs 24.3 and counsel (https://github.com/abo-abo/swiper)
+;; Modify `grep-find-ignored-directories' and `grep-find-ignored-files'
+;; to setup directories and files grep should ignore:
+;;   (eval-after-load 'grep
+;;     '(progn
+;;        (dolist (v '("node_modules"
+;;                     "bower_components"
+;;                     ".sass_cache"
+;;                     ".cache"
+;;                     ".npm"))
+;;          (add-to-list 'grep-find-ignored-directories v))
+;;        (dolist (v '("*.min.js"
+;;                     "*.bundle.js"
+;;                     "*.min.css"
+;;                     "*.json"
+;;                     "*.log"))
+;;          (add-to-list 'grep-find-ignored-files v))))
+;;
+;; Or you can setup above ignore options in ".dir-locals.el".
+;; The content of ".dir-locals.el":
+;;   ((nil . ((eval . (progn
+;;                      (dolist (v '("node_modules"
+;;                                   "bower_components"
+;;                                   ".sass_cache"
+;;                                   ".cache"
+;;                                   ".npm"))
+;;                        (add-to-list 'grep-find-ignored-directories v))
+;;                      (dolist (v '("*.min.js"
+;;                                   "*.bundle.js"
+;;                                   "*.min.css"
+;;                                   "*.json"
+;;                                   "*.log"))
+;;                        (add-to-list 'grep-find-ignored-files v)))))))
+;;
+;; GNU Grep v3.1+, Emacs v24.3 and Ivy (https://github.com/abo-abo/swiper)
 ;; are required.
 ;;
-;; Please use HomeBrew (https://brew.sh/) to install GNU Grep on macOS.
-;; Then insert `(setq eacl-grep-program "ggrep")' into "~/.emacs".
-;; The bundled "BSD Grep" on macOS is too outdated to use.
+;; On macOS:
+;;   - Use HomeBrew (https://brew.sh/) to install latest GNU Grep on macOS
+;;   - Insert `(setq eacl-grep-program "ggrep")' into "~/.emacs".
+;;   - Bundled "BSD Grep" is too outdated to use
 
 
 ;;; Code:
@@ -94,6 +128,17 @@ The callback is expected to return the path of project root."
       (cl-some (apply-partially 'locate-dominating-file
                                 default-directory)
                eacl-project-file)))
+
+(defun eacl-check-grep-version ()
+  "GNU Grep v3.1 is required."
+  (let* ((ver-msg (nth 0 (split-string (shell-command-to-string
+                                        (format "%s --version"
+                                                eacl-grep-program)) "\n")))
+         (valid (and (string-match "GNU grep[^0-9.]*\\([0-9.]*\\)" ver-msg)
+                 (>= (string-to-number (match-string 1 ver-msg)) 3.1))))
+    (unless valid
+      (message "GNU Grep v3.1+ must be installed!"))
+    valid))
 
 ;;;###autoload
 (defun eacl-current-line ()
@@ -179,7 +224,7 @@ If REGEX is not nil, complete statement."
                       eacl-grep-program
                       (eacl-grep-exclude-opts)
                       (if regex (concat quoted-keyword regex) quoted-keyword)))
-         ;; Please note grep's "-z" will output null character at the end of each candidate
+         ;; Grep option "-z" outputs null character at the end of each candidate
          (sep (if regex "\x0" "[\r\n]+"))
          (collection (split-string (shell-command-to-string cmd) sep t "[ \t\r\n]+"))
          (rlt t))
@@ -219,14 +264,17 @@ If REGEX is not nil, complete statement."
   (let* ((cur-line (eacl-current-line))
          (keyword (eacl-get-keyword cur-line))
          (start (eacl-line-beginning-position))
-         (continue t))
+         (continue (eacl-check-grep-version)))
     (while continue
       (unless (eacl-complete-line-or-statement regex cur-line keyword start)
         (message "Auto-completion done!")
         (setq continue nil))
       (cond
-       ((and continue (yes-or-no-p "Continue?"))
-        (setq keyword (eacl-encode (eacl-trim-left (buffer-substring-no-properties start (point))))))
+       (continue
+        (when (fboundp 'xref-pulse-momentarily)
+          (xref-pulse-momentarily))
+        (when (yes-or-no-p "Continue?")
+          (setq keyword (eacl-encode (eacl-trim-left (buffer-substring-no-properties start (point)))))))
        (t
         (setq continue nil))))))
 
@@ -259,4 +307,3 @@ If REGEX is not nil, complete statement."
 
 (provide 'eacl)
 ;;; eacl.el ends here
-

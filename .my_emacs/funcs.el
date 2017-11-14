@@ -623,3 +623,24 @@ already narrowed."
   :commands (js-codemod-mod-region))
 
 
+
+(eval-after-load 'grep
+  '(progn
+     (dolist (v '("node_modules"
+                  "bower_components"
+                  ".sass_cache"
+                  "sampleModels"
+                  "release"
+                  "build"
+                  "dist"
+                  ".cache"
+                  ".npm"))
+       (add-to-list 'grep-find-ignored-directories v))
+     (dolist (v '("*.min.js"
+                  "*.bundle.js"
+                  "*.gbim"
+                  "*.min.css"
+                  "*.log"))
+       (add-to-list 'grep-find-ignored-files v))))
+
+
