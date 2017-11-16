@@ -45,6 +45,7 @@ values."
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy
+     ;; helm
      fasd
      ;; (c-c++ :variables
      ;;        c-c++-default-mode-for-headers 'c++-mode
@@ -394,8 +395,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq custom-file (concat spacemacs-cache-directory ".custom-settings"))
   (setq exec-path-from-shell-check-startup-files nil) ;; only from .zshenv
   (setq exec-path-from-shell-arguments '("-l"))  ;; remove -i read form .zshenv
-  (add-to-list 'package-archives
-               '("melpa-china" . "http://elpa.emacs-china.org/melpa/"))
+  (add-to-list 'package-archives '("melpa-china" . "http://elpa.emacs-china.org/melpa/"))
+  (add-to-list 'package-archives '("org-cn"   . "http://elpa.emacs-china.org/org/"))
+  (add-to-list 'package-archives '("gnu-cn"   . "http://elpa.emacs-china.org/gnu/"))
   ;; (add-to-list 'package-archives
   ;;              '("melpa" . "https://melpa.org/packages/"))
   (setq configuration-layer--elpa-archives
