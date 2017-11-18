@@ -290,25 +290,25 @@ Visit the file after creation."
   (interactive "sName of scratch file: ")
   (start--file (expand-file-name (format "~Downloads/scratch/%s" file-name))))
 
-(defun ivy-insert-org-entity ()
-  "Insert an org-entity using ivy."
-  (interactive)
-  (ivy-read "Entity: " (loop for element in (append org-entities org-entities-user)
-                             when (not (stringp element))
-                             collect
-                             (cons
-                              (format "%10s | %s | %s | %s"
-                                      (car element) ;name
-                                      (nth 1 element) ; latex
-                                      (nth 3 element) ; html
-                                      (nth 6 element)) ;utf-8
-                              element))
-            :require-match t
-            :action '(1
-                      ("u" (lambda (element) (insert (nth 6 (cdr element)))) "utf-8")
-                      ("o" (lambda (element) (insert "\\" (cadr element))) "org-entity")
-                      ("l" (lambda (element) (insert (nth 1 (cdr element)))) "latex")
-                      ("h" (lambda (element) (insert (nth 3 (cdr element)))) "html"))))
+;; (defun ivy-insert-org-entity ()
+;;   "Insert an org-entity using ivy."
+;;   (interactive)
+;;   (ivy-read "Entity: " (loop for element in (append org-entities org-entities-user)
+;;                              when (not (stringp element))
+;;                              collect
+;;                              (cons
+;;                               (format "%10s | %s | %s | %s"
+;;                                       (car element) ;name
+;;                                       (nth 1 element) ; latex
+;;                                       (nth 3 element) ; html
+;;                                       (nth 6 element)) ;utf-8
+;;                               element))
+;;             :require-match t
+;;             :action '(1
+;;                       ("u" (lambda (element) (insert (nth 6 (cdr element)))) "utf-8")
+;;                       ("o" (lambda (element) (insert "\\" (cadr element))) "org-entity")
+;;                       ("l" (lambda (element) (insert (nth 1 (cdr element)))) "latex")
+;;                       ("h" (lambda (element) (insert (nth 3 (cdr element)))) "html"))))
 
 
 
