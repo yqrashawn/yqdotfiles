@@ -74,7 +74,8 @@ values."
           org-enable-org-journal-support t
           org-journal-dir "~/Dropbox/ORG/journal"
           org-enable-github-support t
-          org-projectile-file "TODOs.org"
+          ;; org-projectile-file "TODOs.org"
+          org-projectile-file "~/Dropbox/ORG/project.org"
           )
      (shell :variables
             shell-default-height 30
