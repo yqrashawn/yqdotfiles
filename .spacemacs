@@ -372,7 +372,7 @@ values."
    dotspacemacs-whitespace-cleanup t
    spell-checking-enable-by-default nil
    auto-completion-complete-with-key-sequence-delay 0.01
-   auto-completion-enable-snippets-in-popup t
+   auto-completion-enable-snippets-in-popup nil
    auto-completion-enable-sort-by-usage t
    auto-completion-private-snippets-directory "~/.emacs.d/private/snippets"
    syntax-checking-enable-tooltips t
