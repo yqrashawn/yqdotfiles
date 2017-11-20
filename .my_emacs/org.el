@@ -196,7 +196,7 @@
 (setq org-mobile-directory "~/Dropbox/应用/MobileOrg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/ORG/flagged.org")
 (setq org-default-notes-file '("~/Dropbox/ORG/notes.org"))
-(setq org-projectile-capture-template "* TODO %? \n%U")
+(setq org-projectile-capture-template "* TODO %? %^G\n%U")
 (with-eval-after-load 'org-agenda
   (add-to-list 'org-agenda-custom-commands
                '("P" "Printed agenda"

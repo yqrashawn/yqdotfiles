@@ -27,7 +27,7 @@ values."
                                                    "~/Dropbox/ORG/feed/local.org"))
      ;; parinfer
      ;; nlinum
-     bm
+     ;; bm
      github
      color
      ;; command-log
@@ -45,6 +45,7 @@ values."
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy
+     ;; helm
      fasd
      ;; (c-c++ :variables
      ;;        c-c++-default-mode-for-headers 'c++-mode
@@ -100,8 +101,8 @@ values."
      )
    dotspacemacs-additional-packages '(
                                       ;; butler
-                                      beacon
-                                      bug-hunter
+                                      ;; beacon
+                                      ;; bug-hunter
                                       company-flx
                                       circe
                                       circe-notifications
@@ -122,9 +123,9 @@ values."
                                       helpful
                                       js-codemod
                                       langtool
-                                      suggest
+                                      ;; suggest
                                       super-save
-                                      glsl-mode
+                                      ;; glsl-mode
                                       gruvbox-theme
                                       golden-ratio-scroll-screen
                                       hackernews
@@ -394,10 +395,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq custom-file (concat spacemacs-cache-directory ".custom-settings"))
   (setq exec-path-from-shell-check-startup-files nil) ;; only from .zshenv
   (setq exec-path-from-shell-arguments '("-l"))  ;; remove -i read form .zshenv
-  (add-to-list 'package-archives '("melpa-china" . "http://melpa.org/packages/"))
-  ;; (add-to-list 'package-archives '("melpa-china" . "http://elpa.emacs-china.org/melpa/"))
-  ;; (add-to-list 'package-archives '("org-cn"   . "http://elpa.emacs-china.org/org/"))
-  ;; (add-to-list 'package-archives '("gnu-cn"   . "http://elpa.emacs-china.org/gnu/"))
+  (add-to-list 'package-archives '("melpa-china" . "http://elpa.emacs-china.org/melpa/"))
+  (add-to-list 'package-archives '("org-cn"   . "http://elpa.emacs-china.org/org/"))
+  (add-to-list 'package-archives '("gnu-cn"   . "http://elpa.emacs-china.org/gnu/"))
   ;; (add-to-list 'package-archives
   ;;              '("melpa" . "https://melpa.org/packages/"))
   (setq configuration-layer--elpa-archives
@@ -407,21 +407,21 @@ before packages are loaded. If you are unsure, you should try in setting them in
           ;; ("gnu"   . "elpa.gnu.org/packages/")
           ("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
-          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
-          ))
+          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+
+  ;; (when (memq window-system '(mac ns))
+  ;;   (exec-path-from-shell-copy-env "LC_ALL")
+  ;;   (exec-path-from-shell-copy-env "TERM")
+  ;;   (exec-path-from-shell-initialize))
   (setq insert-directory-program "/usr/local/opt/coreutils/bin/gls")
   (setq dired-listing-switches "-aBhl --group-directories-first")
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
         `(("." . ,(concat user-emacs-directory ".cache/undo"))))
   (unless (file-exists-p (concat user-emacs-directory ".cache/undo"))
-    (make-directory (concat user-emacs-directory "./cache/undo")))
+    (make-directory (concat user-emacs-directory "./cache/undo"))))
 
-  ;; (when (memq window-system '(mac ns))
-  ;;   (exec-path-from-shell-copy-env "LC_ALL")
-  ;;   (exec-path-from-shell-copy-env "TERM")
-  ;;   (exec-path-from-shell-initialize))
-  )
+
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -430,23 +430,24 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (use-package super-save
-    :init
-    (setq super-save-auto-save-when-idle t)
-    (setq super-save-idle-duration 30)  ; def 5 sec
-    :config (super-save-initialize))
-  (setq backup-directory-alist (quote ((".*" . "~/.emacs.d/.cache/backups/"))))
-  (setq make-backup-files t      ; backup of a file the first time it is saved.
-        backup-by-copying t      ; don't clobber symlinks
-        version-control t        ; version numbers for backup files
-        delete-old-versions t    ; delete excess backup files silently
-        kept-old-versions 2      ; oldest versions to keep when a new numbered backup is made (default: 2)
-        kept-new-versions 2     ; newest versions to keep when a new numbered backup is made (default: 2)
-        auto-save-default t      ; auto-save every buffer that visits a file
-        auto-save-timeout 60     ; number of seconds idle time before auto-save (default: 30)
-        auto-save-interval 1000   ; number of keystrokes between auto-saves (default: 300)
-        )
-  (setq create-lockfiles nil)
+  ;; auto save
+  ;; (use-package super-save
+  ;;   :init
+  ;;   (setq super-save-auto-save-when-idle t)
+  ;;   (setq super-save-idle-duration 30)  ; def 5 sec
+  ;;   :config (super-save-initialize))
+  ;; (setq backup-directory-alist (quote ((".*" . "~/.emacs.d/.cache/backups/"))))
+  ;; (setq make-backup-files t      ; backup of a file the first time it is saved.
+  ;;       backup-by-copying t      ; don't clobber symlinks
+  ;;       version-control t        ; version numbers for backup files
+  ;;       delete-old-versions t    ; delete excess backup files silently
+  ;;       kept-old-versions 2      ; oldest versions to keep when a new numbered backup is made (default: 2)
+  ;;       kept-new-versions 2     ; newest versions to keep when a new numbered backup is made (default: 2)
+  ;;       auto-save-default t      ; auto-save every buffer that visits a file
+  ;;       auto-save-timeout 60     ; number of seconds idle time before auto-save (default: 30)
+  ;;       auto-save-interval 1000   ; number of keystrokes between auto-saves (default: 300)
+  ;;       )
+  ;; (setq create-lockfiles nil)
 
   (put 'narrow-to-defun  'disabled nil)
   (put 'narrow-to-page   'disabled nil)
@@ -552,7 +553,7 @@ you should place your code here."
   (load-file "~/.my_emacs/eacl.el")
   (setq eacl-grep-program "ggrep")
   ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq company-idle-delay 0.15)
+  (setq company-idle-delay 0.3)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
