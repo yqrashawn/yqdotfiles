@@ -383,14 +383,14 @@ Version 2015-06-11"
 
 
 
-(use-package beacon
-  :diminish ""
-  :config
-  (setq beacon-color "firebrick")
-  (setq beacon-size 20)         ; smaller than default 40
-  (setq beacon-blink-delay 0.1) ; faster than default 0.3 ms
-  (setq beacon-blink-when-focused t)
-  (beacon-mode 1))
+;; (use-package beacon
+;;   :diminish ""
+;;   :config
+;;   (setq beacon-color "firebrick")
+;;   (setq beacon-size 20)         ; smaller than default 40
+;;   (setq beacon-blink-delay 0.1) ; faster than default 0.3 ms
+;;   (setq beacon-blink-when-focused t)
+;;   (beacon-mode 1))
 
 
 

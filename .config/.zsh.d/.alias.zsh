@@ -4,6 +4,8 @@ alias w='cd ~/workspace/'
 alias rg="rg --smart-case"
 alias rgu="rg -uu"
 alias rgfu="rg -F -u"
+alias rgf="rg --files --no-ignore --hidden --follow"
+alias rgfh="rg --files --no-ignore --hidden --follow ./"
 alias zc="emacsclient ~/.zshrc"
 alias zcc="emacsclient ~/.zprezto/runcoms/zpreztorc"
 alias cl='clear'
@@ -43,7 +45,7 @@ alias rbservp='ruby -run -e httpd . -p '
 alias ttmux='tmuxinator start projects'
 alias server='http-server'
 alias serverp='http-server -p'
-alias serv="live-server --port=8081'"
+alias serv="live-server --port=8081"
 
 # editors
 alias e='emacsclient'

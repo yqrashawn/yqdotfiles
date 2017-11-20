@@ -32,7 +32,7 @@
 (global-set-key (kbd "H-d") 'dired)
 (global-set-key (kbd "H-l") 'spacemacs/layouts-transient-state/body)
 (global-set-key (kbd "H-k") 'spacemacs/kill-this-buffer)
-(global-set-key (kbd "H-j") 'ivy-switch-buffer)
+(global-set-key (kbd "H-j") 'save-buffer)
 (global-set-key (kbd "H-b") 'bookmark-jump)
 (global-set-key (kbd "H-m") 'magit-dispatch-popup)
 ;; (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
