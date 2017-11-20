@@ -124,8 +124,8 @@ values."
                                       helpful
                                       js-codemod
                                       langtool
-                                      ;; suggest
-                                      super-save
+                                      suggest
+                                      ;; super-save
                                       ;; glsl-mode
                                       gruvbox-theme
                                       golden-ratio-scroll-screen

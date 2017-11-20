@@ -272,10 +272,10 @@
   ;;              '("pb" "B items" tags-todo "+PRIORITY=\"B\""))
   ;; (add-to-list org-agenda-custom-commands
   ;;              '("pc" "C items" tags-todo "+PRIORITY=\"C\""))
-(add-to-list 'org-agenda-custom-commands '("r" "Read later" ((agenda "") (tags-todo "read"))))
+  (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((agenda "") (tags-todo "read"))))
 
-(require 'org-projectile)
-(setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
+  (require 'org-projectile)
+  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
 
 (defvar current-file-reference ""  "Global variable to store the current file reference")
 
@@ -430,3 +430,125 @@
   ("m" org-timer)
   ("t" org-timer-item)
   ("z" (org-info "Timers")))
+
+
+
+(defvar blog-root "~/blog/")
+(defvar blog-file-pattern "") ;; also possible: "*.org"
+(setq blog-file-pattern "") ;; also possible: "*.org"
+
+(defun my-handle-tsfile-link (querystring)
+  (let ((querystring
+         (if (s-contains-p "/" querystring)
+             (f-filename querystring)
+           (s-replace " " ".*" querystring)
+           )))
+    (message (concat "DEBUG1: querystring: " querystring))
+    (message (concat "DEBUG2: "
+                     "fd \""
+                     querystring
+                     "\" "
+                     (concat blog-root blog-file-pattern)))
+    ;; get a list of hits
+    (let ((queryresults (split-string
+                         (s-trim
+                          (shell-command-to-string
+                           (concat
+                            "fd \""
+                            querystring
+                            "\" "
+                            (concat blog-root blog-file-pattern))))
+                         "\n" t)))
+      (message (concat "DEBUG3: queryresults: " (car queryresults)))
+      ;; check length of list (number of lines)
+      (cond
+       ((= 0 (length queryresults))
+        ;; edge case: empty query result
+        (message "Sorry, no results found for query: %s" querystring))
+       (t
+        (with-temp-buffer
+          (spacemacs//open-in-external-app (if (= 1 (length queryresults))
+                                               (car queryresults)
+                                             (completing-read "Choose: " queryresults)))
+          ;; (insert (if (= 1 (length queryresults))
+          ;;             (car queryresults)
+          ;;           (completing-read "Choose: " queryresults)))
+          ;; (org-mode)
+          ;; (goto-char (point-min))
+          ;; (org-next-link)
+          ;; (org-open-at-point)
+          ))))
+    ))
+
+(org-link-set-parameters
+ "tsfile"
+ :follow (lambda (path) (my-handle-tsfile-link path))
+ :help-echo "Opens the linked file with your default application")
+
+;; "rg -i --no-heading --line-number --color never %s ."
+(defcustom counsel-fd-base-command "fd -L --hidden -p -a --color never "
+  "Alternative to `counsel-fd-base-command' using ripgrep."
+  :type 'string
+  :group 'ivy)
+;; (setq counsel-fd-base-command "fd -L --hidden -p -a --color never")
+
+(defun counsel-fd-function (string base-cmd)
+  "Grep in the current directory for STRING using BASE-CMD.
+If non-nil, append EXTRA-fd-ARGS to BASE-CMD."
+
+  (if (< (length string) 3)
+      (counsel-more-chars 3)
+    (let ((default-directory counsel--git-dir)
+          (regex (counsel-unquote-regex-parens
+                  (setq ivy--old-re
+                        (ivy--regex-plus string)))))
+      (let* ((fd-cmd (concat (format base-cmd) (concat " " (s-wrap regex "'")))))
+        (counsel--async-command fd-cmd)
+        nil))))
+
+(defun my-insert-fd-full-path (path)
+  (insert (concat counsel--git-dir path)))
+
+(defun my-insert-tsfile-path (path)
+  (insert (concat (concat "[[tsfile:" (f-filename path)) "][]]")))
+
+(defun counsel-fd (&optional initial-input initial-directory fd-prompt)
+  "Grep for a string in the current directory using fd.
+INITIAL-INPUT can be given as the initial minibuffer input.
+INITIAL-DIRECTORY, if non-nil, is used as the root directory for search.
+EXTRA-FD-ARGS string, if non-nil, is appended to `counsel-fd-base-command'.
+FD-PROMPT, if non-nil, is passed as `ivy-read' prompt argument."
+  (interactive
+   (list nil
+         (when current-prefix-arg
+           (read-directory-name (concat
+                                 (car (split-string counsel-fd-base-command))
+                                 " in directory: ")))))
+  (counsel-require-program (car (split-string counsel-fd-base-command)))
+  (ivy-set-prompt 'counsel-fd counsel-prompt-function)
+  (setq counsel--git-dir (or initial-directory
+                             (locate-dominating-file default-directory ".git")
+                             default-directory))
+  (ivy-read (or fd-prompt (car (split-string counsel-fd-base-command)))
+            (lambda (string)
+              (counsel-fd-function string counsel-fd-base-command))
+            :initial-input initial-input
+            :dynamic-collection t
+            ;; :keymap counsel-ag-map
+            :history 'counsel-git-grep-history
+            :action '(1 ("z" (lambda (file)
+                               (with-ivy-window
+                                 (when file
+                                   (find-file  file)))))
+                        ("o" (lambda (path)
+                               (my-insert-tsfile-path path)
+                               (backward-char)
+                               (backward-char)) "insert tsfile path")
+                        )
+            :unwind (lambda ()
+                      (counsel-delete-process)
+                      (swiper--cleanup))
+            :caller 'counsel-fd))
+
+(spacemacs/set-leader-keys "skd" 'counsel-fd)
+(spacemacs/set-leader-keys "sm" 'counsel-fd)
