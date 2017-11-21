@@ -133,6 +133,8 @@ values."
                                       ivy-dired-history
                                       imenu-anywhere
                                       ;; key-chord
+                                      magithub
+                                      ghub+
                                       keyfreq
                                       noccur
                                       phi-search
