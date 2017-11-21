@@ -166,7 +166,7 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
 (defun endless/visit-pull-request-url ()
   "Visit the current branch's PR on Github."
   (interactive)
-  (let ((repo (magit-get "remote" (magit-get-remote) "url")))
+  (let ((repo (magit-get "remote" (magit-get-tracked-remote) "url")))
     (if (not repo)
         (setq repo (magit-get "remote" (magit-get-push-remote) "url")))
     (if (string-match "github\\.com" repo)
@@ -178,11 +178,25 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
   (interactive)
   (message repo)
   (browse-url
-   (format "https://github.com/%s/pull/new/%s"
-           (replace-regexp-in-string
-            "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
-            repo)
-           (magit-get-current-branch))))
+   (replace-regexp-in-string
+    "\\(\\.git\\)" "/pulls"
+    repo)))
+
+;; old code
+;; (defun visit-gh-pull-request (repo)
+;;   "Visit the current branch's PR on Github."
+;;   (interactive)
+;;   (message repo)
+;;   (browse-url
+;;    (replace-regexp-in-string
+;;     "\\(\\.git\\)" "/pulls"
+;;     repo)
+;;    (format "https://github.com/%s/pull/new/%s"
+;;            (replace-regexp-in-string
+;;             "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+;;             repo)
+;;            (magit-get-current-branch))))
+;; (setq repo "https://github.com/yqrashawn/yqdotfiles.git")
 
 ;; Bitbucket pull requests are kinda funky, it seems to try to just do the
 ;; right thing, so there's no branches to include.
@@ -196,11 +210,7 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
             repo)
            (magit-get-current-branch))))
 
-;; visit PR for github or bitbucket repositories with "v"
-(eval-after-load 'magit
-  '(define-key magit-mode-map "v"
-     #'endless/visit-pull-request-url))
-
+(magit-define-popup-action 'magit-remote-popup ?V "View PR" #'endless/visit-pull-request-url)
 
 
 ;; as tower C-u SPC-g-s
@@ -644,3 +654,51 @@ already narrowed."
        (add-to-list 'grep-find-ignored-files v))))
 
 
+
+;; https://github.com/tarsius/magit-rockstar/blob/master/magit-rockstar.el#L134
+(defun magit-branch-pull-request (number &optional branch checkout)
+  "Create a new branch from a Github pull request and show its log.
+Read \"NR[:BRANCH-NAME] from the user.  If BRANCH-NAME is not
+provided use \"pr-NR\".  Set \"master\" as the upstream.
+Assume all pull requests can be found on \"origin\".  With a
+prefix argument checkout branch instead of showing its log."
+  (interactive
+   (let ((input (magit-read-string
+                 "Branch pull request (NR[:BRANCH-NAME])"
+                 (magit-section-when 'magithub-issue
+                   (number-to-string
+                    (plist-get (magit-section-value it) :number))))))
+     (if (string-match "\\([1-9][0-9]*\\)\\(?::\\(.+\\)\\)?" input)
+         (list (match-string 1 input)
+               (match-string 2 input)
+               current-prefix-arg)
+       (user-error "Invalid input"))))
+  (unless branch
+    (setq branch (format "pr-%s" number)))
+  (magit-call-git "fetch" "origin" (format "pull/%s/head:%s" number branch))
+  (magit-set-branch*merge/remote branch "master")
+  (if checkout
+      (magit-run-git "checkout" branch)
+    (apply #'magit-log (list branch) (magit-log-arguments))))
+
+(defun endless/add-PR-fetch ()
+  "If refs/pull is not defined on a GH repo, define it."
+  (let ((fetch-address
+         "+refs/pull/*/head:refs/pull/origin/*")
+        (magit-remotes
+         (magit-get-all "remote" "origin" "fetch")))
+    (unless (or (not magit-remotes)
+                (member fetch-address magit-remotes))
+      (when (string-match
+             "github" (magit-get "remote" "origin" "url"))
+        (magit-git-string
+         "config" "--add" "remote.origin.fetch"
+         fetch-address)))))
+
+(add-hook 'magit-mode-hook #'endless/add-PR-fetch)
+
+
+
+(use-package magithub
+  :after magit
+  :config (magithub-feature-autoinject t))
