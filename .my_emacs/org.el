@@ -304,7 +304,7 @@
          (file+olp "~/Dropbox/ORG/notes.org" "notes" "read")
          "*** TODO %? %^L %^G\n%U")
         ("b" "Brain" plain (function org-brain-goto-end)
-         "* %i%?" :empty-lines 1)
+         "* %i%?\n")
         ("n" "notes" entry
          (file+olp "~/Dropbox/ORG/notes.org" "notes" "note")
          "*** %?\n   %U")

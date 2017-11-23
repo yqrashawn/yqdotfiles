@@ -210,7 +210,9 @@ http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
             repo)
            (magit-get-current-branch))))
 
-(magit-define-popup-action 'magit-remote-popup ?V "View PR" #'endless/visit-pull-request-url)
+(eval-after-load "magit"
+  '(magit-define-popup-action 'magit-remote-popup ?V "View PR" #'endless/visit-pull-request-url))
+
 
 
 ;; as tower C-u SPC-g-s

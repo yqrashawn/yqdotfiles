@@ -542,7 +542,7 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;; load-file ;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (load-file "~/.my_emacs/modeline.el")
   (load-file "~/.my_emacs/el.el")
-  ;; (load-file "~/.my_emacs/funcs.el")
+  (load-file "~/.my_emacs/funcs.el")
   (load-file "~/.my_emacs/aliases.el")
   (load-file "~/.emacs.d/private/local/hide-comnt.el")
   ;; (load-file "~/.my_emacs/keychord.el")
