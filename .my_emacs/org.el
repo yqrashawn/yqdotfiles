@@ -297,13 +297,14 @@
 (setq org-opml-src (concat user-home-directory ".my_emacs/org-opml/"))
 
 (setq org-capture-templates
-      (quote
-       (("l" "Capture from the Internet with link" entry
-         (file+olp "~/Dropbox/ORG/notes.org" "notes" "read")
-         "*** TODO %? %^L %^G\n%U")
-        ("s" "Some day" entry
+      '(("s" "Some day" entry
          (file+olp "~/Dropbox/ORG/notes.org" "notes" "some day")
          "*** TODO %? %^L %^G\n%U")
+        ("l" "Capture from the Internet with link" entry
+         (file+olp "~/Dropbox/ORG/notes.org" "notes" "read")
+         "*** TODO %? %^L %^G\n%U")
+        ("b" "Brain" plain (function org-brain-goto-end)
+         "* %i%?" :empty-lines 1)
         ("n" "notes" entry
          (file+olp "~/Dropbox/ORG/notes.org" "notes" "note")
          "*** %?\n   %U")
@@ -315,11 +316,7 @@
          "* TODO %? \n %a\n%U")
         ("t" "TODOs" entry
          (file+olp "~/Dropbox/ORG/gtd.org" "misc")
-         "* TODO %? \n%U"))))
-
-(push '("b" "Brain" plain (function org-brain-goto-end)
-        "* %i%?" :empty-lines 1)
-      org-capture-templates)
+         "* TODO %? \n%U")))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -552,3 +549,59 @@ FD-PROMPT, if non-nil, is passed as `ivy-read' prompt argument."
 
 (spacemacs/set-leader-keys "skd" 'counsel-fd)
 (spacemacs/set-leader-keys "sm" 'counsel-fd)
+
+(setq org-id-method 'org)
+;; Automatically write CREATED properties in the PROPERTIES drawer:
+(org-expiry-insinuate)
+
+(defun my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard ()
+  "Retrieves an URL from the clipboard, gets its Org-mode source,
+   extracts the ID of the article and jumps to its Org-mode heading"
+  (interactive)
+  (let (
+        ;; Getting URL from the clipboard. Since it may contain
+        ;; some text properties we are using substring-no-properties
+        ;; function
+        (url (substring-no-properties (current-kill 0)))
+        ;; This is a check string: if the URL in the clipboard
+        ;; doesn't start with this, an error message is shown
+        (domain "yqrashawn.com")
+	      )
+    ;; Check if URL string is from my domain (all other strings do
+    ;; not make any sense here)
+    (if (string-match (upcase domain) (upcase url))
+	      ;; Retrieving content by URL into new buffer asynchronously
+	      (url-retrieve url
+                      ;; call this lambda function when URL content is retrieved
+			                (lambda (status)
+			                  ;; Extrating and preparing the ID
+			                  (let* (
+                               ;; Limit the ID search to the top 1000 characters of the buffer
+				                       (pageheader (buffer-substring 1 1000))
+				                       ;; Start index of the id
+                               (start (string-match "<meta name=\"orgmode-id\" content=\"" pageheader))
+                               ;; End index of the id
+                               (end (string-match "\" />" pageheader start))
+                               ;; Amount of characters to skip for the openning tag
+                               (chars-to-skip (length "<meta name=\"orgmode-id\" content=\""))
+                               ;; Extract ID
+                               (lazyblorg-id (if (and start end (< start end))
+                                                 ;; ... extract it and return.
+                                                 (substring pageheader (+ start chars-to-skip) end)
+                                               nil))
+                               )
+			                    (message (concat "Looking for id:" lazyblorg-id))
+			                    (org-open-link-from-string (concat "ID:" lazyblorg-id))
+			                    )
+			                  )
+			                )
+	    (message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't contain \"" domain "\". Aborting."))
+      ;;(message (concat "domain: " domain))
+      ;;(message (concat "url:    " url))
+	    )
+    )
+  )
+
+(defun sr-org-id-insert-maybe ()
+  (if (y-or-n-p "Create a unique ID for this section?")
+      (org-id-get-create)))
