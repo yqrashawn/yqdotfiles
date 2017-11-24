@@ -396,6 +396,7 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq custom-file (concat spacemacs-cache-directory ".custom-settings"))
+  (load-file custom-file)
   (setq exec-path-from-shell-check-startup-files nil) ;; only from .zshenv
   (setq exec-path-from-shell-arguments '("-l"))  ;; remove -i read form .zshenv
   (add-to-list 'package-archives '("melpa-china" . "http://elpa.emacs-china.org/melpa/"))
