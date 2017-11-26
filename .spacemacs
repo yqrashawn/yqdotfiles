@@ -21,7 +21,8 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(artist
+   '(vimscript
+     ;; artist
      yq-mode-line
      (elfeed :variables rmh-elfeed-org-files (list "~/Dropbox/ORG/feed/feedly.org"
                                                    "~/Dropbox/ORG/feed/local.org"))
@@ -29,7 +30,7 @@ values."
      ;; nlinum
      ;; bm
      github
-     color
+     ;; color
      ;; command-log
      spacemacs-evil
      spacemacs-editing

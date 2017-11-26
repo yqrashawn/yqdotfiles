@@ -1,41 +1,30 @@
 let mapleader=' '
-
-source ~/.config/nvim/filetype.vim
-source ~/.config/nvim/func.vim
-source ~/.config/nvim/plugins.vim
 source ~/.config/nvim/default.vim
-source ~/.config/nvim/ui.vim
-"source ~/.config/nvim/large-file.vim
-
-"" keymap
+source ~/.config/nvim/func.vim
 
 " gneral
+nnoremap sh :w<cr>
 nnoremap <leader>fs :w<cr>
-nnoremap <leader>bd :bd<cr>
-nnoremap <leader>fed :e ~/.config/nvim/init.vim<cr>:3<cr>
-nnoremap <leader>feR :source ~/.config/nvim/init.vim<cr>
+nnoremap <leader>bd :close<cr>
+nnoremap <leader>fed :e ~/.ideavimrc<cr>:3<cr>
+nnoremap <leader>feR :source ~/.ideavimrc<cr>
 nnoremap <leader><tab> <C-^>
 nnoremap <leader>q :confirm quit<cr>
+
 nnoremap ^@ /
 nnoremap <C-space> /
-nnoremap <return> %
-nnoremap <C-m> %
+nnoremap <C-k> za
 imap fd <esc>
 imap df <esc>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
-xnoremap <C-r> :<C-u>call VSetSearch('/')<CR>:%s/\V<C-R>=@/<CR>//gc<Left><Left><Left>
 nnoremap <leader>tn :<C-u>call ToggleNumber()<cr>
 nnoremap <leader>tN :<C-u>call ToggleRelativeNumber()<cr>
-nnoremap <leader>Tn :<C-u>call ToggleBG()<cr>
 nnoremap <C-l> zz
 nnoremap <C-k> za
-" nnoremap <c-l> :call GetPotionFold(32)<cr>
 
-
-" edit
 nnoremap Y y$
 nnoremap <C-a> ^
 nnoremap <C-e> $
@@ -64,7 +53,13 @@ nnoremap sv :vsplit<cr>
 nnoremap ss :split<cr>
 nnoremap sc <C-w><C-c>
 nnoremap so <C-w><C-o>
+nnoremap <leader>ww <C-w><C-w>
 nnoremap st :<c-u>tabnew<cr>
+nnoremap <C-w><C-l> <C-w>l
+nnoremap <C-w><C-k> <C-w>k
+nnoremap <C-w><C-j> <C-w>j
+nnoremap <C-w><C-h> <C-w>h
+nnoremap <C-w><BS> <C-w>h
 
 " tab
 noremap <leader>1 1gt
@@ -77,3 +72,5 @@ noremap <leader>7 7gt
 noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
+
+set norelativenumber

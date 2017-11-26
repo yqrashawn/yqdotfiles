@@ -161,7 +161,7 @@ endif
 " Editor UI Appearance {{{
 " --------------------
 set shortmess=aoOTI     " Shorten messages and don't show intro
-set nonumber              " Show line numbers
+set norelativenumber
 set list                " Show hidden characters
 
 set tabpagemax=10       " Maximum number of tab pages
