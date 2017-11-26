@@ -219,8 +219,7 @@
                   (org-agenda-compact-blocks t)
                   (org-agenda-remove-tags t)
                   (ps-number-of-columns 2)
-                  (ps-landscape-mode t))
-                 ("~/Downloads/agenda.ps")))
+                  (ps-landscape-mode t))))
   (add-to-list 'org-agenda-custom-commands
                '("d" "Upcoming deadlines" agenda ""
                  ((org-agenda-entry-types '(:deadline))
@@ -230,13 +229,24 @@
   (add-to-list 'org-agenda-custom-commands '("w" . "Work stuff"))
   (add-to-list 'org-agenda-custom-commands '("wt" "Agenda and work todo" ((agenda "") (tags-todo "work"))))
   (add-to-list 'org-agenda-custom-commands
+               '("B" "Working Weekly Todo"
+                 ((tags-todo "work")
+                  (tags-todo "MAYBE+work") ;; review someday/maybe items
+                  (tags-todo "WAITING+work"))
+                 nil
+                 ("~/agendas/work/todo.pdf"
+                  "~/agendas/work/todo.csv"
+                  "~/agendas/work/todo.txt"
+                  "~/agendas/work/todo.html")))
+
+  (add-to-list 'org-agenda-custom-commands
                '("ww" "Working Weekly Review"
                  ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
                   ;; type "l" in the agenda to review logged items
                   (stuck "work" ((org-agenda-files (org-projectile-todo-files)))) ;; review stuck projects
                   (tags-todo "work")
                   (tags-todo "MAYBE+work") ;; review someday/maybe items
-                  (tags-todo "WAITING+work")))) ;; review waiting items
+                  (tags-todo "WAITING+work")) nil ("~/agendas/week/work.pdf" "~/agendas/week/work.csv" "~/agendas/week/work.txt" "~/agendas/week/work.html"))) ;; review waiting items
   (add-to-list 'org-agenda-custom-commands
                '("wp" . "Working Priority")) ;; review waiting items
   (add-to-list 'org-agenda-custom-commands
@@ -272,7 +282,7 @@
   ;;              '("pb" "B items" tags-todo "+PRIORITY=\"B\""))
   ;; (add-to-list org-agenda-custom-commands
   ;;              '("pc" "C items" tags-todo "+PRIORITY=\"C\""))
-  (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((agenda "") (tags-todo "read"))))
+  (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((tags-todo "read")) nil ("~/agendas/work/readlater.html" "~/agendas/work/readlater.txt")))
 
   (require 'org-projectile)
   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
@@ -430,7 +440,7 @@
 
 
 
-(defvar blog-root "~/blog/")
+(defvar blog-root "~/google/sync/blog/")
 (defvar blog-file-pattern "") ;; also possible: "*.org"
 (setq blog-file-pattern "") ;; also possible: "*.org"
 
