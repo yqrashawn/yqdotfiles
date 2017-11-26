@@ -497,7 +497,6 @@
   "Alternative to `counsel-fd-base-command' using ripgrep."
   :type 'string
   :group 'ivy)
-;; (setq counsel-fd-base-command "fd -L --hidden -p -a --color never")
 
 (defun counsel-fd-function (string base-cmd)
   "Grep in the current directory for STRING using BASE-CMD.
@@ -505,7 +504,7 @@ If non-nil, append EXTRA-fd-ARGS to BASE-CMD."
 
   (if (< (length string) 3)
       (counsel-more-chars 3)
-    (let ((default-directory counsel--git-dir)
+    (let ((default-directory counsel-fd-current-dir)
           (regex (counsel-unquote-regex-parens
                   (setq ivy--old-re
                         (ivy--regex-plus string)))))
@@ -514,7 +513,7 @@ If non-nil, append EXTRA-fd-ARGS to BASE-CMD."
         nil))))
 
 (defun my-insert-fd-full-path (path)
-  (insert (concat counsel--git-dir path)))
+  (insert (concat counsel-fd-current-dir path)))
 
 (defun my-insert-tsfile-path (path)
   (insert (concat (concat "[[tsfile:" (f-filename path)) "][]]")))
@@ -533,9 +532,7 @@ FD-PROMPT, if non-nil, is passed as `ivy-read' prompt argument."
                                  " in directory: ")))))
   (counsel-require-program (car (split-string counsel-fd-base-command)))
   (ivy-set-prompt 'counsel-fd counsel-prompt-function)
-  (setq counsel--git-dir (or initial-directory
-                             (locate-dominating-file default-directory ".git")
-                             default-directory))
+  (setq counsel-fd-current-dir (or initial-directory default-directory))
   (ivy-read (or fd-prompt (car (split-string counsel-fd-base-command)))
             (lambda (string)
               (counsel-fd-function string counsel-fd-base-command))

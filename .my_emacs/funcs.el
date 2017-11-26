@@ -704,3 +704,9 @@ prefix argument checkout branch instead of showing its log."
 (use-package magithub
   :after magit
   :config (magithub-feature-autoinject t))
+
+(defun counsel-find-file-occur ()
+  (cd ivy--directory)
+  (counsel-cmd-to-dired
+   (format
+    "ls | grep -i -E '%s' | xargs ls" ivy--old-re)))
