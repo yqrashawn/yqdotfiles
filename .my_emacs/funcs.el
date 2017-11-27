@@ -705,8 +705,22 @@ prefix argument checkout branch instead of showing its log."
   :after magit
   :config (magithub-feature-autoinject t))
 
-(defun counsel-find-file-occur ()
-  (cd ivy--directory)
-  (counsel-cmd-to-dired
-   (format
-    "ls | grep -i -E '%s' | xargs ls" ivy--old-re)))
+;; (defun counsel-find-file-occur ()
+;;   (cd ivy--directory)
+;;   (counsel-cmd-to-dired
+;;    (format
+;;     "ls | grep -i -E '%s' | xargs ls" ivy--old-re)))
+
+
+;; (defun counsel-git-occur ()
+;;   "Occur function for `counsel-git' using `counsel-cmd-to-dired'."
+;;   (print ivy--old-re)
+;;   (cd counsel--git-dir)
+;;   (counsel-cmd-to-dired
+;;    (format "%s | grep -i -E '%s' | xargs ls"
+;;            counsel-git-cmd
+;;            (counsel-unquote-regex-parens ivy--old-re))))
+
+;; (load-file "~/.emacs.d/elpa/counsel-20171125.36/counsel-autoloads.el")
+;; (load-file "~/.emacs.d/elpa/ivy-20171113.1024/ivy-autoloads.el")
+;; (load-file "~/.emacs.d/elpa/swiper-20171124.804/swiper-autoloads.el")
