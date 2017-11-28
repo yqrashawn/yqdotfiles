@@ -703,4 +703,35 @@ prefix argument checkout branch instead of showing its log."
 
 (use-package magithub
   :after magit
-  :config (magithub-feature-autoinject t))
+  :config (setq magithub-feature-autoinject t
+                magithub-dir "~/Dropbox/sync/magithub"))
+
+(defun spacemacs//short-key-state (modeon)
+  "Set evil-evilified-state explicitly."
+  (if modeon
+      (evil-evilified-state)
+    (evil-normal-state)))
+
+(use-package realgud
+  :defer t
+  :commands (realgud:gdb realgud:pdb)
+  :init
+  (progn
+    (spacemacs/set-leader-keys "de" 'realgud:cmd-eval-dwim)
+    (advice-add 'realgud-short-key-mode-setup
+                :before #'spacemacs//short-key-state)
+    (realgud-safe-mode  -1)
+    (evilified-state-evilify-map realgud:shortkey-mode-map
+      :eval-after-load realgud
+      :mode realgud-short-key-mode
+      :bindings
+      "s" 'realgud:cmd-next
+      "i" 'realgud:cmd-step
+      "b" 'realgud:cmd-break
+      "B" 'realgud:cmd-clear
+      "o" 'realgud:cmd-finish
+      "c" 'realgud:cmd-continue
+      "e" 'realgud:cmd-eval
+      "r" 'realgud:cmd-restart
+      "q" 'realgud:cmd-quit
+      "S" 'realgud-window-cmd-undisturb-src)))
