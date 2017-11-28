@@ -365,7 +365,7 @@
 
 ;; (define-key flyspell-mode-map (kbd "C-M-i") nil)
 ;; (bind-key "C-M-i" 'complete-symbol org-mode-map)
-(evil-define-key 'insert 'org-mode-map "C-M-i" 'complete-symbol)
+(evil-define-key 'insert 'org-mode-map (kbd "C-M-i") 'complete-symbol)
 (setq completion-at-point-functions
       '(org-completion-symbols
         ora-cap-filesystem
