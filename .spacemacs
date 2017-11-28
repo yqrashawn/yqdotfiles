@@ -135,6 +135,8 @@ values."
                                       imenu-anywhere
                                       ;; key-chord
                                       magithub
+                                      realgud
+                                      realgud-byebug
                                       ghub+
                                       keyfreq
                                       noccur
@@ -431,7 +433,6 @@ values."
    org-enable-github-support t
    better-defaults-move-to-end-of-code-first t
    evil-snipe-enable-alternate-f-and-t-behaviors t
-   dotspacemacs-switch-to-buffer-prefers-purpose nil
    ))
 
 (defun dotspacemacs/user-init ()
