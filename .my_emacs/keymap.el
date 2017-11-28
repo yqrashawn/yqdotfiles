@@ -5,9 +5,6 @@
 (global-set-key (kbd "H-]") 'multi-term-next)
 (global-set-key (kbd "H-[") 'multi-term-prev)
 (global-set-key (kbd "H-p") 'multi-term)
-(eval-after-load 'magit
-  '(evil-define-key 'normal magit-mode-map "v"
-     #'endless/visit-pull-request-url))
 
 (define-key evil-window-map "\C-l" 'evil-window-right)
 (define-key evil-window-map "\C-j" 'evil-window-down)
@@ -38,6 +35,7 @@
 ;; (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
 (global-set-key (kbd "C-;") 'spacemacs/default-pop-shell)
 (spacemacs/set-leader-keys "fd" 'diredp-dired-recent-dirs)
+(spacemacs/set-leader-keys "fF" 'find-file-other-window)
 (push 'evil-escape-mode evil-mc-incompatible-minor-modes)
 (setq evil-mc-undo-cursors-on-keyboard-quit t)
 

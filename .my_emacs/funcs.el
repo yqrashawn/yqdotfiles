@@ -703,24 +703,35 @@ prefix argument checkout branch instead of showing its log."
 
 (use-package magithub
   :after magit
-  :config (magithub-feature-autoinject t))
+  :config (setq magithub-feature-autoinject t
+                magithub-dir "~/Dropbox/sync/magithub"))
 
-;; (defun counsel-find-file-occur ()
-;;   (cd ivy--directory)
-;;   (counsel-cmd-to-dired
-;;    (format
-;;     "ls | grep -i -E '%s' | xargs ls" ivy--old-re)))
+(defun spacemacs//short-key-state (modeon)
+  "Set evil-evilified-state explicitly."
+  (if modeon
+      (evil-evilified-state)
+    (evil-normal-state)))
 
-
-;; (defun counsel-git-occur ()
-;;   "Occur function for `counsel-git' using `counsel-cmd-to-dired'."
-;;   (print ivy--old-re)
-;;   (cd counsel--git-dir)
-;;   (counsel-cmd-to-dired
-;;    (format "%s | grep -i -E '%s' | xargs ls"
-;;            counsel-git-cmd
-;;            (counsel-unquote-regex-parens ivy--old-re))))
-
-;; (load-file "~/.emacs.d/elpa/counsel-20171125.36/counsel-autoloads.el")
-;; (load-file "~/.emacs.d/elpa/ivy-20171113.1024/ivy-autoloads.el")
-;; (load-file "~/.emacs.d/elpa/swiper-20171124.804/swiper-autoloads.el")
+(use-package realgud
+  :defer t
+  :commands (realgud:gdb realgud:pdb)
+  :init
+  (progn
+    (spacemacs/set-leader-keys "de" 'realgud:cmd-eval-dwim)
+    (advice-add 'realgud-short-key-mode-setup
+                :before #'spacemacs//short-key-state)
+    (realgud-safe-mode  -1)
+    (evilified-state-evilify-map realgud:shortkey-mode-map
+      :eval-after-load realgud
+      :mode realgud-short-key-mode
+      :bindings
+      "s" 'realgud:cmd-next
+      "i" 'realgud:cmd-step
+      "b" 'realgud:cmd-break
+      "B" 'realgud:cmd-clear
+      "o" 'realgud:cmd-finish
+      "c" 'realgud:cmd-continue
+      "e" 'realgud:cmd-eval
+      "r" 'realgud:cmd-restart
+      "q" 'realgud:cmd-quit
+      "S" 'realgud-window-cmd-undisturb-src)))
