@@ -25,6 +25,7 @@ PYTHONPATH="~/blog/lazyblorg:" $HOME/blog/lazyblorg/lazyblorg.py \
           --logfile $HOME/blog/2del-logfile.org \
           --orgfiles $HOME/Dropbox/ORG/writes.org \
                      $HOME/Dropbox/ORG/work-blog.org \
+                     $HOME/Dropbox/ORG/resume.org \
           $HOME/blog/lazyblorg/templates/blog-format.org $@
 
 #END
