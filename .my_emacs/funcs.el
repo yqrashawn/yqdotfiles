@@ -720,7 +720,7 @@ prefix argument checkout branch instead of showing its log."
     (spacemacs/set-leader-keys "de" 'realgud:cmd-eval-dwim)
     (advice-add 'realgud-short-key-mode-setup
                 :before #'spacemacs//short-key-state)
-    (realgud-safe-mode  -1)
+
     (evilified-state-evilify-map realgud:shortkey-mode-map
       :eval-after-load realgud
       :mode realgud-short-key-mode
@@ -734,4 +734,5 @@ prefix argument checkout branch instead of showing its log."
       "e" 'realgud:cmd-eval
       "r" 'realgud:cmd-restart
       "q" 'realgud:cmd-quit
-      "S" 'realgud-window-cmd-undisturb-src)))
+      "S" 'realgud-window-cmd-undisturb-src))
+  :config (realgud-safe-mode  -1))

@@ -193,8 +193,6 @@
 (setq org-directory "~/Dropbox/ORG")
 (setq org-agenda-files (list "~/Dropbox/ORG"))
 (setq org-agenda-skip-unavailable-files t)
-(setq org-mobile-directory "~/Dropbox/应用/MobileOrg")
-(setq org-mobile-inbox-for-pull "~/Dropbox/ORG/flagged.org")
 (setq org-default-notes-file '("~/Dropbox/ORG/notes.org"))
 (setq org-projectile-capture-template "* TODO %? %^G\n%U")
 (with-eval-after-load 'org-agenda
@@ -493,7 +491,7 @@
  :help-echo "Opens the linked file with your default application")
 
 ;; "rg -i --no-heading --line-number --color never %s ."
-(defcustom counsel-fd-base-command "fd -L --hidden -p -a --color never "
+(defcustom counsel-fd-base-command "fd -L -I --hidden -p -a --color never "
   "Alternative to `counsel-fd-base-command' using ripgrep."
   :type 'string
   :group 'ivy)
