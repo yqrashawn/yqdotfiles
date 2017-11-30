@@ -27,7 +27,7 @@
 ;; (define-key ivy-mode-map (kbd "C-s-9") 'minibuffer-keyboard-quit)
 ;; mac port set command to hyper
 (global-set-key (kbd "H-d") 'dired)
-(global-set-key (kbd "H-l") 'spacemacs/layouts-transient-state/body)
+(global-set-key (kbd "H-l") 'spacemacs/persp-perspectives)
 (global-set-key (kbd "H-k") 'spacemacs/kill-this-buffer)
 (global-set-key (kbd "H-j") 'save-buffer)
 (global-set-key (kbd "H-b") 'bookmark-jump)
@@ -363,3 +363,4 @@
 
 (spacemacs/set-leader-keys "fs" nil)
 (spacemacs/set-leader-keys "bd" nil)
+(spacemacs/set-leader-keys "gf" 'magit-file-popup)
