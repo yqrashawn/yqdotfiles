@@ -282,8 +282,9 @@
   ;;              '("pc" "C items" tags-todo "+PRIORITY=\"C\""))
   (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((tags-todo "read")) nil ("~/agendas/work/readlater.html" "~/agendas/work/readlater.txt")))
 
-  (require 'org-projectile)
-  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))))
+  ;; (require 'org-projectile)
+  ;; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+  )
 
 (defvar current-file-reference ""  "Global variable to store the current file reference")
 
