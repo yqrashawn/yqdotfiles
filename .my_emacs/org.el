@@ -264,20 +264,6 @@
                   (tags-todo "MAYBE+home") ;; review someday/maybe items
                   (tags-todo "WAITING+home")))) ;; review waiting items
 
-  ;; (add-to-list 'org-agenda-custom-commands
-  ;;              '("hp" . "Home Priority")) ;; review waiting items
-  ;; (add-to-list 'org-agenda-custom-commands
-  ;;              '("hpa" "Home Priority A" tags-todo "+PRIORITY=\"A\"+home")) ;; review waiting items
-  ;; (add-to-list 'org-agenda-custom-commands
-  ;;              '("hpb" "Home Priority B" tags-todo "+PRIORITY=\"B\"+home")) ;; review waiting items
-  ;; (add-to-list 'org-agenda-custom-commands
-  ;;              '("hpc" "Home Priority C" tags-todo "+PRIORITY=\"C\"+home")) ;; review waiting items
-  ;; (add-to-list org-agenda-custom-commands
-  ;;              '("p" . "Priorities"))
-  ;; (add-to-list org-agenda-custom-commands
-  ;;              '("pa" "A items" tags-todo "+PRIORITY=\"A\""))
-  ;; (add-to-list org-agenda-custom-commands
-  ;;              '("pb" "B items" tags-todo "+PRIORITY=\"B\""))
   ;; (add-to-list org-agenda-custom-commands
   ;;              '("pc" "C items" tags-todo "+PRIORITY=\"C\""))
   (add-to-list 'org-agenda-custom-commands '("r" "Read later" ((tags-todo "read")) nil ("~/agendas/work/readlater.html" "~/agendas/work/readlater.txt")))
@@ -491,11 +477,11 @@
  :follow (lambda (path) (my-handle-tsfile-link path))
  :help-echo "Opens the linked file with your default application")
 
-;; "rg -i --no-heading --line-number --color never %s ."
 (defcustom counsel-fd-base-command "fd -L -I --hidden -p -a --color never "
   "Alternative to `counsel-fd-base-command' using ripgrep."
   :type 'string
   :group 'ivy)
+;; (setq counsel-fd-base-command "fd -L -I --hidden -p --color never ")
 
 (defun counsel-fd-function (string base-cmd)
   "Grep in the current directory for STRING using BASE-CMD.
