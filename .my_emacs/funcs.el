@@ -703,7 +703,8 @@ prefix argument checkout branch instead of showing its log."
 
 (use-package magithub
   :after magit
-  :config (setq magithub-feature-autoinject t
+  :config (setq magithub-features t
+                magithub-feature-autoinject t
                 magithub-dir "~/Dropbox/sync/magithub"))
 
 (defun spacemacs//short-key-state (modeon)
