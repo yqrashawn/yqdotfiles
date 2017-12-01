@@ -21,7 +21,8 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(vimscript
+   '(csv
+     vimscript
      ;; artist
      yq-mode-line
      (elfeed :variables rmh-elfeed-org-files (list "~/Dropbox/ORG/feed/feedly.org"
@@ -467,11 +468,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;   (exec-path-from-shell-initialize))
   (setq insert-directory-program "/usr/local/opt/coreutils/bin/gls")
   (setq dired-listing-switches "-aBhl --group-directories-first")
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat user-emacs-directory ".cache/undo"))))
-  (unless (file-exists-p (concat user-emacs-directory ".cache/undo"))
-    (make-directory (concat user-emacs-directory "./cache/undo"))))
+  ;; (setq undo-tree-auto-save-history t
+  ;;       undo-tree-history-directory-alist
+  ;;       `(("." . ,(concat user-emacs-directory ".cache/undo"))))
+  ;; (unless (file-exists-p (concat user-emacs-directory ".cache/undo"))
+  ;;   (make-directory (concat user-emacs-directory "./cache/undo")))
+  )
 
 
 

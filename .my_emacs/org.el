@@ -477,7 +477,7 @@
  :follow (lambda (path) (my-handle-tsfile-link path))
  :help-echo "Opens the linked file with your default application")
 
-(defcustom counsel-fd-base-command "fd -L -I --hidden -p -a --color never "
+(defcustom counsel-fd-base-command "fd -L -I --hidden -a --color never "
   "Alternative to `counsel-fd-base-command' using ripgrep."
   :type 'string
   :group 'ivy)
