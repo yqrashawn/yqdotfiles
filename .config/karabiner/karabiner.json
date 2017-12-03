@@ -499,7 +499,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "right_option"
+                                      "key_code": "right_option"
                                     }
                                 ],
                                 "to_if_alone": [
@@ -3790,9 +3790,6 @@
                                         "modifiers": [
                                             "left_command"
                                         ]
-                                    },
-                                    {
-                                        "key_code": "left_command"
                                     }
                                 ],
                                 "type": "basic"
@@ -4404,7 +4401,7 @@
                                     "key_code": "spacebar",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_command"
+                                            "command"
                                         ],
                                         "optional": [
                                             "caps_lock"
