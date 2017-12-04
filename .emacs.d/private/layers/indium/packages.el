@@ -30,6 +30,7 @@
           (evil-define-key 'normal map "gr" #'indium-inspector-refresh)
           (evil-define-key 'normal map "n" #'indium-inspector-refresh)
           (evil-define-key 'normal map "p" #'indium-inspector-refresh)
+          (evil-define-key 'normal map "q" #'quit-window)
           (define-key map "l" #'indium-inspector-pop)
           (define-key map "g" #'indium-inspector-refresh)
           (define-key map "n" #'indium-inspector-next-reference)
@@ -50,10 +51,15 @@
           (define-key map (kbd "C-c C-z") #'indium-repl-pop-buffer)
           (define-key map (kbd "C-c C-q") #'indium-quit)
           (define-key map (kbd "C-c C-q") #'indium-quit)
-          (define-key map (kbd "C-n") #'next-line)
-          (define-key map (kbd "C-p") #'previous-line)
-          (define-key map (kbd "M-p") #'indium-repl-previous-input)
-          (define-key map (kbd "M-n") #'indium-repl-next-input)
+          ;; (define-key map (kbd "C-n") #'next-line)
+          ;; (define-key map (kbd "C-p") #'previous-line)
+          (evil-define-key 'normal map "q" #'quit-window)
+          (evil-define-key 'normal map (kbd "C-p") #'indium-repl-previous-input)
+          (evil-define-key 'normal map (kbd "C-n") #'indium-repl-next-input)
+          (evil-define-key 'insert map (kbd "C-p") #'indium-repl-previous-input)
+          (evil-define-key 'insert map (kbd "C-n") #'indium-repl-next-input)
+          (define-key map (kbd "C-p") #'indium-repl-previous-input)
+          (define-key map (kbd "C-n") #'indium-repl-next-input)
           (easy-menu-define indium-repl-mode-menu map
             "Menu for Indium REPL"
             '("Indium REPL"
