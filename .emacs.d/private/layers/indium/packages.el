@@ -7,18 +7,36 @@
     :init
     (progn
       ;; add hook for js2 mode
-      ;; (add-hook 'js2-mode-hook 'init-indium)
       (spacemacs/declare-prefix-for-mode 'js2-mode "mi" "indium")
-      (setq indium-chrome-executable "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+      (setq indium-chrome-executable "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary")
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
         "ir" 'indium-run-node
         "iR" 'indium-connect-to-nodejs
         "iC" 'indium-run-chrome
         "ic" 'indium-connect-to-chrome
         "ibb" 'indium-add-breakpoint
+        "ibB" 'indium-add-conditional-breakpoint
         "ibk" 'indium-remove-breakpoint
-        "ibl" 'indium-list-breakpoint
-        )
+        "ibK" 'indium-breakpoint-remove-all
+        "ibl" 'indium-list-breakpoint)
+
+
+      (defvar indium-inspector-mode-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map [return] #'indium-follow-link)
+          (define-key map "\C-m" #'indium-follow-link)
+          (define-key map [mouse-1] #'indium-follow-link)
+          (evil-define-key 'normal map "gl" #'indium-inspector-pop)
+          (evil-define-key 'normal map "gr" #'indium-inspector-refresh)
+          (evil-define-key 'normal map "n" #'indium-inspector-refresh)
+          (evil-define-key 'normal map "p" #'indium-inspector-refresh)
+          (define-key map "l" #'indium-inspector-pop)
+          (define-key map "g" #'indium-inspector-refresh)
+          (define-key map "n" #'indium-inspector-next-reference)
+          (define-key map "p" #'indium-inspector-previous-reference)
+          (define-key map [tab] #'indium-inspector-next-reference)
+          (define-key map [backtab] #'indium-inspector-previous-reference)
+          map))
 
       (defvar indium-repl-mode-map
         (let ((map (make-sparse-keymap)))
@@ -46,4 +64,44 @@
               "--"
               ["Quit" indium-quit]))
           map))
-      )))
+
+      (defvar indium-debugger-mode-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map " " #'indium-debugger-step-over)
+          (define-key map (kbd "H-'") #'indium-debugger-step-over)
+          (define-key map (kbd "H-;") #'indium-debugger-step-into)
+          (define-key map (kbd "i") #'indium-debugger-step-into)
+          (define-key map (kbd "o") #'indium-debugger-step-out)
+          (define-key map (kbd "H-:") #'indium-debugger-step-out)
+          (define-key map (kbd "c") #'indium-debugger-resume)
+          (define-key map (kbd "H-\\") #'indium-debugger-resume)
+          (define-key map (kbd "l") #'indium-debugger-locals)
+          (define-key map (kbd "H-L") #'indium-debugger-locals)
+          (define-key map (kbd "s") #'indium-debugger-stack-frames)
+          (define-key map (kbd "H-S") #'indium-debugger-stack-frames)
+          (define-key map (kbd "q") #'indium-debugger-resume)
+          (define-key map (kbd "h") #'indium-debugger-here)
+          (define-key map (kbd "H-\"") #'indium-debugger-here)
+          (define-key map (kbd "e") #'indium-debugger-evaluate)
+          (define-key map (kbd "H-E") #'indium-debugger-evaluate)
+          (define-key map (kbd "n") #'indium-debugger-next-frame)
+          (define-key map (kbd "p") #'indium-debugger-previous-frame)
+          (define-key map (kbd "H-N") #'indium-debugger-next-frame)
+          (define-key map (kbd "H-P") #'indium-debugger-previous-frame)
+          (easy-menu-define indium-debugger-mode-menu map
+            "Menu for Indium debugger"
+            '("Indium Debugger"
+              ["Resume" indium-debugger-resume]
+              ["Step over" indium-debugger-step-over]
+              ["Step into" indium-debugger-step-into]
+              ["Step out" indium-debugger-step-out]
+              ["Jump here" indium-debugger-here]
+              "--"
+              ["Inspect locals" indium-debugger-locals]
+              ["Show stack" indium-debugger-stack-frames]
+              "--"
+              ["Evaluate" indium-debugger-evaluate]
+              "--"
+              ["Jump to the next frame" indium-debugger-next-frame]
+              ["Jump to the previous frame" indium-debugger-previous-frame]))
+          map)))))
