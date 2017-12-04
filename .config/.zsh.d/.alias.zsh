@@ -10,7 +10,6 @@ alias zc="emacsclient ~/.zshrc"
 alias zcc="emacsclient ~/.zprezto/runcoms/zpreztorc"
 alias cl='clear'
 alias o='open'
-alias lstt='ls -t'
 
 
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
@@ -31,7 +30,8 @@ alias l='exa'
 alias ls="exa"
 alias lsa="exa -abghl --git --color=automatic"
 alias lsd="exa -l --color=automatic | grep --color=never '^d'"
-alias lst='exa -t modified --long'
+alias lst='exa --sort=created --time=created --long --all -r | sed 15q'
+alias lstt='exa --sort=modified --time=created --long --all -r | sed 15q'
 # alias ls="ls -AlF ${colorflag}"
 # alias l="ls -lF ${colorflag}"
 # alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
