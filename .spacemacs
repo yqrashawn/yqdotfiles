@@ -27,7 +27,7 @@ values."
      yq-mode-line
      (elfeed :variables rmh-elfeed-org-files (list "~/Dropbox/ORG/feed/feedly.org"
                                                    "~/Dropbox/ORG/feed/local.org"))
-     ;; parinfer
+     parinfer
      ;; nlinum
      ;; bm
      github
@@ -77,8 +77,8 @@ values."
           org-journal-dir "~/Dropbox/ORG/journal"
           org-enable-github-support t
           ;; org-projectile-file "TODOs.org"
-          org-projectile-file "~/Dropbox/ORG/project.org"
-          )
+          org-projectile-file "~/Dropbox/ORG/project.org")
+
      (shell :variables
             shell-default-height 30
             shell-default-position 'right
@@ -100,8 +100,8 @@ values."
      ;; docker
      ;; vimscript
      javascript
-     (python :variables python-enable-yapf-format-on-save t)
-     )
+     (python :variables python-enable-yapf-format-on-save t))
+
    dotspacemacs-additional-packages '(
                                       ;; butler
                                       ;; beacon
@@ -109,6 +109,9 @@ values."
                                       company-flx
                                       circe
                                       circe-notifications
+                                      lsp-mode
+                                      lsp-vue
+                                      company-lsp
                                       ;; smart-mode-line
                                       ;; org-mind-map
                                       ;; cheat-sh
@@ -150,8 +153,8 @@ values."
                                       writegood-mode
                                       web-narrow-mode
                                       webpaste
-                                      zenburn-theme
-                                      )
+                                      zenburn-theme)
+
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -165,8 +168,8 @@ values."
                                     helm-core
                                     helm
                                     spaceline
-                                    desktop
-                                    )
+                                    desktop)
+
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -435,8 +438,7 @@ values."
    org-enable-bootstrap-support t
    org-enable-github-support t
    better-defaults-move-to-end-of-code-first t
-   evil-snipe-enable-alternate-f-and-t-behaviors t
-   ))
+   evil-snipe-enable-alternate-f-and-t-behaviors t))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -445,6 +447,8 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  ;; 'dired-do-copy' and 'dired-rename-file' create non-existent directories
+  (setq dired-create-destination-dirs t)
   (setq custom-file (concat spacemacs-cache-directory ".custom-settings"))
   (load-file custom-file)
   (setq exec-path-from-shell-check-startup-files nil) ;; only from .zshenv
@@ -469,15 +473,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;   (exec-path-from-shell-copy-env "TERM")
   ;;   (exec-path-from-shell-initialize))
   (setq insert-directory-program "/usr/local/opt/coreutils/bin/gls")
-  (setq dired-listing-switches "-aBhl --group-directories-first")
+  (setq dired-listing-switches "-aBhl --group-directories-first"))
   ;; (setq undo-tree-auto-save-history t
   ;;       undo-tree-history-directory-alist
   ;;       `(("." . ,(concat user-emacs-directory ".cache/undo"))))
   ;; (unless (file-exists-p (concat user-emacs-directory ".cache/undo"))
   ;;   (make-directory (concat user-emacs-directory "./cache/undo")))
-  )
-
-
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -708,5 +709,4 @@ you should place your code here."
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-  )
+This function is called at the very end of Spacemacs initialization.")

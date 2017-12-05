@@ -737,3 +737,98 @@ prefix argument checkout branch instead of showing its log."
       "q" 'realgud:cmd-quit
       "S" 'realgud-window-cmd-undisturb-src))
   :config (realgud-safe-mode  -1))
+
+
+
+(eval-after-load 'hippie-exp
+  ;; Modified version of try-expand-line from hippie-exp.el v1.6 by Anders Holst
+  ;; Changed to return the completion instead of calling he-substitute-string
+  '(progn (defun my-try-expand-line (old)
+            "Try to complete the current line to an entire line in the buffer.
+The argument OLD has to be nil the first call of this function, and t
+for subsequent calls (for further possible completions of the same
+string).  It returns t if a new completion is found, nil otherwise."
+            (let ((expansion ())
+                  (strip-prompt (and (get-buffer-process (current-buffer))
+                                     comint-use-prompt-regexp
+                                     comint-prompt-regexp)))
+              (if (not old)
+                  (progn
+                    (he-init-string (he-line-beg strip-prompt) (point))
+                    (set-marker he-search-loc he-string-beg)
+                    (setq he-search-bw t)))
+
+              (if (not (equal he-search-string ""))
+                  (save-excursion
+                    (save-restriction
+                      (if hippie-expand-no-restriction
+                          (widen))
+                      ;; Try looking backward unless inhibited.
+                      (if he-search-bw
+                          (progn
+                            (goto-char he-search-loc)
+
+                            (setq expansion (he-line-search he-search-string
+                                                            strip-prompt t))
+                            (set-marker he-search-loc (point))
+                            (if (not expansion)
+                                (progn
+                                  (set-marker he-search-loc he-string-end)
+                                  (setq he-search-bw ())))))
+
+                      (if (not expansion) ; Then look forward.
+                          (progn
+                            (goto-char he-search-loc)
+                            (setq expansion (he-line-search he-search-string
+                                                            strip-prompt nil))
+                            (set-marker he-search-loc (point)))))))
+
+              (if (not expansion)
+                  (progn
+                    (if old (he-reset-string))
+                    ())
+                (progn
+                  expansion))))
+
+          (defun get-hippie-expand-lines ()
+            (let (completions-list candidate)
+              (setq candidate (my-try-expand-line nil))
+              (if candidate
+                  (progn
+                    (push candidate completions-list)
+                    (while (progn
+                             (setq candidate (my-try-expand-line t))
+                             (if candidate
+                                 (push candidate completions-list)
+                               nil))))
+                nil)
+              completions-list))
+
+          (defun company-hippie-line (command &optional arg &rest ignored)
+            (interactive (list 'interactive))
+
+            (cl-case command
+              (interactive (company-begin-backend 'company-hippie-line))
+              (prefix (and (company-grab-symbol)
+                           (not (looking-at "[:word:]"))
+                           (let (p1 p2)
+                             (save-excursion
+                               (end-of-line)
+                               (setq p2 (point))
+                               (back-to-indentation)
+                               (setq p1 (point)))
+                             (buffer-substring-no-properties p1 p2))))
+              (candidates (get-hippie-expand-lines))))
+
+          ;; Uncomment if you want to get line completion popups whenever found
+          ;; (add-to-list 'company-backends 'company-hippie-line)
+          (global-set-key (kbd "C-x l") 'company-hippie-line)))
+
+(defun eww-more-readable ()
+  "Makes eww more pleasant to use. Run it after eww buffer is loaded."
+  (interactive)
+  (setq eww-header-line-format nil)               ;; removes page title
+  (setq mode-line-format nil)                     ;; removes mode-line
+  (set-window-margins (get-buffer-window) 20 20)  ;; increases size of margins
+  (redraw-display)                                ;; apply mode-line changes
+  (eww-reload 'local))                            ;; apply eww-header changes
