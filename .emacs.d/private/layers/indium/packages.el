@@ -10,14 +10,15 @@
       (spacemacs/declare-prefix-for-mode 'js2-mode "mi" "indium")
       (setq indium-chrome-executable "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary")
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
-        "ir" 'indium-run-node
-        "iR" 'indium-connect-to-nodejs
-        "iC" 'indium-run-chrome
-        "ic" 'indium-connect-to-chrome
+        "inr" 'indium-run-node
+        "inc" 'indium-connect-to-nodejs
+        "icr" 'indium-run-chrome
+        "icC" 'indium-toggle-v8-cache
+        "icc" 'indium-connect-to-chrome
         "ibb" 'indium-add-breakpoint
         "ibB" 'indium-add-conditional-breakpoint
         "ibk" 'indium-remove-breakpoint
-        "ibK" 'indium-breakpoint-remove-all
+        "ibK" 'indium-remove-all-breakpoints-from-buffer
         "ibl" 'indium-list-breakpoint)
 
 

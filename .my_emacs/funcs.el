@@ -832,3 +832,8 @@ string).  It returns t if a new completion is found, nil otherwise."
   (set-window-margins (get-buffer-window) 20 20)  ;; increases size of margins
   (redraw-display)                                ;; apply mode-line changes
   (eww-reload 'local))                            ;; apply eww-header changes
+
+(use-package nov
+  :defer
+  :commands nav-mode
+  :mode ("\\.epub\\'" . nov-mode))
