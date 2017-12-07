@@ -63,4 +63,4 @@ if modalmgr then
   if launch_modalmgr == true then modalmgr:enter() end
 end
 
-require("command-q-twice")
+-- require("command-q-twice")
