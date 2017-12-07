@@ -9,6 +9,8 @@
       ;; add hook for js2 mode
       (spacemacs/declare-prefix-for-mode 'js2-mode "mi" "indium")
       (setq indium-chrome-executable "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary")
+
+      (spacemacs/declare-prefix-for-mode 'js2-mode "mi" "indium")
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
         "inr" 'indium-run-node
         "inc" 'indium-connect-to-nodejs

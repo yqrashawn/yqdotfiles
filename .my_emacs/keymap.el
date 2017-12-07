@@ -193,8 +193,8 @@
                   "s" nil
                   "S" nil
                   "t" #'evil-snipe-s
-                  "T" #'evil-snipe-S
-                  )
+                  "T" #'evil-snipe-S)
+
 (setq evil-snipe-auto-disable-substitute nil)
 (define-key evil-normal-state-map "s" nil)
 (define-key evil-normal-state-map "S" nil)
@@ -363,7 +363,27 @@
 
 (evil-global-set-key 'insert (kbd "C-l") 'hippie-expand)
 
-
 (spacemacs/set-leader-keys "fs" nil)
 (spacemacs/set-leader-keys "bd" nil)
 (spacemacs/set-leader-keys "gf" 'magit-file-popup)
+
+(with-eval-after-load 'pdf-tools
+  (setq pdf-annot-activate-created-annotations nil)
+  (evil-define-key 'visual pdf-view-mode-map "h" 'pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map "H" 'pdf-annot-add-highlight-markup-annotation)
+  (evilified-state-evilify pdf-view-mode pdf-view-mode-map
+    (kbd "D") 'pdf-annot-delete
+    (kbd "t") 'pdf-annot-add-text-annotation
+    "H" 'pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "sl") 'counsel-imenu)
+  (define-key pdf-view-mode-map (kbd "sc") 'spacemacs/delete-window)
+  (define-key pdf-view-mode-map (kbd "sv") 'split-window-right)
+  (define-key pdf-view-mode-map (kbd "ss") 'pdf-occur)
+  (define-key pdf-view-mode-map (kbd "C-w") 'nil)
+  (define-key pdf-view-mode-map (kbd "C-w C-w") 'evil-window-next)
+  (define-key pdf-view-mode-map (kbd "C-w C-l") 'evil-window-right)
+  (define-key pdf-view-mode-map (kbd "C-w C-j") 'evil-window-down)
+  (define-key pdf-view-mode-map (kbd "C-w C-k") 'evil-window-up)
+  (define-key pdf-view-mode-map (kbd "C-w C-h") 'evil-window-left)
+  (define-key pdf-view-mode-map (kbd "C-w DEL") 'evil-window-left)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
