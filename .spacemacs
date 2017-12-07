@@ -137,6 +137,7 @@ values."
                                       hackernews
                                       ivy-dired-history
                                       imenu-anywhere
+                                      nov
                                       ;; key-chord
                                       magithub
                                       realgud
