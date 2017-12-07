@@ -1,0 +1,17 @@
+{
+  "segments": [
+    "exit_code",
+    "read_only",
+    "ssh",
+    "cwd",
+    "git",
+    "jobs",
+    "set_term_title",
+    "root"
+  ],
+  "mode": "flat",
+  "cwd": {
+    "mode": "plain"
+  },
+  "theme": "solarized_light"
+}
