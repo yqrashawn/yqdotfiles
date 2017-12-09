@@ -7178,6 +7178,29 @@
                                         "name": "alf_mode",
                                         "type": "variable_if",
                                         "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "alf_mode",
+                                        "type": "variable_if",
+                                        "value": 1
                                     },
                                     {
                                         "bundle_identifiers": [
