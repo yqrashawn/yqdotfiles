@@ -48,7 +48,7 @@ alias serverp='http-server -p'
 alias serv="live-server --port=8081"
 
 # editors
-alias e='emacsclient'
+alias e='emacsclient -n'
 alias v='nvim'
 alias p='you-get -p mpv '
 alias mmpv='mpv -vo=opengl '
