@@ -876,3 +876,4 @@ string).  It returns t if a new completion is found, nil otherwise."
             (local-set-key (kbd "$") (quote bms/pdf-midnite-original))))
 
 (setq counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls")
+
