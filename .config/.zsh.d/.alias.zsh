@@ -50,7 +50,7 @@ alias serv="live-server --port=8081"
 # editors
 alias e='emacsclient -n'
 alias v='nvim'
-alias p='you-get -p mpv '
+alias p='you-get -p mpv'
 alias mmpv='mpv -vo=opengl '
 alias vv='fasd -f -e nvim'
 alias ee='fasd -f -e emacsclient'
