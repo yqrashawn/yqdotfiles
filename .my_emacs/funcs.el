@@ -877,3 +877,17 @@ string).  It returns t if a new completion is found, nil otherwise."
 
 (setq counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls")
 
+(setq yq/large-screen-default-font '("Hack"
+                                     ;;"Menlo"
+                                     ;; "Anonymous Pro for Powerline"
+                                     ;; "InconsolataG for Powerline"
+                                     ;; "Source Code Pro for Powerline"
+                                     :size 15
+                                     :weight normal
+                                     :width normal
+                                     :powerline-scale 1.1))
+
+(defun yq/default-font-large-screen ()
+  "font for large screen"
+  (interactive)
+  (spacemacs/set-default-font yq/large-screen-default-font))

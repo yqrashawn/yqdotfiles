@@ -76,6 +76,8 @@
 (global-set-key (kbd "C-SPC") 'counsel-grep-or-swiper)
 (global-set-key (kbd "^@") 'counsel-grep-or-swiper)
 (global-set-key (kbd "C-@") 'counsel-grep-or-swiper)
+(global-set-key (kbd "C-S-SPC") 'spacemacs/swiper-region-or-symbol)
+(global-set-key (kbd "C-S-@") 'spacemacs/swiper-region-or-symbol)
 ;; (global-set-key (kbd "C-SPC") 'evil-search-forward)
 ;; (global-set-key (kbd "^@") 'evil-search-forward)
 
@@ -202,7 +204,7 @@
 (define-key evil-normal-state-map "sf" 'spacemacs/search-auto)
 (define-key evil-normal-state-map "sF" 'spacemacs/search-auto-region-or-symbol)
 (define-key evil-normal-state-map "sk" 'spacemacs/kill-this-buffer)
-(define-key evil-normal-state-map "sK" 'spacemacs/swiper-region-or-symbol)
+(define-key evil-normal-state-map "sK" 'kill-buffer-and-window)
 (define-key evil-visual-state-map "sa" 'avy-goto-word-or-subword-1)
 (define-key evil-normal-state-map "sh" 'save-buffer)
 (define-key evil-normal-state-map "sl" 'counsel-imenu)
@@ -225,7 +227,6 @@
 (define-key evil-visual-state-map (kbd "C-s c") 'sp-rewrap-sexp)
 (define-key evil-visual-state-map (kbd "C-s d") 'sp-splice-sexp)
 (define-key evil-normal-state-map (kbd "C-q") nil)
-(define-key evil-normal-state-map (kbd "C-q k") 'sp-kill-sexp)
 (define-key evil-normal-state-map (kbd "C-q i") 'yas-insert-snippet)
 (define-key evil-insert-state-map (kbd "C-q") nil)
 (define-key evil-insert-state-map (kbd "C-q C-j") 'counsel-company)
@@ -390,3 +391,27 @@
   (define-key pdf-view-mode-map (kbd "C-w C-h") 'evil-window-left)
   (define-key pdf-view-mode-map (kbd "C-w DEL") 'evil-window-left)
   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
+(define-key evil-normal-state-map (kbd "C-q j") 'buffer-switch)
+;; keymap used in the popup menu
+(setq switch-keymap (make-sparse-keymap))
+(define-key switch-keymap (kbd "j") 'popup-next)
+(define-key switch-keymap (kbd "k") 'popup-previous)
+(define-key switch-keymap (kbd "<return>") 'popup-select)
+(define-key switch-keymap (kbd "l") 'popup-select)
+(setq buffer-switch-max 5)
+
+(defun buffer-switch ()
+  (interactive)
+  ;; all the buffers
+  (setq full-buffer-list (mapcar (function buffer-name) (buffer-list)))
+  (if buffer-switch-max
+      (progn
+        ;; if max specified, only take n buffers
+        (setq buffer-select-list (subseq full-buffer-list 0 (- buffer-switch-max 1))))
+
+    ;; if not specified, take all
+    (setq buffer-select-list full-buffer-list))
+
+  (setq dest-buffer (popup-menu* buffer-select-list :keymap switch-keymap))
+  (switch-to-buffer dest-buffer))
