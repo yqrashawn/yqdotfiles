@@ -64,6 +64,8 @@ values."
      (mu4e :variables mu4e-account-alist t)
      emacs-lisp
      git
+     (slack :variables slack-spacemacs-layout-name "@Slack"
+            slack-spacemacs-layout-binding "s")
      osx
      indium
      parinfer
@@ -603,6 +605,7 @@ you should place your code here."
   (load-file "~/.my_emacs/popwin.el")
   (load-file "~/.my_emacs/dired.el")
   (load-file "~/.my_emacs/prodigy.el")
+  (load-file "~/Dropbox/slack.el")
   ;; (load-file "~/.my_emacs/eacl.el")
   (setq eacl-grep-program "ggrep")
   ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
