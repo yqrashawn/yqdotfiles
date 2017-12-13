@@ -38,6 +38,7 @@ values."
      spacemacs-completion
      spacemacs-org
      spacemacs-visual
+     (treemacs :variables treemacs-use-follow-mode t)
      ;; spacemacs-editing-visual
      spacemacs-layouts
      spacemacs-purpose
