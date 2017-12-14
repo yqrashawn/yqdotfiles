@@ -839,28 +839,28 @@ string).  It returns t if a new completion is found, nil otherwise."
   :mode ("\\.epub\\'" . nov-mode))
 
 ;; pdf view mode midnite theme
-(setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
+(setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12")) ; set the amber profile as default (see below)
 
 (defun bms/pdf-no-filter ()
   "View pdf without colour filter."
   (interactive)
-  (pdf-view-midnight-minor-mode -1)
-  )
+  (pdf-view-midnight-minor-mode -1))
+
 
 ;; change midnite mode colours functions
 (defun bms/pdf-midnite-original ()
   "Set pdf-view-midnight-colors to original colours."
   (interactive)
-  (setq pdf-view-midnight-colors '("#839496" . "#002b36" )) ; original values
-  (pdf-view-midnight-minor-mode)
-  )
+  (setq pdf-view-midnight-colors '("#839496" . "#002b36")) ; original values
+  (pdf-view-midnight-minor-mode))
+
 
 (defun bms/pdf-midnite-amber ()
   "Set pdf-view-midnight-colors to amber on dark slate blue."
   (interactive)
-  (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; amber
-  (pdf-view-midnight-minor-mode)
-  )
+  (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12")) ; amber
+  (pdf-view-midnight-minor-mode))
+
 
 (defun bms/pdf-midnite-green ()
   "Set pdf-view-midnight-colors to green on black."
@@ -891,3 +891,21 @@ string).  It returns t if a new completion is found, nil otherwise."
   "font for large screen"
   (interactive)
   (spacemacs/set-default-font yq/large-screen-default-font))
+
+(defun treemacs-toggle ()
+  "If a treemacs buffer exists and is visible hide it.
+If a treemacs buffer exists, but is not visible bring it to the foreground
+and select it.
+If no treemacs buffer exists call `treemacs'."
+  (interactive)
+  (-pcase (treemacs--current-visibility)
+    ['visible
+     (treemacs--select-visible)
+     (if (one-window-p)
+         (switch-to-buffer (other-buffer))
+       (bury-buffer))]
+    ['exists
+     (treemacs)]
+    ['none
+     (treemacs)]
+    [_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility))]))
