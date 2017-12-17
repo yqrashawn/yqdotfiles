@@ -3921,7 +3921,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchiTerm\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchAlacritty\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
@@ -5373,6 +5373,7 @@
                                             "^org\\.gnu\\.AquamacsEmacs$",
                                             "^org\\.gnu\\.Aquamacs$",
                                             "^com\\.googlecode\\.iterm2$",
+                                            "^io\\.alacritty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$"
