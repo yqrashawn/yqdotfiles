@@ -21,7 +21,8 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
-   '(csv
+   '(yaml
+     csv
      vimscript
      ;; artist
      yq-mode-line
@@ -509,7 +510,8 @@ you should place your code here."
   ;;       auto-save-interval 1000   ; number of keystrokes between auto-saves (default: 300)
   ;;       )
   ;; (setq create-lockfiles nil)
-
+  ;; (setq ns-use-thin-smoothing t)
+  (menu-bar-mode -1)
   (put 'narrow-to-defun  'disabled nil)
   (put 'narrow-to-page   'disabled nil)
   (put 'narrow-to-region 'disabled nil)
