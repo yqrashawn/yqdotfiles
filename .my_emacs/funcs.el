@@ -300,7 +300,7 @@ Visit the file after creation."
 (defun yq/start-scratch-file (file-name)
   "Create a file in ~/scratch for the given FILE-NAME."
   (interactive "sName of scratch file: ")
-  (start--file (expand-file-name (format "~Downloads/scratch/%s" file-name))))
+  (start--file (expand-file-name (format "~/Downloads/scratch/%s" file-name))))
 
 ;; (defun ivy-insert-org-entity ()
 ;;   "Insert an org-entity using ivy."
@@ -909,3 +909,10 @@ If no treemacs buffer exists call `treemacs'."
     ['none
      (treemacs)]
     [_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility))]))
+
+(cond
+ ((executable-find "aspell")
+  ;; you may also need `ispell-extra-args'
+  (setq ispell-program-name "aspell"))
+ ((executable-find "hunspell")
+  (setq ispell-program-name "hunspell")))
