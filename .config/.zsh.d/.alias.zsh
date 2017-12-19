@@ -10,7 +10,7 @@ alias zc="emacsclient ~/.zshrc"
 alias zcc="emacsclient ~/.zprezto/runcoms/zpreztorc"
 alias cl='clear'
 alias o='open'
-
+alias p2='percol'
 
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
@@ -49,11 +49,12 @@ alias serv="live-server --port=8081"
 
 # editors
 alias e='emacsclient -n'
+alias ee='emacsclient -t'
 alias v='nvim'
 alias p='you-get -p mpv'
 alias mmpv='mpv -vo=opengl '
 alias vv='fasd -f -e nvim'
-alias ee='fasd -f -e emacsclient'
+alias eee='fasd -f -e emacsclient'
 alias t='emacsclient -t'
 alias vvv='vimr'
 alias m='mvim'
