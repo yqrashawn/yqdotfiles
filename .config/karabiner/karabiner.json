@@ -366,7 +366,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_control"
+                                        "key_code": "left_control",
+                                        "lazy": true
                                     }
                                 ],
                                 "to_if_alone": [
@@ -554,6 +555,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -617,6 +619,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -721,6 +724,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -788,6 +792,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -855,6 +860,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -922,6 +928,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -987,6 +994,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -1052,6 +1060,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -1116,6 +1125,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -1180,6 +1190,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -1244,6 +1255,7 @@
                                             "^org\\.macosforge\\.xquartz\\.X11$",
                                             "^org\\.macports\\.X11$",
                                             "^com\\.jetbrains\\.*",
+                                            "^io\\.alacritty$",
                                             "^com\\.microsoft\\.VSCode$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -3921,7 +3933,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchiTerm\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchAlacritty\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
@@ -5373,6 +5385,7 @@
                                             "^org\\.gnu\\.AquamacsEmacs$",
                                             "^org\\.gnu\\.Aquamacs$",
                                             "^com\\.googlecode\\.iterm2$",
+                                            "^io\\.alacritty$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyperterm$",
                                             "^co\\.zeit\\.hyper$"
@@ -5444,7 +5457,10 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": [
+                                        "option"
+                                      ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5482,7 +5498,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5520,7 +5537,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5558,7 +5576,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5596,7 +5615,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5634,7 +5654,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"

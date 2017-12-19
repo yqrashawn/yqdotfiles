@@ -1,5 +1,7 @@
 let mapleader=' '
-
+let g:python_host_prog='/usr/local/bin/python2'
+let g:loaded_python3_provider=1
+" let g:python3_host_prog='/usr/local/bin/python3'
 source ~/.config/nvim/filetype.vim
 source ~/.config/nvim/func.vim
 source ~/.config/nvim/plugins.vim
@@ -11,7 +13,9 @@ source ~/.config/nvim/ui.vim
 
 " gneral
 nnoremap <leader>fs :w<cr>
+nnoremap sh :w<cr>
 nnoremap <leader>bd :bd<cr>
+nnoremap sd :bd<cr>
 nnoremap <leader>fed :e ~/.config/nvim/init.vim<cr>:3<cr>
 nnoremap <leader>feR :source ~/.config/nvim/init.vim<cr>
 nnoremap <leader><tab> <C-^>
