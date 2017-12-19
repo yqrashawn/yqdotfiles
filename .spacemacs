@@ -156,6 +156,7 @@ values."
                                       nodejs-repl
                                       ;; visual-ascii-mode
                                       writegood-mode
+                                      wakatime-mode
                                       web-narrow-mode
                                       webpaste
                                       zenburn-theme)
