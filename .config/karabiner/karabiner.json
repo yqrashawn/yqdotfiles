@@ -5456,7 +5456,10 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": [
+                                        "option"
+                                      ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5494,7 +5497,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5532,7 +5536,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5570,7 +5575,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5608,7 +5614,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
@@ -5646,7 +5653,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "spacebar"
+                                      "key_code": "m",
+                                      "modifiers": ["option"]
                                     },
                                     {
                                         "key_code": "w"
