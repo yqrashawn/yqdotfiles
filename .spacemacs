@@ -168,6 +168,9 @@ values."
                                     evil-tutor
                                     evil-visualstar
                                     lorem-ipsum
+                                    skewer-mode
+                                    coffee-mode
+                                    livid-mode
                                     password-generator
                                     helm-make
                                     spinner
