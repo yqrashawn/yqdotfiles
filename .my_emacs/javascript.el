@@ -1,9 +1,6 @@
 (setq babel-repl-cli-program "~/.npm-packages/bin/babel-node")
 (setq vue-html-color-interpolations t)
 
-;; (add-hook 'js2-mode-hook 'prettier-js-mode)
-;; (add-hook 'typescript-mode-hook 'prettier-js-mode)
-;; (add-hook 'react-mode-hook 'prettier-js-mode)
 (defun enable-minor-mode (my-pair)
   "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
   (if (buffer-file-name)
@@ -58,13 +55,13 @@
 (defun nodejs-repl-real-quit ()
   (interactive)
   (nodejs-repl-quit-or-cancel)
-  (nodejs-repl-quit-or-cancel)
-  )
+  (nodejs-repl-quit-or-cancel))
+
 (defun nodejs-repl-resend-buffer ()
   (interactive)
   (nodejs-repl-quit-or-cancel)
-  (nodejs-repl-send-buffer)
-  )
+  (nodejs-repl-send-buffer))
+
 
 (use-package nodejs-repl
   :init
@@ -78,16 +75,16 @@
       "n," 'nodejs-repl-send-buffer
       "n." 'nodejs-repl-real-quit
       "nl" 'nodejs-repl-switch-to-repl
-      "nn" 'nodejs-repl-resend-buffer
-      )
+      "nn" 'nodejs-repl-resend-buffer)
+
     (add-hook 'js2-mode-hook
               (lambda ()
                 (define-key js2-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
                 (define-key js2-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
                 (define-key js2-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
                 (define-key js2-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-                (define-key js2-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
-    ))
+                (define-key js2-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))))
+
 
   ;;;;;;;;;;;;; flycheck ;;;;;;;;;;;;;
 (setq eslintd-fix-executable (concat user-home-directory ".npm-packages/bin/eslint_d"))
@@ -138,3 +135,87 @@
   ;; install it separately via package-install
   ;; `M-x package-install [ret] company`
   (company-mode +1))
+
+(setq yq/js-large-file-size 800000)
+
+(defun yq/is-file-large ()
+  "If buffer too large and my cause performance issue. 0.8M"
+  (< yq/js-large-file-size (buffer-size)))
+
+(defun yq/disable-on-large-js-file (orig-fun &rest args)
+  "docstring"
+  (interactive "P")
+  (if (yq/is-file-large)
+      (message "js file is larger than %s" yq/js-large-file-size)
+    (apply orig-fun args)))
+
+(defun yq/detect-large-js-file (func)
+  (advice-add func :around 'yq/disable-on-large-js-file))
+
+;; (advice-add 'tern-mode :around 'yq/disable-on-large-js-file)
+;; (advice-add 'tide-mode :around 'yq/disable-on-large-js-file)
+;; (advice-add 'company-mode :around 'yq/disable-on-large-js-file)
+;; (advice-add 'spacemacs/js-doc-require :around 'yq/disable-on-large-js-file)
+;; (advice-add 'setup-tide-mode :around 'yq/disable-on-large-js-file)
+;; (advice-add 'spacemacs//init-company-js2-mode :around 'yq/disable-on-large-js-file)
+;; (advice-add 'setup-tide-mode :around 'yq/disable-on-large-js-file)
+(yq/detect-large-js-file 'tern-mode)
+(yq/detect-large-js-file 'tide-mode)
+;; (yq/detect-large-js-file 'company-mode)
+(yq/detect-large-js-file 'spacemacs/js-doc-require)
+(yq/detect-large-js-file 'setup-tide-mode)
+(yq/detect-large-js-file 'spacemacs//init-company-js2-mode)
+(yq/detect-large-js-file 'line-number-mode)
+(yq/detect-large-js-file 'column-number-mode)
+(yq/detect-large-js-file 'flycheck-mode)
+(yq/detect-large-js-file 'git-gutter-mode)
+(yq/detect-large-js-file 'spacemacs-whitespace-cleanup-mode)
+(yq/detect-large-js-file 'vi-tilde-fringe-mode)
+(yq/detect-large-js-file 'undo-tree-mode)
+;; (yq/detect-large-js-file 'jit-lock-mode)
+;; (yq/detect-large-js-file 'font-lock-mode)
+;; (yq/detect-large-js-file 'auto-highlight-symbol-mode)
+(yq/detect-large-js-file 'diff-hl-mode)
+(yq/detect-large-js-file 'company-flx-mode)
+(yq/detect-large-js-file 'electric-indent-mode)
+(yq/detect-large-js-file 'flycheck-pos-tip-mode)
+(yq/detect-large-js-file 'hl-todo-mode)
+;; (yq/detect-large-js-file 'show-paren-mode)
+(yq/detect-large-js-file 'smartparens-mode)
+(yq/detect-large-js-file 'yas-minor-mode)
+(yq/detect-large-js-file 'git-gutter+-mode)
+(yq/detect-large-js-file 'aggressive-indent-mode)
+
+(add-hook 'js2-mode-hook
+          (lambda ((if (yq/is-file-large) (setq blink-matching-paren nil)))))
+
+(setq yq/is-visual-line-move t)
+
+(defun yq/toggle-visual-line-move ()
+  "toggle j k   between visual line move and real line move"
+  (interactive)
+  (if yq/is-visual-line-move
+      (progn
+        (define-key evil-normal-state-map (kbd "j") 'evil-next-line)
+        (define-key evil-normal-state-map (kbd "k") 'evil-previous-line)
+        (setq yq/is-visual-line-move nil))
+
+    (progn
+      (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+      (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+      (setq yq/is-visual-line-move t))))
+
+
+
+(defun yq/find-file-happy ()
+  "find file hook, smart configuration depending on file size"
+  (interactive)
+  (if (and (yq/is-file-large) yq/is-visual-line-move)
+      (yq/toggle-visual-line-move)
+    (if (and (not (yq/is-file-large))
+             (not yq/is-visual-line-move))
+        (yq/toggle-visual-line-move))))
+
+
+
+(add-hook 'find-file-hook 'yq/find-file-happy)

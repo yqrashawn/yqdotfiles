@@ -918,3 +918,4 @@ If no treemacs buffer exists call `treemacs'."
   (setq ispell-program-name "hunspell")))
 (setq wakatime-api-key "99569b07-e1f8-4458-aeb1-fd3fef58ff49")
 (global-wakatime-mode)
+
