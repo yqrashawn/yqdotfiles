@@ -72,6 +72,8 @@ alias dyyf='mpv https://www.douyu.com/58428'
 alias dchuan='mpv https://www.douyu.com/chuan967'
 alias dxiao8='mpv https://www.douyu.com/xiao8'
 
+alias aria2c='aria2c --enable-rpc --rpc-listen-all'
+
 # macOS has no `md5sum`, so use `md5` as a fallback
 command -v md5sum > /dev/null || alias md5sum="md5"
 
