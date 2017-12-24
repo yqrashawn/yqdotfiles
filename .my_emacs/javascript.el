@@ -164,7 +164,7 @@
 ;; (yq/detect-large-js-file 'company-mode)
 (yq/detect-large-js-file 'spacemacs/js-doc-require)
 (yq/detect-large-js-file 'setup-tide-mode)
-(yq/detect-large-js-file 'spacemacs//init-company-js2-mode)
+;; (yq/detect-large-js-file 'spacemacs//init-company-js2-mode)
 (yq/detect-large-js-file 'line-number-mode)
 (yq/detect-large-js-file 'column-number-mode)
 (yq/detect-large-js-file 'flycheck-mode)
