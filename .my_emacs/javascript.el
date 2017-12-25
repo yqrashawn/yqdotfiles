@@ -187,7 +187,7 @@
 (yq/detect-large-js-file 'aggressive-indent-mode)
 
 (add-hook 'js2-mode-hook
-          (lambda ((if (yq/is-file-large) (setq blink-matching-paren nil)))))
+          (lambda () (if (yq/is-file-large) (setq blink-matching-paren nil))))
 
 (setq yq/is-visual-line-move t)
 
