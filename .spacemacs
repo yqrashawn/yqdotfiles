@@ -113,6 +113,7 @@ values."
                                       company-flx
                                       circe
                                       circe-notifications
+                                      docker-tramp
                                       lsp-mode
                                       lsp-vue
                                       company-lsp
