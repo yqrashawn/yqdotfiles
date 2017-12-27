@@ -164,7 +164,7 @@
 ;; (yq/detect-large-js-file 'company-mode)
 (yq/detect-large-js-file 'spacemacs/js-doc-require)
 (yq/detect-large-js-file 'setup-tide-mode)
-(yq/detect-large-js-file 'spacemacs//init-company-js2-mode)
+;; (yq/detect-large-js-file 'spacemacs//init-company-js2-mode)
 (yq/detect-large-js-file 'line-number-mode)
 (yq/detect-large-js-file 'column-number-mode)
 (yq/detect-large-js-file 'flycheck-mode)
@@ -187,7 +187,7 @@
 (yq/detect-large-js-file 'aggressive-indent-mode)
 
 (add-hook 'js2-mode-hook
-          (lambda ((if (yq/is-file-large) (setq blink-matching-paren nil)))))
+          (lambda () (if (yq/is-file-large) (setq blink-matching-paren nil))))
 
 (setq yq/is-visual-line-move t)
 
