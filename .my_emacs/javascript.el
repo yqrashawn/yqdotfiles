@@ -181,7 +181,7 @@
 (yq/detect-large-js-file 'flycheck-pos-tip-mode)
 (yq/detect-large-js-file 'hl-todo-mode)
 ;; (yq/detect-large-js-file 'show-paren-mode)
-(yq/detect-large-js-file 'smartparens-mode)
+;; (yq/detect-large-js-file 'smartparens-mode)
 (yq/detect-large-js-file 'yas-minor-mode)
 (yq/detect-large-js-file 'git-gutter+-mode)
 (yq/detect-large-js-file 'aggressive-indent-mode)
