@@ -213,6 +213,7 @@
 (define-key evil-normal-state-map "sj" 'counsel-recentf)
 (define-key evil-normal-state-map "so" 'counsel-find-file)
 (define-key evil-normal-state-map "sv" 'er/expand-region)
+(define-key evil-normal-state-map "sm" 'spacemacs/symbol-highlight)
 
 (define-key evil-normal-state-map "sQ" 'aya-create)
 (define-key evil-normal-state-map "sq" 'aya-expand)
