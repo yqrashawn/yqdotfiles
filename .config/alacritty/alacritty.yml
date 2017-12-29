@@ -238,6 +238,7 @@ live_config_reload: true
 key_bindings:
   - { key: B, mods: Alt, chars: "\x1bb" }
   - { key: F, mods: Alt, chars: "\x1bf" }
+  - { key: C, mods: Alt, chars: "\x1bc" }
   - { key: Key0, mods: Alt, chars: "\x1b0" }
   - { key: Key1, mods: Alt, chars: "\x1b1" }
   - { key: Key2, mods: Alt, chars: "\x1b2" }
