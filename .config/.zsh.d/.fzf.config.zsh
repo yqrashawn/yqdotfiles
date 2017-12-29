@@ -1,12 +1,23 @@
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Setting rg as the default source for fzf
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+# export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='fd --type f -H'
 
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-export FZF_ALT_C_COMMAND="cd ~/; bfs -type d -nohidden | sed 's/\./~/'"
+export FZF_ALT_C_COMMAND="cd ~/; fd -t d -H"
+export FZF_COMPLETION_TRIGGER='jk'
+
+# export FZF_ALT_C_COMMAND="cd ~/; bfs -type d -nohidden"
+
+# fasd & fzf change directory - jump using `fasd` if given argument, filter output of `fasd` using `fzf` else
+z() {
+    [ $# -gt 0 ] && fasd_cd -d "$*" && return
+    local dir
+    dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+}
 
 tm() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
@@ -112,4 +123,16 @@ fstash() {
             git stash show -p $sha
         fi
     done
+}
+# Use fd (https://github.com/sharkdp/fd) instead of the default find
+# command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+    fd --hidden --follow --exclude ".git" --exclude ".Trash" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+    fd --type d --hidden --follow --exclude ".git" ".Trash" . "$1"
 }
