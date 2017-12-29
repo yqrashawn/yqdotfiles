@@ -150,6 +150,7 @@
 (define-key evil-visual-state-map (kbd "C-a") 'evil-first-non-blank)
 (define-key evil-visual-state-map (kbd "C-e") 'evil-end-of-line)
 (define-key evil-visual-state-map (kbd "C-m") 'evil-jump-item)
+(define-key evil-motion-state-map (kbd "C-m") 'evil-jump-item)
 (define-key evil-visual-state-map (kbd "C-x C-;") 'evilnc-comment-or-uncomment-lines)
 (define-key evil-visual-state-map "gE" 'mc-edit-lines)
 
@@ -164,8 +165,6 @@
 ;; (define-key evil-insert-state-map (kbd "C-l") 'evil-complete-next)
 (define-key evil-insert-state-map (kbd "C-n") 'next-line)
 (define-key evil-insert-state-map (kbd "C-p") 'previous-line)
-;; (define-key evil-insert-state-map (kbd "C-S-n") 'mc/skip-to-next-like-this)
-;; (define-key evil-insert-state-map (kbd "C-S-p") 'mc/skip-to-previous-like-this)
 
 ;; textobj
 (define-key evil-inner-text-objects-map "f" 'evil-textobj-anyblock-inner-block)
@@ -416,3 +415,8 @@
 
   (setq dest-buffer (popup-menu* buffer-select-list :keymap switch-keymap))
   (switch-to-buffer dest-buffer))
+
+(evil-define-key 'motion help-mode-map (kbd "s") nil)
+(evil-define-key 'motion help-mode-map (kbd "sv") 'er/expand-region)
+(evil-define-key 'motion help-mode-map (kbd "C-e") 'mwim-end-of-code-or-line)
+(evil-define-key 'motion help-mode-map (kbd "C-f") 'mwim-beginning-of-code-or-line)
