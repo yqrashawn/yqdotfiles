@@ -117,6 +117,7 @@ values."
                                       lsp-mode
                                       lsp-vue
                                       company-lsp
+                                      counsel-tramp
                                       ;; smart-mode-line
                                       ;; org-mind-map
                                       ;; cheat-sh
