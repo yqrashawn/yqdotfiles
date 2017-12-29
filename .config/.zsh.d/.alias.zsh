@@ -51,7 +51,7 @@ alias serv="live-server --port=8081"
 alias e='emacsclient -n'
 alias ee='emacsclient -t'
 alias v='nvim'
-alias p='you-get -p mpv'
+alias pyou='you-get -p mpv'
 alias mmpv='mpv -vo=opengl '
 alias vv='fasd -f -e nvim'
 alias eee='fasd -f -e emacsclient'
@@ -64,7 +64,8 @@ alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias chromed='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222'
 alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'
 
-alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152 & '
+# alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152 & '
+alias ss='export https_proxy=http://127.0.0.1:6152;export all_proxy=http://127.0.0.1:6152 & '
 
 # douyu
 alias d820='mpv https://www.douyu.com/zyt820'
