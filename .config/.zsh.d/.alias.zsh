@@ -65,7 +65,8 @@ alias chromed='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --
 alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'
 
 # alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152 & '
-alias ss='export https_proxy=http://127.0.0.1:6152;export all_proxy=http://127.0.0.1:6152 & '
+# alias ss='export https_proxy=http://127.0.0.1:6152;export all_proxy=http://127.0.0.1:6152 & '
+alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152;export HTTP_PROXY=http://127.0.0.1:6152:export HTTPs_PROXY=http://127.0.0.1:6152 &'
 
 # douyu
 alias d820='mpv https://www.douyu.com/zyt820'
