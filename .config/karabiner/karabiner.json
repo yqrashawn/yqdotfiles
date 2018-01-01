@@ -9,7 +9,8 @@
             "complex_modifications": {
                 "parameters": {
                     "basic.to_delayed_action_delay_milliseconds": 500,
-                    "basic.to_if_alone_timeout_milliseconds": 200
+                    "basic.to_if_alone_timeout_milliseconds": 200,
+                    "basic.to_if_held_down_threshold_milliseconds": 500
                 },
                 "rules": [
                     {
@@ -448,7 +449,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_command"
+                                      "key_code": "left_command",
+                                      "lazy": true
                                     }
                                 ],
                                 "to_if_alone": [
@@ -5302,78 +5304,6 @@
                         ]
                     },
                     {
-                        "description": "Quit application by pressing command-q twice",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "command-q",
-                                        "type": "variable_if",
-                                        "value": 1
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "q",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "command"
-                                        ],
-                                        "optional": [
-                                            "caps_lock"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "q",
-                                        "modifiers": "left_command"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "q",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "command"
-                                        ],
-                                        "optional": [
-                                            "caps_lock"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "set_variable": {
-                                            "name": "command-q",
-                                            "value": 1
-                                        }
-                                    }
-                                ],
-                                "to_delayed_action": {
-                                    "to_if_canceled": [
-                                        {
-                                            "set_variable": {
-                                                "name": "command-q",
-                                                "value": 0
-                                            }
-                                        }
-                                    ],
-                                    "to_if_invoked": [
-                                        {
-                                            "set_variable": {
-                                                "name": "command-q",
-                                                "value": 0
-                                            }
-                                        }
-                                    ]
-                                },
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Tmux Prefix Mode [Tab as trigger key]",
                         "manipulators": [
                             {
@@ -5457,10 +5387,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "m",
-                                      "modifiers": [
-                                        "option"
-                                      ]
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5498,8 +5428,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "m",
-                                      "modifiers": ["option"]
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5537,8 +5469,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "m",
-                                      "modifiers": ["option"]
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5576,8 +5510,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "m",
-                                      "modifiers": ["option"]
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5615,8 +5551,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "m",
-                                      "modifiers": ["option"]
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     },
                                     {
                                         "key_code": "w"
@@ -5654,8 +5592,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "m",
-                                      "modifiers": ["option"]
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "option"
+                                        ]
                                     },
                                     {
                                         "key_code": "w"
@@ -7636,6 +7576,78 @@
                                         "key_code": "u"
                                     }
                                 ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Quit application by pressing command-q twice",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "command-q",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "q",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "q",
+                                        "modifiers": "left_command"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "q",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "command-q",
+                                            "value": 1
+                                        }
+                                    }
+                                ],
+                                "to_delayed_action": {
+                                    "to_if_canceled": [
+                                        {
+                                            "set_variable": {
+                                                "name": "command-q",
+                                                "value": 0
+                                            }
+                                        }
+                                    ],
+                                    "to_if_invoked": [
+                                        {
+                                            "set_variable": {
+                                                "name": "command-q",
+                                                "value": 0
+                                            }
+                                        }
+                                    ]
+                                },
                                 "type": "basic"
                             }
                         ]
