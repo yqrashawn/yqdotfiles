@@ -29,11 +29,7 @@ values."
      (elfeed :variables rmh-elfeed-org-files (list "~/Dropbox/ORG/feed/feedly.org"
                                                    "~/Dropbox/ORG/feed/local.org"))
      parinfer
-     ;; nlinum
-     ;; bm
      github
-     ;; color
-     ;; command-log
      spacemacs-evil
      spacemacs-editing
      spacemacs-completion
@@ -41,15 +37,14 @@ values."
      spacemacs-visual
      (treemacs :variables treemacs-use-follow-mode t)
      ;; spacemacs-editing-visual
-     spacemacs-layouts
      spacemacs-purpose
+     spacemacs-layouts
      spacemacs-misc
      spacemacs-navigation
      (rcirc :variables rcirc-enable-authinfo-support t)
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      ruby
      ivy
-     ;; helm
      fasd
      ;; (c-c++ :variables
      ;;        c-c++-default-mode-for-headers 'c++-mode
@@ -118,7 +113,6 @@ values."
                                       lsp-vue
                                       company-lsp
                                       counsel-tramp
-                                      ;; smart-mode-line
                                       ;; org-mind-map
                                       ;; cheat-sh
                                       ;; docker-tramp
