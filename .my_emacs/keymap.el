@@ -354,7 +354,7 @@
   (switch-to-nth-buffer 3))
 
 ;;fast switching between two buffers
-(define-key evil-normal-state-map (kbd "<tab>") 'switch-to-most-recent-buffer)
+;; (define-key evil-normal-state-map (kbd "<tab>") 'switch-to-most-recent-buffer)
 
 ;;fast switching between three buffers
 (define-key evil-normal-state-map (kbd "<C-tab>") 'switch-to-second-most-recent-buffer)
