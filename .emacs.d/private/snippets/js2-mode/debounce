@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name:debounce 
+# key: debounce
+# --
+const debounce = (fn, delay) => {
+  let timer = null;
+  return () => {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    }, delay);
+  };
+}
