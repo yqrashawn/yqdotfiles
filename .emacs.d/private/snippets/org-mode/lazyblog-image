@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name : ATTR_HTML block with CAPTION for lazyblorg images
+# key: iimg
+# --
+# --
+#+CAPTION: ${1:caption}
+#+ATTR_HTML: :alt ${2:alterantive-text for the image}
+#+ATTR_HTML: :align ${3:$$(yas-choose-value '("left" "center" "right" "float-left" "float-right"))} :width ${4:width in pixel}

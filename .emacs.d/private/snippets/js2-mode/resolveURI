@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: resolveURI
+# key: resolveURI
+# --
+function resolveURI(strToTest) {
+  if (typeof strToTest !== 'string') return strToTest;
+  let needEscape = false;
+  const toEscape = ['+','<','(','>','\\', '#',')'];
+  for (let i = 0; i < toEscape.length; i++) {
+    if (strToTest.indexOf(toEscape[i]) !== -1) {
+      needEscape = true;
+      break;
+    }
+  }
+
+  if (needEscape) return encodeURIComponent(strToTest)
+}
