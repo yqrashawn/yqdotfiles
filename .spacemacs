@@ -65,6 +65,7 @@ values."
             slack-spacemacs-layout-binding "s")
      osx
      indium
+     yq-react
      parinfer
      (markdown :variables
                markdown-live-preview-engine 'vmd
@@ -612,7 +613,7 @@ you should place your code here."
   ;; (load-file "~/.my_emacs/eacl.el")
   (setq eacl-grep-program "ggrep")
   ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;; settings ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq company-idle-delay 0.3)
+  (setq company-idle-delay 0)
   (setq diary-file "~/Dropbox/org/diary")
   (setq dired-hide-details-hide-information-lines nil)
   (setq dired-hide-details-hide-symlink-targets nil)
