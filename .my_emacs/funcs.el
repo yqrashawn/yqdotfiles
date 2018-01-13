@@ -877,6 +877,16 @@ string).  It returns t if a new completion is found, nil otherwise."
 
 (setq counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls")
 
+(defvar yq/default-font-kind "small")
+(setq yq/small-screen-default-font '("Hack"
+                                     ;;"Menlo"
+                                     ;; "Anonymous Pro for Powerline"
+                                     ;; "InconsolataG for Powerline"
+                                     ;; "Source Code Pro for Powerline"
+                                     :size 12
+                                     :weight normal
+                                     :width normal
+                                     :powerline-scale 1.1))
 (setq yq/large-screen-default-font '("Hack"
                                      ;;"Menlo"
                                      ;; "Anonymous Pro for Powerline"
@@ -886,11 +896,15 @@ string).  It returns t if a new completion is found, nil otherwise."
                                      :weight normal
                                      :width normal
                                      :powerline-scale 1.1))
-
-(defun yq/default-font-large-screen ()
+(defun yq/toggle-default-font ()
   "font for large screen"
   (interactive)
-  (spacemacs/set-default-font yq/large-screen-default-font))
+  (if (string= yq/default-font-kind "small")
+      (progn (setq yq/default-font-kind "large")
+        (spacemacs/set-default-font yq/large-screen-default-font))
+    (progn (setq yq/default-font-kind "small")
+      (spacemacs/set-default-font yq/small-screen-default-font))))
+
 
 (defun treemacs-toggle ()
   "If a treemacs buffer exists and is visible hide it.
@@ -919,56 +933,3 @@ If no treemacs buffer exists call `treemacs'."
 (setq wakatime-api-key "99569b07-e1f8-4458-aeb1-fd3fef58ff49")
 (global-wakatime-mode)
 
-(defun rjsx-electric-lt (n)
-  "Insert a context-sensitive less-than sign.
-Optional prefix argument N indicates how many signs to insert.
-If N is greater than one, no special handling takes place.
-Otherwise, if the less-than sign would start a JSX block, it
-inserts `</>' and places the cursor inside the new tag."
-  (interactive "p")
-  (if (/= n 1)
-      (insert (make-string n ?<))
-    (if (save-excursion
-          (forward-comment most-negative-fixnum)
-          (skip-syntax-backward " ")
-          (or (= (point) (point-min))
-              (memq (char-before) (append "=(?:>}&|{," nil))
-              (let ((start (- (point) 6)))
-                (and (>= start (point-min))
-                     (string= (buffer-substring start (point)) "return")))))
-        (progn (insert "</>")
-               (backward-char 2))
-      (insert "<"))))
-
-(defun funj (n)
-  "docstring"
-  (interactive "p")
-  (message "%s" n))
-
-(define-key  emacs-lisp-mode-map "<" 'funj)
-(defun testarg (a b)
-  "docstring"
-  (interactive "?Buffer to rename:
-sNew buffer name:
-"))
-
-(defun yq-js2-template-literal-insert-$ (n)
-  "Insert a context-sensitive less-than sign.
-Optional prefix argument N indicates how many signs to insert.
-If N is greater than one, no special handling takes place.
-Otherwise, if the less-than sign would start a JSX block, it
-inserts `</>' and places the cursor inside the new tag."
-  (interactive "p")
-  (if (/= n 1)
-      (insert (make-string n ?<))
-    (if (save-excursion
-          (forward-comment most-negative-fixnum)
-          (skip-syntax-backward " ")
-          (or (= (point) (point-min))
-              (memq (char-before) (append "=(?:>}&|{," nil))
-              (let ((start (- (point) 6)))
-                (and (>= start (point-min))
-                     (string= (buffer-substring start (point)) "return")))))
-        (progn (insert "</>")
-               (backward-char 2))
-      (insert "<"))))
