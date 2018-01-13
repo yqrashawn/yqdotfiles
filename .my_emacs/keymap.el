@@ -420,3 +420,4 @@
 (evil-define-key 'motion help-mode-map (kbd "sv") 'er/expand-region)
 (evil-define-key 'motion help-mode-map (kbd "C-e") 'mwim-end-of-code-or-line)
 (evil-define-key 'motion help-mode-map (kbd "C-f") 'mwim-beginning-of-code-or-line)
+(global-set-key (kbd "C-x 9") 'yq/toggle-default-font)
