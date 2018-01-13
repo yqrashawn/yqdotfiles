@@ -919,3 +919,56 @@ If no treemacs buffer exists call `treemacs'."
 (setq wakatime-api-key "99569b07-e1f8-4458-aeb1-fd3fef58ff49")
 (global-wakatime-mode)
 
+(defun rjsx-electric-lt (n)
+  "Insert a context-sensitive less-than sign.
+Optional prefix argument N indicates how many signs to insert.
+If N is greater than one, no special handling takes place.
+Otherwise, if the less-than sign would start a JSX block, it
+inserts `</>' and places the cursor inside the new tag."
+  (interactive "p")
+  (if (/= n 1)
+      (insert (make-string n ?<))
+    (if (save-excursion
+          (forward-comment most-negative-fixnum)
+          (skip-syntax-backward " ")
+          (or (= (point) (point-min))
+              (memq (char-before) (append "=(?:>}&|{," nil))
+              (let ((start (- (point) 6)))
+                (and (>= start (point-min))
+                     (string= (buffer-substring start (point)) "return")))))
+        (progn (insert "</>")
+               (backward-char 2))
+      (insert "<"))))
+
+(defun funj (n)
+  "docstring"
+  (interactive "p")
+  (message "%s" n))
+
+(define-key  emacs-lisp-mode-map "<" 'funj)
+(defun testarg (a b)
+  "docstring"
+  (interactive "?Buffer to rename:
+sNew buffer name:
+"))
+
+(defun yq-js2-template-literal-insert-$ (n)
+  "Insert a context-sensitive less-than sign.
+Optional prefix argument N indicates how many signs to insert.
+If N is greater than one, no special handling takes place.
+Otherwise, if the less-than sign would start a JSX block, it
+inserts `</>' and places the cursor inside the new tag."
+  (interactive "p")
+  (if (/= n 1)
+      (insert (make-string n ?<))
+    (if (save-excursion
+          (forward-comment most-negative-fixnum)
+          (skip-syntax-backward " ")
+          (or (= (point) (point-min))
+              (memq (char-before) (append "=(?:>}&|{," nil))
+              (let ((start (- (point) 6)))
+                (and (>= start (point-min))
+                     (string= (buffer-substring start (point)) "return")))))
+        (progn (insert "</>")
+               (backward-char 2))
+      (insert "<"))))
