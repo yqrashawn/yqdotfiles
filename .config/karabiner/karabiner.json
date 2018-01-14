@@ -287,14 +287,14 @@
                                     "key_code": "h"
                                 },
                                 "to": [
-                                  {
-                                   "key_code": "j",
-                                    "modifiers": [
-                                      "control",
-                                      "option",
-                                      "shift"
-                                    ]
-                                  }
+                                    {
+                                        "key_code": "j",
+                                        "modifiers": [
+                                            "control",
+                                            "option",
+                                            "shift"
+                                        ]
+                                    }
                                 ],
                                 "type": "basic"
                             },
@@ -310,14 +310,14 @@
                                     "key_code": "l"
                                 },
                                 "to": [
-                                  {
-                                   "key_code": "k",
-                                    "modifiers": [
-                                      "control",
-                                      "option",
-                                      "shift"
-                                    ]
-                                  }
+                                    {
+                                        "key_code": "k",
+                                        "modifiers": [
+                                            "control",
+                                            "option",
+                                            "shift"
+                                        ]
+                                    }
                                 ],
                                 "type": "basic"
                             },
@@ -338,14 +338,14 @@
                                     }
                                 },
                                 "to": [
-                                  {
-                                   "key_code": "j",
-                                    "modifiers": [
-                                      "control",
-                                      "option",
-                                      "shift"
-                                    ]
-                                  }
+                                    {
+                                        "key_code": "j",
+                                        "modifiers": [
+                                            "control",
+                                            "option",
+                                            "shift"
+                                        ]
+                                    }
                                 ],
                                 "type": "basic"
                             },
@@ -366,14 +366,14 @@
                                     }
                                 },
                                 "to": [
-                                  {
-                                   "key_code": "k",
-                                    "modifiers": [
-                                      "control",
-                                      "option",
-                                      "shift"
-                                    ]
-                                  }
+                                    {
+                                        "key_code": "k",
+                                        "modifiers": [
+                                            "control",
+                                            "option",
+                                            "shift"
+                                        ]
+                                    }
                                 ],
                                 "type": "basic"
                             },
@@ -1246,12 +1246,12 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "left_command"
+                                        "key_code": "left_command"
                                     }
                                 ],
                                 "to_if_alone": [
                                     {
-                                      "key_code": "f19"
+                                        "key_code": "f19"
                                     }
                                 ],
                                 "type": "basic"
@@ -2538,7 +2538,7 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "close_bracket",
+                                        "key_code": "close_bracket",
                                         "modifiers": [
                                             "left_shift"
                                         ]
@@ -2562,9 +2562,9 @@
                                 "from": {
                                     "key_code": "w",
                                     "modifiers": {
-                                      "optional": [
-                                          "caps_lock"
-                                      ]
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
                                     }
                                 },
                                 "to": [
@@ -8011,7 +8011,7 @@
                         "key_code": "f1"
                     },
                     "to": {
-                        "key_code": "display_brightness_decrement"
+                        "key_code": "f1"
                     }
                 },
                 {
@@ -8019,7 +8019,7 @@
                         "key_code": "f2"
                     },
                     "to": {
-                        "key_code": "display_brightness_increment"
+                        "key_code": "f2"
                     }
                 },
                 {
@@ -8027,7 +8027,7 @@
                         "key_code": "f3"
                     },
                     "to": {
-                        "key_code": "mission_control"
+                        "key_code": "f3"
                     }
                 },
                 {
@@ -8035,7 +8035,7 @@
                         "key_code": "f4"
                     },
                     "to": {
-                        "key_code": "launchpad"
+                        "key_code": "f4"
                     }
                 },
                 {
@@ -8043,7 +8043,7 @@
                         "key_code": "f5"
                     },
                     "to": {
-                        "key_code": "illumination_decrement"
+                        "key_code": "f5"
                     }
                 },
                 {
@@ -8051,7 +8051,7 @@
                         "key_code": "f6"
                     },
                     "to": {
-                        "key_code": "illumination_increment"
+                        "key_code": "f6"
                     }
                 },
                 {
@@ -8059,7 +8059,7 @@
                         "key_code": "f7"
                     },
                     "to": {
-                        "key_code": "rewind"
+                        "key_code": "f7"
                     }
                 },
                 {
@@ -8067,7 +8067,7 @@
                         "key_code": "f8"
                     },
                     "to": {
-                        "key_code": "play_or_pause"
+                        "key_code": "f8"
                     }
                 },
                 {
@@ -8075,7 +8075,7 @@
                         "key_code": "f9"
                     },
                     "to": {
-                        "key_code": "fastforward"
+                        "key_code": "f9"
                     }
                 },
                 {
@@ -8083,7 +8083,7 @@
                         "key_code": "f10"
                     },
                     "to": {
-                        "key_code": "mute"
+                        "key_code": "f10"
                     }
                 },
                 {
