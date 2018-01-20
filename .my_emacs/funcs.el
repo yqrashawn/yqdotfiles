@@ -1,4 +1,11 @@
 ;;; Code:
+
+(use-package windmove
+  :bind( ("C-x 7 w h" . 'windmove-left)
+         ("C-x 7 w l" . 'windmove-right)
+         ("C-x 7 w j" . 'windmove-down)
+         ("C-x 7 w k" . 'windmove-up)))
+
 (defun yq/what-major-mode ()
   "Reveal current major mode."
   (interactive)
@@ -933,3 +940,7 @@ If no treemacs buffer exists call `treemacs'."
 (setq wakatime-api-key "99569b07-e1f8-4458-aeb1-fd3fef58ff49")
 (global-wakatime-mode)
 
+;; play
+
+(use-package mode-line-bell
+  :config (mode-line-bell-mode))

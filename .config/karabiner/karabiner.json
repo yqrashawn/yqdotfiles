@@ -5658,16 +5658,13 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "m",
+                                        "key_code": "x",
                                         "modifiers": [
-                                            "option"
+                                            "control"
                                         ]
                                     },
                                     {
-                                        "key_code": "w"
-                                    },
-                                    {
-                                        "key_code": "s"
+                                        "key_code": "2"
                                     }
                                 ],
                                 "type": "basic"
@@ -5699,16 +5696,13 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "m",
+                                        "key_code": "x",
                                         "modifiers": [
-                                            "option"
+                                            "control"
                                         ]
                                     },
                                     {
-                                        "key_code": "w"
-                                    },
-                                    {
-                                        "key_code": "v"
+                                        "key_code": "3"
                                     }
                                 ],
                                 "type": "basic"
@@ -5740,10 +5734,13 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "m",
+                                        "key_code": "x",
                                         "modifiers": [
-                                            "option"
+                                            "control"
                                         ]
+                                    },
+                                    {
+                                        "key_code": "7"
                                     },
                                     {
                                         "key_code": "w"
@@ -5822,10 +5819,13 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "m",
+                                        "key_code": "x",
                                         "modifiers": [
-                                            "option"
+                                            "control"
                                         ]
+                                    },
+                                    {
+                                        "key_code": "7"
                                     },
                                     {
                                         "key_code": "w"
@@ -5863,10 +5863,13 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "m",
+                                        "key_code": "x",
                                         "modifiers": [
-                                            "option"
+                                            "control"
                                         ]
+                                    },
+                                    {
+                                        "key_code": "7"
                                     },
                                     {
                                         "key_code": "w"

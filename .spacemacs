@@ -141,6 +141,7 @@ values."
                                       nov
                                       ;; key-chord
                                       magithub
+                                      mode-line-bell
                                       realgud
                                       realgud-byebug
                                       ghub+
