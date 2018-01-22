@@ -5778,10 +5778,13 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "m",
+                                        "key_code": "x",
                                         "modifiers": [
-                                            "option"
+                                            "control"
                                         ]
+                                    },
+                                    {
+                                        "key_code": "7"
                                     },
                                     {
                                         "key_code": "w"
