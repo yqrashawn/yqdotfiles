@@ -461,7 +461,6 @@ FD-PROMPT, if non-nil, is passed as `ivy-read' prompt argument."
                       (swiper--cleanup))
             :caller 'counsel-fd))
 
-(spacemacs/set-leader-keys "skd" 'counsel-fd)
 (spacemacs/set-leader-keys "sm" 'counsel-fd)
 
 (setq org-id-method 'org)
@@ -512,9 +511,7 @@ FD-PROMPT, if non-nil, is passed as `ivy-read' prompt argument."
 	    (message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't contain \"" domain "\". Aborting."))
       ;;(message (concat "domain: " domain))
       ;;(message (concat "url:    " url))
-	    )
-    )
-  )
+	    )))
 
 (defun sr-org-id-insert-maybe ()
   (if (y-or-n-p "Create a unique ID for this section?")
