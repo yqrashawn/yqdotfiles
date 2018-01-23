@@ -911,7 +911,6 @@ string).  It returns t if a new completion is found, nil otherwise."
         (spacemacs/set-default-font yq/large-screen-default-font))
     (progn (setq yq/default-font-kind "small")
       (spacemacs/set-default-font yq/small-screen-default-font))))
-
 
 (defun treemacs-toggle ()
   "If a treemacs buffer exists and is visible hide it.
