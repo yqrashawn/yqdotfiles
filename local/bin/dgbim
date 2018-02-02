@@ -11,7 +11,7 @@ def downloadImage(uri)
     uri = uri.gsub(/##/, "")
   end
   uri = uri.gsub(/\\/, "/")
-  system "wget #{URI.encode($GBIM_TEXTURE_PATH + uri)}  -P #{$modelFolder + 'textures'}", :out=>:close, :err=>:close
+  system 'wget', URI.encode($GBIM_TEXTURE_PATH + uri), '-P', $modelFolder + 'textures', :out=>:close, :err=>['/dev/null', 'a']
   puts $GBIM_TEXTURE_PATH + uri
 end
 
@@ -32,18 +32,18 @@ else
     basePath = decoded.sub($modelName + '.gbim', '')
     $modelFolder="#{ENV["HOME"]}/Downloads/models/#{$modelName}/";
 
-    # download_output = system "wget #{URI.encode(infoUrl)} -P #{$modelFolder}", :out=>:close, :err=>:close
+    # download_output = system "wget #{URI.encode(infoUrl)} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null', 'a']
     # puts infoUrl
 
-    download_output = system "wget #{URI.encode(decoded)} -P #{$modelFolder}", :out=>:close, :err=>:close
+    download_output = system 'wget', URI.encode(decoded), '-P', $modelFolder, :out=>:close, :err=>['/dev/null', 'a']
     puts decoded
 
     if download_output
 
-      system "wget #{URI.encode(decoded.sub('.gbim', '.pi'))} -P #{$modelFolder}", :out=>:close, :err=>:close
+      system "wget #{URI.encode(decoded.sub('.gbim', '.pi'))} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null','a']
       puts decoded.sub('.gbim', '.pi')
 
-      system "wget #{URI.encode(decoded.sub('.gbim', '.pc'))} -P #{$modelFolder}", :out=>:close, :err=>:close
+      system "wget #{URI.encode(decoded.sub('.gbim', '.pc'))} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null','a']
       puts decoded.sub('.gbim', '.pc')
 
       # download images
@@ -58,7 +58,7 @@ else
       puts '---------------Checking Texture--------------'
       images.each { |index, imageInfo| downloadImage(imageInfo["uri"]) }
 
-      # # download buffers
+      # download buffers
       bufferCount = gbim["buffers"].length;
       count = 0
       puts ''
@@ -66,7 +66,7 @@ else
       while download_output
         break if count == bufferCount
         bin = ".#{count + 1}.bin"
-        download_output = system "wget #{URI.encode(decoded.sub('.gbim', bin))} -P #{$modelFolder}", :out=>:close, :err=>:close
+        download_output = system "wget #{URI.encode(decoded.sub('.gbim', bin))} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null','a']
         puts decoded.sub('.gbim', bin)
         count = count + 1
       end
