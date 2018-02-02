@@ -11,7 +11,10 @@ def downloadImage(uri)
     uri = uri.gsub(/##/, "")
   end
   uri = uri.gsub(/\\/, "/")
-  system 'wget', URI.encode($GBIM_TEXTURE_PATH + uri), '-P', $modelFolder + 'textures', :out=>:close, :err=>['/dev/null', 'a']
+  uriArr = uri.split("/")
+  uriArr.pop()
+  subDir = uriArr.join('/')
+  system 'wget', URI.encode($GBIM_TEXTURE_PATH + uri), '-P', $modelFolder + subDir, :out=>:close, :err=>['/dev/null', 'a']
   puts $GBIM_TEXTURE_PATH + uri
 end
 
