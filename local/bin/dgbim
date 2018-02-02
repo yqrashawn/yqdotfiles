@@ -1,5 +1,5 @@
 #!/usr/local/bin/ruby
-
+# require 'json/stream'
 require 'json'
 require 'uri'
 
@@ -12,6 +12,7 @@ def downloadImage(uri)
   end
   uri = uri.gsub(/\\/, "/")
   system "wget #{URI.encode($GBIM_TEXTURE_PATH + uri)}  -P #{$modelFolder + 'textures'}", :out=>:close, :err=>:close
+  puts $GBIM_TEXTURE_PATH + uri
 end
 
 url = ARGV[0]
@@ -31,8 +32,8 @@ else
     basePath = decoded.sub($modelName + '.gbim', '')
     $modelFolder="#{ENV["HOME"]}/Downloads/models/#{$modelName}/";
 
-    download_output = system "wget #{URI.encode(infoUrl)} -P #{$modelFolder}", :out=>:close, :err=>:close
-    puts infoUrl
+    # download_output = system "wget #{URI.encode(infoUrl)} -P #{$modelFolder}", :out=>:close, :err=>:close
+    # puts infoUrl
 
     download_output = system "wget #{URI.encode(decoded)} -P #{$modelFolder}", :out=>:close, :err=>:close
     puts decoded
@@ -46,14 +47,22 @@ else
       puts decoded.sub('.gbim', '.pc')
 
       # download images
+      # puts $modelFolder + $modelName + '.gbim'
       gbimStr = File.read($modelFolder + $modelName + '.gbim')
+
+      # puts gbimStr
+      # gbim = JSON::Stream::Parser.parse(gbimStr);
       gbim = JSON.parse(gbimStr);
       images = gbim["images"];
+      puts ''
+      puts '---------------Checking Texture--------------'
       images.each { |index, imageInfo| downloadImage(imageInfo["uri"]) }
 
-      # download buffers
+      # # download buffers
       bufferCount = gbim["buffers"].length;
       count = 0
+      puts ''
+      puts '--------------Downloading Buffers-----------'
       while download_output
         break if count == bufferCount
         bin = ".#{count + 1}.bin"
@@ -61,6 +70,7 @@ else
         puts decoded.sub('.gbim', bin)
         count = count + 1
       end
+      puts ''
       puts '------------------Finished-------------------'
     end
   end
