@@ -2,9 +2,18 @@
 # require 'json/stream'
 require 'json'
 require 'uri'
+require 'zlib'
 
 # url = 'http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
 $GBIM_TEXTURE_PATH="http://gb9.bimsop.com/assets/m2/"
+$GZIPED=false
+
+def valid_json?(json)
+  JSON.parse(json)
+  return true
+rescue JSON::ParserError => e
+  return false
+end
 
 def downloadImage(uri)
   if uri.include?("##")
@@ -16,6 +25,18 @@ def downloadImage(uri)
   subDir = uriArr.join('/')
   system 'wget', URI.encode($GBIM_TEXTURE_PATH + uri), '-P', $modelFolder + subDir, :out=>:close, :err=>['/dev/null', 'a']
   puts $GBIM_TEXTURE_PATH + uri
+end
+
+def unzip(filePath)
+  puts filePath
+  if $GZIPED
+    Zlib::GzipReader.open(filePath) { |gz|
+      decompressed = gz.read
+      File.open(filePath, 'w'){|file| file.write(decompressed)}
+    }
+  end
+rescue Zlib::GzipFile::Error => err
+  return false
 end
 
 url = ARGV[0]
@@ -52,6 +73,15 @@ else
       # download images
       # puts $modelFolder + $modelName + '.gbim'
       gbimStr = File.read($modelFolder + $modelName + '.gbim')
+      if !valid_json?(gbimStr)
+        Zlib::GzipReader.open($modelFolder + $modelName + '.gbim') {|gz|
+          gbimStr = gz.read
+          File.open($modelFolder + $modelName + '.gbim', 'w'){|file| file.write(gbimStr)}
+        }
+        unzip($modelFolder + $modelName + '.pi')
+        unzip($modelFolder + $modelName + '.pc')
+        $GZIPED=true
+      end
 
       # puts gbimStr
       # gbim = JSON::Stream::Parser.parse(gbimStr);
@@ -70,6 +100,7 @@ else
         break if count == bufferCount
         bin = ".#{count + 1}.bin"
         download_output = system "wget #{URI.encode(decoded.sub('.gbim', bin))} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null','a']
+        unzip($modelFolder + $modelName + bin)
         puts decoded.sub('.gbim', bin)
         count = count + 1
       end
