@@ -30,9 +30,9 @@ end
 def unzip(filePath)
   puts filePath
   if $GZIPED
-    Zlib::GzipReader.open(filePath) { |gz|
+    Zlib::GzipReader.open( filePath ) { |gz|
       decompressed = gz.read
-      File.open(filePath, 'w'){|file| file.write(decompressed)}
+      File.open( filePath , 'w'){|file| file.write(decompressed)}
     }
   end
 rescue Zlib::GzipFile::Error => err
@@ -60,9 +60,9 @@ else
     # puts infoUrl
 
     download_output = system 'wget', URI.encode(decoded), '-P', $modelFolder, :out=>:close, :err=>['/dev/null', 'a']
-    puts decoded
 
     if download_output
+      puts decoded
 
       system "wget #{URI.encode(decoded.sub('.gbim', '.pi'))} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null','a']
       puts decoded.sub('.gbim', '.pi')
@@ -107,5 +107,7 @@ else
       puts ''
       puts '------------------Finished-------------------'
     end
+  else
+    puts 'gbim download went wrong'
   end
 end
