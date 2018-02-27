@@ -17,23 +17,47 @@
                     {
                         "description": "simultaneously keypress",
                         "manipulators": [
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        {
-                                            "key_code": "j"
-                                        },
-                                        {
-                                            "key_code": "l"
-                                        }
-                                    ]
+                          {
+                            "from": {
+                              "simultaneous": [
+                                {
+                                  "key_code": "i"
                                 },
-                                "to": [
-                                    {
-                                        "key_code": "f19"
-                                    }
-                                ],
-                                "type": "basic"
+                                {
+                                  "key_code": "u"
+                                }
+                              ]
+                            },
+                            "to": [
+                              {
+                                "key_code": "equal_sign",
+                                "modifiers": [
+                                  "left_command",
+                                  "left_control",
+                                  "left_option",
+                                  "left_shift"
+                                ]
+                              }
+                            ],
+                            "type": "basic"
+                          },
+                          {
+                            "from": {
+                              "simultaneous": [
+                                {
+                                  "key_code": "j"
+                                },
+                                {
+                                  "key_code": "l"
+                                }
+                              ]
+                            },
+                            "to": [
+                              {
+                                "key_code": "f19"
+                              }
+                            ],
+                            "type": "basic"
                             },
                             {
                                 "from": {
