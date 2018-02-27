@@ -873,7 +873,7 @@
                             },
                             "to": [
                               {
-                                "shell_command": "osascript '/Users/Rashawn/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/chrome-continue-to-here.scpt'"
+                                "shell_command": "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"
                               }
                             ],
                             "type": "basic"
