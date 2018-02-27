@@ -2228,7 +2228,7 @@
                 ],
                 "to_if_alone": [
                   {
-                    "key_code": "f17"
+                    "shell_command": "osascript '/Users/rashawnzhang/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/switch-to-second-previous-app.scpt'"
                   }
                 ],
                 "type": "basic"
