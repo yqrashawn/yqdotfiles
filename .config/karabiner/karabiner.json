@@ -860,12 +860,30 @@
                                 ],
                                 "type": "basic"
                             },
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "chrome_mode",
-                                        "type": "variable_if",
-                                        "value": 1
+                          {
+                            "conditions": [
+                              {
+                                "name": "chrome_mode",
+                                "type": "variable_if",
+                                "value": 1
+                              }
+                            ],
+                            "from": {
+                              "key_code": "2"
+                            },
+                            "to": [
+                              {
+                                "shell_command": "osascript '/Users/Rashawn/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/chrome-continue-to-here.scpt'"
+                              }
+                            ],
+                            "type": "basic"
+                          },
+                          {
+                            "conditions": [
+                              {
+                                "name": "chrome_mode",
+                                "type": "variable_if",
+                                "value": 1
                                     }
                                 ],
                                 "from": {
