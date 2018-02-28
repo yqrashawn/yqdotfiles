@@ -21,30 +21,6 @@
                             "from": {
                               "simultaneous": [
                                 {
-                                  "key_code": "i"
-                                },
-                                {
-                                  "key_code": "u"
-                                }
-                              ]
-                            },
-                            "to": [
-                              {
-                                "key_code": "equal_sign",
-                                "modifiers": [
-                                  "left_command",
-                                  "left_control",
-                                  "left_option",
-                                  "left_shift"
-                                ]
-                              }
-                            ],
-                            "type": "basic"
-                          },
-                          {
-                            "from": {
-                              "simultaneous": [
-                                {
                                   "key_code": "j"
                                 },
                                 {
