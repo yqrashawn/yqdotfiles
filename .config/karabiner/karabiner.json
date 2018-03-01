@@ -17,47 +17,23 @@
                     {
                         "description": "simultaneously keypress",
                         "manipulators": [
-                          {
-                            "from": {
-                              "simultaneous": [
-                                {
-                                  "key_code": "i"
-                                },
-                                {
-                                  "key_code": "u"
-                                }
-                              ]
-                            },
-                            "to": [
-                              {
-                                "key_code": "equal_sign",
-                                "modifiers": [
-                                  "left_command",
-                                  "left_control",
-                                  "left_option",
-                                  "left_shift"
+                            {
+                              "from": {
+                                "simultaneous": [
+                                  {
+                                    "key_code": "j"
+                                  },
+                                  {
+                                    "key_code": "l"
+                                  }
                                 ]
-                              }
-                            ],
-                            "type": "basic"
-                          },
-                          {
-                            "from": {
-                              "simultaneous": [
+                              },
+                              "to": [
                                 {
-                                  "key_code": "j"
-                                },
-                                {
-                                  "key_code": "l"
+                                  "key_code": "f19"
                                 }
-                              ]
-                            },
-                            "to": [
-                              {
-                                "key_code": "f19"
-                              }
-                            ],
-                            "type": "basic"
+                              ],
+                              "type": "basic"
                             },
                             {
                                 "from": {
@@ -860,30 +836,30 @@
                                 ],
                                 "type": "basic"
                             },
-                          {
-                            "conditions": [
-                              {
-                                "name": "chrome_mode",
-                                "type": "variable_if",
-                                "value": 1
-                              }
-                            ],
-                            "from": {
-                              "key_code": "2"
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "chrome_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "2"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"
+                                    }
+                                ],
+                                "type": "basic"
                             },
-                            "to": [
-                              {
-                                "shell_command": "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"
-                              }
-                            ],
-                            "type": "basic"
-                          },
-                          {
-                            "conditions": [
-                              {
-                                "name": "chrome_mode",
-                                "type": "variable_if",
-                                "value": 1
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "chrome_mode",
+                                        "type": "variable_if",
+                                        "value": 1
                                     }
                                 ],
                                 "from": {

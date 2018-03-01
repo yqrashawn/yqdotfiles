@@ -59,7 +59,7 @@ alias t='emacsclient -t'
 alias vvv='vimr'
 alias m='mvim'
 alias wdired='roamer'
-alias emacsd='vmtouch -e ~/.emasc.d && vmtouch -tldf ~/.emacs.d'
+alias emacsd='vmtouch -ef ~/.emacs.d && vmtouch -tldf ~/.emacs.d'
 
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias chromed='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222'
