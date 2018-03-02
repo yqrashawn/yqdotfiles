@@ -18,22 +18,22 @@
                         "description": "simultaneously keypress",
                         "manipulators": [
                             {
-                              "from": {
-                                "simultaneous": [
-                                  {
-                                    "key_code": "j"
-                                  },
-                                  {
-                                    "key_code": "l"
-                                  }
-                                ]
-                              },
-                              "to": [
-                                {
-                                  "key_code": "f19"
-                                }
-                              ],
-                              "type": "basic"
+                                "from": {
+                                    "simultaneous": [
+                                        {
+                                            "key_code": "j"
+                                        },
+                                        {
+                                            "key_code": "l"
+                                        }
+                                    ]
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f19"
+                                    }
+                                ],
+                                "type": "basic"
                             },
                             {
                                 "from": {
