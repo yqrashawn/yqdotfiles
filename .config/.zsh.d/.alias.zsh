@@ -85,3 +85,5 @@ command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
 alias fdf='fd -t f'
 alias fdd='fd -t d'
+
+alias wifi-device-name='networksetup -listallhardwareports'
