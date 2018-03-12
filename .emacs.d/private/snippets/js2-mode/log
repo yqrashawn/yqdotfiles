@@ -2,4 +2,4 @@
 # name: log
 # key: log
 # --
-console.log(${1:info});
+console.log($1);

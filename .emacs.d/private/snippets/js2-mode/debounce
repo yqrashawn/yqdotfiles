@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name:debounce 
+# name:debounce
 # key: debounce
 # --
 const debounce = (fn, delay) => {
