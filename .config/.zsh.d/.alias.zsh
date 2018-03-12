@@ -88,3 +88,4 @@ alias fdd='fd -t d'
 
 # tmp
 alias yarn='cross-env NPM_CONFIG_PYTHON="/usr/bin/python" yarn'
+alias wifi-device-name='networksetup -listallhardwareports'
