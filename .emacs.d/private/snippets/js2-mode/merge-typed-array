@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: mergeTypedArray
-# key: mergeTypedArray
+# name: mergetypearray
+# key: mergetypearray
 # --
 function mergeTypedArrays(a, b) {
     // Checks for truthy values on both arrays
