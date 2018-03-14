@@ -8647,11 +8647,46 @@
                                 "type": "basic"
                             },
                             {
-                                "conditions": [
-                                    {
-                                        "name": "alf_mode",
-                                        "type": "variable_if",
-                                        "value": 1
+                              "conditions": [
+                                {
+                                  "name": "alf_mode",
+                                  "type": "variable_if",
+                                  "value": 1
+                                }
+                              ],
+                              "from": {
+                                "key_code": "return_or_enter",
+                                "modifiers": {
+                                  "optional": [
+                                    "caps_lock"
+                                  ]
+                                }
+                              },
+                              "to": [
+                                {
+                                  "key_code": "c",
+                                  "modifiers": [
+                                    "command"
+                                  ]
+                                },
+                                {
+                                  "key_code": "m",
+                                  "modifiers": [
+                                    "command",
+                                    "shift",
+                                    "control",
+                                    "option"
+                                  ]
+                                }
+                              ],
+                              "type": "basic"
+                            },
+                          {
+                            "conditions": [
+                              {
+                                "name": "alf_mode",
+                                "type": "variable_if",
+                                "value": 1
                                     }
                                 ],
                                 "from": {
