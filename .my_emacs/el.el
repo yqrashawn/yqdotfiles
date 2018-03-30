@@ -50,7 +50,6 @@
   (interactive "P")
   (el-shell (concat  "fasd -d " str) #'dired))
 
-
 (defun evil-ex-fasd-eval (orig-fun str)
   "docstring"
   (interactive "P")
