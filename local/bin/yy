@@ -1,0 +1,1 @@
+cd ~/local/bin/ && yarn $1

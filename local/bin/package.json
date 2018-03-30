@@ -1,0 +1,18 @@
+{
+  "name": "yqrashawn-project-manager",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "peacock": "run-p peacock:*",
+    "peacock:peacock-dev": "cd ~/workspace/OFFICE/peacock && yarn start",
+    "peacock:sso-dev": "cd ~/workspace/OFFICE/SSO && yarn start",
+    "kinder": "run-p kindergarten:*",
+    "kindergarten:web": "cd ~/workspace/OFFICE/kindergarten && yarn start",
+    "kindergarten:server": "cd ~/workspace/OFFICE/kindergarten-server && yarn start",
+    "lmv": "cd ~/workspace/OFFICE/gltflmvviewer && yarn dev",
+    "bimv": "cd ~/workspace/OFFICE/bimsop-viewer-bimv && yarn start"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.2"
+  }
+}
