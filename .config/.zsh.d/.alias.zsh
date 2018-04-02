@@ -86,6 +86,7 @@ command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
 alias fdf='fd -t f'
 alias fdd='fd -t d'
+alias fdfe='fd -t f -e'
 
 # tmp
 alias yarn='cross-env NPM_CONFIG_PYTHON="/usr/bin/python" yarn'
