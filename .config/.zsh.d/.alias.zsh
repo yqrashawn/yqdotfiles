@@ -26,8 +26,8 @@ alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
-alias l='exa'
-alias ls="exa"
+alias l='exa -al'
+alias ls="exa -a"
 alias lsa="exa -abghl --git --color=automatic"
 alias lsd="exa -l --color=automatic | grep --color=never '^d'"
 alias lst='exa --sort=created --time=created --long --all -r | sed 15q'
@@ -35,7 +35,6 @@ alias lstt='exa --sort=modified --time=created --long --all -r | sed 15q'
 # alias ls="ls -AlF ${colorflag}"
 # alias l="ls -lF ${colorflag}"
 # alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
-
 alias reload="exec $SHELL -l"
 
 
@@ -84,6 +83,7 @@ command -v md5sum > /dev/null || alias md5sum="md5"
 # macOS has no `sha1sum`, so use `shasum` as a fallback
 command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
+# fd
 alias fdf='fd -t f'
 alias fdd='fd -t d'
 alias fdfe='fd -t f -e'
@@ -91,3 +91,6 @@ alias fdfe='fd -t f -e'
 # tmp
 alias yarn='cross-env NPM_CONFIG_PYTHON="/usr/bin/python" yarn'
 alias wifi-device-name='networksetup -listallhardwareports'
+
+# reflex
+alias ref='reflex -c reflex.conf'
