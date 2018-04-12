@@ -265,7 +265,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "v",
+                  "key_code": "left_command",
                   "modifiers": {
                     "optional": [
                       "caps_lock"
@@ -284,6 +284,24 @@
           {
             "description": "simultaneously keypress",
             "manipulators": [
+              {
+                "from": {
+                  "simultaneous": [
+                    {
+                      "key_code": "h"
+                    },
+                    {
+                      "key_code": "k"
+                    }
+                  ]
+                },
+                "to": [
+                  {
+                    "shell_command":"osascript -e 'tell application \"Alfred 3\" to run trigger \"switchWindow\" in workflow \"ru.mandrigin.alfred.sww\" with argument \"\"'"
+                  }
+                ],
+                "type": "basic"
+              },
               {
                 "from": {
                   "simultaneous": [
@@ -742,7 +760,7 @@
                 ],
                 "to_if_alone": [
                   {
-                    "key_code": "f19"
+                    "key_code": "left_command"
                   }
                 ],
                 "type": "basic"
@@ -4632,6 +4650,34 @@
                 "to": [
                   {
                     "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchPaw\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "launch_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  },
+                  {
+                    "name": "launch_mode_second_level",
+                    "type": "variable_if",
+                    "value": 0
+                  }
+                ],
+                "from": {
+                  "key_code": "n",
+                  "modifiers": {
+                    "optional": [
+                      "caps_lock"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchPS\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
                   }
                 ],
                 "type": "basic"
