@@ -94,3 +94,6 @@ alias wifi-device-name='networksetup -listallhardwareports'
 
 # reflex
 alias ref='reflex -c reflex.conf'
+
+# dired
+alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
