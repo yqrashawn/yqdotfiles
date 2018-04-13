@@ -105,7 +105,12 @@ var switchTo = new Key("f16", ["alt", "ctrl"], function() {
   })
     .toString()
     .replace(/,/g, "\n");
-  if (WINDOW_LIST.length === 0) tmodal.text = "no uncontrolled window";
+  if (WINDOW_LIST.length === 0) {
+    tmodal.text = "no uncontrolled window";
+    tmodal.duration = 1;
+  } else {
+    tmodal.duration = 0;
+  }
   keys.forEach(function(keyHandler) {
     keyHandler.disable();
   });
