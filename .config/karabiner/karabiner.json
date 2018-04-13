@@ -306,6 +306,28 @@
                 "from": {
                   "simultaneous": [
                     {
+                      "key_code": "i"
+                    },
+                    {
+                      "key_code": "j"
+                    }
+                  ]
+                },
+                "to": [
+                  {
+                    "key_code": "f16",
+                    "modifiers": [
+                      "option",
+                      "control"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "simultaneous": [
+                    {
                       "key_code": "j"
                     },
                     {
@@ -834,7 +856,10 @@
                 ],
                 "to_if_alone": [
                   {
-                    "key_code": "f16"
+                    "key_code": "tab",
+                    "modifiers": [
+                      "command"
+                    ]
                   }
                 ],
                 "type": "basic"
@@ -995,7 +1020,7 @@
             ]
           },
           {
-            "description": "Change right_option to f17 if alone",
+            "description": "Change right_option to f15 if alone",
             "manipulators": [
               {
                 "from": {
@@ -1013,7 +1038,7 @@
                 ],
                 "to_if_alone": [
                   {
-                    "shell_command": "osascript '/Users/rashawnzhang/Library/Mobile Documents/com~apple~ScriptEditor2/Documents/switch-to-second-previous-app.scpt'"
+                    "shell_command": "osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"
                   }
                 ],
                 "type": "basic"
