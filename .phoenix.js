@@ -23,7 +23,7 @@ const IGNORED_APP = [
   "iTerm2",
   "Finder",
   "Phoenix",
-  "Beary Chat",
+  "BearyChat",
   "Karabiner-Elements",
   "Karabiner-EventViewer",
   "Alfred 3",
