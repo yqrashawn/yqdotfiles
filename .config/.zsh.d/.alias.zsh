@@ -100,3 +100,7 @@ alias ref='reflex -c reflex.conf'
 
 # dired
 alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
+
+# png
+alias pngq="pngquant -f --speed 1"
+alias optipng="optipng -o7"
