@@ -4,7 +4,7 @@
 /**
  * @fileOverview phoenix configuration file
  * @name .phoenix.js
- * @author Rashawn Zhang <Rashawn@bogon>
+ * @author Rashawn Zhang <Rashawn@namy.19@gmail.com>
  */
 g = this;
 
@@ -68,6 +68,7 @@ const appDidTerminate = new Event("appDidTerminate", function(app) {
 });
 
 const tmodal = new Modal();
+g.tmodal = tmodal;
 tmodal.duration = 0;
 tmodal.origin = { x: 1110, y: 1110 };
 
