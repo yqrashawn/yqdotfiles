@@ -70,7 +70,7 @@ const appDidTerminate = new Event("appDidTerminate", function(app) {
 const tmodal = new Modal();
 g.tmodal = tmodal;
 tmodal.duration = 0;
-tmodal.origin = { x: 1110, y: 1110 };
+tmodal.origin = { x: 0, y: 0 };
 
 var switchToSecondPrevWindow = new Key(
   "f16",
