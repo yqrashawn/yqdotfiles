@@ -18,6 +18,48 @@
             "description": "chunkwm",
             "manipulators": [
               {
+                "conditions": [
+                  {
+                    "name": "alf_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "slash_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "quote_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "vi_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "tmux_prefix_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "qi_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "launch_mode_second_level",
+                    "type": "variable_if",
+                    "value": 0
+                  },
+                  {
+                    "name": "launch_mode",
+                    "type": "variable_if",
+                    "value": 0
+                  }
+                ],
                 "from": {
                   "key_code": "v"
                 },
