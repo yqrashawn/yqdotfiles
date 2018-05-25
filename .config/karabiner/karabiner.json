@@ -61,7 +61,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "a"
+                  "key_code": "tab"
                 },
                 "to": [
                   {
@@ -81,41 +81,7 @@
                 ],
                 "to_if_alone": [
                   {
-                    "key_code": "a"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "wm_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  }
-                ],
-                "from": {
-                  "key_code": "s"
-                },
-                "to": [
-                  {
-                    "set_variable": {
-                      "name": "wms_mode",
-                      "value": 1
-                    }
-                  }
-               ],
-                "to_after_key_up": [
-                  {
-                    "set_variable": {
-                      "name": "wms_mode",
-                      "value": 0
-                    }
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "s"
+                    "key_code": "tab"
                   }
                 ],
                 "type": "basic"
@@ -160,9 +126,43 @@
                     "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "f"
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "wmf_mode",
+                      "value": 1
+                    }
+                  }
+               ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "wmf_mode",
+                      "value": 0
+                    }
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "f"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "wm_mode",
+                    "type": "variable_if",
+                    "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -185,7 +185,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -208,7 +208,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -231,7 +231,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -254,7 +254,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wms_mode",
+                    "name": "wmc_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -277,7 +277,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wms_mode",
+                    "name": "wmc_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -300,7 +300,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wms_mode",
+                    "name": "wmc_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -323,7 +323,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wms_mode",
+                    "name": "wmc_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -346,7 +346,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 0
                   }
@@ -369,7 +369,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 0
                   }
@@ -392,7 +392,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 0
                   }
@@ -415,7 +415,7 @@
                     "value": 1
                   },
                   {
-                    "name": "wmc_mode",
+                    "name": "wmf_mode",
                     "type": "variable_if",
                     "value": 0
                   }
@@ -906,7 +906,7 @@
             ]
           },
           {
-            "description": "Chrome",
+            "description": "Chrome Mode",
             "manipulators": [
               {
                 "conditions": [
@@ -916,38 +916,9 @@
                       "^com\\.google\\.Chrome\\.canary$"
                     ],
                     "type": "frontmost_application_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "tab"
-                },
-                "to": [
+                  },
                   {
-                    "set_variable": {
-                      "name": "chrome_mode",
-                      "value": 1
-                    }
-                  }
-                ],
-                "to_after_key_up": [
-                  {
-                    "set_variable": {
-                      "name": "chrome_mode",
-                      "value": 0
-                    }
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "tab"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "chrome_mode",
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -968,7 +939,14 @@
               {
                 "conditions": [
                   {
-                    "name": "chrome_mode",
+                    "bundle_identifiers": [
+                      "^com\\.google\\.Chrome$",
+                      "^com\\.google\\.Chrome\\.canary$"
+                    ],
+                    "type": "frontmost_application_if"
+                  },
+                  {
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -986,7 +964,14 @@
               {
                 "conditions": [
                   {
-                    "name": "chrome_mode",
+                    "bundle_identifiers": [
+                      "^com\\.google\\.Chrome$",
+                      "^com\\.google\\.Chrome\\.canary$"
+                    ],
+                    "type": "frontmost_application_if"
+                  },
+                  {
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -1007,7 +992,14 @@
               {
                 "conditions": [
                   {
-                    "name": "chrome_mode",
+                    "bundle_identifiers": [
+                      "^com\\.google\\.Chrome$",
+                      "^com\\.google\\.Chrome\\.canary$"
+                    ],
+                    "type": "frontmost_application_if"
+                  },
+                  {
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -1025,7 +1017,14 @@
               {
                 "conditions": [
                   {
-                    "name": "chrome_mode",
+                    "bundle_identifiers": [
+                      "^com\\.google\\.Chrome$",
+                      "^com\\.google\\.Chrome\\.canary$"
+                    ],
+                    "type": "frontmost_application_if"
+                  },
+                  {
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -1047,7 +1046,14 @@
               {
                 "conditions": [
                   {
-                    "name": "chrome_mode",
+                    "bundle_identifiers": [
+                      "^com\\.google\\.Chrome$",
+                      "^com\\.google\\.Chrome\\.canary$"
+                    ],
+                    "type": "frontmost_application_if"
+                  },
+                  {
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -1068,7 +1074,14 @@
               {
                 "conditions": [
                   {
-                    "name": "chrome_mode",
+                    "bundle_identifiers": [
+                      "^com\\.google\\.Chrome$",
+                      "^com\\.google\\.Chrome\\.canary$"
+                    ],
+                    "type": "frontmost_application_if"
+                  },
+                  {
+                    "name": "wm_mode",
                     "type": "variable_if",
                     "value": 1
                   }
@@ -5393,7 +5406,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "tab"
+                  "key_code": "q"
                 },
                 "to": [
                   {
@@ -5413,7 +5426,7 @@
                 ],
                 "to_if_alone": [
                   {
-                    "key_code": "tab"
+                    "key_code": "q"
                   }
                 ],
                 "type": "basic"
@@ -5669,30 +5682,6 @@
                     "name": "tmux_prefix_mode",
                     "type": "variable_if",
                     "value": 1
-                  }
-                ],
-                "from": {
-                  "key_code": "b"
-                },
-                "to": [
-                  {
-                    "key_code": "q",
-                    "modifiers": [
-                      "left_control"
-                    ]
-                  },
-                  {
-                    "key_code": "b"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "tmux_prefix_mode",
-                    "type": "variable_if",
-                    "value": 1
                   },
                   {
                     "bundle_identifiers": [
@@ -5704,7 +5693,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "c"
+                  "key_code": "b"
                 },
                 "to": [
                   {
@@ -6000,30 +5989,6 @@
                   }
                 ],
                 "from": {
-                  "key_code": "m"
-                },
-                "to": [
-                  {
-                    "key_code": "q",
-                    "modifiers": [
-                      "left_control"
-                    ]
-                  },
-                  {
-                    "key_code": "m"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "tmux_prefix_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  }
-                ],
-                "from": {
                   "key_code": "n"
                 },
                 "to": [
@@ -6264,7 +6229,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "x"
+                  "key_code": "b"
                 },
                 "to": [
                   {
@@ -6320,7 +6285,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "z"
+                  "key_code": "m"
                 },
                 "to": [
                   {
@@ -6344,7 +6309,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "z"
+                  "key_code": "m"
                 },
                 "to": [
                   {
