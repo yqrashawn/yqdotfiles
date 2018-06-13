@@ -193,6 +193,52 @@
                                     {
                                         "name": "wmf_mode",
                                         "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "open_bracket"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "wm_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "wmf_mode",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "close_bracket"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/usr/local/bin/chunkc tiling::window --send-to-monitor next"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "wm_mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    },
+                                    {
+                                        "name": "wmf_mode",
+                                        "type": "variable_if",
                                         "value": 1
                                     }
                                 ],
