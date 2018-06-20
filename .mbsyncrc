@@ -6,9 +6,8 @@ Port 993
 User namy.19@gmail.com
 PassCmd "security find-generic-password  -s imap.gmail.com -w"
 SSLType IMAPS
-# SSLVersions SSLv3
 SSLVersions TLSv1.2
-# AuthMechs PLAIN
+AuthMechs PLAIN
 CertificateFile /etc/ssl/certs/ca.crt
 
 IMAPStore gmail-remote
@@ -27,7 +26,6 @@ Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
 # Patterns "Inbox" "Saved" "Drafts" "Sent Mail" "Trash" "Important"
-# Patterns * "!Trash" "!Spam" "!&XeVPXJCuTvY-" "!&ZTZjbg-" "!&ZcWITHb4UXM-"
 Patterns %
 Create Both
 Expunge Both
