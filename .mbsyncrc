@@ -28,54 +28,54 @@ Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
 # Patterns "Inbox" "Saved" "Drafts" "Sent Mail" "Trash" "Important"
-Patterns %
+Patterns *
 Create Both
 Expunge Both
 SyncState *
 
-Channel gmail-inbox
-Master :gmail-remote:
-Slave :gmail-local:
-Patterns "INBOX"
-Create Both
-Expunge Both
-SyncState *
+# Channel gmail-inbox
+# Master :gmail-remote:
+# Slave :gmail-local:
+# Patterns "INBOX"
+# Create Both
+# Expunge Both
+# SyncState *
 
-Channel gmail-trash
-Master :gmail-remote:"[Gmail]/Bin"
-Slave :gmail-local:"[Gmail].Bin"
-Create Both
-Expunge Both
-SyncState *
+# Channel gmail-trash
+# Master :gmail-remote:"[Gmail]/Bin"
+# Slave :gmail-local:"[Gmail].Bin"
+# Create Both
+# Expunge Both
+# SyncState *
 
-Channel gmail-sent
-Master :gmail-remote:"[Gmail]/Sent Mail"
-Slave :gmail-local:"[Gmail].Sent Mail"
-Create Both
-Expunge Both
-SyncState *
+# Channel gmail-sent
+# Master :gmail-remote:"[Gmail]/Sent Mail"
+# Slave :gmail-local:"[Gmail].Sent Mail"
+# Create Both
+# Expunge Both
+# SyncState *
 
-Channel gmail-all
-Master :gmail-remote:"[Gmail]/All Mail"
-Slave :gmail-local:"[Gmail].All Mail"
-Create Both
-Expunge Both
-SyncState *
+# Channel gmail-all
+# Master :gmail-remote:"[Gmail]/All Mail"
+# Slave :gmail-local:"[Gmail].All Mail"
+# Create Both
+# Expunge Both
+# SyncState *
 
-Channel gmail-starred
-Master :gmail-remote:"[Gmail]/Starred"
-Slave :gmail-local:"[Gmail].Starred"
-Create Both
-Expunge Both
-SyncState *
+# Channel gmail-starred
+# Master :gmail-remote:"[Gmail]/Starred"
+# Slave :gmail-local:"[Gmail].Starred"
+# Create Both
+# Expunge Both
+# SyncState *
 
 Group gmail
 Channel gmail-folders
-Channel gmail-inbox
-Channel gmail-sent
-Channel gmail-trash
-Channel gmail-all
-Channel gmail-starred
+# Channel gmail-inbox
+# Channel gmail-sent
+# Channel gmail-trash
+# Channel gmail-all
+# Channel gmail-starred
 
 #################### icloud
 # Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html
