@@ -6,9 +6,11 @@ Port 993
 User namy.19@gmail.com
 PassCmd "security find-generic-password  -s imap.gmail.com -w"
 SSLType IMAPS
-SSLVersions TLSv1.2
-AuthMechs PLAIN
-CertificateFile /etc/ssl/certs/ca.crt
+# SSLVersions TLSv1.2
+# AuthMechs *
+# AuthMechs PLAIN
+AuthMechs LOGIN
+# CertificateFile /etc/ssl/certs/ca.crt
 
 IMAPStore gmail-remote
 Account gmail
