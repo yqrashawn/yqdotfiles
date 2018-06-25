@@ -104,3 +104,6 @@ alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
 # png
 alias pngq="pngquant -f --speed 1"
 alias optipng="optipng -o7"
+
+# update email
+alias umail="export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152;export HTTP_PROXY=http://127.0.0.1:6152:export HTTPs_PROXY=http://127.0.0.1:6152 & mbsync --pull --create --new --delete --flags --renew --expunge-slave gmail && mbsync --push  --create --new --delete --flags --renew --expunge-master gmail"
