@@ -939,7 +939,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"searchBrowserTabs\" in workflow \"com.clintonstrong.SearchTabs\" with argument \"\"'"
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"switchWindow\" in workflow \"ru.mandrigin.alfred.sww\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
