@@ -997,7 +997,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"switchWindow\" in workflow \"ru.mandrigin.alfred.sww\" with argument \"\"'"
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"helpSearch\" in workflow \"com.tedwise.menubarsearch\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
@@ -6937,7 +6937,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"help\" in workflow \"com.tedwise.menubarsearch\" with argument \"\"'"
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"helpSearch\" in workflow \"com.tedwise.menubarsearch\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
