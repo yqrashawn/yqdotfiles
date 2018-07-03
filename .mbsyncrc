@@ -4,7 +4,7 @@ IMAPAccount gmail
 Host imap.gmail.com
 Port 993
 User namy.19@gmail.com
-PassCmd "security find-generic-password  -s imap.gmail.com -w"
+PassCmd "security find-generic-password  -s mbsync-gmail -w"
 SSLType IMAPS
 # SSLVersions TLSv1.2
 # AuthMechs *
