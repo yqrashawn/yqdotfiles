@@ -106,4 +106,4 @@ alias pngq="pngquant -f --speed 1"
 alias optipng="optipng -o7"
 
 # update email
-alias umail="export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152;export HTTP_PROXY=http://127.0.0.1:6152:export HTTPs_PROXY=http://127.0.0.1:6152 & mbsync --pull --create --new --delete --flags --renew --expunge-slave gmail && mbsync --push  --create --new --delete --flags --renew --expunge-master gmail"
+alias umail="export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152;export HTTP_PROXY=http://127.0.0.1:6152:export HTTPs_PROXY=http://127.0.0.1:6152 & proxychains4 -f /etc/proxychains.conf mbsync --pull --create --new --delete --flags --renew --expunge-slave gmail && proxychains4 -f /etc/proxychains.conf mbsync --push  --create --new --delete --flags --renew --expunge-master gmail"
