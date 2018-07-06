@@ -19,7 +19,7 @@ MaildirStore gmail-local
 Path ~/Maildir/gmail/
 Inbox ~/Maildir/gmail/Inbox
 SubFolders Verbatim
-Trash Trash
+# Trash Trash
 
 # Channels and Groups
 # (so that we can rename local directories and flatten the hierarchy)
@@ -27,8 +27,8 @@ Trash Trash
 Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
-# Patterns "Inbox" "Saved" "Drafts" "Sent Mail" "Trash" "Important"
 Patterns *
+Sync All
 Create Both
 Expunge Both
 SyncState *
