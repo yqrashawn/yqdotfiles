@@ -49,3 +49,4 @@ chunkc core::load tiling.so
 
 chunkc tiling::rule --owner Finder --name Copy --state float &
 chunkc tiling::rule --owner Emacs --except "^$" --state tile &
+chunkc tiling::rule --owner WeChat --state float &
