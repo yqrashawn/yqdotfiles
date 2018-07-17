@@ -948,20 +948,16 @@
                                 "from": {
                                     "simultaneous": [
                                         {
-                                            "key_code": "f"
+                                            "key_code": "h"
                                         },
                                         {
-                                            "key_code": "j"
+                                            "key_code": "l"
                                         }
                                     ]
                                 },
                                 "to": [
                                     {
-                                        "key_code": "f16",
-                                        "modifiers": [
-                                            "option",
-                                            "control"
-                                        ]
+                                        "key_code": "f16"
                                     }
                                 ],
                                 "type": "basic"
@@ -988,10 +984,10 @@
                                 "from": {
                                     "simultaneous": [
                                         {
-                                            "key_code": "h"
+                                            "key_code": "f"
                                         },
                                         {
-                                            "key_code": "l"
+                                            "key_code": "j"
                                         }
                                     ]
                                 },
@@ -1248,11 +1244,19 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "d",
-                                        "modifiers": [
-                                            "command",
-                                            "control"
-                                        ]
+                                      "pointing_button": "button1"
+                                    },
+                                    {
+                                      "pointing_button": "button1"
+                                    },
+                                    {
+                                      "key_code": "grave_accent_and_tilde",
+                                      "modifiers": [
+                                        "control",
+                                        "command",
+                                        "option",
+                                        "shift"
+                                      ]
                                     }
                                 ],
                                 "type": "basic"
@@ -6877,7 +6881,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "equal_sign",
+                                        "key_code": "grave_accent_and_tilde",
                                         "modifiers": [
                                             "left_command",
                                             "left_control",
