@@ -14,18 +14,23 @@ env:
   # TERM: xterm-256color
   TERM: xterm-24bit
 
-# Window dimensions in character columns and lines
-# (changes require restart)
-dimensions:
-  columns: 80
-  lines: 24
+window:
+  # Window dimensions in character columns and lines
+  # (changes require restart)
+  dimensions:
+    columns: 80
+    lines: 24
 
-# Adds this many blank pixels of padding around the window
-# Units are physical pixels; this is not DPI aware.
-# (change requires restart)
-padding:
-  x: 0
-  y: 0
+  # Adds this many blank pixels of padding around the window
+  # Units are physical pixels; this is not DPI aware.
+  # (change requires restart)
+  padding:
+    x: 0
+    y: 0
+
+  # Window decorations
+  # Setting this to false will result in window without borders and title bar.
+  decorations: false
 
 # Display tabs using this many cells (changes require restart)
 tabspaces: 8
@@ -39,7 +44,7 @@ font:
   normal:
     family: Hack
     # Style can be specified to pick a specific face.
-    style: Bold
+    style: Regular
 
   # The bold font face
   bold:
@@ -54,20 +59,24 @@ font:
     style: Italic
 
   # Point size of the font
-  size: 13.0
+  size: 12.0
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increase the x offset to move the glyph to
   # the right, increase the y offset to move the glyph upward.
   glyph_offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
+
+  # Scale the font size based on the monitor's DPI. This will lead to bigger text on HiDPI
+  # screens and make reading text a little easier.
+  scale_with_dpi: true
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -87,6 +96,7 @@ colors:
   primary:
     background: '0x4b4b4b'
     foreground: '0xeaeaea'
+    bright_foreground: '0xeaeaea'
 
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
@@ -125,7 +135,6 @@ colors:
     magenta: '0xcc99cc'
     cyan:    '0x66cccc'
     white:   '0xdddddd'
-
 
 # Visual Bell
 #
@@ -175,11 +184,28 @@ mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
 
 mouse:
+  # Click settings
+  #
+  # The `double_click` and `triple_click` settings control the time
+  # alacritty should wait for accepting multiple clicks as one double
+  # or triple click.
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
+  # Faux Scrollback
+  #
+  # The `faux_scrollback_lines` setting controls the number
+  # of lines the terminal should scroll when the alternate
+  # screen buffer is active. This is used to allow mouse
+  # scrolling for applications like `man`.
+  #
+  # To disable this completely, set `faux_scrollback_lines` to 0.
+  faux_scrollback_lines: 1
+
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
+
+dynamic_title: true
 
 hide_cursor_when_typing: true
 
@@ -191,6 +217,9 @@ hide_cursor_when_typing: true
 # - Beam
 cursor_style: Block
 
+# Whether the cursor should be a hollow block on window focus loss
+unfocused_hollow_cursor: true
+
 # Live config reload (changes require restart)
 live_config_reload: true
 
@@ -199,10 +228,10 @@ live_config_reload: true
 # You can set shell.program to the path of your favorite shell, e.g. /bin/fish.
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
-shell:
-  program: /usr/local/bin/tmux
-  # args:
-    # - --login
+# shell:
+   # program: /usr/local/bin/tmux
+#   args:
+#     - --login
 
 # Key bindings
 #
@@ -212,6 +241,9 @@ shell:
 # as well (F1, F2, ..). The number keys above the main keyboard are encoded as
 # `Key1`, `Key2`, etc. Keys on the number pad are encoded `Number1`, `Number2`,
 # etc.  These all match the glutin::VirtualKeyCode variants.
+#
+# A list with all available `key` names can be found here:
+# https://docs.rs/glutin/*/glutin/enum.VirtualKeyCode.html#variants
 #
 # Possible values for `mods`
 # `Command`, `Super` refer to the super/command/windows key
@@ -237,9 +269,32 @@ shell:
 #     strings. For example:
 #     - { ... , command: { program: "alacritty", args: ["-e", "vttest"] } }
 key_bindings:
+  - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: B, mods: Alt, chars: "\x1bb" }
-  - { key: F, mods: Alt, chars: "\x1bf" }
   - { key: C, mods: Alt, chars: "\x1bc" }
+  - { key: D, mods: Alt, chars: "\x1bd" }
+  - { key: E, mods: Alt, chars: "\x1be" }
+  - { key: F, mods: Alt, chars: "\x1bf" }
+  - { key: G, mods: Alt, chars: "\x1bg" }
+  - { key: H, mods: Alt, chars: "\x1bh" }
+  - { key: I, mods: Alt, chars: "\x1bi" }
+  - { key: J, mods: Alt, chars: "\x1bj" }
+  - { key: K, mods: Alt, chars: "\x1bk" }
+  - { key: L, mods: Alt, chars: "\x1bl" }
+  - { key: M, mods: Alt, chars: "\x1bm" }
+  - { key: N, mods: Alt, chars: "\x1bn" }
+  - { key: O, mods: Alt, chars: "\x1bo" }
+  - { key: P, mods: Alt, chars: "\x1bp" }
+  - { key: Q, mods: Alt, chars: "\x1bq" }
+  - { key: R, mods: Alt, chars: "\x1br" }
+  - { key: S, mods: Alt, chars: "\x1bs" }
+  - { key: T, mods: Alt, chars: "\x1bt" }
+  - { key: U, mods: Alt, chars: "\x1bu" }
+  - { key: V, mods: Alt, chars: "\x1bv" }
+  - { key: W, mods: Alt, chars: "\x1bw" }
+  - { key: X, mods: Alt, chars: "\x1bx" }
+  - { key: Y, mods: Alt, chars: "\x1by" }
+  - { key: Z, mods: Alt, chars: "\x1bz" }
   - { key: Key0, mods: Alt, chars: "\x1b0" }
   - { key: Key1, mods: Alt, chars: "\x1b1" }
   - { key: Key2, mods: Alt, chars: "\x1b2" }
@@ -250,7 +305,9 @@ key_bindings:
   - { key: Key7, mods: Alt, chars: "\x1b7" }
   - { key: Key8, mods: Alt, chars: "\x1b8" }
   - { key: Key9, mods: Alt, chars: "\x1b9" }
-  - { key: Space, mods: Control, chars: "\x00" }
+  - { key: Paste,                   action: Paste                        }
+  - { key: Copy,                    action: Copy                         }
+  - { key: Space, mods: Control, chars: "\x00"                           }
   - { key: V,        mods: Command, action: Paste                        }
   - { key: C,        mods: Command, action: Copy                         }
   - { key: Q,        mods: Command, action: Quit                         }
