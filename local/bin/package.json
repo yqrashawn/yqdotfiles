@@ -11,6 +11,7 @@
     "kindergarten:server": "cd ~/workspace/OFFICE/kindergarten-server && yarn start",
     "lmv": "cd ~/workspace/OFFICE/gltflmvviewer && yarn dev",
     "bimv": "cd ~/workspace/OFFICE/bimsop-viewer-bimv && yarn start",
+    "bimdb": "cd ~/workspace/OFFICE/bimdatabase-1 && open http://localhost:5020 && yarn start",
     "zhongjian": "cd ~/workspace/OFFICE/zhongjiandianshang_demo && yarn dev"
   },
   "devDependencies": {
