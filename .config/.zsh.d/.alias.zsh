@@ -113,6 +113,9 @@ alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias cleanup_dsstore="find . -name '*.DS_Store' -type f -ls -delete"
 alias ungz='gunzip -k'
 
+#diff
+alias diff='diff -Naurbw'
+
 # Create a new directory and enter it
 function md() {
 	  mkdir -p "$@" && cd "$@"
