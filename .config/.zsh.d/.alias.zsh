@@ -52,11 +52,12 @@ alias httpg="http-server -g"
 # editors
 alias e='emacsclient -n'
 alias ee='emacsclient -nw'
+alias eee='fasd -f -e emacsclient -nw'
+alias demacs='emacs -Q -l ~/.emacs.d/init.debug.el'
 alias v='nvim'
 alias pyou='you-get -p mpv'
 alias mmpv='mpv -vo=opengl '
 alias vv='fasd -f -e nvim'
-alias eee='fasd -f -e emacsclient'
 alias t='emacsclient -t'
 alias vvv='vimr'
 alias m='mvim'
