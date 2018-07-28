@@ -2,7 +2,7 @@
 ;;
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
-
+
 ;;;### (autoloads nil "tabbar-flip" "tabbar-flip.el" (22611 58018
 ;;;;;;  0 0))
 ;;; Generated autoloads from tabbar-flip.el
@@ -40,7 +40,7 @@ current tab to stop cycling.
 \(fn &optional ARG)" t nil)
 
 ;;;***
-
+
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
