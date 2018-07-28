@@ -114,4 +114,6 @@ alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias cleanup_dsstore="find . -name '*.DS_Store' -type f -ls -delete"
 alias ungz='gunzip -k'
 
+#diff
+alias diff='diff -Naurbw'
 alias ssh='TERM=xterm-256color ssh'

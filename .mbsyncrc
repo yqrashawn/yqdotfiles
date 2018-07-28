@@ -33,42 +33,6 @@ Create Both
 Expunge Both
 SyncState *
 
-# Channel gmail-inbox
-# Master :gmail-remote:
-# Slave :gmail-local:
-# Patterns "INBOX"
-# Create Both
-# Expunge Both
-# SyncState *
-
-# Channel gmail-trash
-# Master :gmail-remote:"[Gmail]/Bin"
-# Slave :gmail-local:"[Gmail].Bin"
-# Create Both
-# Expunge Both
-# SyncState *
-
-# Channel gmail-sent
-# Master :gmail-remote:"[Gmail]/Sent Mail"
-# Slave :gmail-local:"[Gmail].Sent Mail"
-# Create Both
-# Expunge Both
-# SyncState *
-
-# Channel gmail-all
-# Master :gmail-remote:"[Gmail]/All Mail"
-# Slave :gmail-local:"[Gmail].All Mail"
-# Create Both
-# Expunge Both
-# SyncState *
-
-# Channel gmail-starred
-# Master :gmail-remote:"[Gmail]/Starred"
-# Slave :gmail-local:"[Gmail].Starred"
-# Create Both
-# Expunge Both
-# SyncState *
-
 Group gmail
 Channel gmail-folders
 # Channel gmail-inbox
