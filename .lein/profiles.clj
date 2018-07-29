@@ -2,6 +2,7 @@
         :plugins [[lein-ancient "0.6.15"]
                   [lein-kibit "0.1.6"]
                   [lein-cljsbuild "1.1.0"]
+                  [lein-cloverage "1.0.11"]
                   [lein-environ "1.1.0"]
                   [lein-bin "0.3.6"]
                   [datawalk "0.1.4-SNAPSHOT"]
