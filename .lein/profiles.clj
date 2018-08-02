@@ -17,7 +17,7 @@
         :injections [(require 'pjstadig.humane-test-output)
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
- :repl {:plugins [[cider/cider-nrepl "0.17.0"]
+ :repl {:plugins [[cider/cider-nrepl "0.18.0-SNAPSHOT"]
                   [refactor-nrepl "2.4.0-SNAPSHOT"]]
         :dependencies [#_^:displace [org.clojure/clojure "pp1.9.0"]
                        [criterium "0.4.4"]
