@@ -13,15 +13,21 @@
                   [lein-nsorg "0.2.0"]]
         :dependencies [[jonase/eastwood "0.2.9"]
                        [pjstadig/humane-test-output "0.8.3"]
+                       ;; [com.cemerick/pomegranate "0.2.2"]
+                       ;; [compliment "0.2.2"]
+                       ;; [me.raynes/fs "1.4.6"]
+                       ;; [cider/orchard "0.3.0"]
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
  :repl {:plugins [[cider/cider-nrepl "0.18.0-SNAPSHOT"]
-                  [refactor-nrepl "2.4.0-SNAPSHOT"]]
+                  [refactor-nrepl "2.4.0-SNAPSHOT"]
+                  [cider/piggieback "0.3.6"]]
         :dependencies [#_^:displace [org.clojure/clojure "pp1.9.0"]
                        [criterium "0.4.4"]
                        [cheshire "5.8.0"]
+                       [figwheel-sidecar "0.5.16"]
                        [org.clojure/tools.nrepl "0.2.13"]]
         :injections [(require '[cheshire.core :as json])]}
  :env {:squiggly {:checkers                 [:eastwood :kibit]
