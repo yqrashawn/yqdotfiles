@@ -5074,29 +5074,6 @@
                                         "name": "launch_mode_second_level",
                                         "type": "variable_if",
                                         "value": 0
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "l"
-                                },
-                                "to": [
-                                    {
-                                        "shell_command": "osascript -e ' tell application \"Alfred 3\" to run trigger \"launchChrome\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "launch_mode",
-                                        "type": "variable_if",
-                                        "value": 1
-                                    },
-                                    {
-                                        "name": "launch_mode_second_level",
-                                        "type": "variable_if",
-                                        "value": 0
                                     },
                                     {
                                         "bundle_identifiers": [
