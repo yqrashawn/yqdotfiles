@@ -5282,12 +5282,6 @@
                                         "name": "launch_mode_second_level",
                                         "type": "variable_if",
                                         "value": 1
-                                    },
-                                    {
-                                        "bundle_identifiers": [
-                                            "^org\\.gnu\\.Emacs$"
-                                        ],
-                                        "type": "frontmost_application_unless"
                                     }
                                 ],
                                 "from": {
@@ -5311,6 +5305,12 @@
                                         "name": "launch_mode_second_level",
                                         "type": "variable_if",
                                         "value": 0
+                                    },
+                                    {
+                                        "bundle_identifiers": [
+                                            "^org\\.gnu\\.Emacs$"
+                                        ],
+                                        "type": "frontmost_application_unless"
                                     }
                                 ],
                                 "from": {
