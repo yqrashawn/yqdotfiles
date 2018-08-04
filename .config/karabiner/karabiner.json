@@ -5188,7 +5188,7 @@
                                     {
                                         "name": "launch_mode_second_level",
                                         "type": "variable_if",
-                                        "value": 1
+                                        "value": 0
                                     },
                                     {
                                         "bundle_identifiers": [
