@@ -17,6 +17,7 @@
                        ;; [compliment "0.2.2"]
                        ;; [me.raynes/fs "1.4.6"]
                        ;; [cider/orchard "0.3.0"]
+                       [cider/piggieback "0.3.6"]
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
                      (pjstadig.humane-test-output/activate!)]
