@@ -6,6 +6,7 @@
                   ;; [lein-cloverage "1.0.11"]
                   ;; [lein-environ "1.1.0"]
                   [lein-bin "0.3.6"]
+                  [lein-pdo "0.1.1"]
                   ;; [lein-midje "3.2.1"]
                   ;; [datawalk "0.1.4-SNAPSHOT"]
                   [lein-auto "0.1.3"]
