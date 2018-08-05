@@ -48,6 +48,7 @@ chunkc core::load tiling.so
 # chunkc core::load ffm.so
 
 chunkc tiling::rule --owner Alfred --name "Alfred Preferences" --state float &
+chunkc tiling::rule --owner "The Unarchiver" --name "The Unarchiver" --state float &
 chunkc tiling::rule --owner Finder --name Copy --state float &
 chunkc tiling::rule --owner Emacs --except "^$" --state tile &
 chunkc tiling::rule --owner WeChat --state float &
