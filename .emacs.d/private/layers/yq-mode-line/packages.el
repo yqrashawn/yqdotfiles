@@ -149,15 +149,15 @@
 
                  ;; workspace eyebrowse
                  '(:eval (if (setq-local yq-eyebrowse-config-name
-                                       (mapconcat 'identity
-                                                  (let* ((num (eyebrowse--get 'current-slot))
-                                                         (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
-                                                         (str (if (and tag (< 0 (length tag)))
-                                                                  tag
-                                                                (when num (int-to-string num)))))
-                                                    (or (when spaceline-workspace-numbers-unicode
-                                                          (spaceline--unicode-number str)))
-                                                    (list str)) ""))
+                                         (mapconcat 'identity
+                                                    (let* ((num (eyebrowse--get 'current-slot))
+                                                           (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
+                                                           (str (if (and tag (< 0 (length tag)))
+                                                                    tag
+                                                                  (when num (int-to-string num)))))
+                                                      (or (when spaceline-workspace-numbers-unicode
+                                                            (spaceline--unicode-number str)))
+                                                      (list str)) ""))
                              (propertize (concat "[" yq-eyebrowse-config-name "|") 'face 'font-lock-type-face)))
 
                  ;; '(:eval (let* ((num (eyebrowse--get 'current-slot))
