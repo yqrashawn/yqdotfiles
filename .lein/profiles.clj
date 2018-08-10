@@ -22,7 +22,16 @@
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
                      (pjstadig.humane-test-output/activate!)]
-        :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
+        :aliases {"slamhound" ["run" "-m" "slam.hound"]}
+        :mirrors {#"clojars"
+                  {:name "Clojar USTC"
+                   ;; :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"
+                   :url "https://mirrors.ustc.edu.cn/clojars/"
+                   :repo-manager true}
+                  "central"
+                  {:name "central aliyun"
+                   :url "https://maven.aliyun.com/nexus/content/groups/public/"
+                   :repo-manager true}}}
  :repl {:plugins [[cider/cider-nrepl "0.18.0-SNAPSHOT"]
                   [refactor-nrepl "2.4.0-SNAPSHOT"]
                   [cider/piggieback "0.3.6"]]
