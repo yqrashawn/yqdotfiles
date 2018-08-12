@@ -1,13 +1,12 @@
 {:user {:pedantic? :ranges
-        :plugins [
-                  ;; [lein-ancient "0.6.15"]
+        :plugins [;; [lein-ancient "0.6.15"]
+                  [cider/cider-nrepl "0.18.0-SNAPSHOT"]
                   [lein-kibit "0.1.6"]
                   ;; [lein-cljsbuild "1.1.0"]
                   ;; [lein-cloverage "1.0.11"]
                   ;; [lein-environ "1.1.0"]
                   [lein-bin "0.3.6"]
                   [lein-pdo "0.1.1"]
-                  ;; [lein-midje "3.2.1"]
                   ;; [datawalk "0.1.4-SNAPSHOT"]
                   [lein-auto "0.1.3"]
                   [atroche/lein-ns-dep-graph "0.2.0-SNAPSHOT"]
@@ -16,9 +15,7 @@
                        [pjstadig/humane-test-output "0.8.3"]
                        ;; [com.cemerick/pomegranate "0.2.2"]
                        ;; [compliment "0.2.2"]
-                       ;; [me.raynes/fs "1.4.6"]
                        ;; [cider/orchard "0.3.0"]
-                       [cider/piggieback "0.3.6"]
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
                      (pjstadig.humane-test-output/activate!)]
@@ -33,12 +30,10 @@
                    :url "https://maven.aliyun.com/nexus/content/groups/public/"
                    :repo-manager true}}}
  :repl {:plugins [[cider/cider-nrepl "0.18.0-SNAPSHOT"]
-                  [refactor-nrepl "2.4.0-SNAPSHOT"]
-                  [cider/piggieback "0.3.6"]]
-        :dependencies [#_^:displace [org.clojure/clojure "pp1.9.0"]
-                       [criterium "0.4.4"]
-                       [cheshire "5.8.0"]
-                       [figwheel-sidecar "0.5.16"]
+                  [figwheel-sidecar "0.5.17-SNAPSHOT"]
+                  [cider/piggieback "0.3.8"]
+                  [refactor-nrepl "2.4.0-SNAPSHOT"]]
+        :dependencies [[figwheel-sidecar "0.5.16"]
                        [org.clojure/tools.nrepl "0.2.13"]]
         :injections [(require '[cheshire.core :as json])]}
  :env {:squiggly {:checkers                 [:eastwood :kibit]
