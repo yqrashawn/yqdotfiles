@@ -7012,11 +7012,11 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "quote"
+                                    "key_code": "return_or_enter"
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"helpSearch\" in workflow \"com.tedwise.menubarsearch\" with argument \"\"'"
+                                        "shell_command": "osascript -e 'tell application \"Alfred 3\" to run trigger \"web searches\" in workflow \"nikivi.web.searches\" with argument \"\"'"
                                     }
                                 ],
                                 "type": "basic"
