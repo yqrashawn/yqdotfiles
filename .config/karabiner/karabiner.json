@@ -1244,19 +1244,19 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                      "pointing_button": "button1"
+                                        "pointing_button": "button1"
                                     },
                                     {
-                                      "pointing_button": "button1"
+                                        "pointing_button": "button1"
                                     },
                                     {
-                                      "key_code": "grave_accent_and_tilde",
-                                      "modifiers": [
-                                        "control",
-                                        "command",
-                                        "option",
-                                        "shift"
-                                      ]
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": [
+                                            "control",
+                                            "command",
+                                            "option",
+                                            "shift"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -5087,10 +5087,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "grave_accent_and_tilde",
-                                      "modifiers": [
-                                        "left_command"
-                                      ]
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -5240,10 +5240,10 @@
                                 },
                                 "to": [
                                     {
-                                      "key_code": "grave_accent_and_tilde",
-                                      "modifiers": [
-                                        "left_command"
-                                      ]
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
