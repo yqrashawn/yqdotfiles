@@ -1576,6 +1576,36 @@
                         ]
                     },
                     {
+                        "description": "Change left shift to switch input method",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "left_shift",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                      "key_code": "z",
+                                      "modifiers": [
+                                        "control",
+                                        "shift"
+                                      ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Change caps_lock to control when used as modifier, escape when used alone",
                         "manipulators": [
                             {
