@@ -13,7 +13,8 @@
     "lmvns": "cd ~/workspace/OFFICE/gltflmvviewer && yarn devns",
     "bimv": "cd ~/workspace/OFFICE/bimsop-viewer-bimv && yarn start",
     "bimdb": "cd ~/workspace/OFFICE/bimdatabase-1 && open http://localhost:5020 && yarn start",
-    "zhongjian": "cd ~/workspace/OFFICE/zhongjiandianshang_demo && yarn dev"
+    "zhongjian": "cd ~/workspace/OFFICE/zhongjiandianshang_demo && yarn dev",
+    "paas": "cd ~/workspace/OFFICE/bimtransPAAS/src/ && yarn dev"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2"

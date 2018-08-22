@@ -1008,6 +1008,7 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com\\.google\\.Chrome$",
+                                            "^org\\.chromium\\.Chromium$",
                                             "^com\\.google\\.Chrome\\.canary$"
                                         ],
                                         "type": "frontmost_application_if"
