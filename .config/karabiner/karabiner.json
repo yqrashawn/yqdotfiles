@@ -1595,11 +1595,11 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                      "key_code": "z",
-                                      "modifiers": [
-                                        "control",
-                                        "shift"
-                                      ]
+                                        "key_code": "z",
+                                        "modifiers": [
+                                            "control",
+                                            "shift"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
