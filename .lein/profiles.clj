@@ -34,6 +34,7 @@
                   [cider/piggieback "0.3.8"]
                   [refactor-nrepl "2.4.0-SNAPSHOT"]]
         :dependencies [[figwheel-sidecar "0.5.16"]
+                       [cheshire "5.8.0"]
                        [org.clojure/tools.nrepl "0.2.13"]]
         :injections [(require '[cheshire.core :as json])]}
  :env {:squiggly {:checkers                 [:eastwood :kibit]
