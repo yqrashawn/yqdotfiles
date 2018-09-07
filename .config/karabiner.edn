@@ -1,72 +1,4 @@
-{:devices {:filco-minila [{:product_id 34050 :vendor_id 2652}]
-           :hhkb-bt [{:vendor_id 1278 :product_id 51966}]
-           :hhkb [{:vendor_id 2131 :product_id 256}]}
-
- :applications {:emacs-mode-disable-app [ "^org\\.gnu\\.Emacs$",
-                                         "^org\\.gnu\\.AquamacsEmacs$",
-                                         "^org\\.gnu\\.Aquamacs$",
-                                         "^org\\.pqrs\\.unknownapp.conkeror$",
-                                         "^com\\.microsoft\\.rdc$",
-                                         "^com\\.microsoft\\.rdc\\.mac$",
-                                         "^com\\.microsoft\\.rdc\\.macos$",
-                                         "^com\\.microsoft\\.rdc\\.osx\\.beta$",
-                                         "^net\\.sf\\.cord$",
-                                         "^com\\.thinomenon\\.RemoteDesktopConnection$",
-                                         "^com\\.itap-mobile\\.qmote$",
-                                         "^com\\.nulana\\.remotixmac$",
-                                         "^com\\.p5sys\\.jump\\.mac\\.viewer$",
-                                         "^com\\.p5sys\\.jump\\.mac\\.viewer\\.web$",
-                                         "^com\\.teamviewer\\.TeamViewer$",
-                                         "^com\\.vmware\\.horizon$",
-                                         "^com\\.2X\\.Client\\.Mac$",
-                                         "^com\\.apple\\.Terminal$",
-                                         "^com\\.googlecode\\.iterm2$",
-                                         "^co\\.zeit\\.hyperterm$",
-                                         "^co\\.zeit\\.hyper$",
-                                         "^io\\.alacritty$",
-                                         "^net\\.kovidgoyal\\.kitty$",
-                                         "^org\\.vim\\.",
-                                         "^com\\.qvacua\\.VimR$",
-                                         "^com\\.vmware\\.fusion$",
-                                         "^com\\.vmware\\.horizon$",
-                                         "^com\\.vmware\\.view$",
-                                         "^com\\.parallels\\.desktop$",
-                                         "^com\\.parallels\\.vm$",
-                                         "^com\\.parallels\\.desktop\\.console$",
-                                         "^org\\.virtualbox\\.app\\.VirtualBoxVM$",
-                                         "^com\\.vmware\\.proxyApp\\.",
-                                         "^com\\.parallels\\.winapp\\.",
-                                         "^org\\.x\\.X11$",
-                                         "^com\\.apple\\.x11$",
-                                         "^org\\.macosforge\\.xquartz\\.X11$",
-                                         "^org\\.macports\\.X11$",
-                                         "^com\\.sublimetext\\.",
-                                         "^com\\.microsoft\\.VSCode$"]
-                :Emacs ["^org\\.gnu\\.Emacs$"
-                        "^org\\.gnu\\.AquamacsEmacs$"
-                        "^org\\.gnu\\.Aquamacs$"]
-                :Chromes ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
-                :Terminals ["^com\\.apple\\.Terminal$"
-                            "^com\\.googlecode\\.iterm2$"
-                            "^co\\.zeit\\.hyperterm$"
-                            "^co\\.zeit\\.hyper$"
-                            "^io\\.alacritty$"
-                            "^net\\.kovidgoyal\\.kitty$"]
-                :vim-mode-disabled-application ["^com\\.apple\\.Terminal$"
-                                                "^com\\.googlecode\\.iterm2$"
-                                                "^co\\.zeit\\.hyperterm$"
-                                                "^co\\.zeit\\.hyper$"
-                                                "^io\\.alacritty$"
-                                                "^net\\.kovidgoyal\\.kitty$"
-                                                "^org\\.vim\\."
-                                                "^com\\.qvacua\\.VimR$"]
-                :Finder ["^com\\.apple\\.finder$"]
-                :Browsers ["^org\\.mozilla\\.firefox$"
-                           "^com\\.google\\.Chrome$"
-                           "^com\\.google\\.Chrome\\.canary$"
-                           "^com\\.apple\\.Safari$"]}
-
- :templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+{:templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"}
  :simlayers {:vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
@@ -139,6 +71,7 @@
                  [:k [:alf "chromeHistory" "thomasupton.chrome-history"] :alfred-mode]
                  [:l :!CTslash :finder-alfred-mode]
                  [:l :!COi :browsers-alfred-mode]
+                 [:y :!!grave_accent_and_tilde :alfred-mode]
                  [:o :!CTOS0 :alfred-mode]
                  [:0 [:alf "pasteBack" "yqrashawn.com.ewe"] :alfred-mode]
                  [:semicolon [:alf "localport" "in.fech.localport"] :alfred-mode]
@@ -232,4 +165,73 @@
                  [:!T#OSp :up_arrow :!emacs-mode-disable-app]
                  [:!T#Sv :page_down :!emacs-mode-disable-app]
                  [:!T#Sa :home :!emacs-mode-disable-app]
-                 [:!T#Se :end :!emacs-mode-disable-app]]}]}
+                 [:!T#Se :end :!emacs-mode-disable-app]]}
+        {:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
+         :rules [[:!Cspacebar :!Ctab]
+                 [:!CTspacebar :!CStab]]}]
+ :devices {:filco-minila [{:product_id 34050 :vendor_id 2652}]
+           :hhkb-bt [{:vendor_id 1278 :product_id 51966}]
+           :hhkb [{:vendor_id 2131 :product_id 256}]}
+ :applications {:emacs-mode-disable-app [ "^org\\.gnu\\.Emacs$",
+                                         "^org\\.gnu\\.AquamacsEmacs$",
+                                         "^org\\.gnu\\.Aquamacs$",
+                                         "^org\\.pqrs\\.unknownapp.conkeror$",
+                                         "^com\\.microsoft\\.rdc$",
+                                         "^com\\.microsoft\\.rdc\\.mac$",
+                                         "^com\\.microsoft\\.rdc\\.macos$",
+                                         "^com\\.microsoft\\.rdc\\.osx\\.beta$",
+                                         "^net\\.sf\\.cord$",
+                                         "^com\\.thinomenon\\.RemoteDesktopConnection$",
+                                         "^com\\.itap-mobile\\.qmote$",
+                                         "^com\\.nulana\\.remotixmac$",
+                                         "^com\\.p5sys\\.jump\\.mac\\.viewer$",
+                                         "^com\\.p5sys\\.jump\\.mac\\.viewer\\.web$",
+                                         "^com\\.teamviewer\\.TeamViewer$",
+                                         "^com\\.vmware\\.horizon$",
+                                         "^com\\.2X\\.Client\\.Mac$",
+                                         "^com\\.apple\\.Terminal$",
+                                         "^com\\.googlecode\\.iterm2$",
+                                         "^co\\.zeit\\.hyperterm$",
+                                         "^co\\.zeit\\.hyper$",
+                                         "^io\\.alacritty$",
+                                         "^net\\.kovidgoyal\\.kitty$",
+                                         "^org\\.vim\\.",
+                                         "^com\\.qvacua\\.VimR$",
+                                         "^com\\.vmware\\.fusion$",
+                                         "^com\\.vmware\\.horizon$",
+                                         "^com\\.vmware\\.view$",
+                                         "^com\\.parallels\\.desktop$",
+                                         "^com\\.parallels\\.vm$",
+                                         "^com\\.parallels\\.desktop\\.console$",
+                                         "^org\\.virtualbox\\.app\\.VirtualBoxVM$",
+                                         "^com\\.vmware\\.proxyApp\\.",
+                                         "^com\\.parallels\\.winapp\\.",
+                                         "^org\\.x\\.X11$",
+                                         "^com\\.apple\\.x11$",
+                                         "^org\\.macosforge\\.xquartz\\.X11$",
+                                         "^org\\.macports\\.X11$",
+                                         "^com\\.sublimetext\\.",
+                                         "^com\\.microsoft\\.VSCode$"]
+                :Emacs ["^org\\.gnu\\.Emacs$"
+                        "^org\\.gnu\\.AquamacsEmacs$"
+                        "^org\\.gnu\\.Aquamacs$"]
+                :Chromes ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
+                :Terminals ["^com\\.apple\\.Terminal$"
+                            "^com\\.googlecode\\.iterm2$"
+                            "^co\\.zeit\\.hyperterm$"
+                            "^co\\.zeit\\.hyper$"
+                            "^io\\.alacritty$"
+                            "^net\\.kovidgoyal\\.kitty$"]
+                :vim-mode-disabled-application ["^com\\.apple\\.Terminal$"
+                                                "^com\\.googlecode\\.iterm2$"
+                                                "^co\\.zeit\\.hyperterm$"
+                                                "^co\\.zeit\\.hyper$"
+                                                "^io\\.alacritty$"
+                                                "^net\\.kovidgoyal\\.kitty$"
+                                                "^org\\.vim\\."
+                                                "^com\\.qvacua\\.VimR$"]
+                :Finder ["^com\\.apple\\.finder$"]
+                :Browsers ["^org\\.mozilla\\.firefox$"
+                           "^com\\.google\\.Chrome$"
+                           "^com\\.google\\.Chrome\\.canary$"
+                           "^com\\.apple\\.Safari$"]}}
