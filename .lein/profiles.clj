@@ -3,7 +3,7 @@
                   [cider/cider-nrepl "0.18.0-SNAPSHOT"]
                   [lein-kibit "0.1.6"]
                   ;; [lein-cljsbuild "1.1.0"]
-                  [lein-cloverage "1.0.13"]
+                  ;; [lein-cloverage "1.0.13"]
                   ;; [lein-environ "1.1.0"]
                   [lein-bin "0.3.6"]
                   [lein-pdo "0.1.1"]
