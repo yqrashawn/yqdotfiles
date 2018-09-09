@@ -94,7 +94,12 @@
                  [:s [:!Tq :s] :tmux-winmove-mode]
                  [:m [:!Tq :z] :tmux-winmove-mode]
                  [:b [:!Tq :x] :tmux-winmove-mode]
-                 [:c [:!Tq :c] :tmux-winmove-mode]]}
+                 [:c [:!Tq :c] :tmux-winmove-mode]
+                 [:1 [:!Tq :1] :tmux-winmove-mode]
+                 [:2 [:!Tq :2] :tmux-winmove-mode]
+                 [:3 [:!Tq :3] :tmux-winmove-mode]
+                 [:4 [:!Tq :4] :tmux-winmove-mode]
+                 [:5 [:!Tq :5] :tmux-winmove-mode]]}
         {:des "chunkwm mode"
          :rules [[:tab ["chunkwm-mode" 1] nil {:afterup ["chunkwm-mode" 0] ["chunkwm-move-mode" 0] ["chunkwm-scale-mode" 0] :alone :tab}]
                  [:f ["chunkwm-move-mode" 1] ["chunkwm-mode" 1] {:afterup ["chunkwm-move-mode" 0]}]
@@ -164,8 +169,8 @@
                  [:!T#OSn :down_arrow :!emacs-mode-disable-app]
                  [:!T#OSp :up_arrow :!emacs-mode-disable-app]
                  [:!T#Sv :page_down :!emacs-mode-disable-app]
-                 [:!T#Sa :home :!emacs-mode-disable-app]
-                 [:!T#Se :end :!emacs-mode-disable-app]]}
+                 [:!T#Sa :!Cleft_arrow :!emacs-mode-disable-app]
+                 [:!T#Se :!Cright_arrow :!emacs-mode-disable-app]]}
         {:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
          :rules [[:!Cspacebar :!Ctab]
                  [:!CTspacebar :!CStab]]}]
