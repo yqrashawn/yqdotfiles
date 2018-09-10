@@ -7,7 +7,6 @@
              :tmux-winmove-mode {:key :q :condi :Terminals}
              :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]}}
              :comma-mode {:key :comma}
-             :chrome-mode {:key :tab :condi :Chromes}
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}}
@@ -56,6 +55,8 @@
          :rules [[:right_command :right_command nil {:alone [:!Ctab]}]]}
         {:des "Change left_option to f18 when used alone"
          :rules [[:left_option :left_option nil {:alone [:f18]}]]}
+        {:des "Quit application by pressing command-q twice" :rules [[:!C#Pq :!Cq ["command-q" 1]]
+                                                                     [:!C#Pq ["command-q" 1] nil {:delayed {:invoked ["command-q" 0] :canceled ["commandq" 0]}}]]}
         {:des "Change right_option to switch to second recent application when used alone"
          :rules [[:right_option :right_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
         {:des "some simultaneous keys"
@@ -101,9 +102,9 @@
                  [:4 [:!Tq :4] :tmux-winmove-mode]
                  [:5 [:!Tq :5] :tmux-winmove-mode]]}
         {:des "chunkwm mode"
-         :rules [[:tab ["chunkwm-mode" 1] nil {:afterup ["chunkwm-mode" 0] ["chunkwm-move-mode" 0] ["chunkwm-scale-mode" 0] :alone :tab}]
-                 [:f ["chunkwm-move-mode" 1] ["chunkwm-mode" 1] {:afterup ["chunkwm-move-mode" 0]}]
-                 [:c ["chunkwm-scale-mode" 1] ["chunkwm-mode" 1] {:afterup ["chunkwm-scale-mode" 0]}]
+         :rules [[:tab ["tab-mode" 1] nil {:afterup ["tab-mode" 0] ["chunkwm-move-mode" 0] ["chunkwm-scale-mode" 0] :alone :tab}]
+                 [:f ["chunkwm-move-mode" 1] ["tab-mode" 1] {:afterup ["chunkwm-move-mode" 0]}]
+                 [:c ["chunkwm-scale-mode" 1] ["tab-mode" 1] {:afterup ["chunkwm-scale-mode" 0]}]
                  [:h "/usr/local/bin/chunkc tiling::window --warp west" ["chunkwm-move-mode" 1]]
                  [:j "/usr/local/bin/chunkc tiling::window --warp south" ["chunkwm-move-mode" 1]]
                  [:k "/usr/local/bin/chunkc tiling::window --warp north" ["chunkwm-move-mode" 1]]
@@ -112,20 +113,20 @@
                  [:j "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge south" ["chunkwm-scale-mode" 1]]
                  [:k "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge north" ["chunkwm-scale-mode" 1]]
                  [:l "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge east" ["chunkwm-scale-mode" 1]]
-                 [:h "/usr/local/bin/chunkc tiling::window --focus west" ["chunkwm-mode" 1]]
-                 [:j "/usr/local/bin/chunkc tiling::window --focus south" ["chunkwm-mode" 1]]
-                 [:k "/usr/local/bin/chunkc tiling::window --focus north" ["chunkwm-mode" 1]]
-                 [:l "/usr/local/bin/chunkc tiling::window --focus east" ["chunkwm-mode" 1]]
-                 [:n "/usr/local/bin/chunkc tiling::window --focus next" ["chunkwm-mode" 1]]
-                 [:p "/usr/local/bin/chunkc tiling::window --focus prev" ["chunkwm-mode" 1]]
-                 [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90" ["chunkwm-mode" 1]]
-                 [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen" ["chunkwm-mode" 1]]
-                 [:a "/usr/local/bin/chunkc tiling::window --toggle float" ["chunkwm-mode" 1]]
-                 [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp" ["chunkwm-mode" 1]]
-                 [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle" ["chunkwm-mode" 1]]
-                 [:x "/usr/local/bin/chunkc tiling::window --close" ["chunkwm-mode" 1]]
-                 [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev" ["chunkwm-mode" 1]]
-                 [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next" ["chunkwm-mode" 1]]]}
+                 [:h "/usr/local/bin/chunkc tiling::window --focus west" ["tab-mode" 1]]
+                 [:j "/usr/local/bin/chunkc tiling::window --focus south" ["tab-mode" 1]]
+                 [:k "/usr/local/bin/chunkc tiling::window --focus north" ["tab-mode" 1]]
+                 [:l "/usr/local/bin/chunkc tiling::window --focus east" ["tab-mode" 1]]
+                 [:n "/usr/local/bin/chunkc tiling::window --focus next" ["tab-mode" 1]]
+                 [:p "/usr/local/bin/chunkc tiling::window --focus prev" ["tab-mode" 1]]
+                 [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90" ["tab-mode" 1]]
+                 [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen" ["tab-mode" 1]]
+                 [:a "/usr/local/bin/chunkc tiling::window --toggle float" ["tab-mode" 1]]
+                 [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp" ["tab-mode" 1]]
+                 [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle" ["tab-mode" 1]]
+                 [:x "/usr/local/bin/chunkc tiling::window --close" ["tab-mode" 1]]
+                 [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev" ["tab-mode" 1]]
+                 [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next" ["tab-mode" 1]]]}
         {:des "comma mode"
          :rules [[:a :open_bracket :comma-mode]
                  [:s :close_bracket :comma-mode]
@@ -146,13 +147,13 @@
                  [:e :!Sopen_bracket :period-mode]
                  [:r :!Sclose_bracket :period-mode]]}
         {:des "chrome debug mode"
-         :rules [[:q :!Csemicolon [:chrome-mode :Chromes]]
-                 [:w :!CSsemicolon [:chrome-mode :Chromes]]
-                 [:e :!Cquote [:chrome-mode :Chromes]]
-                 [:r :!Cf8 [:chrome-mode :Chromes]]
-                 [:1 :f8 [:chrome-mode :Chromes]]
-                 [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return" [:chrome-mode :Chromes]]
-                 [:3 :f9 [:chrome-mode :Chromes]]]}
+         :rules [[:q :!Csemicolon [["tab-mode" 1] :Chromes]]
+                 [:w :!CSsemicolon [["tab-mode" 1] :Chromes]]
+                 [:e :!Cquote [["tab-mode" 1] :Chromes]]
+                 [:r :!Cf8 [["tab-mode" 1] :Chromes]]
+                 [:1 :f8 [["tab-mode" 1] :Chromes]]
+                 [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return" [["tab-mode" 1] :Chromes]]
+                 [:3 :f9 [["tab-mode" 1] :Chromes]]]}
         {:des "Mouse button"
          :rules [[{:pkey :button5} :mission_control]
                  [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
@@ -169,6 +170,7 @@
                  [:!T#OSn :down_arrow :!emacs-mode-disable-app]
                  [:!T#OSp :up_arrow :!emacs-mode-disable-app]
                  [:!T#Sv :page_down :!emacs-mode-disable-app]
+                 [:!T#Sy :!Cv :!Emacs]
                  [:!T#Sa :!Cleft_arrow :!emacs-mode-disable-app]
                  [:!T#Se :!Cright_arrow :!emacs-mode-disable-app]]}
         {:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
