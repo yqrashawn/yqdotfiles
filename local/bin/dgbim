@@ -31,7 +31,7 @@ def downloadImage(uri)
 end
 
 def unzip(filePath)
-  if $NEED_GZIP
+  if $NEED_GZIP and File.file?(filePath)
     Zlib::GzipReader.open(filePath) { |gz|
       decompressed = gz.read
       File.open( filePath , 'w'){|file| file.write(decompressed)}
