@@ -5,7 +5,7 @@ ascii_composer:
     Control_L: noop
     Control_R: noop
     Eisu_toggle: noop
-    Shift_L: commit_code
+    Shift_L: noop
     Shift_R: commit_code
 config_version: 0.36.custom.1711423051
 customization: 1711423051

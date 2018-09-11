@@ -47,6 +47,7 @@ alias ttmux='tmuxinator start projects'
 # alias server='http-server'
 alias serverp='http-server -p'
 alias serv="live-server --port=8081"
+# alias serv="devd -ol ."
 alias httpg="http-server -g"
 
 # editors
