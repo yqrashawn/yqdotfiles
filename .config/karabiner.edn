@@ -55,7 +55,7 @@
          :rules [[:right_command :right_command nil {:alone [:!Ctab]}]]}
         {:des "Change left_option to f18 when used alone"
          :rules [[:left_option :left_option nil {:alone [:f18]}]]}
-        {:des "Quit application by pressing command-q twice" :rules [[:!C#Pq :!Cq ["command-q" 1]]
+        {:des "Quit application by pressing command-q twice" :rules [[:!C#Pq [:!Cq ["command-q" 0]] ["command-q" 1]]
                                                                      [:!C#Pq ["command-q" 1] nil {:delayed {:invoked ["command-q" 0] :canceled ["commandq" 0]}}]]}
         {:des "Change right_option to switch to second recent application when used alone"
          :rules [[:right_option :right_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
