@@ -50,7 +50,7 @@
         {:des "HHKB, FILCO MINILA Change left control to esc if alone"
          :rules [[:##left_control :left_control [:hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
         {:des "Change left shift to switch input method"
-         :rules [[:left_shift :left_shift nil {:alone :!TSz}]]}
+         :rules [[:right_shift :right_shift nil {:alone :!TSz}]]}
         {:des "Change right_command to command-tab when used alone"
          :rules [[:right_command :right_command nil {:alone [:!Ctab]}]]}
         {:des "Change left_option to f18 when used alone"
