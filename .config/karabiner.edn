@@ -30,6 +30,9 @@
                  [:##4 :!SCright_arrow :vi-visual-mode]
                  [:##open_bracket :!SOup_arrow :vi-visual-mode]
                  [:##close_bracket :!SOdown_arrow :vi-visual-mode]]}
+        {:des "Emacs switch buffer"
+         :rules [[:tab :!Ttab [:Emacs :period-mode]]
+                 [:tab :!TStab [:Emacs :comma-mode]]]}
         {:des "launcher mode"
          :rules [[:j [:launch "Alacritty"] :launch-mode]
                  [:k [:launch "Emacs"] :launch-mode]
