@@ -43,6 +43,7 @@
                  [:f [:launch "Finder"] :launch-mode]
                  [:9 [:launch "PDFExpert"] :launch-mode]
                  [:comma [:launch "Safari"] :launch-mode]
+                 [:h [:launch "Safari"] :launch-mode]
                  [:period [:launch "Paw"] :launch-mode]
                  [:equal_sign [:launch "Textual"] :launch-mode]
                  [:8 [:launch "KEEvents"] :launch-mode]
