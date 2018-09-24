@@ -1,5 +1,9 @@
 {:templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"}
+ :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
+                                         {:set ["chunkwm-scale-mode" 0]}]}
+          :chunkwm-move-mode {:key :f :condi :tab-mode}
+          :chunkwm-scale-mode {:key :c :condi :tab-mode}}
  :simlayers {:vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
@@ -107,31 +111,28 @@
                  [:4 [:!Tq :4] :tmux-winmove-mode]
                  [:5 [:!Tq :5] :tmux-winmove-mode]]}
         {:des "chunkwm mode"
-         :rules [[:tab ["tab-mode" 1] nil {:afterup ["tab-mode" 0] ["chunkwm-move-mode" 0] ["chunkwm-scale-mode" 0] :alone :tab}]
-                 [:f ["chunkwm-move-mode" 1] ["tab-mode" 1] {:afterup ["chunkwm-move-mode" 0]}]
-                 [:c ["chunkwm-scale-mode" 1] ["tab-mode" 1] {:afterup ["chunkwm-scale-mode" 0]}]
-                 [:h "/usr/local/bin/chunkc tiling::window --warp west" ["chunkwm-move-mode" 1]]
-                 [:j "/usr/local/bin/chunkc tiling::window --warp south" ["chunkwm-move-mode" 1]]
-                 [:k "/usr/local/bin/chunkc tiling::window --warp north" ["chunkwm-move-mode" 1]]
-                 [:l "/usr/local/bin/chunkc tiling::window --warp east" ["chunkwm-move-mode" 1]]
-                 [:h "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge west" ["chunkwm-scale-mode" 1]]
-                 [:j "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge south" ["chunkwm-scale-mode" 1]]
-                 [:k "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge north" ["chunkwm-scale-mode" 1]]
-                 [:l "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge east" ["chunkwm-scale-mode" 1]]
-                 [:h "/usr/local/bin/chunkc tiling::window --focus west" ["tab-mode" 1]]
-                 [:j "/usr/local/bin/chunkc tiling::window --focus south" ["tab-mode" 1]]
-                 [:k "/usr/local/bin/chunkc tiling::window --focus north" ["tab-mode" 1]]
-                 [:l "/usr/local/bin/chunkc tiling::window --focus east" ["tab-mode" 1]]
-                 [:n "/usr/local/bin/chunkc tiling::window --focus next" ["tab-mode" 1]]
-                 [:p "/usr/local/bin/chunkc tiling::window --focus prev" ["tab-mode" 1]]
-                 [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90" ["tab-mode" 1]]
-                 [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen" ["tab-mode" 1]]
-                 [:a "/usr/local/bin/chunkc tiling::window --toggle float" ["tab-mode" 1]]
-                 [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp" ["tab-mode" 1]]
-                 [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle" ["tab-mode" 1]]
-                 [:x "/usr/local/bin/chunkc tiling::window --close" ["tab-mode" 1]]
-                 [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev" ["tab-mode" 1]]
-                 [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next" ["tab-mode" 1]]]}
+         :rules [[:h "/usr/local/bin/chunkc tiling::window --warp west" :chunkwm-move-mode]
+                 [:j "/usr/local/bin/chunkc tiling::window --warp south" :chunkwm-move-mode]
+                 [:k "/usr/local/bin/chunkc tiling::window --warp north" :chunkwm-move-mode]
+                 [:l "/usr/local/bin/chunkc tiling::window --warp east" :chunkwm-move-mode]
+                 [:h "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge west" :chunkwm-scale-mode]
+                 [:j "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge south" :chunkwm-scale-mode]
+                 [:k "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge north" :chunkwm-scale-mode]
+                 [:l "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge east" :chunkwm-scale-mode]
+                 [:h "/usr/local/bin/chunkc tiling::window --focus west" :tab-mode]
+                 [:j "/usr/local/bin/chunkc tiling::window --focus south" :tab-mode]
+                 [:k "/usr/local/bin/chunkc tiling::window --focus north" :tab-mode]
+                 [:l "/usr/local/bin/chunkc tiling::window --focus east" :tab-mode]
+                 [:n "/usr/local/bin/chunkc tiling::window --focus next" :tab-mode]
+                 [:p "/usr/local/bin/chunkc tiling::window --focus prev" :tab-mode]
+                 [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90" :tab-mode]
+                 [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen" :tab-mode]
+                 [:a "/usr/local/bin/chunkc tiling::window --toggle float" :tab-mode]
+                 [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp" :tab-mode]
+                 [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle" :tab-mode]
+                 [:x "/usr/local/bin/chunkc tiling::window --close" :tab-mode]
+                 [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev" :tab-mode]
+                 [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next" :tab-mode]]}
         {:des "comma mode"
          :rules [[:a :open_bracket :comma-mode]
                  [:s :close_bracket :comma-mode]
