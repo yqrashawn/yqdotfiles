@@ -4,7 +4,8 @@
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}}
- :simlayers {:s-mode {:key :s}
+ :simlayers {:a-mode {:key :a}
+             :s-mode {:key :s}
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
@@ -16,7 +17,15 @@
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}}
- :main [{:des "s-mode in emacs, awesome-tab"
+ :main [{:des "a-mode in emacs, ivy-switch-buffer"
+         :rules [[:condi :a-mode :Emacs]
+                 [:h [:!Tx :!T8 :h]]
+                 [:j [:!Tx :!T8 :j]]
+                 [:k [:!Tx :!T8 :k]]
+                 [:l [:!Tx :!T8 :l]]
+                 [:i [:!Tx :!T8 :i]]
+                 [:o [:!Tx :!T8 :o]]]}
+        {:des "s-mode in emacs, awesome-tab"
          :rules [[:condi :s-mode :Emacs]
                  [:h [:!Tx :!T9 :h]]
                  [:j [:!Tx :!T9 :j]]
