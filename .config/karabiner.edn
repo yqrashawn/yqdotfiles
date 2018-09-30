@@ -3,7 +3,10 @@
  :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
-          :chunkwm-scale-mode {:key :c :condi :tab-mode}}
+          :chunkwm-scale-mode {:key :c :condi :tab-mode}
+          :mouse-mode {:key :3}
+          :mouse-slow-mode {:key :2 :condi :mouse-mode}
+          :scroll-mode {:key :1 :condi :mouse-mode}}
  :simlayers {:s-mode {:key :s}
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
@@ -16,7 +19,23 @@
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}}
- :main [{:des "s-mode in emacs, awesome-tab"
+ :main [{:des "mouse key"
+         :rules [:scroll-mode
+                 [:h {:mkey {:hwheel -32}}]
+                 [:l {:mkey {:hwheel 32}}]
+                 [:j {:mkey {:vwheel 32}}]
+                 [:k {:mkey {:vwheel -32}}]
+                 :mouse-slow-mode
+                 [:h {:mkey {:x -1546}}]
+                 [:j {:mkey {:y 1546}}]
+                 [:k {:mkey {:y -1546}}]
+                 [:l {:mkey {:x 1546}}]
+                 :mouse-mode
+                 [:h {:mkey {:x -3546}}]
+                 [:j {:mkey {:y 3546}}]
+                 [:k {:mkey {:y -3546}}]
+                 [:l {:mkey {:x 3546}}]]}
+        {:des "s-mode in emacs, awesome-tab"
          :rules [[:condi :s-mode :Emacs]
                  [:h [:!Tx :!T9 :h]]
                  [:j [:!Tx :!T9 :j]]
