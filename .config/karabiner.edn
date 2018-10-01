@@ -88,7 +88,8 @@
                  [:equal_sign [:launch "Textual"]]
                  [:8 [:launch "KEEvents"]]
                  [:b [:launch "BearyChat"]]
-                 [:t [:launch "TG"]]]}
+                 [:t [:launch "2do"]]
+                 [:r [:launch "Timing"]]]}
         {:des "caps_lock"
          :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
         {:des "HHKB, FILCO MINILA Change left control to esc if alone"
@@ -122,7 +123,8 @@
                  [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]
                  [:semicolon [:alf "localport" "in.fech.localport"]]
                  [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
-                 [:close_bracket :!CTOSclose_bracket]]}
+                 [:close_bracket :!CTOSclose_bracket]
+                 [:hyphen :!!hyphen]]}
         {:des "q"
          :rules [:emacs-winmove-mode
                  [:h [:!Tx :7 :w :h]]
