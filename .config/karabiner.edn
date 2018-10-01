@@ -124,7 +124,8 @@
                  [:semicolon [:alf "localport" "in.fech.localport"]]
                  [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                  [:close_bracket :!CTOSclose_bracket]
-                 [:hyphen :!!hyphen]]}
+                 [:hyphen :!!hyphen]
+                 [:right_command :!!p]]}
         {:des "q"
          :rules [:emacs-winmove-mode
                  [:h [:!Tx :7 :w :h]]
