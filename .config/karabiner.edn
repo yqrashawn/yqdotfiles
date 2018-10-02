@@ -1,10 +1,14 @@
 {:templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-             :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"}
+             :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
+             :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :2do "open 'twodo://x-callback-url/%s'"}
  :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}}
- :simlayers {:s-mode {:key :s}
+ :simlayers {:2do-mode {:key :t}
+             :2do-s-mode {:key :s :condi :2do}
+             :emacs-s-mode {:key :s :condi :Emacs}
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
@@ -16,8 +20,39 @@
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}}
- :main [{:des "s-mode in emacs, awesome-tab"
-         :rules [[:condi :s-mode :Emacs]
+ :main [{:des "in-alfred"
+         :rules [[:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
+                 [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Cright_command [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Tsemicolon [:!Treturn_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Tl [:return_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Tj :down_arrow ["in-alfred" 1]]
+                 [:!Tk :up_arrow ["in-alfred" 1]]
+                 [:!Oh :left_arrow ["in-alfred" 1]]
+                 [:!Oj :down_arrow ["in-alfred" 1]]
+                 [:!Ok :up_arrow ["in-alfred" 1]]
+                 [:!Ol :right_arrow ["in-alfred" 1]]
+                 [:!OSh :!OSleft_arrow ["in-alfred" 1]]
+                 [:!OSj :!OSdown_arrow ["in-alfred" 1]]
+                 [:!OSk :!OSup_arrow ["in-alfred" 1]]
+                 [:!OSl :!OSright_arrow ["in-alfred" 1]]]}
+        {:des "2do"
+         :rules [:2do-mode
+                 [:l [:km "2Do: Capture URL to Read"] :Browsers]
+                 [:spacebar  [:2do "showToday"]]
+                 :2do-s-mode
+                 [:j [:!Cdown_arrow]]
+                 [:k [:!Cup_arrow]]
+                 [:l [:j]]
+                 [:f [:!Cf]]
+                 [:d [:!C5]]
+                 [:i [:!C0]]
+                 [:t [:!C2]]
+                 [:a [:!C1]]
+                 [:v [:!C4]]]}
+        {:des "s-mode in emacs, awesome-tab"
+         :rules [:emacs-s-mode
                  [:h [:!Tx :!T9 :h]]
                  [:j [:!Tx :!T9 :j]]
                  [:k [:!Tx :!T9 :k]]
@@ -87,11 +122,11 @@
          :rules [[:right_option :right_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
         {:des "some simultaneous keys"
          :rules [[[:f :j] [:alf "helpSearch" "com.tedwise.menubarsearch"]]
-                 [[:j :l] :f19]
+                 [[:j :l] [:f19 ["in-alfred" 1]]]
                  [[:h :l] :f16]]}
         {:des "alfred mode"
          :rules [[:l :!COi :browsers-alfred-mode]
-                 [:l :!CTslash :finder-alfred-mode]
+                 [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
                  :alfred-mode
                  [:j [:alf "searchGithub" "nikivi.search-the-web"]]
                  [:return_or_enter [:alf "web searches" "nikivi.web.searches"]]
@@ -99,7 +134,7 @@
                  [:t [:alf "repos" "net.deanishe.alfred-git-repos"]]
                  [:k [:alf "chromeHistory" "thomasupton.chrome-history"]]
                  [:k [:alf "chromeHistory" "thomasupton.chrome-history"]]
-                 [:y :!!grave_accent_and_tilde]
+                 [:y [:!!grave_accent_and_tilde ["in-alfred" 1]]]
                  [:o :!CTOS0]
                  [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]
                  [:semicolon [:alf "localport" "in.fech.localport"]]
@@ -283,7 +318,8 @@
                 :Browsers ["^org\\.mozilla\\.firefox$"
                            "^com\\.google\\.Chrome$"
                            "^com\\.google\\.Chrome\\.canary$"
-                           "^com\\.apple\\.Safari$"]}
+                           "^com\\.apple\\.Safari$"]
+                :2do ["^com\\.guidedways\\.TodoMac.*"]}
  :input-sources {:squirrel {:input_mode_id "com.googlecode.rimeime.inputmethod.Squirrel"
                             :input_source_id "com.googlecode.rimeime.inputmethod.Squirrel.Rime"
                             :language "zh-Hans"}
