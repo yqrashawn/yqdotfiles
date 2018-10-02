@@ -1,1 +1,18 @@
-export LANG=zh_CN.UTF-8; /usr/local/bin/tmux
+#!/bin/bash
+export LANG=zh_CN.UTF-8;
+SESSION='home'
+
+tmux -2 new-session -d -s $SESSION
+
+# Setup a window for home dir
+tmux rename-window 'home'
+
+# Setup a download window
+# tmux new-window -t $SESSION:1 -n 'download'
+# tmux send-keys "cd ~/Downloads" C-m
+
+# Set default window
+# tmux select-window -t $SESSION:0
+
+# Attach to session
+tmux -2 attach-session -t $SESSION
