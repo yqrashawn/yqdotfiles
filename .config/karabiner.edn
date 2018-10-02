@@ -137,6 +137,8 @@
                  [:m [:!Tx :1]]
                  [:b [:!Tx :0]]
                  :tmux-winmove-mode
+                 [:e [:!Tq :e]]
+                 [:w [:!Tq :w]]
                  [:h [:!Tq :h]]
                  [:j [:!Tq :j]]
                  [:k [:!Tq :k]]

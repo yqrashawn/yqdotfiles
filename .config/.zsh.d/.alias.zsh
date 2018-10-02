@@ -119,3 +119,9 @@ alias ungz='gunzip -k'
 #diff
 alias diff='diff -Naurbw'
 alias ssh='TERM=xterm-256color ssh'
+
+# tmux
+alias tma="tmux a -t $1"
+alias tml='tmux list-sessions'
+alias tmn='tmux new -s $1'
+alias tmC='tmux kill-session -a'
