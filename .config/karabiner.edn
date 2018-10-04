@@ -24,18 +24,20 @@
              :browsers-alfred-mode {:key :z :condi :Browsers}}
  :main [{:des "contexts"
          :rules [[:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
+                 [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
                  [:left_control [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
                  [:##caps_lock [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
                  [:return_or_enter [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
                  [:!Tm [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
                  :contexts-f-mode
+                 [:j [["in-contexts" 1] :f16] ["in-contexts" 0]]
+                 [:k [["in-contexts" 1] :f16] ["in-contexts" 0]]
                  [:j :down_arrow ["in-contexts" 1]]
                  [:k :up_arrow ["in-contexts" 1]]
-                 [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
-                 [:j [:f16 ["in-contexts" 1]] ["in-contexts" 0]]
-                 [:k [:f16 ["in-contexts" 1]] ["in-contexts" 0]]]}
+                 [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]]}
         {:des "in-alfred"
-         :rules [[:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
+         :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
+                 [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                  [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
                  [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
                  [:!Cright_command [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
@@ -142,7 +144,7 @@
          :rules [[:l :!COi :browsers-alfred-mode]
                  [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
                  :alfred-mode
-                 [:h [:alf "search repos" "me.lachlan.githubjump"]]
+                 [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
                  [:j [:alf "searchGithub" "nikivi.search-the-web"]]
                  [:return_or_enter [:alf "web searches" "nikivi.web.searches"]]
                  [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
