@@ -265,7 +265,7 @@
                  [:!T#Sv :page_down]
                  [:!T#Sa :!Cleft_arrow]
                  [:!T#Se :!Cright_arrow]]}
-        {:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
+        #_{:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
          :rules [[:!Cspacebar :!Ctab]
                  [:!CTspacebar :!CStab]]}]
  :devices {:macbook-internal [{:product_id 631 :vendor_id 1452}]
