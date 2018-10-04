@@ -1,12 +1,14 @@
 {:templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-             :2do "open 'twodo://x-callback-url/%s'"}
+             :2do "open 'twodo://x-callback-url/%s'"
+             :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"}
  :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}}
- :simlayers {:2do-mode {:key :t}
+ :simlayers {:contexts-f-mode {:key :f}
+             :2do-mode {:key :t}
              :2do-s-mode {:key :s :condi :2do}
              :emacs-s-mode {:key :s :condi :Emacs}
              :vi-mode {:key :d}
@@ -20,7 +22,19 @@
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}}
- :main [{:des "in-alfred"
+ :main [{:des "contexts"
+         :rules [[:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
+                 [:left_control [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
+                 [:##caps_lock [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
+                 [:return_or_enter [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
+                 [:!Tm [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
+                 :contexts-f-mode
+                 [:j :down_arrow ["in-contexts" 1]]
+                 [:k :up_arrow ["in-contexts" 1]]
+                 [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
+                 [:j [:f16 ["in-contexts" 1]] ["in-contexts" 0]]
+                 [:k [:f16 ["in-contexts" 1]] ["in-contexts" 0]]]}
+        {:des "in-alfred"
          :rules [[:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                  [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
                  [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
@@ -249,11 +263,8 @@
         {:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
          :rules [[:!Cspacebar :!Ctab]
                  [:!CTspacebar :!CStab]]}]
- ;; {:des "Change input source"
- ;;  :rules [:q-mode
- ;;          [:i :us]
- ;;          [:o [:squirrel]]]}]
- :devices {:filco-minila [{:product_id 34050 :vendor_id 2652}]
+ :devices {:macbook-internal [{:product_id 631 :vendor_id 1452}]
+           :filco-minila [{:product_id 34050 :vendor_id 2652}]
            :hhkb-tmk [{:vendor_id 65261 :product_id 51966}]
            :hhkb-bt [{:vendor_id 1278 :product_id 514}]
            :hhkb [{:vendor_id 2131 :product_id 256}]}
