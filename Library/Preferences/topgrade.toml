@@ -1,0 +1,6 @@
+git_repos = [
+  "~/workspace/OFFICE/*",
+  "~/workspace/HOME/*",
+  "~/workspace/THIRD/*",
+  "~/.emacs.d/straight/repos/*",
+]
