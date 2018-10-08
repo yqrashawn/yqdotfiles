@@ -76,8 +76,8 @@
                  [:j [:!Tx :!T9 :j]]
                  [:k [:!Tx :!T9 :k]]
                  [:l [:!Tx :!T9 :l]]
-                 [:i [:!Tx :!T9 :i]]
-                 [:o [:!Tx :!T9 :o]]
+                 [:n [:!Tx :!T9 :n]]
+                 [:p [:!Tx :!T9 :p]]
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
                  [:close_bracket [:!Tx :!T9 :close_bracket]]]}
