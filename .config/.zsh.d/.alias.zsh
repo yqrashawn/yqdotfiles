@@ -51,7 +51,7 @@ alias serv="live-server --port=8081"
 alias httpg="http-server -g"
 
 # editors
-alias e="emacsclient -nc"
+alias e="emacsclient -n"
 alias ee='emacsclient -nw'
 alias eee='fasd -f -e emacsclient -nw'
 alias demacs='emacs -Q -l ~/.emacs.d/init.debug.el'
@@ -73,12 +73,6 @@ alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'
 # alias ss='export https_proxy=http://127.0.0.1:6152;export all_proxy=http://127.0.0.1:6152 & '
 alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152;export HTTP_PROXY=http://127.0.0.1:6152:export HTTPs_PROXY=http://127.0.0.1:6152 &'
 alias sf='proxychains4 -f /etc/proxychains.conf'
-
-# douyu
-alias d820='mpv https://www.douyu.com/zyt820'
-alias dyyf='mpv https://www.douyu.com/58428'
-alias dchuan='mpv https://www.douyu.com/chuan967'
-alias dxiao8='mpv https://www.douyu.com/xiao8'
 
 alias aria2c='aria2c --enable-rpc --rpc-listen-all'
 
