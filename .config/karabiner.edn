@@ -266,8 +266,8 @@
                  [:!T#Sa :!Cleft_arrow]
                  [:!T#Se :!Cright_arrow]]}
         #_{:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
-         :rules [[:!Cspacebar :!Ctab]
-                 [:!CTspacebar :!CStab]]}]
+           :rules [[:!Cspacebar :!Ctab]
+                   [:!CTspacebar :!CStab]]}]
  :devices {:macbook-internal [{:product_id 631 :vendor_id 1452}]
            :filco-minila [{:product_id 34050 :vendor_id 2652}]
            :hhkb-tmk [{:vendor_id 65261 :product_id 51966}]
