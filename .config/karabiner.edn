@@ -72,12 +72,18 @@
                  [:v [:!C4]]]}
         {:des "s-mode in emacs, awesome-tab"
          :rules [:emacs-s-mode
-                 [:h [:!Tx :!T9 :h]]
-                 [:j [:!Tx :!T9 :j]]
-                 [:k [:!Tx :!T9 :k]]
-                 [:l [:!Tx :!T9 :l]]
-                 [:n [:!Tx :!T9 :n]]
-                 [:p [:!Tx :!T9 :p]]
+                 ;; [:h [:!Tx :!T9 {:key :h :repeat false}]]
+                 ;; [:j [:!Tx :!T9 {:key :j :repeat false}]]
+                 ;; [:k [:!Tx :!T9 {:key :k :repeat false}]]
+                 ;; [:l [:!Tx :!T9 {:key :l :repeat false}]]
+                 ;; [:n [:!Tx :!T9 {:key :n :repeat false}]]
+                 ;; [:p [:!Tx :!T9 {:key :p :repeat false}]]
+                 [:h :!!h]
+                 [:j :!!j]
+                 [:k :!!k]
+                 [:l :!!l]
+                 [:n :!!n]
+                 [:p :!!p]
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
                  [:close_bracket [:!Tx :!T9 :close_bracket]]]}
