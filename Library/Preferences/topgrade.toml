@@ -4,3 +4,6 @@ git_repos = [
   "~/workspace/THIRD/*",
   "~/.emacs.d/straight/repos/*",
 ]
+
+[pre_commands]
+"Start Log" = "echo 'Start upgrade everything'"
