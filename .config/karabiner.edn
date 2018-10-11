@@ -146,9 +146,8 @@
         {:des "Change right_option to switch to second recent application when used alone"
          :rules [[:right_option :right_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
         {:des "some simultaneous keys"
-         :rules [[[:f :j] [:alf "helpSearch" "com.tedwise.menubarsearch"]]
-                 [[:j :l] [:f19 ["in-alfred" 1]]]
-                 [[:h :l] :f16]]}
+         :rules [[[:h :l] [:alf "helpSearch" "com.tedwise.menubarsearch"]]
+                 [[:j :l] [:f19 ["in-alfred" 1]]]]}
         {:des "alfred mode"
          :rules [[:l :!COi :browsers-alfred-mode]
                  [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
@@ -252,7 +251,7 @@
                  [:w :!CSsemicolon]
                  [:e :!Cquote]
                  [:r :!Cf8]
-                 [:1 :f8]
+                 [:1 :!Cbackslash]
                  [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"]
                  [:3 :f9]]}
         {:des "Mouse button"

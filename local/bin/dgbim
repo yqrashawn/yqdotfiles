@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 # require 'json#!/usr/local/bin/ruby
 # require 'json/stream'
+# -*- coding: utf-8 -*-
 require 'json'
 require 'uri'
 require 'zlib'
@@ -83,11 +84,11 @@ else
       puts decoded.sub('.gbim', '.pc')
 
       # download images
-      gbim_str = File.read($modelFolder + $modelName + '.gbim')
-      unless valid_json?(gbim_str)
+      $gbim_str = File.read($modelFolder + $modelName + '.gbim')
+      unless valid_json?($gbim_str)
         Zlib::GzipReader.open($modelFolder + $modelName + '.gbim') {|gz|
-          gbim_str = gz.read
-          File.open($modelFolder + $modelName + '.gbim', 'w') { |file| file.write(gbim_str) }
+          $gbim_str = gz.read
+          File.open($modelFolder + $modelName + '.gbim', 'w') { |file| file.write($gbim_str) }
         }
         $NEED_GZIP = true
 
@@ -97,9 +98,9 @@ else
         unzip($modelFolder + $modelName + '.pc')
       end
 
-      # puts gbim_str
-      # gbim = JSON::Stream::Parser.parse(gbim_str);
-      gbim = JSON.parse(gbim_str);
+      # puts $gbim_str
+      # gbim = JSON::Stream::Parser.parse($gbim_str);
+      gbim = JSON.parse($gbim_str);
       images = gbim["images"];
       puts ''
       puts '---------------Checking Texture--------------'
