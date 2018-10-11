@@ -179,6 +179,9 @@
                  [:m [:!Tx :1]]
                  [:b [:!Tx :0]]
                  :tmux-winmove-mode
+                 [:comma [:!Tq :comma]]
+                 [:open_bracket [:!Tq :open_bracket]]
+                 [:f [:!Tq :f]]
                  [:e [:!Tq :e]]
                  [:w [:!Tq :w]]
                  [:h [:!Tq :h]]
