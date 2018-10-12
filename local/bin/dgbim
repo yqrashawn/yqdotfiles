@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 # require 'json#!/usr/local/bin/ruby
 # require 'json/stream'
-# -*- coding: utf-8 -*-
 require 'json'
 require 'uri'
 require 'zlib'
@@ -84,11 +83,15 @@ else
       puts decoded.sub('.gbim', '.pc')
 
       # download images
-      $gbim_str = File.read($modelFolder + $modelName + '.gbim')
+      $gbim_str = File.read($modelFolder + $modelName + '.gbim', :encoding => 'bom|utf-8')
       unless valid_json?($gbim_str)
         Zlib::GzipReader.open($modelFolder + $modelName + '.gbim') {|gz|
           $gbim_str = gz.read
-          File.open($modelFolder + $modelName + '.gbim', 'w') { |file| file.write($gbim_str) }
+          gbimpath = $modelFolder + $modelName + '.gbim'
+          system 'rm', gbimpath
+          File.new($modelFolder + $modelName + '.gbim', 'w+')
+          File.open($modelFolder + $modelName + '.gbim', 'w:bom|utf-8') { |file| file.write($gbim_str) }
+          $gbim_str = File.read($modelFolder + $modelName + '.gbim', :encoding => 'bom|utf-8')
         }
         $NEED_GZIP = true
 
