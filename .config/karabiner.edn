@@ -38,7 +38,7 @@
                  [:j :down_arrow ["in-contexts" 1]]
                  [:k :up_arrow ["in-contexts" 1]]
                  [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]]}
-        {:des "in-alfred"
+        #_{:des "in-alfred"
          :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
                  [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                  [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
@@ -129,6 +129,7 @@
                  [:equal_sign [:launch "Textual"]]
                  [:8 [:launch "KEEvents"]]
                  [:b [:launch "BearyChat"]]
+                 [:c [:launch "VSCode"]]
                  [:t [:launch "2do"]]
                  [:r [:launch "Timing"]]]}
         {:des "caps_lock"
