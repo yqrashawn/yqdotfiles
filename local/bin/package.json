@@ -17,7 +17,11 @@
     "paas": "cd ~/workspace/OFFICE/bimtransPAAS/src/ && yarn dev",
     "bimsdk:watch": "cd ~/workspace/OFFICE/BIMSDK/ && yarn watch",
     "bimsdk:serve": "live-server --port=8081 ~/workspace/OFFICE/BIMSDK",
-    "bimsdk": "run-p bimsdk:watch bimsdk:serve"
+    "bimsdk": "run-p bimsdk:watch bimsdk:serve",
+    "upgrade:brew": "brew update && brew upgrade",
+    "upgrade:yarn": "yarn global upgrade",
+    "upgrade:eamcs-packages": "cd ~/.emacs.d/straight/repos && sh pull-all.sh",
+    "up": "run-p upgrade:*"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2"
