@@ -39,23 +39,23 @@
                  [:k :up_arrow ["in-contexts" 1]]
                  [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]]}
         #_{:des "in-alfred"
-         :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
-                 [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
-                 [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
-                 [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
-                 [:!Cright_command [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
-                 [:!Tsemicolon [:!Treturn_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
-                 [:!Tl [:return_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
-                 [:!Tj :down_arrow ["in-alfred" 1]]
-                 [:!Tk :up_arrow ["in-alfred" 1]]
-                 [:!Oh :left_arrow ["in-alfred" 1]]
-                 [:!Oj :down_arrow ["in-alfred" 1]]
-                 [:!Ok :up_arrow ["in-alfred" 1]]
-                 [:!Ol :right_arrow ["in-alfred" 1]]
-                 [:!OSh :!OSleft_arrow ["in-alfred" 1]]
-                 [:!OSj :!OSdown_arrow ["in-alfred" 1]]
-                 [:!OSk :!OSup_arrow ["in-alfred" 1]]
-                 [:!OSl :!OSright_arrow ["in-alfred" 1]]]}
+           :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
+                   [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
+                   [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
+                   [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
+                   [:!Cright_command [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
+                   [:!Tsemicolon [:!Treturn_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
+                   [:!Tl [:return_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
+                   [:!Tj :down_arrow ["in-alfred" 1]]
+                   [:!Tk :up_arrow ["in-alfred" 1]]
+                   [:!Oh :left_arrow ["in-alfred" 1]]
+                   [:!Oj :down_arrow ["in-alfred" 1]]
+                   [:!Ok :up_arrow ["in-alfred" 1]]
+                   [:!Ol :right_arrow ["in-alfred" 1]]
+                   [:!OSh :!OSleft_arrow ["in-alfred" 1]]
+                   [:!OSj :!OSdown_arrow ["in-alfred" 1]]
+                   [:!OSk :!OSup_arrow ["in-alfred" 1]]
+                   [:!OSl :!OSright_arrow ["in-alfred" 1]]]}
         {:des "2do"
          :rules [:2do-mode
                  [:l [:km "2Do: Capture URL to Read"] :Browsers]
@@ -167,7 +167,7 @@
                  [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                  [:close_bracket :!CTOSclose_bracket]
                  [:hyphen :!!hyphen]
-                 [:right_command :!!p]]}
+                 [:right_command :!!3]]}
         {:des "q"
          :rules [:emacs-winmove-mode
                  [:h [:!Tx :7 :w :h]]
