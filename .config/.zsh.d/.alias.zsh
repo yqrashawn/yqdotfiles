@@ -16,7 +16,6 @@ alias p2='percol'
 
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
-alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
@@ -66,6 +65,7 @@ alias wdired='roamer'
 alias emacsd='vmtouch -ef ~/.emacs.d/ && vmtouch -tldf ~/.emacs.d/'
 
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+alias chromec='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
 alias chromed='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222'
 alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'
 
