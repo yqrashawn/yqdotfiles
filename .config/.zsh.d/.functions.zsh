@@ -94,3 +94,29 @@ rscp () {
     rsync -WavP --human-readable --progress $1 $2
 }
 
+DESKTOP_NAMES=("officeimac" "homeimac")
+MOBILE_NAMES=("macbook")
+
+function is-osx {
+    [[ "$(uname)" == "Darwin" ]]
+}
+
+function is-linux {
+    [[ "$(uname)" == "Linux" ]]
+}
+
+function is-desktop {
+    loc=$(scutil --get ComputerName || hostname)
+    for i in "${DESKTOP_NAMES[@]}"; do
+        ([[ "$loc" == "$i" ]] || [[ "$loc" == "$i".local ]]) && return 0
+    done
+    return 1
+}
+
+function is-mobile {
+    loc=$(scutil --get ComputerName || hostname)
+    for i in "${MOBILE_NAMES[@]}"; do
+        ([[ "$loc" == "$i" ]] || [[ "$loc" == "$i".local ]]) && return 0
+    done
+    return 1
+}
