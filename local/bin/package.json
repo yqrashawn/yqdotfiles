@@ -24,7 +24,7 @@
     "upgrade:brew": "brew update && brew upgrade",
     "upgrade:yarn": "yarn global upgrade",
     "upgrade:eamcs-packages": "cd ~/.emacs.d/straight/repos && sh pull-all.sh",
-    "up": "run-p upgrade:*"
+    "up": "run-s upgrade:*"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2"

@@ -131,7 +131,8 @@
                  [:b [:launch "BearyChat"]]
                  [:c [:launch "VSCode"]]
                  [:t [:launch "2do"]]
-                 [:r [:launch "Timing"]]]}
+                 [:r [:launch "Timing"]]
+                 [:d [:launch "Chromium"]]]}
         {:des "caps_lock"
          :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
         {:des "HHKB, FILCO MINILA Change left control to esc if alone"
