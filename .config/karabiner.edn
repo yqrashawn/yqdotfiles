@@ -140,7 +140,8 @@
         {:des "Left Right Shift Press Alone"
          :rules [[:right_shift :right_shift nil {:alone :!TSz}]]}
         {:des "Change right_command to command-tab when used alone"
-         :rules [[:right_command :right_command nil {:alone [:!Ctab]}]]}
+         :rules [[:right_command :right_command nil {:alone [:!Ctab]}]
+                 [:application :right_command nil {:alone [:!Ctab]}]]}
         {:des "Change left_option to f18 when used alone"
          :rules [[:left_option :left_option nil {:alone [:f18]}]]}
         {:des "Quit application by pressing command-q twice" :rules [[:!C#Pq [:!Cq ["command-q" 0]] ["command-q" 1]]
