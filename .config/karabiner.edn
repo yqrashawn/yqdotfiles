@@ -124,7 +124,7 @@
                  [:f [:launch "Finder"]]
                  [:9 [:launch "PDFExpert"]]
                  [:comma [:launch "Safari"]]
-                 [:h [:launch "Chrome"]]
+                 [:h [:launch "Bee"]]
                  [:period [:launch "Paw"]]
                  [:equal_sign [:launch "Textual"]]
                  [:8 [:launch "KEEvents"]]
