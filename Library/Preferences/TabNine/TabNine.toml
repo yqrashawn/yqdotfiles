@@ -3,6 +3,11 @@ command = "javascript-typescript-stdio"
 args = []
 install = [["yarn", "global", "add", "javascript-typescript-langserver"]]
 
+[language.typescript]
+command = "javascript-typescript-stdio"
+args = []
+install = [["yarn", "global", "add", "javascript-typescript-langserver"]]
+
 [language.vue]
 command = "html-languageserver"
 args = ["--stdio"]
@@ -13,3 +18,17 @@ command = "html-languageserver"
 args = ["--stdio"]
 install = [["yarn", "global", "add", "vscode-html-languageserver-bin"]]
 
+[language.css]
+command = "html-languageserver"
+args = ["--stdio"]
+install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
+
+[language.sass]
+command = "html-languageserver"
+args = ["--stdio"]
+install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
+
+[language.less]
+command = "html-languageserver"
+args = ["--stdio"]
+install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
