@@ -5,8 +5,7 @@
   "ignore_all_lsp": false,
   "semantic_status": {
     "css": "Enabled",
-    "vue": "Enabled",
-    "javascript": "Enabled"
+    "vue": "Enabled"
   },
   "disable_auto_update": false
 }
