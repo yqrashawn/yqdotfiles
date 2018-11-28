@@ -23,11 +23,7 @@
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}
              :e-mode {:key :e}}
- :main [{:des "disable command-tab"
-         :rules [[:!Ctab :vk_none]]}
-        #_{:des "sample"
-           :rules [[:2 "say 2 down" nil {:afterup "say 2 up"}]]}
-        {:des "contexts"
+ :main [{:des "contexts"
          :rules [[:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
                  [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
                  [:left_control [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
@@ -139,8 +135,6 @@
          :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
         {:des "HHKB, FILCO MINILA Change left control to esc if alone"
          :rules [[:##left_control :left_control [:hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
-        {:des "Left Right Shift Press Alone"
-         :rules [[:right_shift :right_shift nil {:alone :!TSz}]]}
         {:des "Change right_command to command-tab when used alone"
          :rules [[:right_command :right_command nil {:alone [:!Ctab]}]
                  [:application :right_command nil {:alone [:!Ctab]}]]}
@@ -282,10 +276,7 @@
                  [:!T#OSp :up_arrow]
                  [:!T#Sv :page_down]
                  [:!T#Sa :!Cleft_arrow]
-                 [:!T#Se :!Cright_arrow]]}
-        #_{:des "Anti-RSI App Switch (LCMD+Space to LCMD+Tab and reverse +LControl)."
-           :rules [[:!Cspacebar :!Ctab]
-                   [:!CTspacebar :!CStab]]}]
+                 [:!T#Se :!Cright_arrow]]}]
  :devices {:macbook-internal [{:product_id 631 :vendor_id 1452}]
            :filco-minila [{:product_id 34050 :vendor_id 2652}]
            :hhkb-tmk [{:vendor_id 65261 :product_id 51966}]

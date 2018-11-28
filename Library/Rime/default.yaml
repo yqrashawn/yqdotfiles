@@ -5,10 +5,10 @@ ascii_composer:
     Control_L: noop
     Control_R: noop
     Eisu_toggle: noop
-    Shift_L: noop
-    Shift_R: commit_code
-config_version: 0.36.custom.1711423051
-customization: 1711423051
+    Shift_L: commit_code
+    Shift_R: noop
+config_version: 0.36.custom.3932841869
+customization: 3932841869
 key_binder:
   bindings:
     - {accept: "Control+p", send: Up, when: composing}
@@ -18,17 +18,17 @@ key_binder:
     - {accept: "Control+a", send: Home, when: composing}
     - {accept: "Control+e", send: End, when: composing}
     - {accept: "Control+d", send: Delete, when: composing}
-    - {accept: "Control+k", send: Page_Up, when: composing}
-    - {accept: "Control+j", send: Page_Down, when: composing}
+    - {accept: "Control+k", send: "Shift+Delete", when: composing}
     - {accept: "Control+h", send: BackSpace, when: composing}
     - {accept: "Control+g", send: Escape, when: composing}
+    - {accept: "Control+bracketleft", send: Escape, when: composing}
+    - {accept: "Alt+v", send: Page_Up, when: composing}
+    - {accept: "Control+v", send: Page_Down, when: composing}
     - {accept: ISO_Left_Tab, send: Page_Up, when: composing}
     - {accept: "Shift+Tab", send: Page_Up, when: composing}
     - {accept: Tab, send: Page_Down, when: composing}
-    - {accept: bracketleft, send: Page_Up, when: has_menu}
-    - {accept: bracketright, send: Page_Down, when: has_menu}
-    - {accept: comma, send: Page_Up, when: has_menu}
-    - {accept: period, send: Page_Down, when: has_menu}
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
     - {accept: comma, send: Page_Up, when: paging}
     - {accept: period, send: Page_Down, when: has_menu}
     - {accept: "Control+Shift+1", select: .next, when: always}
@@ -44,7 +44,7 @@ key_binder:
     - {accept: "Shift+space", toggle: full_shape, when: always}
     - {accept: "Control+period", toggle: ascii_punct, when: always}
 menu:
-  page_size: 6
+  page_size: 5
 punctuator:
   full_shape:
     " ": {commit: "　"}
@@ -120,11 +120,11 @@ recognizer:
     url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
 schema_list:
   - schema: luna_pinyin
-style:
-  font_face: "Heiti SC Light"
+  - schema: luna_pinyin_fluency
+  - schema: luna_pinyin_simp
 switcher:
   abbreviate_options: true
-  caption: "〔切换〕"
+  caption: "〔方案選單〕"
   fold_options: true
   hotkeys:
     - "Control+grave"
