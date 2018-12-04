@@ -1,6 +1,35 @@
+app_options:
+  com.alfredapp.Alfred:
+    ascii_mode: true
+  com.apple.Terminal:
+    ascii_mode: true
+    no_inline: true
+  com.apple.dt.Xcode:
+    ascii_mode: true
+  com.blacktree.Quicksilver:
+    ascii_mode: true
+  com.googlecode.iterm2:
+    ascii_mode: true
+  com.qvacua.VimR:
+    no_inline: true
+  "com.runningwithcrayons.Alfred-2":
+    ascii_mode: true
+  "com.runningwithcrayons.Alfred-3":
+    ascii_mode: true
+  com.sublimetext.3:
+    ascii_mode: true
+  io.alacritty:
+    ascii_mode: true
+  org.gnu.Emacs:
+    ascii_mode: true
+  org.vim.MacVim:
+    ascii_mode: true
+    no_inline: true
+  uk.foon.Neovim:
+    no_inline: true
 chord_duration: 0.1
-config_version: 0.22.custom.2396222385
-customization: 2396222385
+config_version: 0.22.custom.1703107819
+customization: 1703107819
 preset_color_schemes:
   apathy:
     author: "LIANG Hai "

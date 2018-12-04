@@ -91,7 +91,7 @@ speller:
 
 switches:
   - name: ascii_mode
-    reset: 0
+    reset: 1
     states: ["西文", "中文"]
   - name: full_shape
     reset: 0
