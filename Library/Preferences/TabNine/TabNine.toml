@@ -19,16 +19,16 @@ args = ["--stdio"]
 install = [["yarn", "global", "add", "vscode-html-languageserver-bin"]]
 
 [language.css]
-command = "html-languageserver"
+command = "css-languageserver"
 args = ["--stdio"]
 install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
 
 [language.sass]
-command = "html-languageserver"
+command = "css-languageserver"
 args = ["--stdio"]
 install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
 
 [language.less]
-command = "html-languageserver"
+command = "css-languageserver"
 args = ["--stdio"]
 install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
