@@ -168,7 +168,8 @@
                  [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                  [:close_bracket :!CTOSclose_bracket]
                  [:hyphen :!!hyphen]
-                 [:right_command :!!3]]}
+                 [:right_command "osascript -e 'tell application \"Alfred 3\" to run trigger \"new2do\" in workflow \"me.canor.alfred2do\" with argument \"\"'"]
+                 #_[:right_command :!!3]]}
         {:des "q"
          :rules [:emacs-winmove-mode
                  [:h [:!Tx :7 :w :h]]
