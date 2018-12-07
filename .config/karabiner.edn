@@ -7,7 +7,8 @@
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}}
- :simlayers {:contexts-f-mode {:key :f}
+ :simlayers {:test-mode {:key :9}
+             :contexts-f-mode {:key :f}
              :2do-mode {:key :t}
              :2do-s-mode {:key :s :condi :2do}
              :emacs-s-mode {:key :s :condi :Emacs}
@@ -23,7 +24,13 @@
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}
              :e-mode {:key :e}}
- :main [{:des "contexts"
+ :main [{:des "double press and hold key down in simlayer"
+         :rules [[:j "say 'j double press'" [["test-mode" 1] ["test-mode-j-dbpress-mode" 1]]]
+                 :test-mode
+                 [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
+                                                                                          :invoked ["test-mode-j-dbpress-mode" 0]}
+                                                                                :held "say 'j held down'"}]]}
+        {:des "contexts"
          :rules [[:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
                  [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
                  [:left_control [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]

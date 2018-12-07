@@ -2,6 +2,7 @@
         :plugins [;; [lein-ancient "0.6.15"]
                   [cider/cider-nrepl "0.19.0-SNAPSHOT"]
                   [lein-kibit "0.1.6"]
+                  [com.cemerick/pomegranate "1.1.0"]
                   [polylith/lein-polylith "LATEST"]
                   ;; [lein-environ "1.1.0"]
                   [lein-pdo "0.1.1"]
