@@ -6,7 +6,9 @@
  :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
-          :chunkwm-scale-mode {:key :c :condi :tab-mode}}
+          :chunkwm-scale-mode {:key :c :condi :tab-mode}
+          :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]}}
+          :comma-mode {:key :comma}}
  :simlayers {:test-mode {:key :9}
              :contexts-f-mode {:key :f}
              :2do-mode {:key :t}
@@ -18,8 +20,6 @@
              :emacs-winmove-mode {:key :q :condi :Emacs}
              :tmux-winmove-mode {:key :q :condi :Terminals}
              :q-mode {:key :q}
-             :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]}}
-             :comma-mode {:key :comma}
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}
