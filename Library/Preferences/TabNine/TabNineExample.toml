@@ -8,17 +8,22 @@ install = [
 [language.javascript]
 command = "flow"
 args = ["lsp"]
-install = [["yarn", "global", "add", "flow-bin"]]
+install = [["npm", "install", "-g", "flow-bin"]]
+
+[language.typescript]
+command = "typescript-language-server"
+args = ["--stdio"]
+install = [["npm", "install", "-g", "typescript-language-server"]]
 
 [language.html]
 command = "html-languageserver"
 args = ["--stdio"]
-install = [["yarn", "global", "add", "vscode-html-languageserver-bin"]]
+install = [["npm", "install", "-g", "vscode-html-languageserver-bin"]]
 
 [language.ocaml]
 command = "ocaml-language-server"
 args = ["--stdio"]
-install = [["yarn", "global", "add", "ocaml-language-server"]]
+install = [["npm", "install", "-g", "ocaml-language-server"]]
 
 [language.python]
 command = "pyls"
@@ -37,10 +42,21 @@ command = "go-langserver"
 args = ["-mode", "stdio", "-gocodecompletion"]
 install = [["go", "get", "-u", "github.com/sourcegraph/go-langserver"]]
 
-[language.bash]
-command = "bash-language-server"
-args = ["start"]
-
 [language.dart]
 command = "dart_language_server"
 install = [["pub", "global", "activate", "dart_language_server"]]
+
+[language.ruby]
+command = "solargraph"
+args = ["stdio"]
+install = [["gem", "install", "solargraph"]]
+
+[language.css]
+command = "css-languageserver"
+args = ["--stdio"]
+install = [["npm", "install", "-g", "vscode-css-languageserver-bin"]]
+
+[language.scss]
+command = "css-languageserver"
+args = ["--stdio"]
+install = [["npm", "install", "-g", "vscode-css-languageserver-bin"]]
