@@ -6,7 +6,8 @@ chunkc core::log_file /tmp/chunkwm.log
 chunkc core::log_level debug
 chunkc core::plugin_dir /usr/local/opt/chunkwm/share/chunkwm/plugins/
 
-chunkc core::hotload 0
+chunkc core::hotload 1
+chunkc set window_use_cgs_move           1
 
 chunkc set global_desktop_mode           bsp
 chunkc set global_desktop_offset_top     0
