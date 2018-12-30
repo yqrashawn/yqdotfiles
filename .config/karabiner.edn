@@ -222,14 +222,10 @@
                  [:k "/usr/local/bin/chunkc tiling::window --warp north"]
                  [:l "/usr/local/bin/chunkc tiling::window --warp east"]
                  :chunkwm-scale-mode
-                 #_[:h "/usr/local/bin/chunkwm-resize left"]
-                 #_[:j "/usr/local/bin/chunkwm-resize down"]
-                 #_[:k "/usr/local/bin/chunkwm-resize up"]
-                 #_[:l "/usr/local/bin/chunkwm-resize right"]
-                 [:h "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge west"]
-                 [:j "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge south"]
-                 [:k "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge north"]
-                 [:l "/usr/local/bin/chunkc tiling::window --use-temporary-ratio 0.03 --adjust-window-edge east"]
+                 [:h "~/local/bin/chunkwm-resize left"]
+                 [:j "~/local/bin/chunkwm-resize down"]
+                 [:k "~/local/bin/chunkwm-resize up"]
+                 [:l "~/local/bin/chunkwm-resize right"]
                  [:spacebar "/usr/local/bin/chunkc tiling::desktop --equalize"]
                  :tab-mode
                  [:h "/usr/local/bin/chunkc tiling::window --focus west"]
