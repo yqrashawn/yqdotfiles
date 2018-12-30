@@ -2,7 +2,8 @@
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :2do "open 'twodo://x-callback-url/%s'"
-             :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"}
+             :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :open "open \"%s\""}
  :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
@@ -124,25 +125,24 @@
                  [:tab :!TStab :comma-mode]]}
         {:des "launcher mode"
          :rules [:launch-mode
-                 [:j [:launch "Alacritty"]]
-                 [:k [:launch "Emacs"]]
+                 [:j [:open "/Applications/Alacritty.app"]]
+                 [:k [:open "/Applications/Emacs.app"]]
+                 [:l [:open "/Applications/Google Chrome Canary.app/"]]
+                 [:m [:open "/Applications/Mail.app"]]
+                 [:v [:open "/Applications/WeChat.app"]]
+                 [:q [:open "/Applications/Karabiner-Elements.app"]]
+                 [:f [:open "/Applications/Finder.app"]]
+                 [:9 [:open "/Applications/PDF Expert.app"]]
+                 [:comma [:open "/Applications/Safari.app"]]
+                 [:h [:open "/Applications/Bee.app"]]
+                 [:period [:open "/Applications/Paw.app"]]
+                 [:equal_sign [:open "/Applications/Textual.app"]]
+                 [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                 [:b [:open "/Applications/Bee.app"]]
+                 [:c [:open "/Applications/Visual Studio Code.app"]]
+                 [:t [:open "/Applications/Setapp/2Do.app"]]
+                 [:r [:open "/Applications/Setapp/Timing.app"]]
                  #_[:l [:!Cgrave_accent_and_tilde] :Chromes]
-                 [:l [:launch "Chrome"]]
-                 [:m [:launch "Mail"]]
-                 [:v [:launch "WeChat"]]
-                 [:q [:launch "KE"]]
-                 [:f [:launch "Finder"]]
-                 [:9 [:launch "PDFExpert"]]
-                 [:comma [:launch "Safari"]]
-                 [:h [:launch "Bee"]]
-                 [:period [:launch "Paw"]]
-                 [:equal_sign [:launch "Textual"]]
-                 [:8 [:launch "KEEvents"]]
-                 [:b [:launch "BearyChat"]]
-                 [:c [:launch "VSCode"]]
-                 ;; [:t [:launch "Pagico"]]
-                 [:t [:launch "2do"]]
-                 [:r [:launch "Timing"]]
                  [:d [{:key :n :modi [:right_option]} {:key :d :modi [:right_option]} {:key :b :modi [:right_option]} :return_or_enter]]]}
         {:des "caps_lock"
          :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
