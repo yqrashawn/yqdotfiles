@@ -77,7 +77,8 @@ chunkc tiling::rule --owner \"Parallels Desktop\" --state float
 chunkc tiling::rule --owner \"Parallels Desktop\" --name \" \" --state float
 chunkc tiling::rule --owner \"VirtualBox\" --name \"Oracle VM VirtualBox Manager\" --state float
 
-chunkc tiling::rule --owner Alacritty --state float &
+# chunkc tiling::rule --owner Alacritty --state float &
+chunkc tiling::rule --owner Alacritty --name emacs-temp-alacritty --state float &
 chunkc tiling::rule --owner Alfred --name "Alfred Preferences" --state float &
 chunkc tiling::rule --owner Timing --state float &
 chunkc tiling::rule --owner Bee --state float &
