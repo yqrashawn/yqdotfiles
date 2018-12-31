@@ -225,11 +225,13 @@
                  [:k "/usr/local/bin/chunkc tiling::window --use-insertion-point north"]
                  [:l "/usr/local/bin/chunkc tiling::window --use-insertion-point east"]
                  :chunkwm-move-mode
+                 ;; move windows
                  [:h "/usr/local/bin/chunkc tiling::window --warp west"]
                  [:j "/usr/local/bin/chunkc tiling::window --warp south"]
                  [:k "/usr/local/bin/chunkc tiling::window --warp north"]
                  [:l "/usr/local/bin/chunkc tiling::window --warp east"]
                  :chunkwm-scale-mode
+                 ;; scale windows
                  [:h "~/local/bin/chunkwm-resize left"]
                  [:j "~/local/bin/chunkwm-resize down"]
                  [:k "~/local/bin/chunkwm-resize up"]
