@@ -8,6 +8,7 @@
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}
+          :chunkwm-insert-mode {:key :i :condi :tab-mode}
           :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]}}
           :comma-mode {:key :comma}}
  :simlayers {:test-mode {:key :9}
@@ -216,7 +217,14 @@
                  [:4 [:!Tq :4]]
                  [:5 [:!Tq :5]]]}
         {:des "chunkwm mode"
-         :rules [:chunkwm-move-mode
+         :rules [[:!COSf "/usr/local/bin/chunkc tiling::window --toggle native-fullscreen"]
+                 :chunkwm-insert-mode
+                 [:spacebar "/usr/local/bin/chunkc tiling::window --use-insertion-point cancel"]
+                 [:h "/usr/local/bin/chunkc tiling::window --use-insertion-point west"]
+                 [:j "/usr/local/bin/chunkc tiling::window --use-insertion-point south"]
+                 [:k "/usr/local/bin/chunkc tiling::window --use-insertion-point north"]
+                 [:l "/usr/local/bin/chunkc tiling::window --use-insertion-point east"]
+                 :chunkwm-move-mode
                  [:h "/usr/local/bin/chunkc tiling::window --warp west"]
                  [:j "/usr/local/bin/chunkc tiling::window --warp south"]
                  [:k "/usr/local/bin/chunkc tiling::window --warp north"]
@@ -226,16 +234,23 @@
                  [:j "~/local/bin/chunkwm-resize down"]
                  [:k "~/local/bin/chunkwm-resize up"]
                  [:l "~/local/bin/chunkwm-resize right"]
+                 ;; equalize size of windows
                  [:spacebar "/usr/local/bin/chunkc tiling::desktop --equalize"]
                  :tab-mode
+                 [:return_or_enter "~/local/bin/chunkwm-change-mode"]
+                 [:grave_accent_and_tilde "/usr/local/bin/brew services restart chunkwm"]
+                 ;; change gap setting, reload chunkwmrc
+                 [:backslash "~/local/bin/chunkwm-gaps 10 10 5 5 7.5"]
                  [:h "/usr/local/bin/chunkc tiling::window --focus west"]
                  [:j "/usr/local/bin/chunkc tiling::window --focus south"]
                  [:k "/usr/local/bin/chunkc tiling::window --focus north"]
                  [:l "/usr/local/bin/chunkc tiling::window --focus east"]
                  [:n "/usr/local/bin/chunkc tiling::window --focus next"]
                  [:p "/usr/local/bin/chunkc tiling::window --focus prev"]
+                 ;; rotate windows clockwise and anticlockwise
                  [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90"]
                  [:!Sr "/usr/local/bin/chunkc tiling::desktop --rotate 270"]
+                 ;; rotate on x and y axis
                  [:y "/usr/local/bin/chunkc tiling::desktop --mirror vertical"]
                  [:!Sy "/usr/local/bin/chunkc tiling::desktop --mirror horizontal"]
                  [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen"]
@@ -243,6 +258,7 @@
                  [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp"]
                  [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle"]
                  [:x "/usr/local/bin/chunkc tiling::window --close"]
+                 [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
                  [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
                  [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next"]]}
         {:des "comma mode"
