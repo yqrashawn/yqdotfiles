@@ -19,8 +19,8 @@
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
-             :emacs-winmove-mode {:key :q :condi :Emacs}
-             :tmux-winmove-mode {:key :q :condi :Terminals}
+             :emacs-windmove-mode {:key :q :condi :Emacs}
+             :tmux-windmove-mode {:key :q :condi :Terminals}
              :q-mode {:key :q}
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
@@ -184,7 +184,7 @@
                  [:right_command "osascript -e 'tell application \"Alfred 3\" to run trigger \"new2do\" in workflow \"me.canor.alfred2do\" with argument \"\"'"]
                  #_[:right_command :!!3]]}
         {:des "q"
-         :rules [:emacs-winmove-mode
+         :rules [:emacs-windmove-mode
                  [:h [:!Tx :7 :w :h]]
                  [:j [:!Tx :7 :w :j]]
                  [:k [:!Tx :7 :w :k]]
@@ -195,7 +195,7 @@
                  [:s [:!Tx :2]]
                  [:m [:!Tx :1]]
                  [:b [:!Tx :0]]
-                 :tmux-winmove-mode
+                 :tmux-windmove-mode
                  [:comma [:!Tq :comma]]
                  [:open_bracket [:!Tq :open_bracket]]
                  [:y [:!Tq :y]]
@@ -243,14 +243,10 @@
                  [:grave_accent_and_tilde "/usr/local/bin/brew services restart chunkwm"]
                  ;; change gap setting, reload chunkwmrc
                  [:backslash "~/local/bin/chunkwm-gaps 10 10 5 5 7.5"]
-                 [:h "/usr/local/bin/chunkc tiling::window --focus west" :!Emacs]
-                 [:j "/usr/local/bin/chunkc tiling::window --focus south" :!Emacs]
-                 [:k "/usr/local/bin/chunkc tiling::window --focus north" :!Emacs]
-                 [:l "/usr/local/bin/chunkc tiling::window --focus east" :!Emacs]
-                 [:h [:!Tx :7 :w :h] :Emacs]
-                 [:j [:!Tx :7 :w :j] :Emacs]
-                 [:k [:!Tx :7 :w :k] :Emacs]
-                 [:l [:!Tx :7 :w :l] :Emacs]
+                 [:h "/usr/local/bin/chunkc tiling::window --focus west"]
+                 [:j "/usr/local/bin/chunkc tiling::window --focus south"]
+                 [:k "/usr/local/bin/chunkc tiling::window --focus north"]
+                 [:l "/usr/local/bin/chunkc tiling::window --focus east"]
                  [:n "/usr/local/bin/chunkc tiling::window --focus next"]
                  [:p "/usr/local/bin/chunkc tiling::window --focus prev"]
                  ;; rotate windows clockwise and anticlockwise
