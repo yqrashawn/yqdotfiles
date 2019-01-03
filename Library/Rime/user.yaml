@@ -1,4 +1,5 @@
 var:
+  last_build_time: 1546483163
   option:
     simplification: true
   previously_selected_schema: luna_pinyin
