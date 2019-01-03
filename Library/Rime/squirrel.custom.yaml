@@ -22,6 +22,8 @@ patch:
      ascii_mode: true
     com.sublimetext.3:
      ascii_mode: true
+    com.google.Chrome.canary:
+      ascii_mode: true
     org.gnu.Emacs:
       ascii_mode: true
     uk.foon.Neovim:

@@ -11,8 +11,92 @@
 # 於重新部署後生效
 #
 
-patch:
-  'speller/algebra':
+custom_phrase:
+  db_class: stabledb
+  dictionary: ""
+  enable_completion: true
+  enable_sentence: true
+  initial_quality: 1
+  user_dict: custom_phrase
+customization: 573312534
+engine:
+  filters:
+    - simplifier
+    - uniquifier
+    - "reverse_lookup_filter@pinyin_lookup"
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - "table_translator@custom_phrase"
+    - "script_translator@pinyin"
+    - reverse_lookup_translator
+    - script_translator
+key_binder:
+  import_preset: default
+punctuator:
+  half_shape:
+    "$": "￥"
+    "%": "%"
+    "*": "*"
+    "/": "/"
+    "<": "《"
+    ">": "》"
+    "[": "「"
+    "\\": "、"
+    "]": "」"
+    _: "—"
+    "{": "『"
+    "|": "|"
+    "}": "』"
+    "~": "~"
+  import_preset: symbols
+recognizer:
+  import_preset: default
+  patterns:
+    punct: "^/([0-9]+[a-z]*|[a-z]+)$"
+    reverse_lookup: "`[a-z]*'?$"
+reverse_lookup:
+  comment_format:
+    - "xform/([nl])v/$1ü/"
+  dictionary: stroke
+  enable_completion: true
+  preedit_format:
+    - "xlit/hspnz/一丨丿丶乙/"
+  prefix: "`"
+  suffix: "'"
+  tips: "〔筆畫〕"
+schema:
+  author:
+    - "佛振 <chen.sst@gmail.com>"
+  dependencies:
+    - stroke
+  description: |
+    Rime 預設的拼音輸入方案。
+    參考以下作品而創作：
+      * CC-CEDICT
+      * Android open source project
+      * Chewing - 新酷音
+      * opencc - 開放中文轉換
+    
+  name: "朙月拼音"
+  schema_id: luna_pinyin
+  version: 0.22.custom.573312534
+speller:
+  algebra:
     - erase/^xx$/                      # 第一行保留
 
     # 模糊音定義
@@ -91,22 +175,31 @@ patch:
     # - derive/ao$/oa/                   # hoa => hao
     # - derive/([iu])a(o|ng?)$/a$1$2/    # tain => tian
 
-  # 分尖團後 v => ü 的改寫條件也要相應地擴充：
-  #'translator/preedit_format':
-  #  - "xform/([nljqxyzcs])v/$1ü/"
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
 
-  punctuator/half_shape:
-      "/" : "/"
-      "\\" : "、"
-      "[": "「"
-      "]": "」"
-      "|": "|"
-      "<": "《"
-      ">": "》"
-      "$": "￥"
-      "%": "%"
-      "*": "*"
-      "~": "~"
-      _: "—"
-      "{": "『"
-      "}": "』"
+switches:
+  - name: ascii_mode
+    reset: 1
+    states: ["西文", "中文"]
+  - name: full_shape
+    reset: 0
+    states: ["半角", "全角"]
+  - name: simplification
+    reset: 1
+    states: ["漢字", "汉字"]
+  - name: ascii_punct
+    reset: 1
+    states: ["。，", "．，"]
+
+translator:
+  dictionary: luna_pinyin
+  enable_completion: true
+  enable_sentence: true
+  enable_user_dict: true
+  preedit_format:
+  # 分尖團後 v => ü 的改寫條件也要相應地擴充：
+    - "xform/([nl])v/$1ü/"
+    - "xform/([nl])ue/$1üe/"
+    - "xform/([jqxy])v/$1u/"
+  spelling_hints: 20
