@@ -181,7 +181,7 @@ speller:
 switches:
   - name: ascii_mode
     reset: 1
-    states: ["西文", "中文"]
+    states: ["中文", "西文"]
   - name: full_shape
     reset: 0
     states: ["半角", "全角"]
@@ -190,7 +190,7 @@ switches:
     states: ["漢字", "汉字"]
   - name: ascii_punct
     reset: 1
-    states: ["。，", "．，"]
+    states: [ 。，, ．， ]
 
 translator:
   dictionary: luna_pinyin
@@ -205,6 +205,4 @@ translator:
   spelling_hints: 20
 
 patch:
-  "menu/page_size": 6
-  'punctuator/import_preset': alternative
-  'key_binder/import_preset': alternative
+  'key_binder/import_preset': default
