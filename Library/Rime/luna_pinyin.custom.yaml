@@ -203,3 +203,8 @@ translator:
     - "xform/([nl])ue/$1üe/"
     - "xform/([jqxy])v/$1u/"
   spelling_hints: 20
+
+patch:
+  "menu/page_size": 6
+  'punctuator/import_preset': alternative
+  'key_binder/import_preset': alternative
