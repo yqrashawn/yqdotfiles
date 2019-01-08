@@ -32,8 +32,8 @@ patch:
       no_inline: true
   style:
     #color_scheme: native
-    #color_scheme: apathy
-    color_scheme: homepage
+    color_scheme: apathy
+    # color_scheme: homepage
     #color_scheme: starcraft
   preset_color_schemes:
     apathy: 
@@ -48,7 +48,7 @@ patch:
       back_color: 0xFFFFFF
       #font_face: "PingFangSC-Regular,HanaMinA"  # HanaMinA makes emoji display bad
       font_face: "PingFangSC-Regular,PingFangTC-Regular"
-      font_point: 15
+      font_point: 16
       text_color: 0x424242
       label_font_face: "PingFangSC-Light,HanaMinA"
       label_font_point: 12
