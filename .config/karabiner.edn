@@ -9,6 +9,9 @@
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}
           :chunkwm-insert-mode {:key :i :condi :tab-mode}
+          :emacs-windmove-mode {:key :q :condi :Emacs}
+          :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
+          ;; :emacs-bufmove-mode {:key :f :condi :emacs-windmove-mode}
           :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]}}
           :comma-mode {:key :comma}}
  :simlayers {:test-mode {:key :9}
@@ -19,7 +22,7 @@
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
-             :emacs-windmove-mode {:key :q :condi :Emacs}
+             ;; :emacs-windmove-mode {:key :q :condi :Emacs}
              :tmux-windmove-mode {:key :q :condi :Terminals}
              :q-mode {:key :q}
              :alfred-mode {:key :z}
@@ -128,7 +131,8 @@
          :rules [:launch-mode
                  [:j [:open "/Applications/Alacritty.app"]]
                  [:k [:open "/Applications/Emacs.app"]]
-                 [:l [:open "/Applications/Google Chrome Canary.app/"]]
+                 ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
+                 [:l [:open "/Applications/FirefoxDeveloperEdition.app/"]]
                  [:m [:open "/Applications/Mail.app"]]
                  [:v [:open "/Applications/WeChat.app"]]
                  [:q [:open "/Applications/Karabiner-Elements.app"]]
@@ -184,7 +188,18 @@
                  [:right_command "osascript -e 'tell application \"Alfred 3\" to run trigger \"new2do\" in workflow \"me.canor.alfred2do\" with argument \"\"'"]
                  #_[:right_command :!!3]]}
         {:des "q"
-         :rules [:emacs-windmove-mode
+         :rules [
+                 ;; :emacs-bufmove-mode
+                 ;; [:h [:!Tx :9 :w :h]]
+                 ;; [:j [:!Tx :9 :w :j]]
+                 ;; [:k [:!Tx :9 :w :k]]
+                 ;; [:l [:!Tx :9 :w :l]]
+                 :emacs-windresize-mode
+                 [:h [:!Tx :8 :w :h]]
+                 [:j [:!Tx :8 :w :j]]
+                 [:k [:!Tx :8 :w :k]]
+                 [:l [:!Tx :8 :w :l]]
+                 :emacs-windmove-mode
                  [:h [:!Tx :7 :w :h]]
                  [:j [:!Tx :7 :w :j]]
                  [:k [:!Tx :7 :w :k]]
@@ -285,7 +300,7 @@
                  [:e :!Sopen_bracket]
                  [:r :!Sclose_bracket]]}
         {:des "chrome debug mode"
-         :rules [[:condi :Chromes :tab-mode]
+         :rules [[:condi :Browsers :tab-mode]
                  [:q :!Csemicolon]
                  [:w :!CSsemicolon]
                  [:e :!Cquote]
@@ -299,7 +314,7 @@
         {:des "Emacs key bindings [control+keys] (rev 10)"
          :rules [[:!T#Sy :!Cv :!Emacs]
                  :!emacs-mode-disable-app
-                 [:!T#Od :delete_forward]
+                 [:!T#Od :delete_forward :!Firefoxes]
                  [:!T#Oh :delete_or_backspace]
                  [:!T#SOw :!Odelete_or_backspace]
                  [:!T#Oi :tab]
@@ -362,6 +377,8 @@
                         "^org\\.gnu\\.AquamacsEmacs$"
                         "^org\\.gnu\\.Aquamacs$"]
                 :Chromes ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
+                :Firefoxes ["^org\\.mozilla\\.firefox$"
+                            "^org\\.mozilla\\.firefoxdeveloperedition$"]
                 :Terminals ["^com\\.apple\\.Terminal$"
                             "^com\\.googlecode\\.iterm2$"
                             "^co\\.zeit\\.hyperterm$"
@@ -378,7 +395,9 @@
                                                 "^com\\.qvacua\\.VimR$"]
                 :Finder ["^com\\.apple\\.finder$"]
                 :Browsers ["^org\\.mozilla\\.firefox$"
+                           "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"
+                           "^org\\.chromium\\.Chromium$"
                            "^com\\.google\\.Chrome\\.canary$"
                            "^com\\.apple\\.Safari$"]
                 :2do ["^com\\.guidedways\\.TodoMac.*"]}
