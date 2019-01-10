@@ -39,7 +39,7 @@ patch:
     apathy: 
       name: "冷漠 / Apathy"
       author: "LIANG Hai "
-      horizontal: true
+      horizontal: false
       inline_preedit: true
       candidate_format: "%c\u2005%@\u2005"
       corner_radius: 4
