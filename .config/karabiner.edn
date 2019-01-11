@@ -29,12 +29,11 @@
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}
              :e-mode {:key :e}}
- :main [#_{:des "double press and hold key down in simlayer"
-           :rules [[:j "say 'j double press'" [["test-mode" 1] ["test-mode-j-dbpress-mode" 1]]]
-                   :test-mode
-                   [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
-                                                                                            :invoked ["test-mode-j-dbpress-mode" 0]}
-                                                                                  :held "say 'j held down'"}]]}
+ :main [#_{:des "double press and hold key down in simlayer"}
+        :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
+                [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
+                                                                                         :invoked ["test-mode-j-dbpress-mode" 0]}
+                                                                               :held "say 'j held down'"}]]
         {:des "contexts"
          :rules [[[:m :l] [:f16]]
                  [:semicolon :right_option nil {:alone :semicolon}]
@@ -131,8 +130,8 @@
          :rules [:launch-mode
                  [:j [:open "/Applications/Alacritty.app"]]
                  [:k [:open "/Applications/Emacs.app"]]
-                 ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
-                 [:l [:open "/Applications/FirefoxDeveloperEdition.app/"]]
+                 [:l [:open "/Applications/Google Chrome Canary.app/"]]
+                 ;; [:l [:open "/Applications/FirefoxDeveloperEdition.app/"]]
                  [:m [:open "/Applications/Mail.app"]]
                  [:v [:open "/Applications/WeChat.app"]]
                  [:q [:open "/Applications/Karabiner-Elements.app"]]
@@ -200,6 +199,7 @@
                  [:k [:!Tx :8 :w :k]]
                  [:l [:!Tx :8 :w :l]]
                  :emacs-windmove-mode
+                 [:r [:q :r]]
                  [:h [:!Tx :7 :w :h]]
                  [:j [:!Tx :7 :w :j]]
                  [:k [:!Tx :7 :w :k]]
@@ -406,4 +406,5 @@
                             :language "zh-Hans"}
                  :us {:input_mode_id ""
                       :input_source_id "com.apple.keylayout.US"
-                      :language "en"}}}
+                      :language "en"}}
+ :simlayer-threshold 250}
