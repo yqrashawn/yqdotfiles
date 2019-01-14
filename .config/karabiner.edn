@@ -22,13 +22,11 @@
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
-             ;; :emacs-windmove-mode {:key :q :condi :Emacs}
              :tmux-windmove-mode {:key :q :condi :Terminals}
              :q-mode {:key :q}
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
-             :browsers-alfred-mode {:key :z :condi :Browsers}
-             :e-mode {:key :e}}
+             :browsers-alfred-mode {:key :z :condi :Browsers}}
  :main [#_{:des "double press and hold key down in simlayer"}
         :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
                 [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
@@ -117,7 +115,7 @@
                  [:##h :!Sleft_arrow]
                  [:##l :!Sright_arrow]
                  [:##b :!SOleft_arrow]
-                 [:##w :!SOright_arrow]
+                 [:##e :!SOright_arrow]
                  [:##0 :!SCleft_arrow]
                  [:##4 :!SCright_arrow]
                  [:##open_bracket :!SOup_arrow]
