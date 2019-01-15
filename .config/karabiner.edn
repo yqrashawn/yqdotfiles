@@ -100,6 +100,23 @@
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
                  [:close_bracket [:!Tx :!T9 :close_bracket]]]}
+        {:des "Emacs m/v select company candidates"
+         :rules [:emacs-m-mode
+                 [:a [:!Tx :!T6 :1]]
+                 [:s [:!Tx :!T6 :2]]
+                 [:d [:!Tx :!T6 :3]]
+                 [:f [:!Tx :!T6 :4]]
+                 [:g [:!Tx :!T6 :5]]
+                 :emacs-v-mode
+                 [:h [:!Tx :!T6 :6]]
+                 [:j [:!Tx :!T6 :7]]
+                 [:k [:!Tx :!T6 :8]]
+                 [:l [:!Tx :!T6 :9]]
+                 [:semicolon [:!Tx :!T6 :0]]]}
+        {:des "Emacs switch buffer"
+         :rules [:Emacs
+                 [:tab :!Ttab :period-mode]
+                 [:tab :!TStab :comma-mode]]}
         {:des "Vi Mode [D as Trigger Key]"
          :rules [:vi-mode
                  [:##j :down_arrow]
@@ -122,23 +139,6 @@
                  [:##4 :!SCright_arrow]
                  [:##open_bracket :!SOup_arrow]
                  [:##close_bracket :!SOdown_arrow]]}
-        {:des "Emacs m/v select company candidates"
-         :rules [:emacs-m-mode
-                 [:a :1]
-                 [:s :2]
-                 [:d :3]
-                 [:f :4]
-                 [:g :5]
-                 :emacs-v-mode
-                 [:h :6]
-                 [:j :7]
-                 [:k :8]
-                 [:l :9]
-                 [:semicolon :0]]}
-        {:des "Emacs switch buffer"
-         :rules [:Emacs
-                 [:tab :!Ttab :period-mode]
-                 [:tab :!TStab :comma-mode]]}
         {:des "launcher mode"
          :rules [:launch-mode
                  [:j [:open "/Applications/Alacritty.app"]]
