@@ -9,11 +9,11 @@
           :chunkwm-move-mode {:key :f :condi :tab-mode}
           :chunkwm-scale-mode {:key :c :condi :tab-mode}
           :chunkwm-insert-mode {:key :i :condi :tab-mode}
-          :emacs-windmove-mode {:key :q :condi :Emacs}
+          :emacs-windmove-mode {:key :q :condi [:Emacs :!comma-mode :!period-mode]}
           :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
-          ;; :emacs-bufmove-mode {:key :f :condi :emacs-windmove-mode}
-          :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]}}
-          :comma-mode {:key :comma}}
+          :emacs-bufmove-mode {:key :f :condi :emacs-windmove-mode}
+          :period-mode {:key :period :afterup {:set ["period-comma-mode" 0]} :condi :!emacs-s-mode}
+          :comma-mode {:key :comma :condi :!emacs-s-mode}}
  :simlayers {:test-mode {:key :9}
              :contexts-f-mode {:key :f}
              :2do-mode {:key :t}
@@ -25,7 +25,7 @@
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
              :tmux-windmove-mode {:key :q :condi :Terminals}
-             :q-mode {:key :q}
+             ;; :q-mode {:key :q :condi [:!comma-mode :!period-mode]}
              :alfred-mode {:key :z}
              :finder-alfred-mode {:key :z :condi :Finder}
              :browsers-alfred-mode {:key :z :condi :Browsers}}
@@ -83,12 +83,6 @@
                  [:v [:!C4]]]}
         {:des "s-mode in emacs, awesome-tab"
          :rules [:emacs-s-mode
-                 ;; [:h [:!Tx :!T9 {:key :h :repeat false}]]
-                 ;; [:j [:!Tx :!T9 {:key :j :repeat false}]]
-                 ;; [:k [:!Tx :!T9 {:key :k :repeat false}]]
-                 ;; [:l [:!Tx :!T9 {:key :l :repeat false}]]
-                 ;; [:n [:!Tx :!T9 {:key :n :repeat false}]]
-                 ;; [:p [:!Tx :!T9 {:key :p :repeat false}]]
                  [:h :!!h]
                  [:j :!!j]
                  [:k :!!k]
@@ -99,7 +93,14 @@
                  [:period [:!Tx :!T8 :close_bracket]]
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
-                 [:close_bracket [:!Tx :!T9 :close_bracket]]]}
+                 [:close_bracket [:!Tx :!T9 :close_bracket]]
+                 [:condi [:emacs-s-mode :Terminals]
+                  [:h [:!Tx :!T9 {:key :h :repeat false}]]
+                  [:j [:!Tx :!T9 {:key :j :repeat false}]]
+                  [:k [:!Tx :!T9 {:key :k :repeat false}]]
+                  [:l [:!Tx :!T9 {:key :l :repeat false}]]
+                  [:n [:!Tx :!T9 {:key :n :repeat false}]]
+                  [:p [:!Tx :!T9 {:key :p :repeat false}]]]]}
         {:des "Emacs m/v select company candidates"
          :rules [:emacs-m-mode
                  [:a [:!Tx :!T6 :1]]
@@ -107,7 +108,9 @@
                  [:d [:!Tx :!T6 :3]]
                  [:f [:!Tx :!T6 :4]]
                  [:g [:!Tx :!T6 :5]]
+                 [:h [:!Tx :!T6 :6]]
                  :emacs-v-mode
+                 [:g [:!Tx :!T6 :5]]
                  [:h [:!Tx :!T6 :6]]
                  [:j [:!Tx :!T6 :7]]
                  [:k [:!Tx :!T6 :8]]
@@ -201,12 +204,11 @@
                  [:right_command "osascript -e 'tell application \"Alfred 3\" to run trigger \"new2do\" in workflow \"me.canor.alfred2do\" with argument \"\"'"]
                  #_[:right_command :!!3]]}
         {:des "q"
-         :rules [
-                 ;; :emacs-bufmove-mode
-                 ;; [:h [:!Tx :9 :w :h]]
-                 ;; [:j [:!Tx :9 :w :j]]
-                 ;; [:k [:!Tx :9 :w :k]]
-                 ;; [:l [:!Tx :9 :w :l]]
+         :rules [:emacs-bufmove-mode
+                 [:h [:!Tx :9 :w :h]]
+                 [:j [:!Tx :9 :w :j]]
+                 [:k [:!Tx :9 :w :k]]
+                 [:l [:!Tx :9 :w :l]]
                  :emacs-windresize-mode
                  [:h [:!Tx :8 :w :h]]
                  [:j [:!Tx :8 :w :j]]
