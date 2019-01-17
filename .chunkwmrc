@@ -71,6 +71,7 @@ chunkc tiling::rule --owner \"Karabiner-EventViewer\" --state float
 chunkc tiling::rule --owner \"Calculator\" --state float
 chunkc tiling::rule --owner \"Dictionary\" --state float
 chunkc tiling::rule --owner \"mpv\" --state float
+chunkc tiling::rule --owner \"Dash\" --state float
 chunkc tiling::rule --owner \"The Unarchiver\" --state float
 chunkc tiling::rule --owner \"Parallels Desktop\" --state float
 chunkc tiling::rule --owner \"Parallels Desktop\" --name \" \" --state float
