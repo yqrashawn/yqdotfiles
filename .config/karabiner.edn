@@ -227,21 +227,21 @@
                  [:m [:!Tx :1]]
                  [:b [:!Tx :0]]
                  :tmux-windmove-mode
-                 [:comma [:!Tq :comma]]
-                 [:open_bracket [:!Tq :open_bracket]]
-                 [:y [:!Tq :y]]
-                 [:f [:!Tq :f]]
-                 [:e [:!Tq :e]]
-                 [:w [:!Tq :w]]
-                 [:h [:!Tq :h]]
-                 [:j [:!Tq :j]]
-                 [:k [:!Tq :k]]
-                 [:l [:!Tq :l]]
-                 [:v [:!Tq :v]]
-                 [:s [:!Tq :s]]
-                 [:m [:!Tq :z]]
-                 [:b [:!Tq :x]]
-                 [:c [:!Tq :c]]
+                 [:comma [:!Tq :comma]] ;; rename tmux pane
+                 [:open_bracket [:!Tq :open_bracket]] ;; esc
+                 [:y [:!Tq :y]] ;; copy
+                 [:f [:!Tq :f]] ;; find and switch window
+                 [:e [:!Tq :e]] ;; find session
+                 [:w [:!Tq :w]] ;; list and switch window/pane
+                 [:h [:!Tq :h]] ;; focuse window
+                 [:j [:!Tq :j]] ;; focuse window
+                 [:k [:!Tq :k]] ;; focuse window
+                 [:l [:!Tq :l]] ;; focuse window
+                 [:v [:!Tq :v]] ;; v split
+                 [:s [:!Tq :s]] ;; s split
+                 [:m [:!Tq :z]] ;; maxmize window
+                 [:b [:!Tq :x]] ;; close window
+                 [:c [:!Tq :c]] ;; new pane
                  [:1 [:!Tq :1]]
                  [:2 [:!Tq :2]]
                  [:3 [:!Tq :3]]
