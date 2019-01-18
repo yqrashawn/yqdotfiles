@@ -274,6 +274,7 @@
                  [:grave_accent_and_tilde "/usr/local/bin/brew services restart chunkwm"]
                  ;; change gap setting, reload chunkwmrc
                  [:backslash "~/local/bin/chunkwm-gaps 10 10 5 5 7.5"]
+                 [:delete_or_backspace "~/local/bin/chunkwm-gaps 0 0 0 0 0"]
                  [:h "/usr/local/bin/chunkc tiling::window --focus west"]
                  [:j "/usr/local/bin/chunkc tiling::window --focus south"]
                  [:k "/usr/local/bin/chunkc tiling::window --focus north"]
