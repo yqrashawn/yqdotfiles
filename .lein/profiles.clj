@@ -1,6 +1,6 @@
 {:user {:pedantic? :ranges
         :plugins [;; [lein-ancient "0.6.15"]
-                  [cider/cider-nrepl "0.19.0-SNAPSHOT"]
+                  [cider/cider-nrepl "0.20.1-SNAPSHOT"]
                   [lein-kibit "0.1.6"]
                   [com.cemerick/pomegranate "1.1.0"]
                   [polylith/lein-polylith "LATEST"]
