@@ -109,7 +109,9 @@
                  [:f [:!Tx :!T6 :4]]
                  [:g [:!Tx :!T6 :5]]
                  [:h [:!Tx :!T6 :6]]
+                 [:left_shift [:!Tx :!T6 :q]]
                  :emacs-v-mode
+                 [:right_shift [:!Tx :!T6 :w]]
                  [:g [:!Tx :!T6 :5]]
                  [:h [:!Tx :!T6 :6]]
                  [:j [:!Tx :!T6 :7]]
