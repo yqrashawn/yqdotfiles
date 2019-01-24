@@ -1,5 +1,4 @@
 alias d='cd ~/Downloads/'
-alias w='cd ~/workspace/'
 alias wo='cd ~/workspace/OFFICE/'
 alias wt='cd ~/workspace/THIRD/'
 alias wh='cd ~/workspace/HOME/'
