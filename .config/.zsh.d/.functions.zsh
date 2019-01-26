@@ -120,3 +120,7 @@ function is-mobile {
     done
     return 1
 }
+
+function cheat() {
+    curl cht.sh/$1
+}

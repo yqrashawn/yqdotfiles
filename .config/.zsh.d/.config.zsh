@@ -4,33 +4,6 @@ if [ -n "$INSIDE_EMACS" ]; then
     print -P "\033AnSiTc %d"
 fi
 
-# function environment_variable_exists {
-#     eval "value=\"\${$1+x}\""
-#     [ ! -z $value ]
-# }
-
-# function emacs_ansi_term_support {
-#     echo -e "\033AnSiTu" "$LOGNAME" # $LOGNAME is more portable than using whoami.
-#     echo -e "\033AnSiTc" "$(pwd)"
-#     if [ $(uname) = "SunOS" ]; then
-#         # The -f option does something else on SunOS and is not needed anyway.
-#         hostname_options="";
-#     else
-#         hostname_options="-f";
-#     fi
-#     # XXX/TODO: This disables correct setting of the current directory
-#     # when in an sshed shell when inside of emacs
-#     # echo -e "\033AnSiTh" "$(hostname $hostname_options)" # Using the -f option can #
-#     # cause problems on some OSes.
-# }
-
-# if environment_variable_exists INSIDE_EMACS; then
-#     if [[ $INSIDE_EMACS == *"term"* ]]
-#     then
-#         add-zsh-hook precmd emacs_ansi_term_support
-#     fi
-# fi
-
 # Highlight section titles in manual pages.
 export LESS_TERMCAP_md="${yellow}";
 
