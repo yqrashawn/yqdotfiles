@@ -23,10 +23,10 @@ PYTHONPATH="~/blog/lazyblorg:" $HOME/blog/lazyblorg/lazyblorg.py \
           --previous-metadata $HOME/blog/lazyblorg/2del-metadata.pk \
           --new-metadata $HOME/blog/lazyblorg/2del-metadata.pk \
           --logfile $HOME/blog/2del-logfile.org \
-          --orgfiles $HOME/Dropbox/ORG/writes.org \
-                     $HOME/Dropbox/ORG/work-blog.org \
-                     $HOME/Dropbox/ORG/resume.org \
-          $HOME/blog/lazyblorg/templates/blog-format.org $@
+          --orgfiles $HOME/Dropbox/ORG/blog/writes.org \
+                     $HOME/Dropbox/ORG/blog/work-blog.org \
+                     $HOME/Dropbox/ORG/blog/resume.org \
+                     $HOME/blog/lazyblorg/templates/blog-format.org $@
 
 #END
 
