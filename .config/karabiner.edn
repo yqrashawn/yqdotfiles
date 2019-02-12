@@ -333,6 +333,7 @@
         {:des "Emacs key bindings [control+keys] (rev 10)"
          :rules [[:!T#Sy :!Cv :!Emacs]
                  :!emacs-mode-disable-app
+                 [:!Ow :!Cc]
                  [:!T#Od :delete_forward :!Firefoxes]
                  [:!T#Oh :delete_or_backspace]
                  [:!T#SOw :!Odelete_or_backspace]
