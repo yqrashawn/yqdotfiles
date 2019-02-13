@@ -12,21 +12,23 @@
                   [lein-nsorg "0.2.0"]]
         :dependencies [[pjstadig/humane-test-output "0.8.3"]
                        [com.cemerick/pomegranate "1.1.0"]
+                       [spyscope "0.1.6"]
                        ;; [compliment "0.2.2"]
                        ;; [cider/orchard "0.3.0"]
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
+                     (require 'spyscope.core)
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
-        ;; :mirrors {#"clojars"
-        ;;           {:name "Clojar USTC"
-        ;;            ;; :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"
-        ;;            :url "https://mirrors.ustc.edu.cn/clojars/"
-        ;;            :repo-manager true}
-        ;;           "central"
-        ;;           {:name "central aliyun"
-        ;;            :url "https://maven.aliyun.com/nexus/content/groups/public/"
-        ;;            :repo-manager true}}}
+ ;; :mirrors {#"clojars"
+ ;;           {:name "Clojar USTC"
+ ;;            ;; :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"
+ ;;            :url "https://mirrors.ustc.edu.cn/clojars/"
+ ;;            :repo-manager true}
+ ;;           "central"
+ ;;           {:name "central aliyun"
+ ;;            :url "https://maven.aliyun.com/nexus/content/groups/public/"
+ ;;            :repo-manager true}}}
  :repl {:plugins [#_[cider/cider-nrepl "0.19.0-SNAPSHOT"]
                   #_[figwheel-sidecar "0.5.17-SNAPSHOT"]
                   [cider/piggieback "0.3.9"]
