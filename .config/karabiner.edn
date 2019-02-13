@@ -20,6 +20,7 @@
              :2do-s-mode {:key :s :condi :2do}
              :emacs-m-mode {:key :m :condi :Emacs}
              :emacs-v-mode {:key :v :condi :Emacs}
+             :emacs-special-s-mode {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
              :emacs-s-mode {:key :s :condi :Emacs}
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
@@ -82,25 +83,27 @@
                  [:a [:!C1]]
                  [:v [:!C4]]]}
         {:des "s-mode in emacs, awesome-tab"
-         :rules [:emacs-s-mode
+         :rules [:emacs-special-s-mode
                  [:h :!!h]
-                 [:j :!!j]
-                 [:k :!!k]
                  [:l :!!l]
-                 [:n :!!n]
-                 [:p :!!p]
+                 :emacs-s-mode
+                 [:j :!!j nil]
+                 [:k :!!k nil]
+                 [:n :!!n nil]
+                 [:p :!!p nil]
                  [:comma [:!Tx :!T8 :open_bracket]]
                  [:period [:!Tx :!T8 :close_bracket]]
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
                  [:close_bracket [:!Tx :!T9 :close_bracket]]
-                 [:condi [:emacs-s-mode :Terminals]
-                  [:h [:!Tx :!T9 {:key :h :repeat false}]]
-                  [:j [:!Tx :!T9 {:key :j :repeat false}]]
-                  [:k [:!Tx :!T9 {:key :k :repeat false}]]
-                  [:l [:!Tx :!T9 {:key :l :repeat false}]]
-                  [:n [:!Tx :!T9 {:key :n :repeat false}]]
-                  [:p [:!Tx :!T9 {:key :p :repeat false}]]]]}
+                 [:condi :emacs-special-s-mode :Terminals]
+                 [:h [:!Tx :!T9 {:key :h :repeat false}]]
+                 [:l [:!Tx :!T9 {:key :l :repeat false}]]
+                 [:condi :emacs-s-mode :Terminals]
+                 [:j [:!Tx :!T9 {:key :j :repeat false}]]
+                 [:k [:!Tx :!T9 {:key :k :repeat false}]]
+                 [:n [:!Tx :!T9 {:key :n :repeat false}]]
+                 [:p [:!Tx :!T9 {:key :p :repeat false}]]]}
         {:des "Emacs m/v select company candidates"
          :rules [:emacs-m-mode
                  [:a [:!Tx :!T6 :1]]
