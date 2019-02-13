@@ -20,7 +20,7 @@
              :2do-s-mode {:key :s :condi :2do}
              :emacs-m-mode {:key :m :condi :Emacs}
              :emacs-v-mode {:key :v :condi :Emacs}
-             :emacs-special-s-mode {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
+             :emacs-special-s-mode {:key :s :condi :Emacs :afterup {:key :escape}}
              :emacs-s-mode {:key :s :condi :Emacs}
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
