@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: extension
-# key: extension
-# --
-${1:urn}.toLowerCase().slice(${1:urn}.lastIndexOf('.' + 1));
-

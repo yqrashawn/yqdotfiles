@@ -1,6 +1,0 @@
-# name : for...of
-# key: foro
-# --
-for (const ${1:var} of ${2:array}) {
-  ${3:funcs}
-}
