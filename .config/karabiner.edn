@@ -161,7 +161,7 @@
                  [:9 [:open "/Applications/PDF Expert.app"]]
                  [:comma [:open "/Applications/Safari.app"]]
                  [:h [:open "/Applications/Bee.app"]]
-                 [:period [:open "/Applications/Paw.app"]]
+                 [:period [:open "/Applications/SetApp/Paw.app"]]
                  [:equal_sign [:open "/Applications/Textual.app"]]
                  [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
                  [:b [:open "/Applications/Bee.app"]]

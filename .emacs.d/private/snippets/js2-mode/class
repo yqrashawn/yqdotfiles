@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: class
-# key: class
-# --
-class ${1: class name} {
-  counstructor(${2:args}) {
-    ${3}
-  }
-}

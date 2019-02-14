@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: sclass
-# key: scalss
-# --
-class ${1: class name}{
-  ${2}
-}

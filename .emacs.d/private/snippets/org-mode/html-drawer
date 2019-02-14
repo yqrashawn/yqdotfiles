@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: html block
-# key: html
-# --
-#+BEGIN_SRC html
-$1
-#+END_SRC
