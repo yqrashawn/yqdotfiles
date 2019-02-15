@@ -1,6 +1,7 @@
 {:user {:pedantic? :ranges
         :plugins [;; [lein-ancient "0.6.15"]
-                  [cider/cider-nrepl "0.20.1-SNAPSHOT"]
+                  [cider/cider-nrepl "0.21.0"]
+                  ;; [cider/cider-nrepl "0.20.1-SNAPSHOT"]
                   [lein-kibit "0.1.6"]
                   [polylith/lein-polylith "LATEST"]
                   ;; [lein-environ "1.1.0"]
@@ -12,12 +13,12 @@
                   [lein-nsorg "0.2.0"]]
         :dependencies [[pjstadig/humane-test-output "0.8.3"]
                        [com.cemerick/pomegranate "1.1.0"]
-                       [spyscope "0.1.6"]
+                       ;; [spyscope "0.1.6"]
                        ;; [compliment "0.2.2"]
                        ;; [cider/orchard "0.3.0"]
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
-                     (require 'spyscope.core)
+                     ;; (require 'spyscope.core)
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
  ;; :mirrors {#"clojars"
@@ -34,7 +35,7 @@
                   [cider/piggieback "0.3.9"]
                   [refactor-nrepl "2.4.0"]]
         :dependencies [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
-                       #_[cheshire "5.8.0"]
+                       [cheshire "5.8.0"]
                        #_[org.clojure/tools.nrepl "0.2.13"]]
         :injections [(require '[cheshire.core :as json])]}
  :env {:squiggly {:checkers                 [:eastwood :kibit]
