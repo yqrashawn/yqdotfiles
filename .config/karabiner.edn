@@ -1,4 +1,5 @@
-{:templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+{:modifiers {:ro :right_option}
+ :templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :2do "open 'twodo://x-callback-url/%s'"
@@ -169,7 +170,26 @@
                  [:t [:open "/Applications/Setapp/2Do.app"]]
                  [:r [:open "/Applications/Setapp/Timing.app"]]
                  #_[:l [:!Cgrave_accent_and_tilde] :Chromes]
-                 [:d [{:key :n :modi [:right_option]} {:key :d :modi [:right_option]} {:key :b :modi [:right_option]} :return_or_enter]]]}
+                 ;; open ndb
+                 [:d [{:key :g :modi [:right_option :right_shift]}
+                      {:key :o :modi :ro}
+                      {:key :o :modi :ro}
+                      {:key :g :modi :ro}
+                      {:key :l :modi :ro}
+                      {:key :e :modi :ro}
+                      {:key :backslash :modi :ro}
+                      {:key :spacebar :modi :ro}
+                      {:key :c :modi [:right_option :right_shift]}
+                      {:key :h :modi :ro}
+                      {:key :r :modi :ro}
+                      {:key :o :modi :ro}
+                      {:key :m :modi :ro}
+                      {:key :e :modi :ro}
+                      {:key :spacebar :modi :ro}
+                      {:key :n :modi :ro}
+                      {:key :d :modi :ro}
+                      {:key :b :modi :ro}
+                      :return_or_enter]]]}
         {:des "caps_lock"
          :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
         {:des "HHKB, FILCO MINILA Change left control to esc if alone"
