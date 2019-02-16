@@ -28,6 +28,7 @@ Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
 Patterns *
+Patterns "![Gmail]/All Mail"
 # Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail" !Homes
 Sync All
 Create Both
