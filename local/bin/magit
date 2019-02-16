@@ -1,2 +1,1 @@
-emacsclient -e "(magit-status \"./$(git rev-parse --show-cdup)\")" &
-osascript -e 'tell application "Emacs" to activate'
+emacsclient -e "(magit-status \"./$(git rev-parse --show-cdup)\")"
