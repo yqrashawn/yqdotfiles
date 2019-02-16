@@ -1,15 +1,20 @@
 {:user {:pedantic? :ranges
         :plugins [;; [lein-ancient "0.6.15"]
                   [cider/cider-nrepl "0.21.0"]
-                  ;; [cider/cider-nrepl "0.20.1-SNAPSHOT"]
-                  [lein-kibit "0.1.6"]
-                  [polylith/lein-polylith "LATEST"]
-                  ;; [lein-environ "1.1.0"]
-                  ;; [lein-pdo "0.1.1"]
+                  ;; [lein-kibit "0.1.6"]
+                  ;; [polylith/lein-polylith "LATEST"]
+
+                  [lein-environ "1.1.0"]
+
+                  ;; A Leiningen plugin that executes tasks when files are modifed
                   ;; [lein-auto "0.1.3"]
+
+                  ;; Run multiple leiningen tasks in parallel.
+                  ;; lein pdo cljsbuild auto, repl
+                  ;; [lein-pdo "0.1.1"]
+
                   #_[com.billpiel/sayid "0.0.16"]
-                  [atroche/lein-ns-dep-graph "0.2.0-SNAPSHOT"]
-                  [jonase/eastwood "0.2.9"]
+                  [jonase/eastwood "0.3.5"]
                   [lein-nsorg "0.2.0"]]
         :dependencies [[pjstadig/humane-test-output "0.8.3"]
                        [com.cemerick/pomegranate "1.1.0"]
@@ -35,8 +40,9 @@
                   [cider/piggieback "0.3.9"]
                   [refactor-nrepl "2.4.0"]]
         :dependencies [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
-                       [cheshire "5.8.0"]
+                       ;; [cheshire "5.8.0"]
                        #_[org.clojure/tools.nrepl "0.2.13"]]
-        :injections [(require '[cheshire.core :as json])]}
+        :injections []}
+                     ;; (require '[cheshire.core :as json])]}
  :env {:squiggly {:checkers                 [:eastwood :kibit]
                   :eastwood-exclude-linters [:unlimited-use]}}}
