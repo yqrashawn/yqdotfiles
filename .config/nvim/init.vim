@@ -1,7 +1,8 @@
 let mapleader=' '
 let g:python_host_prog='/usr/local/bin/python2'
 let g:loaded_python3_provider=1
-" let g:python3_host_prog='/usr/local/bin/python3'
+let g:python3_host_prog='/usr/local/bin/python3'
+let g:ycm_path_to_python_interpreter="/usr/local/bin/python3"
 source ~/.config/nvim/filetype.vim
 source ~/.config/nvim/func.vim
 source ~/.config/nvim/plugins.vim
