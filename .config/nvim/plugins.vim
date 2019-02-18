@@ -1,6 +1,7 @@
 call plug#begin('~/.vim/plugged')
 Plug 'Shougo/vimproc'
 Plug 'jnurmine/Zenburn'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary', {'on':['Commentary']}
 Plug 'w0rp/ale'
 Plug 'Valloric/YouCompleteMe'
