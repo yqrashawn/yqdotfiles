@@ -37,7 +37,7 @@
                                                                                          :invoked ["test-mode-j-dbpress-mode" 0]}
                                                                                :held "say 'j held down'"}]]
         {:des "contexts"
-         :rules [[[:m :l] [:f16]]
+         :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                  [:semicolon :right_option nil {:alone :semicolon}]
                  [:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
                  [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
@@ -51,24 +51,26 @@
                  [:j :down_arrow ["in-contexts" 1]]
                  [:k :up_arrow ["in-contexts" 1]]
                  [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]]}
-        #_{:des "in-alfred"
-           :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
-                   [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
-                   [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
-                   [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
-                   [:!Cright_command [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
-                   [:!Tsemicolon [:!Treturn_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
-                   [:!Tl [:return_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
-                   [:!Tj :down_arrow ["in-alfred" 1]]
-                   [:!Tk :up_arrow ["in-alfred" 1]]
-                   [:!Oh :left_arrow ["in-alfred" 1]]
-                   [:!Oj :down_arrow ["in-alfred" 1]]
-                   [:!Ok :up_arrow ["in-alfred" 1]]
-                   [:!Ol :right_arrow ["in-alfred" 1]]
-                   [:!OSh :!OSleft_arrow ["in-alfred" 1]]
-                   [:!OSj :!OSdown_arrow ["in-alfred" 1]]
-                   [:!OSk :!OSup_arrow ["in-alfred" 1]]
-                   [:!OSl :!OSright_arrow ["in-alfred" 1]]]}
+        {:des "in-alfred"
+         :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
+                 [:!Ty :!Cv ["in-alfred" 1]]
+                 [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
+                 [:##caps_lock [:left_control] ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
+                 [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Cright_command [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Tsemicolon [:!Treturn_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Tl [:return_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:!Tj :down_arrow ["in-alfred" 1]]
+                 [:!Tk :up_arrow ["in-alfred" 1]]
+                 [:!Oh :left_arrow ["in-alfred" 1]]
+                 [:!Oj :down_arrow ["in-alfred" 1]]
+                 [:!Ok :up_arrow ["in-alfred" 1]]
+                 [:!Ol :right_arrow ["in-alfred" 1]]
+                 [:!OSh :!OSleft_arrow ["in-alfred" 1]]
+                 [:!OSj :!OSdown_arrow ["in-alfred" 1]]
+                 [:!OSk :!OSup_arrow ["in-alfred" 1]]
+                 [:!OSl :!OSright_arrow ["in-alfred" 1]]]}
         {:des "2do"
          :rules [:2do-mode
                  [:l [:km "2Do: Capture URL to Read"] :Browsers]
@@ -205,9 +207,9 @@
         {:des "Change right_option to switch to second recent application when used alone"
          :rules [[:right_option :right_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
         {:des "some simultaneous keys"
-         :rules [[[:h :l] [:alf "helpSearch" "com.tedwise.menubarsearch"]]
+         :rules [[[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
                  [[:j :l] [:f19 ["in-alfred" 1]]]
-                 [[:l :n] [:alf "winswitch" "ru.mandrigin.alfred.sww"]]]}
+                 [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
         {:des "alfred mode"
          :rules [[:l :!COi :browsers-alfred-mode]
                  [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
@@ -217,7 +219,7 @@
                  [:return_or_enter [:alf "web searches" "nikivi.web.searches"]]
                  [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
                  [:t [:alf "repos" "net.deanishe.alfred-git-repos"]]
-                 ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
+                 [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
                  [:k [[:alf "chromeHistory" "thomasupton.chrome-history"] ["in-alfred" 1]]]
                  [:m [:alf "tab" "net.deanishe.alfred.safari"]]
                  [:y [:!!grave_accent_and_tilde ["in-alfred" 1]]]
