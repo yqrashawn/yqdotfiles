@@ -37,7 +37,7 @@
  ;;            :repo-manager true}}}
  :repl {:plugins [#_[cider/cider-nrepl "0.19.0-SNAPSHOT"]
                   #_[figwheel-sidecar "0.5.17-SNAPSHOT"]
-                  [cider/piggieback "0.3.9"]
+                  [cider/piggieback "0.4.0"]
                   [refactor-nrepl "2.4.0"]]
         :dependencies [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
                        ;; [cheshire "5.8.0"]
