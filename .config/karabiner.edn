@@ -219,7 +219,7 @@
                  [:return_or_enter [:alf "web searches" "nikivi.web.searches"]]
                  [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
                  [:t [:alf "repos" "net.deanishe.alfred-git-repos"]]
-                 [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
+                 ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
                  [:k [[:alf "chromeHistory" "thomasupton.chrome-history"] ["in-alfred" 1]]]
                  [:m [:alf "tab" "net.deanishe.alfred.safari"]]
                  [:y [:!!grave_accent_and_tilde ["in-alfred" 1]]]
@@ -359,6 +359,8 @@
         {:des "Emacs key bindings [control+keys] (rev 10)"
          :rules [[:!T#Sy :!Cv :!Emacs]
                  :!emacs-mode-disable-app
+                 [:!Ob :!Oleft_arrow]
+                 [:!Of :!Oright_arrow]
                  [:!Ow :!Cc]
                  [:!T#Od :delete_forward :!Firefoxes]
                  [:!T#Oh :delete_or_backspace]
