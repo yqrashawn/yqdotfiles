@@ -107,7 +107,7 @@ alias pngq="pngquant -f --speed 1"
 alias optipng="optipng -o7"
 
 # update email
-alias umail="proxychains4 -f /etc/proxychains.conf mbsync gmail"
+alias umail="proxychains4 -f /etc/proxychains.conf mbsync -a"
 
 # updo git push
 alias undopush="git push -f origin HEAD^:master"

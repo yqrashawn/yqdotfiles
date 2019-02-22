@@ -4,7 +4,8 @@
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :2do "open 'twodo://x-callback-url/%s'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-             :open "open \"%s\""}
+             :open "open \"%s\""
+             :type "cliclick t:'%s'"}
  :layers {:tab-mode {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
                                          {:set ["chunkwm-scale-mode" 0]}]}
           :chunkwm-move-mode {:key :f :condi :tab-mode}
@@ -86,10 +87,9 @@
                  [:a [:!C1]]
                  [:v [:!C4]]]}
         {:des "s-mode in emacs, awesome-tab"
-         :rules [:emacs-special-s-mode
+         :rules [:emacs-s-mode
                  [:j :!!j]
                  [:k :!!k]
-                 :emacs-s-mode
                  [:h :!!h]
                  [:l :!!l]
                  [:n :!!n]
@@ -99,10 +99,9 @@
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
                  [:close_bracket [:!Tx :!T9 :close_bracket]]
-                 [:condi :emacs-special-s-mode :Terminals]
-                 [:j [:!Tx :!T9 {:key :j :repeat false}]]
-                 [:k [:!Tx :!T9 {:key :k :repeat false}]]
                  [:condi :emacs-s-mode :Terminals]
+                 [:k [:!Tx :!T9 {:key :k :repeat false}]]
+                 [:j [:!Tx :!T9 {:key :j :repeat false}]]
                  [:h [:!Tx :!T9 {:key :h :repeat false}]]
                  [:l [:!Tx :!T9 {:key :l :repeat false}]]
                  [:n [:!Tx :!T9 {:key :n :repeat false}]]
@@ -375,7 +374,10 @@
                  [:!T#OSp :up_arrow]
                  [:!T#Sv :page_down]
                  [:!T#Sa :!Cleft_arrow]
-                 [:!T#Se :!Cright_arrow]]}]
+                 [:!T#Se :!Cright_arrow]]}
+        {:des "misc"
+         ;; https://superuser.com/a/324267
+         :rules [[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]]}]
  :devices {:macbook-internal [{:product_id 631 :vendor_id 1452}]
            :filco-minila [{:product_id 34050 :vendor_id 2652}]
            :hhkb-tmk [{:vendor_id 65261 :product_id 51966}]
