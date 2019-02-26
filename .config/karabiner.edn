@@ -215,7 +215,7 @@
                  :alfred-mode
                  [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
                  [:j [:alf "searchGithub" "nikivi.search-the-web"]]
-                 [:return_or_enter [:alf "web searches" "nikivi.web.searches"]]
+                 [:return_or_enter [[:alf "web searches" "nikivi.web.searches"] ["in-alfred" 1]]]
                  [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
                  [:t [:alf "repos" "net.deanishe.alfred-git-repos"]]
                  ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
