@@ -56,6 +56,7 @@
          :rules [[:!Tw :!Odelete_or_backspace ["in-alfred" 1]]
                  [:!Ty :!Cv ["in-alfred" 1]]
                  [:escape [:escape ["in-alfred" 0]] ["in-alfred" 1]]
+                 [:return_or_enter [:return_or_enter ["in-alfred" 0]] ["in-alfred" 1]]
                  [:left_control :left_control ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
                  [:##caps_lock [:left_control] ["in-alfred" 1] {:alone [:escape ["in-alfred" 0]]}]
                  [:!Ctab [:!Ctab ["in-alfred" 0]] ["in-alfred" 1]]
