@@ -1,6 +1,8 @@
 [language.javascript]
 command = "javascript-typescript-stdio"
 args = []
+synchronous_triggers = ["."]
+synchronous_timeout_ms = 200
 num_server_instances = 2
 always_prefer = true
 install = [["yarn", "global", "add", "javascript-typescript-langserver"]]
@@ -9,12 +11,16 @@ install = [["yarn", "global", "add", "javascript-typescript-langserver"]]
 command = "javascript-typescript-stdio"
 args = []
 num_server_instances = 2
+synchronous_triggers = ["."]
+synchronous_timeout_ms = 200
 always_prefer = true
 install = [["yarn", "global", "add", "javascript-typescript-langserver"]]
 
 [language.vue]
 command = "vls"
 always_prefer = false
+synchronous_triggers = ["."]
+synchronous_timeout_ms = 200
 args = []
 num_server_instances = 2
 install = [["yarn", "global", "add", "vue-language-server"]]
