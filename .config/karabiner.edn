@@ -24,6 +24,7 @@
              :emacs-v-mode {:key :v :condi :Emacs}
              :emacs-special-s-mode {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
              :emacs-s-mode {:key :s :condi :Emacs}
+             :emacs-s-mode-terminal {:key :s :condi :Terminals}
              :vi-mode {:key :d}
              :vi-visual-mode {:key :v :condi :!vim-mode-disabled-application}
              :launch-mode {:key :w}
@@ -100,7 +101,7 @@
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                  [:open_bracket [:!Tx :!T9 :open_bracket]]
                  [:close_bracket [:!Tx :!T9 :close_bracket]]
-                 [:condi :emacs-s-mode :Terminals]
+                 :emacs-s-mode-terminal
                  [:k [:!Tx :!T9 {:key :k :repeat false}]]
                  [:j [:!Tx :!T9 {:key :j :repeat false}]]
                  [:h [:!Tx :!T9 {:key :h :repeat false}]]
