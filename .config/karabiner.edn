@@ -174,7 +174,24 @@
                  [:r [:open "/Applications/Setapp/Timing.app"]]
                  #_[:l [:!Cgrave_accent_and_tilde] :Chromes]
                  ;; open ndb
-                 [:d [{:key :g :modi [:right_option :right_shift]}
+                 [:d [{:key :d :modi [:right_option :right_shift]}
+                      {:key :e :modi :ro}
+                      {:key :v :modi :ro}
+                      {:key :t :modi [:right_option :right_shift]}
+                      {:key :o :modi :ro}
+                      {:key :o :modi :ro}
+                      {:key :l :modi :ro}
+                      {:key :s :modi :ro}
+                      {:key :hypen :modi :ro}
+                      {:key :N :modi [:right_option :right_shift]}
+                      {:key :o :modi :ro}
+                      {:key :d :modi :ro}
+                      {:key :e :modi :ro}
+                      {:key :period :modi :ro}
+                      {:key :j :modi :ro}
+                      {:key :s :modi :ro}
+                      :return_or_enter]]
+                 #_[:d [{:key :g :modi [:right_option :right_shift]}
                       {:key :o :modi :ro}
                       {:key :o :modi :ro}
                       {:key :g :modi :ro}
@@ -379,8 +396,7 @@
                  [:!T#Se :!Cright_arrow]]}
         {:des "misc"
          ;; https://superuser.com/a/324267
-         :rules [[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]
-                 [:!COl [:type "javascript:" :return_or_enter]]]}]
+         :rules [[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]]}]
  :devices {:macbook-internal [{:product_id 631 :vendor_id 1452}]
            :filco-minila [{:product_id 34050 :vendor_id 2652}]
            :hhkb-tmk [{:vendor_id 65261 :product_id 51966}]
