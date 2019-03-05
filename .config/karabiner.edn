@@ -192,24 +192,24 @@
                       {:key :s :modi :ro}
                       :return_or_enter]]
                  #_[:d [{:key :g :modi [:right_option :right_shift]}
-                      {:key :o :modi :ro}
-                      {:key :o :modi :ro}
-                      {:key :g :modi :ro}
-                      {:key :l :modi :ro}
-                      {:key :e :modi :ro}
-                      {:key :backslash :modi :ro}
-                      {:key :spacebar :modi :ro}
-                      {:key :c :modi [:right_option :right_shift]}
-                      {:key :h :modi :ro}
-                      {:key :r :modi :ro}
-                      {:key :o :modi :ro}
-                      {:key :m :modi :ro}
-                      {:key :e :modi :ro}
-                      {:key :spacebar :modi :ro}
-                      {:key :n :modi :ro}
-                      {:key :d :modi :ro}
-                      {:key :b :modi :ro}
-                      :return_or_enter]]]}
+                        {:key :o :modi :ro}
+                        {:key :o :modi :ro}
+                        {:key :g :modi :ro}
+                        {:key :l :modi :ro}
+                        {:key :e :modi :ro}
+                        {:key :backslash :modi :ro}
+                        {:key :spacebar :modi :ro}
+                        {:key :c :modi [:right_option :right_shift]}
+                        {:key :h :modi :ro}
+                        {:key :r :modi :ro}
+                        {:key :o :modi :ro}
+                        {:key :m :modi :ro}
+                        {:key :e :modi :ro}
+                        {:key :spacebar :modi :ro}
+                        {:key :n :modi :ro}
+                        {:key :d :modi :ro}
+                        {:key :b :modi :ro}
+                        :return_or_enter]]]}
         {:des "caps_lock"
          :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
         {:des "HHKB, FILCO MINILA Change left control to esc if alone"
@@ -262,6 +262,7 @@
                  [:l [:!Tx :8 :w :l]]
                  :emacs-windmove-mode
                  [:r [:q :r]]
+                 [:i [:q :i]]
                  [:h [:!Tx :7 :w :h]]
                  [:j [:!Tx :7 :w :j]]
                  [:k [:!Tx :7 :w :k]]
@@ -363,7 +364,7 @@
                  [:e :!Sopen_bracket]
                  [:r :!Sclose_bracket]]}
         {:des "chrome debug mode"
-         :rules [[:condi :Browsers :tab-mode]
+         :rules [[:condi :Debuggers :tab-mode]
                  [:q :!Csemicolon]
                  [:w :!CSsemicolon]
                  [:e :!Cquote]
@@ -463,6 +464,13 @@
                                                 "^org\\.vim\\."
                                                 "^com\\.qvacua\\.VimR$"]
                 :Finder ["^com\\.apple\\.finder$"]
+                :Debuggers ["^org\\.mozilla\\.firefox$"
+                            "^org\\.mozilla\\.firefoxdeveloperedition$"
+                            "^com\\.google\\.Chrome$"
+                            "^org\\.chromium\\.Chromium$"
+                            "^com\\.google\\.Chrome\\.canary$"
+                            "^com\\.apple\\.Safari$"
+                            "^com\\.microsoft\\.VSCode$"]
                 :Browsers ["^org\\.mozilla\\.firefox$"
                            "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"
