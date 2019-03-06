@@ -10,41 +10,25 @@ module.exports = {
     THREE: true,
     describe: true,
     it: true,
-    Hammer: true
+    Hammer: true,
   },
   parser: "babel-eslint",
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
-    }
+      jsx: true,
+    },
   },
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   // extends: "google",
-  extends: [
-    "standard",
-    "prettier",
-    "plugin:flowtype/recommended",
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "prettier/flowtype",
-    "prettier/react",
-    "prettier/standard"
-  ],
+  extends: ["wesbos"],
   parserOptions: {
     sourceType: "module",
-    ecmaVersion: 8
+    ecmaVersion: 8,
   },
-  plugins: ["prettier", "flowtype", "react"],
-  settings: {
-    flowtype: {
-      onlyFilesWithFlowAnnotation: true
-    }
-  },
-  rules: {
-    "prettier/prettier": "error"
-  }
+  settings: {},
+  rules: {},
 };
