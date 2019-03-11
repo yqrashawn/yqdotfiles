@@ -1,4 +1,10 @@
-{:modifiers {:ro :right_option}
+{:profiles
+ {:Goku-test {:default true
+              :sim 50
+              :delay 500
+              :alone 1000
+              :held 500}}
+ :modifiers {:ro :right_option}
  :templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
@@ -94,8 +100,8 @@
                  [:k :!!k]
                  [:h :!!h]
                  [:l :!!l]
-                 [:n :!!n]
-                 [:p :!!p]
+                 [:n [:!Tx :!T9 {:key :n :repeat false}]]
+                 [:p [:!Tx :!T9 {:key :p :repeat false}]]
                  [:comma [:!Tx :!T8 :open_bracket]]
                  [:period [:!Tx :!T8 :close_bracket]]
                  [:delete_or_backspace [:!Tx :!T9 :!Sk]]
