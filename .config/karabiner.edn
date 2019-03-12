@@ -1,9 +1,9 @@
 {:profiles
- {:Goku-test {:default true
-              :sim 50
-              :delay 500
-              :alone 1000
-              :held 500}}
+ {:Goku {:default true
+         :sim 50
+         :delay 500
+         :alone 1000
+         :held 500}}
  :modifiers {:ro :right_option}
  :templates {:launch "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
