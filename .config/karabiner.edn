@@ -188,8 +188,8 @@
                       {:key :o :modi :ro}
                       {:key :l :modi :ro}
                       {:key :s :modi :ro}
-                      {:key :hypen :modi :ro}
-                      {:key :N :modi [:right_option :right_shift]}
+                      {:key :hyphen :modi :ro}
+                      {:key :n :modi [:right_option :right_shift]}
                       {:key :o :modi :ro}
                       {:key :d :modi :ro}
                       {:key :e :modi :ro}
