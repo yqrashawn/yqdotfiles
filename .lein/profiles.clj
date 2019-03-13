@@ -1,5 +1,5 @@
 {:user {:pedantic? :ranges
-        :plugins [;; [lein-ancient "0.6.15"]
+        :plugins [[lein-ancient "0.6.15"]
                   [cider/cider-nrepl "0.21.0"]
                   ;; [lein-kibit "0.1.6"]
                   ;; [polylith/lein-polylith "LATEST"]
@@ -26,15 +26,15 @@
                      ;; (require 'spyscope.core)
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
- ;; :mirrors {#"clojars"
- ;;           {:name "Clojar USTC"
- ;;            ;; :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"
- ;;            :url "https://mirrors.ustc.edu.cn/clojars/"
- ;;            :repo-manager true}
- ;;           "central"
- ;;           {:name "central aliyun"
- ;;            :url "https://maven.aliyun.com/nexus/content/groups/public/"
- ;;            :repo-manager true}}}
+ :mirrors {#"clojars"
+           {:name "Clojar USTC"
+            ;; :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"
+            :url "https://mirrors.ustc.edu.cn/clojars/"
+            :repo-manager true}
+           "central"
+           {:name "central aliyun"
+            :url "https://maven.aliyun.com/nexus/content/groups/public/"
+            :repo-manager true}}
  :repl {:plugins [#_[cider/cider-nrepl "0.19.0-SNAPSHOT"]
                   #_[figwheel-sidecar "0.5.17-SNAPSHOT"]
                   [cider/piggieback "0.4.0"]
