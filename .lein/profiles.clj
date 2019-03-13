@@ -1,6 +1,6 @@
 {:user {:pedantic? :ranges
         :plugins [[lein-ancient "0.6.15"]
-                  [cider/cider-nrepl "0.21.0"]
+                  [cider/cider-nrepl "0.21.1"]
                   ;; [lein-kibit "0.1.6"]
                   ;; [polylith/lein-polylith "LATEST"]
 
@@ -15,8 +15,8 @@
 
                   #_[com.billpiel/sayid "0.0.16"]
                   [jonase/eastwood "0.3.5"]
-                  [lein-nsorg "0.2.0"]]
-        :dependencies [[pjstadig/humane-test-output "0.8.3"]
+                  [lein-nsorg "0.3.0"]]
+        :dependencies [[pjstadig/humane-test-output "0.9.0"]
                        [com.cemerick/pomegranate "1.1.0"]
                        ;; [spyscope "0.1.6"]
                        ;; [compliment "0.2.2"]
