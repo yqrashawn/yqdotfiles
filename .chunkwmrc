@@ -68,6 +68,7 @@ chunkc tiling::rule --owner \"System Preferences\" --state float
 chunkc tiling::rule --owner \"Activity Monitor\" --state float
 
 chunkc tiling::rule --owner \"Karabiner-EventViewer\" --state float
+chunkc tiling::rule --owner \"Folx\" --state float
 chunkc tiling::rule --owner \"Calculator\" --state float
 chunkc tiling::rule --owner \"Dictionary\" --state float
 chunkc tiling::rule --owner \"mpv\" --state float
