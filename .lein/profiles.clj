@@ -3,8 +3,7 @@
                   [cider/cider-nrepl "0.21.1"]
                   ;; [lein-kibit "0.1.6"]
                   ;; [polylith/lein-polylith "LATEST"]
-
-                  [lein-environ "1.1.0"]
+                  ;; [lein-environ "1.1.0"]
 
                   ;; A Leiningen plugin that executes tasks when files are modifed
                   ;; [lein-auto "0.1.3"]
