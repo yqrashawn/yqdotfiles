@@ -39,11 +39,11 @@
                       :alfred-mode           {:key :z}
                       :finder-alfred-mode    {:key :z :condi :Finder}
                       :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main               [#_{:des "double press and hold key down in simlayer"}
-                      :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
-                              [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
-                                                                                                       :invoked  ["test-mode-j-dbpress-mode" 0]}
-                                                                                             :held    "say 'j held down'"}]]
+ :main               [#_{:des "double press and hold key down in simlayer"
+                       :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
+                               [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
+                                                                                                        :invoked  ["test-mode-j-dbpress-mode" 0]}
+                                                                                              :held    "say 'j held down'"}]]}
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
