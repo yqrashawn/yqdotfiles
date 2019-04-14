@@ -14,3 +14,5 @@ jd() {
   local projDir=$(pro search $1)
   cd ${projDir}
 }
+
+[ -s "/Users/rashawnzhang/.jabba/jabba.sh" ] && source "/Users/rashawnzhang/.jabba/jabba.sh"
