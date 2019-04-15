@@ -239,6 +239,8 @@
                       {:des   "alfred mode"
                        :rules [[:l :!COi :browsers-alfred-mode]
                                [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
+                               [:!CTk [:!CTk ["in-alfred" 1]]]
+                               [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                                :alfred-mode
                                [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
                                [:j [:alf "searchGithub" "nikivi.search-the-web"]]
