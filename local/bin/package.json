@@ -20,7 +20,7 @@
     "lmvns": "yarn --cwd ~/workspace/OFFICE/gltflmvviewer devns",
     "bimv": "yarn --cwd ~/workspace/OFFICE/bimsop-viewer-bimv start",
     "pm2dev": "run-p ssos ssoc pm2",
-    "pm2test": "cross-env NODE_ENV=test run-p -r pm2 ssoslt pm2tb",
+    "pm2test": "cross-env NODE_ENV=test run-p -r pm2 ssoslt pm2tb -- --no-timeout",
     "pm2": "yarn --cwd ~/workspace/OFFICE/pm2 dev",
     "pm2tb": "yarn --cwd ~/workspace/OFFICE/pm2 test:backend",
     "pm2tbw": "yarn --cwd ~/workspace/OFFICE/pm2 test:backend:watch",

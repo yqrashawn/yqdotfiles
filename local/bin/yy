@@ -1,2 +1,2 @@
 echo "nodejs version is $(node --version)" 
-cd ~/local/bin/ && yarn $1
+yarn --cwd ~/local/bin $1
