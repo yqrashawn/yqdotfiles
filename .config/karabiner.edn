@@ -348,6 +348,7 @@
                                [:a "/usr/local/bin/chunkc tiling::window --toggle float"]
                                [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp"]
                                [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle"]
+                               [:0 "/usr/local/bin/chunkc tiling::desktop --layout float"]
                                [:x "/usr/local/bin/chunkc tiling::window --close"]
                                [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
                                [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
