@@ -124,6 +124,10 @@
                                [:g [:!Tx :!T6 :5]]
                                [:h [:!Tx :!T6 :6]]
                                [:left_shift [:!Tx :!T6 :q]]
+                               [:z [:!Tx :!T6 :z]]
+                               [:x [:!Tx :!T6 :x]]
+                               [:c [:!Tx :!T6 :c]]
+                               [:left_shift [:!Tx :!T6 :q]]
                                :emacs-v-mode
                                [:right_shift [:!Tx :!T6 :w]]
                                [:g [:!Tx :!T6 :5]]
