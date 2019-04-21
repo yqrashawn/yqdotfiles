@@ -2,13 +2,12 @@
  {:Goku {:default true
          :sim     50
          :delay   500
-         :alone   1000
+         :alone   500
          :held    500}}
  :modifiers          {:ro :right_option}
  :templates          {:launch     "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
                       :alf        "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
                       :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-                      :2do        "open 'twodo://x-callback-url/%s'"
                       :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
                       :open       "open \"%s\""
                       :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"}
@@ -24,8 +23,6 @@
                       :comma-mode            {:key :comma :condi :!emacs-s-mode}}
  :simlayers          {:test-mode             {:key :9}
                       :contexts-f-mode       {:key :f}
-                      :2do-mode              {:key :t}
-                      :2do-s-mode            {:key :s :condi :2do}
                       :emacs-m-mode          {:key :m :condi :Emacs}
                       :emacs-v-mode          {:key :v :condi :Emacs}
                       :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
@@ -81,20 +78,6 @@
                                [:!OSj :!OSdown_arrow]
                                [:!OSk :!OSup_arrow]
                                [:!OSl :!OSright_arrow]]}
-                      {:des   "2do"
-                       :rules [:2do-mode
-                               [:l [:km "2Do: Capture URL to Read"] :Browsers]
-                               [:spacebar  [:2do "showToday"]]
-                               :2do-s-mode
-                               [:j [:!Cdown_arrow]]
-                               [:k [:!Cup_arrow]]
-                               [:l [:j]]
-                               [:f [:!Cf]]
-                               [:d [:!C5]]
-                               [:i [:!C0]]
-                               [:t [:!C2]]
-                               [:a [:!C1]]
-                               [:v [:!C4]]]}
                       {:des   "s-mode in emacs, awesome-tab"
                        :rules [:emacs-s-mode
                                [:j :!!j]
@@ -182,7 +165,6 @@
                                [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
                                [:b [:open "/Applications/Bee.app"]]
                                [:c [:open "/Applications/Visual Studio Code.app"]]
-                               [:t [:open "/Applications/Setapp/2Do.app"]]
                                [:r [:open "/Applications/Setapp/Timing.app"]]
                                #_[:l [:!Cgrave_accent_and_tilde] :Chromes]
                                ;; open ndb
@@ -261,7 +243,6 @@
                                [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                                [:close_bracket :!CTOSclose_bracket]
                                [:hyphen :!!hyphen]
-                               [:right_command "osascript -e 'tell application \"Alfred 3\" to run trigger \"new2do\" in workflow \"me.canor.alfred2do\" with argument \"\"'"]
                                #_[:right_command :!!3]]}
                       {:des   "q"
                        :rules [:emacs-bufmove-mode
@@ -491,8 +472,7 @@
                                                       "^com\\.google\\.Chrome$"
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
-                                                      "^com\\.apple\\.Safari$"]
-                      :2do                           ["^com\\.guidedways\\.TodoMac.*"]}
+                                                      "^com\\.apple\\.Safari$"]}
  :input-sources      {:squirrel {:input_mode_id   "com.googlecode.rimeime.inputmethod.Squirrel"
                                  :input_source_id "com.googlecode.rimeime.inputmethod.Squirrel.Rime"
                                  :language        "zh-Hans"}
