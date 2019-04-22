@@ -83,6 +83,7 @@ command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
 # misc
 alias rm='trash'
+alias fixbrew='chown -R `whoami`:admin $(brew --prefix)'
 
 # env
 alias eenv='printenv | fzf'
@@ -137,13 +138,13 @@ alias ygls="yarn global list"
 alias ygrm="yarn global remove"
 alias ygu="yarn global upgrade"
 alias yh="yarn help"
-alias yi="yarn init"
-alias yin="yarn install"
+alias yI="yarn init"
 alias yls="yarn list"
 alias yout="yarn outdated"
-alias yp="yarn pack"
-alias yr="yarn remove"
-alias yrun="yarn run"
+alias yP="yarn pack"
+alias yrm="yarn remove"
+alias yr="yarn run"
+alias yd="yarn dev"
 alias ys="yarn serve"
 alias yst="yarn start"
 alias yt="yarn test"
