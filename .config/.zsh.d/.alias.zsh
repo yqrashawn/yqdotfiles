@@ -105,7 +105,7 @@ alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
 
 # png
 alias pngq="pngquant -f --speed 1"
-alias optipng="optipng -o7"
+alias pngopti="optipng -o7"
 
 # update email
 alias umail="proxychains4 -f /etc/proxychains.conf mbsync -a"
