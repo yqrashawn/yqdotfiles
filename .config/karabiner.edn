@@ -290,7 +290,9 @@
                                [:4 [:!Tq :4]]
                                [:5 [:!Tq :5]]]}
                       {:des   "chunkwm mode"
-                       :rules [[:!COSf "/usr/local/bin/chunkc tiling::window --toggle native-fullscreen"]
+                       :rules [[:!CS4 ["/usr/local/bin/chunkc border::clear" :!CS4]]
+                               [:!CS3 ["/usr/local/bin/chunkc border::clear" :!CS3]]
+                               [:!COSf "/usr/local/bin/chunkc tiling::window --toggle native-fullscreen"]
                                :chunkwm-insert-mode
                                [:spacebar "/usr/local/bin/chunkc tiling::window --use-insertion-point cancel"]
                                [:h "/usr/local/bin/chunkc tiling::window --use-insertion-point west"]
@@ -323,6 +325,11 @@
                                [:l "/usr/local/bin/chunkc tiling::window --focus east"]
                                [:n "/usr/local/bin/chunkc tiling::window --focus next"]
                                [:p "/usr/local/bin/chunkc tiling::window --focus prev"]
+                               ;; chunkwm workspace
+                               ;; [:1 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 1 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 1 ))"]
+                               ;; [:2 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 2 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 2 ))"]
+                               ;; [:3 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 3 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 3 ))"]
+                               ;; [:4 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 4 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 4 ))"]
                                ;; rotate windows clockwise and anticlockwise
                                [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90"]
                                [:!Sr "/usr/local/bin/chunkc tiling::desktop --rotate 270"]
