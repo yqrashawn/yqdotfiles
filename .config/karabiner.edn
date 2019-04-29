@@ -147,7 +147,8 @@
                                [:##close_bracket :!SOdown_arrow]]}
                       {:des   "launcher mode"
                        :rules [:launch-mode
-                               [:j [:open "/Applications/Alacritty.app"]]
+                               ;; [:j [:open "/Applications/Alacritty.app"]]
+                               [:j [:launch "Alacritty"]]
                                ;; [:k [:open "/Applications/Emacs.app"]]
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
