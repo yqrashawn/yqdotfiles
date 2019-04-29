@@ -9,7 +9,7 @@
     "ssodev": "run-s peacock:sso-dev",
     "ssos": "yarn --cwd ~/workspace/OFFICE/SSO/sso-server dev",
     "ssoslt": "yarn --cwd ~/workspace/OFFICE/SSO/sso-server localtestdev",
-    "ssoc": "yarn --cwd ~/workspace/OFFICE/SSO/sso-client local",
+    "ssoc": "yarn --cwd ~/workspace/OFFICE/SSO/sso-client dev",
     "bimcss": "yarn --cwd ~/workspace/OFFICE/bimcs-server dev",
     "bimcsc": "yarn --cwd ~/workspace/OFFICE/bimcs-cli dev",
     "bimcsdev": "run-p bimcss bimcsc",
