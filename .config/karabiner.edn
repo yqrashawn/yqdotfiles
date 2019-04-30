@@ -209,6 +209,14 @@
                        :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
                       {:des   "HHKB, FILCO MINILA Change left control to esc if alone"
                        :rules [[:##left_control :left_control [:hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
+                      {:des   "FILCO MINILA Change left_alt to left_command"
+                       :rules [:filco-minila
+                               [:##grave_accent_and_tilde :backslash]
+                               [:##backslash :grave_accent_and_tilde]
+                               [:##left_option :left_command]
+                               [:##right_option :right_command nil {:alone [:!Ctab]}]
+                               [:##left_command :left_option]
+                               [:##application :right_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
                       {:des   "Change right_command to command-tab when used alone"
                        :rules [[:right_command :right_command nil {:alone [:!Ctab]}]
                                [:application :right_command nil {:alone [:!Ctab]}]]}
