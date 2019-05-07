@@ -11,8 +11,10 @@
                       :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
                       :open       "open \"%s\""
                       :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"}
- :layers             {:tab-mode              {:key :tab :afterup [{:set ["chunkwm-move-mode" 0]}
-                                                                  {:set ["chunkwm-scale-mode" 0]}]}
+ :layers             {:tab-mode              {:key :tab
+                                              :afterup [{:set ["chunkwm-move-mode" 0]}
+                                                        {:set ["chunkwm-scale-mode" 0]}]
+                                              :condi [:!comma-mode :!period-mode]}
                       :chunkwm-move-mode     {:key :f :condi :tab-mode}
                       :chunkwm-scale-mode    {:key :c :condi :tab-mode}
                       :chunkwm-insert-mode   {:key :i :condi :tab-mode}
@@ -20,7 +22,7 @@
                       :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
                       :emacs-bufmove-mode    {:key :f :condi :emacs-windmove-mode}
                       :period-mode           {:key :period :afterup {:set ["period-comma-mode" 0]} :condi :!emacs-s-mode}
-                      :comma-mode            {:key :comma :condi :!emacs-s-mode}}
+                      :comma-mode            {:key :comma :condi [:!emacs-s-mode]}}
  :simlayers          {:test-mode             {:key :9}
                       :contexts-f-mode       {:key :f}
                       :emacs-m-mode          {:key :m :condi :Emacs}
@@ -38,9 +40,9 @@
                       :browsers-alfred-mode  {:key :z :condi :Browsers}}
  :main               [#_{:des "double press and hold key down in simlayer"}
                       :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
-                              [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]
-                                                                                                       :invoked  ["test-mode-j-dbpress-mode" 0]}
-                                                                                             :held    "say 'j held down'"}]]
+                              [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
+                               :invoked  ["test-mode-j-dbpress-mode" 0]
+                               :held    "say 'j held down'"]]
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
