@@ -497,4 +497,4 @@
                       :us       {:input_mode_id   ""
                                  :input_source_id "com.apple.keylayout.US"
                                  :language        "en"}}
- :simlayer-threshold 250}
+ :simlayer-threshold 210}
