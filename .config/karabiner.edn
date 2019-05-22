@@ -57,6 +57,7 @@
                                [:k [["in-contexts" 1] :f16] ["in-contexts" 0]]
                                [:j :down_arrow ["in-contexts" 1]]
                                [:k :up_arrow ["in-contexts" 1]]
+                               [:e [:f :e]]
                                [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]]}
                       {:des   "in-alfred"
                        :rules [:in-alfred
@@ -169,6 +170,7 @@
                                [:b [:open "/Applications/Bee.app"]]
                                [:c [:open "/Applications/Visual Studio Code.app"]]
                                [:r [:open "/Applications/Setapp/Timing.app"]]
+                               [:e [:w :e]]
                                #_[:l [:!Cgrave_accent_and_tilde] :Chromes]
                                ;; open ndb
                                ;; [:d [{:key :d :modi [:right_option :right_shift]}
@@ -239,6 +241,7 @@
                                [:!CTk [:!CTk ["in-alfred" 1]]]
                                [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                                :alfred-mode
+                               [:i [:z :i]]
                                [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
                                [:j [:alf "searchGithub" "nikivi.search-the-web"]]
                                [:return_or_enter [[:alf "web searches" "nikivi.web.searches"] ["in-alfred" 1]]]
