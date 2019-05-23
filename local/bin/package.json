@@ -19,6 +19,7 @@
     "lmv": "yarn --cwd ~/workspace/OFFICE/gltflmvviewer dev",
     "lmvns": "yarn --cwd ~/workspace/OFFICE/gltflmvviewer devns",
     "bimv": "yarn --cwd ~/workspace/OFFICE/bimsop-viewer-bimv start",
+    "gg": "yarn --cwd ~/workspace/OFFICE/gugong dev",
     "pm2": "run-p ssos ssoc pm2dev",
     "pm2tf": "/usr/local/bin/chunkc tiling::desktop --layout float && cross-env NODE_ENV=test run-p -r ssoslt pm2testf",
     "pm2tb": "cross-env NODE_ENV=test run-p -r pm2dev ssoslt pm2testb",
