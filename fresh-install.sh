@@ -17,4 +17,8 @@ setopt EXTENDED_GLOB
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done
-chsh -s /bin/zsh
+
+# https://stackoverflow.com/questions/31034870/making-zsh-default-shell-in-macosx
+# or prezto won't load
+sudo echo "$(which zsh)" >> /etc/shells
+chsh -s /usr/local/bin/zsh
