@@ -43,6 +43,9 @@
                               [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                                :invoked  ["test-mode-j-dbpress-mode" 0]
                                :held    "say 'j held down'"]]
+                      {:des "change input source with left, right shift"
+                       :rules [[:left_shift :left_shift nil {:alone :!!6}]
+                               [:right_shift :right_shift nil {:alone :!!7}]]}
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
