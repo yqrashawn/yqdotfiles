@@ -11,10 +11,10 @@
                       :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
                       :open       "open \"%s\""
                       :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"}
- :layers             {:tab-mode              {:key :tab
+ :layers             {:tab-mode              {:key     :tab
                                               :afterup [{:set ["chunkwm-move-mode" 0]}
                                                         {:set ["chunkwm-scale-mode" 0]}]
-                                              :condi [:!comma-mode :!period-mode]}
+                                              :condi   [:!comma-mode :!period-mode]}
                       :chunkwm-move-mode     {:key :f :condi :tab-mode}
                       :chunkwm-scale-mode    {:key :c :condi :tab-mode}
                       :chunkwm-insert-mode   {:key :i :condi :tab-mode}
@@ -43,9 +43,9 @@
                               [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                                :invoked  ["test-mode-j-dbpress-mode" 0]
                                :held    "say 'j held down'"]]
-                      {:des "change input source with left, right shift"
-                       :rules [[:left_shift :left_shift nil {:alone :!!6}]
-                               [:right_shift :right_shift nil {:alone :!!7}]]}
+                      {:des   "change input source with left, right shift"
+                       :rules [[:left_shift :left_shift :cn {:alone {:input :abc}}]
+                               [:right_shift :right_shift :abc {:alone {:input :cn}}]]}
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
@@ -497,10 +497,9 @@
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
                                                       "^com\\.apple\\.Safari$"]}
- :input-sources      {:squirrel {:input_mode_id   "com.googlecode.rimeime.inputmethod.Squirrel"
-                                 :input_source_id "com.googlecode.rimeime.inputmethod.Squirrel.Rime"
-                                 :language        "zh-Hans"}
-                      :us       {:input_mode_id   ""
-                                 :input_source_id "com.apple.keylayout.US"
-                                 :language        "en"}}
+ :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
+                                 :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
+                      :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
+                      :abc      {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}
+                      :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
