@@ -30,6 +30,7 @@
                       :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
                       :emacs-s-mode          {:key :s :condi :Emacs}
                       :emacs-s-mode-terminal {:key :s :condi :Terminals}
+                      :mouse_keys_mode_v4    {:key :a :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
                       :vi-mode               {:key :d}
                       :vi-visual-mode        {:key :v :condi :!vim-mode-disabled-application}
                       :launch-mode           {:key :w}
@@ -395,6 +396,21 @@
                       {:des   "Mouse button"
                        :rules [[{:pkey :button5} :mission_control]
                                [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
+                      {:des   "Mouse Keys Mode v4 (rev 1)"
+                       :rules [[:##j {:mkey {:vwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
+                               [:##h {:mkey {:hwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
+                               [:##k {:mkey {:vwheel -32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
+                               [:##l {:mkey {:hwheel -32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
+                               :mouse_keys_mode_v4
+                               [:##j {:mkey {:y 3072}}]
+                               [:##k {:mkey {:y -3072}}]
+                               [:##h {:mkey {:x -3072}}]
+                               [:##l {:mkey {:x 3072}}]
+                               [:##v {:pkey :button1}]
+                               [:##b {:pkey :button3}]
+                               [:##n {:pkey :button2}]
+                               [:##s ["mouse_keys_mode_v4_scroll" 1] nil {:afterup ["mouse_keys_mode_v4_scroll" 0]}]
+                               [:##f {:mkey {:speed 0.5}}]]}
                       {:des   "Emacs key bindings [control+keys] (rev 10)"
                        :rules [[:!T#Sy :!Cv :!Emacs]
                                :!emacs-mode-disable-app
