@@ -46,7 +46,9 @@
                                :held    "say 'j held down'"]]
                       {:des   "change input source with left, right shift"
                        :rules [[:left_shift :left_shift :cn {:alone {:input :abc}}]
-                               [:right_shift :right_shift :abc {:alone {:input :cn}}]]}
+                               [:right_shift :right_shift :abc {:alone {:input :cn}}]
+                               ;; input method change not work well in wechat
+                               [:right_shift :right_shift [:wechat :abc] {:alone [{:input :cn} {:input :abc} {:input :cn}]}]]}
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
@@ -512,7 +514,8 @@
                                                       "^com\\.google\\.Chrome$"
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
-                                                      "^com\\.apple\\.Safari$"]}
+                                                      "^com\\.apple\\.Safari$"]
+                      :wechat                        ["^com\\.tencent\\.xinWeChat$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
