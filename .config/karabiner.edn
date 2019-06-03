@@ -274,7 +274,6 @@
                                [:k [:!Tx :8 :w :k]]
                                [:l [:!Tx :8 :w :l]]
                                :emacs-windmove-mode
-                               [:r [:q :r]]
                                [:i [:q :i]]
                                [:h [:!CTO7 :h]]
                                [:j [:!CTO7 :j]]
