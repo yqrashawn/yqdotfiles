@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# https://github.com/ashton314/homebrew-mm
+# https://news.ycombinator.com/item?id=20007108&utm_source=hackernewsletter&utm_medium=email&utm_term=ask_hn
+pandoc -s -t man "$1" | groff -T utf8 -man | $PAGER
