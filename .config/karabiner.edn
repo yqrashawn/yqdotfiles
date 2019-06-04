@@ -44,11 +44,6 @@
                               [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                                :invoked  ["test-mode-j-dbpress-mode" 0]
                                :held    "say 'j held down'"]]
-                      {:des   "change input source with left, right shift"
-                       :rules [[:left_shift :left_shift :cn {:alone {:input :abc}}]
-                               [:right_shift :right_shift :abc {:alone {:input :cn}}]
-                               ;; input method change not work well in wechat
-                               [:right_shift :right_shift [:wechat :abc] {:alone [{:input :cn} {:input :abc} {:input :cn}]}]]}
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
@@ -397,7 +392,7 @@
                                [:3 :f9]]}
                       {:des   "Mouse button"
                        :rules [[{:pkey :button5} :mission_control]
-                               [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
+                               #_[{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
                       {:des   "Mouse Keys Mode v4 (rev 1)"
                        :rules [[:##j {:mkey {:vwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
                                [:##h {:mkey {:hwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
@@ -441,7 +436,7 @@
                       :hhkb-tmk         [{:vendor_id 65261 :product_id 51966}]
                       :hhkb-bt          [{:vendor_id 1278 :product_id 514}]
                       :hhkb             [{:vendor_id 2131 :product_id 256}]}
- :applications       {:emacs-mode-disable-app        [ "^org\\.gnu\\.Emacs$",
+ :applications       {:emacs-mode-disable-app        ["^org\\.gnu\\.Emacs$",
                                                       "^org\\.gnu\\.AquamacsEmacs$",
                                                       "^org\\.gnu\\.Aquamacs$",
                                                       "^org\\.pqrs\\.unknownapp.conkeror$",
