@@ -393,7 +393,7 @@
                                [:3 :f9]]}
                       {:des   "Mouse button"
                        :rules [[{:pkey :button5} :mission_control]
-                               #_[{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
+                               [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
                       {:des   "Mouse Keys Mode v4 (rev 1)"
                        :rules [[:##j {:mkey {:vwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
                                [:##h {:mkey {:hwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
