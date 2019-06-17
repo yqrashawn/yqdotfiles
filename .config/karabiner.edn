@@ -193,18 +193,19 @@
                                ;;      {:key :j :modi :ro}
                                ;;      {:key :s :modi :ro}
                                ;;      :return_or_enter]]
-                               [:d [{:key :g :modi [:right_option :right_shift]}
+                               [:d [{:key :g :modi :ro}
                                     {:key :o :modi :ro}
                                     {:key :o :modi :ro}
                                     {:key :g :modi :ro}
                                     {:key :l :modi :ro}
                                     {:key :e :modi :ro}
-                                    {:key :c :modi [:right_option :right_shift]}
+                                    {:key :c :modi :ro}
                                     {:key :h :modi :ro}
                                     {:key :r :modi :ro}
                                     {:key :o :modi :ro}
                                     {:key :m :modi :ro}
                                     {:key :e :modi :ro}
+                                    {:key :spacebar :modi :ro}
                                     {:key :n :modi :ro}
                                     {:key :d :modi :ro}
                                     {:key :b :modi :ro}
