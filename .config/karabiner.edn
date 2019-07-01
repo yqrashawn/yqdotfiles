@@ -174,32 +174,7 @@
                                [:c [:open "/Applications/Visual Studio Code.app"]]
                                [:r [:open "/Applications/Setapp/Timing.app"]]
                                [:e [:w :e]]
-                               #_[:l [:!Cgrave_accent_and_tilde] :Chromes]
-                               ;; open ndb
-                               ;; [:d [{:key :d :modi [:right_option :right_shift]}
-                               ;;      {:key :e :modi :ro}
-                               ;;      {:key :v :modi :ro}
-                               ;;      {:key :t :modi [:right_option :right_shift]}
-                               ;;      {:key :o :modi :ro}
-                               ;;      {:key :o :modi :ro}
-                               ;;      {:key :l :modi :ro}
-                               ;;      {:key :s :modi :ro}
-                               ;;      {:key :hyphen :modi :ro}
-                               ;;      {:key :n :modi [:right_option :right_shift]}
-                               ;;      {:key :o :modi :ro}
-                               ;;      {:key :d :modi :ro}
-                               ;;      {:key :e :modi :ro}
-                               ;;      {:key :period :modi :ro}
-                               ;;      {:key :j :modi :ro}
-                               ;;      {:key :s :modi :ro}
-                               ;;      :return_or_enter]]
-                               [:d [{:key :g :modi :ro}
-                                    {:key :o :modi :ro}
-                                    {:key :o :modi :ro}
-                                    {:key :g :modi :ro}
-                                    {:key :l :modi :ro}
-                                    {:key :e :modi :ro}
-                                    {:key :c :modi :ro}
+                               [:d [{:key :c :modi :ro}
                                     {:key :h :modi :ro}
                                     {:key :r :modi :ro}
                                     {:key :o :modi :ro}
