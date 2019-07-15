@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
+    "bb": "proxychains4 -f ~/Dropbox/sync/proxychains.conf yarn --cwd ~/workspace/OFFICE/conflux-bounty/server dev",
+    "dbb": "proxychains4 -f ~/Dropbox/sync/proxychains.conf node ~/.config/yarn/global/node_modules/.bin/ndb yarn --cwd ~/local/bin/ bb",
     "peacock": "run-p peacock:*",
     "peacock:peacock-dev": "yarn --cwd ~/workspace/OFFICE/peacock start",
     "peacock:sso-dev": "yarn --cwd ~/workspace/OFFICE/SSO start",
