@@ -5,16 +5,27 @@
   "ignore_all_lsp": false,
   "semantic_status": {
     "javascript": "Enabled",
-    "vue": "Enabled",
+    "shell": "Enabled",
     "css": "Enabled",
-    "html": "Enabled"
+    "html": "Enabled",
+    "vue": "Enabled"
   },
   "disable_auto_update": false,
-  "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": false,
-  "hosted_deep_completions_enabled": "Disabled",
+  "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": true,
+  "hosted_deep_completions_enabled": "ForWhitelistOnly",
   "tabnine_cloud_host": null,
   "tabnine_cloud_port": null,
-  "cloud_whitelist": [],
-  "api_key": null,
-  "api_key_service_level": null
+  "cloud_whitelist": [
+    "/Users/yqrashawn/workspace/OFFICE/gugong",
+    "/Users/yqrashawn/workspace/OFFICE/SSO",
+    "/Users/yqrashawn/workspace/OFFICE/conflux-rust",
+    "/Users/yqrashawn/workspace/OFFICE/conflux-bounty/web",
+    "/Users/yqrashawn/workspace/OFFICE/conflux-bounty/admin",
+    "/Users/yqrashawn/workspace/OFFICE/conflux-bounty/server/app",
+    "/Users/yqrashawn/workspace/OFFICE/conflux-bounty/server/mail",
+    "/Users/yqrashawn/workspace/HOME",
+    "/Users/yqrashawn/workspace/THIRD"
+  ],
+  "api_key": "xbrsneixqbqppckrgenfdszgzvhwlu",
+  "api_key_service_level": "Cloud"
 }
