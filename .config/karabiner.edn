@@ -69,6 +69,7 @@
                        :rules [:in-alfred
                                [:!Tw :!Odelete_or_backspace]
                                [:!Ty :!Cv]
+                               [:!Tslash :!Cz]
                                [:escape [:escape ["in-alfred" 0]]]
                                [:return_or_enter [:return_or_enter ["in-alfred" 0]]]
                                [:left_control :left_control nil {:alone [:escape ["in-alfred" 0]]}]
