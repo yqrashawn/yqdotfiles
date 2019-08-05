@@ -32,6 +32,7 @@
                       :emacs-v-mode          {:key :v :condi :Emacs}
                       :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
                       :emacs-s-mode          {:key :s :condi :Emacs}
+                      :chrome-s-mode         {:key :s :condi :Chromes}
                       :emacs-s-mode-terminal {:key :s :condi :Terminals}
                       :mouse_keys_mode_v4    {:key :a :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
                       :vi-mode               {:key :d}
@@ -88,7 +89,7 @@
                                [:!OSj :!OSdown_arrow]
                                [:!OSk :!OSup_arrow]
                                [:!OSl :!OSright_arrow]]}
-                      {:des   "s-mode in emacs, awesome-tab"
+                      {:des   "s-mode in emacs"
                        :rules [:emacs-s-mode
                                [:j :!!j]
                                [:k :!!k]
@@ -133,6 +134,12 @@
                        :rules [:Emacs
                                [:tab :!Ttab :period-mode]
                                [:tab :!TStab :comma-mode]]}
+                      {:des   "s-mode in chrome"
+                       :rules [:chrome-s-mode
+                               [:j :!CSopen_bracket]
+                               [:k :!CSclose_bracket]
+                               [:h :!Copen_bracket]
+                               [:l :!Cclose_bracket]]}
                       {:des   "Vi Mode [D as Trigger Key]"
                        :rules [:vi-mode
                                [:##j :down_arrow]
