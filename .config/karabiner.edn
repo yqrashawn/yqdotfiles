@@ -6,7 +6,11 @@
          :held    500}}
  :tos                {:prev_app {:key :tab :modi [:left_command] :lazy true}
                       :left_paren {:key :9 :modi [:left_shift] :lazy true}
-                      :right_paren {:key :0 :modi [:left_shift] :lazy true}}
+                      :right_paren {:key :0 :modi [:left_shift] :lazy true}
+                      :home_dir [{:key :grave_accent_and_tilde :modi [:left_shift] :lazy true}
+                                 {:key :slash}]
+                      :regex_match_any [{:key :period}
+                                        {:key :8 :modi [:left_shift] :lazy true}]}
  :modifiers          {:ro :right_option}
  :templates          {:launch     "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
                       :alf        "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
@@ -358,8 +362,8 @@
                       {:des   "period mode"
                        :rules [:period-mode
                                [:comma ["period-comma-mode" 1] nil {:alone :comma :afterup ["period-comma-mode" 0]}]
-                               [:a [:!Sgrave_accent_and_tilde :slash]]
-                               [:s [:period :!S8]]
+                               [:a :home_dir]
+                               [:s :regex_match_any]
                                [:d :left_paren]
                                [:f :right_paren]
                                [:q :hyphen]
