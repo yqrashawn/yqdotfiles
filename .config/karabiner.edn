@@ -202,6 +202,8 @@
                                     :return_or_enter]]]}
                       {:des   "caps_lock"
                        :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
+                      {:des "return_or_enter to control when pressed with other keys"
+                       :rules [[:##return_or_enter :left_control nil {:alone :return_or_enter}]]}
                       {:des   "HHKB, FILCO MINILA Change left control to esc if alone"
                        :rules [[:##left_control :left_control [:hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
                       {:des   "FILCO MINILA Change left_alt to left_command"
