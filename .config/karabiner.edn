@@ -53,7 +53,7 @@
                                :invoked  ["test-mode-j-dbpress-mode" 0]
                                :held    "say 'j held down'"]]
                       {:des "global C-h to backspace"
-                       :rules [[:!Th :delete_or_backspace]]}
+                       :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
                       {:des   "contexts"
                        :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
                                [:semicolon :right_option nil {:alone :semicolon}]
