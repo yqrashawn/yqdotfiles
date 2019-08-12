@@ -52,8 +52,6 @@
                               [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                                :invoked  ["test-mode-j-dbpress-mode" 0]
                                :held    "say 'j held down'"]]
-                      {:des "additional modifier key"
-                       :rules [[:##p :left_option nil {:alone :p}]]}
                       {:des "global C-h to backspace"
                        :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
                       {:des   "contexts"
