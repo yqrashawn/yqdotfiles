@@ -5,10 +5,10 @@
   "ignore_all_lsp": false,
   "semantic_status": {
     "javascript": "Enabled",
-    "html": "Enabled",
+    "vue": "Enabled",
     "shell": "Enabled",
     "css": "Enabled",
-    "vue": "Enabled"
+    "html": "Enabled"
   },
   "disable_auto_update": false,
   "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": true,
@@ -45,7 +45,8 @@
     "/Users/rashawnzhang/workspace/OFFICE/peacock",
     "/Users/rashawnzhang/workspace/OFFICE/ConfluxWeb",
     "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty/server/script",
-    "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty/translator"
+    "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty/translator",
+    "/Users/rashawnzhang/workspace/OFFICE/fc2wei"
   ],
   "api_key": "xbrsneixqbqppckrgenfdszgzvhwlu",
   "api_key_service_level": "Cloud"
