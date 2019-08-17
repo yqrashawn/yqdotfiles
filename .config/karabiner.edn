@@ -222,6 +222,14 @@
                       {:des   "Quit application by pressing command-q twice"
                        :rules [[:!C#Pq [:!Cq ["command-q" 0]] ["command-q" 1]]
                                [:!C#Pq ["command-q" 1] nil {:delayed {:invoked ["command-q" 0] :canceled ["commandq" 0]}}]]}
+
+                      #_{:des   "Press right_shift twice to enter douvle shift mode, press right_shift once to leave it"
+                       :rules [[:right_shift ["double-right-shift-mode" 1] ["shift-pressed-once" 1]]
+                               [:right_shift [:right_shift ["shift-pressed-once" 1]] ["double-right-shift-mode" 0] {:delayed {:invoked ["shift-pressed-once" 0] :canceled ["shift-pressed-once" 0]}}]
+                               :double-right-shift-mode
+                               [:right_shift ["double-right-shift-mode" 0]]
+                               [:a "say 'know we are in double shift mode'"]]}
+
                       {:des   "Change right_option to switch to second recent application when used alone"
                        :rules [[:right_option :left_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
                       {:des   "some simultaneous keys"
