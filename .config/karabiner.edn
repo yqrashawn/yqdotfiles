@@ -223,9 +223,9 @@
                        :rules [[:!C#Pq [:!Cq ["command-q" 0]] ["command-q" 1]]
                                [:!C#Pq ["command-q" 1] nil {:delayed {:invoked ["command-q" 0] :canceled ["commandq" 0]}}]]}
 
-                      {:des   "Press shift twice to toggle input methods"
+                      #_{:des   "Press shift twice to toggle input methods"}
                        :rules [[:right_shift [:right_shift ["shift-pressed-once" 0]] ["shift-pressed-once" 1]]
-                               [:right_shift [:left_shift ["shift-pressed-once" 1]] nil {:delayed {:invoked ["shift-pressed-once" 0] :canceled ["shift-pressed-once" 0]}}]]}
+                               [:right_shift [:left_shift ["shift-pressed-once" 1]] nil {:delayed {:invoked ["shift-pressed-once" 0] :canceled ["shift-pressed-once" 0]}}]]
 
                       {:des   "Change right_option to switch to second recent application when used alone"
                        :rules [[:right_option :left_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
