@@ -5,11 +5,11 @@
   "ignore_all_lsp": false,
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
-    "vue": "Enabled",
-    "html": "Enabled",
+    "css": "Enabled",
     "shell": "Enabled",
     "javascript": "Enabled",
-    "css": "Enabled"
+    "vue": "Enabled",
+    "html": "Enabled"
   },
   "disable_auto_update": false,
   "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": true,
@@ -48,12 +48,16 @@
     "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty/server/script",
     "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty/translator",
     "/Users/rashawnzhang/workspace/OFFICE/fc2wei",
-    "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty"
+    "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty",
+    "/Users/rashawnzhang/workspace/OFFICE/bounty-admin"
   ],
   "api_key": "xbrsneixqbqppckrgenfdszgzvhwlu",
   "api_key_service_level": "Cloud",
   "api_base_url": null,
   "local_enabled": "Unset",
   "disable_local_when_using_battery": false,
-  "hide_deep_information_message": false
+  "hide_deep_information_message": false,
+  "enable_power_saving_mode": false,
+  "rate_limit_interval_seconds": null,
+  "rate_limit_amount": null
 }
