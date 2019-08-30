@@ -222,11 +222,6 @@
                       {:des   "Quit application by pressing command-q twice"
                        :rules [[:!C#Pq [:!Cq ["command-q" 0]] ["command-q" 1]]
                                [:!C#Pq ["command-q" 1] nil {:delayed {:invoked ["command-q" 0] :canceled ["commandq" 0]}}]]}
-
-                      #_{:des   "Press shift twice to toggle input methods"}
-                       :rules [[:right_shift [:right_shift ["shift-pressed-once" 0]] ["shift-pressed-once" 1]]
-                               [:right_shift [:left_shift ["shift-pressed-once" 1]] nil {:delayed {:invoked ["shift-pressed-once" 0] :canceled ["shift-pressed-once" 0]}}]]
-
                       {:des   "Change right_option to switch to second recent application when used alone"
                        :rules [[:right_option :left_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
                       {:des   "some simultaneous keys"
@@ -244,7 +239,7 @@
                                [:j [:alf "searchGithub" "nikivi.search-the-web"]]
                                [:return_or_enter [[:alf "web searches" "nikivi.web.searches"] ["in-alfred" 1]]]
                                [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
-                               [:t [:alf "repos" "net.deanishe.alfred-git-repos"]]
+                               [:u [:alf "repos" "net.deanishe.alfred-git-repos"]]
                                ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
                                [:k [[:alf "chromeHistory" "thomasupton.chrome-history"] ["in-alfred" 1]]]
                                [:m [:alf "tab" "net.deanishe.alfred.safari"]]
