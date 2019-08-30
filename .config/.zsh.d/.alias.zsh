@@ -49,7 +49,7 @@ alias serv="live-server --port=8081"
 alias httpg="http-server -g"
 
 # editors
-alias e="emacsclient -n"
+# alias e="emacsclient -n"
 alias ee='fasd -f -e emacsclient -nw'
 alias eee='emacsclient -nw'
 alias demacs='emacs -Q -l ~/.emacs.d/init.debug.el'

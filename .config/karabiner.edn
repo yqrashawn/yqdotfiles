@@ -12,8 +12,8 @@
                       :regex_match_any [{:key :period}
                                         {:key :8 :modi [:left_shift] :lazy true}]}
  :modifiers          {:ro :right_option}
- :templates          {:launch     "osascript -e 'tell application \"Alfred 3\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-                      :alf        "osascript -e 'tell application \"Alfred 3\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
+ :templates          {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+                      :alf        "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
                       :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
                       :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
                       :open       "open \"%s\""
