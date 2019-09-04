@@ -6,11 +6,7 @@ Port 993
 User namy.19@gmail.com
 PassCmd "security find-generic-password  -s mbsync-gmail -w"
 SSLType IMAPS
-# SSLVersions TLSv1.2
-# AuthMechs *
-# AuthMechs PLAIN
 AuthMechs LOGIN
-# CertificateFile /etc/ssl/certs/ca.crt
 
 IMAPStore gmail-remote
 Account gmail
@@ -19,11 +15,7 @@ MaildirStore gmail-local
 Path ~/Maildir/gmail/
 Inbox ~/Maildir/gmail/Inbox
 SubFolders Verbatim
-# Trash
 
-# Channels and Groups
-# (so that we can rename local directories and flatten the hierarchy)
-#
 Channel gmail-folders
 Master :gmail-remote:
 Slave :gmail-local:
@@ -35,6 +27,8 @@ Create Both
 Expunge Both
 SyncState *
 
+# Channels and Groups
+# (so that we can rename local directories and flatten the hierarchy)
 Group gmail
 Channel gmail-folders
 # Channel gmail-inbox
@@ -42,115 +36,6 @@ Channel gmail-folders
 # Channel gmail-trash
 # Channel gmail-all
 # Channel gmail-starred
-
-# #################### icloud
-# IMAPAccount icloud
-# Host imap.mail.me.com
-# User rashawnzym
-# PassCmd "security find-generic-password -s imap.mail.me.com -w"
-# Port 993
-# SSLType IMAPS
-# SSLVersions TLSv1.2
-# AuthMechs PLAIN
-
-# IMAPStore icloud-remote
-# Account icloud
-
-# MaildirStore icloud-local
-# Path ~/Maildir/icloud/
-# Inbox ~/Maildir/icloud/inbox
-# SubFolders Verbatim
-# Trash Trash
-
-# #
-# # Channels and Groups
-# # (so that we can rename local directories and flatten the hierarchy)
-# #
-# #
-# Channel icloud-folders
-# Master :icloud-remote:
-# Slave :icloud-local:
-# # Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
-# Patterns *
-# Patterns %
-# Create Both
-# Expunge Both
-# SyncState *
-
-# Group icloud
-# Channel icloud-folders
-
-#################### bimsop
-# Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html
-IMAPAccount bimsop
-Host imap.exmail.qq.com
-User zhangyuxiao@bimsop.com
-PassCmd "security find-generic-password  -s "imap.exmail.qq.com" -w"
-Port 993
-SSLType IMAPS
-SSLVersions TLSv1.2
-AuthMechs *
-
-IMAPStore bimsop-remote
-Account bimsop
-
-MaildirStore bimsop-local
-Path ~/Maildir/bimsop/
-Inbox ~/Maildir/bimsop/inbox
-SubFolders Verbatim
-Trash Trash
-
-# Channels and Groups
-# (so that we can rename local directories and flatten the hierarchy)
-#
-Channel bimsop-folders
-Master :bimsop-remote:
-Slave :bimsop-local:
-Patterns *
-Patterns %
-# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
-Create Both
-Expunge Both
-SyncState *
-
-Group bimsop
-Channel bimsop-folders
-
-#################### qq
-# Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html
-IMAPAccount qq
-Host imap.qq.com
-User 254651372@qq.com
-PassCmd "security find-generic-password  -s "imap.qq.com" -w"
-Port 993
-SSLType IMAPS
-SSLVersions TLSv1.2
-AuthMechs *
-
-IMAPStore qq-remote
-Account qq
-
-MaildirStore qq-local
-Path ~/Maildir/qq/
-Inbox ~/Maildir/qq/inbox
-SubFolders Verbatim
-Trash Trash
-
-# Channels and Groups
-# (so that we can rename local directories and flatten the hierarchy)
-#
-Channel qq-folders
-Master :qq-remote:
-Slave :qq-local:
-# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
-Patterns *
-Patterns %
-Create Both
-Expunge Both
-SyncState *
-
-Group qq
-Channel qq-folders
 
 #################### zoho
 # Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html

@@ -5,11 +5,11 @@
   "ignore_all_lsp": false,
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
-    "html": "Enabled",
-    "shell": "Enabled",
     "javascript": "Enabled",
+    "css": "Enabled",
     "vue": "Enabled",
-    "css": "Enabled"
+    "shell": "Enabled",
+    "html": "Enabled"
   },
   "disable_auto_update": false,
   "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": true,
@@ -49,7 +49,9 @@
     "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty/translator",
     "/Users/rashawnzhang/workspace/OFFICE/fc2wei",
     "/Users/rashawnzhang/workspace/OFFICE/conflux-bounty",
-    "/Users/rashawnzhang/workspace/OFFICE/bounty-admin"
+    "/Users/rashawnzhang/workspace/OFFICE/bounty-admin",
+    "/Users/rashawnzhang/workspace/OFFICE/conflux-website",
+    "/Users/rashawnzhang/workspace/OFFICE/bounty-server"
   ],
   "api_key": "xbrsneixqbqppckrgenfdszgzvhwlu",
   "api_key_service_level": "Cloud",
