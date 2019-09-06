@@ -1,6 +1,6 @@
 {:nrebl   {:repl-options   {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
            :dependencies   [[rickmoynihan/nrebl.middleware "0.2.0"] ;; set this to the latest nrebl version
-                            [org.clojure/core.async "0.4.490"]]
+                            [org.clojure/core.async "0.4.500"]]
            :resource-paths ["/Users/yqrashawn/Dropbox/sync/REBL-0.9.157/REBL-0.9.157.jar"] ;; set this to where your REBL jar is installed
            :injections     [(require '[cognitect.rebl :as rebl])]}
 
@@ -19,7 +19,7 @@
                      ;; [lein-pdo "0.1.1"]
 
                      #_[com.billpiel/sayid "0.0.16"]
-                     [jonase/eastwood "0.3.5"]
+                     [jonase/eastwood "0.3.6"]
                      [lein-nsorg "0.3.0"]]
          :dependencies [[pjstadig/humane-test-output "0.9.0"]
                         [com.cemerick/pomegranate "1.1.0"]
@@ -40,10 +40,7 @@
            {:name         "central aliyun"
             :url          "https://maven.aliyun.com/nexus/content/groups/public/"
             :repo-manager true}}
- :repl    {:plugins      [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
-                          [cider/cider-nrepl "0.22.0-SNAPSHOT"]
-                          [cider/piggieback "0.4.1-SNAPSHOT"]
-                          [refactor-nrepl "2.4.1-SNAPSHOT"]]
+ :repl    {:plugins      [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]]
            :dependencies [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
                           ;; [cheshire "5.8.0"]
                           [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
