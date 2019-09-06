@@ -169,8 +169,8 @@
                       {:des   "launcher mode"
                        :rules [:launch-mode
                                ;; [:j [:open "/Applications/Alacritty.app"]]
-                               ;; [:j [:launch "Alacritty"]]
-                               [:j [:launch "iTerm"]]
+                               [:j [:launch "Alacritty"]]
+                               ;; [:j [:launch "iTerm"]]
                                ;; [:k [:open "/Applications/Emacs.app"]]
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
