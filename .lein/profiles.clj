@@ -40,7 +40,7 @@
            {:name         "central aliyun"
             :url          "https://maven.aliyun.com/nexus/content/groups/public/"
             :repo-manager true}}
- :repl    {:plugins      [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]]
+ :repl    {:plugins      [[refactor-nrepl "2.4.0"]]
            :dependencies [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
                           ;; [cheshire "5.8.0"]
                           [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
