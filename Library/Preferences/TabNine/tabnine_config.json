@@ -6,6 +6,7 @@
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
     "css": "Enabled",
+    "shell": "Enabled",
     "javascript": "Enabled",
     "html": "Enabled",
     "vue": "Enabled",

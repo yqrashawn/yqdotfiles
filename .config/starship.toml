@@ -1,0 +1,14 @@
+# https://starship.rs/config/#prompt
+# Don't print a new line at the start of the prompt
+add_newline = true
+
+[character]      # The name of the module we are confguring is "character"
+symbol = "❯"
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+fish_style_pwd_dir_length = 1
+
+[package]
+disabled = true
