@@ -6,10 +6,10 @@
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
     "javascript": "Enabled",
+    "vue": "Enabled",
     "html": "Enabled",
-    "shell": "Enabled",
     "css": "Enabled",
-    "vue": "Enabled"
+    "shell": "Enabled"
   },
   "disable_auto_update": false,
   "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": true,
