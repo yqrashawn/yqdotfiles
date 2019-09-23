@@ -36,7 +36,7 @@
                       :emacs-v-mode          {:key :v :condi :Emacs}
                       :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
                       :emacs-s-mode          {:key :s :condi :Emacs}
-                      :chrome-s-mode         {:key :s :condi :Chromes}
+                      :browser-s-mode         {:key :s :condi :Browsers}
                       :emacs-s-mode-terminal {:key :s :condi :Terminals}
                       :mouse_keys_mode_v4    {:key :a :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
                       :vi-mode               {:key :d}
@@ -139,7 +139,7 @@
                                [:tab :!Ttab :period-mode]
                                [:tab :!TStab :comma-mode]]}
                       {:des   "s-mode in chrome"
-                       :rules [:chrome-s-mode
+                       :rules [:browser-s-mode
                                [:j :!CSopen_bracket]
                                [:k :!CSclose_bracket]
                                [:h :!Copen_bracket]
@@ -174,8 +174,8 @@
                                ;; [:k [:open "/Applications/Emacs.app"]]
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
-                               [:l [:open "/Applications/Google Chrome.app/"]]
-                               [:comma [:open "/Applications/FirefoxDeveloperEdition.app/"]]
+                               [:comma [:open "/Applications/Google Chrome.app/"]]
+                               [:l [:open "/Applications/FirefoxDeveloperEdition.app/"]]
                                [:m [:open "/Applications/Mail.app"]]
                                [:v [:open "/Applications/WeChat.app"]]
                                [:q [:open "/Applications/Karabiner-Elements.app"]]
@@ -422,7 +422,8 @@
                                [:!T#Se :!Cright_arrow]]}
                       {:des   "misc"
                        ;; https://superuser.com/a/324267
-                       :rules [[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]]}]
+                       :rules [[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]
+                               [:!CSl [:f6] :Firefoxes]]}]
  :devices            {:macbook-internal [{:product_id 631 :vendor_id 1452}]
                       :filco-minila     [{:product_id 34050 :vendor_id 2652}]
                       :hhkb-tmk         [{:vendor_id 65261 :product_id 51966}]
