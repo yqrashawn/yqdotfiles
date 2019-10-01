@@ -175,7 +175,7 @@
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
                                [:comma [:open "/Applications/Google Chrome.app/"]]
-                               [:l [:open "/Applications/FirefoxDeveloperEdition.app/"]]
+                               [:l [:open "/Applications/Firefox Developer Edition.app/"]]
                                [:m [:open "/Applications/Mail.app"]]
                                [:v [:open "/Applications/WeChat.app"]]
                                [:q [:open "/Applications/Karabiner-Elements.app"]]
