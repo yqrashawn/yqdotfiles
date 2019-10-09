@@ -5,10 +5,10 @@
   "ignore_all_lsp": false,
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
-    "html": "Enabled",
     "css": "Enabled",
-    "javascript": "Enabled",
+    "html": "Enabled",
     "shell": "Enabled",
+    "javascript": "Enabled",
     "vue": "Enabled"
   },
   "disable_auto_update": false,
@@ -54,7 +54,8 @@
     "/Users/rashawnzhang/workspace/OFFICE/bounty-server",
     "/Users/rashawnzhang/workspace/OFFICE/conflux-textfilter",
     "/Users/yqrashawn/workspace/OFFICE/conflux-textfilter",
-    "/Users/yqrashawn/workspace/OFFICE/bounty-server"
+    "/Users/yqrashawn/workspace/OFFICE/bounty-server",
+    "/Users/yqrashawn/workspace/OFFICE/dag"
   ],
   "api_key": "xbrsneixqbqppckrgenfdszgzvhwlu",
   "api_key_service_level": "Cloud",
