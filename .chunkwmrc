@@ -82,6 +82,7 @@ chunkc tiling::rule --owner Finder --name Info --state float &
 chunkc tiling::rule --owner Charles --name \"Charles Preferences\" --state float &
 chunkc tiling::rule --owner Charles --name \"External Proxy Settings\" --state float &
 chunkc tiling::rule --owner \"App Store\" --state float &
+chunkc tiling::rule --owner \"2Do\" --state float &
 chunkc tiling::rule --owner \"System Preferences\" --state float &
 chunkc tiling::rule --owner \"Activity Monitor\" --state float &
 

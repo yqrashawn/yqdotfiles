@@ -174,6 +174,7 @@
                                ;; [:k [:open "/Applications/Emacs.app"]]
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
+                               [:t [:open "/Applications/2Do.app"]]
                                [:l [:open "/Applications/Google Chrome.app/"]]
                                [:comma [:open "/Applications/Firefox Developer Edition.app/"]]
                                [:m [:open "/Applications/Mail.app"]]
@@ -503,7 +504,8 @@
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
                                                       "^com\\.apple\\.Safari$"]
-                      :wechat                        ["^com\\.tencent\\.xinWeChat$"]}
+                      :wechat                        ["^com\\.tencent\\.xinWeChat$"]
+                      :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
