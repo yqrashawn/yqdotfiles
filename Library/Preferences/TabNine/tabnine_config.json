@@ -5,11 +5,11 @@
   "ignore_all_lsp": false,
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
-    "javascript": "Enabled",
     "css": "Enabled",
     "html": "Enabled",
-    "vue": "Enabled",
-    "shell": "Enabled"
+    "shell": "Enabled",
+    "javascript": "Enabled",
+    "vue": "Enabled"
   },
   "disable_auto_update": false,
   "user_understands_that_enabling_tabnine_cloud_sends_code_to_tabnine_servers": true,
@@ -62,7 +62,7 @@
   "api_key_service_level": "Cloud",
   "api_base_url": null,
   "local_enabled": "Yes",
-  "disable_local_when_using_battery": false,
+  "disable_local_when_using_battery": true,
   "hide_deep_information_message": false,
   "enable_power_saving_mode": false,
   "rate_limit_interval_seconds": null,
