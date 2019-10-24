@@ -53,6 +53,18 @@
                               [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                                :invoked  ["test-mode-j-dbpress-mode" 0]
                                :held    "say 'j held down'"]]
+
+                      {:des "vscode"
+                       :rules [:VSCode
+                               [:left_command [:left_command ["vsc-m-x-on" 1]] nil {:alone :!CSp}]
+                               :vsc-m-x-on
+                               [:!Tl [:return_or_enter ["in-alfred" 0]]]
+                               [:!Tj :down_arrow]
+                               [:!Tk :up_arrow]
+                               [:escape [:escape ["vsc-m-x-on" 0]]]
+                               [:left_control :left_control nil {:alone [:escape ["vsc-m-x-on" 0]]}]
+                               [:return_or_enter [:return_or_enter ["vsc-m-x-on" 0]]]]}
+
                       {:des "global C-h to backspace"
                        :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
                       {:des   "contexts"
@@ -361,6 +373,7 @@
                                [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
                                [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
                                [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next"]]}
+
                       {:des   "comma mode"
                        :rules [:comma-mode
                                [:a :open_bracket]
@@ -478,6 +491,7 @@
                                                       "^org\\.macports\\.X11$",
                                                       "^com\\.sublimetext\\.",
                                                       "^com\\.microsoft\\.VSCode$"]
+                      :VSCode                        ["^com\\.microsoft\\.VSCode$"]
                       :Emacs                         ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
                                                       "^org\\.gnu\\.Aquamacs$"]
