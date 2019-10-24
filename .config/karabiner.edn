@@ -176,8 +176,9 @@
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
                                [:t [:open "/Applications/2Do.app"]]
-                               [:comma [:open "/Applications/Google Chrome.app/"]]
-                               [:l [:open "/Applications/Firefox Developer Edition.app/"]]
+                               [:l [:open "/Applications/Google Chrome.app/"]]
+                               [:comma [:open "/Applications/Firefox Developer Edition.app/"]]
+                               [:n [:open "/Applications/Notion.app"]]
                                [:m [:open "/Applications/Mail.app"]]
                                [:v [:open "/Applications/WeChat.app"]]
                                [:q [:open "/Applications/Karabiner-Elements.app"]]
@@ -284,6 +285,7 @@
                                [:l [:!Tq :!Sl]] ;; resize window
                                :tmux-windmove-mode
                                ;; [:comma [:!Tq :comma]] ;; rename tmux pane
+                               [:m [:!Tq :z]] ;; size window
                                [:f [:!Tq :s]] ;; find and switch window
                                [:w [:!Tq :w]] ;; list and switch window/pane
                                [:b [:!Tq :x]] ;; kill pane
