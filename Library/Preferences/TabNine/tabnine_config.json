@@ -5,10 +5,10 @@
   "ignore_all_lsp": false,
   "creation_time": "2019-08-21T08:54:13.405394Z",
   "semantic_status": {
-    "css": "Enabled",
-    "html": "Enabled",
     "shell": "Enabled",
     "javascript": "Enabled",
+    "html": "Enabled",
+    "css": "Enabled",
     "vue": "Enabled"
   },
   "disable_auto_update": false,
