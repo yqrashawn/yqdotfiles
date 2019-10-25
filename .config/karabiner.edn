@@ -38,6 +38,7 @@
                       :emacs-v-mode          {:key :v :condi :Emacs}
                       :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
                       :emacs-s-mode          {:key :s :condi :Emacs}
+                      :vscode-s-mode          {:key :s :condi :VSCode}
                       :browser-s-mode         {:key :s :condi :Browsers}
                       :emacs-s-mode-terminal {:key :s :condi :Terminals}
                       :mouse_keys_mode_v4    {:key :a :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
@@ -63,7 +64,10 @@
                                [:!Tk :up_arrow]
                                [:escape [:escape ["vsc-m-x-on" 0]]]
                                [:##left_control :left_control nil {:alone [:escape ["vsc-m-x-on" 0]]}]
-                               [:return_or_enter [:return_or_enter ["vsc-m-x-on" 0]]]]}
+                               [:return_or_enter [:return_or_enter ["vsc-m-x-on" 0]]]
+                               :vscode-s-mode
+                               [:j :!CSopen_bracket]
+                               [:k :!CSclose_bracket]]}
 
                       {:des "global C-h to backspace"
                        :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
