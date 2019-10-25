@@ -56,13 +56,13 @@
 
                       {:des "vscode"
                        :rules [:VSCode
-                               [:left_command [:left_command ["vsc-m-x-on" 1]] nil {:alone :!CSp}]
+                               [:##left_command :left_command nil {:alone [:!CSp ["vsc-m-x-on" 1]]}]
                                :vsc-m-x-on
                                [:!Tl [:return_or_enter ["in-alfred" 0]]]
                                [:!Tj :down_arrow]
                                [:!Tk :up_arrow]
                                [:escape [:escape ["vsc-m-x-on" 0]]]
-                               [:left_control :left_control nil {:alone [:escape ["vsc-m-x-on" 0]]}]
+                               [:##left_control :left_control nil {:alone [:escape ["vsc-m-x-on" 0]]}]
                                [:return_or_enter [:return_or_enter ["vsc-m-x-on" 0]]]]}
 
                       {:des "global C-h to backspace"
@@ -72,7 +72,7 @@
                                [:semicolon :right_option nil {:alone :semicolon}]
                                [:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
                                [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
-                               [:left_control [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
+                               [:##left_control :left_control ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
                                [:##caps_lock [:left_control] ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
                                [:return_or_enter [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
                                [:!Tm [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]
@@ -90,7 +90,7 @@
                                [:!Tslash :!Cz]
                                [:escape [:escape ["in-alfred" 0]]]
                                [:return_or_enter [:return_or_enter ["in-alfred" 0]]]
-                               [:left_control :left_control nil {:alone [:escape ["in-alfred" 0]]}]
+                               [:##left_control :left_control nil {:alone [:escape ["in-alfred" 0]]}]
                                [:##caps_lock [:left_control] nil {:alone [:escape ["in-alfred" 0]]}]
                                [:!Ctab [:!Ctab ["in-alfred" 0]]]
                                [:!Cright_command [:!Ctab ["in-alfred" 0]]]
