@@ -1,11 +1,10 @@
-{:nrebl   {:repl-options   {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
-           :dependencies   [[rickmoynihan/nrebl.middleware "0.2.0"] ;; set this to the latest nrebl version
-                            [org.clojure/core.async "0.4.500"]]
-           :resource-paths ["/Users/yqrashawn/Dropbox/sync/REBL-0.9.157/REBL-0.9.157.jar"] ;; set this to where your REBL jar is installed
-           :injections     [(require '[cognitect.rebl :as rebl])]}
-
- :user [#_:nrebl
-        {:pedantic? :ranges
+{:nrebl {:repl-options   {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
+         :dependencies   [[rickmoynihan/nrebl.middleware "0.2.0"] ;; set this to the latest nrebl version
+                          [org.clojure/core.async "0.4.490"]
+                          [fn-fx/fn-fx-javafx "0.5.0-SNAPSHOT"]]
+         :resource-paths ["/Users/yqrashawn/REBL-0.9.220/REBL-0.9.220.jar"] ;; set this to where your REBL jar is installed
+         :injections     [(require '[cognitect.rebl :as rebl])]}
+ :repl  {:pedantic? :ranges
          :plugins   [[lein-ancient "0.6.15"]
                      ;; [lein-kibit "0.1.6"]
                      ;; [polylith/lein-polylith "LATEST"]
@@ -30,7 +29,9 @@
          :injections   [(require 'pjstadig.humane-test-output)
                         ;; (require 'spyscope.core)
                         (pjstadig.humane-test-output/activate!)]
-         :aliases      {"slamhound" ["run" "-m" "slam.hound"]}}]
+         :aliases      {"slamhound" ["run" "-m" "slam.hound"]}}
+ :user  [:nrebl :repl]
+
  :mirrors {#"clojars"
            {:name         "Clojar USTC"
             ;; :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"
@@ -46,5 +47,5 @@
                           [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
                           #_[org.clojure/tools.nrepl "0.2.13"]]
            :injections   []}
- :env {:squiggly {:checkers                 [:eastwood :kibit]
-                  :eastwood-exclude-linters [:unlimited-use]}}}
+ :env     {:squiggly {:checkers                 [:eastwood :kibit]
+                      :eastwood-exclude-linters [:unlimited-use]}}}
