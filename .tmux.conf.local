@@ -294,3 +294,6 @@ bind C-q send-prefix
 
 # move status line to top
 #set -g status-position top
+
+
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
