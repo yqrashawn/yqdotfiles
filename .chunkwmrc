@@ -79,6 +79,8 @@ chunkc core::load tiling.so
 chunkc tiling::rule --owner Finder --name Copy --state float &
 chunkc tiling::rule --owner Finder --name Move --state float &
 chunkc tiling::rule --owner Finder --name Info --state float &
+chunkc tiling::rule --owner Todoist --name Preferences --state float &
+chunkc tiling::rule --owner Todoist --state float &
 chunkc tiling::rule --owner Charles --name \"Charles Preferences\" --state float &
 chunkc tiling::rule --owner Charles --name \"External Proxy Settings\" --state float &
 chunkc tiling::rule --owner \"App Store\" --state float &
