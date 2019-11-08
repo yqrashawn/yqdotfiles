@@ -191,7 +191,7 @@
                                ;; [:k [:open "/Applications/Emacs.app"]]
                                [:k [:launch "Emacs"]]
                                ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
-                               [:t [:open "/Applications/2Do.app"]]
+                               [:t [:open "/Applications/Todoist.app"]]
                                [:l [:open "/Applications/Google Chrome.app/"]]
                                [:comma [:open "/Applications/Firefox Developer Edition.app/"]]
                                [:n [:open "/Applications/Notion.app"]]
