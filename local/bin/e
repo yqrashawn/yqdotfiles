@@ -5,7 +5,7 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 
 EMACS='/Applications/Emacs.app'
-EMACS_CLIENT='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
+EMACS_CLIENT='/usr/local/bin/emacsclient'
 
 DEFAULT_EVAL='(switch-to-buffer "*scratch*")'
 DEFAULT_ARGS="-e"
