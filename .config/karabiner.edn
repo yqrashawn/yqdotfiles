@@ -31,7 +31,8 @@
              :period-mode           {:key :period :afterup {:set ["period-comma-mode" 0]} :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :tmux-windmove-mode    {:key :q :condi :Terminals}
-             :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}}
+             :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
+             :k2-mode               {:key :2}}
  :simlayers {:test-mode             {:key :9}
              :contexts-f-mode       {:key :f}
              :emacs-m-mode          {:key :m :condi :Emacs}
@@ -55,6 +56,14 @@
                       :invoked  ["test-mode-j-dbpress-mode" 0]
                       :held    "say 'j held down'"]]
 
+             {:des   "resize window, remap Spectacle"
+              :rules [:k2-mode
+                      [:return_or_enter :!COc]
+                      [:spacebar :!COf]
+                      [:h :!COleft_arrow]
+                      [:l :!COright_arrow]
+                      [:k :!COup_arrow]
+                      [:j :!COdown_arrow]]}
              {:des   "vscode"
               :rules [:VSCode
                       [:##left_command :left_command nil {:alone [:!CSp ["vsc-m-x-on" 1]]}]
@@ -322,78 +331,78 @@
                       [:5 [:!Tq :5]]]}
 
              #_{:des   "chunkwm mode"
-              :rules [[:!CS4 ["/usr/local/bin/chunkc border::clear" :!CS4]]
-                      [:!CS3 ["/usr/local/bin/chunkc border::clear" :!CS3]]
-                      [:!COSf "/usr/local/bin/chunkc tiling::window --toggle native-fullscreen"]
-                      :chunkwm-insert-mode
-                      [:spacebar "/usr/local/bin/chunkc tiling::window --use-insertion-point cancel"]
-                      [:h "/usr/local/bin/chunkc tiling::window --use-insertion-point west"]
-                      [:j "/usr/local/bin/chunkc tiling::window --use-insertion-point south"]
-                      [:k "/usr/local/bin/chunkc tiling::window --use-insertion-point north"]
-                      [:l "/usr/local/bin/chunkc tiling::window --use-insertion-point east"]
+                :rules [[:!CS4 ["/usr/local/bin/chunkc border::clear" :!CS4]]
+                        [:!CS3 ["/usr/local/bin/chunkc border::clear" :!CS3]]
+                        [:!COSf "/usr/local/bin/chunkc tiling::window --toggle native-fullscreen"]
+                        :chunkwm-insert-mode
+                        [:spacebar "/usr/local/bin/chunkc tiling::window --use-insertion-point cancel"]
+                        [:h "/usr/local/bin/chunkc tiling::window --use-insertion-point west"]
+                        [:j "/usr/local/bin/chunkc tiling::window --use-insertion-point south"]
+                        [:k "/usr/local/bin/chunkc tiling::window --use-insertion-point north"]
+                        [:l "/usr/local/bin/chunkc tiling::window --use-insertion-point east"]
 
-                      :chunkwm-move-mode
-                      ;; move windows
-                      [:h "/usr/local/bin/chunkc tiling::window --warp west"]
-                      [:j "/usr/local/bin/chunkc tiling::window --warp south"]
-                      [:k "/usr/local/bin/chunkc tiling::window --warp north"]
-                      [:l "/usr/local/bin/chunkc tiling::window --warp east"]
+                        :chunkwm-move-mode
+                        ;; move windows
+                        [:h "/usr/local/bin/chunkc tiling::window --warp west"]
+                        [:j "/usr/local/bin/chunkc tiling::window --warp south"]
+                        [:k "/usr/local/bin/chunkc tiling::window --warp north"]
+                        [:l "/usr/local/bin/chunkc tiling::window --warp east"]
 
-                      :chunkwm-scale-mode
-                      ;; scale windows
-                      [:h "~/local/bin/chunkwm-resize left"]
-                      [:j "~/local/bin/chunkwm-resize down"]
-                      [:k "~/local/bin/chunkwm-resize up"]
-                      [:l "~/local/bin/chunkwm-resize right"]
-                      ;; equalize size of windows
-                      [:spacebar "/usr/local/bin/chunkc tiling::desktop --equalize"]
-                      :tab-mode
-                      [:return_or_enter "~/local/bin/chunkwm-change-mode"]
-                      [:grave_accent_and_tilde "/usr/local/bin/brew services restart chunkwm"]
-                      ;; change gap setting, reload chunkwmrc
-                      [:backslash "~/local/bin/chunkwm-gaps 10 10 5 5 7.5"]
-                      [:delete_or_backspace "~/local/bin/chunkwm-gaps 0 0 0 0 0"]
-                      ;; [:h "/usr/local/bin/chunkc tiling::window --focus west"]
-                      ;; [:j "/usr/local/bin/chunkc tiling::window --focus south"]
-                      ;; [:k "/usr/local/bin/chunkc tiling::window --focus north"]
-                      ;; [:l "/usr/local/bin/chunkc tiling::window --focus east"]
-                      ;; [:n "/usr/local/bin/chunkc tiling::window --focus next"]
-                      ;; [:p "/usr/local/bin/chunkc tiling::window --focus prev"]
-                      ;; focus mode
-                      [:h "/usr/local/bin/yabai -m window --focus west"]
-                      [:j "/usr/local/bin/yabai -m window --focus south"]
-                      [:k "/usr/local/bin/yabai -m window --focus north"]
-                      [:l "/usr/local/bin/yabai -m window --focus east"]
-                      [:n "/usr/local/bin/yabai -m window --focus next"]
-                      [:p "/usr/local/bin/yabai -m window --focus prev"]
+                        :chunkwm-scale-mode
+                        ;; scale windows
+                        [:h "~/local/bin/chunkwm-resize left"]
+                        [:j "~/local/bin/chunkwm-resize down"]
+                        [:k "~/local/bin/chunkwm-resize up"]
+                        [:l "~/local/bin/chunkwm-resize right"]
+                        ;; equalize size of windows
+                        [:spacebar "/usr/local/bin/chunkc tiling::desktop --equalize"]
+                        :tab-mode
+                        [:return_or_enter "~/local/bin/chunkwm-change-mode"]
+                        [:grave_accent_and_tilde "/usr/local/bin/brew services restart chunkwm"]
+                        ;; change gap setting, reload chunkwmrc
+                        [:backslash "~/local/bin/chunkwm-gaps 10 10 5 5 7.5"]
+                        [:delete_or_backspace "~/local/bin/chunkwm-gaps 0 0 0 0 0"]
+                        ;; [:h "/usr/local/bin/chunkc tiling::window --focus west"]
+                        ;; [:j "/usr/local/bin/chunkc tiling::window --focus south"]
+                        ;; [:k "/usr/local/bin/chunkc tiling::window --focus north"]
+                        ;; [:l "/usr/local/bin/chunkc tiling::window --focus east"]
+                        ;; [:n "/usr/local/bin/chunkc tiling::window --focus next"]
+                        ;; [:p "/usr/local/bin/chunkc tiling::window --focus prev"]
+                        ;; focus mode
+                        [:h "/usr/local/bin/yabai -m window --focus west"]
+                        [:j "/usr/local/bin/yabai -m window --focus south"]
+                        [:k "/usr/local/bin/yabai -m window --focus north"]
+                        [:l "/usr/local/bin/yabai -m window --focus east"]
+                        [:n "/usr/local/bin/yabai -m window --focus next"]
+                        [:p "/usr/local/bin/yabai -m window --focus prev"]
 
-                      ;; chunkwm workspace
-                      ;; [:1 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 1 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 1 ))"]
-                      ;; [:2 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 2 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 2 ))"]
-                      ;; [:3 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 3 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 3 ))"]
-                      ;; [:4 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 4 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 4 ))"]
-                      ;; rotate windows clockwise and anticlockwise
-                      [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90"]
-                      [:!Sr "/usr/local/bin/chunkc tiling::desktop --rotate 270"]
-                      ;; rotate on x and y axis
-                      [:y "/usr/local/bin/chunkc tiling::desktop --mirror vertical"]
-                      [:!Sy "/usr/local/bin/chunkc tiling::desktop --mirror horizontal"]
-                      ;; [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen"]
-                      ;; [:a "/usr/local/bin/chunkc tiling::window --toggle float"]
-                      ;; [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp"]
-                      ;; [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle"]
-                      ;; [:0 "/usr/local/bin/chunkc tiling::desktop --layout float"]
-                      [:a "/usr/local/bin/yabai -m window --toggle float"]
-                      ;; [:0 "/usr/local/bin/yabai -m window --toggle sticky"]
-                      [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
-                      [:spacebar "/usr/local/bin/yabai -m window --toggle zoom-parent"]
-                      [:b "/usr/local/bin/yabai -m window --layout bsp"]
-                      [:m "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
+                        ;; chunkwm workspace
+                        ;; [:1 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 1 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 1 ))"]
+                        ;; [:2 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 2 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 2 ))"]
+                        ;; [:3 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 3 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 3 ))"]
+                        ;; [:4 "/usr/local/bin/chunkc tiling::desktop --focus $(( $(/usr/local/bin/chunkc tiling::query --desktop id) == 4 ? $(/usr/local/bin/chunkc get _last_active_desktop) : 4 ))"]
+                        ;; rotate windows clockwise and anticlockwise
+                        [:r "/usr/local/bin/chunkc tiling::desktop --rotate 90"]
+                        [:!Sr "/usr/local/bin/chunkc tiling::desktop --rotate 270"]
+                        ;; rotate on x and y axis
+                        [:y "/usr/local/bin/chunkc tiling::desktop --mirror vertical"]
+                        [:!Sy "/usr/local/bin/chunkc tiling::desktop --mirror horizontal"]
+                        ;; [:spacebar "/usr/local/bin/chunkc tiling::window --toggle fullscreen"]
+                        ;; [:a "/usr/local/bin/chunkc tiling::window --toggle float"]
+                        ;; [:b "/usr/local/bin/chunkc tiling::desktop --layout bsp"]
+                        ;; [:m "/usr/local/bin/chunkc tiling::desktop --layout monocle"]
+                        ;; [:0 "/usr/local/bin/chunkc tiling::desktop --layout float"]
+                        [:a "/usr/local/bin/yabai -m window --toggle float"]
+                        ;; [:0 "/usr/local/bin/yabai -m window --toggle sticky"]
+                        [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+                        [:spacebar "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+                        [:b "/usr/local/bin/yabai -m window --layout bsp"]
+                        [:m "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
 
-                      [:x "/usr/local/bin/chunkc tiling::window --close"]
-                      [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
-                      [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
-                      [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next"]]}
+                        [:x "/usr/local/bin/chunkc tiling::window --close"]
+                        [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
+                        [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
+                        [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next"]]}
              {:des   "yabai mode"
               :rules [
                       ;; [:!CS4 ["/usr/local/bin/chunkc border::clear" :!CS4]]
@@ -472,10 +481,10 @@
                       [:b "/usr/local/bin/yabai -m window --layout bsp"]
                       [:m "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]}
 
-                      ;; [:x "/usr/local/bin/chunkc tiling::window --close"]
-                      ;; [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
-                      ;; [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
-                      ;; [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next"]]}
+             ;; [:x "/usr/local/bin/chunkc tiling::window --close"]
+             ;; [:delete_or_backspace "/usr/local/bin/chunkc tiling::window --close"]
+             ;; [:open_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor prev"]
+             ;; [:close_bracket "/usr/local/bin/chunkc tiling::window --send-to-monitor next"]]}
 
              {:des   "comma mode"
               :rules [:comma-mode
