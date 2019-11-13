@@ -16,3 +16,8 @@ jd() {
 }
 
 [ -s "/Users/rashawnzhang/.jabba/jabba.sh" ] && source "/Users/rashawnzhang/.jabba/jabba.sh"
+
+if [ "dumb"  == "$TERM" ] ; then
+  export PAGER=cat
+  export TERM=xterm-color
+fi
