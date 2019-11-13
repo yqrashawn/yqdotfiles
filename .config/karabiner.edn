@@ -17,7 +17,8 @@
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
-             :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"}
+             :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"
+             :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""}
  :layers    {:tab-mode              {:key     :tab
                                      :afterup [{:set ["yabai-move-mode" 0]}
                                                {:set ["yabai-scale-mode" 0]}]
@@ -195,28 +196,25 @@
              {:des   "launcher mode"
               :rules [:launch-mode
                       ;; [:j [:open "/Applications/Alacritty.app"]]
-                      [:j [:launch "Alacritty"]]
+                      [:j [[:open "/Applications/Alacritty.app"] [:focus "1" "1"]]]
                       ;; [:j [:launch "iTerm"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
-                      [:k [:launch "Emacs"]]
-                      ;; [:l [:open "/Applications/Google Chrome Canary.app/"]]
-                      [:t [:open "/Applications/Todoist.app"]]
-                      [:l [:open "/Applications/Google Chrome.app/"]]
-                      [:comma [:open "/Applications/Firefox Developer Edition.app/"]]
-                      [:n [:open "/Applications/Notion.app"]]
-                      [:m [:open "/Applications/Spark.app"]]
-                      [:v [:open "/Applications/WeChat.app"]]
+                      [:k [[:launch "Emacs"] [:focus "1" "1"]]]
+                      [:t [[:open "/Applications/Todoist.app"] [:focus "1" "3"]]]
+                      [:l [[:open "/Applications/Google Chrome.app/"] [:focus "2" "1"]]]
+                      [:comma [[:open "/Applications/Firefox Developer Edition.app/"] [:focus "2" "1"]]]
+                      [:n [[:open "/Applications/Notion.app"] [:focus "1" "3"]]]
+                      [:m [[:open "/Applications/Spark.app"] [:focus "1" "2"]]]
+                      [:v [[:open "/Applications/WeChat.app"] [:focus "1" "2"]]]
                       [:q [:open "/Applications/Karabiner-Elements.app"]]
-                      [:f [:open "/System/Library/CoreServices/Finder.app"]]
-                      [:9 [:open "/Applications/PDF Expert.app"]]
-                      ;; [:comma [:open "/Applications/Safari.app"]]
-                      [:h [:open "/Applications/Slack.app"]]
+                      [:f [[:focus "2" "1"] [:open "/System/Library/CoreServices/Finder.app"]]]
+                      [:9 [[:open "/Applications/PDF Expert.app"] [:focus "2" "2"]]]
+                      [:h [[:open "/Applications/Slack.app"] [:focus "1" "2"]]]
                       [:period [:open "/Applications/SetApp/Paw.app"]]
-                      [:equal_sign [:open "/Applications/Textual.app"]]
+                      [:equal_sign [[:open "/Applications/Textual.app"] [:focus "1" "2"]]]
                       [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
                       [:b [:open "/Applications/Bee.app"]]
-                      [:c [:open "/Applications/Visual Studio Code.app"]]
-                      [:r [:open "/Applications/Setapp/Timing.app"]]
+                      [:c [[:open "/Applications/Visual Studio Code.app"] [:focus "1" "1"]]]
                       [:e [:w :e]]
                       [:d [{:key :c :modi :ro}
                            {:key :h :modi :ro}
