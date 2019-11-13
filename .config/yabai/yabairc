@@ -1,18 +1,9 @@
 #!/usr/bin/env sh
-yabai -m rule --add label=emacs app=Emacs manage=on
-yabai -m rule --add app="^System Preferences$" manage=off
-yabai -m rule --add app=WeChat manage=off
-yabai -m rule --add app=微信 manage=off
-yabai -m rule --add app=Slack manage=off
-yabai -m rule --add app=Todoist manage=off
-yabai -m rule --add app=Notion manage=off
-yabai -m rule --add app=Finder manage=off
-yabai -m rule --add app=Alacritty manage=off
-yabai -m rule --add app=Preferences manage=off
-yabai -m rule --add app="^CleanMyMac.*$" manage=off
+yabai --config ~/.config/yabai/rules
+yabai --config ~/.config/yabai/signals
 
 # bar settings
-yabai -m config status_bar                   off
+yabai -m config status_bar                   on
 yabai -m config status_bar_text_font         "Helvetica Neue:Bold:12.0"
 yabai -m config status_bar_icon_font         "FontAwesome:Regular:12.0"
 yabai -m config status_bar_background_color  0xff202020
