@@ -6,6 +6,7 @@
          :injections     [(require '[cognitect.rebl :as rebl])]}
  :repl  {:pedantic? :ranges
          :plugins   [[lein-ancient "0.6.15"]
+                     [refactor-nrepl "2.4.0"]
                      ;; [lein-kibit "0.1.6"]
                      ;; [polylith/lein-polylith "LATEST"]
                      ;; [lein-environ "1.1.0"]
@@ -18,7 +19,6 @@
                      ;; [lein-pdo "0.1.1"]
 
                      #_[com.billpiel/sayid "0.0.16"]
-                     [refactor-nrepl "2.4.0"]
                      [jonase/eastwood "0.3.6"]
                      [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
                      [lein-nsorg "0.3.0"]]
@@ -32,7 +32,7 @@
                         ;; (require 'spyscope.core)
                         (pjstadig.humane-test-output/activate!)]
          :aliases      {"slamhound" ["run" "-m" "slam.hound"]}}
- :user  [:nrebl :repl]
+ :user [:nrebl :repl]
 
  :mirrors {#"clojars"
            {:name         "Clojar USTC"
