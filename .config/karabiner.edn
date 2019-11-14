@@ -18,7 +18,8 @@
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"
-             :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""}
+             ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
+             :focus      "echo"}
  :layers    {:tab-mode              {:key     :tab
                                      :afterup [{:set ["yabai-move-mode" 0]}
                                                {:set ["yabai-scale-mode" 0]}]
@@ -29,7 +30,7 @@
              :emacs-windmove-mode   {:key :q :condi [:Emacs :!comma-mode :!period-mode]}
              :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
              :emacs-bufmove-mode    {:key :f :condi :emacs-windmove-mode}
-             :period-mode           {:key :period :afterup {:set ["period-comma-mode" 0]} :condi [:!emacs-s-mode :!tmux-windmove-mode]}
+             :period-mode           {:key :period :afterup {:set ["period-comma-mode" 0]} :condi [:!emacs-s-mode :!tmux-windmove-mode :!k2-mode]}
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :tmux-windmove-mode    {:key :q :condi :Terminals}
              :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
@@ -61,10 +62,15 @@
               :rules [:k2-mode
                       [:return_or_enter :!COc]
                       [:spacebar :!COf]
-                      [:h :!COleft_arrow]
-                      [:l :!COright_arrow]
-                      [:k :!COup_arrow]
-                      [:j :!COdown_arrow]]}
+                      [:y :!CTleft_arrow] ;; upper left
+                      [:n :!CSTleft_arrow] ;; lower left
+                      [:o :!CTright_arrow] ;; upper right
+                      [:period :!CTSright_arrow] ;; lower right
+                      [:h :!COleft_arrow] ;; left half
+                      [:l :!COright_arrow] ;; right half
+                      [:k :!COup_arrow] ;; top half
+                      [:j :!COdown_arrow]]} ;; bottom half
+
              {:des   "vscode"
               :rules [:VSCode
                       [:##left_command :left_command nil {:alone [:!CSp ["vsc-m-x-on" 1]]}]
