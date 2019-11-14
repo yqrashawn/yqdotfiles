@@ -6,6 +6,7 @@
          :injections     [(require '[cognitect.rebl :as rebl])]}
  :repl  {:pedantic? :ranges
          :plugins   [[lein-ancient "0.6.15"]
+                     [refactor-nrepl "2.4.0"]
                      ;; [lein-kibit "0.1.6"]
                      ;; [polylith/lein-polylith "LATEST"]
                      ;; [lein-environ "1.1.0"]
@@ -18,6 +19,7 @@
                      ;; [lein-pdo "0.1.1"]
 
                      #_[com.billpiel/sayid "0.0.16"]
+                     [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
                      [jonase/eastwood "0.3.6"]
                      [lein-nsorg "0.3.0"]]
          :dependencies [[pjstadig/humane-test-output "0.9.0"]
@@ -41,11 +43,5 @@
            {:name         "central aliyun"
             :url          "https://maven.aliyun.com/nexus/content/groups/public/"
             :repo-manager true}}
- :repl    {:plugins      [[refactor-nrepl "2.4.0"]]
-           :dependencies [#_[figwheel-sidecar "0.5.17-SNAPSHOT"]
-                          ;; [cheshire "5.8.0"]
-                          [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
-                          #_[org.clojure/tools.nrepl "0.2.13"]]
-           :injections   []}
  :env     {:squiggly {:checkers                 [:eastwood :kibit]
                       :eastwood-exclude-linters [:unlimited-use]}}}
