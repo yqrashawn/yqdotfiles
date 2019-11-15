@@ -1,9 +1,16 @@
 {:nrebl {:repl-options   {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
          :dependencies   [[rickmoynihan/nrebl.middleware "0.2.0"] ;; set this to the latest nrebl version
-                          [org.clojure/core.async "0.4.490"]
-                          [fn-fx/fn-fx-javafx "0.5.0-SNAPSHOT"]]
+                          [org.clojure/core.async "0.4.500"]
+                          [org.openjfx/javafx-fxml "11.0.1"]
+                          [org.openjfx/javafx-controls "11.0.1"]
+                          [org.openjfx/javafx-graphics "11.0.1"]
+                          [org.openjfx/javafx-media "11.0.1"]
+                          [org.openjfx/javafx-swing "11.0.1"]
+                          [org.openjfx/javafx-base "11.0.1"]
+                          [org.openjfx/javafx-web "11.0.1"]
+                          [cljfmt "0.6.4"]]
          :resource-paths ["/Users/yqrashawn/REBL-0.9.220/REBL-0.9.220.jar"] ;; set this to where your REBL jar is installed
-         :injections     [(require '[cognitect.rebl :as rebl])]}
+         :injections     [(require 'nrebl.middleware) (require '[cognitect.rebl :as rebl])]}
  :repl  {:pedantic? :ranges
          :plugins   [[lein-ancient "0.6.15"]
                      [refactor-nrepl "2.4.0"]
