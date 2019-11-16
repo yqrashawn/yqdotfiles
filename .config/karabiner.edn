@@ -26,7 +26,7 @@
                                      :condi   [:!comma-mode :!period-mode]}
              :yabai-move-mode       {:key :f :condi :tab-mode}
              :yabai-scale-mode      {:key :c :condi :tab-mode}
-             :yabai-insert-mode     {:key :i :condi :tab-mode}
+             ;; :yabai-insert-mode     {:key :i :condi :tab-mode}
              :emacs-windmove-mode   {:key :q :condi [:Emacs :!comma-mode :!period-mode]}
              :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
              :emacs-bufmove-mode    {:key :f :condi :emacs-windmove-mode}
@@ -335,11 +335,11 @@
                       [:5 [:!Tq :5]]]}
              {:des   "yabai mode"
               :rules [
-                      :yabai-insert-mode
-                      [:h "/usr/local/bin/yabai -m window --insert west"]
-                      [:j "/usr/local/bin/yabai -m window --insert south"]
-                      [:k "/usr/local/bin/yabai -m window --insert north"]
-                      [:l "/usr/local/bin/yabai -m window --insert east"]
+                      ;; :yabai-insert-mode
+                      ;; [:h "/usr/local/bin/yabai -m window --insert west"]
+                      ;; [:j "/usr/local/bin/yabai -m window --insert south"]
+                      ;; [:k "/usr/local/bin/yabai -m window --insert north"]
+                      ;; [:l "/usr/local/bin/yabai -m window --insert east"]
 
                       ;; move windows
                       :yabai-move-mode
@@ -378,6 +378,16 @@
                       [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
                       [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
                       [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
+             {:des   "totalspace 2"
+              :rules [
+                      ;; move windows
+                      :yabai-move-mode
+                      [:i :!STOleft_arrow]
+                      [:o :!STOright_arrow]
+                      :tab-mode
+                      ;; focus mode
+                      [:i :!OSleft_arrow]
+                      [:o :!OSright_arrow]]}
 
              {:des   "comma mode"
               :rules [:comma-mode
