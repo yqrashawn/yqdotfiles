@@ -222,6 +222,14 @@
                       [:b [:open "/Applications/Bee.app"]]
                       [:c [:open "/Applications/Visual Studio Code.app"]]
                       [:e [:w :e]]
+                      [:hyphen [{:key :m :modi :ro}
+                                {:key :a :modi :ro}
+                                {:key :i :modi :ro}
+                                {:key :n :modi :ro}
+                                {:key :r :modi :ro}
+                                {:key :e :modi :ro}
+                                {:key :b :modi :ro}
+                                {:key :l :modi :ro}]]
                       [:d [{:key :c :modi :ro}
                            {:key :h :modi :ro}
                            {:key :r :modi :ro}
@@ -437,6 +445,15 @@
                       [:##n {:pkey :button2}]
                       [:##s ["mouse_keys_mode_v4_scroll" 1] nil {:afterup ["mouse_keys_mode_v4_scroll" 0]}]
                       [:##f {:mkey {:speed 0.5}}]]}
+             {:des   "REBL key bindings"
+              :rules [:REBL
+                      [:l :!Cright_arrow]
+                      [:h :!Cleft_arrow]
+                      [:!Sa :!CSleft_arrow]
+                      [:b :!Tb]
+                      [:v :!Tv]
+                      [:k :!Tup_arrow]
+                      [:j :!Tdown_arrow]]}
              {:des   "Emacs key bindings [control+keys] (rev 10)"
               :rules [[:!T#Sy :!Cv :!Emacs]
                       :!emacs-mode-disable-app
@@ -542,6 +559,7 @@
                                                       "^com\\.google\\.Chrome\\.canary$"
                                                       "^com\\.apple\\.Safari$"]
                       :wechat                        ["^com\\.tencent\\.xinWeChat$"]
+                      :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
