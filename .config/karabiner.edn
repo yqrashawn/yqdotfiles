@@ -4,7 +4,6 @@
          :delay   500
          :alone   500
          :held    500}}
- :froms     {:anykey {:any :key_code}}
  :tos       {:prev_app        {:key :tab :modi [:left_command] :lazy true}
              :left_paren      {:key :9 :modi [:left_shift] :lazy true}
              :right_paren     {:key :0 :modi [:left_shift] :lazy true}
@@ -53,29 +52,29 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [#_{:des "double press and hold key down in simlayer"}
+ :main      [{:des "mouse motion to scroll"
+              :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_control]}}}]}
+             #_{:des "double press and hold key down in simlayer"}
              :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
                      [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                       :invoked  ["test-mode-j-dbpress-mode" 0]
                       :held    "say 'j held down'"]]
-
-             #_{:des "any key test"
-              :rules [[:a ["test-anykey-mode" 0] ["test-anykey-mode" 1]]
-                      [:b ["test-anykey-mode" 1]]
-                      :test-anykey-mode
-                      [:anykey :1]]}
-             {:des   "resize window, remap Spectacle"
+             {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
                       [:return_or_enter :!COc]
                       [:spacebar :!COf]
-                      [:y :!CTleft_arrow] ;; upper left
-                      [:n :!CSTleft_arrow] ;; lower left
-                      [:o :!CTright_arrow] ;; upper right
+                      [:y :!CTleft_arrow]        ;; upper left
+                      [:n :!CSTleft_arrow]       ;; lower left
+                      [:o :!CTright_arrow]       ;; upper right
                       [:period :!CTSright_arrow] ;; lower right
-                      [:h :!COleft_arrow] ;; left half
-                      [:l :!COright_arrow] ;; right half
-                      [:k :!COup_arrow] ;; top half
-                      [:j :!COdown_arrow]]} ;; bottom half
+                      [:h :!COleft_arrow]        ;; left half
+                      [:l :!COright_arrow]       ;; right half
+                      [:k :!COup_arrow]          ;; top half
+                      [:j :!COdown_arrow]
+                      [:hyphen :!TOShyphen]
+                      [:equal_sign :!TOSequal_sign]
+                      [:open_bracket :!COTopen_bracket]
+                      [:close_bracket :!COTclose_bracket]]}
 
              {:des   "vscode"
               :rules [:VSCode
