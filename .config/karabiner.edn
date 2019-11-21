@@ -377,10 +377,10 @@
                       [:p "/usr/local/bin/yabai -m window --focus prev"]
 
                       ;; yabai workspace
-                      [:1 "/usr/local/bin/yabai -m space --focus 1"]
-                      [:2 "/usr/local/bin/yabai -m space --focus 2"]
-                      [:3 "/usr/local/bin/yabai -m space --focus 3"]
-                      [:4 "/usr/local/bin/yabai -m space --focus 4"]
+                      ;; [:1 "/usr/local/bin/yabai -m space --focus 1"]
+                      ;; [:2 "/usr/local/bin/yabai -m space --focus 2"]
+                      ;; [:3 "/usr/local/bin/yabai -m space --focus 3"]
+                      ;; [:4 "/usr/local/bin/yabai -m space --focus 4"]
                       [:a "/usr/local/bin/yabai -m window --toggle float"]
                       ;; [:0 "/usr/local/bin/yabai -m window --toggle sticky"]
                       [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
