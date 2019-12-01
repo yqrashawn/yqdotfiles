@@ -34,7 +34,7 @@
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :tmux-windmove-mode    {:key :q :condi :Terminals}
              :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
-             :k2-mode               {:key :2 :condi :!tab-mode}}
+             :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
  :simlayers {:test-mode             {:key :9}
              :contexts-f-mode       {:key :f}
              :emacs-m-mode          {:key :m :condi :Emacs}
@@ -52,8 +52,8 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [{:des "mouse motion to scroll"
-              :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command]}} :options {:momentum_scroll_enabled true}}]}
+ :main      [{:des   "mouse motion to scroll"
+              :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_control]}} :options {:momentum_scroll_enabled true}}]}
              #_{:des "double press and hold key down in simlayer"}
              :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
                      [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
@@ -210,7 +210,7 @@
                       [:j [:open "/Applications/Alacritty.app"]]
                       ;; [:j [:launch "iTerm"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
-                      [:k [:launch "Emacs"]]
+                      ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"]]
                       [:comma [:open "/Applications/Firefox Developer Edition.app/"]]
@@ -338,7 +338,9 @@
                       [:l [:!Tq :l]] ;; focuse window
                       [:v [:!Tq :!Shyphen]] ;; v split
                       [:s [:!Tq :hyphen]] ;; s split
-                      [:n [:!Tq :c]] ;; new session
+                      [:return_or_enter [:!Tq :c]] ;; new session
+                      [:n [:!Tq :!Tl]]
+                      [:p [:!Tq :!Th]]
                       [:comma [:!Tq :!Th]]
                       [:period [:!Tq :!Tl]]
                       [:1 [:!Tq :1]]
@@ -481,92 +483,92 @@
                       [:!T#Se :!Cright_arrow]]}
              {:des   "misc"
               ;; https://superuser.com/a/324267
-              :rules [[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]
+              :rules [#_[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]
                       [:!CSl [:f6] :Firefoxes]]}]
- :devices            {:macbook-internal [{:product_id 631 :vendor_id 1452}]
-                      :uhk-keyboard     [{:product_id 24866 :vendor_id 7504}]
-                      :filco-minila     [{:product_id 34050 :vendor_id 2652}]
-                      :hhkb-tmk         [{:vendor_id 65261 :product_id 51966}]
-                      :hhkb-bt          [{:vendor_id 1278 :product_id 514}]
-                      :hhkb             [{:vendor_id 2131 :product_id 256}]}
- :applications       {:emacs-mode-disable-app        ["^org\\.gnu\\.Emacs$",
-                                                      "^org\\.gnu\\.AquamacsEmacs$",
-                                                      "^org\\.gnu\\.Aquamacs$",
-                                                      "^org\\.pqrs\\.unknownapp.conkeror$",
-                                                      "^com\\.microsoft\\.rdc$",
-                                                      "^com\\.microsoft\\.rdc\\.mac$",
-                                                      "^com\\.microsoft\\.rdc\\.macos$",
-                                                      "^com\\.microsoft\\.rdc\\.osx\\.beta$",
-                                                      "^net\\.sf\\.cord$",
-                                                      "^com\\.thinomenon\\.RemoteDesktopConnection$",
-                                                      "^com\\.itap-mobile\\.qmote$",
-                                                      "^com\\.nulana\\.remotixmac$",
-                                                      "^com\\.p5sys\\.jump\\.mac\\.viewer$",
-                                                      "^com\\.p5sys\\.jump\\.mac\\.viewer\\.web$",
-                                                      "^com\\.teamviewer\\.TeamViewer$",
-                                                      "^com\\.vmware\\.horizon$",
-                                                      "^com\\.2X\\.Client\\.Mac$",
-                                                      "^com\\.apple\\.Terminal$",
-                                                      "^com\\.googlecode\\.iterm2$",
-                                                      "^co\\.zeit\\.hyperterm$",
-                                                      "^co\\.zeit\\.hyper$",
-                                                      "^io\\.alacritty$",
-                                                      "^net\\.kovidgoyal\\.kitty$",
-                                                      "^org\\.vim\\.",
-                                                      "^com\\.qvacua\\.VimR$",
-                                                      "^com\\.vmware\\.fusion$",
-                                                      "^com\\.vmware\\.horizon$",
-                                                      "^com\\.vmware\\.view$",
-                                                      "^com\\.parallels\\.desktop$",
-                                                      "^com\\.parallels\\.vm$",
-                                                      "^com\\.parallels\\.desktop\\.console$",
-                                                      "^org\\.virtualbox\\.app\\.VirtualBoxVM$",
-                                                      "^com\\.vmware\\.proxyApp\\.",
-                                                      "^com\\.parallels\\.winapp\\.",
-                                                      "^org\\.x\\.X11$",
-                                                      "^com\\.apple\\.x11$",
-                                                      "^org\\.macosforge\\.xquartz\\.X11$",
-                                                      "^org\\.macports\\.X11$",
-                                                      "^com\\.sublimetext\\.",
-                                                      "^com\\.microsoft\\.VSCode$"]
-                      :VSCode                        ["^com\\.microsoft\\.VSCode$"]
-                      :Emacs                         ["^org\\.gnu\\.Emacs$"
-                                                      "^org\\.gnu\\.AquamacsEmacs$"
-                                                      "^org\\.gnu\\.Aquamacs$"]
-                      :Chromes                       ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
-                      :Firefoxes                     ["^org\\.mozilla\\.firefox$"
-                                                      "^org\\.mozilla\\.firefoxdeveloperedition$"]
-                      :Terminals                     ["^com\\.apple\\.Terminal$"
-                                                      "^com\\.googlecode\\.iterm2$"
-                                                      "^co\\.zeit\\.hyperterm$"
-                                                      "^co\\.zeit\\.hyper$"
-                                                      "^io\\.alacritty$"
-                                                      "^net\\.kovidgoyal\\.kitty$"]
-                      :vim-mode-disabled-application ["^com\\.apple\\.Terminal$"
-                                                      "^com\\.googlecode\\.iterm2$"
-                                                      "^co\\.zeit\\.hyperterm$"
-                                                      "^co\\.zeit\\.hyper$"
-                                                      "^io\\.alacritty$"
-                                                      "^net\\.kovidgoyal\\.kitty$"
-                                                      "^org\\.vim\\."
-                                                      "^com\\.qvacua\\.VimR$"]
-                      :Finder                        ["^com\\.apple\\.finder$"]
-                      :Debuggers                     ["^org\\.mozilla\\.firefox$"
-                                                      "^org\\.mozilla\\.firefoxdeveloperedition$"
-                                                      "^com\\.google\\.Chrome$"
-                                                      "^org\\.chromium\\.Chromium$"
-                                                      "^com\\.google\\.Chrome\\.canary$"
-                                                      "^com\\.apple\\.Safari$"
-                                                      "^com\\.microsoft\\.VSCode$"]
-                      :Browsers                      ["^org\\.mozilla\\.firefox$"
-                                                      "^org\\.mozilla\\.firefoxdeveloperedition$"
-                                                      "^com\\.google\\.Chrome$"
-                                                      "^org\\.chromium\\.Chromium$"
-                                                      "^com\\.google\\.Chrome\\.canary$"
-                                                      "^com\\.apple\\.Safari$"]
-                      :wechat                        ["^com\\.tencent\\.xinWeChat$"]
-                      :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
-                      :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
+ :devices      {:macbook-internal [{:product_id 631 :vendor_id 1452}]
+                :uhk-keyboard     [{:product_id 24866 :vendor_id 7504}]
+                :filco-minila     [{:product_id 34050 :vendor_id 2652}]
+                :hhkb-tmk         [{:vendor_id 65261 :product_id 51966}]
+                :hhkb-bt          [{:vendor_id 1278 :product_id 514}]
+                :hhkb             [{:vendor_id 2131 :product_id 256}]}
+ :applications {:emacs-mode-disable-app ["^org\\.gnu\\.Emacs$",
+                                         "^org\\.gnu\\.AquamacsEmacs$",
+                                         "^org\\.gnu\\.Aquamacs$",
+                                         "^org\\.pqrs\\.unknownapp.conkeror$",
+                                         "^com\\.microsoft\\.rdc$",
+                                         "^com\\.microsoft\\.rdc\\.mac$",
+                                         "^com\\.microsoft\\.rdc\\.macos$",
+                                         "^com\\.microsoft\\.rdc\\.osx\\.beta$",
+                                         "^net\\.sf\\.cord$",
+                                         "^com\\.thinomenon\\.RemoteDesktopConnection$",
+                                         "^com\\.itap-mobile\\.qmote$",
+                                         "^com\\.nulana\\.remotixmac$",
+                                         "^com\\.p5sys\\.jump\\.mac\\.viewer$",
+                                         "^com\\.p5sys\\.jump\\.mac\\.viewer\\.web$",
+                                         "^com\\.teamviewer\\.TeamViewer$",
+                                         "^com\\.vmware\\.horizon$",
+                                         "^com\\.2X\\.Client\\.Mac$",
+                                         "^com\\.apple\\.Terminal$",
+                                         "^com\\.googlecode\\.iterm2$",
+                                         "^co\\.zeit\\.hyperterm$",
+                                         "^co\\.zeit\\.hyper$",
+                                         "^io\\.alacritty$",
+                                         "^net\\.kovidgoyal\\.kitty$",
+                                         "^org\\.vim\\.",
+                                         "^com\\.qvacua\\.VimR$",
+                                         "^com\\.vmware\\.fusion$",
+                                         "^com\\.vmware\\.horizon$",
+                                         "^com\\.vmware\\.view$",
+                                         "^com\\.parallels\\.desktop$",
+                                         "^com\\.parallels\\.vm$",
+                                         "^com\\.parallels\\.desktop\\.console$",
+                                         "^org\\.virtualbox\\.app\\.VirtualBoxVM$",
+                                         "^com\\.vmware\\.proxyApp\\.",
+                                         "^com\\.parallels\\.winapp\\.",
+                                         "^org\\.x\\.X11$",
+                                         "^com\\.apple\\.x11$",
+                                         "^org\\.macosforge\\.xquartz\\.X11$",
+                                         "^org\\.macports\\.X11$",
+                                         "^com\\.sublimetext\\.",
+                                         "^com\\.microsoft\\.VSCode$"]
+                :VSCode                 ["^com\\.microsoft\\.VSCode$"]
+                :Emacs                         ["^org\\.gnu\\.Emacs$"
+                                                "^org\\.gnu\\.AquamacsEmacs$"
+                                                "^org\\.gnu\\.Aquamacs$"]
+                :Chromes                       ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
+                :Firefoxes                     ["^org\\.mozilla\\.firefox$"
+                                                "^org\\.mozilla\\.firefoxdeveloperedition$"]
+                :Terminals                     ["^com\\.apple\\.Terminal$"
+                                                "^com\\.googlecode\\.iterm2$"
+                                                "^co\\.zeit\\.hyperterm$"
+                                                "^co\\.zeit\\.hyper$"
+                                                "^io\\.alacritty$"
+                                                "^net\\.kovidgoyal\\.kitty$"]
+                :vim-mode-disabled-application ["^com\\.apple\\.Terminal$"
+                                                "^com\\.googlecode\\.iterm2$"
+                                                "^co\\.zeit\\.hyperterm$"
+                                                "^co\\.zeit\\.hyper$"
+                                                "^io\\.alacritty$"
+                                                "^net\\.kovidgoyal\\.kitty$"
+                                                "^org\\.vim\\."
+                                                "^com\\.qvacua\\.VimR$"]
+                :Finder                        ["^com\\.apple\\.finder$"]
+                :Debuggers                     ["^org\\.mozilla\\.firefox$"
+                                                "^org\\.mozilla\\.firefoxdeveloperedition$"
+                                                "^com\\.google\\.Chrome$"
+                                                "^org\\.chromium\\.Chromium$"
+                                                "^com\\.google\\.Chrome\\.canary$"
+                                                "^com\\.apple\\.Safari$"
+                                                "^com\\.microsoft\\.VSCode$"]
+                :Browsers                      ["^org\\.mozilla\\.firefox$"
+                                                "^org\\.mozilla\\.firefoxdeveloperedition$"
+                                                "^com\\.google\\.Chrome$"
+                                                "^org\\.chromium\\.Chromium$"
+                                                "^com\\.google\\.Chrome\\.canary$"
+                                                "^com\\.apple\\.Safari$"]
+                :wechat                        ["^com\\.tencent\\.xinWeChat$"]
+                :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
+                :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
