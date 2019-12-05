@@ -17,6 +17,7 @@
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
+             :open-with-applescript "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
              :focus      "echo"}
@@ -209,7 +210,8 @@
                       ;; [:j [:open "/Applications/Alacritty.app"]]
                       [:j [:open "/Applications/Alacritty.app"]]
                       ;; [:j [:launch "iTerm"]]
-                      [:k [:open "/Applications/Emacs.app"]]
+                      ;; [:k [:open "/Applications/Emacs.app"]]
+                      [:k [:open-with-applescript "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"]]
