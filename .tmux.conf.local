@@ -298,3 +298,4 @@ bind C-q send-prefix
 
 
 bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+set -g default-command "reattach-to-user-namespace -l /usr/local/bin/zsh"
