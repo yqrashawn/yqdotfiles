@@ -331,7 +331,7 @@
                       :tmux-windmove-mode
                       ;; [:comma [:!Tq :comma]] ;; rename tmux pane
                       [:m [:!Tq :z]] ;; size window
-                      [:f [:!Tq :s]] ;; find and switch window
+                      [:f [:!Tq :slash]] ;; find and switch window
                       [:w [:!Tq :w]] ;; list and switch window/pane
                       [:b [:!Tq :x]] ;; kill pane
                       [:open_bracket [:!Tq :open_bracket]] ;; esc
