@@ -104,8 +104,24 @@ alias ref='reflex -c reflex.conf'
 alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
 
 # png
-alias pngq="pngquant -f --speed 1"
-alias pngopti="optipng -o7"
+function pngopti {
+  optipng -o7 $@
+}
+function pngq {
+  pngquant --force --speed 1 --output $@ $@
+}
+function opng {
+  pngq $@
+  pngopti $@
+}
+function pnghalf {
+  convert -resize 50% $@ $@
+}
+function opnghalf {
+  convert -resize 50% $@ $@
+  pngq $@
+  pngopti $@
+}
 
 # update email
 alias umail="proxychains4 -f /etc/proxychains.conf mbsync -a"
