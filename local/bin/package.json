@@ -50,5 +50,11 @@
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "got": "^10.0.4",
+    "lodash": "^4.17.15",
+    "ramda": "^0.26.1"
   }
 }
