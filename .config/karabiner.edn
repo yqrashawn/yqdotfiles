@@ -430,14 +430,20 @@
                       [:r :!Sclose_bracket]]}
              {:des   "chrome debug mode"
               :rules [[:condi :Debuggers :tab-mode]
+                      ;; step in
                       [:q :!Csemicolon]
+                      ;; step out
                       [:w :!CSsemicolon]
-                      ;; [:e :!Cquote]
-                      [:e :f9]
-                      [:r :!Cf8]
+                      ;; step over
+                      [:e :!Cquote]
+                      ;; step
+                      [:r :f9]
+                      ;; de/activate breakpoints
+                      [:t :!Cf8]
+                      ;; pause/resume
                       [:1 :!Cbackslash]
-                      [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"]
-                      [:3 :f9]]}
+                      ;; continue to here
+                      [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"]]}
              {:des   "Mouse button"
               :rules [[{:pkey :button5} :mission_control]
                       [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
