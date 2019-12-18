@@ -174,3 +174,6 @@ alias yt="yarn test"
 alias yuc="yarn global upgrade && yarn cache clean"
 alias yui="yarn upgrade-interactive"
 alias yup="yarn upgrade"
+
+# geth local dev
+alias gethld="geth --rpc --dev --miner.threads 1 console"
