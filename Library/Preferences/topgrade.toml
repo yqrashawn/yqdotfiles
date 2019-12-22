@@ -10,7 +10,7 @@ git_repos = [
 "Start Log" = "echo 'Start upgrade everything'"
 
 # Disable specific steps - same options as the command line flag
-disable = ["npm", "remotes", "macos", "App Store", "emacs", "ruby", "gem", "emacs"]
+disable = ["npm", "remotes", "macos", "App Store", "emacs", "ruby", "gem", "emacs", "system"]
 
 # Run specific steps - same options as the command line flag
 #only = ["system", "emacs"]
