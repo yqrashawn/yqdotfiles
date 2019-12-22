@@ -4,7 +4,8 @@
          :delay   500
          :alone   500
          :held    500}}
- :tos       {:prev_app        {:key :tab :modi [:left_command] :lazy true}
+ :tos       {:same_wind_app   {:key :grave_accent_and_tilde :modi [:left_command] :lazy true}
+             :prev_app        {:key :tab :modi [:left_command] :lazy true}
              :left_paren      {:key :9 :modi [:left_shift] :lazy true}
              :right_paren     {:key :0 :modi [:left_shift] :lazy true}
              :home_dir        [{:key :grave_accent_and_tilde :modi [:left_shift] :lazy true}
@@ -215,8 +216,10 @@
                       [:k [:show "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
-                      [:l [:open "/Applications/Google Chrome.app/"]]
-                      [:comma [:open "/Applications/Firefox Developer Edition.app/"]]
+                      [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
+                      [:l :same_wind_app :Chromes]
+                      [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
+                      [:comma :same_wind_app :Firefoxes]
                       [:n [:open "/Applications/Notion.app"]]
                       [:m [:open "/Applications/Spark.app"]]
                       [:v [:open "/Applications/WeChat.app"]]
@@ -299,6 +302,7 @@
                       [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                       [:close_bracket :!CTOSclose_bracket]
                       [:hyphen :!!hyphen]
+                      [:spacebar "~/Dropbox/sync/pullover/pullover-start-or-finish"]
                       #_[:right_command :!!3]]}
              {:des   "q"
               :rules [:emacs-bufmove-mode
