@@ -433,13 +433,15 @@
                       [:e :!Sopen_bracket]
                       [:r :!Sclose_bracket]]}
              {:des   "chrome debug mode"
-              :rules [[:condi :Debuggers :tab-mode]
+              :rules [:!Debuggers
+                      [:f10 :mute]
+                      [:condi :Debuggers :tab-mode]
                       ;; step in
                       [:q :!Csemicolon]
                       ;; step out
                       [:w :!CSsemicolon]
                       ;; step over
-                      [:e :!Cquote]
+                      [:e :f10]
                       ;; step
                       [:r :f9]
                       ;; de/activate breakpoints
