@@ -83,6 +83,7 @@
               :rules [:VSCode
                       [:##left_command :left_command nil {:alone [:!CSp ["vsc-m-x-on" 1]]}]
                       :vsc-m-x-on
+                      [:!Tl [:return_or_enter ["in-alfred" 0]]]
                       [:!Tj :down_arrow]
                       [:!Tk :up_arrow]
                       [:escape [:escape ["vsc-m-x-on" 0]]]
@@ -111,12 +112,18 @@
                       [:e [:f :e]]
                       [:l [:return_or_enter ["in-contexts" 0]] ["in-contexts" 1]]]}
              {:des   "in-alfred"
-              :rules [:Alfred
-                      [:!Tl :return_or_enter]
+              :rules [:in-alfred
                       [:!Tw :!Odelete_or_backspace]
                       [:!Ty :!Cv]
-                      [:!Tg :escape]
                       [:!Tslash :!Cz]
+                      [:escape [:escape ["in-alfred" 0]]]
+                      [:return_or_enter [:return_or_enter ["in-alfred" 0]]]
+                      [:##left_control :left_control nil {:alone [:escape ["in-alfred" 0]]}]
+                      [:##caps_lock [:left_control] nil {:alone [:escape ["in-alfred" 0]]}]
+                      [:!Ctab [:!Ctab ["in-alfred" 0]]]
+                      [:!Cright_command [:!Ctab ["in-alfred" 0]]]
+                      [:!Tsemicolon [:!Treturn_or_enter ["in-alfred" 0]]]
+                      [:!Tl [:return_or_enter ["in-alfred" 0]]]
                       [:!Tj :down_arrow]
                       [:!Tk :up_arrow]
                       [:!Oh :left_arrow]
@@ -127,6 +134,7 @@
                       [:!OSj :!OSdown_arrow]
                       [:!OSk :!OSup_arrow]
                       [:!OSl :!OSright_arrow]]}
+
              {:des   "s-mode in emacs"
               :rules [:emacs-s-mode
                       [:j :!!j]
@@ -271,31 +279,33 @@
              {:des   "Change right_option to switch to second recent application when used alone"
               :rules [[:right_option :left_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
              {:des   "some simultaneous keys"
-              :rules [[[:h :l] [:alf "helpSearch" "com.tedwise.menubarsearch"]]
-                      [[:j :l] [:open "/Applications/Alfred 4.app"]]
-                      [[:l :n] [:alf "winswitch" "ru.mandrigin.alfred.sww"]]]}
+              :rules [[[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
+                      [[:j :l] [:f19 ["in-alfred" 1]]]
+                      [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
-                      [:l [[:open "/Applications/Alfred 4.app"] :!CTslash ] :finder-alfred-mode]
-                      [:!CTk [[:open "/Applications/Alfred 4.app"] :!CTk]]
+                      [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
+                      [:!CTk [:!CTk ["in-alfred" 1]]]
+                      [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                       :alfred-mode
                       [:i [:z :i]]
-                      [:h [[:open "/Applications/Alfred 4.app"] [:alf "search repos" "me.lachlan.githubjump"]]]
-                      [:j [[:open "/Applications/Alfred 4.app"] [:alf "searchGithub" "nikivi.search-the-web"]]]
-                      [:return_or_enter [[:open "/Applications/Alfred 4.app"] [:alf "web searches" "nikivi.web.searches"]]]
-                      [:x [[:open "/Applications/Alfred 4.app"] [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]]
-                      [:u [[:open "/Applications/Alfred 4.app"] [:alf "repos" "net.deanishe.alfred-git-repos"]]]
+                      [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
+                      [:j [:alf "searchGithub" "nikivi.search-the-web"]]
+                      [:return_or_enter [[:alf "web searches" "nikivi.web.searches"] ["in-alfred" 1]]]
+                      [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
+                      [:u [:alf "repos" "net.deanishe.alfred-git-repos"]]
                       ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
-                      [:k [[:open "/Applications/Alfred 4.app"] [:alf "chromeHistory" "thomasupton.chrome-history"]]]
-                      [:m [[:open "/Applications/Alfred 4.app"] [:alf "tab" "net.deanishe.alfred.safari"]]]
-                      [:y [[:open "/Applications/Alfred 4.app"] :!!grave_accent_and_tilde]]
+                      [:k [[:alf "chromeHistory" "thomasupton.chrome-history"] ["in-alfred" 1]]]
+                      [:m [:alf "tab" "net.deanishe.alfred.safari"]]
+                      [:y [:!!grave_accent_and_tilde ["in-alfred" 1]]]
                       [:o :!CTOS0]
                       [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]
-                      [:semicolon [[:open "/Applications/Alfred 4.app"] [:alf "localport" "in.fech.localport"]]]
+                      [:semicolon [:alf "localport" "in.fech.localport"]]
                       [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                       [:close_bracket :!CTOSclose_bracket]
                       [:hyphen :!!hyphen]
-                      [:spacebar "~/Dropbox/sync/pullover/pullover-start-or-finish"]]}
+                      [:spacebar "~/Dropbox/sync/pullover/pullover-start-or-finish"]
+                      #_[:right_command :!!3]]}
              {:des   "q"
               :rules [:emacs-bufmove-mode
                       [:h [:!Tx :9 :w :h]]
