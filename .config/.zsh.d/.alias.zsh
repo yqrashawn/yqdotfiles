@@ -12,6 +12,7 @@ alias ec="cd ~/.emacs.d/ && gws && gwd"
 alias cl='clear'
 alias o='open'
 alias p2='percol'
+alias upgradenix="sudo -i sh -c 'nix-channel --update && nix-env -iA nixpkgs.nix && launchctl remove org.nixos.nix-daemon && launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist'"
 
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
