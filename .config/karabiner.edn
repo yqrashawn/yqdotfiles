@@ -35,7 +35,7 @@
              :emacs-bufmove-mode    {:key :f :condi :emacs-windmove-mode}
              :period-mode           {:key :period :afterup {:set ["period-comma-mode" 0]} :condi [:!emacs-s-mode :!tmux-windmove-mode :!k2-mode]}
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
-             :tmux-windmove-mode    {:key :q :condi :Terminals}
+             :tmux-windmove-mode    {:key :q :condi [:Terminals :!comma-mode :!period-mode]}
              :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
              :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
  :simlayers {:test-mode             {:key :9}
