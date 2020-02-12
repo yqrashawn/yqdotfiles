@@ -58,7 +58,7 @@ install = [["yarn", "global", "add", "bash-language-server"]]
 command = "json-language-server"
 args = ["--stdio"]
 synchronous_timeout_ms = 300
-install = [["yarn", "global", "add", "json-language-server"]]
+install = [["yarn", "global", "add", "vscode-json-languageserver"]]
 
 [language.python]
 command = "pyls"
@@ -69,7 +69,7 @@ install = [["pip", "install", "'python-language-server[all]'"]]
 command = "ocaml-language-server"
 args = ["--stdio"]
 synchronous_timeout_ms = 300
-install = [["npm", "install", "-g", "ocaml-language-server"]]
+install = [["yarn", "global", "add", "ocaml-language-server"]]
 
 [language.cpp]
 command = "cquery"
