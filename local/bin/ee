@@ -5,19 +5,22 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 
 EMACS='/Applications/Emacs.app'
-EMACS_CLIENT='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
+EMACS_CLIENT='/usr/local/bin/emacsclient'
 
 DEFAULT_EVAL='(switch-to-buffer "*scratch*")'
 DEFAULT_ARGS="-e"
 NO_WAIT='-n'
 
+# function run_client(){
+#     if [ $# -ne 0 ]
+#     then
+#         ${EMACS_CLIENT} ${NO_WAIT} $@
+#     else
+#         ${EMACS_CLIENT} ${NO_WAIT} ${DEFAULT_ARGS} "${DEFAULT_EVAL}" &> /dev/null
+#     fi
+# }
 function run_client(){
-    if [ $# -ne 0 ]
-    then
-        ${EMACS_CLIENT} ${NO_WAIT} $@
-    else
-        ${EMACS_CLIENT} ${NO_WAIT} ${DEFAULT_ARGS} "${DEFAULT_EVAL}" &> /dev/null
-    fi
+  emacsclient -nw -c $@
 }
 
 echo -e "Checking Emacs server status...\c"
@@ -30,7 +33,8 @@ then
 else
     echo "${BOLD}${BG_RED}Inactive${RESET}"
     echo -e "Emacs server is starting...\c"
-    open -a ${EMACS}
+    # open -a ${EMACS}
+    emacs --daemon
     echo "${BOLD}${BG_GREEN}DONE${RESET}"
 
     echo -e "Trying connecting...\c"
