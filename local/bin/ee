@@ -19,8 +19,8 @@ NO_WAIT='-n'
 #         ${EMACS_CLIENT} ${NO_WAIT} ${DEFAULT_ARGS} "${DEFAULT_EVAL}" &> /dev/null
 #     fi
 # }
-function run_client(){
-  emacsclient -nw -c $@
+function run_client() {
+  emacsclient -nw $@
 }
 
 echo -e "Checking Emacs server status...\c"
