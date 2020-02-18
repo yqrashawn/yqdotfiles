@@ -721,6 +721,7 @@ key_bindings:
   - { key: V,        mods: Command, action: Paste                             }
   - { key: C,        mods: Command, action: Copy                              }
   - { key: Paste,                   action: Paste                             }
+  - { key: Paste,    mods: Command, action: Paste                             }
   - { key: Copy,                    action: Copy                              }
   - { key: H,        mods: Command, action: Hide                              }
   - { key: Q,        mods: Command, action: Quit                              }
@@ -741,3 +742,4 @@ key_bindings:
   - { key: Slash,     mods: Control,   chars: "\x1f"                          }
   - { key: Slash, mods: Control|Shift,   chars: "\x1b+\x1b+\x43\x3f"          }
   - { key: Q, mods: Control,   chars: "\x11"                                  }
+  - { key: K, mods: Command,   chars: "\x1b+\x1b+\x44\x6b"                                  }
