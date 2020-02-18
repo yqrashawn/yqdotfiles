@@ -609,8 +609,6 @@ key_bindings:
   - { key: F11,      mods: Command, chars: "\x1b[23;3~"                       }
   - { key: F12,      mods: Command, chars: "\x1b[24;3~"                       }
   - { key: NumpadEnter,             chars: "\n"                               }
-  - { key: Comma,     mods: Command,      command:
-     {program: "emacsclient -nw", args: ["~/.config/alacritty/alacritty.yml"] }}
   - { key: N,         mods: Command,      action: SpawnNewInstance            }
 
   - { key: Grave,     mods: Alt,       chars: "\x1b`"                         } # Alt + `

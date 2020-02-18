@@ -317,6 +317,7 @@ bind -r l if-shell "$is_vim_emacs" "send-keys M-+ M-+ W l" "select-pane -R"
 bind -r _ if-shell "$is_vim_emacs" "send-keys C-x 3" "split-window -h"
 bind -r - if-shell "$is_vim_emacs" "send-keys C-x 2" "split-window -v"
 bind -r z if-shell "$is_vim_emacs" "send-keys C-x 1" "resize-pane -Z"
+bind x if-shell "$is_vim_emacs" "send-keys M-0" "kill-pane"
 
 # Multi-key prefix for custom bindings
 # bind-key -Troot C-q switch-client -Temacs-keys
@@ -332,6 +333,6 @@ bind -Tcopy-mode-vi h select-pane -L
 bind -Tcopy-mode-vi j select-pane -D
 bind -Tcopy-mode-vi k select-pane -U
 bind -Tcopy-mode-vi l select-pane -R
-bind _ -Tcopy-mode-vi split-window -h
-bind - -Tcopy-mode-vi split-window -v
-bind z -Tcopy-mode-vi resize-pane -Z
+bind -Tcopy-mode-vi _ split-window -h
+bind -Tcopy-mode-vi - split-window -v
+bind -Tcopy-mode-vi z resize-pane -Z
