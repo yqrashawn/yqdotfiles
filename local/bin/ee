@@ -24,7 +24,7 @@ function run_client() {
 }
 
 echo -e "Checking Emacs server status...\c"
-if pgrep Emacs &> /dev/null
+if pgrep -f "[E,e]macs$" &> /dev/null
 then
     echo "${BOLD}${BG_GREEN}Active${RESET}"
     echo -e "Connecting...\c"
