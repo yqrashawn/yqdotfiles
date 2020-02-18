@@ -740,3 +740,4 @@ key_bindings:
 
   - { key: Slash,     mods: Control,   chars: "\x1f"                          }
   - { key: Slash, mods: Control|Shift,   chars: "\x1b+\x1b+\x43\x3f"          }
+  - { key: Q, mods: Control,   chars: "\x11"                                  }
