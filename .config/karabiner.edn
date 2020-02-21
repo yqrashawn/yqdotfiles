@@ -214,7 +214,7 @@
                       [:j [:open "/Applications/Alacritty.app"]]
                       ;; [:j [:launch "iTerm"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
-                      [:k [:show "Emacs"]]
+                      ;; [:k [:show "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
