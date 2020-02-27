@@ -11,7 +11,13 @@
              :home_dir        [{:key :grave_accent_and_tilde :modi [:left_shift] :lazy true}
                                {:key :slash}]
              :regex_match_any [{:key :period}
-                               {:key :8 :modi [:left_shift] :lazy true}]}
+                               {:key :8 :modi [:left_shift] :lazy true}]
+             :select_cn       {:select_input_source
+                               {:input_mode_id   ""
+                                :input_source_id "com.apple.keylayout.US"
+                                :language        "en"}}
+             :select_abc      {:select_input_source
+                               {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}}
  :modifiers {:ro :right_option}
  :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
@@ -62,6 +68,17 @@
                      [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                       :invoked  ["test-mode-j-dbpress-mode" 0]
                       :held    "say 'j held down'"]]
+             {:des   "switch input method"
+              :rules [{:from {:key_code :left_shift}
+                       :to [{:key_code :left_shift}]
+                       :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}]
+                       :type :basic}
+
+                      {:from {:key_code :right_shift}
+                       :to [{:key_code :right_shift}]
+                       :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}]
+                       :type :basic}
+                      ]}
              {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
                       [:return_or_enter :!COc]
@@ -134,7 +151,6 @@
                       [:!OSj :!OSdown_arrow]
                       [:!OSk :!OSup_arrow]
                       [:!OSl :!OSright_arrow]]}
-
              {:des   "s-mode in emacs"
               :rules [:emacs-s-mode
                       [:j :!!j]
@@ -214,7 +230,7 @@
                       [:j [:open "/Applications/Alacritty.app"]]
                       ;; [:j [:launch "iTerm"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
-                      ;; [:k [:show "Emacs"]]
+                      [:k [:show "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
@@ -592,7 +608,9 @@
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
-                      :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
+                      :us       {:input_mode_id   ""
+                                 :input_source_id "com.apple.keylayout.US"
+                                 :language        "en"}
                       :abc      {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}
                       :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
