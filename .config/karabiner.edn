@@ -68,7 +68,7 @@
                      [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                       :invoked  ["test-mode-j-dbpress-mode" 0]
                       :held    "say 'j held down'"]]
-             {:des   "switch input method"
+             #_{:des   "switch input method"
               :rules [{:from {:key_code :left_shift}
                        :to [{:key_code :left_shift}]
                        :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}]
@@ -264,8 +264,9 @@
                            {:key :r :modi :ro}
                            {:key :o :modi :ro}
                            {:key :m :modi :ro}
-                           {:key :e :modi :ro}
-                           {:key :spacebar}
+                           {:key :i :modi :ro}
+                           {:key :u :modi :ro}
+                           {:key :m :modi :ro}
                            {:key :n :modi :ro}
                            {:key :d :modi :ro}
                            {:key :b :modi :ro}
