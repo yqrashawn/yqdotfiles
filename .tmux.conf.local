@@ -306,8 +306,10 @@ bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pb
 #     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?|emacs|emacsclient|ee|e)(diff)?$'"
 
 # only emacs
+# is_vim_emacs="ps -o state= -o comm= -t '#{pane_tty}' \
+    # | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(emacs|emacsclient|ee|e)(diff)?$'"
 is_vim_emacs="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(emacs|emacsclient|ee|e)(diff)?$'"
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(emacsclient)(diff)?$'"
 
 # enable in root key table
 bind -r h if-shell "$is_vim_emacs" "send-keys M-+ M-+ W h" "select-pane -L"
