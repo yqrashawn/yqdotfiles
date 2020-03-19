@@ -1,9 +1,6 @@
 {:profiles
- {:Goku {:default true
-         :sim     50
-         :delay   500
-         :alone   500
-         :held    500}}
+ {:Goku      {:default true :sim 50 :delay 500 :alone 500 :held 500}
+  :issue-54 {:sim 50 :delay 500 :alone 500 :held 500}}
  :tos       {:same_wind_app   {:key :grave_accent_and_tilde :modi [:left_command] :lazy true}
              :prev_app        {:key :tab :modi [:left_command] :lazy true}
              :left_paren      {:key :9 :modi [:left_shift] :lazy true}
@@ -31,10 +28,12 @@
              :focus      "echo"}
  :layers    {:tab-mode              {:key     :tab
                                      :afterup [{:set ["yabai-move-mode" 0]}
-                                               {:set ["yabai-scale-mode" 0]}]
+                                               {:set ["yabai-scale-mode" 0]}
+                                               {:set ["spec-mode" 0]}]
                                      :condi   [:!comma-mode :!period-mode]}
              :yabai-move-mode       {:key :f :condi :tab-mode}
              :yabai-scale-mode      {:key :c :condi :tab-mode}
+             :spec-mode             {:key :s :condi :tab-mode}
              ;; :yabai-insert-mode     {:key :i :condi :tab-mode}
              :emacs-windmove-mode   {:key :q :condi [:Emacs :!comma-mode :!period-mode]}
              :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
@@ -61,7 +60,14 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [{:des   "mouse motion to scroll"
+ :main      [
+             {:des "issue-54"
+              :rules [:issue-54
+                      [:j :2 :yabai-move-mode]
+                      [:j :3 :yabai-scale-mode]
+                      [:j :4 :spec-mode]
+                      [:j :1 :tab-mode]]}
+             {:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
              #_{:des "double press and hold key down in simlayer"}
              :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
@@ -69,16 +75,16 @@
                       :invoked  ["test-mode-j-dbpress-mode" 0]
                       :held    "say 'j held down'"]]
              #_{:des   "switch input method"
-              :rules [{:from {:key_code :left_shift}
-                       :to [{:key_code :left_shift}]
-                       :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}]
-                       :type :basic}
+                :rules [{:from        {:key_code :left_shift}
+                         :to          [{:key_code :left_shift}]
+                         :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}]
+                         :type        :basic}
 
-                      {:from {:key_code :right_shift}
-                       :to [{:key_code :right_shift}]
-                       :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}]
-                       :type :basic}
-                      ]}
+                        {:from        {:key_code :right_shift}
+                         :to          [{:key_code :right_shift}]
+                         :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}]
+                         :type        :basic}
+                        ]}
              {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
                       [:return_or_enter :!COc]
