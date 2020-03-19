@@ -39,7 +39,8 @@
                         ;; (require 'spyscope.core)
                         (pjstadig.humane-test-output/activate!)]
          :aliases      {"slamhound" ["run" "-m" "slam.hound"]}}
- :user [:nrebl :repl]
+ :user [;; :nrebl
+        :repl]
 
  :mirrors {#"clojars"
            {:name         "Clojar USTC"
