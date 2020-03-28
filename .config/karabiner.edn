@@ -1,6 +1,5 @@
 {:profiles
- {:Goku      {:default true :sim 50 :delay 500 :alone 500 :held 500}
-  :issue-54 {:sim 50 :delay 500 :alone 500 :held 500}}
+ {:Goku      {:default true :sim 50 :delay 500 :alone 500 :held 500}}
  :tos       {:same_wind_app   {:key :grave_accent_and_tilde :modi [:left_command] :lazy true}
              :prev_app        {:key :tab :modi [:left_command] :lazy true}
              :left_paren      {:key :9 :modi [:left_shift] :lazy true}
@@ -60,14 +59,7 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [
-             {:des "issue-54"
-              :rules [:issue-54
-                      [:j :2 :yabai-move-mode]
-                      [:j :3 :yabai-scale-mode]
-                      [:j :4 :spec-mode]
-                      [:j :1 :tab-mode]]}
-             {:des   "mouse motion to scroll"
+ :main      [{:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
              #_{:des "double press and hold key down in simlayer"}
              :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
@@ -246,7 +238,8 @@
                       [:n [:open "/Applications/Notion.app"]]
                       ;; [:m [:open "/Applications/Mail.app"]]
                       [:m [:launch "Mail"]]
-                      [:v [:open "/Applications/WeChat.app"]]
+                      ;; [:v [:open "/Applications/WeChat.app"]]
+                      [:v [:launch "WeChat"]]
                       [:q [:open "/Applications/Karabiner-Elements.app"]]
                       [:f [:open "/System/Library/CoreServices/Finder.app"]]
                       [:9 [:open "/Applications/PDF Expert.app"]]
