@@ -24,7 +24,7 @@
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
-             :focus      "echo"}
+             }
  :layers    {:tab-mode              {:key     :tab
                                      :afterup [{:set ["yabai-move-mode" 0]}
                                                {:set ["yabai-scale-mode" 0]}
@@ -61,11 +61,11 @@
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
  :main      [{:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
-             #_{:des "double press and hold key down in simlayer"}
-             :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
-                     [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
-                      :invoked  ["test-mode-j-dbpress-mode" 0]
-                      :held    "say 'j held down'"]]
+             #_{:des "double press and hold key down in simlayer"
+                :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
+                        [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
+                         :invoked  ["test-mode-j-dbpress-mode" 0]
+                         :held    "say 'j held down'"]]}
              #_{:des   "switch input method"
                 :rules [{:from        {:key_code :left_shift}
                          :to          [{:key_code :left_shift}]
@@ -300,7 +300,7 @@
                       [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
-                      [:l :!CTslash [:finder-alfred-mode ["in-alfred" 1]]]
+                      [:l :!CTslash :finder-alfred-mode]
                       [:!CTk [:!CTk ["in-alfred" 1]]]
                       [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                       :alfred-mode
