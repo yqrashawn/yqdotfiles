@@ -32,3 +32,6 @@ Thumbs.db
 .indium
 .tabnine_root
 .ignore
+
+# worklog
+*.worklog.org
