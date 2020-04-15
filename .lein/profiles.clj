@@ -1,6 +1,6 @@
 {:nrebl {:repl-options   {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
-         :dependencies   [[rickmoynihan/nrebl.middleware "0.2.0"] ;; set this to the latest nrebl version
-                          [org.clojure/core.async "0.4.500"]
+         :dependencies   [[rickmoynihan/nrebl.middleware "0.3.1"]
+                          [org.clojure/core.async "1.1.587"]
                           [org.openjfx/javafx-fxml "11.0.1"]
                           [org.openjfx/javafx-controls "11.0.1"]
                           [org.openjfx/javafx-graphics "11.0.1"]
@@ -8,7 +8,7 @@
                           [org.openjfx/javafx-swing "11.0.1"]
                           [org.openjfx/javafx-base "11.0.1"]
                           [org.openjfx/javafx-web "11.0.1"]
-                          [cljfmt "0.6.4"]]
+                          [cljfmt "0.6.7"]]
          :resource-paths ["/Users/yqrashawn/REBL-0.9.220/REBL-0.9.220.jar"] ;; set this to where your REBL jar is installed
          :injections     [(require 'nrebl.middleware) (require '[cognitect.rebl :as rebl])]}
  :repl  {:pedantic? :ranges
@@ -26,10 +26,10 @@
                      ;; [lein-pdo "0.1.1"]
 
                      #_[com.billpiel/sayid "0.0.16"]
-                     [jonase/eastwood "0.3.6"]
+                     [jonase/eastwood "0.3.11"]
                      [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
                      [lein-nsorg "0.3.0"]]
-         :dependencies [[pjstadig/humane-test-output "0.9.0"]
+         :dependencies [[pjstadig/humane-test-output "0.10.0"]
                         [com.cemerick/pomegranate "1.1.0"]
                         ;; [spyscope "0.1.6"]
                         ;; [compliment "0.2.2"]
