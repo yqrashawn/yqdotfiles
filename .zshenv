@@ -1,1 +1,1 @@
-.zprezto/runcoms/zshenv
+/Users/yqrashawn/.zprezto/runcoms/zshenv
