@@ -16,7 +16,7 @@
                                {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}}
  :modifiers {:ro :right_option}
  :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-             :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
+             :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
@@ -307,7 +307,7 @@
                       [:i [:z :i]]
                       [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
                       [:j [:alf "searchGithub" "nikivi.search-the-web"]]
-                      [:return_or_enter [[:alf "web searches" "nikivi.web.searches"] ["in-alfred" 1]]]
+                      [:##return_or_enter [["in-alfred" 1] [:alf "web searches" "nikivi.web.searches"]]]
                       [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
                       [:u [:alf "repos" "net.deanishe.alfred-git-repos"]]
                       ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
