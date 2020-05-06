@@ -231,6 +231,7 @@
                       [:k [:show "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
+                      [:p [:open "/Applications/Setapp/NotePlan.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
                       [:l :same_wind_app :Chromes]
                       [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
