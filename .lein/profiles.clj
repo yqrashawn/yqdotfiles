@@ -13,6 +13,7 @@
          :injections     [(require 'nrebl.middleware) (require '[cognitect.rebl :as rebl])]}
  :repl  {:pedantic? :ranges
          :plugins   [[lein-ancient "0.6.15"]
+                     ;; [clj-commons/pomegranate "1.2.0"]
                      ;; [refactor-nrepl "2.4.0"]
                      ;; [lein-kibit "0.1.6"]
                      ;; [polylith/lein-polylith "LATEST"]
