@@ -320,7 +320,8 @@
                       [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]
                       [:semicolon [:alf "localport" "in.fech.localport"]]
                       [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
-                      [:close_bracket :!CTOSclose_bracket]
+                      ;; [:close_bracket :!CTOSclose_bracket]
+                      [:close_bracket :!Cf3]
                       [:hyphen :!!hyphen]
                       [:spacebar "~/Dropbox/sync/pullover/pullover-start-or-finish"]
                       #_[:right_command :!!3]]}
