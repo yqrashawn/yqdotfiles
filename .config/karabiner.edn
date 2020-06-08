@@ -1,5 +1,5 @@
 {:profiles
- {:Goku      {:default true :sim 50 :delay 500 :alone 500 :held 500}}
+ {:Goku {:default true :sim 50 :delay 500 :alone 500 :held 500}}
  :tos       {:same_wind_app   {:key :grave_accent_and_tilde :modi [:left_command] :lazy true}
              :prev_app        {:key :tab :modi [:left_command] :lazy true}
              :left_paren      {:key :9 :modi [:left_shift] :lazy true}
@@ -15,14 +15,14 @@
              :select_abc      {:select_input_source
                                {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}}
  :modifiers {:ro :right_option}
- :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-             :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
-             :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-             :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-             :open       "open \"%s\""
-             :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
-             :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
-             :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
+ :templates {:launch      "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+             :alf         "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
+             :km          "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :kb-maestro  "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :open        "open \"%s\""
+             :show        "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
+             :toggle      "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
+             :type        "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
              }
  :layers    {:tab-mode              {:key     :tab
@@ -61,7 +61,7 @@
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
  :main      [{:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
-             #_{:des "double press and hold key down in simlayer"
+             #_{:des   "double press and hold key down in simlayer"
                 :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
                         [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                          :invoked  ["test-mode-j-dbpress-mode" 0]
@@ -302,6 +302,8 @@
                       [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
+                      [:9 [:!Cl [:type "chrome://extensions/?id=pkjpciobmjhfjaddkiehmknaclajlkgf"]] :browsers-alfred-mode]
+                      [:0 [:!Cl [:type "chrome-extension://pkjpciobmjhfjaddkiehmknaclajlkgf/home.html"]] :browsers-alfred-mode]
                       [:l :!CTslash :finder-alfred-mode]
                       [:!CTk [:!CTk ["in-alfred" 1]]]
                       [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
