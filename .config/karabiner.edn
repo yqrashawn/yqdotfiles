@@ -59,7 +59,10 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [{:des   "mouse motion to scroll"
+ :main      [{:des "swap 1 and 2 under abc input method"
+              :rules [[:1 :3 :abc]
+                      [:3 :1 :abc]]}
+             {:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
              #_{:des   "double press and hold key down in simlayer"
                 :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
