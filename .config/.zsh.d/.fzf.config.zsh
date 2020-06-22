@@ -1,19 +1,16 @@
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ $TERM != "emacs" && -f ~/.fzf.zsh ]]; then
+  source ~/.fzf.zsh
+fi
 
 # Setting rg as the default source for fzf
-# export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
-export FZF_DEFAULT_COMMAND='fd --type f -iH -I'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+# export FZF_DEFAULT_COMMAND='fd --type f -iH -I'
 
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-export FZF_ALT_C_COMMAND="cd ~/; fd -t d -H"
-export FZF_COMPLETION_TRIGGER='jk'
-
-# export FZF_ALT_C_COMMAND="cd ~/; bfs -type d -nohidden"
-
 # fasd & fzf change directory - jump using `fasd` if given argument, filter output of `fasd` using `fzf` else
-z() {
+j() {
     [ $# -gt 0 ] && fasd_cd -d "$*" && return
     local dir
     dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
@@ -136,9 +133,3 @@ _fzf_compgen_path() {
 _fzf_compgen_dir() {
     fd --type d --hidden --follow --exclude ".git" ".Trash" . "$1"
 }
-
-# Setting fd as the default source for fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-
-# To apply the command to CTRL-T as well
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
