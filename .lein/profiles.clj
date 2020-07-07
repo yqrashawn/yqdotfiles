@@ -41,7 +41,9 @@
                         (pjstadig.humane-test-output/activate!)]
          :aliases      {"slamhound" ["run" "-m" "slam.hound"]}}
  :user [;; :nrebl
-        :repl]
+        :repl
+        {:dependencies [[hashp "0.2.0"]]
+         :injections [(require 'hashp.core)]}]
 
  :mirrors {#"clojars"
            {:name         "Clojar USTC"
