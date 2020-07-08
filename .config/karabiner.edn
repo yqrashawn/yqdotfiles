@@ -224,14 +224,13 @@
                       [:##close_bracket :!SOdown_arrow]]}
              {:des   "launcher mode"
               :rules [:launch-mode
-                      ;; [:j [:open "/Applications/Alacritty.app"]]
                       [:j [:open "/Applications/Alacritty.app"]]
                       ;; [:j [:launch "iTerm"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       [:k [:show "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
                       [:t [:open "/Applications/Todoist.app"]]
-                      [:p [:open "/Applications/Setapp/NotePlan.app"]]
+                      [:p [:open "/Applications/Figma.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
                       [:l :same_wind_app :Chromes]
                       [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
