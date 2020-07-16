@@ -58,8 +58,16 @@
              ;; :q-mode {:key :q :condi [:!comma-mode :!period-mode]}
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
-             :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [{:des   "mouse motion to scroll"
+             :browsers-alfred-mode  {:key :z :condi :Browsers}
+             :#69-example           {:key :0}
+}
+ :main      [
+             {:des "#69 example"
+              :rules [:#69-example
+                      [:a [:!S0 ["#69-a-level2" 0]] ["#69-a-level2" 1]]
+                      [:a ["#69-a-level2" 1] ["#69-a-level2" 0] {:delayed {:invoked [:!S9 ["#69-a-level2" 0]] :canceled ["#69-a-level2" 0]}
+                                                                 :params {:delay 300}}]]}
+             {:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
              #_{:des   "double press and hold key down in simlayer"
                 :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
