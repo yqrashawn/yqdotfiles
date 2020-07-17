@@ -569,8 +569,8 @@
                                                       "^org\\.macosforge\\.xquartz\\.X11$",
                                                       "^org\\.macports\\.X11$",
                                                       "^com\\.sublimetext\\.",
-                                                      "^com\\.microsoft\\.VSCode$"]
-                      :VSCode                        ["^com\\.microsoft\\.VSCode$"]
+                                                      "^com\\.microsoft\\.VSCode(Insiders)?$"]
+                      :VSCode                        ["^com\\.microsoft\\.VSCode(Insiders)?$"]
                       :Emacs                         ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
                                                       "^org\\.gnu\\.Aquamacs$"]
@@ -598,7 +598,7 @@
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
                                                       "^com\\.apple\\.Safari$"
-                                                      "^com\\.microsoft\\.VSCode$"]
+                                                      "^com\\.microsoft\\.VSCode(Insiders)?$"]
                       :Alfred                        ["^com\\.runningwithcrayons\\.Alfred$"]
                       :Todoist                       ["^com\\.todoist\\.mac\\.Todoist$"]
                       :Browsers                      ["^org\\.mozilla\\.firefox$"
