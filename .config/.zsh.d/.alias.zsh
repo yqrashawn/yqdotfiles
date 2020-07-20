@@ -73,10 +73,10 @@ alias chromec='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chro
 alias chromed='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222'
 alias mongodd='mongod -dbpath ~/workspace/projects/mongodb/data'
 
-# alias ss='export https_proxy=http://127.0.0.1:7890;export http_proxy=http://127.0.0.1:7890 & '
-# alias ss='export https_proxy=http://127.0.0.1:7890;export all_proxy=http://127.0.0.1:7890 & '
+# alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152 & '
+# alias ss='export https_proxy=http://127.0.0.1:6152;export all_proxy=http://127.0.0.1:6152 & '
 alias s='proxychains4 -f ~/Dropbox/sync/proxychains.conf'
-alias ss='export https_proxy=http://127.0.0.1:7890;export http_proxy=http://127.0.0.1:7890;export HTTP_PROXY=http://127.0.0.1:7890:export HTTPs_PROXY=http://127.0.0.1:7890 &'
+alias ss='export https_proxy=http://127.0.0.1:6152;export http_proxy=http://127.0.0.1:6152;export HTTP_PROXY=http://127.0.0.1:6152:export HTTPs_PROXY=http://127.0.0.1:6152 &'
 alias sf='proxychains4 -f /etc/proxychains.conf'
 
 alias aria2c='aria2c --enable-rpc --rpc-listen-all'
