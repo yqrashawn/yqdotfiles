@@ -229,6 +229,7 @@
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       [:k [:show "Emacs"]]
                       ;; [:k [:launch "Emacs"]]
+                      [:quote [:open "/Applications/ClickUp.app"]]
                       [:t [:open "/Applications/Todoist.app"]]
                       [:p [:open "/Applications/Figma.app"]]
                       [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
