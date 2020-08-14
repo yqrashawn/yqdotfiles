@@ -14,6 +14,7 @@
   # TERM: xterm-256color
 
 window:
+  dynamic_title: true
   # Window dimensions (changes require restart)
   #
   # Specified in number of columns/lines, not pixels.
@@ -46,7 +47,7 @@ window:
   #     - none: Neither borders nor title bar
   #     - buttonless: Title bar, transparent background and title bar buttons
   #     - transparent: Title bar, transparent background, but no title bar buttons
-  decorations: none
+  decorations: transparent
 
   # Startup Mode (changes require restart)
   #
@@ -228,9 +229,8 @@ colors:
 #   - Linear
 #
 # Specifying a `duration` of `0` will disable the visual bell.
-visual_bell:
+bell:
   animation: EaseOutExpo
-  duration: 0
 
 # Background opacity
 #
@@ -244,8 +244,6 @@ selection:
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: true
 
-# Allow terminal applications to change Alacritty's window title.
-dynamic_title: true
 
 cursor:
   # Cursor style
