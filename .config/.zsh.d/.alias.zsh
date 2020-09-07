@@ -183,3 +183,5 @@ alias yup="yarn upgrade"
 
 # geth local dev
 alias gethld="geth --rpc --dev --miner.threads 1 console"
+
+alias ssh="ssh -F =(gpg2 --decrypt ~/.ssh/config.gpg 2>/dev/null) "
