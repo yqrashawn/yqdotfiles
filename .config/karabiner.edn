@@ -20,6 +20,7 @@
              :km          "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro  "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open        "open \"%s\""
+             :opena       "open -a \"%s\""
              :show        "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
              :toggle      "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type        "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
@@ -245,7 +246,7 @@
                       [:f [:open "/System/Library/CoreServices/Finder.app"]]
                       [:9 [:open "/Applications/PDF Expert.app"]]
                       [:h [:open "/Applications/Slack.app"]]
-                      [:r [:open "/Applications/Roam.app"]]
+                      [:r [:opena "Roam Research"]]
                       [:period [:open "/Applications/SetApp/Paw.app"]]
                       [:equal_sign [:open "/Applications/Textual.app"]]
                       [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
