@@ -1,0 +1,3 @@
+#!/bin/sh
+eval "$(fnm env)"
+fnm --log-level=error use --install-if-missing
