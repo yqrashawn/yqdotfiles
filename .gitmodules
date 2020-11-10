@@ -1,0 +1,3 @@
+[submodule ".clojure"]
+	path = .clojure
+	url = https://github.com/yqrashawn/clojure-deps-edn.git
