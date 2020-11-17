@@ -1,4 +1,7 @@
-{:nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
+{:portal {:dependencies [[djblue/portal "0.6.3"]]
+          :injections [(require '[portal.api])
+                       (portal.api/open)]}
+ :nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
          :dependencies [[rickmoynihan/nrebl.middleware "0.3.1"]
                         [org.clojure/core.async "1.3.610"]
                         [org.openjfx/javafx-fxml "15.0.1"]
@@ -41,6 +44,7 @@
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
  :user [ ;; :nrebl
+        :portal
         {:signing {:gpg-key "E394C5D9A8E535A6"}}
         :repl
         {:dependencies [[hashp "0.2.0"]
