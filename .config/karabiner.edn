@@ -60,7 +60,11 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [{:des   "mouse motion to scroll"
+ :main      [{:des "Keybase return"
+              :rules [:Keybase
+                      [:return_or_enter :!Sreturn_or_enter]
+                      [:!Creturn_or_enter :return_or_enter]]}
+             {:des   "mouse motion to scroll"
               :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
              #_{:des   "double press and hold key down in simlayer"
                 :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
@@ -603,6 +607,7 @@
                                                       "^com\\.microsoft\\.VSCode(Insiders)?$"]
                       :Alfred                        ["^com\\.runningwithcrayons\\.Alfred$"]
                       :Todoist                       ["^com\\.todoist\\.mac\\.Todoist$"]
+                      :Keybase                       ["^keybase\\.Electron$"]
                       :Browsers                      ["^org\\.mozilla\\.firefox$"
                                                       "^org\\.mozilla\\.firefoxdeveloperedition$"
                                                       "^com\\.google\\.Chrome$"
