@@ -15,15 +15,15 @@
              :select_abc      {:select_input_source
                                {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}}}
  :modifiers {:ro :right_option}
- :templates {:launch      "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-             :alf         "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
-             :km          "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-             :kb-maestro  "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-             :open        "open \"%s\""
-             :opena       "open -a \"%s\""
-             :show        "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
-             :toggle      "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
-             :type        "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
+ :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+             :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
+             :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :open       "open \"%s\""
+             :opena      "open -a \"%s\""
+             :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
+             :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
+             :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
              }
  :layers    {:tab-mode              {:key     :tab
@@ -60,7 +60,7 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [{:des "Keybase return"
+ :main      [{:des   "Keybase return"
               :rules [:Keybase
                       [:return_or_enter :!Sreturn_or_enter]
                       [:!Creturn_or_enter :return_or_enter]]}
@@ -80,8 +80,7 @@
                         {:from        {:key_code :right_shift}
                          :to          [{:key_code :right_shift}]
                          :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}]
-                         :type        :basic}
-                        ]}
+                         :type        :basic}]}
              {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
                       [:return_or_enter :!COc]
@@ -241,7 +240,8 @@
                       [:l :same_wind_app :Chromes]
                       [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
                       [:comma :same_wind_app :Firefoxes]
-                      [:n [:open "/Applications/Notion.app"]]
+                      ;; [:n [:open "/Applications/Notion.app"]]
+                      [:n [:open "/Applications/Google Chrome Canary.app"]]
                       ;; [:m [:open "/Applications/Mail.app"]]
                       [:m [:launch "Mail"]]
                       ;; [:v [:open "/Applications/WeChat.app"]]
@@ -363,17 +363,17 @@
                       :tmux-windmove-mode
                       [:return_or_enter [:!Tq :c]] ;; new session
                       ;; [:comma [:!Tq :comma]] ;; rename tmux pane
-                      [:m [:!Tq :z]] ;; size window
+                      [:m [:!Tq :z]]     ;; size window
                       [:f [:!Tq :slash]] ;; find and switch window
-                      [:w [:!Tq :w]] ;; list and switch window/pane
-                      [:b [:!Tq :x]] ;; kill pane
+                      [:w [:!Tq :w]]     ;; list and switch window/pane
+                      [:b [:!Tq :x]]     ;; kill pane
                       [:open_bracket [:!Tq :open_bracket]] ;; esc
-                      [:h [:!Tq :h]] ;; focuse window
-                      [:j [:!Tq :j]] ;; focuse window
-                      [:k [:!Tq :k]] ;; focuse window
-                      [:l [:!Tq :l]] ;; focuse window
-                      [:v [:!Tq :!Shyphen]] ;; v split
-                      [:s [:!Tq :hyphen]] ;; s split
+                      [:h [:!Tq :h]]                       ;; focuse window
+                      [:j [:!Tq :j]]                       ;; focuse window
+                      [:k [:!Tq :k]]                       ;; focuse window
+                      [:l [:!Tq :l]]                       ;; focuse window
+                      [:v [:!Tq :!Shyphen]]                ;; v split
+                      [:s [:!Tq :hyphen]]                  ;; s split
                       [:n [:!Tq :!Tl]]
                       [:p [:!Tq :!Th]]
                       [:comma [:!Tq :!Th]]
@@ -384,8 +384,7 @@
                       [:4 [:!Tq :4]]
                       [:5 [:!Tq :5]]]}
              {:des   "yabai mode"
-              :rules [
-                      ;; :yabai-insert-mode
+              :rules [;; :yabai-insert-mode
                       ;; [:h "/usr/local/bin/yabai -m window --insert west"]
                       ;; [:j "/usr/local/bin/yabai -m window --insert south"]
                       ;; [:k "/usr/local/bin/yabai -m window --insert north"]
@@ -429,8 +428,7 @@
                       [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
                       [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
              {:des   "totalspace 2"
-              :rules [
-                      ;; move windows
+              :rules [;; move windows
                       :yabai-move-mode
                       [:i :!STOleft_arrow]
                       [:o :!STOright_arrow]
@@ -580,7 +578,10 @@
                       :Emacs                         ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
                                                       "^org\\.gnu\\.Aquamacs$"]
-                      :Chromes                       ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
+                      :Chromes                       ["^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$" "^com\\.google\\.Chrome\\.canary$"]
+                      :Chrome                        ["^com\\.google\\.Chrome$"]
+                      :ChromeCanary                  ["^com\\.google\\.Chrome\\.canary$"]
+                      :Chromium                      ["^org\\.chromium\\.Chromium$"]
                       :Firefoxes                     ["^org\\.mozilla\\.firefox$"
                                                       "^org\\.mozilla\\.firefoxdeveloperedition$"]
                       :Terminals                     ["^com\\.apple\\.Terminal$"

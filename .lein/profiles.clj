@@ -1,6 +1,7 @@
 {:portal {:dependencies [[djblue/portal "0.6.3"]]
           :injections [(require '[portal.api])
-                       (portal.api/open)]}
+                       ;; (portal.api/open)
+                       ]}
  :nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
          :dependencies [[rickmoynihan/nrebl.middleware "0.3.1"]
                         [org.clojure/core.async "1.3.610"]
