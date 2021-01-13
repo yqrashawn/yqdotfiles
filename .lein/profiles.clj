@@ -1,7 +1,9 @@
-{:portal {:dependencies [[djblue/portal "0.6.3"]]
-          :injections [(require '[portal.api])
-                       ;; (portal.api/open)
-                       ]}
+{:portal {:dependencies [[djblue/portal "0.7.0"]]
+          :injections [(require '[portal.api])]}
+ :fipp {:dependencies [[fipp "0.6.23"]]
+        :injections [(require 'fipp.clojure)]}
+ :hashp {:dependencies [[hashp "0.2.0"]]
+         :injections [(require 'hashp.core)]}
  :nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
          :dependencies [[rickmoynihan/nrebl.middleware "0.3.1"]
                         [org.clojure/core.async "1.3.610"]
@@ -31,14 +33,13 @@
                   ;; lein pdo cljsbuild auto, repl
                   ;; [lein-pdo "0.1.1"]
 
-                  #_[com.billpiel/sayid "0.0.16"]
+                  #_ [com.billpiel/sayid "0.0.16"]
                   [jonase/eastwood "0.3.11"]
                   [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
                   [lein-nsorg "0.3.0"]]
         :dependencies [[pjstadig/humane-test-output "0.10.0"]
-                       [com.cemerick/pomegranate "1.1.0"]
+                       [clj-commons/pomegranate "1.2.0"]
                        ;; [spyscope "0.1.6"]
-                       ;; [compliment "0.2.2"]
                        ;; [cider/orchard "0.3.0"]
                        [slamhound "1.5.5"]]
         :injections [(require 'pjstadig.humane-test-output)
@@ -46,12 +47,10 @@
                      (pjstadig.humane-test-output/activate!)]
         :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
  :user [ ;; :nrebl
-        :portal
-        {:signing {:gpg-key "E394C5D9A8E535A6"}}
-        :repl
-        {:dependencies [[hashp "0.2.0"]
-                        [fipp "0.6.23"]]
-         :injections [(require 'hashp.core)]}]
+        :hashp
+        :fipp
+        :portal {:signing {:gpg-key "E394C5D9A8E535A6"}}
+        :repl]
 
  :mirrors {#"clojars"
            {:name "Clojar USTC"
