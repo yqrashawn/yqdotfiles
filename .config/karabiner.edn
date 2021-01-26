@@ -242,6 +242,7 @@
                       [:comma :same_wind_app :Firefoxes]
                       ;; [:n [:open "/Applications/Notion.app"]]
                       [:n [:open "/Applications/Google Chrome Canary.app"]]
+                      [:return_or_enter [:open "/Applications/Microsoft Edge Beta.app"]]
                       ;; [:m [:open "/Applications/Mail.app"]]
                       [:m [:launch "Mail"]]
                       ;; [:v [:open "/Applications/WeChat.app"]]
@@ -578,7 +579,7 @@
                       :Emacs                         ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
                                                       "^org\\.gnu\\.Aquamacs$"]
-                      :Chromes                       ["^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$" "^com\\.google\\.Chrome\\.canary$"]
+                      :Chromes                       ["^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$" "^com\\.google\\.Chrome\\.canary$" "^com\\.microsoft\\.edgemac\\.Beta$"]
                       :Chrome                        ["^com\\.google\\.Chrome$"]
                       :ChromeCanary                  ["^com\\.google\\.Chrome\\.canary$"]
                       :Chromium                      ["^org\\.chromium\\.Chromium$"]
@@ -600,6 +601,7 @@
                                                       "^com\\.qvacua\\.VimR$"]
                       :Finder                        ["^com\\.apple\\.finder$"]
                       :Debuggers                     ["^org\\.mozilla\\.firefox$"
+                                                      "^com\\.microsoft\\.edgemac\\.Beta$"
                                                       "^org\\.mozilla\\.firefoxdeveloperedition$"
                                                       "^com\\.google\\.Chrome$"
                                                       "^org\\.chromium\\.Chromium$"
@@ -614,7 +616,8 @@
                                                       "^com\\.google\\.Chrome$"
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
-                                                      "^com\\.apple\\.Safari$"]
+                                                      "^com\\.apple\\.Safari$"
+                                                      "^com\\.microsoft\\.edgemac\\.Beta$"]
                       :wechat                        ["^com\\.tencent\\.xinWeChat$"]
                       :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
