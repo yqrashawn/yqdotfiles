@@ -1,0 +1,72 @@
+[user]
+	name = yqrashawn
+	email = namy.19@gmail.com
+[core]
+	excludesfile = ~/.gitignore_global
+	pager = delta
+[merge]
+				tool = ediff
+[interactive]
+		diffFilter = delta --color-only
+[delta]
+		features = side-by-side line-numbers decorations
+		syntax-theme = Dracula
+		plus-style = syntax "#003800"
+		minus-style = syntax "#3f0001"
+[delta "decorations"]
+		commit-decoration-style = bold yellow box ul
+		file-style = bold yellow ul
+		file-decoration-style = none
+		hunk-header-decoration-style = cyan box ul
+[delta "line-numbers"]
+		line-numbers-left-style = cyan
+		line-numbers-right-style = cyan
+		line-numbers-minus-style = 124
+		line-numbers-plus-style = 28
+[mergetool "ediff"]
+				cmd = ~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
+				trustExitCode = true
+[github]
+	user = yqrashawn
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 227
+	frag = magenta bold
+	commit = 227 bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[color]
+	ui = true
+[alias]
+	fetch = git fetch --tags
+	branches = !legit branches
+	publish = !legit publish
+	unpublish = !legit unpublish
+	sync = !legit sync
+	switch = !legit switch
+	resync = !legit resync
+	undo = !legit undo
+	# ---- git-submodule-update-checker
+	submodule-updates = "!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f"
+	# ---- delete old local branches
+		clean-branch = "!f() { git branch -d $(git branch --merged ${1:-master} | grep -v \"*\\|${1:-master}\"); }; f"
+	# ---- DWIM abort rebase, merge or cherry-pick
+		abort = "!f() { local command=$(git status | grep -o \"git \\w* --abort\"); echo $command; $($command); }; f"
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+#[remote "origin"]
+#	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
+# [http]
+#		proxy = http://127.0.0.1:7890
+# [https]
+#		proxy = http://127.0.0.1:7890
+[include]
+	path = ~/.gitconfig.local
