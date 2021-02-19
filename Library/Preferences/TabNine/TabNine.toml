@@ -21,7 +21,7 @@ synchronous_timeout_ms = 100
 always_prefer = true
 install = [["yarn", "global", "add", "typescript-language-server", "typescript"]]
 
-[language.typescript]
+[language.dockerfile]
 command = "docker-langserver"
 args = ["--stdio"]
 synchronous_timeout_ms = 100
