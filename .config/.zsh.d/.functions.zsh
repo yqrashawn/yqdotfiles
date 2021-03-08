@@ -124,3 +124,7 @@ function is-mobile {
 function cheat() {
     curl cht.sh/$1
 }
+
+function javatrustssl() {
+  keytool -import -trustcacerts -file $1  -alias $2 -keystore $JAVA_HOME/lib/security/cacerts
+}
