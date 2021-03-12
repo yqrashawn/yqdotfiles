@@ -315,7 +315,7 @@
                       [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
                       :alfred-mode
                       [:i [:z :i]]
-                      [:h [[:alf "search repos" "me.lachlan.githubjump"] ["in-alfred" 1]]]
+                      [:h [[:alf "search repos" "com.yqrashawn.ghjump"] ["in-alfred" 1]]]
                       [:j [:alf "searchGithub" "nikivi.search-the-web"]]
                       [:##return_or_enter [["in-alfred" 1] [:alf "web searches" "nikivi.web.searches"]]]
                       [:x [:alf "killProcess" "com.ngreenstein.alfred-process-killer"]]
