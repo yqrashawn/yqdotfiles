@@ -1,9 +1,10 @@
 [language.clojure]
 command = "clojure-lsp"
 args = []
-synchronous_triggers = ["/", ".", "("]
+synchronous_triggers = ["/", ".", "(", ":"]
 synchronous_timeout_ms = 100
 always_prefer = true
+install = [["brew", "install", "brew install clojure-lsp/brew/clojure-lsp-native"]]
 
 [language.javascript]
 command = "typescript-language-server"

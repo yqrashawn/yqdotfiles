@@ -579,7 +579,11 @@
                       :Emacs                         ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
                                                       "^org\\.gnu\\.Aquamacs$"]
-                      :Chromes                       ["^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$" "^com\\.google\\.Chrome\\.canary$" "^com\\.microsoft\\.edgemac\\.Beta$"]
+                      :Chromes                       ["^org\\.chromium\\.Chromium$"
+                                                      "^com\\.google\\.Chrome$"
+                                                      "^com\\.google\\.Chrome\\.dev$"
+                                                      "^com\\.google\\.Chrome\\.canary$"
+                                                      "^com\\.microsoft\\.edgemac\\.Beta$"]
                       :Chrome                        ["^com\\.google\\.Chrome$"]
                       :ChromeCanary                  ["^com\\.google\\.Chrome\\.canary$"]
                       :Chromium                      ["^org\\.chromium\\.Chromium$"]
