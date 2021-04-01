@@ -17,13 +17,15 @@
                         [cljfmt "0.7.0"]]
          :resource-paths ["/Users/yqrashawn/REBL-0.9.220/REBL-0.9.220.jar"] ;; set this to where your REBL jar is installed
          :injections [(require 'nrebl.middleware) (require '[cognitect.rebl :as rebl])]}
+ :reveal {:dependencies [[vlaaad/reveal "LATEST"]]
+          :repl-options {:nrepl-middleware [vlaaad.reveal.nrepl/middleware]}}
  :repl {:pedantic? :ranges
-        :plugins [[lein-ancient "0.6.15"]
-                  ;; [cider/cider-nrepl "LATEST"]
-                  ;; [clj-commons/pomegranate "1.2.0"]
-                  ;; [refactor-nrepl "2.4.0"]
+        :plugins [[lein-ancient "LATEST"]
+                  [refactor-nrepl "LATEST"]
+                  [cider/cider-nrepl "LATEST"]
+                  [clj-commons/pomegranate "LATEST"] ;; use to modify classpath at runtime
+
                   ;; [lein-kibit "0.1.6"]
-                  ;; [polylith/lein-polylith "LATEST"]
                   ;; [lein-environ "1.1.0"]
 
                   ;; A Leiningen plugin that executes tasks when files are modifed
@@ -34,22 +36,22 @@
                   ;; [lein-pdo "0.1.1"]
 
                   #_ [com.billpiel/sayid "0.0.16"]
-                  [jonase/eastwood "0.3.11"]
-                  [acyclic/squiggly-clojure "0.1.9-SNAPSHOT" :exclusions [org.clojure/tools.reader]]
-                  [lein-nsorg "0.3.0"]]
-        :dependencies [[pjstadig/humane-test-output "0.10.0"]
-                       [clj-commons/pomegranate "1.2.0"]
-                       ;; [spyscope "0.1.6"]
-                       ;; [cider/orchard "0.3.0"]
-                       [slamhound "1.5.5"]]
+                  [jonase/eastwood "LATEST"]
+                  [acyclic/squiggly-clojure "LATEST" :exclusions [org.clojure/tools.reader]] ;; flycheck
+                  [lein-nsorg "LATEST"]]
+        :dependencies [[pjstadig/humane-test-output "LATEST"]
+                       [clj-commons/pomegranate "LATEST"]
+                       [cider/orchard "LATEST"]]
         :injections [(require 'pjstadig.humane-test-output)
                      ;; (require 'spyscope.core)
                      (pjstadig.humane-test-output/activate!)]
-        :aliases {"slamhound" ["run" "-m" "slam.hound"]}}
+        :aliases {;; "slamhound" ["run" "-m" "slam.hound"]
+                  }}
  :user [ ;; :nrebl
         :hashp
         :fipp
-        :portal {:signing {:gpg-key "E394C5D9A8E535A6"}}
+        :reveal
+        ;; :portal {:signing {:gpg-key "E394C5D9A8E535A6"}}
         :repl]
 
  :mirrors {#"clojars"
@@ -60,6 +62,9 @@
            "central"
            {:name "central aliyun"
             :url "https://maven.aliyun.com/nexus/content/groups/public/"
-            :repo-manager true}}
+            :repo-manager true}
+           "cognitect-dev-tools"
+           {:url "https://dev-tools.cognitect.com/maven/releases/"
+            :creds :gpg}}
  :env {:squiggly {:checkers [:eastwood :kibit]
                   :eastwood-exclude-linters [:unlimited-use]}}}
