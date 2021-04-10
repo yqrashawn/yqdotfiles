@@ -558,6 +558,7 @@
                                                       "^co\\.zeit\\.hyperterm$",
                                                       "^co\\.zeit\\.hyper$",
                                                       "^io\\.alacritty$",
+                                                      "^com\\.github\\.wez\\.wezterm$"
                                                       "^net\\.kovidgoyal\\.kitty$",
                                                       "^org\\.vim\\.",
                                                       "^com\\.qvacua\\.VimR$",
@@ -595,12 +596,14 @@
                                                       "^co\\.zeit\\.hyperterm$"
                                                       "^co\\.zeit\\.hyper$"
                                                       "^io\\.alacritty$"
+                                                      "^com\\.github\\.wez\\.wezterm$"
                                                       "^net\\.kovidgoyal\\.kitty$"]
                       :vim-mode-disabled-application ["^com\\.apple\\.Terminal$"
                                                       "^com\\.googlecode\\.iterm2$"
                                                       "^co\\.zeit\\.hyperterm$"
                                                       "^co\\.zeit\\.hyper$"
                                                       "^io\\.alacritty$"
+                                                      "^com\\.github\\.wez\\.wezterm$"
                                                       "^net\\.kovidgoyal\\.kitty$"
                                                       "^org\\.vim\\."
                                                       "^com\\.qvacua\\.VimR$"]
