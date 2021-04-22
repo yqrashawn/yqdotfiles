@@ -134,32 +134,40 @@ draw_bold_text_with_bright_colors: true
 
 # Colors (Tomorrow Night Bright)
 colors:
-  name: zenburn
-  author: ""
+  # Default colors
   primary:
-    background: "#000000"
-    foreground: "#ffffff"
+    background: '#011627'
+    foreground: '#acb4c2'
+
   cursor:
-    text: "#000000"
-    cursor: "#ffffff"
+    text: '#fafafa'
+    cursor: '#9ca1aa'
+
+  selection:
+    text: '#080808'
+    background: '#b2ceee'
+
+  # Normal colors
   normal:
-    black: "#1e2320"
-    red: "#705050"
-    green: "#60b48a"
-    yellow: "#dfaf8f"
-    blue: "#506070"
-    magenta: "#dc8cc3"
-    cyan: "#8cd0d3"
-    white: "#dcdccc"
+    black: '#1d3b53'
+    red: '#fc514e'
+    green: '#a1cd5e'
+    yellow: '#e3d18a'
+    blue: '#82aaff'
+    magenta: '#c792ea'
+    cyan: '#7fdbca'
+    white: '#a1aab8'
+
+  # Bright colors
   bright:
-    black: "#709080"
-    red: "#dca3a3"
-    green: "#c3bf9f"
-    yellow: "#f0dfaf"
-    blue: "#94bff3"
-    magenta: "#ec93d3"
-    cyan: "#93e0e3"
-    white: "#ffffff"
+    black: '#7c8f8f'
+    red: '#ff5874'
+    green: '#21c7a8'
+    yellow: '#ecc48d'
+    blue: '#82aaff'
+    magenta: '#ae81ff'
+    cyan: '#7fdbca'
+    white: '#d6deeb'
 # Visual Bell
 #
 # Any time the BEL code is received, Alacritty "rings" the visual bell. Once
