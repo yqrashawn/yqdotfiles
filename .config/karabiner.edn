@@ -230,6 +230,7 @@
              {:des   "launcher mode"
               :rules [:launch-mode
                       [:j [:open "/Applications/Alacritty.app"]]
+                      ;; [:j [:open "/System/Volumes/Data/usr/local/Cellar/wezterm/20210405-110924/WezTerm.app"]]
                       ;; [:j [:launch "iTerm"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       [:k [:show "Emacs"]]
