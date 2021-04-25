@@ -140,8 +140,8 @@ colors:
     background: "#575757"
     foreground: "#dcdccc"
   cursor:
-    text: "#fafafa"
-    cursor: "#9ca1aa"
+    text: "#575757"
+    cursor: "#bde270"
   normal:
     black: "#666666"
     red: "#ff8278"
