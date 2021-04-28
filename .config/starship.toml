@@ -3,7 +3,9 @@
 add_newline = true
 
 [character]      # The name of the module we are confguring is "character"
-symbol = "❯"
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vicmd_symbol = "[❮](bold green)"
 
 [directory]
 truncation_length = 0
@@ -12,3 +14,6 @@ fish_style_pwd_dir_length = 1
 
 [package]
 disabled = true
+
+[[battery.display]]
+threshold = 50
