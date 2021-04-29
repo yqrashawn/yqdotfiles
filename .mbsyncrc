@@ -12,15 +12,16 @@ IMAPStore gmail-remote
 Account gmail
 
 MaildirStore gmail-local
-Path ~/Maildir/gmail/
-Inbox ~/Maildir/gmail/Inbox
+Path ~/maildir/gmail/
+Inbox ~/maildir/gmail/Inbox
 SubFolders Verbatim
 
 Channel gmail-folders
-Master :gmail-remote:
-Slave :gmail-local:
+Far :gmail-remote:
+Near :gmail-local:
 Patterns *
-Patterns "![Gmail]/All Mail"
+# Patterns * "All Mail"
+# Patterns "![Gmail]/All Mail"
 # Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail" !Homes
 Sync All
 Create Both
@@ -37,38 +38,41 @@ Channel gmail-folders
 # Channel gmail-all
 # Channel gmail-starred
 
-#################### zoho
-# Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html
-IMAPAccount zoho
-Host imappro.zoho.com
-User hi@yqrashawn.com
-PassCmd "security find-generic-password  -s "imappro.zoho.com" -w"
+#################### office
+IMAPAccount cfx
+Host imap.gmail.com
 Port 993
+User yuxiao@confluxnetwork.org
+PassCmd "security find-generic-password  -s mbsync-office -w"
 SSLType IMAPS
-SSLVersions TLSv1.2
-AuthMechs PLAIN
+AuthMechs LOGIN
 
-IMAPStore zoho-remote
-Account zoho
+IMAPStore cfx-remote
+Account cfx
 
-MaildirStore zoho-local
-Path ~/Maildir/zoho/
-Inbox ~/Maildir/zoho/inbox
+MaildirStore cfx-local
+Path ~/maildir/cfx/
+Inbox ~/maildir/cfx/Inbox
 SubFolders Verbatim
-Trash Trash
 
-# Channels and Groups
-# (so that we can rename local directories and flatten the hierarchy)
-#
-Channel zoho-folders
-Master :zoho-remote:
-Slave :zoho-local:
-# Patterns "INBOX" "Saved" "Drafts" "Archive" "Sent*" "Trash"
+Channel cfx-folders
+Far :cfx-remote:
+Near :cfx-local:
 Patterns *
-Patterns %
+# Patterns * "All Mail"
+# Patterns "![Gmail]/All Mail"
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail" !Homes
+Sync All
 Create Both
 Expunge Both
 SyncState *
 
-Group zoho
-Channel zoho-folders
+# Channels and Groups
+# (so that we can rename local directories and flatten the hierarchy)
+Group cfx
+Channel cfx-folders
+# Channel gmail-inbox
+# Channel gmail-sent
+# Channel gmail-trash
+# Channel gmail-all
+# Channel gmail-starred
