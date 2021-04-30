@@ -38,12 +38,12 @@ Channel gmail-folders
 # Channel gmail-all
 # Channel gmail-starred
 
-#################### office
+#################### cfx
 IMAPAccount cfx
 Host imap.gmail.com
 Port 993
 User yuxiao@confluxnetwork.org
-PassCmd "security find-generic-password  -s mbsync-office -w"
+PassCmd "security find-generic-password  -s mbsync-cfx -w"
 SSLType IMAPS
 AuthMechs LOGIN
 
