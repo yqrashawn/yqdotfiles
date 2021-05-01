@@ -12,8 +12,8 @@ IMAPStore gmail-remote
 Account gmail
 
 MaildirStore gmail-local
-Path ~/maildir/gmail/
-Inbox ~/maildir/gmail/Inbox
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/Inbox
 SubFolders Verbatim
 
 Channel gmail-folders
@@ -51,8 +51,8 @@ IMAPStore cfx-remote
 Account cfx
 
 MaildirStore cfx-local
-Path ~/maildir/cfx/
-Inbox ~/maildir/cfx/Inbox
+Path ~/mail/cfx/
+Inbox ~/mail/cfx/Inbox
 SubFolders Verbatim
 
 Channel cfx-folders
