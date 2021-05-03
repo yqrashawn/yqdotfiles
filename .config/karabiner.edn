@@ -117,7 +117,7 @@
               :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
              {:des   "contexts"
               :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
-                      [:semicolon :right_option nil {:alone :semicolon}]
+                      ;; [:semicolon :right_option nil {:alone :semicolon}]
                       [:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
                       [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
                       [:##left_control :left_control ["in-contexts" 1] {:alone [:escape ["in-contexts" 0]]}]
@@ -368,6 +368,7 @@
                       [:l [:!Tq :!Sl]] ;; resize window
                       :tmux-windmove-mode
                       [:return_or_enter [:!Tq :c]] ;; new session
+                      [:semicolon [:!Tq :!Ssemicolon]]
                       ;; [:comma [:!Tq :comma]] ;; rename tmux pane
                       [:m [:!Tq :z]]     ;; size window
                       [:f [:!Tq :slash]] ;; find and switch window
