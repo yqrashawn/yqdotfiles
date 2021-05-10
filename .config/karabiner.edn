@@ -247,7 +247,7 @@
                       [:comma :same_wind_app :Firefoxes]
                       ;; [:n [:open "/Applications/Notion.app"]]
                       [:n [:open "/Applications/Google Chrome Canary.app"]]
-                      [:return_or_enter [:open "/Applications/Microsoft Edge Beta.app"]]
+                      [:return_or_enter [:open "/Applications/Brave Browser.app"]]
                       ;; [:m [:open "/Applications/Mail.app"]]
                       [:m [:launch "Mail"]]
                       ;; [:v [:open "/Applications/WeChat.app"]]
@@ -590,7 +590,8 @@
                                                       "^com\\.google\\.Chrome$"
                                                       "^com\\.google\\.Chrome\\.dev$"
                                                       "^com\\.google\\.Chrome\\.canary$"
-                                                      "^com\\.microsoft\\.edgemac\\.Beta$"]
+                                                      "^com\\.microsoft\\.edgemac\\.Beta$"
+                                                      "^com\\.brave\\.Browser$"]
                       :Chrome                        ["^com\\.google\\.Chrome$"]
                       :ChromeCanary                  ["^com\\.google\\.Chrome\\.canary$"]
                       :Chromium                      ["^org\\.chromium\\.Chromium$"]
@@ -620,7 +621,8 @@
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
                                                       "^com\\.apple\\.Safari$"
-                                                      "^com\\.microsoft\\.VSCode(Insiders)?$"]
+                                                      "^com\\.microsoft\\.VSCode(Insiders)?$"
+                                                      "^com\\.brave\\.Browser$"]
                       :Alfred                        ["^com\\.runningwithcrayons\\.Alfred$"]
                       :Todoist                       ["^com\\.todoist\\.mac\\.Todoist$"]
                       :Keybase                       ["^keybase\\.Electron$"]
