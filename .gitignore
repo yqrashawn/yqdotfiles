@@ -3,3 +3,4 @@
 !/.emacs.d/private
 **
 /local/bin/light.DS_Store
+!.config/clojure
