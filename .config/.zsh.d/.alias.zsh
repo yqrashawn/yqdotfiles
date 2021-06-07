@@ -137,7 +137,10 @@ alias undopush="git push -f origin HEAD^:master"
 alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias cleanup_dsstore="find . -name '*.DS_Store' -type f -ls -delete"
 alias ungz='gunzip -k'
-alias gwss='e -e "(magit-status)"'
+
+function gwss {
+  e -e "(magit-status)"
+}
 
 #diff
 alias diff='diff -Naurbw'
