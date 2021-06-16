@@ -36,7 +36,9 @@ function vterm_cmd() {
   vterm_printf "51;E$vterm_elisp"
 }
 
-if [ -n "$INSIDE_EMACS" ]; then
+# use with emacs term.el
+# https://stackoverflow.com/questions/3508387/how-can-i-have-term-el-ansi-term-track-directories-if-using-anyhting-other-tha
+if [[ -n "$INSIDE_EMACS" && $INSIDE_EMACS != "t" ]]; then
     chpwd() { print -P "\033AnSiTc %d" }
     print -P "\033AnSiTu %n"
     print -P "\033AnSiTc %d"

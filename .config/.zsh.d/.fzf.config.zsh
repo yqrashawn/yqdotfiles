@@ -1,6 +1,4 @@
-if [[ $TERM != "emacs" && -f ~/.fzf.zsh ]]; then
-  source ~/.fzf.zsh
-fi
+[[ -z "$EMACS" && -z "$VIM" && -z "$INSIDE_EMACS" ]] && source ~/.fzf.zsh
 
 # Setting rg as the default source for fzf
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
