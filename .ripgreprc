@@ -1,0 +1,7 @@
+--max-columns=200
+--max-columns-preview
+
+--type-add
+web:*.{html,css,js,jsx,txs}*
+
+--smart-case
