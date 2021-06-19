@@ -3,29 +3,33 @@
 	email = namy.19@gmail.com
 [core]
 	excludesfile = ~/.gitignore_global
+[pager]
 	pager = delta
+	diff = delta
+	reflog = delta
+	show = delta
 [merge]
-				tool = ediff
+	tool = ediff
 [interactive]
-		diffFilter = delta --color-only
+	diffFilter = delta --color-only
 [delta]
-		features = side-by-side line-numbers decorations
-		syntax-theme = Dracula
-		plus-style = syntax "#003800"
-		minus-style = syntax "#3f0001"
+	features = side-by-side line-numbers decorations
+	syntax-theme = Dracula
+	plus-style = syntax "#003800"
+	minus-style = syntax "#3f0001"
 [delta "decorations"]
-		commit-decoration-style = bold yellow box ul
-		file-style = bold yellow ul
-		file-decoration-style = none
-		hunk-header-decoration-style = cyan box ul
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
+	hunk-header-decoration-style = cyan box ul
 [delta "line-numbers"]
-		line-numbers-left-style = cyan
-		line-numbers-right-style = cyan
-		line-numbers-minus-style = 124
-		line-numbers-plus-style = 28
+	line-numbers-left-style = cyan
+	line-numbers-right-style = cyan
+	line-numbers-minus-style = 124
+	line-numbers-plus-style = 28
 [mergetool "ediff"]
-				cmd = ~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
-				trustExitCode = true
+	cmd = ~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
+	trustExitCode = true
 [github]
 	user = yqrashawn
 [color "diff-highlight"]
@@ -54,9 +58,9 @@
 	# ---- git-submodule-update-checker
 	submodule-updates = "!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f"
 	# ---- delete old local branches
-		clean-branch = "!f() { git branch -d $(git branch --merged ${1:-master} | grep -v \"*\\|${1:-master}\"); }; f"
+	clean-branch = "!f() { git branch -d $(git branch --merged ${1:-master} | grep -v \"*\\|${1:-master}\"); }; f"
 	# ---- DWIM abort rebase, merge or cherry-pick
-		abort = "!f() { local command=$(git status | grep -o \"git \\w* --abort\"); echo $command; $($command); }; f"
+	abort = "!f() { local command=$(git status | grep -o \"git \\w* --abort\"); echo $command; $($command); }; f"
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
