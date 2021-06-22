@@ -490,7 +490,7 @@
                       [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"]]}
              {:des   "Mouse button"
               :rules [[{:pkey :button5} :mission_control]
-                      [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!!grave_accent_and_tilde]]]}
+                      [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!Cc] nil {:delayed {:invoked :!!grave_accent_and_tilde} :params {:delay 200}}]]}
              {:des   "Mouse Keys Mode v4 (rev 1)"
               :rules [[:##j {:mkey {:vwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
                       [:##h {:mkey {:hwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
