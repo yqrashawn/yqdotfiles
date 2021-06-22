@@ -147,13 +147,7 @@ alias tmn='tmux new -s $1'
 alias tmC='tmux kill-session -a'
 
 # yarn
-# alias y="yarn"
-# https://nobitagit.github.io/blog/Yarn-Npm-Faster/
-function y {
-  mkdir node_modules 2>/dev/null
-  touch ./node_modules/.metadata_never_index
-  yarn $@
-}
+alias y="yarn"
 alias ya="yarn add"
 alias yad="yarn add --dev"
 alias yap="yarn add --peer"
