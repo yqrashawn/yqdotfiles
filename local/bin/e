@@ -37,9 +37,10 @@ else
     echo "${BOLD}${BG_GREEN}DONE${RESET}"
 
     echo -e "Trying connecting...\c"
-    until run_client $* &> /dev/null;[ $? -eq 0 ]
-    do
-        sleep 1
-    done
-    echo "${BOLD}${BG_GREEN}DONE${RESET}"
+    run_client $*
+    # until run_client $* &> /dev/null;[ $? -eq 0 ]
+    # do
+    #     sleep 1
+    # done
+    # echo "${BOLD}${BG_GREEN}DONE${RESET}"
 fi
