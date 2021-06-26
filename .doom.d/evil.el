@@ -55,7 +55,6 @@
   (after! evil-multiedit (setq! evil-multiedit-store-in-search-history t))
   (define-key evil-iedit-state-map "V" nil)
   (define-key evil-iedit-state-map "m" 'iedit-show/hide-unmatched-lines))
-
 (use-package mwim
   :commands (mwim-beginning-of-code-or-line mwim-end-of-code-or-line))
 

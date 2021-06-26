@@ -15,6 +15,7 @@
        confirm-kill-processes nil)
 
 (+global-word-wrap-mode +1)
+
 (pushnew! auto-mode-alist '("\\.gitconfig.*\\'" . gitconfig-mode))
 (pushnew! auto-mode-alist '("\\.gitignore.*\\'" . gitignore-mode))
 (pushnew! auto-mode-alist '("\\.git/info/exclude\\'" . gitignore-mode))

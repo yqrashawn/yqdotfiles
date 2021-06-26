@@ -82,4 +82,4 @@
 (defadvice! ++workspaces-delete-associated-workspace-h (orig-fn &optional frame)
   :around #'+workspaces-delete-associated-workspace-h
   (when (not (string= (buffer-name (current-buffer)) "COMMIT_EDITMSG"))
-    (orig-fn frame)))
+    (apply orig-fn frame)))
