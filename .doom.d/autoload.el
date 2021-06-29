@@ -225,3 +225,35 @@ If the universal prefix argument is used then kill also the window."
   (setq debug-on-quit nil)
   (setq quit-flag nil)
   (setq inhibit-quit nil))
+
+;;;###autoload (autoload 'hydra-smerge/body "autoload" nil t)
+(defhydra hydra-smerge (:color pink :hint nil :post (smerge-auto-leave))
+  "
+^Move^       ^Keep^               ^Diff^                 ^Other^
+^^-----------^^-------------------^^---------------------^^-------
+_j_ext       _b_ase               _<_: upper/base        _C_ombine
+_k_rev       _u_pper              _=_: upper/lower       _r_esolve
+^^           _l_ower              _>_: base/lower        _K_ill current
+^^           _a_ll                _R_efine               _w_save buffer
+^^           _RET_: current       _e_diff
+"
+  ("j" smerge-next)
+  ("k" smerge-prev)
+  ("b" smerge-keep-base)
+  ("u" smerge-keep-upper)
+  ("l" smerge-keep-lower)
+  ("a" smerge-keep-all)
+  ("RET" smerge-keep-current)
+  ("\C-m" smerge-keep-current)
+  ("<" smerge-diff-base-upper)
+  ("=" smerge-diff-upper-lower)
+  (">" smerge-diff-base-lower)
+  ("r" smerge-refine)
+  ("e" smerge-ediff)
+  ("C" smerge-combine-with-next)
+  ("R" smerge-resolve)
+  ("K" smerge-kill-current)
+  ("ZZ" (cmd! (save-buffer) (bury-buffer)) "Save and bury buffer" :color blue)
+  ("w" save-buffer "Save buffer" :color blue)
+  ("q" nil "cancel" :color blue)
+  ("C-g" nil "cancel" :color blue))
