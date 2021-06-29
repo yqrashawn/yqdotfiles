@@ -17,6 +17,27 @@
     (comment-forward (point-max))
     (looking-at-p "\\(?:#?\\^\\)\\|#:?:?[[:alpha:]]\\|#_")))
 
+(after! cider
+  (after! lispy
+    ;; make lispy-eval works in babashka repl
+    (defadvice! +lispy-eval (orig-fn &rest args)
+      :around #'lispy-eval
+      (if (and (memq major-mode '(clojure-mode)) (functionp 'cider--babashka-version) (cider--babashka-version))
+          (if (and lispy-mode (lispy-left-p))
+              (save-excursion
+                (call-interactively 'lispy-different)
+                (call-interactively 'cider-eval-last-sexp))
+            (call-interactively 'cider-eval-last-sexp))
+        (apply orig-fn args)))
+
+    (defadvice! +lispy-eval-and-insert (func &rest args)
+      :around #'lispy-eval-and-insert
+      (if (and (memq major-mode '(clojure-mode)) (functionp 'cider--babashka-version) (cider--babashka-version))
+          (progn
+            ;; (setq current-prefix-arg '(1))
+            (call-interactively 'cider-pprint-eval-last-sexp))
+        (apply func args)))))
+
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
   (cmd! (setq-local company-idle-delay 0.2
                     evil-shift-width 1)))

@@ -185,25 +185,6 @@ If the universal prefix argument is used then kill also the window."
     (and (file-exists-p buffer-file-name) (yq/open-with-call-alfred-osascript buffer-file-name))))
 
 ;;;###autoload
-(defun th/magit-eldoc-for-commit (_callback)
-    (let ((commit (magit-commit-at-point)))
-      (when commit
-        (with-temp-buffer
-          (magit-git-insert "show"
-                            "--format=format:%s (%cn<%ce> %cr)"
-                            (format "--stat=%d" (window-width))
-                            commit)
-          (goto-char (point-min))
-          (put-text-property (point-min)
-                             (line-end-position)
-                             'face 'bold)
-          (buffer-string)))))
-
-;;;###autoload
-(defun th/magit-eldoc-setup ()
-    (add-hook! 'eldoc-documentation-functions #'th/magit-eldoc-for-commit nil t) (eldoc-mode 1))
-
-;;;###autoload
 (defun +jest-popup-debug ()
   (interactive)
   (require 'jest)

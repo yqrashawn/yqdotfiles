@@ -53,11 +53,12 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(load! "./keybindings.el")
+(load! "./map.el")
 (load! "./better-default.el")
 (load! "./evil.el")
 (load! "./navigation.el")
 (load! "./prog.el")
+(load! "./version-control.el")
 (load! "./lisp.el")
 
 (load! "./elisp.el")
