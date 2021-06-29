@@ -12,7 +12,25 @@
        require-final-newline nil
        mode-require-final-newline nil
        auto-window-vscroll nil
-       confirm-kill-processes nil)
+       confirm-kill-processes nil
+
+       ;; scroll
+       hscroll-margin 5
+       hscroll-step 0
+       ;; Emacs spends too much effort recentering the screen if you scroll the
+       ;; cursor more than N lines past window edges (where N is the settings of
+       ;; `scroll-conservatively'). This is especially slow in larger files
+       ;; during large-scale scrolling commands. If kept over 100, the window is
+       ;; never automatically recentered.
+       scroll-conservatively 0
+       scroll-margin 0
+       scroll-preserve-screen-position nil
+       ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
+       ;; for tall lines.
+       auto-window-vscroll nil
+       ;; mouse
+       mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
+       mouse-wheel-scroll-amount-horizontal 2)
 
 (+global-word-wrap-mode +1)
 
