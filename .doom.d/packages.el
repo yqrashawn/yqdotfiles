@@ -86,3 +86,4 @@
 
 (package! jest)
 (package! outline-minor-faces)
+(package! magit-cz :recipe (:host github :repo "yqrashawn/magit-cz.el"))

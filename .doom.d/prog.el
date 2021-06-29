@@ -93,3 +93,4 @@ requiring confirmation."
           (magit-stage-1 nil (list file)))))))
 
 (use-package! abridge-diff :hook (magit-status-mode . abridge-diff-mode))
+(use-package! magit-cz :after magit)
