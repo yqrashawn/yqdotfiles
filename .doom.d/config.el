@@ -65,4 +65,5 @@
 (load! "./clojure.el")
 (load! "./js.el")
 
+(load! "lang.el")
 (load! "visual.el")

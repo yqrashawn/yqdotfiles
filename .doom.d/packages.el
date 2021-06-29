@@ -55,6 +55,7 @@
 (package! ccc)
 (package! el-patch)
 (package! git-link)
+(package! copy-as-format)
 (package! iflipb)
 (package! rg)
 (package! evil-iedit-state)
@@ -93,3 +94,9 @@
 (package! highlight-function-calls)
 (package! easy-escape)
 (package! company-tabnine)
+
+(package! tree-sitter)
+(package! tree-sitter-langs)
+(package! jenkinsfile-mode)
+(package! jq-mode)
+(package! separedit)

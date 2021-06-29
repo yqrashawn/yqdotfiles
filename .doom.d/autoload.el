@@ -285,3 +285,14 @@ _g_  gfm      _m_ markdown
       (setq company-idle-delay 0.2)
       (setq company-tabnine--disabled t)
       (message "Turn off company-tabnine"))))
+
+;;;###autoload
+(defun +tree-sitter-manybe-enable ()
+  (lambda ()
+    ;; Activate tree-sitter's improved syntax highlighting only if we are
+    ;; using a major-mode that has a compatible tree-sitter syntax parser
+    (if (and (boundp 'tree-sitter-major-mode-language-alist)
+             (assq major-mode tree-sitter-major-mode-language-alist))
+        (progn
+          (tree-sitter-mode)
+          (tree-sitter-hl-mode)))))
