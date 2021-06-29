@@ -49,9 +49,9 @@
          expand-region-reset-fast-key "r"))
 
 (use-package! evil-iedit-state
-  :init
-  (add-hook! 'doom-first-input-hook (cmd! (require 'evil-iedit-state)))
+  :commands (evil-iedit-state/iedit-mode-from-expand-region evil-iedit-state/iedit-mode)
   :config
+  (defalias 'iedit-lib-cleanup #'iedit-cleanup)
   (after! evil-multiedit (setq! evil-multiedit-store-in-search-history t))
   (define-key evil-iedit-state-map "V" nil)
   (define-key evil-iedit-state-map "m" 'iedit-show/hide-unmatched-lines))

@@ -4,11 +4,10 @@
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
   (setq! iflipb-always-ignore-buffers
-   (lambda (name)
-     (print name)
-     (or (string-match-p "^magit" name)
-         (string-match-p "^\*" name)
-         (string-match-p "^ " name)))))
+         (lambda (name)
+           (or (string-match-p "^magit" name)
+               (string-match-p "^\*" name)
+               (string-match-p "^ " name)))))
 
 (after! ivy
   (setq! ivy-magic-tilde nil

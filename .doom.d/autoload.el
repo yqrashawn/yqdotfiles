@@ -238,3 +238,50 @@ _k_rev       _u_pper              _=_: upper/lower       _r_esolve
   ("w" save-buffer "Save buffer" :color blue)
   ("q" nil "cancel" :color blue)
   ("C-g" nil "cancel" :color blue))
+
+;;;###autoload (autoload 'hydra-change-mode/body "autoload" nil t)
+(defhydra hydra-change-mode (:hint nil :color pink)
+  "
+_e_  elisp    _c_  clojure   _t_  typescript
+_j_  js2      _T_  text      _f_  fundamental
+_g_  gfm      _m_ markdown
+"
+  ("e" emacs-lisp-mode :exit t)
+  ("j" js2-mode :exit t)
+  ("c" clojure-mode :exit t)
+  ("T" text-mode :exit t)
+  ("t" typescript-mode :exit t)
+  ("f" fundamental-mode :exit t)
+  ("m" markdown-mode :exit t)
+  ("g" gfm-mode :exit t)
+  ("q" hydra-keyboard-quit :exit t)
+  ("C-g" hydra-keyboard-quit :exit t))
+
+;;;###autoload
+(defun ++doom-apply-ansi-color-to-compilation-buffer-h ()
+  "Applies ansi codes to the compilation buffers. Meant for
+`compilation-filter-hook'."
+  (with-silent-modifications
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+;;;###autoload
+(defun +company-complete-selection-or-default ()
+  (interactive)
+  (let ((company-selection (or company-selection
+                               company-selection-default
+                               0)))
+    (call-interactively #'company-complete-selection)))
+
+;;;###autoload
+(defun yq/toggle-company-tabnine ()
+  (interactive)
+  (company-tabnine-restart-server)
+  (if company-tabnine--disabled
+      (progn
+        (setq company-idle-delay 0)
+        (setq company-tabnine--disabled nil)
+        (message "Turn on company-tabnine"))
+    (progn
+      (setq company-idle-delay 0.2)
+      (setq company-tabnine--disabled t)
+      (message "Turn off company-tabnine"))))

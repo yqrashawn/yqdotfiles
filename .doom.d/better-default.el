@@ -22,25 +22,6 @@
 
 (add-hook! 'delete-terminal-functions (lambda (&rest a) (recentf-save-list)))
 
-(after! hydra
-  (defhydra hydra-change-mode (:hint nil :color pink)
-    "
-_e_  elisp    _c_  clojure   _t_  typescript
-_j_  js2      _T_  text      _f_  fundamental
-_g_  gfm      _m_ markdown
-"
-    ("e" emacs-lisp-mode :exit t)
-    ("j" js2-mode :exit t)
-    ("c" clojure-mode :exit t)
-    ("T" text-mode :exit t)
-    ("t" typescript-mode :exit t)
-    ("f" fundamental-mode :exit t)
-    ("m" markdown-mode :exit t)
-    ("g" gfm-mode :exit t)
-    ("q" hydra-keyboard-quit :exit t)
-    ("C-g" hydra-keyboard-quit :exit t))
-  (define-key! yq-s-map "RET" 'hydra-change-mode/body))
-
 (use-package! git-link
   :commands (git-link git-link-commit git-link-homepage)
   :init

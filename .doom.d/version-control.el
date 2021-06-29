@@ -3,11 +3,10 @@
 (setq! vc-handled-backends '(Git))
 (add-hook! 'doom-first-file-hook #'magit-wip-mode #'magit-auto-revert-mode)
 
-(after! transient (setq! transient-default-level 7))
-
 (el-patch-feature magit-apply)
 (after! magit
   (setq! magit-fetch-modules-jobs 10
+         transient-default-level 7
          magit-log-margin '(t age-abbreviated magit-log-margin-width t 18)
          magit-section-initial-visibility-alist '((stashes . hide)
                                                   (untracked . show)
@@ -19,6 +18,7 @@
                                         ("~/workspace/office/" . 1)
                                         ("~/workspace/third/" . 1)))
   (pushnew! magit-no-confirm 'stage-all-changes)
+  (add-hook! 'magit-process-mode-hook #'++doom-apply-ansi-color-to-compilation-buffer-h)
   (transient-define-argument magit-merge:--strategy-option ()
     :description "Strategy Option"
     :class 'transient-option
@@ -51,13 +51,29 @@
   (add-function :before magit-completing-read-function #'my-magit-command)
   (pushnew! ivy-re-builders-alist '(magit-log-other . ivy--regex-fuzzy))
 
+  ;; https://emacs-pe.github.io/2015/06/30/magit-github-pr/
+  (defun marsam/add-pull-request-refs (&optional remote local-ns)
+    "Set pull requests refs from a REMOTE with LOCAL-NS namespace into Git config."
+    (interactive (let* ((remote (magit-read-remote "Fetch remote"))
+                        (local-ns (read-string "local namespace: " (format "%s/pr" remote))))
+                   (list remote local-ns)))
+    (and (not (magit-get-boolean "core" "disableprref"))
+         (let* ((remote (or remote "origin"))
+                (local-ns (if (or (null local-ns) (string= "" local-ns)) (format "%s/pr" remote) local-ns))
+                (pr-refs (format "+refs/pull/*/head:refs/remotes/%s/*" local-ns))
+                (remote-fetch-refs (magit-get-all "remote" remote "fetch")))
+           (and remote-fetch-refs
+                (not (magit-get-boolean "remote" remote "disableprref"))
+                (not (member pr-refs remote-fetch-refs))
+                (string-match "github.com" (magit-get "remote" remote "url"))
+                (magit-git-string "config" "--add" (format "remote.%s.fetch" remote) pr-refs)))))
 
-
-
-
-
-
-
+  (defun +marsam/add-pull-request-refs ()
+    (dolist (remote (magit-list-remotes))
+      (marsam/add-pull-request-refs remote)))
+  (defadvice! +forge-pull (&optional repo until) :after #'forge-pull
+    (+marsam/add-pull-request-refs))
+  ;; (add-hook 'magit-mode-hook '+marsam/add-pull-request-refs)
 
   (el-patch-defun magit-stage-file (file)
     "Stage all changes to FILE.
@@ -87,3 +103,4 @@ requiring confirmation."
 (use-package! abridge-diff :hook (magit-status-mode . abridge-diff-mode))
 (use-package! magit-cz :after magit)
 (after! with-editor (add-hook! 'with-editor-mode-hook #'evil-insert-state))
+(use-package smeargle :commands (smeargle))

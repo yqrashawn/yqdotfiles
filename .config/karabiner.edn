@@ -43,8 +43,8 @@
              :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
  :simlayers {:test-mode             {:key :9}
              :contexts-f-mode       {:key :f}
-             :emacs-m-mode          {:key :m :condi :Emacs}
-             :emacs-v-mode          {:key :v :condi :Emacs}
+             :emacs-m-mode          {:key :m :condi :Emacs-and-Terminals}
+             :emacs-v-mode          {:key :v :condi :Emacs-and-Terminals}
              :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
              :emacs-s-mode          {:key :s :condi :Emacs}
              :vscode-s-mode         {:key :s :condi :VSCode}
@@ -167,8 +167,8 @@
                       [:l :!!l]
                       [:n [:!Tx :!T9 {:key :n :repeat false}]]
                       [:p [:!Tx :!T9 {:key :p :repeat false}]]
-                      [:comma [:!Tx :!T8 :open_bracket]]
-                      [:period [:!Tx :!T8 :close_bracket]]
+                      [:comma [:!Tx :!S2 :8 :open_bracket]]
+                      [:period [:!Tx :!S2 :8 :close_bracket]]
                       [:delete_or_backspace [:!Tx :!T9 :!Sk]]
                       [:open_bracket [:!Tx :!T9 :open_bracket]]
                       [:close_bracket [:!Tx :!T9 :close_bracket]]
@@ -181,24 +181,24 @@
                       [:p [:!Tx :!T9 {:key :p :repeat false}]]]}
              {:des   "Emacs m/v select company candidates"
               :rules [:emacs-m-mode
-                      [:a [:!Tx :!T6 :1]]
-                      [:s [:!Tx :!T6 :2]]
-                      [:d [:!Tx :!T6 :3]]
-                      [:f [:!Tx :!T6 :4]]
-                      [:g [:!Tx :!T6 :5]]
-                      [:h [:!Tx :!T6 :6]]
-                      [:left_shift [:!Tx :!T6 :q]]
-                      [:z [:!Tx :!T6 :z]]
-                      [:x [:!Tx :!T6 :x]]
-                      [:c [:!Tx :!T6 :c]]
-                      [:left_shift [:!Tx :!T6 :q]]
+                      [:a [:!Tx :!S2 :6 :1]]
+                      [:s [:!Tx :!S2 :6 :2]]
+                      [:d [:!Tx :!S2 :6 :3]]
+                      [:f [:!Tx :!S2 :6 :4]]
+                      [:g [:!Tx :!S2 :6 :5]]
+                      [:h [:!Tx :!S2 :6 :6]]
+                      [:left_shift [:!Tx :!S2 :6 :q]]
+                      [:z [:!Tx :!S2 :6 :z]]
+                      [:x [:!Tx :!S2 :6 :x]]
+                      [:c [:!Tx :!S2 :6 :c]]
+                      [:left_shift [:!Tx :!S2 :6 :q]]
                       :emacs-v-mode
-                      [:right_shift [:!Tx :!T6 :w]]
-                      [:g [:!Tx :!T6 :5]]
-                      [:h [:!Tx :!T6 :6]]
-                      [:j [:!Tx :!T6 :7]]
-                      [:k [:!Tx :!T6 :8]]
-                      [:l [:!Tx :!T6 :9]]
+                      [:right_shift [:!Tx :!S2 :6 :w]]
+                      [:g [:!Tx :!S2 :6 :5]]
+                      [:h [:!Tx :!S2 :6 :6]]
+                      [:j [:!Tx :!S2 :6 :7]]
+                      [:k [:!Tx :!S2 :6 :8]]
+                      [:l [:!Tx :!S2 :6 :9]]
                       [:semicolon [:!Tx :!T6 :0]]]}
              {:des   "Emacs switch buffer"
               :rules [:Emacs
@@ -588,6 +588,16 @@
                                                       "^com\\.sublimetext\\.",
                                                       "^com\\.microsoft\\.VSCode(Insiders)?$"]
                       :VSCode                        ["^com\\.microsoft\\.VSCode(Insiders)?$"]
+                      :Emacs-and-Terminals           ["^org\\.gnu\\.Emacs$"
+                                                      "^org\\.gnu\\.AquamacsEmacs$"
+                                                      "^org\\.gnu\\.Aquamacs$"
+                                                      "^com\\.apple\\.Terminal$"
+                                                      "^com\\.googlecode\\.iterm2$"
+                                                      "^co\\.zeit\\.hyperterm$"
+                                                      "^co\\.zeit\\.hyper$"
+                                                      "^io\\.alacritty$"
+                                                      "^com\\.github\\.wez\\.wezterm$"
+                                                      "^net\\.kovidgoyal\\.kitty$"]
                       :Emacs                         ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
                                                       "^org\\.gnu\\.Aquamacs$"]
