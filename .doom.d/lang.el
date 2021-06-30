@@ -30,13 +30,15 @@
    lsp-eslint-run "onSave"
    lsp-eslint-auto-fix-on-save t))
 
-(use-package! tree-sitter-langs :defer t)
-(use-package! tree-sitter
-  :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
-  :init
-  (setq! tree-sitter-hl-use-font-lock-keywords nil)
+(use-package! tree-sitter-langs
+  :defer t
   :config
   (pushnew! tree-sitter-major-mode-language-alist
             '(clojure-mode . clojure)
             '(clojurescript-mode . clojure)
             '(clojurec-mode . clojure)))
+
+(use-package! tree-sitter
+  :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
+  :init
+  (setq! tree-sitter-hl-use-font-lock-keywords nil))

@@ -289,6 +289,7 @@ _g_  gfm      _m_ markdown
 ;;;###autoload
 (defun +tree-sitter-manybe-enable ()
   (lambda ()
+    (require 'tree-sitter-langs)
     ;; Activate tree-sitter's improved syntax highlighting only if we are
     ;; using a major-mode that has a compatible tree-sitter syntax parser
     (if (and (boundp 'tree-sitter-major-mode-language-alist)
