@@ -73,3 +73,5 @@
 (use-package explain-pause-mode :defer t)
 
 (after! with-editor (shell-command-with-editor-mode))
+
+(use-package! help-fns+ :defer t :commands (describe-keymap))

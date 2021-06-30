@@ -4,7 +4,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((eval progn
+   '((eval add-to-list 'projectile-globally-ignored-directories "[/\\\\]conflux-portal[/\\]dist$")
+     (eval add-to-list 'projectile-globally-ignored-directories "[/\\\\]conflux-portal[/\\]builds$")
+     (eval progn
            (pp-buffer)
            (indent-buffer))
      (elisp-lint-indent-specs
