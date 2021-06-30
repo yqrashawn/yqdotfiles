@@ -4,8 +4,6 @@
 (after! lispy
   (setq! lispy-close-quotes-at-end-p nil
          lispy-eval-display-style 'overlay)
-  (defadvice! +lispy-up (a) :after #'lispy-up (call-interactively #'lispy-tab))
-  (defadvice! +lispy-down (a) :after #'lispy-down (call-interactively #'lispy-tab))
   (defadvice! +lispy-tab (orig-fn)
     :around #'lispy-tab
     (if (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))
