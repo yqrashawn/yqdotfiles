@@ -94,6 +94,7 @@
 (package! highlight-function-calls)
 (package! easy-escape)
 (package! company-tabnine)
+(package! company-ctags)
 
 (package! tree-sitter)
 (package! tree-sitter-langs)

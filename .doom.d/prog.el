@@ -66,3 +66,5 @@
     (when (memq major-mode '(rjsx-mode js-mode js2-mode typescript-mode))
      (let ((+format-with-lsp nil))
        (ignore-errors (call-interactively orig-fn))))))
+
+(use-package! company-ctags :defer t)
