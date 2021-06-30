@@ -23,30 +23,35 @@
     :around #'npm-mode--exec-process
     (apply orig-fn (s-replace-all '(("npm" . "yarn")) cmd comint))))
 
-;; (set-ligatures! 'rjsx-mode
-;;   :def "export function")
-
-;; (dolist (feature '(rjsx-mode
-;;                    (js-mode . js)
-;;                    typescript-mode
-;;                    web-mode
-;;                    (nodejs-repl-mode . nodejs-repl)))
-;;   (let ((pkg (or (cdr-safe feature) feature))
-;;         (mode (or (car-safe feature) feature)))
-;;     (with-eval-after-load pkg
-;;       (set-ligatures! mode
-;;         ;; Functional
-;;         :def "function"
-;;         ;; :lambda "() =>"
-;;         ;; :composition "compose"
-;;         ;; ;; Types
-;;         ;; :null "null"
-;;         ;; :true "true" :false "false"
-;;         ;; ;; Flow
-;;         ;; :not "!"
-;;         ;; :and "&&" :or "||"
-;;         ;; :for "for"
-;;         ;; :return "return"
-;;         ;; ;; Other
-;;         ;; :yield "import"
-;;         ))))
+(dolist (mode '(rjsx-mode
+                   js2-mode
+                   typescript-mode
+                   web-mode))
+  (with-eval-after-load mode
+    (delq! (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
+    (set-ligatures! mode
+      ;; Functional
+      :def "function"
+      :lambda "() =>"
+      :composition "compose"
+      ;; Types
+      :null "null"
+      :true "true" :false "false"
+      ;; Flow
+      ;; :not "!"
+      :and "&&" :or "||"
+      :for "for"
+      :return "return"
+      ;; Other
+      ;; :yield "import"
+      :alist
+      '(("async" . ?⊳)
+        ("await" . ?⊲)
+        ("throw" . ?Ƭ)
+        ("this" . ?ƭ)
+        ("import" . ?⇟)
+        ("export" . ?⇞)
+        ("const" . ?Ċ)
+        ("Promise" . ?Ṗ)
+        ("if" . ?␦)
+        ("let" . ?ḷ)))))
