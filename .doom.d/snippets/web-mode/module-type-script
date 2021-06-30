@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: <script type="module">...</script>
+# key: srptm
+# --
+<script type="module">
+  $0
+</script>

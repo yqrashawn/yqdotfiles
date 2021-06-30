@@ -296,3 +296,15 @@ _g_  gfm      _m_ markdown
         (progn
           (tree-sitter-mode)
           (tree-sitter-hl-mode)))))
+
+;;;###autoload
+(defun +yas-expand-when-inserting-dot (&optional args)
+  (interactive)
+  (if (eq major-mode 'vterm-mode) (vterm--self-insert)
+    (if (eq (preceding-char) ?.)
+        (if (and (not (delete-char -1 nil)) (yas-expand))
+            t
+          (progn
+            (insert ?.)
+            (insert ?.)))
+      (insert ?.))))

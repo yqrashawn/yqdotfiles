@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: des
+# key: des
+# --
+describe("${1:name}", function() {
+  $2
+});

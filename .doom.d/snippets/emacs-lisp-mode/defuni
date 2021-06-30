@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: defun-interactive
+# key: dfi
+# --
+
+(defun ()
+  (interactive)
+  $1)

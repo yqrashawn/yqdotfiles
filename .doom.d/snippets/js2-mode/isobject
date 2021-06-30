@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: isobject
+# key: isobject
+# --
+if (Object.prototype.toString.call(${1:var}).slice(8, -1) === 'Object') {
+  ${2:func}
+}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: test scope
+# key: ts
+# --
+test($1): $2

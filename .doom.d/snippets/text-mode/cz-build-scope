@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: build scope
+# key: bs
+# --
+build($1): $2

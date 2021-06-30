@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: console.error
+# key: err
+# --
+console.error(${1:object})

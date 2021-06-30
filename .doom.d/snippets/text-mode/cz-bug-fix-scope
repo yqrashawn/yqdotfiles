@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: bug-fix
+# key: bs
+# --
+fix($1): $2

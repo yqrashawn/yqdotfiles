@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: chore
+# key: c
+# --
+chore: $1

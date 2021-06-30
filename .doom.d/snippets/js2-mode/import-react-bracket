@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: import react bracket
+# key: imrb
+# --
+import React, { $1 } from 'react'

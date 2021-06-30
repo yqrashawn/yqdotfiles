@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: feature
+# key: fs
+# --
+feat$1: $2

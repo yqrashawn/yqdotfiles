@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: CI scope
+# key: CC
+# --
+ci($1): $2

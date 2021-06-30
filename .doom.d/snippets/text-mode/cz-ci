@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: CI
+# key: C
+# --
+ci: $1

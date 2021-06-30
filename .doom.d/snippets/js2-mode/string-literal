@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: string-literal
+# key: tl
+# --
+\${${1}}

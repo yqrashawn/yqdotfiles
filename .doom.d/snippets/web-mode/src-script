@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name:<script type="text/javascript" src="..."></script>
+# key: srpts
+# --
+<script type="text/javascript" src="$1"></script>

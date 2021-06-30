@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: build
+# key: b
+# --
+build: $1

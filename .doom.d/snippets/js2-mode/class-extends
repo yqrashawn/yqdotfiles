@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: class-extends
+# key: cle
+# --
+class ${1: class name} extends ${2: extend class} {
+  counstructor(${3:args}) {
+    ${4}
+  }
+}

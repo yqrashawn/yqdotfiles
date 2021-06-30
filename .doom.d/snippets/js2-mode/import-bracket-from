@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: import bracket from
+# key: imb
+# --
+import { ${2:im} } from '${1:package}'

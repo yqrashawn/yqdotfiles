@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: it
+# key: it
+# --
+it("${1:should}", async function() {
+  $2
+});
