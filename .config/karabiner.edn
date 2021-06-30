@@ -82,11 +82,6 @@
                          :to          [{:key_code :right_shift}]
                          :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}]
                          :type        :basic}]}
-             {:des "fl to esc, fh to ..."
-              :rules
-              [[[:f :l] :escape]
-               ;; [[:f :h] :escape]
-               ]}
              {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
                       [:return_or_enter :!COc]

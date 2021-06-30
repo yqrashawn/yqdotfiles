@@ -48,3 +48,21 @@
   (setq! company-tabnine--disabled t) )
 (use-package! copy-as-format :defer t)
 (use-package! separedit :defer t)
+
+(after! format-all
+  (defadvice! +format-all--formatter-executable (orig-fn formatter)
+    :around #'format-all--formatter-executable
+    (let* ((home (concat (getenv "HOME") "/"))
+           (root (doom-project-root))
+           (root (if (or (not root) (string= home root)) (expand-file-name "~/.config/yarn/global/") root)))
+      (if (file-executable-p (concat root "node_modules/" ".bin/" (symbol-name formatter)))
+          (concat root "node_modules/" ".bin/" (symbol-name formatter))
+        (apply orig-fn formatter))))
+
+  ;; run prettier after lsp format (eslint)
+  (defadvice! ++format/region-or-buffer (orig-fn)
+    :around #'+format/region-or-buffer
+    (ignore-errors (call-interactively orig-fn))
+    (when (memq major-mode '(rjsx-mode js-mode js2-mode typescript-mode))
+     (let ((+format-with-lsp nil))
+       (ignore-errors (call-interactively orig-fn))))))

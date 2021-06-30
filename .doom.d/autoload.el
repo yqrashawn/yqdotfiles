@@ -308,3 +308,53 @@ _g_  gfm      _m_ markdown
             (insert ?.)
             (insert ?.)))
       (insert ?.))))
+
+;;;###autoload
+(defun corgi/cider-eval-last-sexp-and-replace ()
+    "Alternative to cider-eval-last-sexp-and-replace, but kills
+clojure logical sexp instead of ELisp sexp, and pprints the
+result."
+    (interactive)
+    (let ((last-sexp (cider-last-sexp)))
+      ;; we have to be sure the evaluation won't result in an error
+      (cider-nrepl-sync-request:eval last-sexp)
+      ;; seems like the sexp is valid, so we can safely kill it
+      (let ((opoint (point)))
+        (clojure-backward-logical-sexp)
+        (kill-region (point) opoint))
+      (cider-interactive-eval last-sexp
+                              (cider-eval-pprint-with-multiline-comment-handler
+                               (current-buffer)
+                               (set-marker (make-marker) (point))
+                               ""
+                               " "
+                               "")
+                              nil
+                              (cider--nrepl-print-request-map fill-column))))
+
+;;;###autoload
+(defun corgi/cider-pprint-eval-last-sexp-insert ()
+    (interactive)
+    (let ((cider-comment-prefix "")
+          (cider-comment-continued-prefix " ")
+          (cider-comment-postfix ""))
+      (cider-pprint-eval-last-sexp-to-comment)))
+
+;;;###autoload
+(defun corgi/cider-pprint-register (register)
+    "Evaluate a Clojure snippet stored in a register.
+Will ask for the register when used interactively. Put `#_clj' or
+`#_cljs' at the start of the snippet to force evaluation to go to
+a specific REPL type, no matter the mode (clojure-mode or
+clojurescript-mode) of the current buffer."
+    (interactive (list (register-read-with-preview "Eval register: ")))
+    (let ((reg (get-register register)))
+      (cond
+       ((string-match-p "^#_cljs" reg)
+        (with-current-buffer (car (cider-repls 'cljs))
+          (cider--pprint-eval-form reg)))
+       ((string-match-p "^#_clj" reg)
+        (with-current-buffer (car (cider-repls 'clj))
+          (cider--pprint-eval-form reg)))
+       (t
+        (cider--pprint-eval-form reg)))))
