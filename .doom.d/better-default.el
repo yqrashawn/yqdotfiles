@@ -30,7 +30,11 @@
        auto-window-vscroll nil
        ;; mouse
        mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
-       mouse-wheel-scroll-amount-horizontal 2)
+       mouse-wheel-scroll-amount-horizontal 2
+       confirm-kill-emacs nil
+       url-proxy-services
+       '(("http" . "127.0.0.1:6152")
+         ("https" . "127.0.0.1:6153")))
 
 (+global-word-wrap-mode +1)
 
