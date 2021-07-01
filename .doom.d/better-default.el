@@ -102,9 +102,9 @@
         (setq-local outline-regexp +emacs-lisp-outline-regexp)
       (progn
         (setq-local +outline-regexp-start (+outline-chomp comment-start))
-        (setq-local +outline-regexp-body (concat "\s?" "\\(#\\|;\\|\*\\)+"))
+        (setq-local +outline-regexp-body (concat "\\(\\(" +outline-regexp-start "\\)" "+\\|" "\s?\\(#\\|;\\|\*\\)+" "\\)"))
         (make-local-variable 'outline-regexp)
-        (setq outline-regexp (concat "[ \t]*" comment-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]")))))
+        (setq outline-regexp (concat "[ \t]*" +outline-regexp-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]")))))
   (add-hook! outline-minor-mode '+outline-minor-mode-setup-regexp '+outline-minor-mode-disable-evil-tab))
 
 (defadvice! +doom/switch-to-scratch-buffer (orig-fn &optional arg project-p)

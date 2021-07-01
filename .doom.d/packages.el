@@ -85,6 +85,7 @@
 (package! loccur)
 (package! double-saber)
 (package! bicycle)
+(package! backline)
 
 (package! abridge-diff)
 
