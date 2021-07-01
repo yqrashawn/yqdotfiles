@@ -68,3 +68,14 @@
   evil-search-word-backward
   evil-search-forward
   evil-search-backward)
+
+(after! evil-terminal-cursor-changer
+  (setq! etcc-use-color t)
+  (defadvice evil-set-cursor-color (after etcc--evil-set-cursor (arg) activate)
+    (unless (display-graphic-p)
+      (etcc--evil-set-cursor-color arg)))
+
+  (defadvice evil-set-cursor (after etcc--evil-set-cursor (arg) activate)
+    (unless (display-graphic-p)
+      (etcc--evil-set-cursor)))
+  (defun etcc--in-xterm? () t))
