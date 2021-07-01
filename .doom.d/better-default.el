@@ -106,3 +106,7 @@
         (make-local-variable 'outline-regexp)
         (setq outline-regexp (concat "[ \t]*" comment-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]")))))
   (add-hook! outline-minor-mode '+outline-minor-mode-setup-regexp '+outline-minor-mode-disable-evil-tab))
+
+(defadvice! +doom/switch-to-scratch-buffer (orig-fn &optional arg project-p)
+  :around #'doom/switch-to-scratch-buffer
+  (apply orig-fn (not arg) project-p))
