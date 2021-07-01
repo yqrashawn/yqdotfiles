@@ -189,5 +189,5 @@
 
 ;; needs to put this in init.el
 ;; https://github.com/hlissner/doom-emacs/issues/401
-(setq evil-respect-visual-line-mode t)
+(setq evil-respect-visual-line-mode nil)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))

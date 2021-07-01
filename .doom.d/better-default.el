@@ -34,7 +34,8 @@
        confirm-kill-emacs nil
        url-proxy-services
        '(("http" . "127.0.0.1:6152")
-         ("https" . "127.0.0.1:6153")))
+         ("https" . "127.0.0.1:6153"))
+       url-proxy-services nil)
 
 (+global-word-wrap-mode +1)
 

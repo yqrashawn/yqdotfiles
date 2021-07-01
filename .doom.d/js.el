@@ -38,7 +38,7 @@
       :null "null"
       :true "true" :false "false"
       ;; Flow
-      ;; :not "!"
+      :not "!"
       :and "&&" :or "||"
       :for "for"
       :return "return"
