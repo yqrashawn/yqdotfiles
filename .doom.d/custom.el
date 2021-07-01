@@ -78,7 +78,7 @@ import waitForExpect from 'wait-for-expect'
            '("package.json")
            :project-file "package.json" :compile "yarn install" :test "yarn test" :test-suffix ".test")))
  '(warning-suppress-log-types '((use-package) (use-package)))
- '(warning-suppress-types '((use-package))))
+ '(warning-suppress-types '((lsp-on-idle-hook) (lsp-on-idle-hook) (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

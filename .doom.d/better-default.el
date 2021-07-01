@@ -72,6 +72,7 @@
   :commands (string-inflection-all-cycle))
 
 ;; TODO: check autoinsert and doom templates
+;; maybe use yasnippet with it
 
 (use-package side-notes :init (setq! side-notes-file "notes.side.org"))
 
@@ -80,3 +81,28 @@
 (after! with-editor (shell-command-with-editor-mode))
 
 (use-package! help-fns+ :defer t :commands (describe-keymap))
+
+(use-package! outline
+  :hook (prog-mode . outline-minor-mode)
+  :init
+  (defun +outline-chomp (str)
+    "Chomp leading and trailing whitespace from STR."
+    (save-excursion
+      (save-match-data
+        (while (string-match
+                "\\`\n+\\|^\\s-+\\|\\s-+$\\|\n+\\'"
+                str)
+          (setq str (replace-match "" t t str)))
+        str)))
+  :config
+  (defun +outline-minor-mode-disable-evil-tab ()
+    (define-key! evil-motion-state-map "TAB" nil))
+  (defun +outline-minor-mode-setup-regexp ()
+    (if (or (and (boundp 'lispy-mode) lispy-mode) (and (boundp 'lispyville-mode) lispyville-mode))
+        (setq-local outline-regexp +emacs-lisp-outline-regexp)
+      (progn
+        (setq-local +outline-regexp-start (+outline-chomp comment-start))
+        (setq-local +outline-regexp-body (concat "\s?" "\\(#\\|;\\|\*\\)+"))
+        (make-local-variable 'outline-regexp)
+        (setq outline-regexp (concat "[ \t]*" comment-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]")))))
+  (add-hook! outline-minor-mode '+outline-minor-mode-setup-regexp '+outline-minor-mode-disable-evil-tab))
