@@ -190,4 +190,5 @@
 ;; needs to put this in init.el
 ;; https://github.com/hlissner/doom-emacs/issues/401
 (setq evil-respect-visual-line-mode nil)
+(setq straight-vc-git-default-clone-depth 'full)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))
