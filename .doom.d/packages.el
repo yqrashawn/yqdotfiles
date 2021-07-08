@@ -49,6 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+(package! zoxide)
 (package! mwim)
 (package! emamux)
 (package! company-flx)
@@ -111,3 +112,5 @@
 (package! company-nginx)
 (package! dotenv-mode)
 (package! crontab-mode)
+
+(package! modus-themes)

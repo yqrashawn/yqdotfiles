@@ -82,3 +82,8 @@
   :around #'+workspaces-delete-associated-workspace-h
   (when (not (string= (buffer-name (current-buffer)) "COMMIT_EDITMSG"))
     (apply orig-fn frame)))
+
+(use-package! zoxide
+  :defer t
+  :init
+  (add-hook! 'find-file-hook #'zoxide-add))
