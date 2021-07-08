@@ -84,6 +84,9 @@ Instead keep them, with a newline after each comment."
               (cons x y))))
      expr)))
 
+(after! semantic
+  (setq! semanticdb-find-default-throttle '(file local project omniscience recursive)))
+
 ;;; lispyville
 (after! lispyville
   (setq!
