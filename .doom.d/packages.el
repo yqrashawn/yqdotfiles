@@ -114,3 +114,5 @@
 (package! crontab-mode)
 
 (package! modus-themes)
+
+(unpin! cider lispy)
