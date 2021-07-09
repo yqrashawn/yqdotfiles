@@ -56,10 +56,10 @@ alias t='emacsclient -t'
 alias vvv='vimr'
 alias m='mvim'
 alias wdired='roamer'
-alias emacsd='vmtouch -ef ~/.emacs.d/ && vmtouch -tldf ~/.emacs.d/ && vmtouch -ef /Applications/Emacs.app/ && vmtouch -tldf /Applications/Emacs.app/'
+alias emacsd='vmtouch -efq ~/.doom.d/ && vmtouch -qtf ~/.doom.d/ && vmtouch -efq ~/.emacs.d/ && vmtouch -qtf ~/.emacs.d/ && vmtouch -ef /Applications/Emacs.app/ && vmtouch -qtf /Applications/Emacs.app/'
 
 function mlock {
-  vmtouch -ef $@ && vmtouch -tldf $@
+  vmtouch -efq $@ && vmtouch -qtf $@
 }
 
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'

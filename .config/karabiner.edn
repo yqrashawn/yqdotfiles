@@ -66,7 +66,14 @@
                       [:return_or_enter :!Sreturn_or_enter]
                       [:!Creturn_or_enter :return_or_enter]]}
              {:des   "mouse motion to scroll"
-              :rules [{:type :mouse_motion_to_scroll :from {:modifiers {:mandatory [:left_command :left_shift]}} :options {:momentum_scroll_enabled true}}]}
+              :rules [{:type       :mouse_motion_to_scroll
+                       :from       {:modifiers {:optional [:any]}}
+                       :conditions [ {:type :variable_if :name "mmts" :value 1} ]}
+                      [:f24 ["mmts" 1] ["mmts" 0]]
+                      [:f24 ["mmts" 0] ["mmts" 1]]
+                      [[{:pkey :button1} {:pkey :button2}] ["mmts" 1] ["mmts" 0]]
+                      [{:pkey :button1} ["mmts" 0] ["mmts" 1]]
+                      [{:pkey :button2} ["mmts" 0] ["mmts" 1]]]}
              #_{:des   "double press and hold key down in simlayer"
                 :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
                         [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
