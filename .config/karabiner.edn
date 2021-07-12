@@ -320,8 +320,9 @@
                       [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
+                      [:0 [:!Cl [:type "chrome://extensions/"]] :browsers-alfred-mode]
+                      [:8 [:!Cl [:type "chrome-extension://pkjpciobmjhfjaddkiehmknaclajlkgf/home.html"]] :browsers-alfred-mode]
                       [:9 [:!Cl [:type "chrome://extensions/?id=pkjpciobmjhfjaddkiehmknaclajlkgf"]] :browsers-alfred-mode]
-                      [:0 [:!Cl [:type "chrome-extension://pkjpciobmjhfjaddkiehmknaclajlkgf/home.html"]] :browsers-alfred-mode]
                       [:l :!CTslash :finder-alfred-mode]
                       [:!CTk [:!CTk ["in-alfred" 1]]]
                       [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
