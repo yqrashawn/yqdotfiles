@@ -64,7 +64,7 @@
 (unpin! evil-textobj-anyblock)
 (package! evil-textobj-anyblock :recipe (:host github :repo "noctuid/evil-textobj-anyblock" :branch "master"))
 (package! string-inflection)
-(package! side-notes :recipe (:host github :repo "rnkn/side-notes"))
+(package! side-notes)
 (package! explain-pause-mode :recipe (:type git :host github :repo "lastquestion/explain-pause-mode"))
 
 ;; (package! ivy :recipe (:host github :repo "abo-abo/swiper" :branch "master"
