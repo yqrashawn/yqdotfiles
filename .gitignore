@@ -166,3 +166,9 @@ local/bin/rust-analyzer
 /.roswell/
 /.slime/
 /quicklisp/
+/.SpaceVim.d/
+/.SpaceVim/
+/.config/nvim
+/.config/nvim_back/
+/.vim
+/.vim_back/
