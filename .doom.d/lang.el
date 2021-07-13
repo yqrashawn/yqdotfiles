@@ -28,7 +28,8 @@
    lsp-bash-highlight-parsing-errors t
    lsp-eslint-package-manager "yarn"
    lsp-eslint-run "onSave"
-   lsp-eslint-auto-fix-on-save t))
+   lsp-eslint-auto-fix-on-save t)
+  (add-hook! lsp-ui-mode (cmd! () (when (memq major-mode '(clojurescript-mode clojure-mode clojurec-mode)) (lsp-ui-mode -1)))))
 
 (use-package! tree-sitter-langs
   :defer t
