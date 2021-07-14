@@ -101,7 +101,7 @@
     (if (or (and (boundp 'lispy-mode) lispy-mode) (and (boundp 'lispyville-mode) lispyville-mode))
         (setq-local outline-regexp +emacs-lisp-outline-regexp)
       (progn
-        (setq-local +outline-regexp-start (+outline-chomp comment-start))
+        (setq-local +outline-regexp-start (+outline-chomp (or comment-start "#")))
         (setq-local +outline-regexp-body (concat "\\(\\(" +outline-regexp-start "\\)" "+\\|" "\s?\\(#\\|;\\|\*\\)+" "\\)"))
         (make-local-variable 'outline-regexp)
         (setq outline-regexp (concat "[ \t]*" +outline-regexp-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]")))))
