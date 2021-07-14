@@ -80,3 +80,5 @@
   :defer t
   :init
   (add-hook! 'find-file-hook #'zoxide-add))
+
+(use-package! reveal-in-osx-finder :defer t)

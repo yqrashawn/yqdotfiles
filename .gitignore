@@ -172,3 +172,4 @@ local/bin/rust-analyzer
 /.config/nvim_back/
 /.vim
 /.vim_back/
+/gmail/

@@ -40,9 +40,9 @@ Channel gmail-folders
 
 #################### cfx
 IMAPAccount cfx
-Host imap.gmail.com
+Host outlook.office365.com
 Port 993
-User yuxiao@confluxnetwork.org
+User yuxiao.zhang@confluxnetwork.org
 PassCmd "security find-generic-password  -s mbsync-cfx -w"
 SSLType IMAPS
 AuthMechs LOGIN
@@ -59,9 +59,6 @@ Channel cfx-folders
 Far :cfx-remote:
 Near :cfx-local:
 Patterns *
-# Patterns * "All Mail"
-# Patterns "![Gmail]/All Mail"
-# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail" !Homes
 Sync All
 Create Both
 Expunge Both

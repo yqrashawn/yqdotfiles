@@ -70,3 +70,4 @@
 
 (load! "lang.el")
 (load! "visual.el")
+(load! "mail.el")

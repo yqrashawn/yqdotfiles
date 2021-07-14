@@ -37,8 +37,6 @@
          ("https" . "127.0.0.1:6153"))
        url-proxy-services nil)
 
-(+global-word-wrap-mode +1)
-
 (pushnew! auto-mode-alist '("\\.gitconfig.*\\'" . gitconfig-mode))
 (pushnew! auto-mode-alist '("\\.gitignore.*\\'" . gitignore-mode))
 (pushnew! auto-mode-alist '("\\.git/info/exclude\\'" . gitignore-mode))
@@ -84,6 +82,8 @@
 
 (use-package! outline
   :hook (prog-mode . outline-minor-mode)
+  :hook (text-mode . outline-minor-mode)
+  :hook (conf-mode . outline-minor-mode)
   :init
   (defun +outline-chomp (str)
     "Chomp leading and trailing whitespace from STR."
@@ -110,3 +110,5 @@
 (defadvice! +doom/switch-to-scratch-buffer (orig-fn &optional arg project-p)
   :around #'doom/switch-to-scratch-buffer
   (apply orig-fn (not arg) project-p))
+
+(+global-word-wrap-mode +1)

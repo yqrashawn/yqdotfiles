@@ -115,4 +115,6 @@
 
 (package! modus-themes)
 
-(unpin! cider lispy)
+(package! reveal-in-osx-finder)
+
+(unpin! cider lispy mu4e)
