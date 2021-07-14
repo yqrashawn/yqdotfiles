@@ -41,6 +41,9 @@
            ("“" . "”"))))
 
 (after! evil-snipe
+  (evil-define-minor-mode-key '(normal motion) 'evil-snipe-local-mode
+      "s" nil
+      "S" nil)
   (setq! evil-snipe-scope 'whole-buffer
          evil-snipe-repeat-scope 'buffer))
 

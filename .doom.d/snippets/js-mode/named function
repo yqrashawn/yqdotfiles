@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: named function
+# key: f
+# uuid: function_block
+# condition: (or (doom-snippets-bolp) (region-active-p))
+# --
+function ${1:name}($2) {
+    `(doom-snippets-format "%n%s%n")`$0
+}

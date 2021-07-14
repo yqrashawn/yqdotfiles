@@ -76,13 +76,6 @@
               ("C-i" . bicycle-cycle)
               ("<backtab>" . bicycle-cycle-global)))
 
-;; TODO: find the real solution
-;; https://github.com/hlissner/doom-emacs/issues/5195
-(defadvice! ++workspaces-delete-associated-workspace-h (orig-fn &optional frame)
-  :around #'+workspaces-delete-associated-workspace-h
-  (when (not (string= (buffer-name (current-buffer)) "COMMIT_EDITMSG"))
-    (apply orig-fn frame)))
-
 (use-package! zoxide
   :defer t
   :init
