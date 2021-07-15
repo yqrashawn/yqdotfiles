@@ -32,7 +32,8 @@
   (pushnew! projectile-project-root-files ".tabnine_root" "yarn.lock" ".yarnrc" ".eslintcache")
   (pushnew! projectile-globally-ignored-file-suffixes ".min.js" ".min.css" ".map"))
 (after! dired
-  (setq! dired-recursive-deletes 'always))
+  (setq! dired-recursive-deletes 'always
+         dired-kill-when-opening-new-dired-buffer t))
 (after! dired-aux
   (setq! dired-create-destination-dirs 'always
          dired-isearch-filenames 'dwim))

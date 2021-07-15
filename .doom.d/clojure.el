@@ -15,7 +15,10 @@
 \"Non-logical\" sexp are ^metadata and #reader.macros."
     (comment-normalize-vars)
     (comment-forward (point-max))
-    (looking-at-p "\\(?:#?\\^\\)\\|#:?:?[[:alpha:]]\\|#_")))
+    (looking-at-p "\\(?:#?\\^\\)\\|#:?:?[[:alpha:]]\\|#_"))
+
+  (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
+    lsp-ui-sideline-show-code-actions nil))
 
 (after! cider
   (after! lispy

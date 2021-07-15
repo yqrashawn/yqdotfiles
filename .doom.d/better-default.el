@@ -111,4 +111,8 @@
   :around #'doom/switch-to-scratch-buffer
   (apply orig-fn (not arg) project-p))
 
+(defvar +word-wrap-disabled-modes
+  '(fundamental-mode so-long-mode)
+  "Major-modes where `+global-word-wrap-mode' should not enable
+`+word-wrap-mode'.")
 (+global-word-wrap-mode +1)
