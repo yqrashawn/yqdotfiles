@@ -117,4 +117,7 @@
 
 (package! reveal-in-osx-finder)
 
+(package! company-manually)
+
+;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e)

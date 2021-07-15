@@ -68,3 +68,32 @@
        (ignore-errors (call-interactively orig-fn))))))
 
 (use-package! company-ctags :defer t)
+
+;; try fix company overlay performance
+;; TODO: check if this works
+(defadvice! +company-tng-frontend (orig command)
+  :around #'company-tng-frontend
+  (overlay-recenter (point))
+  (setq-local inhibit-field-text-motion t)
+  (funcall orig command))
+(defadvice! +company-enable-overriding-keymap (orig keymap)
+  :around #'company-enable-overriding-keymap
+  (if keymap (setq-local inhibit-field-text-motion t)
+    (setq-local inhibit-field-text-motion nil))
+  (funcall orig keymap))
+
+;; try to speed up the overlay
+(defvar last-post-command-position 0
+  "Holds the cursor position from the last run of post-command-hooks.")
+
+(make-variable-buffer-local 'last-post-command-position)
+
+(defun do-stuff-if-moved-post-command ()
+  (let ((p (point)))
+    (unless (equal p last-post-command-position)
+      (overlay-recenter p))
+    (setq last-post-command-position p)))
+
+(add-hook! 'post-command-hook #'do-stuff-if-moved-post-command)
+
+(setq display-line-numbers-type nil)

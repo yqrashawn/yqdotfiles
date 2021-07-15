@@ -18,7 +18,8 @@
     (looking-at-p "\\(?:#?\\^\\)\\|#:?:?[[:alpha:]]\\|#_"))
 
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
-    lsp-ui-sideline-show-code-actions nil))
+    lsp-ui-sideline-show-code-actions nil
+    lsp-ui-sideline-show-diagnostics nil))
 
 (after! cider
   (after! lispy
