@@ -116,6 +116,5 @@
 (package! modus-themes)
 
 (package! reveal-in-osx-finder)
-(package! elpher)
 
 (unpin! cider lispy mu4e)
