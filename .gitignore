@@ -173,3 +173,4 @@ local/bin/rust-analyzer
 /.vim
 /.vim_back/
 /gmail/
+/.vmodules/

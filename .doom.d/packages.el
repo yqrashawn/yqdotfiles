@@ -118,6 +118,8 @@
 (package! reveal-in-osx-finder)
 
 (package! company-manually)
+(package! vlang-mode :recipe (:type git :host github :repo "Naheel-Azawy/vlang-mode"))
+(package! ivy-dired-history)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e)
