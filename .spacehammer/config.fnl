@@ -358,15 +358,7 @@
 (local browser-keys
        [{:mods [:cmd :shift]
          :key :l
-         :action "chrome:open-location"}
-        {:mods [:alt]
-         :key :k
-         :action "chrome:next-tab"
-         :repeat true}
-        {:mods [:alt]
-         :key :j
-         :action "chrome:prev-tab"
-         :repeat true}])
+         :action "chrome:open-location"}])
 
 (local browser-items
        (concat

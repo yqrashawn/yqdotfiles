@@ -174,3 +174,4 @@ local/bin/rust-analyzer
 /.vim_back/
 /gmail/
 /.vmodules/
+/.emacs_anywhere/

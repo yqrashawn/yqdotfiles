@@ -105,7 +105,6 @@
                       [:equal_sign :!TOSequal_sign]
                       [:open_bracket :!COTopen_bracket]
                       [:close_bracket :!COTclose_bracket]]}
-
              {:des   "vscode"
               :rules [:VSCode
                       [:##left_command :left_command nil {:alone [:!CSp ["vsc-m-x-on" 1]]}]
@@ -119,7 +118,6 @@
                       :vscode-s-mode
                       [:j :!CSopen_bracket]
                       [:k :!CSclose_bracket]]}
-
              {:des   "global C-h to backspace"
               :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
              {:des   "contexts"
@@ -335,7 +333,8 @@
                       [:u [:alf "repos" "net.deanishe.alfred-git-repos"]]
                       ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
                       [:k [[:alf "chromeHistory" "thomasupton.chrome-history"] ["in-alfred" 1]]]
-                      [:m [:alf "tab" "net.deanishe.alfred.safari"]]
+                      ;; [:m [:alf "tab" "net.deanishe.alfred.safari"]]
+                      [:m "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --eval '(emacs-everywhere)'"]
                       [:y :!Cc nil {:delayed {:invoked [:!!grave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]
                       [:o :!CTOS0]
                       [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]
@@ -451,7 +450,6 @@
                       ;; focus mode
                       [:i :!OSleft_arrow]
                       [:o :!OSright_arrow]]}
-
              {:des   "comma mode"
               :rules [:comma-mode
                       [:a :open_bracket]
@@ -527,7 +525,7 @@
                       [:!T#Od :delete_forward :!Firefoxes]
                       [:!T#Oh :delete_or_backspace]
                       [:!T#SOw :!Odelete_or_backspace]
-                      [:!T#Oi :tab]
+                      ;; [:!T#Oi :tab]
                       [:!T#Oopen_bracket :escape]
                       [:!T#OSm :return_or_enter]
                       [:!T#OSb :left_arrow]
