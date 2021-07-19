@@ -1,11 +1,11 @@
 ;;; lang/clojure.el -*- lexical-binding: t; -*-
 
+
+(add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
+(add-to-list 'magic-mode-alist '("^#![^\n]*/\\(boot\\|clj\\|clojure\\|bb\\|lumo\\)\s" . clojure-mode))
+
 (after! clojure-mode
-  (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
-  (add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
-  ;; This regexp matches shebang expressions like `#!/usr/bin/env boot'
-  (add-to-list 'magic-mode-alist '("#!.*boot\\s-*$" . clojure-mode))
-  (add-to-list 'magic-mode-alist '("^#![^\n]*/\\(clj\\|clojure\\|bb\\|lumo\\)" . clojure-mode))
   (setq! clojure-toplevel-inside-comment-form t
          clojure-align-reader-conditionals t
          clojure-defun-indents '(fn-traced)
