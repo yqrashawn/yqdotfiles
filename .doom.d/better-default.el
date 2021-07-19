@@ -98,21 +98,27 @@
   (defun +outline-minor-mode-disable-evil-tab ()
     (define-key! evil-motion-state-map "TAB" nil))
   (defun +outline-minor-mode-setup-regexp ()
-    (if (or (and (boundp 'lispy-mode) lispy-mode) (and (boundp 'lispyville-mode) lispyville-mode))
-        (setq-local outline-regexp +emacs-lisp-outline-regexp)
-      (progn
-        (setq-local +outline-regexp-start (+outline-chomp (or comment-start "#")))
-        (setq-local +outline-regexp-body (concat "\\(\\(" +outline-regexp-start "\\)" "+\\|" "\s?\\(#\\|;\\|\*\\)+" "\\)"))
-        (make-local-variable 'outline-regexp)
-        (setq outline-regexp (concat "[ \t]*" +outline-regexp-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]")))))
+    (unless (eq major-mode 'org-mode)
+      (if (or (and (boundp 'lispy-mode) lispy-mode) (and (boundp 'lispyville-mode) lispyville-mode))
+          (setq-local outline-regexp +emacs-lisp-outline-regexp)
+        (progn
+          (setq-local +outline-regexp-start (+outline-chomp (or comment-start "#")))
+          (setq-local +outline-regexp-body (concat "\\(\\(" +outline-regexp-start "\\)" "+\\|" "\s?\\(#\\|;\\|\*\\)+" "\\)"))
+          (make-local-variable 'outline-regexp)
+          (setq outline-regexp (concat "[ \t]*" +outline-regexp-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]"))))))
   (add-hook! outline-minor-mode '+outline-minor-mode-setup-regexp '+outline-minor-mode-disable-evil-tab))
 
 (defadvice! +doom/switch-to-scratch-buffer (orig-fn &optional arg project-p)
   :around #'doom/switch-to-scratch-buffer
   (apply orig-fn (not arg) project-p))
 
-(defvar +word-wrap-disabled-modes
-  '(fundamental-mode so-long-mode)
-  "Major-modes where `+global-word-wrap-mode' should not enable
-`+word-wrap-mode'.")
+
+(setq-default +word-wrap-disabled-modes '(fundamental-mode so-long-mode))
+
+(setq-default +word-wrap-visual-modes '(org-mode))
+
+(setq-default +word-wrap-text-modes
+  '(text-mode markdown-mode markdown-view-mode gfm-mode gfm-view-mode rst-mode
+    latex-mode LaTeX-mode))
+
 (+global-word-wrap-mode +1)

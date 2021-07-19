@@ -70,5 +70,6 @@
 (load! "js.el")
 
 (load! "lang.el")
+(load! "org.el")
 (load! "visual.el")
 (load! "mail.el")

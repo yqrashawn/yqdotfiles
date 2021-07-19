@@ -80,8 +80,7 @@ import waitForExpect from 'wait-for-expect'
  '(warning-suppress-log-types
    '())
  '(warning-suppress-types
-   '((org-reveal-start-hook)
-     (lsp-on-idle-hook)
+   '((lsp-on-idle-hook)
      (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

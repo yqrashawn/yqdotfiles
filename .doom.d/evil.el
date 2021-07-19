@@ -82,3 +82,6 @@
     (unless (display-graphic-p)
       (etcc--evil-set-cursor)))
   (defun etcc--in-xterm? () t))
+
+(after! evil-org
+  (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
