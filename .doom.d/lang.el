@@ -39,6 +39,7 @@
             '(clojurec-mode . clojure)))
 
 (use-package! tree-sitter
-  :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
+  :defer t
+  ;; :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
   :init
   (setq! tree-sitter-hl-use-font-lock-keywords nil))
