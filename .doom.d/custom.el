@@ -4,7 +4,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((comment-fill-column . 80)
+   '((mangle-whitespace . t)
+     (comment-fill-column . 80)
      (eval add-to-list 'projectile-globally-ignored-directories "[/\\\\]conflux-portal[/\\]dist$")
      (eval add-to-list 'projectile-globally-ignored-directories "[/\\\\]conflux-portal[/\\]builds$")
      (eval progn
@@ -77,11 +78,8 @@ import waitForExpect from 'wait-for-expect'
      (eval projectile-register-project-type 'yarn
            '("package.json")
            :project-file "package.json" :compile "yarn install" :test "yarn test" :test-suffix ".test")))
- '(warning-suppress-log-types
-   '())
- '(warning-suppress-types
-   '((lsp-on-idle-hook)
-     (use-package))))
+ '(warning-suppress-log-types 'nil)
+ '(warning-suppress-types '((lsp-on-idle-hook) (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

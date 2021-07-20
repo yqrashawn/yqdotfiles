@@ -176,3 +176,4 @@ local/bin/rust-analyzer
 /.vmodules/
 /.emacs_anywhere/
 /.luarocks/
+/gdrive
