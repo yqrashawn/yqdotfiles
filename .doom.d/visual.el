@@ -15,4 +15,5 @@
   (setq! olivetti-minimum-body-width 90
          olivetti-enable-visual-line-mode nil))
 
-(plist-put! +ligatures-extra-symbols :not "¬")
+(when (boundp '+ligatures-extra-symbols)
+  (plist-put! +ligatures-extra-symbols :not "¬"))

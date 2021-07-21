@@ -58,7 +58,8 @@ SubFolders Verbatim
 Channel cfx-folders
 Far :cfx-remote:
 Near :cfx-local:
-Patterns *
+# Patterns *
+Patterns INBOX Inbox Archive Trash Junk Sent Drafts Later "All Mail"
 Sync All
 Create Both
 Expunge Both

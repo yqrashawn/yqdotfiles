@@ -2,7 +2,6 @@
 
 (pushnew! global-hl-line-modes 'dired-mode)
 (delq! 'prog-mode global-hl-line-modes)
-(delq! 'text-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
        save-silently t
        echo-keystrokes 1e-6
@@ -115,7 +114,7 @@
   (apply orig-fn (not arg) project-p))
 
 
-(setq-default +word-wrap-disabled-modes '(fundamental-mode so-long-mode))
+(setq-default +word-wrap-disabled-modes '(fundamental-mode so-long-mode prog-mode))
 
 (setq-default +word-wrap-visual-modes '(org-mode))
 
