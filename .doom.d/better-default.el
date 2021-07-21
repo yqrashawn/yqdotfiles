@@ -7,8 +7,6 @@
        save-silently t
        echo-keystrokes 1e-6
        split-window-keep-point t
-       recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
-       recentf-max-saved-items 2000
        require-final-newline nil
        mode-require-final-newline nil
        auto-window-vscroll nil
@@ -36,6 +34,10 @@
        '(("http" . "127.0.0.1:6152")
          ("https" . "127.0.0.1:6153"))
        url-proxy-services nil)
+
+(after! recentf
+  (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
+         recentf-max-saved-items 2000))
 
 (pushnew! auto-mode-alist '("\\.gitconfig.*\\'" . gitconfig-mode))
 (pushnew! auto-mode-alist '("\\.gitignore.*\\'" . gitignore-mode))
