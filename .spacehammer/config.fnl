@@ -335,15 +335,15 @@
          :items emacs-bindings}])
 
 (local common-keys
-       [{:mods [:alt]
-         :key :space
-         :action "lib.modal:activate-modal"}
-        {:mods [:alt]
-         :key :n
-         :action "apps:next-app"}
-        {:mods [:alt]
-         :key :p
-         :action "apps:prev-app"}
+       [;; {:mods [:alt]
+        ;;  :key :space
+        ;;  :action "lib.modal:activate-modal"}
+        ;; {:mods [:alt]
+        ;;  :key :n
+        ;;  :action "apps:next-app"}
+        ;; {:mods [:alt]
+        ;;  :key :p
+        ;;  :action "apps:prev-app"}
         {:mods [:cmd :ctrl]
          :key "`"
          :action hs.toggleConsole}
