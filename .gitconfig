@@ -68,9 +68,9 @@
 	required = true
 #[remote "origin"]
 #	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
-# [http]
-#		proxy = http://127.0.0.1:7890
-# [https]
-#		proxy = http://127.0.0.1:7890
+[http]
+	proxy = http://127.0.0.1:6152
+[https]
+	proxy = http://127.0.0.1:6153
 [include]
 	path = ~/.gitconfig.local
