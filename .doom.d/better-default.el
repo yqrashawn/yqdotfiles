@@ -98,7 +98,7 @@
   (defun +outline-minor-mode-disable-evil-tab ()
     (define-key! evil-motion-state-map "TAB" nil))
   (defun +outline-minor-mode-setup-regexp ()
-    (unless (eq major-mode 'org-mode)
+    (unless (or (eq major-mode 'org-mode) (derived-mode-p 'org-mode))
       (if (or (and (boundp 'lispy-mode) lispy-mode) (and (boundp 'lispyville-mode) lispyville-mode))
           (setq-local outline-regexp +emacs-lisp-outline-regexp)
         (progn

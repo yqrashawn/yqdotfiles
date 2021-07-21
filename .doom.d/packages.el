@@ -126,4 +126,4 @@
 (package! olivetti)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
-(unpin! cider lispy mu4e)
+(unpin! cider lispy mu4e link-hint)

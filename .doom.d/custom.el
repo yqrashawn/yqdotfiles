@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
    '((mangle-whitespace . t)
+     (eval require 'org-roam-dev)
      (comment-fill-column . 80)
      (eval add-to-list 'projectile-globally-ignored-directories "[/\\\\]conflux-portal[/\\]dist$")
      (eval add-to-list 'projectile-globally-ignored-directories "[/\\\\]conflux-portal[/\\]builds$")
