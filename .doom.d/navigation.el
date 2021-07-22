@@ -93,3 +93,13 @@
 
 (use-package! corfu
   :hook (doom-first-input . corfu-global-mode))
+
+;; (use-package affe
+;;   :defer t
+;;   :config
+;;   ;; Configure Orderless
+;;   (setq! affe-regexp-function #'orderless-pattern-compiler
+;;          affe-highlight-function #'orderless--highlight)
+
+;;   ;; Manual preview key for `affe-grep'
+;;   (consult-customize affe-grep :preview-key (kbd "M-.")))

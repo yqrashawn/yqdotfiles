@@ -126,6 +126,7 @@
 (package! olivetti)
 (package! orderless)
 (package! corfu)
+;; (package! affe)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e link-hint)
