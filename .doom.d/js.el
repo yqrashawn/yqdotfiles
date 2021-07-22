@@ -23,35 +23,36 @@
     :around #'npm-mode--exec-process
     (apply orig-fn (s-replace-all '(("npm" . "yarn")) cmd comint))))
 
-(dolist (mode '(rjsx-mode
-                   js2-mode
-                   typescript-mode
-                   web-mode))
-  (with-eval-after-load mode
-    (delq! (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
-    (set-ligatures! mode
-      ;; Functional
-      :def "function"
-      :lambda "() =>"
-      :composition "compose"
-      ;; Types
-      :null "null"
-      :true "true" :false "false"
-      ;; Flow
-      :not "!"
-      :and "&&" :or "||"
-      :for "for"
-      :return "return"
-      ;; Other
-      ;; :yield "import"
-      :alist
-      '(("async" . ?⊳)
-        ("await" . ?⊲)
-        ("throw" . ?Ƭ)
-        ("this" . ?ƭ)
-        ("import" . ?⇟)
-        ("export" . ?⇞)
-        ("const" . ?Ċ)
-        ("Promise" . ?Ṗ)
-        ("if" . ?␦)
-        ("let" . ?ḷ)))))
+(when (boundp '+ligatures-extra-alist)
+  (dolist (mode '(rjsx-mode
+                  js2-mode
+                  typescript-mode
+                  web-mode))
+    (with-eval-after-load mode
+      (delq! (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
+      (set-ligatures! mode
+                      ;; Functional
+                      :def "function"
+                      :lambda "() =>"
+                      :composition "compose"
+                      ;; Types
+                      :null "null"
+                      :true "true" :false "false"
+                      ;; Flow
+                      :not "!"
+                      :and "&&" :or "||"
+                      :for "for"
+                      :return "return"
+                      ;; Other
+                      ;; :yield "import"
+                      :alist
+                      '(("async" . ?⊳)
+                        ("await" . ?⊲)
+                        ("throw" . ?Ƭ)
+                        ("this" . ?ƭ)
+                        ("import" . ?⇟)
+                        ("export" . ?⇞)
+                        ("const" . ?Ċ)
+                        ("Promise" . ?Ṗ)
+                        ("if" . ?␦)
+                        ("let" . ?ḷ))))))

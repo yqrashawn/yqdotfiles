@@ -335,7 +335,7 @@
                       ;; [:k [[:alf "history" "net.deanishe.alfred.safari"] ["in-alfred" 1]]]
                       [:k [[:alf "chromeHistory" "thomasupton.chrome-history"] ["in-alfred" 1]]]
                       ;; [:m [:alf "tab" "net.deanishe.alfred.safari"]]
-                      [:m "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --eval '(emacs-everywhere)'"]
+                      [:m [:!Ca :!Cx "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --eval '(emacs-everywhere)'"]]
                       [:y :!Cc nil {:delayed {:invoked [:!!grave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]
                       [:o :!CTOS0]
                       [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]

@@ -90,3 +90,6 @@
   (add-hook! doom-first-input-hook (cmd! (require 'orderless)))
   (setq! completion-styles '(orderless)
          orderless-component-separator "[ &]"))
+
+(use-package! corfu
+  :hook (doom-first-input . corfu-global-mode))

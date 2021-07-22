@@ -20,9 +20,10 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 
-(setq doom-font (font-spec :family "PragmataPro Mono Liga" :size 14 :weight 'normal)
-      doom-variable-pitch-font (font-spec :family "PragmataPro Mono Liga" :size 12)
-      doom-big-font (font-spec :family "PragmataPro Mono Liga" :size 22 :weight 'normal))
+(setq doom-font (font-spec :family "PragmataPro Mono Liga" :size 16 :weight 'normal)
+      doom-variable-pitch-font (font-spec :family "PragmataPro Mono Liga" :size 14)
+      doom-big-font (font-spec :family "PragmataPro Mono Liga" :size 22 :weight 'normal)
+      doom-font-increment 1)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
