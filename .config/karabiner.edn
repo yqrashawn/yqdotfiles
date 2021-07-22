@@ -318,6 +318,7 @@
                       [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
+                      [:p :!OSa :browsers-alfred-mode]
                       [:0 [:!Cl [:type "chrome://extensions/"]] :browsers-alfred-mode]
                       [:8 [:!Cl [:type "chrome-extension://pkjpciobmjhfjaddkiehmknaclajlkgf/home.html"]] :browsers-alfred-mode]
                       [:9 [:!Cl [:type "chrome://extensions/?id=pkjpciobmjhfjaddkiehmknaclajlkgf"]] :browsers-alfred-mode]
@@ -648,7 +649,8 @@
                                                       "^org\\.chromium\\.Chromium$"
                                                       "^com\\.google\\.Chrome\\.canary$"
                                                       "^com\\.apple\\.Safari$"
-                                                      "^com\\.microsoft\\.edgemac\\.Beta$"]
+                                                      "^com\\.microsoft\\.edgemac\\.Beta$"
+                                                      "^com\\.brave\\.Browser$"]
                       :wechat                        ["^com\\.tencent\\.xinWeChat$"]
                       :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]}

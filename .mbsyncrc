@@ -1,5 +1,6 @@
 #################### gmail
 # Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html
+IMAPStore gmail-remote
 IMAPAccount gmail
 Host imap.gmail.com
 Port 993
@@ -8,7 +9,6 @@ PassCmd "security find-generic-password  -s mbsync-gmail -w"
 SSLType IMAPS
 AuthMechs LOGIN
 
-IMAPStore gmail-remote
 Account gmail
 
 MaildirStore gmail-local
@@ -16,9 +16,9 @@ Path ~/mail/gmail/
 Inbox ~/mail/gmail/Inbox
 SubFolders Verbatim
 
-Channel gmail-folders
-Far :gmail-remote:
-Near :gmail-local:
+Channel gmail
+Master :gmail-remote:
+Slave :gmail-local:
 Patterns *
 # Patterns * "All Mail"
 # Patterns "![Gmail]/All Mail"
@@ -30,32 +30,25 @@ SyncState *
 
 # Channels and Groups
 # (so that we can rename local directories and flatten the hierarchy)
-Group gmail
-Channel gmail-folders
-# Channel gmail-inbox
-# Channel gmail-sent
-# Channel gmail-trash
-# Channel gmail-all
-# Channel gmail-starred
+# Group gmail
 
 #################### cfx
+IMAPStore cfx-remote
+Account cfx
 IMAPAccount cfx
 Host outlook.office365.com
 Port 993
 User yuxiao.zhang@confluxnetwork.org
 PassCmd "security find-generic-password  -s mbsync-cfx -w"
 SSLType IMAPS
-AuthMechs LOGIN
-
-IMAPStore cfx-remote
-Account cfx
+# AuthMechs LOGIN
 
 MaildirStore cfx-local
 Path ~/mail/cfx/
 Inbox ~/mail/cfx/Inbox
 SubFolders Verbatim
 
-Channel cfx-folders
+Channel cfx
 Far :cfx-remote:
 Near :cfx-local:
 # Patterns *
@@ -64,13 +57,3 @@ Sync All
 Create Both
 Expunge Both
 SyncState *
-
-# Channels and Groups
-# (so that we can rename local directories and flatten the hierarchy)
-Group cfx
-Channel cfx-folders
-# Channel gmail-inbox
-# Channel gmail-sent
-# Channel gmail-trash
-# Channel gmail-all
-# Channel gmail-starred

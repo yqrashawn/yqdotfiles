@@ -30,7 +30,8 @@
          company-require-match nil
          company-dabbrev-minimum-length 2
          company-search-regexp-function #'company-search-flex-regexp
-         company-show-numbers-function 'yq//company-format-numbers)
+         ;; company-show-numbers-function 'yq//company-format-numbers
+         )
 
   (dotimes (i 10)
     (define-key! company-active-map
