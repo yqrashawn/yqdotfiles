@@ -27,11 +27,9 @@
 ;;;###autoload
 (defun yq/split-window-below-tmux (arg)
   (interactive "P")
-  (if (display-graphic-p)
-      (when (featurep! :term vterm) (+vterm/toggle arg))
-      (if arg
-          (emamux:split-window)
-        (yq/split-window-below))))
+  (if arg
+      (emamux:split-window)
+    (yq/split-window-below)))
 
 ;;;###autoload
 (defun yq/toggle-maximize-buffer-tmux (arg)

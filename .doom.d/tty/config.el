@@ -22,6 +22,7 @@
 
 (use-package! emamux
   :commands (emamux:tmux-run-command emamux:check-tmux-running)
+  :when (not (display-graphic-p))
   :init
   (define-key!
     [remap windmove-up] (cmd! () (yq/tmux-select-pane "up"))
@@ -32,7 +33,6 @@
     [remap evil-window-left] (cmd! () (yq/tmux-select-pane "left"))
     [remap windmove-right] (cmd! () (yq/tmux-select-pane "right"))
     [remap evil-window-right] (cmd! () (yq/tmux-select-pane "right"))
-    [remap yq/split-window-right] 'yq/split-window-right-tmux
-    [remap yq/split-window-below] 'yq/split-window-below-tmux
-    [remap spacemacs/toggle-maximize-buffer] 'yq/toggle-maximize-buffer-tmux
-    "C-'" #'emamux:split-window))
+    [remap evil-window-vsplit] 'yq/split-window-right-tmux
+    [remap evil-window-split] 'yq/split-window-below-tmux
+    [remap spacemacs/toggle-maximize-buffer] 'yq/toggle-maximize-buffer-tmux))

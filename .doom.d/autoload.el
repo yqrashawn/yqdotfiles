@@ -359,3 +359,10 @@ clojurescript-mode) of the current buffer."
           (cider--pprint-eval-form reg)))
        (t
         (cider--pprint-eval-form reg)))))
+
+;;;###autoload
+(defun yq/vterm-toggle (arg)
+  (interactive "P")
+  (if (display-graphic-p)
+      (and (featurep! :term vterm) (+vterm/toggle arg))
+    (and (fboundp 'yq/split-window-below-tmux) (yq/split-window-below-tmux (not arg)))))
