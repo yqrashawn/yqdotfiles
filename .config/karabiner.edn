@@ -234,13 +234,14 @@
                       [:##close_bracket :!SOdown_arrow]]}
              {:des   "launcher mode"
               :rules [:launch-mode
-                      ;; [:j [:open "/Applications/Alacritty.app"]]
-                      [:j [:opena "kitty"]]
+                      [:j [:open "/Applications/Alacritty.app"]]
+                      ;; [:j [:opena "kitty"]]
                       ;; [:j [:open "/System/Volumes/Data/usr/local/Cellar/wezterm/20210405-110924/WezTerm.app"]]
                       ;; [:j [:launch "iTerm"]]
-                      [:k [:open "/Applications/Emacs.app"]]
+                      ;; [:k [:open "/Applications/Emacs.app"]]
+                      ;; [:k "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n"]
                       ;; [:k [:show "Emacs"]]
-                      ;; [:k [:opena "kitty"]]
+                      [:k [:opena "kitty"]]
                       ;; [:k [:opena "WezTerm.app"]]
                       ;; [:k [:launch "Emacs"]]
                       [:quote [:opena "ClickUp"]]
