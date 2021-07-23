@@ -15,5 +15,5 @@
   (setq! olivetti-minimum-body-width 90
          olivetti-enable-visual-line-mode nil))
 
-(when (boundp '+ligatures-extra-symbols)
-  (plist-put! +ligatures-extra-symbols :not "¬"))
+(after! prog-mode
+  (delq! 'highlight-indent-guides-mode prog-mode-hook))

@@ -424,7 +424,7 @@ key_bindings:
   - { key: Paste, action: Paste }
   - { key: Paste, mods: Command, action: Paste }
   - { key: Copy, action: Copy }
-  - { key: H, mods: Command, action: Hide }
+  # - { key: H, mods: Command, action: Hide }
   - { key: Q, mods: Command, action: Quit }
   - { key: G, mods: Control, chars: "\a" }
 
@@ -443,4 +443,29 @@ key_bindings:
   - { key: Slash, mods: Control, chars: "\x1f" }
   - { key: Slash, mods: Control|Shift, chars: "\e+\e+C?" }
   - { key: Q, mods: Control, chars: "\x11" }
-  - { key: K, mods: Command, chars: "\e+\e+Dk" }
+  - { key: A, mods: Command, chars: "@@a" }
+  - { key: B, mods: Command, chars: "@@b" }
+  # - { key: C, mods: Command, chars: "@@c" }
+  - { key: D, mods: Command, chars: "@@d" }
+  - { key: E, mods: Command, chars: "@@e" }
+  - { key: F, mods: Command, chars: "@@f" }
+  - { key: G, mods: Command, chars: "@@g" }
+  - { key: H, mods: Command, chars: "@@h" }
+  - { key: I, mods: Command, chars: "@@i" }
+  - { key: J, mods: Command, chars: "@@j" }
+  - { key: K, mods: Command, chars: "@@k" }
+  - { key: L, mods: Command, chars: "@@l" }
+  - { key: M, mods: Command, chars: "@@m" }
+  # - { key: N, mods: Command, chars: "@@n" }
+  - { key: O, mods: Command, chars: "@@o" }
+  - { key: P, mods: Command, chars: "@@p" }
+  # - { key: Q, mods: Command, chars: "@@q" }
+  - { key: R, mods: Command, chars: "@@r" }
+  - { key: S, mods: Command, chars: "@@s" }
+  - { key: T, mods: Command, chars: "@@t" }
+  - { key: U, mods: Command, chars: "@@u" }
+  # - { key: V, mods: Command, chars: "@@v" }
+  - { key: W, mods: Command, chars: "@@w" }
+  - { key: X, mods: Command, chars: "@@x" }
+  - { key: Y, mods: Command, chars: "@@y" }
+  - { key: Z, mods: Command, chars: "@@z" }

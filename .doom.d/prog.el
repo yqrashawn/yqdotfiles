@@ -97,3 +97,6 @@
 (add-hook! 'post-command-hook #'do-stuff-if-moved-post-command)
 
 (setq display-line-numbers-type nil)
+
+(after! lsp-mode
+  (delq! 'lsp-ui-mode lsp-mode-hook))

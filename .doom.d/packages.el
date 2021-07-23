@@ -129,4 +129,4 @@
 ;; (package! affe)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
-(unpin! cider lispy mu4e link-hint)
+(unpin! cider lispy mu4e link-hint fd-dired)
