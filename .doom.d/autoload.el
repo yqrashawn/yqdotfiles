@@ -244,7 +244,7 @@ _k_rev       _u_pper              _=_: upper/lower       _r_esolve
   "
 _e_  elisp    _c_  clojure   _t_  typescript
 _j_  js2      _T_  text      _f_  fundamental
-_g_  gfm      _m_ markdown
+_g_  gfm      _o_ org        _m_ markdown
 "
   ("e" emacs-lisp-mode :exit t)
   ("j" js2-mode :exit t)
@@ -254,6 +254,7 @@ _g_  gfm      _m_ markdown
   ("f" fundamental-mode :exit t)
   ("m" markdown-mode :exit t)
   ("g" gfm-mode :exit t)
+  ("o" org-mode :exit t)
   ("q" hydra-keyboard-quit :exit t)
   ("C-g" hydra-keyboard-quit :exit t))
 
