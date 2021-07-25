@@ -10,4 +10,14 @@
          org-startup-with-inline-images "inlineimages"
          org-cycle-emulate-tab nil
          org-cycle-global-at-bob t
-         org-hide-block-startup t))
+         org-hide-block-startup t)
+  (pushnew! org-agenda-files (concat org-roam-directory org-roam-dailies-directory)))
+
+(setq +org-roam-open-buffer-on-find-file nil)
+(after! org-roam
+  (pushnew! org-default-properties "ROAM_ALIASES" "ROAM_REFS")
+  (setq! org-roam-dailies-capture-templates
+         `(("d" "default" entry
+            "* %?"
+            :if-new (file+head "%<%Y-%m-%d %a>.org"
+                               "#+title: %<%Y-%m-%d %a>\n")))))
