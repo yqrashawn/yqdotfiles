@@ -130,4 +130,5 @@
 
 (set-popup-rules!
   '(("^\\*[Hh]elp" :slot 2 :side right :vslot -8 :size 0.35 :select t :quit current)
-    ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)))
+    ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
+    ("^\\*Messages\\*$" :vslot -2 :size 0.5  :autosave t :quit t :ttl nil)))
