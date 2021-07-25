@@ -50,7 +50,11 @@
   (setq! git-link-use-commit t))
 
 (use-package! rg
-  :commands (rg rg-literal rg-dwim rg-project))
+  :commands (rg rg-literal rg-dwim rg-project)
+  :config
+  (pushnew! rg-custom-type-aliases '("js" . "*.js *.jsx *.ts *.tsx *.mjs *.cjs"))
+  (defadvice! +rg (&rest _)
+    :after #'rg (switch-to-buffer-other-window "*rg*")))
 
 (setq! rotate-text-words
        '(("with" "height")
