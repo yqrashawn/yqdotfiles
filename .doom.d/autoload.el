@@ -155,14 +155,14 @@ If the universal prefix argument is used then kill also the window."
            (rel-fname (file-name-nondirectory fname))
            (junk-dir (file-name-directory fname))
            (default-directory junk-dir))
-      (counsel-find-file rel-fname)))
+      (find-file rel-fname)))
 
 ;;;###autoload
-(defun counsel-imenu-comments ()
+(defun +imenu-comments ()
   "Imenu display comments."
   (interactive)
   (let* ((imenu-create-index-function 'evilnc-imenu-create-index-function))
-    (counsel-imenu)))
+    (imenu)))
 
 ;;;###autoload
 (defun yq/open-with-call-alfred-osascript (file)

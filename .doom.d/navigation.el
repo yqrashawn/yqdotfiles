@@ -9,6 +9,9 @@
                (string-match-p "^\*" name)
                (string-match-p "^ " name)))))
 
+(after! vertico
+  (setq! vertico-count 10
+         vertico-cycle nil))
 (after! ivy
   (setq! ivy-magic-tilde nil
          ivy-height 10

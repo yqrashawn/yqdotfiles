@@ -46,10 +46,10 @@
   (defun my-magit-command (&rest _)
     (interactive)
     (setq this-command #'my-magit-command))
-  (with-eval-after-load 'ivy
-    (setf (alist-get 'my-magit-command ivy-re-builders-alist) #'ivy--regex-fuzzy))
+  (after! ivy
+    (setf (alist-get 'my-magit-command ivy-re-builders-alist) #'ivy--regex-fuzzy)
+    (pushnew! ivy-re-builders-alist '(magit-log-other . ivy--regex-fuzzy)))
   (add-function :before magit-completing-read-function #'my-magit-command)
-  (pushnew! ivy-re-builders-alist '(magit-log-other . ivy--regex-fuzzy))
 
   ;; https://emacs-pe.github.io/2015/06/30/magit-github-pr/
   (defun marsam/add-pull-request-refs (&optional remote local-ns)

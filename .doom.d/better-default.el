@@ -123,3 +123,7 @@
     latex-mode LaTeX-mode))
 
 (+global-word-wrap-mode +1)
+
+(set-popup-rules!
+  '(("^\\*[Hh]elp" :slot 2 :side right :vslot -8 :size 0.35 :select t :quit current)
+    ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)))
