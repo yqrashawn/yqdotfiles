@@ -128,3 +128,15 @@ function cheat() {
 function javatrustssl() {
   keytool -import -trustcacerts -file $1  -alias $2 -keystore $JAVA_HOME/lib/security/cacerts
 }
+
+# https://philjackson.github.io//emacs/shell/2021/07/26/export-an-environment-variable-to-emacs/
+function export-emacs {
+    if [ "$(emacsclient -e t)" != 't' ]; then
+        return 1
+    fi
+
+    for name in "${@}"; do
+        value=$(eval echo \"\$${name}\")
+        emacsclient -e "(setenv \"${name}\" \"${value}\")" >/dev/null
+    done
+}

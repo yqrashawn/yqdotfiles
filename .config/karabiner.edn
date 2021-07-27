@@ -234,7 +234,7 @@
                       [:##close_bracket :!SOdown_arrow]]}
              {:des   "launcher mode"
               :rules [:launch-mode
-                      [:j :same_wind_app :Emacs-and-Terminals]
+                      [:j :same_wind_app :Terminals]
                       [:j [:open "/Applications/Alacritty.app"]]
                       ;; [:j [:opena "kitty"]]
                       ;; [:j [:open "/System/Volumes/Data/usr/local/Cellar/wezterm/20210405-110924/WezTerm.app"]]

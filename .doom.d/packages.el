@@ -127,6 +127,7 @@
 (package! orderless)
 (package! corfu)
 (package! ix)
+;; (package! sis)
 ;; (package! affe)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
