@@ -21,3 +21,10 @@
             "* %?"
             :if-new (file+head "%<%Y-%m-%d %a>.org"
                                "#+title: %<%Y-%m-%d %a>\n")))))
+
+(use-package! orgbox
+  :commands (orgbox orgbox-schedule)
+  :init
+  (setq! orgbox-start-time-of-day "9:30"
+         orgbox-start-time-of-weekends "11:00"
+         orgbox-start-time-of-evening "20:00"))

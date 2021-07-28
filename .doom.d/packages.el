@@ -127,6 +127,8 @@
 (package! orderless)
 (package! corfu)
 (package! ix)
+(package! orgbox)
+;; (package! fancy-dabbrev)
 ;; (package! sis)
 ;; (package! affe)
 

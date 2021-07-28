@@ -95,7 +95,9 @@
          orderless-component-separator "[ &]"))
 
 (use-package! corfu
-  :hook (doom-first-input . corfu-global-mode))
+  :hook (doom-first-input . corfu-global-mode)
+  :init
+  (setq! corfu-auto t))
 
 ;; (use-package affe
 ;;   :defer t

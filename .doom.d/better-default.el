@@ -134,3 +134,10 @@
     ("^\\*Messages\\*$" :vslot -2 :size 0.5  :autosave t :quit t :ttl nil)))
 
 (use-package! ix :commands (ix))
+
+;; (use-package! fancy-dabbre
+;;   :hook (doom-first-input . global-fancy-dabbrev-mode)
+;;   :init
+;;   (setq! fancy-dabbrev-preview-delay 0
+;;          fancy-dabbrev-preview-context 'everywhere
+;;          fancy-dabbrev-expansion-on-preview-only t))
