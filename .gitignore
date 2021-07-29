@@ -177,3 +177,5 @@ local/bin/rust-analyzer
 /.emacs_anywhere/
 /.luarocks/
 /gdrive
+/.Xauthority
+/.serverauth.1290

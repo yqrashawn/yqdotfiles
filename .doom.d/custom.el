@@ -4,7 +4,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((cider-shadow-cljs-default-options . "app")
+   '((cider-default-cljs-repl . shadow)
+     (cider-shadow-cljs-default-options . "app")
      (elisp-lint-indent-specs
       (describe . 1)
       (it . 1)
