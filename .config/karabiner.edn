@@ -60,6 +60,19 @@
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
  :main      [#_{:des   "test"
                 :rules [[[:t :e :s :t] :select_abc]]}
+             #_{:des "#137"
+              :rules
+              [[:caps_lock ["cap" 1] ["cap" 0]]
+               [:caps_lock ["cap" 0] ["cap" 1]]
+               :cap
+               [:##i :up_arrow ["capspace" 0]]
+               [:##k :down_arrow ["capspace" 0]]
+               [:##j :left_arrow]
+               [:##l :right_arrow]
+               [:spacebar ["capspace" 1] nil {:alone :spacebar :afterup ["capspace" 0]}]
+               :capspace
+               [:##i :page_up]
+               [:##k :page_down]]}
              {:des   "Keybase return"
               :rules [;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
                       :Keybase
