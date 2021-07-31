@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: feature
+# name: cz-feature
 # key: f
 # --
 feat: $1

@@ -141,3 +141,6 @@
 ;;   (setq! fancy-dabbrev-preview-delay 0
 ;;          fancy-dabbrev-preview-context 'everywhere
 ;;          fancy-dabbrev-expansion-on-preview-only t))
+
+(after! eww
+  (add-hook! 'eww-after-render-hook #'eww-readable))
