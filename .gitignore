@@ -179,3 +179,6 @@ local/bin/rust-analyzer
 /gdrive
 /.Xauthority
 /.serverauth.1290
+/.config/tool_state
+/.config/settings
+/.config/custom_devices.json
