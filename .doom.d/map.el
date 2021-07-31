@@ -34,6 +34,8 @@
  :g "s-u" #'revert-buffer
  :g "s-i" #'side-notes-toggle-notes
  :g "C-M-s-7" '+windmove-map
+ :g "C-M-s-j" #'iflipb-next-buffer
+ :g "C-M-s-k" #'iflipb-previous-buffer
  :g "C-a" #'mwim-beginning-of-code-or-line
  :g "C-e" #'mwim-end-of-code-or-line
  :g "C-'" #'yq/vterm-toggle
@@ -85,7 +87,7 @@
   (:prefix-map ("fe" . "Edit srcs")
    :desc "Find library" "l" #'find-library
    :desc "Edit .doom.d config" "d" (cmd! (find-file-existing "~/.doom.d/config.el"))
-   :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config") (call-interactively #'swiper))
+   :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'swiper))
    :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory "~/.emacs.d/")) (call-interactively #'+default/search-project)))
    :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.config/karabiner.edn"))
    :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
