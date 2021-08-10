@@ -365,5 +365,5 @@ clojurescript-mode) of the current buffer."
 (defun yq/vterm-toggle (arg)
   (interactive "P")
   (if (display-graphic-p)
-      (and (featurep! :term vterm) (+vterm/toggle arg))
+      (and (featurep! :term vterm) (+vterm/toggle (not arg)))
     (and (fboundp 'yq/split-window-below-tmux) (yq/split-window-below-tmux (not arg)))))

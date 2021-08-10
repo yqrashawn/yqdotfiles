@@ -128,10 +128,26 @@
 
 (+global-word-wrap-mode +1)
 
+
 (set-popup-rules!
   '(("^\\*[Hh]elp" :slot 2 :side right :vslot -8 :size 0.35 :select t :quit current)
     ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
-    ("^\\*Messages\\*$" :vslot -2 :size 0.5  :autosave t :quit t :ttl nil)))
+    ("^\\*eww\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
+    ("^\\*Messages\\*$" :vslot -2 :size 0.5 :autosave t :quit t :ttl nil)
+    ("^\\*Completions" :ignore t)
+    ("^\\*Local variables\\*$" :vslot -1 :slot 1 :size +popup-shrink-to-fit)
+    ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)" :vslot -2 :size 0.3 :autosave t :quit t :ttl nil)
+    ("^\\*\\(?:doom \\|Pp E\\)"    ; transient buffers (no interaction required)
+     :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
+    ("^\\*doom:"                        ; editing buffers (interaction required)
+     :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
+    ("^\\*doom:\\(?:v?term\\|e?shell\\)-popup" ; editing buffers (interaction required)
+     :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil)
+    ("^\\*\\(?:Wo\\)?Man " :vslot -6 :size 0.45 :select t :quit t :ttl 0)
+    ("^\\*Calc" :vslot -7 :side bottom :size 0.4 :select t :quit nil :ttl 0)
+    ("^\\*Customize" :slot 2 :side right :size 0.5 :select t :quit nil)
+    ("^ \\*undo-tree\\*" :slot 2 :side left :size 20 :select t :quit t)
+    ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)))
 
 (use-package! ix :commands (ix))
 

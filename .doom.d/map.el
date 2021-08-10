@@ -175,8 +175,8 @@
   :g "c" #'delete-window
   :g "K" #'project-kill-buffers
   :g "a" #'loccur-current
-  :g "n" #'evil-avy-goto-char-2
-  :g "/" #'evil-avy-goto-char-timer
+  :g "/" #'evil-avy-goto-char-2
+  :g "n" #'evil-avy-goto-char-timer
   :g "k" #'bury-buffer
   :g "m" #'+ivy/projectile-find-file
   :g "l" #'imenu

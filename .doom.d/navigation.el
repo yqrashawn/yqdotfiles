@@ -84,7 +84,16 @@
 (use-package! zoxide
   :defer t
   :init
-  (add-hook! 'find-file-hook #'zoxide-add))
+  (defun +zoxide-add (&optional path &rest _)
+    "Add PATH to zoxide database.  This function is called asynchronously."
+    (interactive "Dpath: ")
+    (unless path
+      (setq path default-directory))
+    (zoxide-run t "add" path)
+
+    (when (buffer-file-name)
+      (zoxide-run t "add" (buffer-file-name))))
+  (add-hook! 'find-file-hook #'+zoxide-add))
 
 (use-package! reveal-in-osx-finder :defer t)
 
