@@ -74,7 +74,7 @@
                  [:##i :page_up]
                  [:##k :page_down]]}
              {:des   "Keybase return"
-              :rules [;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
+              :rules [ ;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
                       :Keybase
                       [:return_or_enter :!Sreturn_or_enter]
                       [:!Creturn_or_enter :return_or_enter]]}
@@ -324,8 +324,12 @@
               :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
              {:des   "return_or_enter to control when pressed with other keys"
               :rules [[:##return_or_enter :left_control [["tmux-windmove-mode" 0] ["k2-mode" 0]] {:alone :return_or_enter}]]}
-             {:des   "HHKB, FILCO MINILA Change left control to esc if alone"
-              :rules [[:##left_control :left_control [:uhk :hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
+             #_{:des   "adv2"
+              :rules [[:adv2 :adv2p]
+                      #_[:##right_control :right_control nil {:alone :return_or_enter}]
+                      #_[:##spacebar :left_control nil {:alone :spacebar}]]}
+             {:des   "HHKB, FILCO MINILA Adv2 Change left control to esc if alone"
+              :rules [[:##left_control :left_control [:adv2 :adv2p :uhk :hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
              {:des   "FILCO MINILA Change left_alt to left_command"
               :rules [:filco-minila
                       [:##grave_accent_and_tilde :backslash]
@@ -580,7 +584,9 @@
                       :hhkb-tmk         [{:vendor_id 65261 :product_id 51966}]
                       :hhkb-bt          [{:vendor_id 1278 :product_id 514}]
                       :hhkb             [{:vendor_id 2131 :product_id 256}]
-                      :kensington-tb    [{:vendor_id 1149 :product_id 32792}]}
+                      :kensington-tb    [{:vendor_id 1149 :product_id 32792}]
+                      :adv2             [{:vendor_id 10730 :product_id 258}]
+                      :adv2p            [{:vendor_id 10730 :product_id 259}]}
  :applications       {:emacs-mode-disable-app        ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.xquartz\\.X11$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
