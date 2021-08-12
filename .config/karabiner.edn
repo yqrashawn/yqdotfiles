@@ -11,7 +11,8 @@
                                {:input_mode_id   ""
                                 :input_source_id "com.apple.keylayout.US"
                                 :language        "en"}}
-             :select_abc      {:input :abc}}
+             :select_abc      {:input :abc}
+             :rctrl           {:key :right_control :lazy true}}
  :modifiers {:ro :right_option}
  :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
@@ -118,6 +119,10 @@
                        :to          [{:key_code :right_shift}]
                        :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.keylayout\\.US$"}}]
                        :type        :basic}]}
+             #_{:des   "m/v to l/r ctrl"
+                ;; produce typo
+                :rules [[:##v :left_control nil {:alone :v}]
+                        [:##m :right_control nil {:alone :m}]]}
              {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
                       [:return_or_enter :!COc]
@@ -171,6 +176,7 @@
                       [:!Tw :!Odelete_or_backspace]
                       [:!Ty :!Cv]
                       [:!Tslash :!Cz]
+                      [:##escape :left_control :adv2 {:alone [:escape ["in-alfred" 0]]}]
                       [:escape [:escape ["in-alfred" 0]]]
                       [:return_or_enter [:return_or_enter ["in-alfred" 0]]]
                       [:##left_control :left_control nil {:alone [:escape ["in-alfred" 0]]}]
@@ -323,13 +329,15 @@
              {:des   "caps_lock"
               :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
              {:des   "return_or_enter to control when pressed with other keys"
-              :rules [[:##return_or_enter :left_control [["tmux-windmove-mode" 0] ["k2-mode" 0]] {:alone :return_or_enter}]]}
-             #_{:des   "adv2"
-              :rules [[:adv2 :adv2p]
-                      #_[:##right_control :right_control nil {:alone :return_or_enter}]
-                      #_[:##spacebar :left_control nil {:alone :spacebar}]]}
+              :rules [[:##return_or_enter :left_control [:!adv2 :!adv2p ["tmux-windmove-mode" 0] ["k2-mode" 0]] {:alone :return_or_enter}]]}
+             {:des   "adv2"
+              :rules [:adv2
+                      [:##return_or_enter :right_command nil {:alone :return_or_enter}]
+                      [:##delete_or_backspace :left_command nil {:alone :delete_or_backspace}]
+                      #_[:##spacebar {:key :right_control :lazy true} nil {:alone :spacebar}]
+                      [:##escape :left_control nil {:alone :escape}]]}
              {:des   "HHKB, FILCO MINILA Adv2 Change left control to esc if alone"
-              :rules [[:##left_control :left_control [:adv2 :adv2p :uhk :hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
+              :rules [[:##left_control :left_control [:adv2 :uhk :hhkb-bt :hhkb :hhkb-tmk :filco-minila] {:alone :escape}]]}
              {:des   "FILCO MINILA Change left_alt to left_command"
               :rules [:filco-minila
                       [:##grave_accent_and_tilde :backslash]
@@ -349,7 +357,8 @@
              {:des   "Change right_option to switch to second recent application when used alone"
               :rules [[:right_option :left_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
              {:des   "some simultaneous keys"
-              :rules [;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
+              :rules [
+                      ;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
                       [[:h :l] :f17]
                       [[:j :l] [:f19 ["in-alfred" 1]]]
                       [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
@@ -585,8 +594,9 @@
                       :hhkb-bt          [{:vendor_id 1278 :product_id 514}]
                       :hhkb             [{:vendor_id 2131 :product_id 256}]
                       :kensington-tb    [{:vendor_id 1149 :product_id 32792}]
-                      :adv2             [{:vendor_id 10730 :product_id 258}]
-                      :adv2p            [{:vendor_id 10730 :product_id 259}]}
+                      :adv2np           [{:vendor_id 10730 :product_id 258}]
+                      :adv2p            [{:vendor_id 10730 :product_id 259}]
+                      :adv2             [{:vendor_id 10730}]}
  :applications       {:emacs-mode-disable-app        ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.xquartz\\.X11$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
