@@ -318,4 +318,7 @@
   :i "C-y" #'yank
 
   :textobj "F" #'+evil:defun-txtobj #'+evil:defun-txtobj
-  :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block))
+  :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block)
+ (:after vterm
+  (:map vterm-mode-map
+   :g "C-y" #'vterm-yank)))
