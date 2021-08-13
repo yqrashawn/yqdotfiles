@@ -6,13 +6,7 @@
              :home_dir        [{:key :grave_accent_and_tilde :modi [:left_shift] :lazy true}
                                {:key :slash}]
              :regex_match_any [{:key :period}
-                               {:key :8 :modi [:left_shift] :lazy true}]
-             :select_us       {:select_input_source
-                               {:input_mode_id   ""
-                                :input_source_id "com.apple.keylayout.US"
-                                :language        "en"}}
-             :select_abc      {:input :abc}
-             :rctrl           {:key :right_control :lazy true}}
+                               {:key :8 :modi [:left_shift] :lazy true}]}
  :modifiers {:ro :right_option}
  :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
@@ -59,9 +53,7 @@
              :alfred-mode           {:key :z}
              :finder-alfred-mode    {:key :z :condi :Finder}
              :browsers-alfred-mode  {:key :z :condi :Browsers}}
- :main      [#_{:des   "test"
-                :rules [[[:t :e :s :t] :select_abc]]}
-             #_{:des "#137"
+ :main      [#_{:des "#137"
                 :rules
                 [[:caps_lock ["cap" 1] ["cap" 0]]
                  [:caps_lock ["cap" 0] ["cap" 1]]
@@ -74,11 +66,11 @@
                  :capspace
                  [:##i :page_up]
                  [:##k :page_down]]}
-             {:des   "Keybase return"
-              :rules [ ;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
-                      :Keybase
-                      [:return_or_enter :!Sreturn_or_enter]
-                      [:!Creturn_or_enter :return_or_enter]]}
+             #_{:des   "Keybase return"
+                :rules [ ;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
+                        :Keybase
+                        [:return_or_enter :!Sreturn_or_enter]
+                        [:!Creturn_or_enter :return_or_enter]]}
              {:des   "mouse motion to scroll"
               :rules [{:type       :mouse_motion_to_scroll
                        :from       {:modifiers {:optional [:any]}}
@@ -93,32 +85,17 @@
                         [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
                          :invoked  ["test-mode-j-dbpress-mode" 0]
                          :held    "say 'j held down'"]]}
-             {:des   "switch input method"
-              :rules [ ;; {:from        {:key_code :left_shift}
-                      ;;  :to          [{:key_code :left_shift}]
-                      ;;  :to_if_alone [{:select_input_source {:input_mode_id   "^com\\.sogou\\.inputmethod\\.pinyin$",
-                      ;;                                       :input_source_id "^com\\.sogou\\.inputmethod\\.sogou\\.pinyin$",
-                      ;;                                       :language        "zh-Hans"}}]
-                      ;;  :type        :basic}
-
-                      {:from        {:key_code :left_shift}
-                       :to          [{:key_code :left_shift}]
-                       :to_if_alone [{:select_input_source {:input_mode_id   "^com\\.apple\\.inputmethod\\.SCIM.ITABC$",
-                                                            :input_source_id "^com\\.apple\\.inputmethod\\.SCIM.ITABC$",
-                                                            :language        "zh-Hans"}}]
-                       :type        :basic}
-
-                      ;; {:from        {:key_code :left_shift}
-                      ;;  :to          [{:key_code :left_shift}]
-                      ;;  :to_if_alone [{:select_input_source {:input_mode_id   "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$",
-                      ;;                                       :input_source_id "^com\\.logcg\\.inputmethod\\.LogInputMac2\\.LogInputMac2SP$",
-                      ;;                                       :language        "zh-Hans"}}]
-                      ;;  :type        :basic}
-
-                      {:from        {:key_code :right_shift}
-                       :to          [{:key_code :right_shift}]
-                       :to_if_alone [{:select_input_source {:input_source_id "^com\\.apple\\.keylayout\\.US$"}}]
-                       :type        :basic}]}
+             {:des   "space cadet and switch input method shift"
+              :rules [[:left_shift [["lshift" 0] {:input :cn}] :lshift]
+                      [:##left_shift :left_shift :!lshift {:alone   ["lshift" 1]
+                                                           :params  {:delay 300}
+                                                           :delayed {:invoked  [["lshift" 0] :!S9]
+                                                                     :canceled ["lshift" 0]}}]
+                      [:right_shift [["rshift" 0] {:input :us}] :rshift]
+                      [:##right_shift :right_shift :!lshift {:alone   ["rshift" 1]
+                                                             :params  {:delay 300}
+                                                             :delayed {:invoked  [["rshift" 0] :!Sopen_bracket]
+                                                                       :canceled ["rshift" 0]}}]]}
              #_{:des   "m/v to l/r ctrl"
                 ;; produce typo
                 :rules [[:##v :left_control nil {:alone :v}]
@@ -706,10 +683,11 @@
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
-                      :us       {:input_mode_id   ""
-                                 :input_source_id "com.apple.keylayout.US"
-                                 :language        "en"}
+                      :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
                       :sougou   {:input_source_id "^com\\.sogou\\.inputmethod\\.pinyin$"}
                       :abc      {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}
+                      :logcg    {:input_mode_id   "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$",
+                                 :input_source_id "^com\\.logcg\\.inputmethod\\.LogInputMac2\\.LogInputMac2SP$",
+                                 :language        "zh-Hans"}
                       :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
