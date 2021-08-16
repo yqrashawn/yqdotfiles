@@ -57,7 +57,7 @@
 (use-package! loccur :commands loccur-current)
 (use-package! double-saber
   :init
-  (add-hook! ivy-occur-grep-mode (cmd! (double-saber-mode 1) (setq-local double-saber-start-line 5)))
+  (add-hook! occur-mode (cmd! (double-saber-mode 1) (setq-local double-saber-start-line 5)))
   (defadvice ivy-wgrep-change-to-wgrep-mode (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
     "disable `double-saber-mode' when enter wgrep mode"
     (interactive)
@@ -66,12 +66,14 @@
   (defadvice wgrep-finish-edit (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
     "enable `double-saber-mode' when leave wgrep mode"
     (interactive)
-    (double-saber-mode 1))
+    (with-current-buffer (current-buffer)
+        (double-saber-mode 1)))
 
   (defadvice wgrep-abort-changes (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
     "enable `double-saber-mode' when leave wgrep mode"
     (interactive)
-    (double-saber-mode 1)))
+    (with-current-buffer (current-buffer)
+      (double-saber-mode 1))))
 
 (use-package! bicycle
   :defer t

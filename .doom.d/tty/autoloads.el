@@ -22,14 +22,14 @@
   (interactive "P")
   (if arg
       (emamux:split-window-horizontally)
-    (yq/split-window-right)))
+    (evil-window-vsplit)))
 
 ;;;###autoload
 (defun yq/split-window-below-tmux (arg)
   (interactive "P")
   (if arg
       (emamux:split-window)
-    (yq/split-window-below)))
+    (evil-window-split)))
 
 ;;;###autoload
 (defun yq/toggle-maximize-buffer-tmux (arg)
