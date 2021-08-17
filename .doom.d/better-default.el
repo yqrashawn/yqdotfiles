@@ -3,6 +3,7 @@
 (pushnew! global-hl-line-modes 'dired-mode)
 (delq! 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
+       save-interprogram-paste-before-kill nil
        save-silently t
        echo-keystrokes 1e-6
        split-window-keep-point t
@@ -160,3 +161,7 @@
 
 (after! eww
   (add-hook! 'eww-after-render-hook #'eww-readable))
+
+(symbol-name major-mode)
+
+(use-package! thing-edit :defer t)

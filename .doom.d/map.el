@@ -8,6 +8,7 @@
 (define-prefix-command 'yq-s-map)
 (define-prefix-command 'ctl-x-at-8-map)
 (define-prefix-command 'ctl-x-at-6-map)
+(define-prefix-command '+thing-edit-map)
 
 (global-set-key (kbd "<mouse-4>") (kbd "<wheel-up>"))
 (global-set-key (kbd "<mouse-5>") (kbd "<wheel-down>"))
@@ -187,6 +188,10 @@
   :g "b" #'switch-to-buffer
   :g "RET" #'hydra-change-mode/body
   :g "R" #'rg)
+ (:map +thing-edit-map
+  :g "," (cmd! (message "this operator is %s" evil-this-operator))
+  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
+  :g "E" (+thing-edit-gen-evil-op-f 'email))
  (:after evil-snipe
   (:map evil-snipe-override-mode-map
    :nm "s" nil)
@@ -316,6 +321,7 @@
   :v "C-e" #'evil-end-of-line-or-visual-line
   :v "C-a" #'evil-beginning-of-visual-line
   :i "C-y" #'yank
+  :m "r" '+thing-edit-map
 
   :textobj "F" #'+evil:defun-txtobj #'+evil:defun-txtobj
   :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block)

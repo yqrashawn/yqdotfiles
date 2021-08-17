@@ -367,3 +367,20 @@ clojurescript-mode) of the current buffer."
   (if (display-graphic-p)
       (and (featurep! :term vterm) (+vterm/toggle (not arg)))
     (and (fboundp 'yq/split-window-below-tmux) (yq/split-window-below-tmux (not arg)))))
+
+;;;###autoload
+(defun +thing-edit-gen-evil-op-f (el)
+  (cmd!
+   (let* ((op (and evil-this-operator (symbol-name evil-this-operator)))
+          (del-op? (and op (string-match-p "delete" op)))
+          (yank-op? (and op (string-match-p "yank" op)))
+          (rst-op (cond (del-op? "-cut-")
+                        (yank-op? "-copy-")
+                        (t nil)))
+          (f-name (and rst-op (concat "thing" rst-op (symbol-name el))))
+          (new-f (and f-name (intern f-name))))
+     ;; TODO: support evil register
+     (when new-f
+       (call-interactively new-f)
+       (when (bound-and-true-p evil-mode)
+         (evil-set-register ?0 (current-kill 0)))))))
