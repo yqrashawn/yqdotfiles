@@ -86,7 +86,10 @@
                          :invoked  ["test-mode-j-dbpress-mode" 0]
                          :held    "say 'j held down'"]]}
              {:des   "space cadet and switch input method shift"
-              :rules [[:left_shift [["lshift" 0] {:input :cn}] :lshift]
+              :rules [[:left_shift [["lshift" 0] {:input
+                                                  ;; :cn
+                                                  :sougou
+                                                  }] :lshift]
                       [:##left_shift :left_shift :!lshift {:alone   ["lshift" 1]
                                                            :params  {:delay 300}
                                                            :delayed {:invoked  [["lshift" 0] :!S9]
@@ -155,6 +158,7 @@
                       [:!Tslash :!Cz]
                       [:##escape :left_control :adv2 {:alone [:escape ["in-alfred" 0]]}]
                       [:escape [:escape ["in-alfred" 0]]]
+                      [:##return_or_enter :left_command :adv2 {:alone [:return_or_enter ["in-alfred" 0]]}]
                       [:return_or_enter [:return_or_enter ["in-alfred" 0]]]
                       [:##left_control :left_control nil {:alone [:escape ["in-alfred" 0]]}]
                       [:##caps_lock [:left_control] nil {:alone [:escape ["in-alfred" 0]]}]
@@ -684,7 +688,7 @@
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
-                      :sougou   {:input_source_id "^com\\.sogou\\.inputmethod\\.pinyin$"}
+                      :sougou   {:input_source_id "^com\\.sogou\\.inputmethod\\.sogou\\.pinyin$"}
                       :abc      {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}
                       :logcg    {:input_mode_id   "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$",
                                  :input_source_id "^com\\.logcg\\.inputmethod\\.LogInputMac2\\.LogInputMac2SP$",

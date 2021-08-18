@@ -188,10 +188,10 @@
   :g "b" #'switch-to-buffer
   :g "RET" #'hydra-change-mode/body
   :g "R" #'rg)
- (:map +thing-edit-map
-  :g "," (cmd! (message "this operator is %s" evil-this-operator))
-  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
-  :g "E" (+thing-edit-gen-evil-op-f 'email))
+ ;; (:map +thing-edit-map
+ ;;  :g "," (cmd! (message "this operator is %s" evil-this-operator))
+ ;;  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
+ ;;  :g "E" (+thing-edit-gen-evil-op-f 'email))
  (:after evil-snipe
   (:map evil-snipe-override-mode-map
    :nm "s" nil)
