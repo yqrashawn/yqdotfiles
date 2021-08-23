@@ -67,6 +67,7 @@
   :desc "Locate file" "sD" #'locate
   :desc "Toggle debug on error" "tD" #'toggle-debug-on-error
   :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
+  :desc "Line numbers" "tl" #'display-line-numbers-mode
   (:prefix-map ("k" . "Kill")
    :desc "Browse at remote" "k" #'browse-at-remote
    (:prefix-map ("g" . "git link")

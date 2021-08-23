@@ -92,12 +92,14 @@
                                                   }] :lshift]
                       [:##left_shift :left_shift :!lshift {:alone   ["lshift" 1]
                                                            :params  {:delay 300}
-                                                           :delayed {:invoked  [["lshift" 0] :!S9]
+                                                           :delayed {:invoked  [["lshift" 0] ;; :!S9
+                                                                                ]
                                                                      :canceled ["lshift" 0]}}]
                       [:right_shift [["rshift" 0] {:input :us}] :rshift]
                       [:##right_shift :right_shift :!lshift {:alone   ["rshift" 1]
                                                              :params  {:delay 300}
-                                                             :delayed {:invoked  [["rshift" 0] :!Sopen_bracket]
+                                                             :delayed {:invoked  [["rshift" 0] ;; :!Sopen_bracket
+                                                                                  ]
                                                                        :canceled ["rshift" 0]}}]]}
              #_{:des   "m/v to l/r ctrl"
                 ;; produce typo
