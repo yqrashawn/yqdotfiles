@@ -181,7 +181,6 @@
   :g "k" #'bury-buffer
   :g "m" #'+ivy/projectile-find-file
   :g "l" #'imenu
-  :g "n" #'evil-avy-goto-char-2
   :g "f" #'+default/search-project
   :g "F" #'+default/search-project-for-symbol-at-point
   :g "o" #'dired-jump

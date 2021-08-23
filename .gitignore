@@ -184,3 +184,4 @@ local/bin/rust-analyzer
 /.config/custom_devices.json
 /.solargraph/
 /.lldb/
+/.deta/
