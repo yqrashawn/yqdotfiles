@@ -133,7 +133,11 @@
 ;; (package! affe)
 
 (package! thing-edit :recipe (:type git :host github :repo "manateelazycat/thing-edit"))
-(package! dogears :recipe (:type git :host github :repo "alphapapa/dogears.el"))
+;(package! dogears :recipe (:type git :host github :repo "alphapapa/dogears.el"))
+
+(package! yaml-imenu)
+;; (package! imenu-list)
+(package! side-hustle)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e link-hint fd-dired)

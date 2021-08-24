@@ -67,7 +67,8 @@
   :desc "Locate file" "sD" #'locate
   :desc "Toggle debug on error" "tD" #'toggle-debug-on-error
   :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
-  :desc "Line numbers" "tl" #'display-line-numbers-mode
+  :desc "Line numbers" "tl" #'doom/toggle-line-numbers
+  :desc "Imenu sidebar" "cb" #'side-hustle-toggle
   (:prefix-map ("k" . "Kill")
    :desc "Browse at remote" "k" #'browse-at-remote
    (:prefix-map ("g" . "git link")
@@ -327,4 +328,8 @@
   :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block)
  (:after vterm
   (:map vterm-mode-map
-   :g "C-y" #'vterm-yank)))
+   :g "C-y" #'vterm-yank))
+ (:after side-hustle
+  (:map side-hustle-mode-map
+   :g "TAB" #' side-hustle-show-item
+   :g "q" #'side-hustle-toggle)))

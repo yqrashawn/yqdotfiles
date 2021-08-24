@@ -45,7 +45,8 @@
          company-tabnine-context-radius-after 6000
          company-tabnine-log-file-path "~/Downloads/tabnine.log")
   :config
-  (setq! company-tabnine--disabled t) )
+  (setq! company-tabnine--disabled t))
+
 (use-package! copy-as-format :defer t)
 (use-package! separedit :defer t)
 
@@ -96,7 +97,41 @@
 
 (add-hook! 'post-command-hook #'do-stuff-if-moved-post-command)
 
-(setq display-line-numbers-type nil)
-
 (after! lsp-mode
-  (delq! 'lsp-ui-mode lsp-mode-hook))
+  (delq! 'lsp-ui-mode lsp-mode-hook)
+  (setq! +lsp-company-backends
+         (if (featurep! :editor snippets)
+             '(:separate company-tabnine company-capf company-yasnippet)
+           '(:separate company-tabnine company-capf))))
+
+(use-package! yaml-imenu
+  :hook (yaml-mode . yaml-imenu-enable)
+  :init
+  (defun which-function-from-imenu-index ()
+    "Call the imenu-index part in `which-function'.
+
+It is a fallback for when which-func-functions and `add-log-current-defun' return nil."
+    (let (which-func-functions)
+      (letf (((symbol-function 'add-log-current-defun)
+              (lambda () nil)))
+        (which-function))))
+
+  ;; `add-log-current-defun' returns a not so meaningful result in some
+  ;; major modes when the default `add-log-current-defun-function'
+  ;; happens to match a random line that is not really a function
+  ;; definition.  It is often much more desirable to find a function
+  ;; name from an imenu index in those modes.  Results are also used by
+  ;; `which-function-mode'.
+  (defun enable-add-log-current-defun-using-which-function ()
+    (setq-local add-log-current-defun-function 'which-function-from-imenu-index))
+
+  (add-hook! 'yaml-mode-hook 'enable-add-log-current-defun-using-which-function))
+
+(use-package! side-hustle
+  :defer t
+  :config
+  (defadvice! ++fold/toggle (orig-fn)
+    :around #'+fold/toggle
+    (if (eq major-mode 'side-hustle-mode)
+        (call-interactively #'side-hustle-show-item)
+      (call-interactively orig-fn))))

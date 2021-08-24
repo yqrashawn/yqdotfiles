@@ -33,8 +33,7 @@
        url-proxy-services
        '(("http" . "127.0.0.1:6152")
          ("https" . "127.0.0.1:6153"))
-       url-proxy-services nil
-       display-line-numbers-type t)
+       url-proxy-services nil)
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)

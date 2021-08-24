@@ -33,8 +33,8 @@
     [remap evil-window-left] (cmd! () (yq/tmux-select-pane "left"))
     [remap windmove-right] (cmd! () (yq/tmux-select-pane "right"))
     [remap evil-window-right] (cmd! () (yq/tmux-select-pane "right"))
-    [remap split-window-below] 'yq/split-window-right-tmux
-    [remap split-window-right] 'yq/split-window-below-tmux
+    [remap split-window-below] 'yq/split-window-below-tmux
+    [remap split-window-right] 'yq/split-window-right-tmux
     [remap evil-window-vsplit] 'yq/split-window-right-tmux
     [remap evil-window-split] 'yq/split-window-below-tmux
     [remap spacemacs/toggle-maximize-buffer] 'yq/toggle-maximize-buffer-tmux))
