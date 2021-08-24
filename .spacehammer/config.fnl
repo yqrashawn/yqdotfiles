@@ -50,7 +50,7 @@
 ;; [x] |-- e - emacs
 ;; [x] |-- g - chrome
 ;; [x] |-- f - firefox
-;; [x] |-- i - iTerm
+;; [x] |-- i - Alacritty
 ;; [x] |-- s - Slack
 ;; [x] |-- b - Brave
 ;;
@@ -258,8 +258,8 @@
          :title "Firefox"
          :action (activator "Firefox")}
         {:key :i
-         :title "iTerm"
-         :action (activator "iTerm2")}
+         :title "Alacritty"
+         :action (activator "Alacritty")}
         {:key :s
          :title "Slack"
          :action (activator "Slack")}
@@ -335,21 +335,29 @@
          :items emacs-bindings}])
 
 (local common-keys
-       [;; {:mods [:alt]
-        ;;  :key :space
-        ;;  :action "lib.modal:activate-modal"}
-        ;; {:mods [:alt]
-        ;;  :key :n
-        ;;  :action "apps:next-app"}
-        ;; {:mods [:alt]
-        ;;  :key :p
-        ;;  :action "apps:prev-app"}
+       [{ ;; :mods [:alt]
+         :key :F18
+         :action "lib.modal:activate-modal"}
+        {:mods [:alt]
+         :key :n
+         :action "apps:next-app"}
+        {:mods [:alt]
+         :key :p
+         :action "apps:prev-app"}
         {:mods [:cmd :ctrl]
          :key "`"
          :action hs.toggleConsole}
         {:mods [:cmd :ctrl]
          :key :o
-         :action "emacs:edit-with-emacs"}])
+         :action "emacs:edit-with-emacs"}
+        {:mods [:hyper]
+         :key :1
+         :title  "Emacs"
+         :action (activator "Emacs")}
+        {:mods [:hyper]
+         :key :2
+         :title  "Alacritty"
+         :action (activator "Alacritty")}])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; App Specific Config
@@ -476,7 +484,7 @@
         :enter (fn [] (windows.hide-display-numbers))
         :exit  (fn [] (windows.hide-display-numbers))
         :apps  apps
-        :hyper {:key :F18}})
+        :hyper {:key :F17}})
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -14,6 +14,7 @@
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
              :opena      "open -a \"%s\""
+             :hsl "/usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
@@ -254,40 +255,62 @@
              {:des   "launcher mode"
               :rules [:launch-mode
                       [:j :same_wind_app :Terminals]
-                      [:j [:open "/Applications/Alacritty.app"]]
+                      ;; [:j [:open "/Applications/Alacritty.app"]]
+
+                      ;; [:j [:f16 :!Sa :l :a :c :r :i :t :t :y :return_or_enter]]
+
+                      [:j [:hsl "Alacritty"]]
+
                       ;; [:j [:opena "kitty"]]
                       ;; [:j [:open "/System/Volumes/Data/usr/local/Cellar/wezterm/20210405-110924/WezTerm.app"]]
                       ;; [:j [:launch "iTerm"]]
+
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       ;; [:k "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n"]
-                      [:k [:show "Emacs"]]
+                      ;; [:k [:show "Emacs"]]
+                      ;; [:k [:f16 :!Sd :o :o :m :spacebar :!Se :m :a :c :s :return_or_enter]]
+                      [:k [:hsl "Emacs"]]
                       ;; [:k [:opena "kitty"]]
                       ;; [:k [:opena "WezTerm.app"]]
                       ;; [:k [:launch "Emacs"]]
-                      [:quote [:opena "ClickUp"]]
-                      [:t [:open "/Applications/Todoist.app"]]
-                      [:p [:open "/Applications/Figma.app"]]
-                      [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
+
+                      ;; [:quote [:opena "ClickUp"]]
+                      [:quote [:hsl "ClickUp"]]
+                      ;; [:t [:open "/Applications/Todoist.app"]]
+                      ;; [:p [:open "/Applications/Figma.app"]]
+                      [:p [:hsl "Figma"]]
+                      ;; [:l [:open "/Applications/Google Chrome.app/"] :!Chromes]
+                      [:l [:hsl "Google Chrome"] :!Chromes]
+                      ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e :return_or_enter] :!Chromes]
                       [:l :same_wind_app :Chromes]
-                      [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
+                      ;; [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
+                      [:comma [:hsl "Firefox Developer Edition"] :!Firefoxes]
                       [:comma :same_wind_app :Firefoxes]
                       ;; [:n [:open "/Applications/Notion.app"]]
-                      [:n [:open "/Applications/Google Chrome Canary.app"]]
-                      [:return_or_enter [:open "/Applications/Brave Browser.app"]]
+                      ;; [:n [:open "/Applications/Google Chrome Canary.app"]]
+                      [:n [:hsl "Google Chrome Canary"]]
+                      [:return_or_enter [:hsl "Brave Browser"]]
                       ;; [:m [:open "/Applications/Mail.app"]]
-                      [:m [:launch "Mail"]]
+                      [:m [:hsl "Mail"]]
+                      ;; [:m [:launch "Mail"]]
                       ;; [:v [:open "/Applications/WeChat.app"]]
-                      [:v [:launch "WeChat"]]
+                      ;; [:v [:launch "WeChat"]]
+                      [:v [:hsl "WeChat"]]
                       [:q [:open "/Applications/Karabiner-Elements.app"]]
                       [:f [:open "/System/Library/CoreServices/Finder.app"]]
                       [:9 [:open "/Applications/PDF Expert.app"]]
-                      [:h [:open "/Applications/Slack.app"]]
+                      ;; [:h [:open "/Applications/Slack.app"]]
+                      [:h [:hsl "Slack"]]
                       [:r [:opena "Roam Research"]]
-                      [:period [:open "/Applications/SetApp/Paw.app"]]
-                      [:equal_sign [:open "/Applications/Textual.app"]]
-                      [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
-                      [:b [:open "/Applications/Bee.app"]]
-                      [:c [:open "/Applications/Visual Studio Code.app"]]
+                      ;; [:period [:open "/Applications/SetApp/Paw.app"]]
+                      [:period [:hsl "Paw"]]
+                      ;; [:equal_sign [:open "/Applications/Textual.app"]]
+                      [:equal_sign [:hsl "Textual"]]
+                      ;; [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                      [:8 [:hsl "Karabiner-EventViewer"]]
+                      ;; [:b [:open "/Applications/Bee.app"]]
+                      ;; [:c [:open "/Applications/Visual Studio Code.app"]]
+                      [:c [:hsl "Visual Studio Code"]]
                       [:e [:w :e]]
                       [:hyphen [{:key :m :modi :ro}
                                 {:key :a :modi :ro}
