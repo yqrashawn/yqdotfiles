@@ -35,3 +35,6 @@
 # - `mods` (see key bindings)
 mouse_bindings:
  - { mouse: Right, action: PasteSelection }
+
+mouse:
+  hide_when_typing: true

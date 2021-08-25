@@ -18,7 +18,10 @@
          evil-want-C-i-jump t
          evil-want-C-d-scroll t
          evil-want-C-u-scroll t
-         evil-want-C-w-delete t)
+         evil-want-C-w-delete t
+         ;; evil-collection
+         )
+
   ;; (setq evil-insert-state-cursor '(bar "green"))
   ;; (setq local-function-key-map (delq '(kp-tab . [9]) local-function-key-map))
   ;; (define-key input-decode-map [?\C-i] [C-i])

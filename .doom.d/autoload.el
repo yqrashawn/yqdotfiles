@@ -384,3 +384,25 @@ clojurescript-mode) of the current buffer."
        (call-interactively new-f)
        (when (bound-and-true-p evil-mode)
          (evil-set-register ?0 (current-kill 0)))))))
+
+;;;###autoload (autoload 'hydra-outline/body "autoload" nil t)
+(defhydra hydra-outline (:color pink :hint nil)
+  "
+_b_ranch _j_next _k_prev _h_up
+"
+
+  ;; ("t" outline-toggle-children)
+  ;; ("l" outline-toggle-children)
+  ("b" outline-show-branches)
+  ("n" outline-next-heading)
+  ("p" outline-previous-heading)
+  ("N" outline-previous-heading)
+  ("j" outline-next-visible-heading)
+  ("k" outline-previous-visible-heading)
+  ("h" outline-up-heading)
+  ("x" outline-hide-leaves)
+  ("o" outline-hide-other)
+  ("r" outline-show-all)
+  ("q" nil "cancel" :color blue)
+  ("C-g" nil "cancel" :color blue)
+  ("<escape>" nil "cancel" :color blue))

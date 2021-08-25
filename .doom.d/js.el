@@ -56,3 +56,27 @@
                         ("Promise" . ?Ṗ)
                         ("if" . ?␦)
                         ("let" . ?ḷ))))))
+
+(defun +js-test-file-p ()
+  (let ((path (buffer-file-name)))
+    (and path (string-match-p "\.\\(test\\|spec\\)\.\\(j\\|t\\)s$" path))))
+
+(setq +js-test-file-outline-regexp "\\(^\s*//\\(\\(//\\)+\\| ?\\(#\\|;\\|*\\)+\\) [^\n]\\)\\|\\(^\s*\\(describe\\|test\\|beforeEach\\|beforeAll\\)(\\)")
+
+(defun +js-test-outline-level ()
+  "Get the outline level of jest test file"
+  (let ((s (match-string 0)))
+    (when (string-match "^\s*" s)
+      (+ (length (match-string 0 s)) 1))))
+
+(defun +setup-js-test-file-outline ()
+  (interactive)
+  (when (+js-test-file-p)
+      (setq-local outline-regexp +js-test-file-outline-regexp
+                  outline-level '+js-test-outline-level
+                  ;; outline-level 'outline-level
+                  )
+      (and (functionp 'outline-minor-faces-add-font-lock-keywords)
+           (outline-minor-faces-add-font-lock-keywords))))
+
+(add-hook! rjsx-mode '+setup-js-test-file-outline)

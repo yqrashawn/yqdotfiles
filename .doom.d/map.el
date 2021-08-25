@@ -325,7 +325,35 @@
   :m "r" '+thing-edit-map
 
   :textobj "F" #'+evil:defun-txtobj #'+evil:defun-txtobj
-  :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block)
+  :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+
+  ;; XXX: copied from doom-emacs config, needs better way to custom this
+  :m [tab] (cmds! (and (featurep! :editor snippets)
+                       (evil-visual-state-p)
+                       (or (eq evil-visual-selection 'line)
+                           (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
+                  #'yas-insert-snippet
+                  (and (featurep! :editor fold)
+                       (save-excursion (end-of-line) (invisible-p (point))))
+                  #'+fold/toggle
+                  outline-minor-mode
+                  #'bicycle-cycle
+
+                  ;; Fixes #4548: without this, this tab keybind overrides
+                  ;; mode-local ones for modes that don't have an evil
+                  ;; keybinding scheme or users who don't have :editor (evil
+                  ;; +everywhere) enabled.
+                  (or (doom-lookup-key
+                       [tab]
+                       (list (evil-get-auxiliary-keymap (current-local-map) evil-state)
+                             (current-local-map)))
+                      (doom-lookup-key
+                       (kbd "TAB")
+                       (list (evil-get-auxiliary-keymap (current-local-map) evil-state)))
+                      (doom-lookup-key (kbd "TAB") (list (current-local-map))))
+                  it
+                  (fboundp 'evil-jump-item)
+                  #'evil-jump-item))
  (:after vterm
   (:map vterm-mode-map
    :g "C-y" #'vterm-yank))
