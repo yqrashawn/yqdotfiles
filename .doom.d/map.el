@@ -356,7 +356,7 @@
                   #'evil-jump-item))
  (:after vterm
   (:map vterm-mode-map
-   :g "C-y" #'vterm-yank))
+   :gi "C-y" #'vterm-yank))
  (:after side-hustle
   (:map side-hustle-mode-map
    :g "TAB" #' side-hustle-show-item
