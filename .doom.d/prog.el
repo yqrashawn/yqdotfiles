@@ -45,7 +45,13 @@
          company-tabnine-context-radius-after 6000
          company-tabnine-log-file-path "~/Downloads/tabnine.log")
   :config
-  (setq! company-tabnine--disabled t))
+  (setq! company-tabnine--disabled t)
+  (after! lsp-mode
+    (defadvice! +lsp-mode (orig-fn &rest args)
+      :around #'lsp-mode
+      (when company-tabnine--disabled (apply orig-fn args))
+      (when (and (not company-tabnine--disabled) lsp-mode)
+        (apply orig-fn args)))))
 
 (use-package! copy-as-format :defer t)
 (use-package! separedit :defer t)

@@ -281,10 +281,14 @@ _g_  gfm      _o_ org        _m_ markdown
       (progn
         (setq company-idle-delay 0)
         (setq company-tabnine--disabled nil)
+        (when lsp-mode
+          (lsp-mode -1)
+          (lsp-workspace-shutdown))
         (message "Turn on company-tabnine"))
     (progn
       (setq company-idle-delay 0.2)
       (setq company-tabnine--disabled t)
+      (call-interactively #'revert-buffer)
       (message "Turn off company-tabnine"))))
 
 ;;;###autoload
