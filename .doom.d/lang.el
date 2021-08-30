@@ -32,11 +32,12 @@
 
 (use-package! tree-sitter-langs
   :defer t
-  :config
-  (pushnew! tree-sitter-major-mode-language-alist
-            '(clojure-mode . clojure)
-            '(clojurescript-mode . clojure)
-            '(clojurec-mode . clojure)))
+  ;; :config
+  ;; (pushnew! tree-sitter-major-mode-language-alist
+  ;;           '(clojure-mode . clojure)
+  ;;           '(clojurescript-mode . clojure)
+  ;;           '(clojurec-mode . clojure))
+  )
 
 (use-package! tree-sitter
   :defer t

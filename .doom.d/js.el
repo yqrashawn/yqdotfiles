@@ -80,3 +80,27 @@
            (outline-minor-faces-add-font-lock-keywords))))
 
 (add-hook! rjsx-mode '+setup-js-test-file-outline)
+
+(after! lsp-mode
+  (setq! lsp-clients-typescript-log-verbosity "off"
+         lsp-clients-typescript-server-args '("--stdio"
+                                              "--log-level"
+                                              "1"
+                                              "--tsserver-log-verbosity"
+                                              "off"))
+  (let ((vsintel (car (seq-filter
+                       (lambda (s) (string-match-p "visualstudioexptteam\.vscodeintellicode-" s))
+                       (directory-files (expand-file-name "~/.vscode/extensions/"))))))
+    (when vsintel
+      (setq! lsp-clients-typescript-plugins (vector (list :name "@vsintellicode/typescript-intellicode-plugin" :location vsintel)))))
+
+  (defadvice! +lsp--get-buffer-diagnostics (orig-fn)
+    :around #'lsp--get-buffer-diagnostics
+    (seq-filter
+     (lambda (i)
+       (if (hash-table-p i)
+           (not (string-match-p
+                 "Could not find a declaration file for module .* implicitly has an .*any.* type"
+                 (gethash "message" i)))
+         t))
+     (funcall orig-fn))))
