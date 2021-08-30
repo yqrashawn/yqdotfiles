@@ -185,3 +185,4 @@ local/bin/rust-analyzer
 /.solargraph/
 /.lldb/
 /.deta/
+/.config/mume/
