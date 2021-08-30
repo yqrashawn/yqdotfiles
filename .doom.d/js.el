@@ -58,25 +58,40 @@
                         ("let" . ?ḷ))))))
 
 (after! lsp-mode
+  (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook)
+    +format-with-lsp nil)
   (setq! lsp-clients-typescript-log-verbosity "off"
          lsp-clients-typescript-server-args '("--stdio"
                                               "--log-level"
                                               "1"
                                               "--tsserver-log-verbosity"
-                                              "off"))
+                                              "off")
+         lsp-clients-deno-enable-unstable t)
   (let ((vsintel (car (seq-filter
                        (lambda (s) (string-match-p "visualstudioexptteam\.vscodeintellicode-" s))
-                       (directory-files (expand-file-name "~/.vscode/extensions/"))))))
+                       (directory-files (expand-file-name "~/.vscode/extensions/")))))
+        (snapshot-tool (car (seq-filter
+                             (lambda (s) (string-match-p "asvetliakov\.snapshot-tools-" s))
+                             (directory-files (expand-file-name "~/.vscode/extensions/"))))))
     (when vsintel
-      (setq! lsp-clients-typescript-plugins (vector (list :name "@vsintellicode/typescript-intellicode-plugin" :location vsintel)))))
+      (setq! lsp-clients-typescript-plugins
+       (vector
+        (list
+         :name "@vsintellicode/typescript-intellicode-plugin"
+         :location vsintel)
+        (list
+         :name "@snapshot-tools/typescript-snapshots-plugin"
+         :location vsintel)))))
 
   (defadvice! +lsp--get-buffer-diagnostics (orig-fn)
     :around #'lsp--get-buffer-diagnostics
     (seq-filter
      (lambda (i)
        (if (hash-table-p i)
-           (not (string-match-p
-                 "Could not find a declaration file for module .* implicitly has an .*any.* type"
-                 (gethash "message" i)))
+           (and
+            ;; ts-ls
+            (not (string-match-p "Could not find a declaration file for module .* implicitly has an .*any.* type" (gethash "message" i)))
+            ;; deno
+            (not (string-match-p "Relative import path .* not prefixed with .*file:.*" (gethash "message" i))))
          t))
      (funcall orig-fn))))

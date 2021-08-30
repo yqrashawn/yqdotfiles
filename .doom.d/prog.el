@@ -67,12 +67,13 @@
         (apply orig-fn formatter))))
 
   ;; run prettier after lsp format (eslint)
-  (defadvice! ++format/region-or-buffer (orig-fn)
-    :around #'+format/region-or-buffer
-    (ignore-errors (call-interactively orig-fn))
-    (when (memq major-mode '(rjsx-mode js-mode js2-mode typescript-mode))
-     (let ((+format-with-lsp nil))
-       (ignore-errors (call-interactively orig-fn))))))
+  ;; (defadvice! ++format/region-or-buffer (orig-fn)
+  ;;   :around #'+format/region-or-buffer
+  ;;   (ignore-errors (call-interactively orig-fn))
+  ;;   (when (memq major-mode '(rjsx-mode js-mode js2-mode typescript-mode))
+  ;;    (let ((+format-with-lsp nil))
+  ;;      (ignore-errors (call-interactively orig-fn)))))
+  )
 
 (use-package! company-ctags :defer t)
 
