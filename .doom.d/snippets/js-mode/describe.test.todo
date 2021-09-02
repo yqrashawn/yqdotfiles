@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: describe test.todo
+# key: destodo
+# --
+describe('$1', function() {
+  test.todo('$1')
+})

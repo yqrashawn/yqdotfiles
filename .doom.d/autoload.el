@@ -409,3 +409,9 @@ _b_ranch _j_next _k_prev _h_up
   ("q" nil "cancel" :color blue)
   ("C-g" nil "cancel" :color blue)
   ("<escape>" nil "cancel" :color blue))
+
+;;;###autoload
+(defun nuke-all-buffers ()
+  (interactive)
+  (mapcar 'kill-buffer (buffer-list))
+  (delete-other-windows))

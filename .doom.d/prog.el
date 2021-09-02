@@ -143,8 +143,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
         (call-interactively #'side-hustle-show-item)
       (call-interactively orig-fn))))
 
-(defadvice! ++syntax-init-popups-h (orig-fn)
-  :around #'+syntax-init-popups-h
-  (unless (and (bound-and-true-p lsp-ui-mode)
-               lsp-ui-sideline-enable)
-    (flycheck-popup-tip-mode +1)))
+;; (defadvice! ++syntax-init-popups-h (orig-fn)
+;;   :around #'+syntax-init-popups-h
+;;   (unless (and (bound-and-true-p lsp-ui-mode)
+;;                lsp-ui-sideline-enable)
+;;     (flycheck-popup-tip-mode +1)))
