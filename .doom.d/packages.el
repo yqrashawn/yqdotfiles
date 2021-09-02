@@ -138,6 +138,8 @@
 (package! yaml-imenu)
 ;; (package! imenu-list)
 (package! side-hustle)
+(package! github-review)
+(package! comb)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e link-hint fd-dired)
