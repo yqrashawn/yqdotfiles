@@ -110,6 +110,15 @@
 
 (after! lsp-mode
   (delq! 'lsp-ui-mode lsp-mode-hook)
+  (pushnew! lsp-file-watch-ignored-directories
+            "[/\\\\]coverage'"
+            "[/\\\\]lcov-report'"
+            "[/\\\\]\\.log\\'"
+            "[/\\\\]build'"
+            "[/\\\\]cljs-runtime'"
+            "[/\\\\]__snapshots__'"
+            "[/\\\\]sp_'"
+            "[/\\\\]\\.cache\\'")
   (setq! +lsp-company-backends
          (if (featurep! :editor snippets)
              '(:separate company-tabnine company-capf company-yasnippet)
