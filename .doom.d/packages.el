@@ -124,7 +124,7 @@
 
 
 (package! olivetti)
-(package! orderless)
+;; (package! orderless)
 ;; (package! corfu)
 (package! ix)
 (package! orgbox)

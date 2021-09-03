@@ -104,12 +104,18 @@
 
 (add-hook! 'post-command-hook #'do-stuff-if-moved-post-command)
 
+(defun +disable-lsp-watcher-in-some-project ()
+  (when (string= (directory-file-name (doom-project-root)) (directory-file-name (getenv "HOME")))
+    (setq-local lsp-enable-file-watchers nil)))
+
 (after! lsp-mode
   (delq! 'lsp-ui-mode lsp-mode-hook)
   (setq! +lsp-company-backends
          (if (featurep! :editor snippets)
              '(:separate company-tabnine company-capf company-yasnippet)
-           '(:separate company-tabnine company-capf))))
+           '(:separate company-tabnine company-capf)))
+
+  (add-hook! 'lsp-configure-hook '+disable-lsp-watcher-in-some-project))
 
 (use-package! yaml-imenu
   :hook (yaml-mode . yaml-imenu-enable)

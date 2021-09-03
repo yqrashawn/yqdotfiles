@@ -18,7 +18,9 @@
          ivy-use-virtual-buffers t
          ivy-re-builders-alist '((forge-create-pullreq . ivy--regex-fuzzy)
                                  (counsel-git . ivy--regex-fuzzy)
-                                 (t . orderless-ivy-re-builder))))
+                                 (t . ivy--regex-plus)
+                                 ;; (t . orderless-ivy-re-builder)
+                                 )))
 
 (after! counsel
   (setq! counsel-grep-base-command "rg -i -M 120 --no-heading --line-number --color never %s %s"
@@ -99,11 +101,11 @@
 
 (use-package! reveal-in-osx-finder :defer t)
 
-(use-package! orderless
-  :init
-  (add-hook! doom-first-input-hook (cmd! (require 'orderless)))
-  (setq! completion-styles '(orderless)
-         orderless-component-separator "[ &]"))
+;; (use-package! orderless
+;;   :init
+;;   (add-hook! doom-first-input-hook (cmd! (require 'orderless)))
+;;   (setq! completion-styles '(orderless)
+;;          orderless-component-separator "[ &]"))
 
 ;; (use-package! corfu
 ;;   :hook (doom-first-input . corfu-global-mode)

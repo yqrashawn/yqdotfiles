@@ -33,7 +33,13 @@
        url-proxy-services
        '(("http" . "127.0.0.1:6152")
          ("https" . "127.0.0.1:6153"))
-       url-proxy-services nil)
+       url-proxy-services nil
+       blink-matching-paren t
+       ;; blink-matching-paren 'jump
+       blink-matching--overlay (let ((ol (make-overlay (point) (point) nil t)))
+                                 (overlay-put ol 'face 'custom-invalid)
+                                 (delete-overlay ol)
+                                 ol))
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
