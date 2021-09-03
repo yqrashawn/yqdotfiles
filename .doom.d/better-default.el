@@ -173,3 +173,7 @@
 (symbol-name major-mode)
 
 (use-package! thing-edit :defer t)
+
+(use-package! wucuo
+  :defer t
+  :hook (prod-mode . wucuo-start))

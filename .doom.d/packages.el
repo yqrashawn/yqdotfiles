@@ -140,6 +140,7 @@
 (package! side-hustle)
 (package! github-review)
 (package! comb)
+(package! wucuo)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e link-hint fd-dired)
