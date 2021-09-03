@@ -39,7 +39,9 @@
        blink-matching--overlay (let ((ol (make-overlay (point) (point) nil t)))
                                  (overlay-put ol 'face 'custom-invalid)
                                  (delete-overlay ol)
-                                 ol))
+                                 ol)
+       ispell-dictionary "en_US"
+       ispell-personal-dictionary "~/.config/personal_dict")
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
