@@ -2,7 +2,7 @@
           :injections [(require '[portal.api])]}
  :fipp {:dependencies [[fipp "0.6.23"]]
         :injections [(require 'fipp.clojure)]}
- :hashp {:dependencies [[hashp "0.2.0"]]
+ :hashp {:dependencies [[hashp "0.2.1"]]
          :injections [(require 'hashp.core)]}
  :nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
          :dependencies [[rickmoynihan/nrebl.middleware "0.3.1"]
@@ -35,7 +35,7 @@
                   ;; lein pdo cljsbuild auto, repl
                   ;; [lein-pdo "0.1.1"]
 
-                  #_ [com.billpiel/sayid "0.0.16"]
+                  #_[com.billpiel/sayid "0.0.16"]
                   [jonase/eastwood "LATEST"]
                   [acyclic/squiggly-clojure "LATEST" :exclusions [org.clojure/tools.reader]] ;; flycheck
                   [lein-nsorg "LATEST"]]
@@ -47,7 +47,7 @@
                      (pjstadig.humane-test-output/activate!)]
         :aliases {;; "slamhound" ["run" "-m" "slam.hound"]
                   }}
- :user [ ;; :nrebl
+ :user [;; :nrebl
         :hashp
         :fipp
         :reveal

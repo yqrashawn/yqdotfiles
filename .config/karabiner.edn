@@ -68,14 +68,14 @@
                  [:##i :page_up]
                  [:##k :page_down]]}
              #_{:des   "Keybase return"
-                :rules [ ;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
+                :rules [;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
                         :Keybase
                         [:return_or_enter :!Sreturn_or_enter]
                         [:!Creturn_or_enter :return_or_enter]]}
              {:des   "mouse motion to scroll"
               :rules [{:type       :mouse_motion_to_scroll
                        :from       {:modifiers {:optional [:any]}}
-                       :conditions [ {:type :variable_if :name "mmts" :value 1} ]}
+                       :conditions [{:type :variable_if :name "mmts" :value 1}]}
                       [:f24 ["mmts" 1] ["mmts" 0]]
                       [:f24 ["mmts" 0] ["mmts" 1]]
                       [[{:pkey :button1} {:pkey :button2}] ["mmts" 1] ["mmts" 0]]
@@ -89,8 +89,7 @@
              {:des   "space cadet and switch input method shift"
               :rules [[:left_shift [["lshift" 0] {:input
                                                   ;; :cn
-                                                  :sougou
-                                                  }] :lshift]
+                                                  :sougou}] :lshift]
                       [:##left_shift :left_shift :!lshift {:alone   ["lshift" 1]
                                                            :params  {:delay 300}
                                                            :delayed {:invoked  [["lshift" 0] ;; :!S9
@@ -358,13 +357,12 @@
              {:des   "Change left_option to f18 when used alone"
               :rules [[:left_option :left_option nil {:alone [:f18]}]]}
              {:des   "Quit application by pressing command-q twice"
-              :rules [[:!C#Pq [:!Cq ["command-q" 0]] ["command-q" 1]]
-                      [:!C#Pq ["command-q" 1] nil {:delayed {:invoked ["command-q" 0] :canceled ["command-q" 0]}}]]}
+              :rules [[:!C#Pq [:!Cq ["command-q" 0] [:noti :cmdq]] ["command-q" 1]]
+                      [:!C#Pq [[:noti :cmdq "Press Again to QUIT"] ["command-q" 1]] nil {:delayed {:invoked [["command-q" 0] [:noti :cmdq]] :canceled [["command-q" 0] [:noti :cmdq]]}}]]}
              {:des   "Change right_option to switch to second recent application when used alone"
               :rules [[:right_option :left_option nil {:alone ["osascript ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
              {:des   "some simultaneous keys"
-              :rules [
-                      ;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
+              :rules [;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
                       [[:h :l] :f17]
                       [[:j :l] [:f19 ["in-alfred" 1]]]
                       [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
@@ -451,7 +449,7 @@
                       [:4 [:!Tq :4]]
                       [:5 [:!Tq :5]]]}
              {:des   "yabai mode"
-              :rules [ ;; :yabai-insert-mode
+              :rules [;; :yabai-insert-mode
                       ;; [:h "/usr/local/bin/yabai -m window --insert west"]
                       ;; [:j "/usr/local/bin/yabai -m window --insert south"]
                       ;; [:k "/usr/local/bin/yabai -m window --insert north"]
@@ -495,7 +493,7 @@
                       [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
                       [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
              {:des   "totalspace 2"
-              :rules [ ;; move windows
+              :rules [;; move windows
                       :yabai-move-mode
                       [:i :!STOleft_arrow]
                       [:o :!STOright_arrow]
