@@ -123,6 +123,7 @@
          (if (featurep! :editor snippets)
              '(:separate company-tabnine company-capf company-yasnippet)
            '(:separate company-tabnine company-capf)))
+  (setq! lsp-eslint-enable nil)
 
   (add-hook! 'lsp-configure-hook '+disable-lsp-watcher-in-some-project))
 
