@@ -177,3 +177,10 @@
 (use-package! wucuo
   :defer t
   :hook (prod-mode . wucuo-start))
+
+(defadvice! +kill-buffer (orig arg)
+  #'kill-buffer
+  (when (or (memq major-mode '(jest-mode comint-mode))
+            (derived-mode-p 'comint-mode))
+    (ignore-errors (comint-interrupt-subjob)))
+  (apply orig arg))
