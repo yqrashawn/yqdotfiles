@@ -1,8 +1,8 @@
-{:portal {:dependencies [[djblue/portal "0.7.0"]]
+{:portal {:dependencies [[djblue/portal "LATEST"]]
           :injections [(require '[portal.api])]}
- :fipp {:dependencies [[fipp "0.6.23"]]
+ :fipp {:dependencies [[fipp "LATEST"]]
         :injections [(require 'fipp.clojure)]}
- :hashp {:dependencies [[hashp "0.2.1"]]
+ :hashp {:dependencies [[hashp "LATEST"]]
          :injections [(require 'hashp.core)]}
  :nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
          :dependencies [[rickmoynihan/nrebl.middleware "0.3.1"]
@@ -51,7 +51,7 @@
         :hashp
         :fipp
         :reveal
-        ;; :portal {:signing {:gpg-key "E394C5D9A8E535A6"}}
+        ;; :portal
         :repl]
 
  :mirrors {#"clojars"
