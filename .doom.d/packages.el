@@ -141,6 +141,7 @@
 (package! github-review)
 (package! comb)
 (package! wucuo)
+(package! mini-frame)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy mu4e link-hint fd-dired)
