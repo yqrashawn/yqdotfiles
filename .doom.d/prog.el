@@ -164,3 +164,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 ;;   (unless (and (bound-and-true-p lsp-ui-mode)
 ;;                lsp-ui-sideline-enable)
 ;;     (flycheck-popup-tip-mode +1)))
+
+(use-package! evil-textobj-tree-sitter
+  :after evil)
