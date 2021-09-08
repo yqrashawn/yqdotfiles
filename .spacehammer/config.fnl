@@ -12,6 +12,7 @@
 
 
 (require-macros :lib.macros)
+(local log (hs.logger.new "\tcore.fnl\t" "debug"))
 (local windows (require :windows))
 (local emacs (require :emacs))
 (local slack (require :slack))
@@ -338,12 +339,12 @@
        [{ ;; :mods [:alt]
          :key :F18
          :action "lib.modal:activate-modal"}
-        {:mods [:alt]
-         :key :n
-         :action "apps:next-app"}
-        {:mods [:alt]
-         :key :p
-         :action "apps:prev-app"}
+        ;; {:mods [:alt]
+        ;;  :key :n
+        ;;  :action "apps:next-app"}
+        ;; {:mods [:alt]
+        ;;  :key :p
+        ;;  :action "apps:prev-app"}
         {:mods [:cmd :ctrl]
          :key "`"
          :action hs.toggleConsole}
@@ -486,6 +487,53 @@
         :apps  apps
         :hyper {:key :F17}})
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Spoon
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hs.loadSpoon "SpoonInstall" true)
+(global spoon _G.spoon)
+(set spoon.SpoonInstall.use_syncinstall true)
+(local Install spoon.SpoonInstall)
+
+
+(local brv "com.brave.Browser")
+(local vv "com.vivaldi.Vivaldi")
+(local ffd "org.mozilla.firefoxdeveloperedition")
+(local ff "org.mozilla.firefox")
+(local chrm "com.google.Chrome")
+(local chrmc "com.google.Chrome.canary")
+(local safari "com.apple.Safari")
+
+;; https://www.hammerspoon.org/Spoons/URLDispatcher.html
+(Install:andUse "URLDispatcher"
+ {:start true
+  :loglevel "error"
+  :config
+  {:url_patterns [["zoommtg:" "us.zoom.xos"]
+                  ["tg:" "ru.keepcoder.Telegram"]
+                  ["https://yqrashawn.deta.dev.*" chrm]]
+   :url_redir_decoders [["Zoom URLs"
+                         "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
+                         "zoommtg://zoom.us/join?confno=%1&pwd=%2"
+                         true]
+                        ["Telegram URLs"
+                         "https?://t.me/(.*)"
+                         "tg://t.me/%1"
+                         true]
+                        ["Fix broken Preview anchor URLs"
+                         "%%23"
+                         "#"
+                         false
+                         "Preview"]]
+
+   :default_handler ffd}})
+
+(comment
+ (local col hs.drawing.color.x11)
+ (Install:andUse "MenubarFlag" {:start true
+                                :config {:colors [["U.S." {}]
+                                                  [["Ukrainian - PC"] [col.blue col.yellow]]
+                                                  [["Ukrainian"] [col.blue col.yellow]]]}}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Exports
