@@ -19,6 +19,7 @@
           '("\\.swcrc\\'" . json-mode)
           '("\\.babelrc\\'" . json-mode))
 (use-package! crontab-mode :defer t)
+(use-package! jsonnet-mode :mode "\.jsonnet\'")
 
 (after! lsp
   (setq!

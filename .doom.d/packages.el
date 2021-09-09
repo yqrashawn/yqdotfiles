@@ -143,6 +143,8 @@
 (package! wucuo)
 (package! mini-frame)
 (package! evil-textobj-tree-sitter)
+(package! jsonnet-mode)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
-(unpin! cider lispy mu4e link-hint fd-dired)
+(unpin! cider lispy ;; mu4e
+        link-hint fd-dired)
