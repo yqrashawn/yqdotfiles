@@ -414,3 +414,18 @@ _b_ranch _j_next _k_prev _h_up
   (interactive)
   (mapcar 'kill-buffer (buffer-list))
   (delete-other-windows))
+
+;;;###autoload
+(defun yq-new-blot-post ()
+  (interactive)
+  (let* ((blot-folder "~/Dropbox/application/Blot/")
+         (time-folder (format-time-string "%Y/%m/%d/"))
+         (blog-dir (expand-file-name (concat blot-folder time-folder)))
+         (filename (read-string "Blog file name: "))
+         (filename (concat blog-dir filename)))
+    (if (or (s-ends-with? ".md" filename)
+            (s-ends-with? ".org" filename))
+        (progn (make-empty-file filename t)
+               (find-file filename)
+               (insert "sbt."))
+      (user-error! "Invalid extension."))))

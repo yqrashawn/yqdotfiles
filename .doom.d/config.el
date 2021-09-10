@@ -72,5 +72,6 @@
 
 (load! "lang.el")
 (load! "org.el")
+(load! "write.el")
 (load! "visual.el")
 (load! "mail.el")

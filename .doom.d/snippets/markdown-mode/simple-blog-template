@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: simple blog template
+# key: sbt
+# --
+Tags: ${1:Tags}
+
+# ${2:Title}

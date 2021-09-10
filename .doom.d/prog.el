@@ -57,6 +57,16 @@
 (use-package! separedit :defer t)
 
 (after! format-all
+  (setq +format-on-save-enabled-modes
+        '(not emacs-lisp-mode           ; elisp's mechanisms are good enough
+              sql-mode                  ; sqlformat is currently broken
+              tex-mode                  ; latexindent is broken
+              latex-mode
+              org-msg-edit-mode
+              rjsx-mode
+              js2-mode
+              js-mode
+              js3-mode))
   (defadvice! +format-all--formatter-executable (orig-fn formatter)
     :around #'format-all--formatter-executable
     (let* ((home (concat (getenv "HOME") "/"))
@@ -167,3 +177,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (use-package! evil-textobj-tree-sitter
   :after evil)
+
+(use-package! apheleia
+  :hook ((js2-mode rjsx-mode) . apheleia-mode))
