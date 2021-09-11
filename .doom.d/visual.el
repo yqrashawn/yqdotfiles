@@ -20,7 +20,7 @@
                                       (left . 0.5)
                                       (height . 15)))
 
-  (setq! ivy-read-action-function #'ivy-read-action-ivy)
+  (after! ivy (setq! ivy-read-action-function #'ivy-read-action-by-key))
   (defadvice! +ivy-shrink-after-dispatching-a (f &rest a)
     :around #'ivy-shrink-after-dispatching
     (unless mini-frame-mode (apply f a))))
