@@ -44,7 +44,7 @@
  [remap split-window-right] #'evil-window-vsplit
  [remap xterm-paste] #'yank
  (:leader
-  :desc "Org Roam Today" "1" #'org-roam-dailies-goto-today
+  :desc "Org Roam Today" "1" #'org-roam-dailies-capture-today
   ;; :desc "Org Agenda" "0" (lambda (arg) (interactive "P") (org-agenda arg "a"))
   :desc "Org Agenda" "0" #'org-agenda
   :desc "Local Leader" "m" (general-simulate-key ",")

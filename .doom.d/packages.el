@@ -145,6 +145,7 @@
 (package! evil-textobj-tree-sitter)
 (package! jsonnet-mode)
 (package! apheleia :recipe (:type git :host github :repo "raxod502/apheleia"))
+(package! vulpea)
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy ;; mu4e
