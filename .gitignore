@@ -186,3 +186,6 @@ local/bin/rust-analyzer
 /.lldb/
 /.deta/
 /.config/mume/
+/.aspell.en.prepl
+/.aspell.en.pws
+/.gmailctl/
