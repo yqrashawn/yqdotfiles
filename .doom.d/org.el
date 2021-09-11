@@ -12,7 +12,9 @@
          org-startup-with-inline-images "inlineimages"
          org-cycle-emulate-tab nil
          org-cycle-global-at-bob t
-         org-hide-block-startup t)
+         org-hide-block-startup t
+         org-agenda-dim-blocked-tasks nil
+         org-agenda-inhibit-startup t)
   (pushnew! org-tags-exclude-from-inheritance "project")
   (pushnew! org-agenda-files (concat org-roam-directory org-roam-dailies-directory))
   (set-popup-rule!
