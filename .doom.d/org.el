@@ -8,6 +8,7 @@
 
 (after! org
   (setq! org-log-done 'time
+         org-roam-dailies-directory ""
          org-startup-with-inline-images "inlineimages"
          org-cycle-emulate-tab nil
          org-cycle-global-at-bob t
@@ -62,30 +63,19 @@
   ;; hook into org-roam-db-autosync-mode you wish to enable
   ;; persistence of meta values (see respective section in README to
   ;; find out what meta means)
-  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable))
-  :init
-  ;; (defun +org-auto-id-add-to-headlines-in-file ()
-  ;;   "Add ID property to the current file and all its headlines."
-  ;;   (when (and (or (eq major-mode 'org-mode)
-  ;;                  (eq major-mode 'org-journal-mode))
-  ;;              (eq buffer-read-only nil))
-  ;;     (save-excursion
-  ;;       (widen)
-  ;;       (goto-char (point-min))
-  ;;       (org-id-get-create)
-  ;;       (org-map-entries #'org-id-get-create))))
-
-  ;; (add-hook! 'before-save-hook #'+org-auto-id-add-to-headlines-in-file)
-  )
+  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
 
 
-;; (defadvice! ++org-init-popup-rules-h (&rest _)
-;;   :after #'+org-init-popup-rules-h
-;;   (set-popup-rules!
-;;     '(("^\\*Capture\\*$\\|CAPTURE-.*$"
-;;        :actions (display-buffer-at-bottom)
-;;        :size 0.25
-;;        :quit nil
-;;        :select t
-;;        :modeline t
-;;        :autosave ignore))))
+(defun +org-has-todo-p ()
+  "Return non-nil if current buffer has any todo entry.
+
+TODO entries marked as done are ignored, meaning the this
+function returns nil if current buffer contains only completed
+tasks."
+  (org-element-map
+      (org-element-parse-buffer 'headline)
+      'headline
+    (lambda (h)
+      (eq (org-element-property :todo-type h)
+          'todo))
+    nil 'first-match))
