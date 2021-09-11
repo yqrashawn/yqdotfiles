@@ -52,7 +52,7 @@
   :desc "Reveal in finder" "bf" #'reveal-in-osx-finder
   :desc "Open scratch buffer" "bs" #'doom/switch-to-scratch-buffer
   :desc "Open scratch project buffer" "bS" #'doom/switch-to-project-scratch-buffer
-  :desc "Toggle popup" "bm" #'+popup/toggle
+  :desc "Toggle popup" "bm" #'++popup-messages
   :desc "Find file" "ff" #'find-file
   :desc "Find file" "fj" #'dired-jump
   :desc "Open junk file" "fJ" #'yq/open-junk-file

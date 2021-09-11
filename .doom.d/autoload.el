@@ -429,3 +429,9 @@ _b_ranch _j_next _k_prev _h_up
                (find-file filename)
                (insert "sbt."))
       (user-error! "Invalid extension."))))
+;;;###autoload
+(defun ++popup-messages (arg)
+  (interactive "P")
+  (if arg
+      (+popup-buffer (get-buffer "*Messages*"))
+    (+popup-buffer (get-buffer "*Messages*") '((quit . t)))))

@@ -77,7 +77,10 @@
                         (and (cider--match-repl-type type b)
                              (not (equal b (get-buffer "*babashka-repl*")))))
                       repls)
-          (list (get-buffer "*babashka-repl*"))))))
+          (list (get-buffer "*babashka-repl*")))))
+
+  (set-popup-rules!
+    '(("^\\*cider-repl" :side right :size 0.5 :quit +doom/just-escaped-p :ttl nil))))
 
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
   (cmd! (setq-local company-idle-delay 0.2

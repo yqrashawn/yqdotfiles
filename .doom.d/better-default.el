@@ -146,9 +146,9 @@
     ("^\\*Completions" :ignore t)
     ("^\\*Local variables\\*$" :vslot -1 :slot 1 :size +popup-shrink-to-fit)
     ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)" :vslot -2 :size 0.3 :autosave t :quit t :ttl nil)
-    ("^\\*\\(?:doom \\|Pp E\\)"    ; transient buffers (no interaction required)
+    ("^\\*\\(?:doom \\|Pp E\\)"           ; transient buffers (no interaction required)
      :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
-    ("^\\*doom:"                        ; editing buffers (interaction required)
+    ("^\\*doom:"                         ; editing buffers (interaction required)
      :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
     ("^\\*doom:\\(?:v?term\\|e?shell\\)-popup" ; editing buffers (interaction required)
      :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil)
@@ -184,3 +184,20 @@
             (derived-mode-p 'comint-mode))
     (ignore-errors (comint-interrupt-subjob)))
   (apply orig arg))
+
+;; these fns are used for impl things that triggerd or passed under double C-g/ESC
+(defun +doom/escape-just-called-cancel ()
+  (setq +doom/escape-just-called nil))
+(+doom/escape-just-called-cancel)
+
+(defadvice! +doom/escape (orig-fn &optional interactive)
+  :around #'doom/escape
+  (unless +doom/escape-just-called
+      (setq +doom/escape-just-called t)
+      (run-at-time 0.4 #'+doom/escape-just-called-cancel))
+  (funcall orig-fn interactive))
+
+(defun +doom/just-escaped-p (&rest _)
+  (when +doom/escape-just-called
+    (+doom/escape-just-called-cancel)
+    t))
