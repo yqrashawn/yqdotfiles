@@ -225,6 +225,9 @@
                       [:tab :!TStab :comma-mode]]}
              {:des   "s-mode in chrome"
               :rules [:browser-s-mode
+                      ;; vertical tab for firefox
+                      [:j :!CSclose_bracket :Firefoxes]
+                      [:k :!CSopen_bracket :Firefoxes]
                       [:j :!CSopen_bracket]
                       [:k :!CSclose_bracket]
                       [:h :!Copen_bracket]
