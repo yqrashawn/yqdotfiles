@@ -138,7 +138,7 @@
              {:des   "global C-h to backspace"
               :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
              {:des   "contexts"
-              :rules [[[:m :l] [:f16 ["in-contexts" 1]]]
+              :rules [[[:n :l] [:f16 ["in-contexts" 1]]]
                       ;; [:semicolon :right_option nil {:alone :semicolon}]
                       [:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
                       [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]] ["in-contexts" 1]]
@@ -367,7 +367,9 @@
               :rules [[[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"] ["in-alfred" 1]]]
                       ;; [[:h :l] :f17]
                       [[:j :l] [:f19 ["in-alfred" 1]]]
-                      [[:l :n] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]]}
+                      ;; [[:m :l] [[:alf "winswitch" "ru.mandrigin.alfred.sww"] ["in-alfred" 1]]]
+                      [[:m :l] :f18]
+                      ]}
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
                       [:p :!OSa :browsers-alfred-mode]

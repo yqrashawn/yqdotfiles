@@ -21,6 +21,7 @@
 (local {:concat concat
         :logf logf} (require :lib.functional))
 
+(hs.application.enableSpotlightForNameSearches true)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; WARNING
 ;; Make sure you are customizing ~/.spacehammer/config.fnl and not
@@ -107,7 +108,7 @@
 ;; If you would like to customize this we recommend copying this file to
 ;; ~/.spacehammer/config.fnl. That will be used in place of the default
 ;; and will not be overwritten by upstream changes when spacehammer is updated.
-(local music-app "Spotify")
+(local music-app "NeteaseMusic")
 
 (local return
        {:key :space
@@ -249,31 +250,16 @@
 
 (local app-bindings
        [return
-        {:key :e
-         :title "Emacs"
-         :action (activator "Emacs")}
-        {:key :g
-         :title "Chrome"
-         :action (activator "Google Chrome")}
-        {:key :f
-         :title "Firefox"
-         :action (activator "Firefox")}
-        {:key :i
-         :title "Alacritty"
-         :action (activator "Alacritty")}
-        {:key :s
-         :title "Slack"
-         :action (activator "Slack")}
-        {:key :b
-         :title "Brave"
-         :action (activator "Brave")}
+        {:key :k
+         :title "Keybase"
+         :action (activator "Keybase")}
         {:key :m
          :title music-app
          :action (activator music-app)}])
 
 (local media-bindings
        [return
-        {:key :s
+        {:key :p
          :title "Play or Pause"
          :action "multimedia:play-or-pause"}
         {:key :h
@@ -313,15 +299,22 @@
 ;; Main Menu & Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(fn browser-org-roam-capture []
+  (hs.eventtap.keyStroke ["alt" "shift"] "9")
+  (hs.eventtap.keyStroke [] "R"))
+(fn browser-newsblur []
+  (hs.eventtap.keyStroke ["alt" "shift"] "9")
+  (hs.eventtap.keyStroke [] "N"))
+
 (local menu-items
-       [{:key    :space
-         :title  "Alfred"
-         :action (activator "Alfred 4")}
-        {:key   :w
-         :title "Window"
-         :enter "windows:enter-window-menu"
-         :exit "windows:exit-window-menu"
-         :items window-bindings}
+       [ ;; {:key    :space
+        ;;  :title  "Alfred"
+        ;;  :action (activator "Alfred 4")}
+        ;; {:key   :w
+        ;;  :title "Window"
+        ;;  :enter "windows:enter-window-menu"
+        ;;  :exit "windows:exit-window-menu"
+        ;;  :items window-bindings}
         {:key   :a
          :title "Apps"
          :items app-bindings}
@@ -331,9 +324,10 @@
         {:key   :m
          :title "Media"
          :items media-bindings}
-        {:key   :x
-         :title "Emacs"
-         :items emacs-bindings}])
+        ;; {:key   :x
+        ;;  :title "Emacs"
+        ;;  :items emacs-bindings}
+        ])
 
 (local common-keys
        [{ ;; :mods [:alt]
@@ -348,17 +342,18 @@
         {:mods [:cmd :ctrl]
          :key "`"
          :action hs.toggleConsole}
-        {:mods [:cmd :ctrl]
-         :key :o
-         :action "emacs:edit-with-emacs"}
-        {:mods [:hyper]
-         :key :1
-         :title  "Emacs"
-         :action (activator "Emacs")}
-        {:mods [:hyper]
-         :key :2
-         :title  "Alacritty"
-         :action (activator "Alacritty")}])
+        ;; {:mods [:cmd :ctrl]
+        ;;  :key :o
+        ;;  :action "emacs:edit-with-emacs"}
+        ;; {:mods [:hyper]
+        ;;  :key :1
+        ;;  :title  "Emacs"
+        ;;  :action (activator "Emacs")}
+        ;; {:mods [:hyper]
+        ;;  :key :2
+        ;;  :title  "Alacritty"
+        ;;  :action (activator "Alacritty")}
+        ])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; App Specific Config
@@ -374,7 +369,15 @@
         menu-items
         [{:key "'"
           :title "Edit with Emacs"
-          :action "emacs:edit-with-emacs"}]))
+          :action "emacs:edit-with-emacs"}
+         {:key :c
+          :title "Capture"
+          :items [{:key :r
+                   :title "Org Roam"
+                   :action browser-org-roam-capture}
+                  {:key :n
+                   :title "Newsblur"
+                   :action browser-newsblur}]}]))
 
 (local brave-config
        {:key "Brave Browser"
@@ -382,12 +385,12 @@
         :items browser-items})
 
 (local chrome-config
-       {:key "Google Chrome"
+       {:key "Google Chrome Canary"
         :keys browser-keys
         :items browser-items})
 
 (local firefox-config
-       {:key "Firefox"
+       {:key "Firefox Developer Edition"
         :keys browser-keys
         :items browser-items})
 
@@ -476,7 +479,8 @@
         emacs-config
         grammarly-config
         hammerspoon-config
-        slack-config])
+        ;; slack-config
+        ])
 
 (local config
        {:title "Main Menu"
@@ -491,7 +495,6 @@
 ;; Spoon
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hs.loadSpoon "SpoonInstall" true)
-(global spoon _G.spoon)
 (set spoon.SpoonInstall.use_syncinstall true)
 (local Install spoon.SpoonInstall)
 
