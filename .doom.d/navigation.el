@@ -121,3 +121,5 @@
 
 ;;   ;; Manual preview key for `affe-grep'
 ;;   (consult-customize affe-grep :preview-key (kbd "M-.")))
+
+(use-package! spacehammer :load-path "~/.hammerspoon/")

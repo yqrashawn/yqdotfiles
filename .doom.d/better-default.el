@@ -201,3 +201,13 @@
   (when +doom/escape-just-called
     (+doom/escape-just-called-cancel)
     t))
+
+
+(defun sticky-window-keep-window-visible ()
+  "Insure the buffer associated with the current window stays visible.
+This is handy for ERC buffers where you would like to see the
+conversation while you work in other windows within the frame.
+This is intended to be used with `sticky-window-delete-window'.
+A prefix arg reverses this operation."
+  (interactive)
+  (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
