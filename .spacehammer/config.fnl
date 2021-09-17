@@ -514,7 +514,8 @@
   :config
   {:url_patterns [["zoommtg:" "us.zoom.xos"]
                   ["tg:" "ru.keepcoder.Telegram"]
-                  ["https://yqrashawn.deta.dev.*" chrm]]
+                  ["https://yqrashawn.deta.dev.*" chrm]
+                  ["http://localhost:.*" chrm]]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
                          "zoommtg://zoom.us/join?confno=%1&pwd=%2"
