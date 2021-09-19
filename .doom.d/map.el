@@ -44,9 +44,12 @@
  [remap split-window-right] #'evil-window-vsplit
  [remap xterm-paste] #'yank
  (:leader
-  :desc "Org Roam Today" "1" #'org-roam-dailies-capture-today
-  ;; :desc "Org Agenda" "0" (lambda (arg) (interactive "P") (org-agenda arg "a"))
-  :desc "Org Agenda" "0" #'org-agenda
+  (:prefix-map ("1" . "DO")
+   :desc "Daily Capture" "c" #'org-roam-dailies-capture-today
+   :desc "Daily Note" "1" #'org-roam-dailies-goto-today
+   :desc "What To Do" "SPC" #'org-agenda
+   :desc "New Node" "n" #'org-roam-capture
+   :desc "Find Node" "f" #'org-roam-node-find)
   :desc "Local Leader" "m" (general-simulate-key ",")
   :desc "M-x" "SPC" #'execute-extended-command
   :desc "Reveal in finder" "bf" #'reveal-in-osx-finder
