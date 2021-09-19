@@ -2,8 +2,8 @@
 
 (setq +company-backend-alist
       '((text-mode (:separate company-dabbrev company-yasnippet company-files company-ispell))
-        (prog-mode company-tabnine company-capf company-yasnippet company-files company-keywords company-dabbrev-code company-dabbrev)
-        (conf-mode company-tabnine company-capf company-dabbrev-code company-yasnippet)))
+        (prog-mode company-tabnine company-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
+        (conf-mode company-tabnine company-capf company-files company-dabbrev-code company-yasnippet)))
 
 (setq! projectile-project-search-path '("~/workspace/office" "~/workspace/home" "~/workspace/third"))
 

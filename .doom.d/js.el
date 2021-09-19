@@ -5,9 +5,7 @@
   :init
   (setq! jest-executable "yarn test")
   (pushnew! evil-collection-mode-list 'jest-mode)
-  (pushnew! evil-normal-state-modes 'jest-mode)
-  ;; (set-popup-rule! "^\\*jest\\*" :side 'right :width 0.4 :vslot 2 :quit 'current :select nil)
-  )
+  (pushnew! evil-normal-state-modes 'jest-mode))
 
 (use-package! rjsx-mode
   :defer t

@@ -49,7 +49,8 @@
    :desc "Daily Note" "1" #'org-roam-dailies-goto-today
    :desc "What To Do" "SPC" #'org-agenda
    :desc "New Node" "n" #'org-roam-capture
-   :desc "Find Node" "f" #'org-roam-node-find)
+   :desc "Find Node" "f" #'org-roam-node-find
+   :desc "Agenda" "a" (lambda (arg) (interactive "P") (org-agenda arg "a")))
   :desc "Local Leader" "m" (general-simulate-key ",")
   :desc "M-x" "SPC" #'execute-extended-command
   :desc "Reveal in finder" "bf" #'reveal-in-osx-finder
