@@ -211,3 +211,7 @@ This is intended to be used with `sticky-window-delete-window'.
 A prefix arg reverses this operation."
   (interactive)
   (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+
+(after! wgrep
+  (advice-remove #'wgrep-abort-changes #'+popup-close-a)
+  (advice-remove #'wgrep-finish-edit #'+popup-close-a))

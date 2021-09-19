@@ -17,6 +17,8 @@
          org-agenda-inhibit-startup t)
   (pushnew! org-tags-exclude-from-inheritance "project")
   (pushnew! org-agenda-files (concat org-roam-directory org-roam-dailies-directory))
+  (defadvice! +org-agenda--quit (&rest _) :before #'org-agenda--quit (org-save-all-org-buffers))
+  (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
   (set-popup-rule!
     "^\\*Capture\\*$\\|CAPTURE-.*$"
     :actions '(display-buffer-at-bottom)
