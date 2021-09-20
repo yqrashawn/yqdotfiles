@@ -104,7 +104,8 @@
   (:after js2-mode
    (:map js2-mode-map
     :n "jj" #'+jest-popup
-    :n "jd" #'+jest-popup-debug))
+    :n "jd" #'+jest-popup-debug
+    :n "rll" #'turbo-log-print))
   (:after org
    (:map org-mode-map
     :n "i" nil
@@ -197,6 +198,8 @@
  ;;  :g "," (cmd! (message "this operator is %s" evil-this-operator))
  ;;  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
  ;;  :g "E" (+thing-edit-gen-evil-op-f 'email))
+ (:after org
+  [remap org-insert-link ar/org-insert-link-dwim])
  (:after evil-snipe
   (:map evil-snipe-override-mode-map
    :nm "s" nil)

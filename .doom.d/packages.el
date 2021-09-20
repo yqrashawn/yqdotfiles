@@ -101,7 +101,7 @@
 (package! company-tabnine)
 (package! company-ctags)
 
-(package! tree-sitter)
+(package! tree-sitter :pin "3a600d769bd5da95bf46bec58893934370c6c04f" :recipe (:host github :repo "emacs-tree-sitter/elisp-tree-sitter"))
 (package! tree-sitter-langs)
 (package! jenkinsfile-mode)
 (package! jq-mode)
@@ -146,6 +146,9 @@
 (package! jsonnet-mode)
 (package! apheleia :recipe (:type git :host github :repo "raxod502/apheleia"))
 (package! vulpea)
+(package! deadgrep)
+(package! declutter :recipe (:type git :host github :repo "sanel/declutter"))
+(package! turbo-log :recipe (:type git :host github :repo "Artawower/turbo-log"))
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin! cider lispy ;; mu4e

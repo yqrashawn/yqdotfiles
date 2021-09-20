@@ -1,5 +1,8 @@
 ;;; visual.el -*- lexical-binding: t; -*-
 
+(setq! text-scale-remap-header-line t
+       mac-allow-anti-aliasing t)
+
 (use-package! outline-minor-faces
   :hook (outline-minor-mode . outline-minor-faces-add-font-lock-keywords))
 

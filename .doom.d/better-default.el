@@ -215,3 +215,5 @@ A prefix arg reverses this operation."
 (after! wgrep
   (advice-remove #'wgrep-abort-changes #'+popup-close-a)
   (advice-remove #'wgrep-finish-edit #'+popup-close-a))
+
+(setq! xref-search-program 'rg)

@@ -21,7 +21,7 @@
 ;; font string. You generally only need these two:
 
 (setq doom-font (font-spec :family "PragmataPro Mono Liga" :size 16 :weight 'normal)
-      doom-variable-pitch-font (font-spec :family "PragmataPro Mono Liga" :size 14)
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans" :size 14)
       doom-big-font (font-spec :family "PragmataPro Mono Liga" :size 22 :weight 'normal)
       doom-font-increment 1)
 
