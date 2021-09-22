@@ -131,8 +131,8 @@
             "[/\\\\]\\.cache\\'")
   (setq! +lsp-company-backends
          (if (featurep! :editor snippets)
-             '(:separate company-tabnine company-capf company-yasnippet)
-           '(:separate company-tabnine company-capf)))
+             '(:separate company-tabnine company-capf company-files company-yasnippet)
+           '(:separate company-tabnine company-capf company-files)))
   (setq! lsp-eslint-enable nil)
 
   (add-hook! 'lsp-configure-hook '+disable-lsp-watcher-in-some-project))
