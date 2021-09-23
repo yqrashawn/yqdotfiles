@@ -4,7 +4,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((projectile-project-root . "~/.doom.d")
+   '((cider-shadow-watched-builds quote
+                                  ("server" "front"))
+     (projectile-project-root . "~/.doom.d")
      (projectile-project-root . "~/Dropbox/ORG")
      (counsel-rg-base-command "rg" "--max-columns" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "-uu" "%s")
      (vulpea-id-auto-targets nil)
