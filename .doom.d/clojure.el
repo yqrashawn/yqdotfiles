@@ -23,12 +23,34 @@
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil))
 
-(after! cider
-  (after! lispy
-    ;; make lispy-eval works in babashka repl
+(defun +in-babashka-p ()
+  (and (memq major-mode '(clojure-mode))
+       (functionp 'cider--babashka-version)
+       (cider--babashka-version)))
+(defun +in-clj-p ()
+  (memq major-mode '(clojure-mode clojurec-mode clojurescript-mode)))
+
+
+(use-package! lispy
+  :diminish lispy " ʪ"
+  :hook ((ielm-mode
+          lisp-mode
+          clojure-mode
+          clojurec-mode
+          scheme-mode
+          racket-mode
+          hy-mode
+          lfe-mode
+          dune-mode
+          fennel-mode
+          emacs-lisp-mode
+          cider-repl-mode
+          clojurescript-mode) . lispy-mode)
+  :config
+  ;; make lispy-eval works in babashka repl
     (defadvice! +lispy-eval (orig-fn &rest args)
       :around #'lispy-eval
-      (if (and (memq major-mode '(clojure-mode)) (functionp 'cider--babashka-version) (cider--babashka-version))
+      (if (+in-clj-p)
           (if (and lispy-mode (lispy-left-p))
               (save-excursion
                 (call-interactively 'lispy-different)
@@ -38,12 +60,13 @@
 
     (defadvice! +lispy-eval-and-insert (func &rest args)
       :around #'lispy-eval-and-insert
-      (if (and (memq major-mode '(clojure-mode)) (functionp 'cider--babashka-version) (cider--babashka-version))
+      (if (+in-clj-p)
           (progn
-            ;; (setq current-prefix-arg '(1))
+            (setq current-prefix-arg '(1))
             (call-interactively 'cider-pprint-eval-last-sexp))
         (apply func args))))
 
+(after! cider
   ;; When asking for a "matching" REPL (clj/cljs), and no matching REPL is found,
   ;; return any REPL that is there. This is so that cider-quit can be called
   ;; repeatedly to close all REPLs in a process. It also means that , s s will go
