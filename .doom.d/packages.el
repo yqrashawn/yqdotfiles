@@ -153,6 +153,7 @@
  lispy ;; mu4e
  link-hint fd-dired)
 
+(package! elcord)
 (package! tree-sitter
   :pin "c7a1c34549cad41a3618c6f17e0e9dabd3e98fe1")
 (package! tree-sitter-langs
