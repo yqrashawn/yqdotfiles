@@ -217,3 +217,5 @@ A prefix arg reverses this operation."
   (advice-remove #'wgrep-finish-edit #'+popup-close-a))
 
 (setq! xref-search-program 'rg)
+
+(add-hook! 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)

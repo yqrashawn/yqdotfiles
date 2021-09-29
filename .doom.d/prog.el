@@ -47,6 +47,7 @@
   :config
   (setq! company-tabnine--disabled t)
   (after! lsp-mode
+    (setq! lsp-enable-snippet nil)
     (defadvice! +lsp-mode (orig-fn &rest args)
       :around #'lsp-mode
       (when company-tabnine--disabled (apply orig-fn args))
