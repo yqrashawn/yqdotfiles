@@ -28,4 +28,4 @@
     :around #'ivy-shrink-after-dispatching
     (unless mini-frame-mode (apply f a))))
 
-(use-package! elcord :hook (doom-first-file-hook . elcord-mode))
+(use-package! elcord :hook (doom-first-file . elcord-mode))
