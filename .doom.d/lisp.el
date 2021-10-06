@@ -109,3 +109,20 @@ Instead keep them, with a newline after each comment."
   (lispyville-set-key-theme)
   (lispy-define-key lispy-mode-map "v" #'lispyville-toggle-mark-type)
   (lispy-define-key lispy-mode-map "m" #'lispy-view))
+
+(use-package! parinfer-rust-mode
+  :defer t
+  ;; :hook (emacs-lisp-mode clojure-mode clojurescript-mode)
+  :init
+  (setq! parinfer-rust-preferred-mode "paren"
+         parinfer-rust-check-before-enable nil))
+
+(use-package! symex
+  :defer t
+  ;; :hook ((scheme-mode
+  ;;         arc-mode
+  ;;         clojure-mode
+  ;;         clojurescript-mode
+  ;;         lisp-mode) . symex-initialize)
+  :config
+  (global-set-key (kbd "s-;") 'symex-mode-interface))

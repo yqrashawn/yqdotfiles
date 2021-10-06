@@ -18,14 +18,14 @@
          ivy-use-virtual-buffers t
          ivy-re-builders-alist '((forge-create-pullreq . ivy--regex-fuzzy)
                                  (counsel-git . ivy--regex-fuzzy)
-                                 (t . ivy--regex-plus)
+                                 (t . ivy--regex-plus))))
                                  ;; (t . orderless-ivy-re-builder)
-                                 )))
+                                 
 
 (after! counsel
-  (setq! counsel-grep-base-command "rg -i -M 120 --no-heading --line-number --color never %s %s"
+  (setq! counsel-grep-base-command "rg -i -M 120 --no-heading --line-number --color never %s %s"))
          ;; counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls"
-         ))
+         
 
 (use-package! counsel-tramp :commands (counsel-tramp))
 

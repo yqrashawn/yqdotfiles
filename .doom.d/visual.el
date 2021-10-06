@@ -29,3 +29,4 @@
     (unless mini-frame-mode (apply f a))))
 
 (use-package! elcord :hook (doom-first-file . elcord-mode))
+(use-package! idle-highlight-mode :hook (doom-first-file))

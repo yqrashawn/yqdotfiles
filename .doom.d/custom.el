@@ -4,7 +4,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((projectile-project-root . "~/.doom.d/")
+   '((elisp-lint-indent-specs
+      (describe . 1)
+      (it . 1))
+     (projectile-project-root . "~/.doom.d/")
      (cider-shadow-cljs-command . "yarn run shadow-cljs")
      (cider-shadow-watched-builds quote
                                   ("server" "front"))
