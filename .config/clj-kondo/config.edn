@@ -1,0 +1,23 @@
+{:lint-as {garden.def/defcssfn clojure.core/def
+           garden.def/defkeyframes clojure.core/def
+           garden.def/defrule clojure.core/def
+           garden.def/defstyles clojure.core/def
+           garden.def/defstylesheet clojure.core/def
+           nubank.workspaces.core/defcard clojure.core/def
+           mount/defstate clojure.core/def
+           reagent.core/with-let clojure.core/let
+           spade.core/defclass clojure.core/defn
+           spade.core/defattrs clojure.core/defn}
+ :linters {:unresolved-symbol {:exclude [goog.DEBUG]}
+           :unused-namespace {:exclude [cljs.repl]}
+           :unused-referred-var {:exclude {cljs.repl [Error->map
+                                                      apropos
+                                                      dir
+                                                      doc
+                                                      error->str
+                                                      ex-str
+                                                      ex-triage
+                                                      find-doc
+                                                      print-doc
+                                                      pst
+                                                      source]}}}}
