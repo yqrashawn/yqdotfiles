@@ -305,7 +305,7 @@
                       [:6 :!!z]
                       [:9 [:open "/Applications/PDF Expert.app"]]
                       ;; [:h [:open "/Applications/Slack.app"]]
-                      [:h [:hsl "Slack"]]
+                      [:h [:hsl "DingTalk"]]
                       [:r [:opena "Roam Research"]]
                       ;; [:period [:open "/Applications/SetApp/Paw.app"]]
                       [:period [:hsl "Paw"]]

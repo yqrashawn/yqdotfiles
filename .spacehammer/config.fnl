@@ -502,10 +502,12 @@
 (local brv "com.brave.Browser")
 (local vv "com.vivaldi.Vivaldi")
 (local ffd "org.mozilla.firefoxdeveloperedition")
+(local ffd "org.mozilla.firefoxdeveloperedition")
 (local ff "org.mozilla.firefox")
 (local chrm "com.google.Chrome")
 (local chrmc "com.google.Chrome.canary")
 (local safari "com.apple.Safari")
+(local unite-clickup "com.ClickUp")
 
 ;; https://www.hammerspoon.org/Spoons/URLDispatcher.html
 (Install:andUse "URLDispatcher"
@@ -515,7 +517,8 @@
   {:url_patterns [["zoommtg:" "us.zoom.xos"]
                   ["tg:" "ru.keepcoder.Telegram"]
                   ["https://yqrashawn.deta.dev.*" chrm]
-                  ["http://localhost:.*" chrm]]
+                  ["http://localhost:.*" chrm]
+                  ["https://api.clickup.com" unite-clickup]]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
                          "zoommtg://zoom.us/join?confno=%1&pwd=%2"
