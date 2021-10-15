@@ -502,7 +502,6 @@
 (local brv "com.brave.Browser")
 (local vv "com.vivaldi.Vivaldi")
 (local ffd "org.mozilla.firefoxdeveloperedition")
-(local ffd "org.mozilla.firefoxdeveloperedition")
 (local ff "org.mozilla.firefox")
 (local chrm "com.google.Chrome")
 (local chrmc "com.google.Chrome.canary")
@@ -518,7 +517,8 @@
                   ["tg:" "ru.keepcoder.Telegram"]
                   ["https://yqrashawn.deta.dev.*" chrm]
                   ["http://localhost:.*" chrm]
-                  ["https://api.clickup.com" unite-clickup]]
+                  ["https://api.clickup.com" unite-clickup]
+                  ["https://alidocs.dingtalk.com" chrm]]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
                          "zoommtg://zoom.us/join?confno=%1&pwd=%2"
