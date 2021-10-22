@@ -517,7 +517,7 @@
                   ["tg:" "ru.keepcoder.Telegram"]
                   ["https://yqrashawn.deta.dev.*" chrm]
                   ["http://localhost:.*" chrm]
-                  ["https://api.clickup.com" unite-clickup]
+                  ["https://app.clickup.com" unite-clickup]
                   ["https://alidocs.dingtalk.com" chrm]]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
