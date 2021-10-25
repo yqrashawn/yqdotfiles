@@ -379,6 +379,16 @@
                    :title "Newsblur"
                    :action browser-newsblur}]}]))
 
+(local clickup-config
+       {:key "ClickUp"
+        :keys browser-keys
+        :items browser-items})
+
+(local safari-config
+       {:key "Safari"
+        :keys browser-keys
+        :items browser-items})
+
 (local brave-config
        {:key "Brave Browser"
         :keys browser-keys
@@ -479,6 +489,8 @@
         emacs-config
         grammarly-config
         hammerspoon-config
+        safari-config
+        clickup-config
         ;; slack-config
         ])
 

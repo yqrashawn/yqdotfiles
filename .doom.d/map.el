@@ -298,6 +298,8 @@
   :i "C-n" nil
   :i "C-p" nil
   :i "C-r" nil
+  ;; :i "C-m" #'newline-and-indent
+  :i "C-j" #'avy-goto-char-timer
   :i "C-l" #'hippie-expand
   :i "." #'+yas-expand-when-inserting-dot
   :m "TAB" nil

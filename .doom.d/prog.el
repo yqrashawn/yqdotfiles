@@ -187,3 +187,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :config
   (pushnew! turbo-log--modes '(rjsx-mode . turbo-log--ecmascript-print))
   (plist-put turbo-log--ecmascript-configs :include-semicolon nil))
+
+(use-package! smerge-mode
+  :defer t
+  :config
+  (add-hook! 'smerge-mode-hook (cmd! (flycheck-mode -1))))

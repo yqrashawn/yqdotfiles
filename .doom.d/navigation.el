@@ -52,8 +52,11 @@
 
 (after! avy
   (setq! avy-timeout-seconds 0.3
+         avy-all-windows t
          avy-indent-line-overlay t
+         avy-single-candidate-jump t
          avy-background t
+         avy-keys '(?f ?j ?d ?k ?a ?s ?l ?g ?h ?e ?i ?r ?u ?w ?o ?v ?m)
          avy-highlight-first t))
 
 (use-package! loccur :commands loccur-current)
