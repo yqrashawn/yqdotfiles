@@ -518,7 +518,7 @@
 (local chrm "com.google.Chrome")
 (local chrmc "com.google.Chrome.canary")
 (local safari "com.apple.Safari")
-(local unite-clickup "com.ClickUp")
+(local unite-clickup "com.clickup.desktop-app")
 
 ;; https://www.hammerspoon.org/Spoons/URLDispatcher.html
 (Install:andUse "URLDispatcher"
