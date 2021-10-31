@@ -1,11 +1,12 @@
 # display 1
 ## space 1
-yabai -m rule --add label=emacs app=Emacs space=1 display=1
+yabai -m rule --add label=emacs app="^Emacs$" space=1 display=1
 yabai -m rule --add app=Alacritty space=1
 ## space 2
 yabai -m rule --add app=WeChat space=2
-yabai -m rule --add app=Slack space=2
-yabai -m rule --add app=Spark space=2
+yabai -m rule --add app="^WeChat$" title!="^Log In$" space=2
+yabai -m rule --add app="^Slack$" space=2
+yabai -m rule --add app="^Mail$" space=2
 ## space 3
 yabai -m rule --add app=Todoist space=3
 yabai -m rule --add app=Notion space=3
@@ -14,6 +15,9 @@ yabai -m rule --add app=Notion space=3
 yabai -m rule --add label=emacs app="^Google Chrome$" space=1 display=2
 
 # float
-yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app=Preferences manage=off
 yabai -m rule --add app="^CleanMyMac.*$" manage=off
+yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^Twitterrific$" manage=off
+yabai -m rule --add app="^WeChat$" title="^Log In$" manage=off
+yabai -m rule --add app="^Dash$" manage=off
