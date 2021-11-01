@@ -1,23 +1,35 @@
-# display 1
-## space 1
-yabai -m rule --add label=emacs app="^Emacs$" space=1 display=1
-yabai -m rule --add app=Alacritty space=1
-## space 2
-yabai -m rule --add app=WeChat space=2
-yabai -m rule --add app="^WeChat$" title!="^Log In$" space=2
-yabai -m rule --add app="^Slack$" space=2
-yabai -m rule --add app="^Mail$" space=2
-## space 3
-yabai -m rule --add app=Todoist space=3
-yabai -m rule --add app=Notion space=3
+#!/usr/bin/env sh
 
-# display 2
-yabai -m rule --add label=emacs app="^Google Chrome$" space=1 display=2
-
-# float
-yabai -m rule --add app=Preferences manage=off
+## label
+### space
+#### main
+yabai -m space 1 --label m:1 --display 1
+yabai -m space 2 --label m:2 --display 1
+yabai -m space 3 --label m:3 --display 1
+#### second
+yabai -m space 4 --label s:1 --display 2
+yabai -m space 5 --label s:2 --display 2
+yabai -m space 6 --label s:3 --display 2
+### app
+#### code
+yabai -m rule --add label=m:1 app="^Emacs$"
+yabai -m rule --add label=m:1 app="^Alacritty$"
+yabai -m rule --add label=m:1 app="^Dash$"
+yabai -m rule --add label=s:1 app="^Figma$"
+yabai -m rule --add label=s:1 app="^Firefox Developer Edition$"
+#### plan
+yabai -m rule --add label=s:2 app="^ClickUp$"
+yabai -m rule --add label=s:2 app="^Todoist$"
+yabai -m rule --add label=s:2 app="^Notion$"
+yabai -m rule --add label=s:2 app="^NotePlan$"
+yabai -m rule --add label=s:2 app="^Logseq$"
+yabai -m rule --add label=s:2 app="^Roam$"
+#### browse
+yabai -m rule --add label=s:1 app="^Google Chrome$"
+### float
+yabai -m rule --add app="^WeChat$" title="^Log.*In$" manage=off
 yabai -m rule --add app="^CleanMyMac.*$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Twitterrific$" manage=off
-yabai -m rule --add app="^WeChat$" title="^Log In$" manage=off
 yabai -m rule --add app="^Dash$" manage=off
+yabai -m rule --add app="^Slidepad$" manage=off

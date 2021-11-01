@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 BATT_PERCENT=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
+
+[[ $BATT_PERCENT = 100 ]] && exit 0
+
 CHARGING=$(pmset -g batt | grep 'AC Power')
 
 if [[ $CHARGING != "" ]]; then
