@@ -191,3 +191,4 @@ local/bin/rust-analyzer
 /.gmailctl/
 /MEGA/
 /.logseq/
+/.netrc

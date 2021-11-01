@@ -273,7 +273,7 @@
                       ;; [:k [:f16 :!Sd :o :o :m :spacebar :!Se :m :a :c :s :return_or_enter]]
                       [:k :same_wind_app :Emacs]
                       [:k [:hsl "Emacs"]]
-                      [:u [:hsl "Emacs-NG"]]
+                      [:u [:hsl "Newsblur"]]
                       ;; [:k [:opena "kitty"]]
                       ;; [:k [:opena "WezTerm.app"]]
                       ;; [:k [:launch "Emacs"]]
