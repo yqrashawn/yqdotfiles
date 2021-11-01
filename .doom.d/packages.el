@@ -149,7 +149,7 @@
 (package! turbo-log :recipe (:type git :host github :repo "Artawower/turbo-log"))
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
-(unpin! ;; cider
+(unpin! cider
  lispy ;; mu4e
  link-hint fd-dired)
 
