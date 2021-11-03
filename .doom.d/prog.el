@@ -192,3 +192,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :defer t
   :config
   (add-hook! 'smerge-mode-hook (cmd! (flycheck-mode -1))))
+
+(use-package! capf-autosuggest
+  :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))

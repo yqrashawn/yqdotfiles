@@ -162,3 +162,4 @@
 (package! parinfer-rust-mode)
 (package! idle-highlight-mode)
 (package! symex)
+(package! capf-autosuggest)

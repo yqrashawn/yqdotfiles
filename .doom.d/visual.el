@@ -30,3 +30,4 @@
 
 (use-package! elcord :hook (doom-first-file . elcord-mode))
 (use-package! idle-highlight-mode :hook (doom-first-file))
+(add-hook! 'doom-first-file-hook #'global-display-fill-column-indicator-mode)

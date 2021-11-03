@@ -43,6 +43,8 @@
  [remap split-window-below] #'evil-window-split
  [remap split-window-right] #'evil-window-vsplit
  [remap xterm-paste] #'yank
+ [remap eval-last-sexp] #'pp-eval-last-sexp
+ [eval-expression] #'pp-eval-expression
  (:leader
   (:prefix-map ("1" . "DO")
    :desc "Daily Capture" "c" #'org-roam-dailies-capture-today

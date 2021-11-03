@@ -375,9 +375,35 @@
           :items [{:key :r
                    :title "Org Roam"
                    :action browser-org-roam-capture}
-                  {:key :n
+                  {:key :N
                    :title "Newsblur"
-                   :action browser-newsblur}]}]))
+                   :action browser-newsblur}
+                  {:key :n
+                   :title "Notion"
+                   :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "k"))}]}]))
+
+(local firefox-items
+       (concat
+        browser-items
+        [{:key "e"
+          :title "Extension"
+          :items [{:key :b
+                   :title "Bitwarden"
+                   :items [{:key :b
+                            :title "Open sidebar"
+                            :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "y"))}
+                           {:key :space
+                            :title "Fill pass"
+                            :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "l"))}
+                           {:key :space
+                            :title "Gen pass"
+                            :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "9"))}]}
+                  {:key :d
+                   :title "Toggle dark mode"
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "a"))}
+                  {:key :t
+                   :title "Toggle tree tab"
+                   :action (fn [] (hs.eventtap.keyStroke ["cmd" "ctrl"] "e"))}]}]))
 
 (local clickup-config
        {:key "ClickUp"
@@ -402,7 +428,7 @@
 (local firefox-config
        {:key "Firefox Developer Edition"
         :keys browser-keys
-        :items browser-items})
+        :items firefox-items})
 
 (local emacs-config
        {:key "Emacs"
