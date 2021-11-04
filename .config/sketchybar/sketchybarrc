@@ -66,8 +66,8 @@ sketchybar -m --add item space_separator left \
 	--set space_separator icon= \
 	associated_space=1 \
 	associated_space=3 \
-	icon.padding_left=15 \
-	label.padding_right=15 \
+	icon.padding_left=0 \
+	label.padding_right=0 \
 	icon.font="PragmataPro:Bold:16.0" \
 	\
 	--add item githubIndicator left \
