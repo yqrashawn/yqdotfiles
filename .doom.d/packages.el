@@ -163,3 +163,4 @@
 (package! idle-highlight-mode)
 (package! symex)
 (package! capf-autosuggest)
+(package! adoc-mode)

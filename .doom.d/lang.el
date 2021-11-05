@@ -46,3 +46,7 @@
   ;; :init
   ;; (setq! tree-sitter-hl-use-font-lock-keywords nil)
   )
+
+(use-package! adoc-mode
+  :mode (("\\.adoc$" . adoc-mode)
+         ("\\.asciidoc$" . adoc-mode)))
