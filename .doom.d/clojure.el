@@ -3,7 +3,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
-(add-to-list 'magic-mode-alist '("^#![^\n]*/\\(boot\\|clj\\|clojure\\|bb\\|lumo\\)\s" . clojure-mode))
+(add-to-list 'magic-mode-alist '("^#!/.*\\(boot\\|clj\\|clojure\\|bb\\|lumo\\)$" . clojure-mode))
 
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t

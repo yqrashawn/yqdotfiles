@@ -12,6 +12,7 @@ sketchybar -m --bar height=25 \
 sketchybar -m --default updates=when_shown \
 	drawing=on \
 	cache_scripts=on \
+	label.highlight_color=0xff48aa2a \
 	icon.font="PragmataPro:Bold:16.0" \
 	icon.color=0xffffffff \
 	label.font="PragmataPro:Bold:16.0" \
@@ -24,36 +25,78 @@ sketchybar -m --default label.padding_left=2 \
 	label.padding_right=8
 
 ############## PRIMARY DISPLAY SPACES ##############
-sketchybar -m --add space code left \
-	--set code associated_space=1 \
+sketchybar -m \
+    --add space space1 left \
+	--set space1 associated_space=1 \
 	associated_display=1 \
-	icon.font="PragmataPro:Bold:20.0" \
-	icon= \
-	icon.padding_right=3 \
-	icon.highlight_color=0xff48aa2a \
-	label=code \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=1 \
 	click_script="yabai -m space --focus 1" \
 	\
-	--add space coffee left \
-	--set coffee associated_display=1 \
-	associated_space=2 \
-	icon.highlight_color=0xfffab402 \
-	icon.font="PragmataPro:Bold:16.0" \
-	icon= \
-	label=coffee \
-	click_script="yabai -m space --focus 2"
+    --add space space2 left \
+	--set space2 associated_space=2 \
+	associated_display=1 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=2 \
+	click_script="yabai -m space --focus 2" \
+	\
+    --add space space3 left \
+	--set space3 associated_space=3 \
+	associated_display=1 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=3 \
+	click_script="yabai -m space --focus 3" \
+	\
+    --add space space4 left \
+	--set space4 associated_space=4 \
+	associated_display=1 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=4 \
+	click_script="yabai -m space --focus 4" \
+	\
+    --add space space5 left \
+	--set space5 associated_space=5 \
+	associated_display=1 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=5 \
+	click_script="yabai -m space --focus 5"
 
 ############## SECONDARY DISPLAY SPACES ##############
-sketchybar -m --add space misc left \
-	--set misc associated_display=2 \
-	associated_space=5 \
-	icon.font="PragmataPro:Bold:20.0" \
-	icon= \
-	icon.highlight_color=0xff48aa2a \
-	icon.padding_right=3 \
-	icon.padding_left=0 \
-	label=misc \
-	click_script="yabai -m space --focus 5"
+sketchybar -m \
+    --add space space6 left \
+	--set space6 associated_space=6 \
+	associated_display=2 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=6 \
+	click_script="yabai -m space --focus 6" \
+	\
+    --add space space7 left \
+	--set space7 associated_space=7 \
+	associated_display=2 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=7 \
+	click_script="yabai -m space --focus 7" \
+	\
+    --add space space8 left \
+	--set space8 associated_space=8 \
+	associated_display=2 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=8 \
+	click_script="yabai -m space --focus 8" \
+	\
+    --add space space9 left \
+	--set space9 associated_space=4 \
+	associated_display=2 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=9 \
+	click_script="yabai -m space --focus 9" \
+	\
+    --add space space0 left \
+	--set space0 associated_space=10 \
+	associated_display=2 \
+	script="~/.config/sketchybar/plugins/space.sh" \
+	label=0 \
+	click_script="yabai -m space --focus 10"
 
 ############## ITEM DEFAULTS ###############
 sketchybar -m --default label.padding_left=2 \
@@ -69,15 +112,6 @@ sketchybar -m --add item space_separator left \
 	icon.padding_left=0 \
 	label.padding_right=0 \
 	icon.font="PragmataPro:Bold:16.0" \
-	\
-	--add item githubIndicator left \
-	--set githubIndicator associated_space=1 \
-	update_freq=1000 \
-	icon.font="PragmataPro:Bold:16.0" \
-	icon= \
-	click_script="open https://github.com" \
-	script="~/.config/sketchybar/plugins/githubIndicator.sh" \
-	--subscribe githubIndicator system_woke \
 	\
 	--add item topmem left \
 	--set topmem associated_space=1 \
@@ -160,6 +194,21 @@ if (($? == 0)); then
 		--set 'iStat Menus Status',com.bjango.istatmenus.memory \
 		associated_space=1 \
 		update_freq=5 \
+		icon.padding_left=0 \
+		label.padding_right=-5
+fi
+sketchybar -m --query default_menu_items | grep 'xbar'
+if (($? == 0)); then
+	sketchybar -m --add alias xbar,Item-0 right \
+		--set xbar,Item-0 \
+		associated_space=1 \
+		update_freq=120 \
+		icon.padding_left=0 \
+		label.padding_right=-5
+	sketchybar -m --add alias xbar,Item-1 right \
+		--set xbar,Item-1 \
+		associated_space=1 \
+		update_freq=120 \
 		icon.padding_left=0 \
 		label.padding_right=-5
 fi

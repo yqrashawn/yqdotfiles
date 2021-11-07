@@ -4,7 +4,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((elisp-lint-indent-specs
+   '((eval defun cider--running-nrepl-paths nil
+           '("~/.config/yabai/"))
+     (eval defun cider--running-nrepl-paths nil
+           '((expand-file-name "~/.config/yabai/")))
+     (eval defun cider--running-nrepl-paths nil
+           (expand-file-name "~/.config/yabai/"))
+     (eval defun cider--running-nrepl-paths nil "~/.config/yabai/")
+     (elisp-lint-indent-specs
       (describe . 1)
       (it . 1))
      (projectile-project-root . "~/.doom.d/")

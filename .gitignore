@@ -192,3 +192,4 @@ local/bin/rust-analyzer
 /MEGA/
 /.logseq/
 /.netrc
+/.config/yabai/.nrepl-port

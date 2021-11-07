@@ -12,24 +12,34 @@ yabai -m space 5 --label s:2 --display 2
 yabai -m space 6 --label s:3 --display 2
 ### app
 #### code
-yabai -m rule --add label=m:1 app="^Emacs$"
-yabai -m rule --add label=m:1 app="^Alacritty$"
-yabai -m rule --add label=m:1 app="^Dash$"
-yabai -m rule --add label=s:1 app="^Figma$"
-yabai -m rule --add label=s:1 app="^Firefox Developer Edition$"
+yabai -m rule --add app="^Emacs$"
+yabai -m rule --add app="^Alacritty$"
+yabai -m rule --add app="^Figma$"
+yabai -m rule --add app="^Firefox Developer Edition$"
 #### plan
-yabai -m rule --add label=s:2 app="^ClickUp$"
-yabai -m rule --add label=s:2 app="^Todoist$"
-yabai -m rule --add label=s:2 app="^Notion$"
-yabai -m rule --add label=s:2 app="^NotePlan$"
-yabai -m rule --add label=s:2 app="^Logseq$"
-yabai -m rule --add label=s:2 app="^Roam$"
+yabai -m rule --add app="^ClickUp$"
+yabai -m rule --add app="^Todoist$"
+yabai -m rule --add app="^Notion$"
+yabai -m rule --add app="^NotePlan$"
+yabai -m rule --add app="^Logseq$"
+yabai -m rule --add app="^Roam$"
 #### browse
-yabai -m rule --add label=s:1 app="^Google Chrome$"
+yabai -m rule --add app="^Google Chrome$"
 ### float
-yabai -m rule --add app="^WeChat$" title="^Log.*In$" manage=off
+yabai -m rule --add app="^WeChat$" title=".*" manage=off
+yabai -m rule --add app="^WeChat$" title="^WeChat" manage=on
 yabai -m rule --add app="^CleanMyMac.*$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Twitterrific$" manage=off
 yabai -m rule --add app="^Dash$" manage=off
 yabai -m rule --add app="^Slidepad$" manage=off
+yabai -m rule --add app="^Sensei$" manage=off
+yabai -m rule --add app="^Finder$" title="^/Volumes/" manage=off
+yabai -m rule --add app="^Install$" manage=off
+yabai -m rule --add app="^Image2icon$" manage=off
+yabai -m rule --add app="^Surge$" manage=off
+yabai -m rule --add app="^Alfred Preferences$" manage=off
+yabai -m rule --add app="^Raycast$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="^TencentMeeting$" title="腾讯会议" manage=off
+yabai -m rule --add app="^CleanShot X$" manage=off

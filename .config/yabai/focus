@@ -1,0 +1,17 @@
+#!/usr/local/bin/bb
+
+(ns focus
+  (:require
+   [lib.yabai :as y]
+   [lib.focus :as f]
+   [clojure.tools.cli :refer [parse-opts]]))
+
+(def cli-options
+  [["-d" "--direction" "Focus direction"]])
+
+(let [cli-options         [["-d" "--direction DIRECTION" "Focus direction"
+                            :default :prev
+                            :parse-fn keyword]]
+      {:keys [options]}   (parse-opts *command-line-args* cli-options)
+      {:keys [direction]} options]
+  (f/m direction))
