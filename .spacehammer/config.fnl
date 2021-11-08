@@ -544,7 +544,8 @@
 (local chrm "com.google.Chrome")
 (local chrmc "com.google.Chrome.canary")
 (local safari "com.apple.Safari")
-(local unite-clickup "com.clickup.desktop-app")
+(local clickup "com.clickup.desktop-app")
+(local figma "com.figma.desktop")
 
 ;; https://www.hammerspoon.org/Spoons/URLDispatcher.html
 (Install:andUse "URLDispatcher"
@@ -555,7 +556,8 @@
                   ["tg:" "ru.keepcoder.Telegram"]
                   ["https://yqrashawn.deta.dev.*" chrm]
                   ["http://localhost:.*" chrm]
-                  ["https://app.clickup.com" unite-clickup]
+                  ["https://app.clickup.com" clickup]
+                  ["https://www.figma.com/file" figma]
                   ["https://alidocs.dingtalk.com" chrm]]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
