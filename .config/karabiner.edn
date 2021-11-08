@@ -26,9 +26,8 @@
                                                {:set ["yabai-scale-mode" 0]}
                                                {:set ["spec-mode" 0]}]
                                      :condi   [:!comma-mode :!period-mode]}
-             :yabai-scale-mode      {:key :c :condi :tab-mode}
+             :yabai-scale-mode      {:key :s :condi :tab-mode}
              :yabai-warp-mode       {:key :r :condi :tab-mode}
-             :spec-mode             {:key :s :condi :tab-mode}
              ;; :yabai-insert-mode     {:key :i :condi :tab-mode}
              :emacs-windmove-mode   {:key :q :condi [:Emacs :!comma-mode :!period-mode]}
              :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
@@ -37,16 +36,21 @@
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :tmux-windmove-mode    {:key :q :condi [:Terminals :!comma-mode :!period-mode]}
              :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
+             :f20l                  {:key :f20
+                                     :afterup [{:set ["f20ls" 0]}
+                                               {:set ["f20lf" 0]}]}
+             :f20ls                 {:key :s :condi [:!tab-mode :f20l]}
+             :f20lf                 {:key :f :condi [:!tab-mode :f20l]}
              :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
  :simlayers {:test-mode             {:key :9}
              :contexts-f-mode       {:key :f}
              :emacs-m-mode          {:key :m :condi :Emacs-and-Terminals}
              :emacs-v-mode          {:key :v :condi :Emacs-and-Terminals}
              :emacs-special-s-mode  {:key :s :condi :Emacs :afterup {:key :return_or_enter}}
-             :emacs-s-mode          {:key :s :condi :Emacs}
-             :vscode-s-mode         {:key :s :condi :VSCode}
-             :browser-s-mode        {:key :s :condi :Browsers}
-             :emacs-s-mode-terminal {:key :s :condi :Terminals}
+             :emacs-s-mode          {:key :s :condi [:Emacs :!tab-mode :!f20l]}
+             :vscode-s-mode         {:key :s :condi [:VSCode :!tab-mode :!f20l]}
+             :browser-s-mode        {:key :s :condi [:Browsers :!tab-mode :!f20l]}
+             :emacs-s-mode-terminal {:key :s :condi [:Terminals :!tab-mode :!f20l]}
              :mouse_keys_mode_v4    {:key :a :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
              :vi-mode               {:key :d}
              :vi-visual-mode        {:key :v :condi :!vim-mode-disabled-application}
@@ -479,6 +483,44 @@
                       [:k "~/.config/yabai/resize up"]
                       [:l "~/.config/yabai/resize right"]
                       :tab-mode
+                      [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
+                      [:7 "/usr/local/bin/brew services stop yabai"]
+                      [:8 "/usr/local/bin/brew services start yabai"]
+                      ;; focus mode
+                      [:h "/usr/local/bin/yabai -m window --focus west || /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows --display west | /usr/local/bin/jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]
+                      [:j "/usr/local/bin/yabai -m window --focus south"]
+                      [:k "/usr/local/bin/yabai -m window --focus north"]
+                      [:l "/usr/local/bin/yabai -m window --focus east || /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows --display east | /usr/local/bin/jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]
+                      [:n "/usr/local/bin/yabai -m space --focus next"]
+                      [:p "/usr/local/bin/yabai -m space --focus prev"]
+                      ;; yabai workspace
+                      [:1 "/usr/local/bin/yabai -m space --focus 1"]
+                      [:2 "/usr/local/bin/yabai -m space --focus 2"]
+                      [:3 "/usr/local/bin/yabai -m space --focus 3"]
+                      [:4 "/usr/local/bin/yabai -m space --focus 4"]
+                      [:a "/usr/local/bin/yabai -m window --toggle float"]
+                      [:!St "/usr/local/bin/yabai -m window --toggle sticky"]
+                      [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+                      [:!Sb "/usr/local/bin/yabai -m window --layout bsp"]
+                      [:m "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
+                      [:x "/usr/local/bin/yabai -m window --close"]
+                      [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
+                      [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
+                      [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
+             {:des   "f20l"
+              :rules [:f20lf
+                      ;; move windows
+                      [:h "/usr/local/bin/yabai -m window --warp west"]
+                      [:j "/usr/local/bin/yabai -m window --warp south"]
+                      [:k "/usr/local/bin/yabai -m window --warp north"]
+                      [:l "/usr/local/bin/yabai -m window --warp east"]
+                      ;; scale windows
+                      :f20ls
+                      [:h "~/.config/yabai/resize left"]
+                      [:j "~/.config/yabai/resize down"]
+                      [:k "~/.config/yabai/resize up"]
+                      [:l "~/.config/yabai/resize right"]
+                      :f20l
                       [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
                       [:7 "/usr/local/bin/brew services stop yabai"]
                       [:8 "/usr/local/bin/brew services start yabai"]
