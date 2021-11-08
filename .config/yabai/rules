@@ -43,3 +43,4 @@ yabai -m rule --add app="^Raycast$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^TencentMeeting$" title="腾讯会议" manage=off
 yabai -m rule --add app="^CleanShot X$" manage=off
+yabai -m rule --add app="^iShot$" manage=off
