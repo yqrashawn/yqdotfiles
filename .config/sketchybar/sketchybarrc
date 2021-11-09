@@ -215,6 +215,8 @@ fi
 
 ###################### CENTER ITEMS ###################
 
+sketchybar -m --add item apptitle center
+
 # Adding custom events which can listen on distributed notifications from other running processes
 # sketchybar -m --add event spotify_change "com.spotify.client.PlaybackStateChanged"										\
 #               --add item spotifyIndicator center                                                                          \

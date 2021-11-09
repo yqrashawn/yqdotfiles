@@ -39,7 +39,11 @@ yabai -m config mouse_action2                move
 yabai -m config mouse_drop_action            swap
 
 # general space settings
-yabai -m config layout                       bsp
+if [ "$(yabai -m query --displays | jq length)" -eq 1 ]; then
+    yabai -m config layout                       stack
+else
+    yabai -m config layout                       bsp
+fi
 yabai -m config top_padding                  10
 yabai -m config bottom_padding               10
 yabai -m config left_padding                 10

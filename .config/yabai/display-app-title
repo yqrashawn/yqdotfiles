@@ -1,0 +1,20 @@
+#!/usr/local/bin/bb
+
+(ns yabai.display-title
+  (:require
+   [clojure.string :as str]
+   [lib.sketchybar :as s]
+   [lib.yabai :as y]))
+
+(def app-name {"Firefox Developer Edition" "FDE"})
+
+(defn shorten-app-name [app]
+  (get app-name app app))
+
+(let [{:keys [title app]} (y/cur-win)
+      short-app-name      (shorten-app-name app)
+      valid-title         (and (string? title) (pos? (count title)))
+      rst                 (cond (not valid-title)                           short-app-name
+                                (and valid-title (str/includes? title app)) title
+                                :else                                       (str short-app-name " - " title))]
+  (s/m :--set :apptitle (str "label=" rst)))

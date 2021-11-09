@@ -6,3 +6,6 @@ yabai -m signal --add event=application_terminated action="yabai -m query --wind
 yabai -m signal --add event=application_activated action="~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
 yabai -m signal --add event=window_focused action="bb -cp ~/.config/yabai  ~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
 yabai -m signal --add event=application_front_switched action="bb -cp ~/.config/yabai ~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
+yabai -m signal --add event=window_focused action="bb -cp ~/.config/yabai  ~/.config/yabai/display-app-title"
+yabai -m signal --add event=window_title_changed action="bb -cp ~/.config/yabai  ~/.config/yabai/display-app-title"
+yabai -m signal --add event=application_front_switched action="bb -cp ~/.config/yabai  ~/.config/yabai/display-app-title"
