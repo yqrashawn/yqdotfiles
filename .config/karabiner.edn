@@ -36,7 +36,7 @@
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :tmux-windmove-mode    {:key :q :condi [:Terminals :!comma-mode :!period-mode]}
              :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
-             :f20l                  {:key :f20
+             :f20l                  {:key     :f20
                                      :afterup [{:set ["f20ls" 0]}
                                                {:set ["f20lf" 0]}]}
              :f20ls                 {:key :s :condi [:!tab-mode :f20l]}
@@ -266,16 +266,12 @@
 
                       ;; [:j [:f16 :!Sa :l :a :c :r :i :t :t :y :return_or_enter]]
 
-                      [:j [:launch "Alacritty"]]
-                      ;; [:j [:opena "kitty"]]
-                      ;; [:j [:open "/System/Volumes/Data/usr/local/Cellar/wezterm/20210405-110924/WezTerm.app"]]
-                      ;; [:j [:launch "iTerm"]]
-
+                      [:j [:hsl "Alacritty"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       ;; [:k "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n"]
                       ;; [:k [:show "Emacs"]]
                       ;; [:k [:f16 :!Sd :o :o :m :spacebar :!Se :m :a :c :s :return_or_enter]]
-                      [:k :same_wind_app :Emacs]
+                      ;; [:k :same_wind_app :Emacs]
                       [:k [:hsl "Emacs"]]
                       [:u [:hsl "Newsblur"]]
                       ;; [:k [:opena "kitty"]]
