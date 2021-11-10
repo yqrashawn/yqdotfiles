@@ -164,3 +164,5 @@
 (package! symex)
 (package! capf-autosuggest)
 (package! adoc-mode)
+(package! sly-quicklisp)
+(package! sly-asdf)

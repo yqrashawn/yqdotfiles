@@ -86,3 +86,6 @@ battleId
 getBattleRecord
 1v1
 randomSeed
+defacto
+LSP
+REPL

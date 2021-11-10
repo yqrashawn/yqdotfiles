@@ -5,6 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
    '((eval defun cider--running-nrepl-paths nil
+           '("~/local/bin/"))
+     (eval defun cider--running-nrepl-paths nil
            '("~/Dropbox/sync/Alfred.alfredpreferences/workflows/user.workflow.B178FD26-4DD8-4281-922B-925CD4AC61CE/"))
      (eval defun cider--running-nrepl-paths nil
            '("~/.config/yabai/"))

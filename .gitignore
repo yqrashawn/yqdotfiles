@@ -194,3 +194,4 @@ local/bin/rust-analyzer
 /.netrc
 /.config/yabai/.nrepl-port
 /.config/raycast
+/local/bin/.nrepl-port

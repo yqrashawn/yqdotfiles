@@ -72,6 +72,7 @@
 (load! "js.el")
 
 (load! "lang.el")
+(load! "clisp.el")
 (load! "org.el")
 (load! "write.el")
 (load! "visual.el")
