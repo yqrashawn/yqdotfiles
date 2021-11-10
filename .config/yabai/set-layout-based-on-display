@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# general space settings
+if [ "$(yabai -m query --displays | jq length)" -eq 1 ]; then
+    yabai -m config layout                       stack
+else
+    yabai -m config layout                       bsp
+fi

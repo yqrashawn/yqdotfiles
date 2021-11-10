@@ -9,3 +9,5 @@ yabai -m signal --add event=application_front_switched action="bb -cp ~/.config/
 yabai -m signal --add event=window_focused action="bb -cp ~/.config/yabai  ~/.config/yabai/display-app-title"
 yabai -m signal --add event=window_title_changed action="bb -cp ~/.config/yabai  ~/.config/yabai/display-app-title"
 yabai -m signal --add event=application_front_switched action="bb -cp ~/.config/yabai  ~/.config/yabai/display-app-title"
+yabai -m signal --add event=display_removed action="sh ~/.config/yabai/set-layout-based-on-display"
+yabai -m signal --add event=display_added action="sh ~/.config/yabai/set-layout-based-on-display"
