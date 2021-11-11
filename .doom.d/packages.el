@@ -166,3 +166,5 @@
 (package! adoc-mode)
 (package! sly-quicklisp)
 (package! sly-asdf)
+(package! string-edit)
+(package! fit-text-scale)

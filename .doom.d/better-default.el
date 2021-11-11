@@ -220,3 +220,5 @@ A prefix arg reverses this operation."
 
 (add-hook! 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 (setq frame-title-format '("%b"))
+
+(use-package! proced-narrow :after proced)

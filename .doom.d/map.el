@@ -75,6 +75,9 @@
   :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
   :desc "Line numbers" "tl" #'doom/toggle-line-numbers
   :desc "Imenu sidebar" "cb" #'side-hustle-toggle
+  (:prefix-map ("e" . "Edit")
+   :desc "String" "s" #'string-edit-at-point
+   :desc "Indirect" "I" #'edit-indirect-region)
   (:prefix-map ("k" . "Kill")
    :desc "Browse at remote" "k" #'browse-at-remote
    (:prefix-map ("g" . "git link")
@@ -123,6 +126,20 @@
  (:map ctl-x-map
   :g "C-r" #'recentf-open-files
   :g "1" #'spacemacs/toggle-maximize-buffer
+  :g "C-&" (lambda (&optional arg)
+             (interactive "P")
+             (if (and (region-active-p) (< (region-beginning) (region-end)))
+                 (save-restriction
+                   (narrow-to-region (region-beginning) (region-end))
+                   (fit-text-scale-max-font-size-fit-buffer))
+               (fit-text-scale-max-font-size-fit-buffer)))
+  :g "C-*" (lambda (&optional arg)
+             (interactive "P")
+             (if (and (region-active-p) (< (region-beginning) (region-end)))
+                 (save-restriction
+                   (narrow-to-region (region-beginning) (region-end))
+                   (fit-text-scale-max-font-size-fit-buffer))
+               (fit-text-scale-max-font-size-fit-buffer)))
   "@ @" '+cmd-prefix-map
   "p" '+ctl-p-prefix-map
   "@ C-x" '+ctl-prefix-map
@@ -372,6 +389,10 @@
   (:map side-hustle-mode-map
    :g "TAB" #' side-hustle-show-item
    :g "q" #'side-hustle-toggle))
+ (:after proced
+  (:map proced-mode-map
+   :g "/" #'proced-narrow
+   :n "/" #'proced-narrow))
  (:after evil-textobj-tree-sitter
   :textobj ".f" (evil-textobj-tree-sitter-get-textobj "function.inner") (evil-textobj-tree-sitter-get-textobj "function.outer")
   :textobj ".l" (evil-textobj-tree-sitter-get-textobj "block.inner") (evil-textobj-tree-sitter-get-textobj "block.outer")
