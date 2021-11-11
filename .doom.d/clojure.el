@@ -67,6 +67,7 @@
         (apply func args))))
 
 (after! cider
+  (setq! cider-auto-jump-to-error nil)
   ;; When asking for a "matching" REPL (clj/cljs), and no matching REPL is found,
   ;; return any REPL that is there. This is so that cider-quit can be called
   ;; repeatedly to close all REPLs in a process. It also means that , s s will go
