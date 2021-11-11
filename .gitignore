@@ -196,3 +196,6 @@ local/bin/rust-analyzer
 /.config/raycast
 /local/bin/.nrepl-port
 /.actrc
+/.config/bblib/.nrepl-port
+/.personal_db/
+/tmp/

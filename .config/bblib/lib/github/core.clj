@@ -1,5 +1,6 @@
 (ns lib.github.core
   (:require
+   [org.httpkit.client :as c]
    [clojure.java.shell :refer [sh]]))
 
 (def ghtoken (:out (sh "security" "find-generic-password" "-s" "github-token" "-w")))
@@ -10,4 +11,5 @@
                              "Authorization" (str "token " ghtoken)}})
 (defn cget
   ([url] (cget url {}))
-  ([url opts] (c/get url (merge default-opts opts))))
+  ([url opts]
+   (c/get (str "https://api.github.com" url) (merge-with merge default-opts opts))))
