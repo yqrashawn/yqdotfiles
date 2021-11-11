@@ -1,6 +1,6 @@
 #!/usr/local/bin/bb
 
-(ns lib.yabai
+(ns lib.yabai.core
   (:require
    [cheshire.core :as json]
    [clojure.java.shell :refer [sh]]))

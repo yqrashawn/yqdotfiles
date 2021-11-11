@@ -2,7 +2,7 @@
 
 (ns yabai.layout
   (:require
-   [lib.yabai :as y]))
+   [lib.yabai.core :as y]))
 
 (let [{cur-win-space :space} (y/m :query :--windows :--window)
       {:keys [zoom-fullscreen id space]} (y/m :query :--windows :--window :recent)]

@@ -2,9 +2,12 @@
 
 (ns yabai.display-title
   (:require
+   [babashka.classpath]
    [clojure.string :as str]
-   [lib.sketchybar :as s]
-   [lib.yabai :as y]))
+   [lib.sketchybar.core :as s]
+   [lib.yabai.core :as y]))
+
+(println (babashka.classpath/get-classpath))
 
 (def app-name {"Firefox Developer Edition" "FDE"})
 

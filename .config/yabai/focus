@@ -2,8 +2,8 @@
 
 (ns focus
   (:require
-   [lib.yabai :as y]
-   [lib.focus :as f]
+   [lib.yabai.core :as y]
+   [lib.yabai.focus :as f]
    [clojure.tools.cli :refer [parse-opts]]))
 
 (def cli-options

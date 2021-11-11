@@ -1,8 +1,6 @@
-#!/usr/local/bin/bb
-
-(ns lib.focus
+(ns lib.yabai.focus
   (:require
-   [lib.yabai :as y]))
+   [lib.yabai.core :as y]))
 
 (defn m [direction]
   (let [{:keys [space]}        (y/cur-win)

@@ -1,6 +1,6 @@
 #!/usr/local/bin/bb
 
-(ns lib.sketchybar
+(ns lib.sketchybar.core
   (:require
    [cheshire.core :as json]
    [clojure.java.shell :refer [sh]]))

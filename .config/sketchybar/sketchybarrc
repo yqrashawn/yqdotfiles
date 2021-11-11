@@ -117,7 +117,13 @@ sketchybar -m --add item space_separator left \
 	--set topmem associated_space=1 \
 	icon.padding_left=0 \
 	update_freq=15 \
-	script="~/.config/sketchybar/plugins/topmem.sh"
+	script="~/.config/sketchybar/plugins/topmem.sh" \
+	\
+	--add kbur left \
+	label.color=0xffff0000 \
+	update_freq=60 \
+	script="~/.config/sketchybar/plugins/keybase_unread.sh" \
+	click_script="hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Keybase\")'"
 
 ############## RIGHT ITEMS ##############
 sketchybar -m --add item battery right \
