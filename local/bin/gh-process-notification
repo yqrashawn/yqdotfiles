@@ -1,0 +1,35 @@
+#!/usr/local/bin/bb
+
+(ns gh-interested-pr
+  (:require
+   [clojure.string :as str]
+   [cheshire.core :as json]
+   [lib.github.pr :as ghpr]
+   [lib.github.notification :as ghnoti]
+   [lib.github.core :as gh]))
+
+(def intrested-repos [["Conflux-Chain" "helios"]])
+(def intrested-repos-full-name (mapv #(str/join "/" %) intrested-repos))
+
+(defn- process-notification [acc {:keys [subject reason repository] :as n}]
+  (let [{:keys [full_name owner name]} repository
+        {:keys [type url]} subject
+        {:keys [login]} owner
+        pr? (= type "PullRequest")
+        intrested-repo? (and pr? (some #{full_name} intrested-repos-full-name))
+        pr-num (and intrested-repo? (int (re-find #"\d+$" url)))
+        pr (and intrested-repo? (ghpr/cget login name pr-num))]
+    (cond
+      ;; pr can/needs merge
+      (and intrested-repo? (ghpr/interested-pr? pr true))
+      (conj acc pr)
+      ;; pr automerge
+      (ghpr/bot-auto-merge-pr? pr)
+      acc
+      :else acc)))
+
+(defn get-intrested-notification []
+  (doseq [n (ghnoti/fetch {:query-params {:participating true :per_page 100}})]))
+
+(comment
+  (get-intrested-notification))

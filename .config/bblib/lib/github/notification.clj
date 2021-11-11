@@ -7,9 +7,12 @@
            [java.time.format DateTimeFormatter]))
 
 (defn- get-last-modified-header []
-  (let [last-fetch (db/q '[:find ?time .
-                           :where
-                           [[:const/id :github/last-time-fetch-notification] ?time]])]
+  (let [last-fetch
+        (try
+          (db/q '[:find ?time .
+                  :where
+                  [[:const/id :github/last-time-fetch-notification] :const/value ?time]])
+          (catch Exception e nil))]
     (if last-fetch
       {"If-Modified-Since" last-fetch}
       {})))
@@ -24,8 +27,9 @@
      (if (not= status 200) []
          (let [{:keys [last-modified]} headers]
            (when last-modified
-             (db/t [{:const/id :github/notification-last-modified-time :const/value last-modified}]))
+             (db/t [{:const/id :github/last-time-fetch-notification :const/value last-modified}]))
            body)))))
 
 (comment
-  (fetch))
+  (db/t [[:db.fn/retractEntity [:const/id :github/last-time-fetch-notification]]])
+  (fetch {:query-params {:participating true :all true :per_page 100}}))

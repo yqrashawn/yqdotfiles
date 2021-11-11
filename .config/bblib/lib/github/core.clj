@@ -1,9 +1,10 @@
 (ns lib.github.core
   (:require
+   [clojure.string :as str]
    [org.httpkit.client :as c]
    [clojure.java.shell :refer [sh]]))
 
-(def ghtoken (:out (sh "security" "find-generic-password" "-s" "github-token" "-w")))
+(def ghtoken (str/trim-newline (:out (sh "security" "find-generic-password" "-s" "github-token" "-w"))))
 (def default-opts {:headers {"Accept"        "application/vnd.github.v3+json"
                              "Connection"    "close"
                              "Host"          "api.github.com"
@@ -13,3 +14,7 @@
   ([url] (cget url {}))
   ([url opts]
    (c/get (str "https://api.github.com" url) (merge-with merge default-opts opts))))
+(defn cput
+  ([url] (cput url {}))
+  ([url opts]
+   (c/put (str "https://api.github.com" url) (merge-with merge default-opts opts))))
