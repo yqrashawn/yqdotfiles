@@ -85,7 +85,7 @@ sketchybar -m \
 	click_script="yabai -m space --focus 8" \
 	\
     --add space space9 left \
-	--set space9 associated_space=4 \
+	--set space9 associated_space=9 \
 	associated_display=2 \
 	script="~/.config/sketchybar/plugins/space.sh" \
 	label=9 \

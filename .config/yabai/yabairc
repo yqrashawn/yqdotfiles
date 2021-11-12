@@ -18,7 +18,9 @@
 yabai -m config debug_output                 off
 yabai -m config external_bar                 all:25:0
 yabai -m config mouse_follows_focus          on
-yabai -m config focus_follows_mouse          autoraise
+# yabai -m config focus_follows_mouse          autoraise
+yabai -m config focus_follows_mouse          autofocus
+# yabai -m config focus_follows_mouse          off
 yabai -m config window_placement             second_child
 yabai -m config window_topmost               on
 yabai -m config window_shadow                float
@@ -47,7 +49,7 @@ yabai -m config window_gap                   20
 
 
 # . ~/.config/yabai/layout
-. ~/.config/yabai/rules
+# . ~/.config/yabai/rules
 . ~/.config/yabai/signals
 
 echo "yabai configuration loaded.."
