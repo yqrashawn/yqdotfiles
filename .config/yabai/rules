@@ -29,7 +29,7 @@ yabai -m rule --add app="^Endel$" manage=on space=10
 yabai -m rule --add app="^NeteaseMusic$" manage=on space=10
 
 ### float
-yabai -m rule --add app="^WeChat$" title="^(?!WeChat).*" manage=off
+yabai -m rule --add app="^WeChat$" title!="^WeChat" manage=off
 yabai -m rule --add app="^CleanMyMac.*$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Twitterrific$" manage=off
@@ -44,7 +44,9 @@ yabai -m rule --add app="^Alfred Preferences$" manage=off
 yabai -m rule --add app="^Raycast$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^TencentMeeting$" title="腾讯会议" manage=off
-yabai -m rule --add app="^CleanShot X$" manage=off
 yabai -m rule --add app="^iShot$" manage=off
 yabai -m rule --add app="^DingTalk$" title="Window" manage=off
 yabai -m rule --add app="^Expressions$" manage=off
+yabai -m rule --add app="^Digital Colou?r Meter$" sticky=on
+yabai -m rule --add app="^Finder$" manage=off
+yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off

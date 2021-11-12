@@ -199,3 +199,5 @@ local/bin/rust-analyzer
 /.config/bblib/.nrepl-port
 /.personal_db/
 /tmp/
+/.vimrecent
+/.config/lvim.bak/

@@ -14,6 +14,8 @@
 # sudo yabai --load-sa
 # yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 
+. ~/.config/yabai/rules
+
 # global settings
 yabai -m config debug_output                 off
 yabai -m config external_bar                 all:25:0
@@ -49,7 +51,6 @@ yabai -m config window_gap                   20
 
 
 # . ~/.config/yabai/layout
-# . ~/.config/yabai/rules
 . ~/.config/yabai/signals
 
 echo "yabai configuration loaded.."

@@ -19,6 +19,7 @@
              :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
+             :jump "/usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
              }
  :layers    {:tab-mode              {:key     :tab
@@ -290,6 +291,7 @@
                       ;; [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
                       [:l [:hsl "Firefox Developer Edition"] :!Firefoxes]
                       [:l :same_wind_app :Firefoxes]
+                      ;; [:l [:jump "Firefox Developer Edition" "Firefox Developer Edition"]]
                       [:n [:hsl "Notion"]]
                       ;; [:n [:hsl "Google Chrome Canary"]]
                       [:return_or_enter [:hsl "Brave Browser"]]
@@ -458,13 +460,7 @@
                       [:4 [:!Tq :4]]
                       [:5 [:!Tq :5]]]}
              {:des   "yabai mode"
-              :rules [;; :yabai-insert-mode
-                      ;; [:h "/usr/local/bin/yabai -m window --insert west"]
-                      ;; [:j "/usr/local/bin/yabai -m window --insert south"]
-                      ;; [:k "/usr/local/bin/yabai -m window --insert north"]
-                      ;; [:l "/usr/local/bin/yabai -m window --insert east"]
-
-                      ;; move windows
+              :rules [;; move windows
                       :yabai-warp-mode
                       [:h "/usr/local/bin/yabai -m window --warp west"]
                       [:j "/usr/local/bin/yabai -m window --warp south"]
@@ -495,9 +491,11 @@
                       [:3 "/usr/local/bin/yabai -m space --focus 3"]
                       [:4 "/usr/local/bin/yabai -m space --focus 4"]
                       [:a "/usr/local/bin/yabai -m window --toggle float"]
-                      [:!St "/usr/local/bin/yabai -m window --toggle sticky"]
+                      [:b "/usr/local/bin/yabai -m window --toggle border"]
                       [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
-                      [:!Sb "/usr/local/bin/yabai -m window --layout bsp"]
+                      [:!Sb "/usr/local/bin/yabai -m config layout bsp"]
+                      [:!Ss "/usr/local/bin/yabai -m config layout stack"]
+                      [:!Sf "/usr/local/bin/yabai -m config layout float"]
                       [:m "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
                       [:x "/usr/local/bin/yabai -m window --close"]
                       [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
