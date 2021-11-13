@@ -1,32 +1,36 @@
 #!/usr/bin/env sh
 
-### app
-yabai -m rule --add app="^Emacs$" space=1
-yabai -m rule --add app="^Alacritty$" space=1
-yabai -m rule --add app="^Firefox Developer Edition$" space=6
+if [ "$(yabai -m query --displays | jq length)" -eq 1 ]; then
+    yabai -m rule --add app=".*" space=1
+else
+    ### app
+    yabai -m rule --add app="^Emacs$" space=1
+    yabai -m rule --add app="^Alacritty$" space=1
+    yabai -m rule --add app="^Firefox Developer Edition$" space=6
 
-yabai -m rule --add app="^Todoist$" space=2
-yabai -m rule --add app="^Notion$" space=2
-yabai -m rule --add app="^NotePlan$" space=2
-yabai -m rule --add app="^Logseq$" space=2
-yabai -m rule --add app="^Roam$" space=2
-yabai -m rule --add app="^Google Chrome$" space=7
+    yabai -m rule --add app="^Todoist$" space=2
+    yabai -m rule --add app="^Notion$" space=2
+    yabai -m rule --add app="^NotePlan$" space=2
+    yabai -m rule --add app="^Logseq$" space=2
+    yabai -m rule --add app="^Roam$" space=2
+    yabai -m rule --add app="^Google Chrome$" space=7
 
-yabai -m rule --add app="^Mail$" space=3
-yabai -m rule --add app="^Newsblur$" space=3
-yabai -m rule --add app="^Reeder$" space=3
-yabai -m rule --add app="^Figma$" space=8
-yabai -m rule --add app="^ClickUp$" space=8
+    yabai -m rule --add app="^Mail$" space=3
+    yabai -m rule --add app="^Newsblur$" space=3
+    yabai -m rule --add app="^Reeder$" space=3
+    yabai -m rule --add app="^Figma$" space=8
+    yabai -m rule --add app="^ClickUp$" space=8
 
-yabai -m rule --add app="^WeChat$" title="^WeChat" manage=on space=9
-yabai -m rule --add app="^DingTalk$" space=9
-yabai -m rule --add app="^Slack$" space=9
+    yabai -m rule --add app="^WeChat$" title="^WeChat" manage=on space=9
+    yabai -m rule --add app="^DingTalk$" space=9
+    yabai -m rule --add app="^Slack$" space=9
 
-yabai -m rule --add app="^Keybase$" manage=on space=5
-yabai -m rule --add app="^Discord$" manage=on space=5
-yabai -m rule --add app="^Telegram$" manage=on space=5
-yabai -m rule --add app="^Endel$" manage=on space=10
-yabai -m rule --add app="^NeteaseMusic$" manage=on space=10
+    yabai -m rule --add app="^Keybase$" manage=on space=5
+    yabai -m rule --add app="^Discord$" manage=on space=5
+    yabai -m rule --add app="^Telegram$" manage=on space=5
+    yabai -m rule --add app="^Endel$" manage=on space=10
+    yabai -m rule --add app="^NeteaseMusic$" manage=on space=10
+fi
 
 ### float
 yabai -m rule --add app="^WeChat$" title!="^WeChat" manage=off

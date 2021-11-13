@@ -14,3 +14,4 @@ yabai -m signal --add event=application_front_switched action="$bb ~/.config/yab
 yabai -m signal --add event=display_removed action="sh ~/.config/yabai/set-layout-based-on-display"
 yabai -m signal --add event=display_added action="sh ~/.config/yabai/set-layout-based-on-display"
 yabai -m signal --add event=application_activated action="~/.config/yabai/rules"
+yabai -m signal --add event=window_destroyed action="~/.config/yabai/rules"
