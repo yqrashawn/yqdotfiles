@@ -315,6 +315,9 @@
         ;;  :enter "windows:enter-window-menu"
         ;;  :exit "windows:exit-window-menu"
         ;;  :items window-bindings}
+        {:key "'"
+          :title "Edit with Emacs"
+          :action "emacs:edit-with-emacs"}
         {:key   :a
          :title "Apps"
          :items app-bindings}
@@ -367,10 +370,7 @@
 (local browser-items
        (concat
         menu-items
-        [{:key "'"
-          :title "Edit with Emacs"
-          :action "emacs:edit-with-emacs"}
-         {:key :c
+        [{:key :c
           :title "Capture"
           :items [{:key :r
                    :title "Org Roam"
@@ -395,7 +395,7 @@
                            {:key :space
                             :title "Fill pass"
                             :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "l"))}
-                           {:key :space
+                           {:key :g
                             :title "Gen pass"
                             :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "9"))}]}
                   {:key :d

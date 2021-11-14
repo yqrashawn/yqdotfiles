@@ -38,7 +38,7 @@ yabai -m rule --add app="^CleanMyMac.*$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Twitterrific$" manage=off
 yabai -m rule --add app="^Dash$" manage=off
-yabai -m rule --add app="^Slidepad$" manage=off
+yabai -m rule --add app="^Slidepad$" manage=off border=off
 yabai -m rule --add app="^Sensei$" manage=off
 yabai -m rule --add app="^Finder$" title="^/Volumes/" manage=off
 yabai -m rule --add app="^Install$" manage=off
@@ -53,4 +53,5 @@ yabai -m rule --add app="^DingTalk$" title="Window" manage=off
 yabai -m rule --add app="^Expressions$" manage=off
 yabai -m rule --add app="^Digital Colou?r Meter$" sticky=on
 yabai -m rule --add app="^Finder$" manage=off
+yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
 yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off

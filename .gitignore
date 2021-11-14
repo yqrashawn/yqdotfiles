@@ -201,3 +201,4 @@ local/bin/rust-analyzer
 /tmp/
 /.vimrecent
 /.config/lvim.bak/
+/.grip/
