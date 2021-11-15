@@ -53,6 +53,9 @@ yabai -m rule --add app="^DingTalk$" title="Window" manage=off
 yabai -m rule --add app="^Expressions$" manage=off
 yabai -m rule --add app="^Digital Colou?r Meter$" sticky=on
 yabai -m rule --add app="^Finder$" manage=off
+yabai -m rule --add app="^Google Drive$" manage=off
+yabai -m rule --add app="^ToothFairy$" manage=off
 yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
 yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
+yabai -m rule --add app="^iStat Menus$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
 yabai -m rule --add app="^iStat Menus$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
