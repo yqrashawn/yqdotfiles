@@ -202,3 +202,4 @@ local/bin/rust-analyzer
 /.vimrecent
 /.config/lvim.bak/
 /.grip/
+/.sync_settings/

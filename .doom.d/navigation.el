@@ -125,4 +125,6 @@
 ;;   ;; Manual preview key for `affe-grep'
 ;;   (consult-customize affe-grep :preview-key (kbd "M-.")))
 
-(use-package! spacehammer :load-path "~/.hammerspoon/")
+(use-package! spacehammer
+  :commands (spacehammer/edit-with-emacs spacehammer/fix-frame spacehammer/activate-capture-frame spacehammer/switch-to-app)
+  :load-path "~/.hammerspoon/")

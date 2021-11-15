@@ -546,6 +546,7 @@
 (local safari "com.apple.Safari")
 (local clickup "com.clickup.desktop-app")
 (local figma "com.figma.desktop")
+(local todoist "com.todoist.mac.Todoist")
 
 ;; https://www.hammerspoon.org/Spoons/URLDispatcher.html
 (Install:andUse "URLDispatcher"
@@ -558,7 +559,10 @@
                   ["http://localhost:.*" chrm]
                   ["https://app.clickup.com" clickup]
                   ["https://www.figma.com/file" figma]
-                  ["https://alidocs.dingtalk.com" chrm]]
+                  ["https://alidocs.dingtalk.com" chrm]
+                  ;; ["https://todoist.com/app" todoist]
+                  ;; ["https://todoist.com/showTask" todoist]
+                  ]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
                          "zoommtg://zoom.us/join?confno=%1&pwd=%2"
