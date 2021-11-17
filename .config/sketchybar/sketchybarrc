@@ -130,8 +130,8 @@ sketchybar -m --add item battery right \
 	--set battery \
 	update_freq=20 \
 	script="~/.config/sketchybar/plugins/power.sh" \
-	label.font="Hack Nerd Font:Bold:16.0" \
-	icon.font=":Bold:16.0"
+	label.font="PragmataPro:Bold:16.0" \
+	icon.font="PragmataPro:Bold:16.0"
 
 sketchybar -m --add item clock right \
 	--set clock update_freq=10 \
