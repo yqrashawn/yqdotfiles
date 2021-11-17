@@ -120,21 +120,23 @@
     (setq-local lsp-enable-file-watchers nil)))
 
 (after! lsp-mode
-  (delq! 'lsp-ui-mode lsp-mode-hook)
+  ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (pushnew! lsp-file-watch-ignored-directories
             "[/\\\\]coverage'"
             "[/\\\\]lcov-report'"
             "[/\\\\]\\.log\\'"
             "[/\\\\]build'"
-            "[/\\\\]cljs-runtime'"
+            "[/\\\\]\\.shadow-cljs"
+            "[/\\\\]cljs-runtime"
+            "[/\\\\]dist"
             "[/\\\\]__snapshots__'"
-            "[/\\\\]sp_'"
+            "[/\\\\]sp_"
             "[/\\\\]\\.cache\\'")
   (setq! +lsp-company-backends
          (if (featurep! :editor snippets)
              '(:separate company-tabnine company-capf company-files company-yasnippet)
            '(:separate company-tabnine company-capf company-files)))
-  (setq! lsp-eslint-enable nil)
+  ;; (setq! lsp-eslint-enable nil)
 
   (add-hook! 'lsp-configure-hook '+disable-lsp-watcher-in-some-project))
 

@@ -33,6 +33,7 @@ else
 fi
 
 ### float
+yabai -m rule --add app="^Emacs$" title="^ *Minibuf.*\*$" manage=off
 yabai -m rule --add app="^WeChat$" title!="^WeChat" manage=off
 yabai -m rule --add app="^CleanMyMac.*$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
@@ -57,5 +58,4 @@ yabai -m rule --add app="^Google Drive$" manage=off
 yabai -m rule --add app="^ToothFairy$" manage=off
 yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
 yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
-yabai -m rule --add app="^iStat Menus$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
-yabai -m rule --add app="^iStat Menus$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
+yabai -m rule --add app="^iStat Menus Status$" manage=off border=off mouse_follows_focus=off sticky=off
