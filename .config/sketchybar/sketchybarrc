@@ -120,6 +120,8 @@ sketchybar -m --add item space_separator left \
 	script="~/.config/sketchybar/plugins/topmem.sh" \
 	\
 	--add item kbur left \
+	--set kbur \
+	icon.font="PragmataPro:Bold:16.0" \
 	label.color=0xffff0000 \
 	update_freq=60 \
 	script="~/.config/sketchybar/plugins/keybase_unread.sh" \
