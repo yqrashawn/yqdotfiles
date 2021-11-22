@@ -197,3 +197,19 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (use-package! capf-autosuggest
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
+
+(defun ar/ediff-dir-content-size ()
+  "Diff all subdirectories (sizes only) in two directories."
+  (interactive)
+  (require 'f)
+  (let* ((dir1-path (read-directory-name "Dir 1: "))
+         (dir2-path (read-directory-name "Dir 2: "))
+         (buf1 (get-buffer-create (format "*Dir 1 (%s)*" (f-base dir1-path))))
+         (buf2 (get-buffer-create (format "*Dir 2 (%s)*" (f-base dir2-path)))))
+    (with-current-buffer buf1
+      (erase-buffer))
+    (with-current-buffer buf2
+      (erase-buffer))
+    (shell-command (format "cd %s; find . -type d | sort | du -h" dir1-path) buf1)
+    (shell-command (format "cd %s; find . -type d | sort | du -h" dir2-path) buf2)
+    (ediff-buffers buf1 buf2)))
