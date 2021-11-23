@@ -32,29 +32,29 @@ SyncState *
 # (so that we can rename local directories and flatten the hierarchy)
 # Group gmail
 
-#################### cfx
-IMAPAccount cfx
-Host outlook.office365.com
-Port 993
-User yuxiao.zhang@confluxnetwork.org
-PassCmd "security find-generic-password  -s mbsync-cfx -w"
-SSLType IMAPS
-# AuthMechs LOGIN
+# #################### cfx
+# IMAPAccount cfx
+# Host outlook.office365.com
+# Port 993
+# User yuxiao.zhang@confluxnetwork.org
+# PassCmd "security find-generic-password  -s mbsync-cfx -w"
+# SSLType IMAPS
+# # AuthMechs LOGIN
 
-IMAPStore cfx-remote
-Account cfx
+# IMAPStore cfx-remote
+# Account cfx
 
-MaildirStore cfx-local
-Path ~/mail/cfx/
-Inbox ~/mail/cfx/Inbox
-SubFolders Verbatim
+# MaildirStore cfx-local
+# Path ~/mail/cfx/
+# Inbox ~/mail/cfx/Inbox
+# SubFolders Verbatim
 
-Channel cfx
-Far :cfx-remote:
-Near :cfx-local:
-Patterns *
-# Patterns INBOX Inbox Archive Trash Junk Sent Drafts Later "All Mail"
-Sync All
-Create Both
-Expunge Both
-SyncState *
+# Channel cfx
+# Far :cfx-remote:
+# Near :cfx-local:
+# Patterns *
+# # Patterns INBOX Inbox Archive Trash Junk Sent Drafts Later "All Mail"
+# Sync All
+# Create Both
+# Expunge Both
+# SyncState *
