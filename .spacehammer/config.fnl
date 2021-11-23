@@ -580,11 +580,7 @@
    :default_handler ffd}})
 
 (comment
- (local col hs.drawing.color.x11)
- (Install:andUse "MenubarFlag" {:start true
-                                :config {:colors [["U.S." {}]
-                                                  [["Ukrainian - PC"] [col.blue col.yellow]]
-                                                  [["Ukrainian"] [col.blue col.yellow]]]}}))
+ (local col hs.drawing.color.x11))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Exports
