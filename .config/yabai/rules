@@ -53,7 +53,7 @@ yabai -m rule --add app="^iShot$" manage=off
 yabai -m rule --add app="^DingTalk$" title="Window" manage=off
 yabai -m rule --add app="^Expressions$" manage=off
 yabai -m rule --add app="^Digital Colou?r Meter$" sticky=on
-yabai -m rule --add app="^Finder$" manage=off
+# yabai -m rule --add app="^Finder$" manage=off
 yabai -m rule --add app="^Google Drive$" manage=off
 yabai -m rule --add app="^ToothFairy$" manage=off
 yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
