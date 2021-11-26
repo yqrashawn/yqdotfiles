@@ -58,7 +58,8 @@
 
 (after! lsp-mode
   (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook)
-    +format-with-lsp nil)
+    +format-with-lsp nil
+    lsp-completion-enable nil)
   (setq! lsp-clients-typescript-log-verbosity "off"
          lsp-clients-typescript-server-args '("--stdio"
                                               "--log-level"

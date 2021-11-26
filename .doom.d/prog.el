@@ -1,9 +1,11 @@
 ;;; prog.el -*- lexical-binding: t; -*-
 
+(load! "init-tabnine-capf.el")
+
 (setq +company-backend-alist
       '((text-mode (:separate company-dabbrev company-yasnippet company-files company-ispell))
-        (prog-mode company-tabnine company-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
-        (conf-mode company-tabnine company-capf company-files company-dabbrev-code company-yasnippet)))
+        (prog-mode company-tabnine-capf company-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
+        (conf-mode company-tabnine-capf company-capf company-files company-dabbrev-code company-yasnippet)))
 
 (setq! projectile-project-search-path '("~/workspace/office" "~/workspace/home" "~/workspace/third"))
 
@@ -44,15 +46,16 @@
          company-tabnine-context-radius 6000
          company-tabnine-context-radius-after 6000
          company-tabnine-log-file-path "~/Downloads/tabnine.log")
-  :config
-  (setq! company-tabnine--disabled t)
-  (after! lsp-mode
-    (setq! lsp-enable-snippet nil)
-    (defadvice! +lsp-mode (orig-fn &rest args)
-      :around #'lsp-mode
-      (when company-tabnine--disabled (apply orig-fn args))
-      (when (and (not company-tabnine--disabled) lsp-mode)
-        (apply orig-fn args)))))
+  ;; :config
+  ;; (setq! company-tabnine--disabled t)
+  ;; (after! lsp-mode
+  ;;   (setq! lsp-enable-snippet nil)
+  ;;   (defadvice! +lsp-mode (orig-fn &rest args)
+  ;;     :around #'lsp-mode
+  ;;     (when company-tabnine--disabled (apply orig-fn args))
+  ;;     (when (and (not company-tabnine--disabled) lsp-mode)
+  ;;       (apply orig-fn args))))
+  )
 
 (use-package! copy-as-format :defer t)
 (use-package! separedit :defer t)
@@ -140,9 +143,9 @@
             "[/\\\\]\\.cache\\'")
   (setq! +lsp-company-backends
          (if (featurep! :editor snippets)
-             '(:separate company-tabnine company-capf company-files company-yasnippet)
-           '(:separate company-tabnine company-capf company-files)))
-  ;; (setq! lsp-eslint-enable nil)
+             '(:separate company-tabnine-capf company-capf company-files company-yasnippet)
+           '(:separate company-tabnine-capf company-capf company-files)))
+  (setq! lsp-eslint-enable nil)
 
   (add-hook! 'lsp-configure-hook '+disable-lsp-watcher-in-some-project))
 

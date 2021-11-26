@@ -503,3 +503,9 @@ _b_ranch _j_next _k_prev _h_up
                                                           'title))))))))
           (t
            (call-interactively 'org-insert-link)))))
+
+;;;###autoload
+(defun +ansi-color-buffer ()
+  (interactive)
+  (with-silent-modifications
+    (ansi-color-apply-on-region (point-min) (point-max))))

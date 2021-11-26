@@ -30,6 +30,10 @@
    lsp-eslint-package-manager "yarn"
    lsp-eslint-run "onSave"
    lsp-eslint-auto-fix-on-save t))
+(after! lsp-ui
+  (setq! lsp-ui-doc-show-with-cursor nil
+         lsp-ui-doc-header t
+         lsp-ui-doc-include-signature t))
 
 (use-package! tree-sitter-langs
   :defer t
