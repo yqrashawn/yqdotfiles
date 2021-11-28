@@ -74,20 +74,21 @@ If the universal prefix argument is used then kill also the window."
 (defun spacemacs/toggle-maximize-buffer ()
   "Maximize buffer"
   (interactive)
-  (if (and (= 1 (length (window-list)))
-           (assoc ?_ register-alist))
-      (jump-to-register ?_)
-    (progn
-      (window-configuration-to-register ?_)
-      (delete-other-windows))))
+  (save-excursion
+    (if (and (= 1 (length (window-list)))
+             (assoc ?_ register-alist))
+        (jump-to-register ?_)
+      (progn
+        (window-configuration-to-register ?_)
+        (delete-other-windows)))))
 
 ;;;###autoload
 (defun yq/duplicate-line ()
-    "Duplicate current line."
-    (interactive)
-    (kill-whole-line)
-    (yank)
-    (yank))
+  "Duplicate current line."
+  (interactive)
+  (kill-whole-line)
+  (yank)
+  (yank))
 
 ;;;###autoload
 (defun yq/indent-region-or-buffer ()
