@@ -4,8 +4,11 @@
 
 (setq +company-backend-alist
       '((text-mode (:separate company-dabbrev company-yasnippet company-files company-ispell))
-        (prog-mode company-tabnine-capf company-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
-        (conf-mode company-tabnine-capf company-capf company-files company-dabbrev-code company-yasnippet)))
+        (rjsx-mode company-tabnine-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
+        (js2-mode company-tabnine-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
+        (typescript-mode company-tabnine-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
+        (prog-mode company-capf company-files company-yasnippet company-keywords company-dabbrev-code company-dabbrev)
+        (conf-mode company-tabnine-capf company-files company-dabbrev-code company-yasnippet)))
 
 (setq! projectile-project-search-path '("~/workspace/office" "~/workspace/home" "~/workspace/third"))
 
@@ -41,6 +44,7 @@
 
 (use-package! company-tabnine
   :defer t
+  :commands (company-tabnine-restart-server)
   :init
   (setq! company-tabnine-binaries-folder "~/.TabNine/binaries/"
          company-tabnine-context-radius 6000
@@ -143,8 +147,8 @@
             "[/\\\\]\\.cache\\'")
   (setq! +lsp-company-backends
          (if (featurep! :editor snippets)
-             '(:separate company-tabnine-capf company-capf company-files company-yasnippet)
-           '(:separate company-tabnine-capf company-capf company-files)))
+             '(:separate company-tabnine-capf company-files company-yasnippet)
+           '(:separate company-tabnine-capf company-files)))
   (setq! lsp-eslint-enable nil)
 
   (add-hook! 'lsp-configure-hook '+disable-lsp-watcher-in-some-project))

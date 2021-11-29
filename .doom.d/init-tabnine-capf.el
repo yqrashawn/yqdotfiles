@@ -56,8 +56,8 @@ tabnine's candidate have greater position then others."
   (cl-case command
     (interactive (company-begin-backend 'company-tabnine-capf))
     (prefix
-     (apply 'company-tabnine `(,command ,@args))
-     (apply 'company-capf `(,command ,@args)))
+     (apply 'company-capf `(,command ,@args))
+     (apply 'company-tabnine `(,command ,@args)))
     (meta (company-tabnine-capf--meta (car args)))
     (annotation (company-tabnine-capf--annotation (car args)))
     (sorted t)

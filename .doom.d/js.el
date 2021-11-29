@@ -57,7 +57,8 @@
                         ("let" . ?ḷ))))))
 
 (after! lsp-mode
-  (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook)
+  (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook typescript-mode-hook)
+    company-tabnine--disabled nil
     +format-with-lsp nil
     lsp-completion-enable nil)
   (setq! lsp-clients-typescript-log-verbosity "off"

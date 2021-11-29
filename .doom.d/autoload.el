@@ -321,15 +321,15 @@ _g_  gfm      _o_ org        _m_ markdown
   (company-tabnine-restart-server)
   (if company-tabnine--disabled
       (progn
-        (setq company-idle-delay 0)
+        ;; (setq company-idle-delay 0)
         (setq company-tabnine--disabled nil)
-        (when lsp-mode
-          (call-interactively #'lsp-workspace-shutdown))
+        ;; (when lsp-mode
+        ;;   (call-interactively #'lsp-workspace-shutdown))
         (message "Turn on company-tabnine"))
     (progn
-      (setq company-idle-delay 0.2)
+      ;; (setq company-idle-delay 0.2)
       (setq company-tabnine--disabled t)
-      (call-interactively #'revert-buffer)
+      ;; (call-interactively #'revert-buffer)
       (message "Turn off company-tabnine"))))
 
 ;;;###autoload
