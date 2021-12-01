@@ -203,3 +203,4 @@ local/bin/rust-analyzer
 /.config/lvim.bak/
 /.grip/
 /.sync_settings/
+/.matplotlib/
