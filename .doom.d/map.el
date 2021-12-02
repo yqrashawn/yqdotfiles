@@ -401,4 +401,7 @@
   :textobj ".L" (evil-textobj-tree-sitter-get-textobj "loop.inner") (evil-textobj-tree-sitter-get-textobj "loop.outer")
   :textobj ".c" (evil-textobj-tree-sitter-get-textobj "call.inner") (evil-textobj-tree-sitter-get-textobj "call.outer")
   :textobj ".s" (evil-textobj-tree-sitter-get-textobj "scopename.inner") (evil-textobj-tree-sitter-get-textobj "statement.outer")
-  :textobj ".p" (evil-textobj-tree-sitter-get-textobj "parameter.inner") (evil-textobj-tree-sitter-get-textobj "parameter.outer")))
+  :textobj ".p" (evil-textobj-tree-sitter-get-textobj "parameter.inner") (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+ (:after ranger
+  (:map ranger-normal-mode-map
+   :g "s" 'yq-s-map)))

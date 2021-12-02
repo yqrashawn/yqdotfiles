@@ -41,7 +41,8 @@
                                  (delete-overlay ol)
                                  ol)
        ispell-dictionary "en_US"
-       ispell-personal-dictionary "~/.config/personal_dict")
+       ispell-personal-dictionary "~/.config/personal_dict"
+       dired-quick-sort-suppress-setup-warning t)
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
