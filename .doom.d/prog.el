@@ -191,8 +191,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 ;;                lsp-ui-sideline-enable)
 ;;     (flycheck-popup-tip-mode +1)))
 
-(use-package! evil-textobj-tree-sitter
-  :after evil)
+;; (use-package! evil-textobj-tree-sitter
+;;   :after evil)
 
 (use-package! apheleia
   :hook ((js2-mode rjsx-mode) . apheleia-mode))

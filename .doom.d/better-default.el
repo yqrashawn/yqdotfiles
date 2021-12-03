@@ -223,3 +223,16 @@ A prefix arg reverses this operation."
 (setq frame-title-format '("%b"))
 
 (use-package! proced-narrow :after proced)
+
+(defadvice! +doom-init-all-the-icons-fonts-h (_)
+  :around #'doom-init-all-the-icons-fonts-h
+  (when (fboundp 'set-fontset-font)
+    (dolist (font (list
+                   "PragmataPro Mono Liga"
+                   "Weather Icons"
+                   "github-octicons"
+                   "FontAwesome"
+                   "all-the-icons"
+                   "file-icons"
+                   "Material Icons"))
+      (set-fontset-font t 'unicode font nil 'append))))

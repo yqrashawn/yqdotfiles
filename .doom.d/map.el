@@ -393,15 +393,15 @@
   (:map proced-mode-map
    :g "/" #'proced-narrow
    :n "/" #'proced-narrow))
- (:after evil-textobj-tree-sitter
-  :textobj ".f" (evil-textobj-tree-sitter-get-textobj "function.inner") (evil-textobj-tree-sitter-get-textobj "function.outer")
-  :textobj ".l" (evil-textobj-tree-sitter-get-textobj "block.inner") (evil-textobj-tree-sitter-get-textobj "block.outer")
-  :textobj ".C" (evil-textobj-tree-sitter-get-textobj "class.inner") (evil-textobj-tree-sitter-get-textobj "class.outer")
-  :textobj ".t" (evil-textobj-tree-sitter-get-textobj "condition.inner") (evil-textobj-tree-sitter-get-textobj "condition.outer")
-  :textobj ".L" (evil-textobj-tree-sitter-get-textobj "loop.inner") (evil-textobj-tree-sitter-get-textobj "loop.outer")
-  :textobj ".c" (evil-textobj-tree-sitter-get-textobj "call.inner") (evil-textobj-tree-sitter-get-textobj "call.outer")
-  :textobj ".s" (evil-textobj-tree-sitter-get-textobj "scopename.inner") (evil-textobj-tree-sitter-get-textobj "statement.outer")
-  :textobj ".p" (evil-textobj-tree-sitter-get-textobj "parameter.inner") (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+ ;; (:after evil-textobj-tree-sitter
+ ;;  :textobj ".f" (evil-textobj-tree-sitter-get-textobj "function.inner") (evil-textobj-tree-sitter-get-textobj "function.outer")
+ ;;  :textobj ".l" (evil-textobj-tree-sitter-get-textobj "block.inner") (evil-textobj-tree-sitter-get-textobj "block.outer")
+ ;;  :textobj ".C" (evil-textobj-tree-sitter-get-textobj "class.inner") (evil-textobj-tree-sitter-get-textobj "class.outer")
+ ;;  :textobj ".t" (evil-textobj-tree-sitter-get-textobj "condition.inner") (evil-textobj-tree-sitter-get-textobj "condition.outer")
+ ;;  :textobj ".L" (evil-textobj-tree-sitter-get-textobj "loop.inner") (evil-textobj-tree-sitter-get-textobj "loop.outer")
+ ;;  :textobj ".c" (evil-textobj-tree-sitter-get-textobj "call.inner") (evil-textobj-tree-sitter-get-textobj "call.outer")
+ ;;  :textobj ".s" (evil-textobj-tree-sitter-get-textobj "scopename.inner") (evil-textobj-tree-sitter-get-textobj "statement.outer")
+ ;;  :textobj ".p" (evil-textobj-tree-sitter-get-textobj "parameter.inner") (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
  (:after ranger
   (:map ranger-normal-mode-map
    :g "s" 'yq-s-map)))
