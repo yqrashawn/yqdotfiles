@@ -45,16 +45,18 @@
                       ;; Other
                       ;; :yield "import"
                       :alist
-                      '(("async" . ?⊳)
-                        ("await" . ?⊲)
-                        ("throw" . ?Ƭ)
-                        ("this" . ?ƭ)
-                        ("import" . ?⇟)
-                        ("export" . ?⇞)
-                        ("const" . ?Ċ)
-                        ("Promise" . ?Ṗ)
-                        ("if" . ?␦)
-                        ("let" . ?ḷ))))))
+                      '(("async " . ?⊳)
+                        ("await " . ?⊲)
+                        ("throw " . ?Ƭ)
+                        ("import " . ?ⅈ)
+                        ("export " . ?ⅇ)
+                        ("export default" . ?ⅆ)
+                        ("const " . ?ℂ)
+                        ("Promise" . ?⁋)
+                        (".then" . ?⇛)
+                        (".catch" . ?⇏)
+                        ("if " . ?␦)
+                        ("let " . ?ℿ))))))
 
 (after! lsp-mode
   (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook typescript-mode-hook)

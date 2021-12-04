@@ -28,6 +28,19 @@
 ;;     :around #'ivy-shrink-after-dispatching
 ;;     (unless mini-frame-mode (apply f a))))
 
-(use-package! elcord :hook (doom-first-file . elcord-mode))
+(use-package! elcord
+  :hook (doom-first-file . elcord-mode)
+  :init
+  (setq! elcord-quiet t))
 (use-package! idle-highlight-mode :hook (doom-first-file))
 (add-hook! 'doom-first-file-hook #'global-display-fill-column-indicator-mode)
+
+(after! prog-mode
+  ;; unprettify when idle for 1 seconds
+  (defadvice! +prettify-symbols--post-command-hook (orig-fn)
+    :around #'prettify-symbols--post-command-hook
+    (run-with-timer 1 nil
+                    (cmd! (let ((ti (current-idle-time)))
+                            (when (or (> (nth 1 ti) 0)
+                                      (> (nth 2 ti) 900000))
+                              (funcall orig-fn)))))))
