@@ -29,7 +29,14 @@
    lsp-bash-highlight-parsing-errors t
    lsp-eslint-package-manager "yarn"
    lsp-eslint-run "onSave"
-   lsp-eslint-auto-fix-on-save t))
+   lsp-eslint-auto-fix-on-save t
+   lsp-completion-show-detail nil
+   lsp-completion-show-kind nil
+   lsp-completion-sort-initial-results nil)
+  (add-hook! 'lsp-configure-hook
+    (cmd! (if (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))
+              (setq-local company-tabnine--disabled t)
+            (setq-local company-tabnine--disabled nil)))))
 (after! lsp-ui
   (setq! lsp-ui-doc-show-with-cursor nil
          lsp-ui-doc-header t

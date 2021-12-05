@@ -226,3 +226,12 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (shell-command (format "cd %s; find . -type d | sort | du -h" dir1-path) buf1)
     (shell-command (format "cd %s; find . -type d | sort | du -h" dir2-path) buf2)
     (ediff-buffers buf1 buf2)))
+
+(use-package! company-box
+  :defer t
+  :init
+  (setq! company-box-enable-icon nil
+         company-box-color-icon nil
+         company-box-max-candidates 15
+         company-box-scrollbar nil
+         company-box-doc-delay 1.5))

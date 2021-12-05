@@ -128,7 +128,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        (company +childframe); the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +fuzzy +childframe +icons) ; a search engine for love and life
+       (ivy +fuzzy +childframe) ; a search engine for love and life
        ;; vertico           ; the search engine of the future
 
        :ui
@@ -153,7 +153,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        vc-gutter         ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        ;;window-select     ; visually switch windows
-       ;; workspaces        ; tab emulation, persistence & separate workspaces
+       workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
 
        :editor
@@ -171,7 +171,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +ranger +icons); making dired pretty [functional]
+       (dired +ranger); making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        (ibuffer +icons)         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
