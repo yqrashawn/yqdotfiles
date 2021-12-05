@@ -344,6 +344,16 @@ _g_  gfm      _o_ org        _m_ markdown
 ;;         (tree-sitter-hl-mode))))
 
 ;;;###autoload
+(defun +company-complete (&optional args)
+  (interactive)
+  (if (eq major-mode 'vterm-mode)
+      (vterm--self-insert)
+    (if (eq (preceding-char) ?l)
+        (progn (delete-char -1 nil)
+               (+company/complete))
+      (insert ?l))))
+
+;;;###autoload
 (defun +yas-expand-when-inserting-dot (&optional args)
   (interactive)
   (if (eq major-mode 'vterm-mode) (vterm--self-insert)

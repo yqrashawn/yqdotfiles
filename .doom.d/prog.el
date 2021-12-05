@@ -32,6 +32,7 @@
 (after! company
   (setq! company-selection-wrap-around t
          company-show-numbers t
+         company-idle-delay 10000
          company-require-match nil
          company-dabbrev-minimum-length 2
          company-search-regexp-function #'company-search-flex-regexp

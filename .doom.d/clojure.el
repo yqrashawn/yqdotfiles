@@ -108,5 +108,4 @@
   )
 
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
-  (cmd! (setq-local company-idle-delay 0.2
-                    evil-shift-width 1)))
+  (cmd! (setq-local evil-shift-width 1)))
