@@ -321,7 +321,7 @@
   :i "C-j" #'avy-goto-char-timer
   :i "C-l" #'hippie-expand
   :i "." #'+yas-expand-when-inserting-dot
-  :i "l" #'+company-complete
+  :i "," #'+company-complete
   :m "TAB" nil
   ;; seperate C-i and tab
   :m "C-x @ C-x i" #'evil-jump-forward

@@ -32,11 +32,19 @@
 (after! company
   (setq! company-selection-wrap-around t
          company-show-numbers t
-         company-idle-delay 10000
+         company-frontends '(company-preview-frontend company-echo-frontend)
          company-require-match nil
          company-dabbrev-minimum-length 2
          company-search-regexp-function #'company-search-flex-regexp
          company-show-numbers-function 'yq//company-format-numbers)
+
+  (setq-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
+    company-idle-delay 2000)
+  (after! eldoc
+    (defadvice! +eldoc--message (orig-fn &optional string)
+      :around #'eldoc--message
+      (unless (company--active-p)
+        (funcall orig-fn string))))
 
   (dotimes (i 10)
     (define-key! company-active-map

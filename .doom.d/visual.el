@@ -40,7 +40,7 @@
   (defadvice! +prettify-symbols--post-command-hook (orig-fn)
     :around #'prettify-symbols--post-command-hook
     (run-with-timer 1 nil
-                    (cmd! (let ((ti (current-idle-time)))
+                    (cmd! (let ((ti (or (current-idle-time) '(0 0 0))))
                             (when (or (> (nth 1 ti) 0)
                                       (> (nth 2 ti) 900000))
                               (funcall orig-fn)))))))

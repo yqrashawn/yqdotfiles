@@ -348,10 +348,10 @@ _g_  gfm      _o_ org        _m_ markdown
   (interactive)
   (if (eq major-mode 'vterm-mode)
       (vterm--self-insert)
-    (if (eq (preceding-char) ?l)
+    (if (and company-mode (eq (preceding-char) ?,))
         (progn (delete-char -1 nil)
                (+company/complete))
-      (insert ?l))))
+      (call-interactively #'self-insert-command))))
 
 ;;;###autoload
 (defun +yas-expand-when-inserting-dot (&optional args)
