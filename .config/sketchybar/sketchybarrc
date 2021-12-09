@@ -125,7 +125,14 @@ sketchybar -m --add item space_separator left \
 	label.color=0xffff0000 \
 	update_freq=60 \
 	script="~/.config/sketchybar/plugins/keybase_unread.sh" \
-	click_script="hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Keybase\")'"
+	click_script="hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Keybase\")'" \
+	\
+	--add item ghactcheck left \
+	--set ghactcheck \
+	icon.font="PragmataPro:Bold:16.0" \
+	label.color=0xffff0000 \
+	update_freq=120 \
+	script="~/.config/sketchybar/plugins/failed_gh_action_in_repos.clj"
 
 ############## RIGHT ITEMS ##############
 sketchybar -m --add item battery right \
