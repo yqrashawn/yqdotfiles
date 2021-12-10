@@ -132,7 +132,7 @@ sketchybar -m --add item space_separator left \
 	icon.font="PragmataPro:Bold:16.0" \
 	label.color=0xffff0000 \
 	update_freq=120 \
-	script="~/.config/sketchybar/plugins/failed_gh_action_in_repos.clj"
+	script="bb -cp ~/.config/bblib ~/.config/sketchybar/plugins/failed_gh_action_in_repos.clj"
 
 ############## RIGHT ITEMS ##############
 sketchybar -m --add item battery right \

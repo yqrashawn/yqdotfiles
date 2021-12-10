@@ -4,15 +4,15 @@ if [ "$(yabai -m query --displays | jq length)" -eq 1 ]; then
     yabai -m rule --add app=".*" space=1
 else
     ### app
-    yabai -m rule --add app="^Emacs$" space=1
     yabai -m rule --add app="^Alacritty$" space=1
+    yabai -m rule --add app="^Emacs$" space=1
     yabai -m rule --add app="^Firefox Developer Edition$" space=6
 
-    yabai -m rule --add app="^Todoist$" space=2
-    yabai -m rule --add app="^Notion$" space=2
-    yabai -m rule --add app="^NotePlan$" space=2
     yabai -m rule --add app="^Logseq$" space=2
     yabai -m rule --add app="^Roam$" space=2
+    yabai -m rule --add app="^NotePlan$" space=2
+    yabai -m rule --add app="^Notion$" space=2
+    yabai -m rule --add app="^Todoist$" space=2
     yabai -m rule --add app="^Google Chrome$" space=7
 
     yabai -m rule --add app="^Mail$" space=3

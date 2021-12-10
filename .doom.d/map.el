@@ -341,7 +341,7 @@
   :n ">" #'evil-shift-right-line
   :n "<" #'evil-shift-left-line
   :n "gm" #'evil-snipe-s
-  :nv "C-m" #'evil-jump-item
+  :nvm "C-m" #'evil-jump-item
   :n "C-n" #'evil-multiedit-match-and-next
   :n "C-p" #'evil-multiedit-match-and-prev
   :v ">" (cmd! (call-interactively 'evil-shift-right) (execute-kbd-macro "gv"))
