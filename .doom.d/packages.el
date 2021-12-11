@@ -174,3 +174,4 @@
 ;; (package! fit-text-scale)
 (package! code-review :recipe (:host github :repo "wandersoncferreira/code-review"))
 ;; (package! centered-cursor-mode)
+(package! meow)
