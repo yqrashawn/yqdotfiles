@@ -1,0 +1,31 @@
+{
+  "replace_slash_with_dot": false,
+  "account": "yqrashawn@gmail.com",
+  "timeout": 600,
+  "drop_non_existing_label": false,
+  "ignore_empty_history": false,
+  "ignore_tags": ["new"],
+  "ignore_remote_labels": [
+    "CATEGORY_PROMOTIONS",
+    "CATEGORY_SOCIAL",
+    "CATEGORY_PERSONAL",
+    "CATEGORY_UPDATES",
+    "CATEGORY_FORUMS",
+    "Spam",
+    "Trash",
+    "deleted",
+    "RSS",
+    "RSS/Clojure",
+    "RSS/Github",
+    "RSS/Crypto",
+    "RSS/Javascript",
+    "RSS/Misc",
+    "RSS/Releases",
+    "RSS/Rust",
+    "RSS/Emacs"
+  ],
+  "remove_local_messages": true,
+  "file_extension": "",
+  "local_trash_tag": "deleted",
+  "translation_list_overlay": []
+}

@@ -128,3 +128,7 @@
 (use-package! spacehammer
   :commands (spacehammer/edit-with-emacs spacehammer/fix-frame spacehammer/activate-capture-frame spacehammer/switch-to-app)
   :load-path "~/.hammerspoon/")
+
+(setq! ranger-return-to-ranger t
+       ranger-show-hidden 'format
+       ranger-persistent-sort t)

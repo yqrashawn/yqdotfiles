@@ -12,9 +12,9 @@ IMAPStore gmail-remote
 Account gmail
 
 MaildirStore gmail-local
+SubFolders Verbatim
 Path ~/mail/gmail/
 Inbox ~/mail/gmail/Inbox
-SubFolders Verbatim
 
 Channel gmail
 Far :gmail-remote:
@@ -39,15 +39,16 @@ SyncState *
 # User yuxiao.zhang@confluxnetwork.org
 # PassCmd "security find-generic-password  -s mbsync-cfx -w"
 # SSLType IMAPS
-# # AuthMechs LOGIN
+# SSLVersion TLSv1.2
+# AuthMechs LOGIN
 
 # IMAPStore cfx-remote
 # Account cfx
 
 # MaildirStore cfx-local
+# SubFolders Verbatim
 # Path ~/mail/cfx/
 # Inbox ~/mail/cfx/Inbox
-# SubFolders Verbatim
 
 # Channel cfx
 # Far :cfx-remote:

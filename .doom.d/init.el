@@ -278,8 +278,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        zig               ; C, but simpler
 
        :email
-       (mu4e +gmail)
-       ;;notmuch
+       ;; (mu4e +gmail +org)
+       (notmuch +org)
        ;;(wanderlust +gmail)
 
        :app

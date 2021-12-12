@@ -204,3 +204,5 @@ local/bin/rust-analyzer
 /.grip/
 /.sync_settings/
 /.matplotlib/
+/.w3m/
+/.mail
