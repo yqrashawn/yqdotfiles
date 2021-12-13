@@ -405,4 +405,8 @@
  ;;  :textobj ".p" (evil-textobj-tree-sitter-get-textobj "parameter.inner") (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
  (:after ranger
   (:map ranger-normal-mode-map
-   :g "s" 'yq-s-map)))
+   :g "s" 'yq-s-map))
+ (:after notmuch
+  [remap evil-collection-notmuch-tree-toggle-delete] #'+notmuch/tree-delete
+  [remap evil-collection-notmuch-show-toggle-delete] #'+notmuch/show-delete
+  [remap evil-collection-notmuch-search-toggle-delete] #'+notmuch/search-delete))

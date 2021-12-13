@@ -465,6 +465,7 @@
                       [:l "~/.config/yabai/resize right"]
                       :tab-mode
                       [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
+                      [:!Thyphen "~/.config/yabai/rules"]
                       [:7 "/usr/local/bin/brew services stop yabai"]
                       [:8 "/usr/local/bin/brew services start yabai"]
                       ;; focus mode
