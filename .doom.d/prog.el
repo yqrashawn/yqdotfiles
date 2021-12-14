@@ -40,6 +40,8 @@
 
   (setq-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
     company-idle-delay 2000)
+  (setq-hook! '(js2-mode-hook rjsx-mode-hook js-mode-hook typescript-mode-hook)
+    company-idle-delay 0)
   (after! eldoc
     (defadvice! +eldoc--message (orig-fn &optional string)
       :around #'eldoc--message

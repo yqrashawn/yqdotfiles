@@ -2,7 +2,7 @@
 assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["system", "emacs", "macports", "mas"]
+disable = ["system", "emacs", "macports", "mas", "tnpm", "neovim", "zinit", "tmux"]
 
 # Ignore failures for these steps
 #ignore_failures = ["powershell"]

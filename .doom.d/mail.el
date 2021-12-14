@@ -8,11 +8,10 @@
 ;; (setq mu4e-html2text-command "html2text -from_encoding utf8 -ascii -width 72")
 ;; (setq mu4e-html2text-command "html2text -width 72")
 
-(defun +notmuch-get-sync-command ()
+(after! notmuch
+  (defun +notmuch-get-sync-command ()
   "custom notmuch sync command"
   "cd ~/.mail/account.gmail && gmi sync && cd ~/.mail/account.yqrashawn && gmi sync && notmuch new")
-
-(after! notmuch
   (setq! mm-text-html-renderer 'w3m-standalone)
   (setq! +notmuch-delete-tags '("+deleted" "-inbox" "-unread")
          notmuch-show-indent-messages-width 2))

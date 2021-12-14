@@ -206,3 +206,5 @@ local/bin/rust-analyzer
 /.matplotlib/
 /.w3m/
 /.mail
+/.node/
+/.flutter

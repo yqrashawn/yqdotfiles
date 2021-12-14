@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-if [ "$(/usr/local/bin/yabai -m query --displays | jq length)" -eq 1 ]; then
+if [ "$(/usr/local/bin/yabai -m query --displays | /usr/local/bin/jq length)" -eq 1 ]; then
     /usr/local/bin/yabai -m rule --add app=".*" space=1
 else
     ### app
