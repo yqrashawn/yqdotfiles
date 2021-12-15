@@ -470,17 +470,42 @@ _b_ranch _j_next _k_prev _h_up
 ;;;###autoload
 (defun yq-new-blot-post ()
   (interactive)
+  ;; (require 's)
   (let* ((blot-folder "~/Dropbox/application/Blot/")
          (time-folder (format-time-string "%Y/%m/%d/"))
          (blog-dir (expand-file-name (concat blot-folder time-folder)))
-         (filename (read-string "Blog file name: "))
+         (title (replace-regexp-in-string
+                 " +" " "
+                 (read-string "Blog title: ")))
+         (filename (replace-regexp-in-string " " "-" (downcase title)))
+         (filename (concat "_" filename ".md"))
          (filename (concat blog-dir filename)))
-    (if (or (s-ends-with? ".md" filename)
-            (s-ends-with? ".org" filename))
-        (progn (make-empty-file filename t)
-               (find-file filename)
-               (insert "sbt."))
-      (user-error! "Invalid extension."))))
+    (make-empty-file filename t)
+    (find-file filename)
+    (insert (concat "sbt.\n\n# " title))
+    (goto-char (point-min))
+    (end-of-line)))
+
+;;;###autoload
+(defun yq-publish-blot-post ()
+  (interactive)
+  (let* ((cur-file-path (buffer-file-name (current-buffer)))
+         (cur-dir (file-name-directory cur-file-path))
+         (new-file-name (save-match-data
+                          (and (string-match "\/_.*\.\\(txt\\|org\\|md\\)$" cur-file-path)
+                               (substring (match-string 0 cur-file-path) 2)))))
+    (cl-assert
+     (string-match-p "\/Dropbox\/应用\/Blot\/" cur-file-path)
+     nil "No in Blot folder")
+    (cl-assert
+     (string-match-p "\/Dropbox\/应用\/Blot\/.*\/_.*\.\\(txt\\|org\\|md\\)$" cur-file-path)
+     nil "Invalid blog format, must be one of txt, org, md")
+    (cl-assert
+     (string-match-p "\/Dropbox\/应用\/Blot\/.*\/_.*\.\\(txt\\|org\\|md\\)$" cur-file-path)
+     nil "Already published")
+    (rename-file cur-file-path new-file-name)
+    (kill-buffer (current-buffer))
+    (find-file (concat cur-dir new-file-name))))
 ;;;###autoload
 (defun ++popup-messages (arg)
   (interactive "P")
