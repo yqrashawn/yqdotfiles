@@ -236,3 +236,8 @@ A prefix arg reverses this operation."
                    "file-icons"
                    "Material Icons"))
       (set-fontset-font t 'unicode font nil 'append))))
+
+(add-hook! 'doom-first-file-hook
+  (cmd!
+   (if (boundp 'pixel-scroll-precision-mode)
+       (pixel-scroll-precision-mode t))))
