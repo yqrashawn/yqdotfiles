@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: datascript vault type tuple
+# key: dstt
+# --
+:valueType :db.type/tuple
+:tupleAttrs [$1]
+:unique :db.unique/identity

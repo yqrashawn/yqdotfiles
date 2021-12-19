@@ -47,7 +47,7 @@ fi
 /usr/local/bin/yabai -m rule --add app="^Image2icon$" manage=off
 /usr/local/bin/yabai -m rule --add app="^Surge$" manage=off
 /usr/local/bin/yabai -m rule --add app="^Alfred Preferences$" manage=off
-/usr/local/bin/yabai -m rule --add app="^Raycast$" manage=off
+# /usr/local/bin/yabai -m rule --add app="^Raycast$" manage=off
 /usr/local/bin/yabai -m rule --add app="^Karabiner-Elements$" manage=off
 /usr/local/bin/yabai -m rule --add app="^TencentMeeting$" title="腾讯会议" manage=off
 /usr/local/bin/yabai -m rule --add app="^iShot$" manage=off

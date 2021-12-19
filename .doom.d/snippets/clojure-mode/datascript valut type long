@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript valut type long
+# key: dstl
+# --
+:valueType :db.type/long

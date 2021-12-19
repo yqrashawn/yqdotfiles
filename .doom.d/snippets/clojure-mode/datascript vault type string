@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript vault type string
+# key: dsts
+# --
+:valueType :db.type/string

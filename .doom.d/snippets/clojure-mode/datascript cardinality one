@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript cardinality one
+# key: dsco
+# --
+:cardinality :db.cardinality/one

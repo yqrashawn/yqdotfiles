@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript schema doc
+# key: dsdc
+# --
+:doc "$1"

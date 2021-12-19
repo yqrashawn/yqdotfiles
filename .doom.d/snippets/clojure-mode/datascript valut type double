@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript valut type double
+# key: dstd
+# --
+:valuetype :db.type/double

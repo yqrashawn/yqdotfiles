@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript cardinality many
+# key: dscm
+# --
+:cardinality :db.cardinality/many

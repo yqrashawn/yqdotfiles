@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript value type boolean
+# key: dstb
+# --
+:valueType :db.type/boolean

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript valut type ref
+# key: dstr
+# --
+:valueType :db.type/ref

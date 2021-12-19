@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript unique value
+# key: dsuv
+# --
+:unique :db.unique/value

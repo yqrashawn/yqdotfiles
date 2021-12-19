@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datascript new schema item
+# key: dsns
+# --
+:${1:namespace}/${2:key} #:db{${3:schema}}
