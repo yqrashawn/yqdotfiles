@@ -341,7 +341,7 @@
   :n ">" #'evil-shift-right-line
   :n "<" #'evil-shift-left-line
   :n "gm" #'evil-snipe-s
-  :nvm "C-m" #'evil-jump-item
+  [remap evil-ret] #'evil-jump-item
   :n "C-n" #'evil-multiedit-match-and-next
   :n "C-p" #'evil-multiedit-match-and-prev
   :v ">" (cmd! (call-interactively 'evil-shift-right) (execute-kbd-macro "gv"))
@@ -409,4 +409,8 @@
  (:after notmuch
   [remap evil-collection-notmuch-tree-toggle-delete] #'+notmuch/tree-delete
   [remap evil-collection-notmuch-show-toggle-delete] #'+notmuch/show-delete
-  [remap evil-collection-notmuch-search-toggle-delete] #'+notmuch/search-delete))
+  [remap evil-collection-notmuch-search-toggle-delete] #'+notmuch/search-delete)
+ (:after code-review
+  (:map code-review-mode-map
+   :gn "r" #'code-review-transient-api
+   :nv "i" #'code-review-comment-add-or-edit)))
