@@ -208,3 +208,4 @@ local/bin/rust-analyzer
 /.mail
 /.node/
 /.flutter
+/.adobe/
