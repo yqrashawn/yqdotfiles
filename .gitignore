@@ -209,3 +209,4 @@ local/bin/rust-analyzer
 /.node/
 /.flutter
 /.adobe/
+/.config/todoist-cli/

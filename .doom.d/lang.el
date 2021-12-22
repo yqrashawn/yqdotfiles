@@ -22,6 +22,7 @@
 (use-package! jsonnet-mode :mode "\.jsonnet\'")
 
 (after! lsp
+  (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
   (setq!
    ;; lsp-imenu-sort-methods '(position)
    ;; lsp-eldoc-enable-hover nil
