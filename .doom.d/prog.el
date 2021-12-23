@@ -245,3 +245,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
          company-box-max-candidates 15
          company-box-scrollbar nil
          company-box-doc-delay 1.5))
+
+(use-package! dtache
+  :hook (doom-input-hook . dtache-initialize)
+  :config
+  (setq! dtache-db-directory doom-cache-dir
+         dtache-session-directory (expand-file-name "dtache" (temporary-file-directory))))

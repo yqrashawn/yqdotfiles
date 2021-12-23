@@ -21,8 +21,59 @@
 (use-package! crontab-mode :defer t)
 (use-package! jsonnet-mode :mode "\.jsonnet\'")
 
+(setq! lsp-eslint-enable nil)
 (after! lsp
   (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection
+    (lsp-stdio-connection
+     (lambda () (lsp-eslint-server-command))
+     (lambda () (lsp-eslint-server-exists? (lsp-eslint-server-command))))
+    :activation-fn (lambda (filename &optional _)
+                     (when lsp-eslint-enable
+                       (or (string-match-p (rx (one-or-more anything) "."
+                                               (or "ts" "js" "jsx" "tsx" "html" "vue" "svelte") eos)
+                                           filename)
+                           (and (derived-mode-p 'js-mode 'js2-mode 'typescript-mode 'html-mode 'svelte-mode)
+                                (not (string-match-p "\\.json\\'" filename))))))
+    :priority -1
+    :completion-in-comments? t
+    :add-on? t
+    :multi-root nil
+    :notification-handlers (ht ("eslint/status" #'lsp-eslint-status-handler))
+    :request-handlers (ht ("workspace/configuration" #'lsp-eslint--configuration)
+                          ("eslint/openDoc" #'lsp-eslint--open-doc)
+                          ("eslint/probeFailed" #'lsp-eslint--probe-failed))
+    :async-request-handlers (ht ("eslint/confirmESLintExecution" #'lsp-eslint--confirm-local))
+    :server-id 'eslint
+    :initialized-fn (lambda (workspace)
+                      (with-lsp-workspace workspace
+                        (lsp--server-register-capability
+                         (lsp-make-registration
+                          :id "random-id"
+                          :method "workspace/didChangeWatchedFiles"
+                          :register-options? (lsp-make-did-change-watched-files-registration-options
+                                              :watchers
+                                              `[,(lsp-make-file-system-watcher
+                                                  :glob-pattern "**/.eslintr{c.js,c.yaml,c.yml,c,c.json}")
+                                                ,(lsp-make-file-system-watcher
+                                                  :glob-pattern "**/.eslintignore")
+                                                ,(lsp-make-file-system-watcher
+                                                  :glob-pattern "**/package.json")])))))
+    :download-server-fn (lambda (_client callback error-callback _update?)
+                          (let ((tmp-zip (make-temp-file "ext" nil ".zip")))
+                            (delete-file tmp-zip)
+                            (lsp-download-install
+                             (lambda (&rest _)
+                               (condition-case err
+                                   (progn
+                                     (lsp-unzip tmp-zip lsp-eslint-unzipped-path)
+                                     (funcall callback))
+                                 (error (funcall error-callback err))))
+                             error-callback
+                             :url lsp-eslint-download-url
+                             :store-path tmp-zip)))))
   (setq!
    ;; lsp-imenu-sort-methods '(position)
    ;; lsp-eldoc-enable-hover nil
