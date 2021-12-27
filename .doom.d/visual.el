@@ -44,3 +44,7 @@
                             (when (or (> (nth 1 ti) 0)
                                       (> (nth 2 ti) 900000))
                               (funcall orig-fn)))))))
+
+(add-hook! 'doom-first-input-hook
+           (cmd! (if (boundp 'pixel-scroll-precision-mode)
+                     (pixel-scroll-precision-mode t))))

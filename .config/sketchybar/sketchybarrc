@@ -196,7 +196,7 @@ if (($? == 0)); then
 fi
 
 # iStat Menus Status
-sketchybar -m --query default_menu_items | grep 'iStat Menus Status;'
+sketchybar -m --query default_menu_items | grep 'iStat Menus Status'
 if (($? == 0)); then
 	sketchybar -m --add alias 'iStat Menus Status',com.bjango.istatmenus.cpu right \
 		--set 'iStat Menus Status',com.bjango.istatmenus.cpu \

@@ -249,5 +249,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 (use-package! dtache
   :hook (doom-input-hook . dtache-initialize)
   :config
+  (defadvice! my/dtache--add-end-of-session-notification-advice (orig-fn session)
+    :around #'dtache--add-end-of-session-notification
+    (let ((dtache-timer-configuration
+           '(:seconds 0.5 :repeat 0.5 :function run-with-idle-timer)))
+      (dtache--session-timer session)))
+
   (setq! dtache-db-directory doom-cache-dir
          dtache-session-directory (expand-file-name "dtache" (temporary-file-directory))))
