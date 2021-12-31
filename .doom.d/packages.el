@@ -178,3 +178,4 @@
 ;; (package! centered-cursor-mode)
 (package! meow)
 (package! dtache :recipe (:type git :host gitlab :repo "niklaseklund/dtache"))
+(package! embark)
