@@ -1,8 +1,11 @@
 #!/usr/bin/env sh
 
 # general space settings
-if [ "$(/usr/local/bin/yabai -m query --displays | /usr/local/bin/jq length)" -eq 1 ]; then
+if [ "$($HOME/local/bin/has-lg-4k-hdr)" ]; then
+    yabai -m config layout bsp
+elif [ "$(/usr/local/bin/yabai -m query --displays | /usr/local/bin/jq length)" -eq 1 ]; then
     yabai -m config layout                       stack
 else
+    echo haha3
     yabai -m config layout                       bsp
 fi
