@@ -43,6 +43,7 @@
              :contexts-f-mode       {:key :f}
              :emacs-m-mode          {:key :m :condi :Emacs-and-Terminals}
              :emacs-v-mode          {:key :v :condi :Emacs-and-Terminals}
+             :slidepad-s-mode       {:key :s :condi [:!tab-mode :slidepad]}
              :emacs-special-s-mode  {:key :s :condi [:!tab-mode :Emacs] :afterup {:key :return_or_enter}}
              :emacs-s-mode          {:key :s :condi [:Emacs :!tab-mode]}
              :vscode-s-mode         {:key :s :condi [:VSCode :!tab-mode]}
@@ -180,6 +181,12 @@
                       [:!OSj :!OSdown_arrow]
                       [:!OSk :!OSup_arrow]
                       [:!OSl :!OSright_arrow]]}
+             {:des "s-mode for slidepad"
+              :rules [:slidepad-s-mode
+                      [:j :!Cgrave_accent_and_tilde]
+                      [:k :!CSgrave_accent_and_tilde]
+                      [:h :!Copen_bracket]
+                      [:l :!Cclose_bracket]]}
              {:des   "s-mode in emacs"
               :rules [:emacs-s-mode
                       [:j :!!j]
@@ -225,7 +232,7 @@
               :rules [:Emacs
                       [:tab :!Ttab :period-mode]
                       [:tab :!TStab :comma-mode]]}
-             {:des   "s-mode in chrome"
+             {:des   "s-mode in browser"
               :rules [:browser-s-mode
                       ;; vertical tab for firefox
                       [:j :!CSclose_bracket :Firefoxes]
@@ -704,6 +711,7 @@
                       :Alfred                        ["^com\\.runningwithcrayons\\.Alfred$"]
                       :Todoist                       ["^com\\.todoist\\.mac\\.Todoist$"]
                       :Keybase                       ["^keybase\\.Electron$"]
+                      :slidepad                      ["^com\\.slidepad\\.slidepad"]
                       :Browsers                      ["^org\\.mozilla\\.firefox$"
                                                       "^org\\.mozilla\\.firefoxdeveloperedition$"
                                                       "^com\\.google\\.Chrome$"
