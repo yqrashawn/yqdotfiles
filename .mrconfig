@@ -1,12 +1,1 @@
-
-[.emacs.d]
-checkout = git clone 'https://github.com/yqrashawn/.emacs.d.git' '.emacs.d'
-
-[.zprezto]
-checkout = git clone 'https://github.com/sorin-ionescu/prezto.git' '.zprezto'
-
-[workspace/HOME/yqrashawn.github.io]
-checkout = git clone 'https://github.com/yqrashawn/yqrashawn.github.io.git' 'yqrashawn.github.io'
-
-[]
-checkout = git clone 'https://yqrashawn@github.com/yqrashawn/yqdotfiles.git' 'dot'
+/Users/yqrashawn/Dropbox/Mackup/.mrconfig
