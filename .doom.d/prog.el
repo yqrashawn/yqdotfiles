@@ -86,14 +86,14 @@
               js2-mode
               js-mode
               js3-mode))
-  (defadvice! +format-all--formatter-executable (orig-fn formatter)
-    :around #'format-all--formatter-executable
-    (let* ((home (concat (getenv "HOME") "/"))
-           (root (doom-project-root))
-           (root (if (or (not root) (string= home root)) (expand-file-name "~/.config/yarn/global/") root)))
-      (if (file-executable-p (concat root "node_modules/" ".bin/" (symbol-name formatter)))
-          (concat root "node_modules/" ".bin/" (symbol-name formatter))
-        (apply orig-fn formatter))))
+  ;; (defadvice! +format-all--formatter-executable (orig-fn formatter)
+  ;;   :around #'format-all--formatter-executable
+  ;;   (let* ((home (concat (getenv "HOME") "/"))
+  ;;          (root (doom-project-root))
+  ;;          (root (if (or (not root) (string= home root)) (expand-file-name "~/.config/yarn/global/") root)))
+  ;;     (if (file-executable-p (concat root "node_modules/" ".bin/" (symbol-name formatter)))
+  ;;         (concat root "node_modules/" ".bin/" (symbol-name formatter))
+  ;;       (apply orig-fn formatter))))
 
   ;; run prettier after lsp format (eslint)
   ;; (defadvice! ++format/region-or-buffer (orig-fn)
