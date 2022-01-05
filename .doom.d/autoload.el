@@ -545,3 +545,14 @@ _b_ranch _j_next _k_prev _h_up
   (interactive)
   (with-silent-modifications
     (ansi-color-apply-on-region (point-min) (point-max))))
+
+;;;###autoload
+(defun +truncate-0x-hash ()
+  "Truncates long 0x hash."
+  (save-excursion
+    (goto-char (match-beginning 0))
+    (let ((start (re-search-forward "0x[a-fA-F0-9]\\{41\\}" nil t))
+           (finish (re-search-forward "\\(\"\\|'\\)" (line-end-position) t)))
+      (when (and start finish)
+        (put-text-property (- start 29) (- finish 1) 'display "..."))))
+  nil)

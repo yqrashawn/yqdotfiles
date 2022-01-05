@@ -48,3 +48,28 @@
 (add-hook! 'doom-first-input-hook
            (cmd! (if (boundp 'pixel-scroll-precision-mode)
                      (pixel-scroll-precision-mode t))))
+
+
+(after! js2-mode
+  (font-lock-add-keywords
+    'js2-mode
+    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+(after! rjsx-mode
+  (font-lock-add-keywords
+    'rjsx-mode
+    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+(after! typescript-mode
+  (font-lock-add-keywords
+    'typescript-mode
+    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+(after! clojure-mode
+  (font-lock-add-keywords
+    'clojurescript-mode
+    (append `(("\"0x" (0 (+truncate-0x-hash))))))
+  (font-lock-add-keywords
+    'clojure-mode
+    (append `(("\"0x" (0 (+truncate-0x-hash)))))))
+(after! web-mode
+  (font-lock-add-keywords
+    'web-mode
+    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))

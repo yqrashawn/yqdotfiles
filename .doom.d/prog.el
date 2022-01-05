@@ -256,4 +256,4 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
       (dtache--session-timer session)))
 
   (setq! dtache-db-directory doom-cache-dir
-         dtache-session-directory (expand-file-name "dtache" (temporary-file-directory))))
+    dtache-session-directory (expand-file-name "dtache" (temporary-file-directory))))
