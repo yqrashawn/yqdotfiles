@@ -1,62 +1,62 @@
 #!/usr/bin/env sh
 
-if [[ "$(/usr/local/bin/yabai -m query --displays | /usr/local/bin/jq length)" -eq 1 ]] && [[ ! "$($HOME/local/bin/has-lg-4k-hdr)" ]]; then
-    # if [ "$(/usr/local/bin/yabai -m query --displays | /usr/local/bin/jq length)" -eq 1 ]; then
-    /usr/local/bin/yabai -m rule --add app=".*" space=1
-elif [[ "$($HOME/local/bin/has-lg-4k-hdr)" ]]; then
-    /usr/local/bin/yabai -m rule --add app="^Alacritty$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Emacs$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Firefox Developer Edition$" space=1
+DISPLAY_COUNT=$(/usr/local/bin/yabai -m query --displays | /usr/local/bin/jq length)
+if [[ $DISPLAY_COUNT -eq 1 ]] && [[ ! "$($HOME/local/bin/has-lg-4k-hdr)" ]]; then
+  /usr/local/bin/yabai -m rule --add app=".*" space=1
+elif [[ $DISPLAY_COUNT -eq 1 ]] && [[ "$($HOME/local/bin/has-lg-4k-hdr)" ]]; then
+  /usr/local/bin/yabai -m rule --add app="^Alacritty$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Emacs$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Firefox Developer Edition$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Google Chrome$" space=1
 
-    /usr/local/bin/yabai -m rule --add app="^Mail$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Newsblur$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Reeder$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Figma$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Mail$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Newsblur$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Reeder$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Figma$" space=1
 
-    /usr/local/bin/yabai -m rule --add app="^ClickUp$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Logseq$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Roam$" space=2
-    /usr/local/bin/yabai -m rule --add app="^NotePlan$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Notion$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Todoist$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Google Chrome$" space=2
+  /usr/local/bin/yabai -m rule --add app="^ClickUp$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Logseq$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Roam$" space=2
+  /usr/local/bin/yabai -m rule --add app="^NotePlan$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Notion$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Todoist$" space=2
 
-    /usr/local/bin/yabai -m rule --add app="^Keybase$" manage=on space=3
-    /usr/local/bin/yabai -m rule --add app="^Discord$" manage=on space=3
-    /usr/local/bin/yabai -m rule --add app="^Telegram$" manage=on space=3
+  /usr/local/bin/yabai -m rule --add app="^Keybase$" manage=on space=3
+  /usr/local/bin/yabai -m rule --add app="^Discord$" manage=on space=3
+  /usr/local/bin/yabai -m rule --add app="^Telegram$" manage=on space=3
 
-    /usr/local/bin/yabai -m rule --add app="^NeteaseMusic$" manage=on space=4
-    /usr/local/bin/yabai -m rule --add app="^Endel$" manage=on space=4
-    /usr/local/bin/yabai -m rule --add app="^TIDAL$" manage=on space=4
+  /usr/local/bin/yabai -m rule --add app="^NeteaseMusic$" manage=on space=4
+  /usr/local/bin/yabai -m rule --add app="^Endel$" manage=on space=4
+  /usr/local/bin/yabai -m rule --add app="^TIDAL$" manage=on space=4
 else
-    ### app
-    /usr/local/bin/yabai -m rule --add app="^Alacritty$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Emacs$" space=1
-    /usr/local/bin/yabai -m rule --add app="^Firefox Developer Edition$" space=6
+  ### app
+  /usr/local/bin/yabai -m rule --add app="^Alacritty$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Emacs$" space=1
+  /usr/local/bin/yabai -m rule --add app="^Firefox Developer Edition$" space=6
 
-    /usr/local/bin/yabai -m rule --add app="^Logseq$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Roam$" space=2
-    /usr/local/bin/yabai -m rule --add app="^NotePlan$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Notion$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Todoist$" space=2
-    /usr/local/bin/yabai -m rule --add app="^Google Chrome$" space=7
+  /usr/local/bin/yabai -m rule --add app="^Logseq$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Roam$" space=2
+  /usr/local/bin/yabai -m rule --add app="^NotePlan$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Notion$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Todoist$" space=2
+  /usr/local/bin/yabai -m rule --add app="^Google Chrome$" space=7
 
-    /usr/local/bin/yabai -m rule --add app="^Mail$" space=3
-    /usr/local/bin/yabai -m rule --add app="^Newsblur$" space=3
-    /usr/local/bin/yabai -m rule --add app="^Reeder$" space=3
-    /usr/local/bin/yabai -m rule --add app="^Figma$" space=8
-    /usr/local/bin/yabai -m rule --add app="^ClickUp$" space=8
+  /usr/local/bin/yabai -m rule --add app="^Mail$" space=3
+  /usr/local/bin/yabai -m rule --add app="^Newsblur$" space=3
+  /usr/local/bin/yabai -m rule --add app="^Reeder$" space=3
+  /usr/local/bin/yabai -m rule --add app="^Figma$" space=8
+  /usr/local/bin/yabai -m rule --add app="^ClickUp$" space=8
 
-    /usr/local/bin/yabai -m rule --add app="^WeChat$" title="^WeChat" manage=on space=9
-    /usr/local/bin/yabai -m rule --add app="^DingTalk$" space=9
-    /usr/local/bin/yabai -m rule --add app="^Slack$" space=9
+  /usr/local/bin/yabai -m rule --add app="^WeChat$" title="^WeChat" manage=on space=9
+  /usr/local/bin/yabai -m rule --add app="^DingTalk$" space=9
+  /usr/local/bin/yabai -m rule --add app="^Slack$" space=9
 
-    /usr/local/bin/yabai -m rule --add app="^Keybase$" manage=on space=5
-    /usr/local/bin/yabai -m rule --add app="^Discord$" manage=on space=5
-    /usr/local/bin/yabai -m rule --add app="^Telegram$" manage=on space=5
-    /usr/local/bin/yabai -m rule --add app="^Endel$" manage=on space=10
-    /usr/local/bin/yabai -m rule --add app="^NeteaseMusic$" manage=on space=10
-    /usr/local/bin/yabai -m rule --add app="^TIDAL$" manage=on space=10
+  /usr/local/bin/yabai -m rule --add app="^Keybase$" manage=on space=5
+  /usr/local/bin/yabai -m rule --add app="^Discord$" manage=on space=5
+  /usr/local/bin/yabai -m rule --add app="^Telegram$" manage=on space=5
+  /usr/local/bin/yabai -m rule --add app="^Endel$" manage=on space=10
+  /usr/local/bin/yabai -m rule --add app="^NeteaseMusic$" manage=on space=10
+  /usr/local/bin/yabai -m rule --add app="^TIDAL$" manage=on space=10
 fi
 
 ### float
