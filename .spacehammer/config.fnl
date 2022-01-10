@@ -460,6 +460,11 @@
                   :action hs.console.clearConsole}])
         :keys []})
 
+(fn slack-thread []
+  (hs.eventtap.keyStroke [] :up)
+  (hs.eventtap.keyStroke [] :right)
+  (hs.eventtap.keyStroke [] :down))
+
 (local slack-config
        {:key "Slack"
         :keys [{:mods [:cmd]
@@ -478,7 +483,7 @@
 
                {:mods [:ctrl]
                 :key :t
-                :action "slack:thread"}
+                :action slack-thread}
 
                ;; {:mods [:ctrl]
                ;;  :key :p
