@@ -84,6 +84,15 @@
                       [[{:pkey :button1} {:pkey :button2}] ["mmts" 1] ["mmts" 0]]
                       [{:pkey :button1} ["mmts" 0] ["mmts" 1]]
                       [{:pkey :button2} ["mmts" 0] ["mmts" 1]]]}
+             {:des "mouse left hand mode"
+              :rules
+              [[[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1] ["mouse_left_hand" 0]]
+               [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 0] ["mouse_left_hand" 1]]
+               :mouse_left_hand
+               [{:pkey :button2} {:pkey :button1}]
+               [{:pkey :button1} {:pkey :button2}]
+               [{:pkey :button3} {:pkey :button4} :kensington-tb]
+               [{:pkey :button4} {:pkey :button3} :kensington-tb]]}
              #_{:des   "double press and hold key down in simlayer"
                 :rules [[:j "say 'j double press'" [["test-mode-j-dbpress-mode" 1]]]
                         [:j ["say 'j press down'" ["test-mode-j-dbpress-mode" 1]] nil {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
@@ -181,7 +190,7 @@
                       [:!OSj :!OSdown_arrow]
                       [:!OSk :!OSup_arrow]
                       [:!OSl :!OSright_arrow]]}
-             {:des "s-mode for slidepad"
+             {:des   "s-mode for slidepad"
               :rules [:slidepad-s-mode
                       [:j :!Cgrave_accent_and_tilde]
                       [:k :!CSgrave_accent_and_tilde]
@@ -556,7 +565,8 @@
                       [:2 "~/local/bin/cliclick kd:ctrl c:+0,+0 ku:ctrl t:continue kp:return"]]}
              {:des   "Mouse button"
               :rules [[{:pkey :button5} :mission_control]
-                      [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!Cc] nil {:delayed {:invoked [:!!grave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]]}
+                      [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!Cc] nil {:delayed {:invoked [:!!grave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]
+                      [{:pkey :button3} :mission_control]]}
              {:des   "Mouse Keys Mode v4 (rev 1)"
               :rules [[:##j {:mkey {:vwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
                       [:##h {:mkey {:hwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
@@ -605,16 +615,17 @@
               ;; https://superuser.com/a/324267
               :rules [#_[:!CSl [:!Cl :j :a :v :a :s :c :r :i :p :t :!Ssemicolon :return_or_enter] :Chromes]
                       [:!CSl [:f6] :Firefoxes]]}]
- :devices            {:macbook-internal [{:product_id 631 :vendor_id 1452}]
-                      :uhk              [{:product_id 24866 :vendor_id 7504}]
-                      :filco-minila     [{:product_id 34050 :vendor_id 2652}]
-                      :hhkb-tmk         [{:vendor_id 65261 :product_id 51966}]
-                      :hhkb-bt          [{:vendor_id 1278 :product_id 514}]
-                      :hhkb             [{:vendor_id 2131 :product_id 256}]
-                      :kensington-tb    [{:vendor_id 1149 :product_id 32792}]
-                      :adv2np           [{:vendor_id 10730 :product_id 258}]
-                      :adv2p            [{:vendor_id 10730 :product_id 259}]
-                      :adv2             [{:vendor_id 10730}]}
+ :devices            {:macbook-internal   [{:product_id 631 :vendor_id 1452}]
+                      :uhk                [{:product_id 24866 :vendor_id 7504}]
+                      :filco-minila       [{:product_id 34050 :vendor_id 2652}]
+                      :hhkb-tmk           [{:vendor_id 65261 :product_id 51966}]
+                      :hhkb-bt            [{:vendor_id 1278 :product_id 514}]
+                      :hhkb               [{:vendor_id 2131 :product_id 256}]
+                      :kensington-tb      [{:vendor_id 1149 :product_id 32792}]
+                      :kensington-virtual [{:vendor_id 1149 :product_id 65520}]
+                      :adv2np             [{:vendor_id 10730 :product_id 258}]
+                      :adv2p              [{:vendor_id 10730 :product_id 259}]
+                      :adv2               [{:vendor_id 10730}]}
  :applications       {:emacs-mode-disable-app        ["^org\\.gnu\\.Emacs$"
                                                       "^org\\.xquartz\\.X11$"
                                                       "^org\\.gnu\\.AquamacsEmacs$"
