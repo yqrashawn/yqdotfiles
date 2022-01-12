@@ -104,13 +104,21 @@
 ;;   ;;           '(clojurec-mode . clojure))
 ;;   )
 
-;; (use-package! tree-sitter
-;;   :defer t
-;;   :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
-;;   ;; :init
-;;   ;; (setq! tree-sitter-hl-use-font-lock-keywords nil)
-;;   )
+(use-package! tree-sitter
+  :defer t
+  :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
+  ;; :init
+  ;; (setq! tree-sitter-hl-use-font-lock-keywords nil)
+  )
 
 (use-package! adoc-mode
   :mode (("\\.adoc$" . adoc-mode)
          ("\\.asciidoc$" . adoc-mode)))
+
+
+(use-package! turbo-log
+  :defer t
+  :config
+  (plist-put turbo-log--default-ecmascript-config :include-semicolon nil)
+  (setq turbo-log-msg-format-template "\"🚀: %s\"")
+  (setq turbo-log-allow-insert-without-tree-sitter-p t))

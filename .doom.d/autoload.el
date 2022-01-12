@@ -333,15 +333,13 @@ _g_  gfm      _o_ org        _m_ markdown
       (message "Turn off company-tabnine"))))
 
 ;;;###autoload
-;; (defun +tree-sitter-manybe-enable ()
-;;   (require 'tree-sitter-langs)
-;;   ;; Activate tree-sitter's improved syntax highlighting only if we are
-;;   ;; using a major-mode that has a compatible tree-sitter syntax parser
-;;   (if (and (boundp 'tree-sitter-major-mode-language-alist)
-;;            (assq major-mode tree-sitter-major-mode-language-alist))
-;;       (progn
-;;         (tree-sitter-mode)
-;;         (tree-sitter-hl-mode))))
+(defun +tree-sitter-manybe-enable ()
+  (require 'tree-sitter-langs)
+  ;; Activate tree-sitter's improved syntax highlighting only if we are
+  ;; using a major-mode that has a compatible tree-sitter syntax parser
+  (if (and (boundp 'tree-sitter-major-mode-language-alist)
+           (assq major-mode tree-sitter-major-mode-language-alist))
+      (tree-sitter-mode)))
 
 ;;;###autoload
 (defun +company-complete (&optional args)

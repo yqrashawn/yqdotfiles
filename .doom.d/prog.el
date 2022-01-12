@@ -207,12 +207,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 (use-package! apheleia
   :hook ((js2-mode rjsx-mode) . apheleia-mode))
 
-(use-package! turbo-log
-  :defer t
-  :config
-  (pushnew! turbo-log--modes '(rjsx-mode . turbo-log--ecmascript-print))
-  (plist-put turbo-log--ecmascript-configs :include-semicolon nil))
-
 (use-package! smerge-mode
   :defer t
   :config
@@ -257,3 +251,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
   (setq! dtache-db-directory doom-cache-dir
     dtache-session-directory (expand-file-name "dtache" (temporary-file-directory))))
+
+
+;; tmp https://github.com/hlissner/doom-emacs/pull/5401
+(defadvice! ++fold--ts-fold-p (orig)
+  :around #'+fold--ts-fold-p
+  nil)

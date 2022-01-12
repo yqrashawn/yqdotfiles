@@ -111,7 +111,8 @@
    (:map js2-mode-map
     :n "jj" #'+jest-popup
     :n "jd" #'+jest-popup-debug
-    :n "rll" #'turbo-log-print))
+    :n "rll" #'turbo-log-print-immediately
+    :n "rlv" #'turbo-log-print))
   (:after org
    (:map org-mode-map
     :n "i" nil
