@@ -179,3 +179,4 @@
 (package! meow)
 (package! dtache :recipe (:type git :host gitlab :repo "niklaseklund/dtache"))
 (package! embark)
+(package! keycast)
