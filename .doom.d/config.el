@@ -75,4 +75,5 @@
 (load! "org.el")
 (load! "write.el")
 (load! "visual.el")
+(load! "read.el")
 (load! "mail.el")
