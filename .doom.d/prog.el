@@ -257,3 +257,10 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 (defadvice! ++fold--ts-fold-p (orig)
   :around #'+fold--ts-fold-p
   nil)
+
+
+;; (use-package! corfu
+;;   :hooks (doom-first-input-hook . corfu-global-mode))
+
+(after! orderless
+  (setq orderless-component-separator "[ ,]"))

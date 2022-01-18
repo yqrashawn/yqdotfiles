@@ -11,7 +11,7 @@
 
 (after! vertico
   (setq! vertico-count 10
-         vertico-cycle nil))
+         vertico-cycle t))
 (after! ivy
   (setq! ivy-magic-tilde nil
          ivy-height 10
@@ -27,7 +27,7 @@
          ;; counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls"
          
 
-(use-package! counsel-tramp :commands (counsel-tramp))
+;; (use-package! counsel-tramp :commands (counsel-tramp))
 
 (after! projectile
   (setq! projectile-verbose t
@@ -132,3 +132,13 @@
 (setq! ranger-return-to-ranger t
        ranger-show-hidden 'format
        ranger-persistent-sort t)
+
+(setq-default
+  isearch-lazy-count t
+  search-ring-max 200
+  regexp-search-ring-max 200
+  isearch-regexp-lax-whitespace t
+  search-whitespace-regexp ".*?")
+
+(use-package! isearch-mb
+  :hooks (doom-first-input . isearch-mb-mode))

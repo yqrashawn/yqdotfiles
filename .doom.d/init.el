@@ -128,8 +128,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        company ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +fuzzy) ; a search engine for love and life
-       ;; vertico           ; the search engine of the future
+       ;; (ivy +fuzzy)     ; a search engine for love and life
+       vertico             ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs

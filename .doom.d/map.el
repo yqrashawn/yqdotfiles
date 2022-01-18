@@ -21,16 +21,20 @@
   :g "C-c" nil
   :g "C-c C-c" #'eval-defun
   :g "C-c '" #'separedit
-  :g "C-c s" #'swiper-isearch-thing-at-point
-  :g "C-c U" #'counsel-unicode-char
+  ;; :g "C-c s" #'swiper-isearch-thing-at-point
+  :g "C-c s" #'+vertico/search-symbol-at-point
+  ;; :g "C-c U" #'counsel-unicode-char
   :g "C-y" #'yank
   :g "C-c <xterm-paste>" #'+default/yank-pop
-  ;; :g "C-s" #'consult-line
-  :g "C-s" #'swiper-isearch
-  ;; :g "C-SPC" #'consult-line
-  ;; :g "C-@" #'consult-line
-  :g "C-SPC" #'counsel-grep-or-swiper
-  :g "C-@" #'counsel-grep-or-swiper
+  ;; :g "C-s" #'+default/search-buffer
+  :g "C-SPC" #'+default/search-buffer
+  :g "C-@" #'+default/search-buffer
+  :g "C-s" #'isearch-forward-regexp
+  :g "C-r" #'isearch-backward-regexp
+  :g "C-s" #'consult-line
+  ;; :g "C-s" #'swiper-isearch
+  ;; :g "C-SPC" #'counsel-grep-or-swiper
+  ;; :g "C-@" #'counsel-grep-or-swiper
   :g "s-k" #'bury-buffer
   :g "s-m" #'+popup/toggle
   :g "s-u" #'revert-buffer
@@ -65,7 +69,7 @@
    :desc "Open junk file" "fJ" #'yq/open-junk-file
    :desc "Indent" "j=" #'yq/indent-region-or-buffer
    :desc "Tab buffer" "TAB" (cmd! () (switch-to-nth-buffer 1))
-   :desc "Tramp" "fT" #'counsel-tramp
+   ;; :desc "Tramp" "fT" #'counsel-tramp
    :desc "Git stage hunk" "gg" #'git-gutter:stage-hunk
    :desc "Magit status" "gs" #'magit-status
    :desc "Magit status here" "gS" #'magit-status-here
@@ -97,11 +101,12 @@
     :desc "Office" "o" (cmd! (let ((default-directory "~/workspace/office/")) (call-interactively #'find-file)))
     :desc "Third" "t" (cmd! (let ((default-directory "~/workspace/third/")) (call-interactively #'find-file))))
    (:prefix-map ("r" . "Misc")
-    :desc "Resume ivy" "l" #'ivy-resume)
+     ;; :desc "Resume ivy" "l" #'ivy-resume
+     :desc "Resume vertico" "l" #'vertico-repeat)
    (:prefix-map ("fe" . "Edit srcs")
     :desc "Find library" "l" #'find-library
     :desc "Edit .doom.d config" "d" (cmd! (find-file-existing "~/.doom.d/config.el"))
-    :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'swiper))
+    :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
     :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory "~/.emacs.d/")) (call-interactively #'+default/search-project)))
     :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.config/karabiner.edn"))
     :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
@@ -208,7 +213,8 @@
     :g "/" #'evil-avy-goto-char-2
     :g "n" #'evil-avy-goto-char-timer
     :g "k" #'bury-buffer
-    :g "m" #'+ivy/projectile-find-file
+    ;; :g "m" #'+ivy/projectile-find-file
+    :g "m" #'project-find-file
     :g "l" #'imenu
     :g "f" #'+default/search-project
     :g "F" #'+default/search-project-for-symbol-at-point
@@ -240,8 +246,10 @@
     (:map swiper-map
       "ESC" #'minibuffer-keyboard-quit))
   (:after vertico
-    (:map vertico-map
-      "C-l" (general-simulate-key "RET")))
+   (:map vertico-map
+    "C-l" (general-simulate-key "RET")
+    "C-p" (general-simulate-key "<prior>")
+    "C-n" (general-simulate-key "<next>")))
   (:after ivy
     (:map ivy-minibuffer-map
       "C-n" #'ivy-next-history-element

@@ -80,7 +80,7 @@
 ;;                            :files ("counsel.el")
 ;;                            :upstream (:host github :repo "abo-abo/swiper")))
 
-(package! counsel-tramp)
+;; (package! counsel-tramp)
 ;; (package! dired-filter)
 (package! dired-quick-sort)
 (package! loccur)
@@ -124,6 +124,7 @@
 (package! olivetti)
 ;; (package! orderless)
 ;; (package! corfu)
+;; (package! cape)
 (package! ix)
 (package! orgbox)
 ;; (package! fancy-dabbrev)
@@ -182,3 +183,6 @@
 (package! keycast)
 (package! elfeed-protocol)
 (package! elfeed-autotag)
+;; (package! tzc)
+;; (package! clj-deps-new)
+(package! isearch-mb)
