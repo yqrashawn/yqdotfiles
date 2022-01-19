@@ -134,6 +134,12 @@
                       [:equal_sign :!TOSequal_sign]
                       [:open_bracket :!COTopen_bracket]
                       [:close_bracket :!COTclose_bracket]]}
+             {:des "CopyQ"
+              :rules
+              [:CopyQ
+               [:!Tj :down_arrow]
+               [:!Tk :up_arrow]
+               [:!Tl :return_or_enter]]}
              {:des   "vscode"
               :rules [:VSCode
                       [:##left_command :left_command nil {:alone [:!CSp ["vsc-m-x-on" 1]]}]
@@ -734,7 +740,8 @@
                       :wechat                        ["^com\\.tencent\\.xinWeChat$"]
                       :Games                         ["^com\\.Klei\\.Dontstarve"]
                       :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
-                      :2Do                           ["^com\\.guidedways\\.TodoMac$"]}
+                      :2Do                           ["^com\\.guidedways\\.TodoMac$"]
+                      :CopyQ                         ["^io\\.github\\.hluk\\.CopyQ$"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}

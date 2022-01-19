@@ -26,15 +26,14 @@
   ;; :g "C-c U" #'counsel-unicode-char
   :g "C-y" #'yank
   :g "C-c <xterm-paste>" #'+default/yank-pop
-  ;; :g "C-s" #'+default/search-buffer
   :g "C-SPC" #'+default/search-buffer
   :g "C-@" #'+default/search-buffer
   :g "C-s" #'isearch-forward-regexp
   :g "C-r" #'isearch-backward-regexp
-  :g "C-s" #'consult-line
-  ;; :g "C-s" #'swiper-isearch
-  ;; :g "C-SPC" #'counsel-grep-or-swiper
-  ;; :g "C-@" #'counsel-grep-or-swiper
+  :g "C-s" #'+default/search-buffer
+  :g "C-s" #'swiper-isearch
+  :g "C-SPC" #'counsel-grep-or-swiper
+  :g "C-@" #'counsel-grep-or-swiper
   :g "s-k" #'bury-buffer
   :g "s-m" #'+popup/toggle
   :g "s-u" #'revert-buffer
@@ -51,67 +50,67 @@
   [remap eval-last-sexp] #'pp-eval-last-sexp
   [eval-expression] #'pp-eval-expression
   (:leader
-   (:prefix-map ("1" . "DO")
-    :desc "Daily Capture" "c" #'org-roam-dailies-capture-today
-    :desc "Daily Note" "1" #'org-roam-dailies-goto-today
-    :desc "What To Do" "SPC" #'org-agenda
-    :desc "New Node" "n" #'org-roam-capture
-    :desc "Find Node" "f" #'org-roam-node-find
-    :desc "Agenda" "a" (lambda (arg) (interactive "P") (org-agenda arg "a")))
-   :desc "Local Leader" "m" (general-simulate-key ",")
-   :desc "M-x" "SPC" #'execute-extended-command
-   :desc "Reveal in finder" "bf" #'reveal-in-osx-finder
-   :desc "Open scratch buffer" "bs" #'doom/switch-to-scratch-buffer
-   :desc "Open scratch project buffer" "bS" #'doom/switch-to-project-scratch-buffer
-   :desc "Toggle popup" "bm" #'++popup-messages
-   :desc "Find file" "ff" #'find-file
-   :desc "Find file" "fj" #'dired-jump
-   :desc "Open junk file" "fJ" #'yq/open-junk-file
-   :desc "Indent" "j=" #'yq/indent-region-or-buffer
-   :desc "Tab buffer" "TAB" (cmd! () (switch-to-nth-buffer 1))
-   ;; :desc "Tramp" "fT" #'counsel-tramp
-   :desc "Git stage hunk" "gg" #'git-gutter:stage-hunk
-   :desc "Magit status" "gs" #'magit-status
-   :desc "Magit status here" "gS" #'magit-status-here
-   :desc "Smerge mode" "gd" #'hydra-smerge/body
-   :desc "Search other directory" "sf" #'+default/search-other-cwd
-   :desc "Locate file" "sD" #'locate
-   :desc "Toggle debug on error" "tD" #'toggle-debug-on-error
-   :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
-   :desc "Line numbers" "tl" #'doom/toggle-line-numbers
-   :desc "Imenu sidebar" "cb" #'side-hustle-toggle
-   :desc "RSS" "on" #'=rss
-   (:prefix-map ("e" . "Edit")
-    :desc "String" "s" #'string-edit-at-point
-    :desc "Indirect" "I" #'edit-indirect-region)
-   (:prefix-map ("k" . "Kill")
-    :desc "Browse at remote" "k" #'browse-at-remote
-    (:prefix-map ("g" . "git link")
-     :desc "Git commit link" "c" #'git-link-commit
-     :desc "Git homepage link" "h" #'git-link-homepage
-     :desc "Git link" "g" #'git-link)
-    (:prefix-map ("a" . "copy as format")
-     :desc "Github" "g" #'copy-as-format-github
-     :desc "Slack" "s" #'copy-as-format-slack
-     :desc "Org" "o" #'copy-as-format-org-mode
-     :desc "Markdown" "m" #'copy-as-format-markdown))
-   (:prefix-map ("fw" . "Workspace")
-    :desc "Find file in workspace" "w" (cmd! (let ((default-directory "~/workspace/")) (call-interactively #'find-file)))
-    :desc "Home" "h" (cmd! (let ((default-directory "~/workspace/home/")) (call-interactively #'find-file)))
-    :desc "Office" "o" (cmd! (let ((default-directory "~/workspace/office/")) (call-interactively #'find-file)))
-    :desc "Third" "t" (cmd! (let ((default-directory "~/workspace/third/")) (call-interactively #'find-file))))
-   (:prefix-map ("r" . "Misc")
-     ;; :desc "Resume ivy" "l" #'ivy-resume
-     :desc "Resume vertico" "l" #'vertico-repeat)
-   (:prefix-map ("fe" . "Edit srcs")
-    :desc "Find library" "l" #'find-library
-    :desc "Edit .doom.d config" "d" (cmd! (find-file-existing "~/.doom.d/config.el"))
-    :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
-    :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory "~/.emacs.d/")) (call-interactively #'+default/search-project)))
-    :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.config/karabiner.edn"))
-    :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
-    :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
-    :desc "Find library" "l" #'find-library))
+    (:prefix-map ("1" . "DO")
+      :desc "Daily Capture" "c" #'org-roam-dailies-capture-today
+      :desc "Daily Note" "1" #'org-roam-dailies-goto-today
+      :desc "What To Do" "SPC" #'org-agenda
+      :desc "New Node" "n" #'org-roam-capture
+      :desc "Find Node" "f" #'org-roam-node-find
+      :desc "Agenda" "a" (lambda (arg) (interactive "P") (org-agenda arg "a")))
+    :desc "Local Leader" "m" (general-simulate-key ",")
+    :desc "M-x" "SPC" #'execute-extended-command
+    :desc "Reveal in finder" "bf" #'reveal-in-osx-finder
+    :desc "Open scratch buffer" "bs" #'doom/switch-to-scratch-buffer
+    :desc "Open scratch project buffer" "bS" #'doom/switch-to-project-scratch-buffer
+    :desc "Toggle popup" "bm" #'++popup-messages
+    :desc "Find file" "ff" #'find-file
+    :desc "Find file" "fj" #'dired-jump
+    :desc "Open junk file" "fJ" #'yq/open-junk-file
+    :desc "Indent" "j=" #'yq/indent-region-or-buffer
+    :desc "Tab buffer" "TAB" (cmd! () (switch-to-nth-buffer 1))
+    ;; :desc "Tramp" "fT" #'counsel-tramp
+    :desc "Git stage hunk" "gg" #'git-gutter:stage-hunk
+    :desc "Magit status" "gs" #'magit-status
+    :desc "Magit status here" "gS" #'magit-status-here
+    :desc "Smerge mode" "gd" #'hydra-smerge/body
+    :desc "Search other directory" "sf" #'+default/search-other-cwd
+    :desc "Locate file" "sD" #'locate
+    :desc "Toggle debug on error" "tD" #'toggle-debug-on-error
+    :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
+    :desc "Line numbers" "tl" #'doom/toggle-line-numbers
+    :desc "Imenu sidebar" "cb" #'side-hustle-toggle
+    :desc "RSS" "on" #'=rss
+    (:prefix-map ("e" . "Edit")
+      :desc "String" "s" #'string-edit-at-point
+      :desc "Indirect" "I" #'edit-indirect-region)
+    (:prefix-map ("k" . "Kill")
+      :desc "Browse at remote" "k" #'browse-at-remote
+      (:prefix-map ("g" . "git link")
+        :desc "Git commit link" "c" #'git-link-commit
+        :desc "Git homepage link" "h" #'git-link-homepage
+        :desc "Git link" "g" #'git-link)
+      (:prefix-map ("a" . "copy as format")
+        :desc "Github" "g" #'copy-as-format-github
+        :desc "Slack" "s" #'copy-as-format-slack
+        :desc "Org" "o" #'copy-as-format-org-mode
+        :desc "Markdown" "m" #'copy-as-format-markdown))
+    (:prefix-map ("fw" . "Workspace")
+      :desc "Find file in workspace" "w" (cmd! (let ((default-directory "~/workspace/")) (call-interactively #'find-file)))
+      :desc "Home" "h" (cmd! (let ((default-directory "~/workspace/home/")) (call-interactively #'find-file)))
+      :desc "Office" "o" (cmd! (let ((default-directory "~/workspace/office/")) (call-interactively #'find-file)))
+      :desc "Third" "t" (cmd! (let ((default-directory "~/workspace/third/")) (call-interactively #'find-file))))
+    (:prefix-map ("r" . "Misc")
+      ;; :desc "Resume ivy" "l" #'ivy-resume
+      :desc "Resume vertico" "l" #'vertico-repeat)
+    (:prefix-map ("fe" . "Edit srcs")
+      :desc "Find library" "l" #'find-library
+      :desc "Edit .doom.d config" "d" (cmd! (find-file-existing "~/.doom.d/config.el"))
+      :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
+      :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory "~/.emacs.d/")) (call-interactively #'+default/search-project)))
+      :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.config/karabiner.edn"))
+      :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
+      :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
+      :desc "Find library" "l" #'find-library))
   (:localleader
     (:after js2-mode
       (:map js2-mode-map
@@ -242,14 +241,12 @@
       :g "C-p" #'evil-multiedit-match-and-prev
       :g "n" #'evil-multiedit-next
       :g "p" #'evil-multiedit-prev))
-  (:after swiper
-    (:map swiper-map
-      "ESC" #'minibuffer-keyboard-quit))
   (:after vertico
-   (:map vertico-map
-    "C-l" (general-simulate-key "RET")
-    "C-p" (general-simulate-key "<prior>")
-    "C-n" (general-simulate-key "<next>")))
+    (:map vertico-map
+      "C-l" (general-simulate-key "RET")
+      "RET" #'vertico-directory-enter
+      "C-p" (general-simulate-key "<prior>")
+      "C-n" (general-simulate-key "<next>")))
   (:after ivy
     (:map ivy-minibuffer-map
       "C-n" #'ivy-next-history-element
@@ -405,6 +402,11 @@
     (:map proced-mode-map
       :g "/" #'proced-narrow
       :n "/" #'proced-narrow))
+  (:after swiper
+    (:map swiper-map
+      :g "<escape>" (general-simulate-key "C-g")
+      :g "C-j" (general-simulate-key "<down>")
+      :g "C-k" (general-simulate-key "<up>")))
   ;; (:after evil-textobj-tree-sitter
   ;;  :textobj ".f" (evil-textobj-tree-sitter-get-textobj "function.inner") (evil-textobj-tree-sitter-get-textobj "function.outer")
   ;;  :textobj ".l" (evil-textobj-tree-sitter-get-textobj "block.inner") (evil-textobj-tree-sitter-get-textobj "block.outer")

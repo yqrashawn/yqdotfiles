@@ -86,4 +86,5 @@ fi
 /usr/local/bin/yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
 /usr/local/bin/yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
 /usr/local/bin/yabai -m rule --add app="^iStat Menus Status$" manage=off border=off mouse_follows_focus=off sticky=off
+/usr/local/bin/yabai -m rule --add app="CopyQ$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
 # /usr/local/bin/yabai -m rule --add app="^Alacritty$" manage=off border=off grid='10:10:0:0:5:10'

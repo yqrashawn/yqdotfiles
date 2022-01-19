@@ -186,3 +186,4 @@
 ;; (package! tzc)
 ;; (package! clj-deps-new)
 (package! isearch-mb)
+(package! jsdoc :recipe (:type git :host github :repo "isamert/jsdoc.el"))

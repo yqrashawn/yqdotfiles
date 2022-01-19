@@ -210,3 +210,4 @@ local/bin/rust-analyzer
 /.flutter
 /.adobe/
 /.config/todoist-cli/
+/.config/copyq/

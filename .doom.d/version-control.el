@@ -5,19 +5,25 @@
 
 (el-patch-feature magit-apply)
 (after! magit
-  (setq! magit-fetch-modules-jobs 10
-         transient-default-level 7
-         magit-log-margin '(t age-abbreviated magit-log-margin-width t 18)
-         magit-section-initial-visibility-alist '((stashes . hide)
-                                                  (untracked . show)
-                                                  (staged . show))
-         ;; magit-blame-echo-style 'margin
-         magit-repository-directories '(("~/.emacs.d" . 0)
-                                        ;; ("~/.emacs.d/straight/repos/" . 1)
-                                        ("~/workspace/home/" . 1)
-                                        ("~/workspace/office/" . 1)
-                                        ;; ("~/workspace/third/" . 1)
-                                        ))
+  (setq!
+    magit-fetch-modules-jobs 10
+    transient-default-level 7
+    magit-log-margin '(t age-abbreviated magit-log-margin-width t 18)
+    magit-section-initial-visibility-alist '((stashes . hide)
+                                              (untracked . show)
+                                              (staged . show))
+    ;; magit-blame-echo-style 'margin
+    magit-repository-directories '(("~/.emacs.d" . 0)
+                                    ;; ("~/.emacs.d/straight/repos/" . 1)
+                                    ("~/workspace/home/" . 1)
+                                    ("~/workspace/office/" . 1)
+                                    ;; ("~/workspace/third/" . 1)
+                                    )
+    magit-branch-prefer-remote-upstream '("master" "main" "dev" "develop" "next")
+    magit-branch-adjust-remote-upstream-alist
+    '(("origin/dev" . ("dev" "main"))
+       ("origin/main" . "^dev$"))
+    magit-published-branches '("origin/master" "origin/dev" "origin/develop"))
   (pushnew! magit-no-confirm 'stage-all-changes)
   (add-hook! 'magit-process-mode-hook #'++doom-apply-ansi-color-to-compilation-buffer-h)
   (transient-define-argument magit-merge:--strategy-option ()
