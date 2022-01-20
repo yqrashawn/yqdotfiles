@@ -106,7 +106,8 @@
       :desc "Find library" "l" #'find-library
       :desc "Edit .doom.d config" "d" (cmd! (find-file-existing "~/.doom.d/config.el"))
       :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
-      :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory "~/.emacs.d/")) (call-interactively #'+default/search-project)))
+      :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
+                                               (call-interactively #'+default/search-project)))
       :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.config/karabiner.edn"))
       :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
       :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
@@ -204,7 +205,7 @@
     :g "h" #'save-buffer
     :g "d" #'sp-kill-sexp
     :g "," #'sp-copy-sexp
-    :g "y" #'zoxide-find-file
+    :g "y" #'consult-dir
     :g "v" #'er/expand-region
     :g "c" #'delete-window
     :g "K" #'project-kill-buffers

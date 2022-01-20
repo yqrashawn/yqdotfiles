@@ -98,9 +98,23 @@
       (setq path default-directory))
     (zoxide-run t "add" path)
 
-    (when (buffer-file-name)
-      (zoxide-run t "add" (buffer-file-name))))
-  (add-hook! 'find-file-hook #'+zoxide-add))
+    (let ((b (buffer-file-name)))
+      (unless (or (s-ends-with? ".git" b)
+                (s-contains? "/.git/" b))
+        (print b)
+        (zoxide-run t "add" b))))
+  (add-hook! 'find-file-hook #'+zoxide-add)
+  (defvar consult-dir--source-zoxide
+    `(:name "Zoxide dirs"
+      :narrow ?z
+      :category file
+      :face consult-file
+      :history file-name-history
+      :enabled ,(lambda () zoxide-executable)
+      :items ,#'zoxide-query)
+    "Zoxide directory source for `consult-dir'.")
+  (after! consult-dir
+    (pushnew! consult-dir-sources 'consult-dir--source-zoxide)))
 
 (use-package! reveal-in-osx-finder :defer t)
 
@@ -142,3 +156,11 @@
 
 (use-package! isearch-mb
   :hooks (doom-first-input . isearch-mb-mode))
+
+
+
+;;; orderless-flex for some commands
+(defun ++flex! (fn &rest args)
+  (let ((orderless-matching-styles '(orderless-flex)))
+    (apply fn args)))
+(advice-add 'magit-completing-read :around #'++flex!)

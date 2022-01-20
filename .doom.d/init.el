@@ -287,7 +287,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;emms
        everywhere        ; *leave* Emacs!? You must be joking
        irc               ; how neckbeards socialize
-       (rss +org)        ; emacs as an RSS reader
+       rss               ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config

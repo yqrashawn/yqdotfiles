@@ -15,9 +15,10 @@
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
              :opena      "open -a \"%s\""
+             :hs         "/usr/local/bin/hs -A -n -q -t 0.1 -c '(\"%s\")'"
              :hsl        "/usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
-             :togg       "/usr/local/bin/hs -A -n -q -t 0.1 -c 'local appName = \"%s\"; local x = hs.application.find(appName); if x:isFrontmost() then x:hide() else hs.application.launchOrFocus(appName) end'"
+             :togg       "/usr/local/bin/hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              :jump       "/usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
@@ -423,7 +424,6 @@
                       [:q "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"Quick Macro 1\"'"]
                       [:close_bracket :!Cf3]
                       [:hyphen :!!hyphen]
-                      [:spacebar "~/Dropbox/sync/pullover/pullover-start-or-finish"]
                       #_[:right_command :!!3]]}
              {:des   "q"
               :rules [:emacs-bufmove-mode
