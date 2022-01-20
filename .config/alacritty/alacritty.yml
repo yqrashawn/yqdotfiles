@@ -11,7 +11,8 @@
 import:
   - ~/.config/alacritty/env.yml
   - ~/.config/alacritty/window.yml
-  - ~/.config/alacritty/color.yml
+  # - ~/.config/alacritty/color.yml
+  - ~/.config/alacritty/modus-vivendi.yml
   - ~/.config/alacritty/selection.yml
   - ~/.config/alacritty/cursor.yml
   - ~/.config/alacritty/hints.yml
@@ -29,7 +30,6 @@ background_opacity: 1.0
 # Live config reload (changes require restart)
 live_config_reload: true
 
-
 # Startup directory
 #
 # Directory the shell is started in. If this is unset, or `None`, the working
@@ -39,14 +39,11 @@ live_config_reload: true
 # Send ESC (\x1b) before characters when alt is pressed.
 alt_send_esc: true
 
-
 debug:
   # Display the time it takes to redraw each frame.
   render_timer: false
-
   # Keep the log file after quitting Alacritty.
   #persistent_logging: false
-
   # Log level
   #
   # Values for `log_level`:
@@ -57,6 +54,5 @@ debug:
   #   - Debug
   #   - Trace
   #log_level: Warn
-
   # Print all received window events.
   #print_events: false
