@@ -3,6 +3,8 @@
 (pushnew! global-hl-line-modes 'dired-mode 'occur-mode 'grep-mode)
 (delq! 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
+       max-specpdl-size 10000
+       max-lisp-eval-depth 10000
        save-interprogram-paste-before-kill nil
        save-silently t
        echo-keystrokes 1e-6

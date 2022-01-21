@@ -101,7 +101,6 @@
     (let ((b (buffer-file-name)))
       (unless (or (s-ends-with? ".git" b)
                 (s-contains? "/.git/" b))
-        (print b)
         (zoxide-run t "add" b))))
   (add-hook! 'find-file-hook #'+zoxide-add)
   (defvar consult-dir--source-zoxide
@@ -110,19 +109,13 @@
       :category file
       :face consult-file
       :history file-name-history
-      :enabled ,(lambda () zoxide-executable)
+      :enabled ,(lambda () (executable-find "zoxide"))
       :items ,#'zoxide-query)
     "Zoxide directory source for `consult-dir'.")
   (after! consult-dir
     (pushnew! consult-dir-sources 'consult-dir--source-zoxide)))
 
 (use-package! reveal-in-osx-finder :defer t)
-
-;; (use-package! orderless
-;;   :init
-;;   (add-hook! doom-first-input-hook (cmd! (require 'orderless)))
-;;   (setq! completion-styles '(orderless)
-;;          orderless-component-separator "[ &]"))
 
 ;; (use-package! corfu
 ;;   :hook (doom-first-input . corfu-global-mode)
@@ -164,3 +157,5 @@
   (let ((orderless-matching-styles '(orderless-flex)))
     (apply fn args)))
 (advice-add 'magit-completing-read :around #'++flex!)
+(advice-add 'magit-completing-read-multiple :around #'++flex!)
+(advice-add 'magit-completing-read-multiple* :around #'++flex!)

@@ -135,6 +135,11 @@
                       [:equal_sign :!TOSequal_sign]
                       [:open_bracket :!COTopen_bracket]
                       [:close_bracket :!COTclose_bracket]]}
+             ;; {:des   "spacebar ctrl"
+             ;;  :rules [[[:spacebar :f] [:spacebar :f]]
+             ;;          [[:spacebar :w] [:spacebar :w]]
+             ;;          [[:spacebar :g] [:spacebar :g]]
+             ;;          [:spacebar :left_control nil {:alone :spacebar}]]}
              {:des "CopyQ"
               :rules
               [:CopyQ

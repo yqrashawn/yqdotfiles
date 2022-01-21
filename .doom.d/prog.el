@@ -263,4 +263,4 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 ;;   :hooks (doom-first-input-hook . corfu-global-mode))
 
 (after! orderless
-  (setq orderless-component-separator "[ ,]"))
+  (setq orderless-component-separator "[ ,j]"))

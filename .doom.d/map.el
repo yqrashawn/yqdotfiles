@@ -244,8 +244,8 @@
       :g "p" #'evil-multiedit-prev))
   (:after vertico
     (:map vertico-map
-      "C-l" (general-simulate-key "RET")
-      "RET" #'vertico-directory-enter
+      "C-l" #'vertico-directory-enter
+      "RET" #'vertico-exit
       "C-p" (general-simulate-key "<prior>")
       "C-n" (general-simulate-key "<next>")))
   (:after ivy
