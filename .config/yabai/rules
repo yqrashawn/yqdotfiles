@@ -47,7 +47,7 @@ else
   /usr/local/bin/yabai -m rule --add app="^Figma$" space=8
   /usr/local/bin/yabai -m rule --add app="^ClickUp$" space=8
 
-  /usr/local/bin/yabai -m rule --add app="^WeChat$" title="^WeChat" manage=on space=9
+  /usr/local/bin/yabai -m rule --add app="^WeChat$" manage=on space=9
   /usr/local/bin/yabai -m rule --add app="^DingTalk$" space=9
   /usr/local/bin/yabai -m rule --add app="^Slack$" space=9
 
@@ -61,7 +61,8 @@ fi
 
 ### float
 /usr/local/bin/yabai -m rule --add app="^Emacs$" title="^ *Minibuf.*\*$" manage=off
-/usr/local/bin/yabai -m rule --add app="^WeChat$" title!="^WeChat" manage=off
+/usr/local/bin/yabai -m rule --add app="^WeChat$" manage=on
+/usr/local/bin/yabai -m rule --add app="^WeChat$" title!="^WeChat \\(Chats\\)" manage=off
 /usr/local/bin/yabai -m rule --add app="^CleanMyMac.*$" manage=off
 /usr/local/bin/yabai -m rule --add app="^System Preferences$" manage=off
 /usr/local/bin/yabai -m rule --add app="^Twitterrific$" manage=off

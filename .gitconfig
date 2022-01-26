@@ -3,6 +3,7 @@
 	email = namy.19@gmail.com
 [core]
 	excludesfile = ~/.gitignore_global
+	precomposeUnicode = true
 [pager]
 	pager = delta
 	diff = delta

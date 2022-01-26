@@ -211,3 +211,6 @@ local/bin/rust-analyzer
 /.adobe/
 /.config/todoist-cli/
 /.config/copyq/
+/.vpython-root/
+/.vpython_cipd_cache/
+/.gsutil/

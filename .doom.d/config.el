@@ -22,6 +22,7 @@
 (setq
  doom-font (font-spec :family "PragmataPro Mono Liga" :size 18 :weight 'medium)
  doom-variable-pitch-font (font-spec :family "Times Newer Roman" :size 16 :weight 'medium)
+ ;; doom-variable-pitch-font (font-spec :family "Noto Serif" :size 16 :weight 'medium)
  doom-big-font (font-spec :family "PragmataPro Mono Liga" :size 24 :weight 'medium)
  doom-font-increment 1)
 

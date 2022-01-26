@@ -39,3 +39,4 @@ Thumbs.db
 \#*#
 flycheck_*
 *.swp
+.clj-kondo/cache
