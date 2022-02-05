@@ -159,3 +159,8 @@
 (advice-add 'magit-completing-read :around #'++flex!)
 (advice-add 'magit-completing-read-multiple :around #'++flex!)
 (advice-add 'magit-completing-read-multiple* :around #'++flex!)
+
+(use-package! dogears :hook (doom-first-input . dogears-mode)
+  :config
+  (after! savehist
+    (pushnew! savehist-additional-variables dogears-list)))

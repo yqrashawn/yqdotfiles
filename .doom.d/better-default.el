@@ -251,22 +251,25 @@ A prefix arg reverses this operation."
     "Show current command and its key binding in the mode line."
     :global t
     (if keycast-mode
-      (progn
-        (add-hook 'pre-command-hook 'keycast--update t)
-        (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+        (progn
+          (add-hook 'pre-command-hook 'keycast--update t)
+          (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
       (remove-hook 'pre-command-hook 'keycast--update)
       (setq global-mode-string (remove '("" mode-line-keycast " ") global-mode-string))))
 
   (setq keycast-substitute-alist '((evil-next-line nil nil)
-                                    (evil-previous-line nil nil)
-                                    (evil-forward-char nil nil)
-                                    (evil-backward-char nil nil)
-                                    (ivy-done nil nil)
-                                    (self-insert-command nil nil)))
+                                   (evil-previous-line nil nil)
+                                   (evil-forward-char nil nil)
+                                   (evil-backward-char nil nil)
+                                   (ivy-done nil nil)
+                                   (self-insert-command nil nil)))
 
   (custom-set-faces!
     '(keycast-command :inherit doom-modeline-debug
-       :height 0.9)
+                      :height 0.9)
     '(keycast-key :inherit custom-modified
-       :height 1.1
-       :weight bold)))
+                  :height 1.1
+                  :weight bold)))
+
+(use-package! unmodified-buffer
+  :hook (doom-first-file . unmodified-buffer-global-mode))
