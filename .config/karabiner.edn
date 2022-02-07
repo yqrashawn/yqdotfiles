@@ -615,7 +615,7 @@
                       [:!T#Oopen_bracket :escape]
                       [:!T#OSm :return_or_enter]
                       [:!T#OSb :left_arrow]
-                      [:!T#OSf :right_arrow]
+                      [:!T#OSf :right_arrow :!Games]
                       [:!T#OSb :left_arrow]
                       [:!T#OSn :down_arrow]
                       [:!T#OSp :up_arrow]
