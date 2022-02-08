@@ -186,6 +186,6 @@
 ;; (package! clj-deps-new)
 (package! isearch-mb)
 (package! jsdoc :recipe (:type git :host github :repo "isamert/jsdoc.el"))
-(package! dogears :recipe (:type git :host github :repo "alphapapa/dogears.el"))
+;; (package! dogears :recipe (:type git :host github :repo "alphapapa/dogears.el"))
 ;; (package! hl-prog-extra :recipe (:type git :host gitlab :repo "ideasman42/emacs-hl-prog-extra"))
 (package! unmodified-buffer :recipe (:type git :host github :repo "arthurcgusmao/unmodified-buffer"))

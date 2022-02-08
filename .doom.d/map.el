@@ -41,6 +41,8 @@
   :g "C-M-s-7" '+windmove-map
   :g "C-M-s-j" #'iflipb-next-buffer
   :g "C-M-s-k" #'iflipb-previous-buffer
+  ;; :g "C-M-s-j" #'dogears-forward
+  ;; :g "C-M-s-k" #'dogears-back
   :g "C-a" #'mwim-beginning-of-code-or-line
   :g "C-e" #'mwim-end-of-code-or-line
   :g "C-'" #'yq/vterm-toggle
@@ -171,7 +173,10 @@
     :g "" #'goto-last-change-reverse)
   (:map ctl-x-9-map
     :g "j" #'iflipb-next-buffer
-    :g "k" #'iflipb-previous-buffer)
+    :g "k" #'iflipb-previous-buffer
+    ;; :g "j" #'dogears-forward
+    ;; :g "k" #'dogears-back
+    )
   (:map +cmd-prefix-map
     :g "m" (general-simulate-key "s-m")
     :g "k" (general-simulate-key "s-k")
