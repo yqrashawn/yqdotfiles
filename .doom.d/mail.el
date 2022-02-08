@@ -8,10 +8,8 @@
 ;; (setq mu4e-html2text-command "html2text -from_encoding utf8 -ascii -width 72")
 ;; (setq mu4e-html2text-command "html2text -width 72")
 
+(setq +notmuch-home-function #'++notmuch-start)
 (after! notmuch
-  (setq +notmuch-home-function (cmd!
-                                (notmuch-search "tag:inbox")
-                                (+notmuch/update)))
   (defun +notmuch-get-sync-command ()
     "custom notmuch sync command"
     "cd ~/.mail/account.gmail && gmi sync && cd ~/.mail/account.yqrashawn && gmi sync && notmuch new")

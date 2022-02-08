@@ -554,3 +554,7 @@ _b_ranch _j_next _k_prev _h_up
       (when (and start finish)
         (put-text-property (- start 29) (- finish 1) 'display "..."))))
   nil)
+
+;;;###autoload
+(defun ++notmuch-start ()
+  (notmuch-search "tag:inbox" nil nil 1 nil))
