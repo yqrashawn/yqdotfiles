@@ -432,4 +432,8 @@
   (:after code-review
     (:map code-review-mode-map
       :gn "r" #'code-review-transient-api
-      :nv "i" #'code-review-comment-add-or-edit)))
+      :nv "i" #'code-review-comment-add-or-edit))
+  (:after elfeed
+    (:map elfeed-show-mode-map
+      :n "gy" #'elfeed-show-yank
+      :n "gr" #'elfeed-show-refresh)))

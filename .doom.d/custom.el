@@ -4,7 +4,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((Syntax . ANSI-Common-Lisp)
+    '((cider-ns-refresh-after-fn . "integrant.repl/resume")
+       (cider-ns-refresh-before-fn . "integrant.repl/suspend")
+       (Syntax . ANSI-Common-Lisp)
        (Base . 10)
        (eval defun cider--running-nrepl-paths nil
          '("~/.config/bblib/"))

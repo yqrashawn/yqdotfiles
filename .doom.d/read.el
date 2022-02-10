@@ -49,7 +49,8 @@
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "solana"  :add '(solana crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "polygon"  :add '(polygon crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "uxdesign\\.cc"  :add '(ux)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "Hacker News" :add '(hn))))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "Hacker News" :add '(hn)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(gstarr))))
 
 (defun +elfeed-debug ()
   (interactive)
