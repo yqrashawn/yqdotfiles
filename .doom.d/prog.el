@@ -134,8 +134,10 @@
 (add-hook! 'post-command-hook #'do-stuff-if-moved-post-command)
 
 (defun +disable-lsp-watcher-in-some-project ()
-  (when (string= (directory-file-name (doom-project-root)) (directory-file-name (getenv "HOME")))
-    (setq-local lsp-enable-file-watchers nil)))
+  (setq-local lsp-enable-file-watchers nil)
+  ;; (when (string= (directory-file-name (doom-project-root)) (directory-file-name (getenv "HOME")))
+  ;;   (setq-local lsp-enable-file-watchers nil))
+  )
 
 (after! lsp-mode
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)

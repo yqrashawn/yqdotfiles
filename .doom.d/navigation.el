@@ -35,7 +35,7 @@
          projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
          projectile-idle-timer-seconds 180)
   (pushnew! projectile-globally-ignored-directories "node_modules" ".shadow-cljs" ".lsp" ".storybook")
-  (pushnew! projectile-project-root-files ".tabnine_root" "yarn.lock" ".yarnrc" ".eslintcache")
+  (pushnew! projectile-project-root-files ".tabnine_root" "yarn.lock" ".yarnrc" ".eslintcache" ".node-version")
   (pushnew! projectile-globally-ignored-file-suffixes ".min.js" ".min.css" ".map"))
 (after! dired
   (setq! dired-recursive-deletes 'always
