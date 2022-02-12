@@ -13,6 +13,7 @@
        mode-require-final-newline nil
        auto-window-vscroll nil
        confirm-kill-processes nil
+       browse-url-secondary-browser-function 'eww-browse-url
 
        ;; scroll
        hscroll-margin 5

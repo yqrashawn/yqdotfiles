@@ -25,7 +25,7 @@
 (after! elfeed
   (setq!
     ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
-    elfeed-search-filter "+unread @3-months-ago"
+    elfeed-search-filter "+unread @3-months-ago -ghstar"
     elfeed-search-trailing-width 60)
   (add-hook 'elfeed-search-mode-hook 'elfeed-update)
   (elfeed-set-timeout 36000)
@@ -50,7 +50,7 @@
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "polygon"  :add '(polygon crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "uxdesign\\.cc"  :add '(ux)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "Hacker News" :add '(hn)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(gstarr))))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(ghstar))))
 
 (defun +elfeed-debug ()
   (interactive)
@@ -61,3 +61,10 @@
   (setq elfeed-protocol-owncloud-maxsize 5)
   (setq elfeed-protocol-ttrss-maxsize 5)
   (setq elfeed-protocol-newsblur-maxpages 20))
+
+(defadvice! +elfeed-search-browse-url (orig-fn &optional use-general-p)
+  "M-RET to view entry in eww, 1 M-RET to view entry in default browser"
+  :around #'elfeed-search-browse-url
+  (let ((browse-url-browser-function 'eww-browse-url)
+         (browse-url-generic-program "open"))
+    (call-interactively orig-fn)))

@@ -558,3 +558,7 @@ _b_ranch _j_next _k_prev _h_up
 ;;;###autoload
 (defun ++notmuch-start ()
   (notmuch-search "tag:inbox" nil nil 1 nil))
+
+;;;###autoload
+(defun browse-url-mpv (url &optional single)
+  (start-process "mpv" nil "mpv" (shell-quote-argument url)))
