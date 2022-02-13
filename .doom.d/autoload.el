@@ -562,3 +562,18 @@ _b_ranch _j_next _k_prev _h_up
 ;;;###autoload
 (defun browse-url-mpv (url &optional single)
   (start-process "mpv" nil "mpv" (shell-quote-argument url)))
+
+;;;###autoload
+(defun =elfeed-dashboard ()
+  "Activate (or switch to) `elfeed' in its workspace."
+  (interactive)
+  (if (featurep! :ui workspaces)
+      (progn
+        (+workspace-switch +rss-workspace-name t)
+        (doom/switch-to-scratch-buffer)
+        (elfeed-dashboard)
+        (+workspace/display))
+    (setq +rss--wconf (current-window-configuration))
+    (delete-other-windows)
+    (switch-to-buffer (doom-fallback-buffer))
+    (elfeed-dashboard)))

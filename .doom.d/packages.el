@@ -191,3 +191,4 @@
 ;; (package! dogears :recipe (:type git :host github :repo "alphapapa/dogears.el"))
 ;; (package! hl-prog-extra :recipe (:type git :host gitlab :repo "ideasman42/emacs-hl-prog-extra"))
 (package! unmodified-buffer :recipe (:type git :host github :repo "arthurcgusmao/unmodified-buffer"))
+(package! elfeed-dashboard)

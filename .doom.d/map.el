@@ -81,6 +81,7 @@
     :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
     :desc "Line numbers" "tl" #'doom/toggle-line-numbers
     :desc "Imenu sidebar" "cb" #'side-hustle-toggle
+    ;; :desc "RSS" "on" #'=elfeed-dashboard
     :desc "RSS" "on" #'=rss
     (:prefix-map ("e" . "Edit")
       :desc "String" "s" #'string-edit-at-point
@@ -428,7 +429,10 @@
   (:after notmuch
     [remap evil-collection-notmuch-tree-toggle-delete] #'+notmuch/tree-delete
     [remap evil-collection-notmuch-show-toggle-delete] #'+notmuch/show-delete
-    [remap evil-collection-notmuch-search-toggle-delete] #'+notmuch/search-delete)
+    [remap evil-collection-notmuch-search-toggle-delete] #'+notmuch/search-delete
+    (:map notmuch-show-mode-map
+      :n "s" 'yq-s-map
+      :n "gs" #'notmuch-search))
   (:after code-review
     (:map code-review-mode-map
       :gn "r" #'code-review-transient-api
@@ -436,4 +440,6 @@
   (:after elfeed
     (:map elfeed-show-mode-map
       :n "gy" #'elfeed-show-yank
-      :n "gr" #'elfeed-show-refresh)))
+      :n "gr" #'elfeed-show-refresh
+      :n "s" 'yq-s-map
+      :n "gs" #'elfeed-show-new-live-search)))

@@ -26,7 +26,7 @@
   (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
     ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
-    elfeed-search-filter "+unread @3-months-ago -ghstar"
+    elfeed-search-filter "+unread @3-months-ago -ghstar -twitter -metamask"
     elfeed-search-trailing-width 60)
   (add-hook 'elfeed-search-mode-hook 'elfeed-update)
   (elfeed-set-timeout 36000)
@@ -41,17 +41,24 @@
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "conflux\\.fun" :add '(crypto conflux)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "twitter\\.com" :add '(twitter)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "planet\\.clojure" :add '(clojure)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "metamask" :add '(metamask crypto)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "metamask" :add '(metamask crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "china" :add '(china)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "protocol\\.com" :add '(protocol news)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "\\/\\/community\\..*\\.\w" :add '(community)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "\\/\\/community\\..*\\.\w" :add '(community)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "ethereum"  :add '(ethereum crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "ethereum"  :add '(ethereum crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "solana"  :add '(solana crypto)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "polygon"  :add '(polygon crypto)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "curve"  :add '(curve crypto)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "uniswap"  :add '(uniswap crypto)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "crypto"  :add '(crypto)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "clojure"  :add '(clojure)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "emacs"  :add '(emacs)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "emacs"  :add '(emacs)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "uxdesign\\.cc"  :add '(ux)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "Hacker News" :add '(hn)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(ghstar))))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(ghstar)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "bankless" :add '(crypto))))
 
 (defun +elfeed-debug ()
   (interactive)
@@ -69,3 +76,10 @@
   (let ((browse-url-browser-function 'eww-browse-url)
          (browse-url-generic-program "open"))
     (call-interactively orig-fn)))
+
+(use-package! elfeed-dashboard
+  :commands (elfeed-dashboard)
+  :config
+  (setq elfeed-dashboard-file "~/.doom.d/elfeed-dashboard.org")
+  ;; update feed counts on elfeed-quit
+  (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))

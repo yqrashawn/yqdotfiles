@@ -1,0 +1,37 @@
+#+TITLE: Elfeed Dashboard
+
+* Basics
+
+ [U] Update Elfeed
+ [s] Search
+ [E] Edit
+ [g] Refresh counts
+ [q] Kill dashboard
+
+* Bookmarks
+
+ [u] Unread      ([[elfeed:+unread @3-months-ago -ghstar -twitter -metamask][   120]]/[[elfeed:][   545]])
+ [e] Emacs        ([[elfeed:+unread +emacs][     5]]/[[elfeed:+emacs][    33]])
+ [r] Reddit        ([[elfeed:+unread +reddit][     0]]/[[elfeed:+reddit][     0]])
+ [C] Crypto       ([[elfeed:+unread +crypto][   118]]/[[elfeed:+crypto][   133]])
+    - [Ct] Twitter          ([[elfeed:+unread +crypto +twitter][    24]]/[[elfeed:+emacs +crypto +twitter][     0]])
+    - [Cm] MetaMask          ([[elfeed:+unread +crypto +metamask][    72]]/[[elfeed:+emacs +crypto +metamask][     0]])
+ [R] Github Starred Release  ([[elfeed:+unread +ghstar][    71]]/[[elfeed:+ghstar][   243]])
+
+* Configuration
+  :PROPERTIES:
+  :VISIBILITY: hideall
+  :END:
+
+  Press "E" to edit and M-x elfeed-dashboard-mode to go back
+
+  #+STARTUP: showall showstars indent
+  #+KEYMAP: u | elfeed-dashboard-query "+unread @3-months-ago -ghstar -twitter -metamask"
+  #+KEYMAP: e | elfeed-dashboard-query "+unread +emacs"
+  #+KEYMAP: CC | elfeed-dashboard-query "+unread +crypto"
+  #+KEYMAP: Ct | elfeed-dashboard-query "+unread +crypto +twitter"
+  #+KEYMAP: s | elfeed
+  #+KEYMAP: g | elfeed-dashboard-update-links
+  #+KEYMAP: U | elfeed-dashboard-update
+  #+KEYMAP: E | elfeed-dashboard-edit
+  #+KEYMAP: q | kill-current-buffer
