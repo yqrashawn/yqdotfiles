@@ -151,11 +151,13 @@
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin!
- doom-snippets
- cider
- lispy
- ;; mu4e
- link-hint fd-dired)
+  doom-snippets
+  cider
+  lispy
+  ;; mu4e
+  link-hint
+  fd-dired
+  code-review)
 
 (package! elcord)
 ;; (package! tree-sitter

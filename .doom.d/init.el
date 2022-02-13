@@ -13,7 +13,6 @@
 ;;
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
-
 (defmacro define-obsolete-variable-alias (obsolete-name current-name &optional when docstring)
   "Make OBSOLETE-NAME a variable alias for CURRENT-NAME and mark it obsolete.
 
@@ -299,3 +298,4 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (setq evil-respect-visual-line-mode nil)
 (setq straight-vc-git-default-clone-depth 'full)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))
+(defalias 'defgeneric 'cl-defgeneric)

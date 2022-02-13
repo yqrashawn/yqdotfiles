@@ -294,7 +294,7 @@
                       [:j [:togg "Alacritty"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       ;; [:k :same_wind_app :Emacs]
-                      [:k [:hsl "Emacs"]]
+                      [:k [:hsl "/Applications/Emacs.app"]]
                       [:u [:togg "Newsblur"]]
                       ;; [:k [:opena "kitty"]]
                       ;; [:k [:opena "WezTerm.app"]]

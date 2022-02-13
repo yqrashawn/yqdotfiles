@@ -4,7 +4,8 @@
   :commands (jest-popup)
   :init
   (setq! jest-executable "yarn test")
-  (pushnew! evil-collection-mode-list 'jest-mode)
+  (after! evil-collection
+    (pushnew! evil-collection-mode-list 'jest-mode))
   (pushnew! evil-normal-state-modes 'jest-mode))
 
 (use-package! rjsx-mode

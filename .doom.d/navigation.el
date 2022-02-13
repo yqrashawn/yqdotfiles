@@ -148,7 +148,7 @@
   search-whitespace-regexp ".*?")
 
 (use-package! isearch-mb
-  :hooks (doom-first-input . isearch-mb-mode))
+  :hook (doom-first-input . isearch-mb-mode))
 
 
 

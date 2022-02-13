@@ -23,6 +23,7 @@
 ;;                              :autotags elfeed-protocol-tags))))
 
 (after! elfeed
+  (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
     ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
     elfeed-search-filter "+unread @3-months-ago -ghstar"
