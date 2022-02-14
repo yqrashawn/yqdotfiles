@@ -1,4 +1,4 @@
-;;; init-tabnine-capf.el -*- lexical-binding: t; -*-
+;;; lisp/company-tabnine-capf.el -*- lexical-binding: t; -*-
 
 (defcustom company-tabnine-capf-threshold 60
   "the tabnine threshold for sorting two different backend"
@@ -79,4 +79,4 @@ tabnine's candidate have greater position then others."
     (add-to-list 'company-backends 'company-tabnine-capf)
     (message "company-tabnine-capf enabled!")))
 
-(provide 'init-tabnine-capf)
+(provide 'company-tabnine-capf)

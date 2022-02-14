@@ -194,3 +194,8 @@
 (package! elfeed-dashboard)
 (package! notmuch-transient)
 (package! tray)
+(package! company-tabnine-capf
+  :recipe (:local-repo "./lisp/"
+           :files ("company-tabnine-capf.el")
+           ;; :build (:not compile)
+           ))

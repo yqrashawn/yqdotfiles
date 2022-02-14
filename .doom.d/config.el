@@ -63,6 +63,7 @@
 (load! "evil.el")
 (load! "navigation.el")
 (load! "prog.el")
+(load! "completion.el")
 (load! "version-control.el")
 (load! "lisp.el")
 
