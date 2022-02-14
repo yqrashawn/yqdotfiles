@@ -430,9 +430,16 @@
     [remap evil-collection-notmuch-tree-toggle-delete] #'+notmuch/tree-delete
     [remap evil-collection-notmuch-show-toggle-delete] #'+notmuch/show-delete
     [remap evil-collection-notmuch-search-toggle-delete] #'+notmuch/search-delete
+    (:map notmuch-hello-mode-map
+      :n "i" #'notmuch-hello-mode-transient)
+    (:map notmuch-search-mode-map
+      :n "i" #'notmuch-search-mode-transient)
+    (:map notmuch-tree-mode-map
+      :n "i" #'notmuch-tree-mode-transient)
     (:map notmuch-show-mode-map
       :n "s" 'yq-s-map
-      :n "gs" #'notmuch-search))
+      :n "gs" #'notmuch-search
+      :n "i" #'notmuch-show-mode-transient))
   (:after code-review
     (:map code-review-mode-map
       :gn "r" #'code-review-transient-api
