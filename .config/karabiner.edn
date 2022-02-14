@@ -300,7 +300,7 @@
                       ;; [:k [:opena "WezTerm.app"]]
 
                       [:quote [:togg "ClickUp"]]
-                      [:t [:togg "Todoist"]]
+                      [:t [:togg "/Applications/Todoist.app"]]
                       [:p [:togg "Figma"]]
                       ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e :return_or_enter] :!Chromes]
                       [:comma [:togg "Google Chrome"] :!Chromes]

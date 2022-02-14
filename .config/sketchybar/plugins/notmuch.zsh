@@ -5,4 +5,4 @@ cd $HOME/.mail/account.gmail &&
   cd $HOME/.mail/account.yqrashawn &&
   gmi sync &&
   notmuch new &&
-  sketchybar -m --set $NAME label=$(notmuch count tag:inbox)
+  sketchybar -m --set $NAME label=$(notmuch count tag:inbox and tag:unread)

@@ -58,7 +58,9 @@
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "uxdesign\\.cc"  :add '(ux)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "Hacker News" :add '(hn)))
   (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(ghstar)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "bankless" :add '(crypto))))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "bankless" :add '(crypto)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "yqrashawn@newsblur\\.com::http:\\/\\/github\\.com" :add '(ghn)))
+  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "yqrashawn@newsblur\\.com::http:\\/\\/github\\.com" :add '(ghn))))
 
 (defun +elfeed-debug ()
   (interactive)
