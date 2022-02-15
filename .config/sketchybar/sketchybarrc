@@ -149,7 +149,7 @@ sketchybar -m --add item clock right \
   --add item notmuch right \
   --set notmuch associated_space=1,2,3 \
   update_freq=300 \
-  script="~/.config/sketchybar/plugins/notmuch.clj" \
+  script="~/.config/sketchybar/plugins/notmuch.sh" \
   icon.font="PragmataPro:Bold:16.0" \
   icon= \
   label.padding_right=-2

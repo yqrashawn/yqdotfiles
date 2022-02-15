@@ -2,49 +2,45 @@
 
 (ns notmuch
   (:require
+   [clojure.core.async :refer [go]]
    [babashka.process :as p :refer [process]]
    [clojure.edn :as edn]
    [clojure.string :as s]
    [clojure.java.shell :refer [sh]]))
 
-(sh "gmi" "sync" :dir (str (System/getenv "HOME") "/.mail/account.gmail"))
-(sh "gmi" "sync" :dir (str (System/getenv "HOME") "/.mail/account.yqrashawn"))
-(sh "notmuch" "new")
+(defonce gmi "/usr/local/bin/gmi")
+(defonce notmuch "/usr/local/bin/notmuch")
+(defonce alerter "/usr/local/bin/alerter")
+
+(sh gmi "sync" :dir (str (System/getenv "HOME") "/.mail/account.gmail"))
+(sh gmi "sync" :dir (str (System/getenv "HOME") "/.mail/account.yqrashawn"))
+(sh notmuch "new")
 
 (defn set-label [label]
-  (sh "sketchybar" "-m" "--set" "notmuch" (str "label=" label)))
+  (sh "/usr/local/bin/sketchybar" "-m" "--set" "notmuch" (str "label=" label)))
 
 (defn new-unread? []
-  (when (pos? (-> (sh "notmuch" "count" (str "tag:inbox and tag:unread and date:3m.."))
+  (when (pos? (-> (sh notmuch "count" (str "tag:inbox and tag:unread and date:3m.."))
                   :out
                   s/trim-newline
                   Integer/parseInt))
-    (let [new (-> (sh "notmuch" "search" "--format" "sexp" "tag:inbox and tag:unread and date:3m..")
+    (let [new (-> (sh notmuch "search" "--format" "sexp" "tag:inbox and tag:unread and date:3m..")
                   :out
                   edn/read-string)
           new (map #(apply hash-map %) new)]
       (doseq [{:keys [authors subject]} new]
-        (let [title    subject
-              subtitle (str authors)]
-          (prn (str
-                "alerter -message '' -timeout 10 -group NOTMUCH -sender org.gnu.Emacs -contentImage"
-                (System/getenv "$HOME")
-                "/.config/sketchybar/plugins/email.png -title '"
-                title
-                "' -subtitle '"
-                subtitle
-                "'"))
-          (process
-           (str
-            "alerter -message '' -timeout 10 -group NOTMUCH -sender org.gnu.Emacs -contentImage"
-            (System/getenv "$HOME")
-            "/.config/sketchybar/plugins/email.png -title '"
-            title
-            "' -subtitle '"
-            subtitle
-            "'")))))))
+        (go
+          (sh
+           alerter
+           "-message" (str "📧" subject)
+           "-timeout" "20"
+           "-group" "NOTMUCH"
+           "-sender" "org.gnu.Emacs"
+           "-contentImage" (str (System/getenv "HOME") "/.config/sketchybar/plugins/email.png")
+           "-title" "Notmuch"
+           "-subtitle" (str "New email from " authors)))))))
 
-(let [unread-count (-> (sh "notmuch" "count" "tag:inbox and tag:unread")
+(let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
                        :out
                        s/trim-newline
                        Integer/parseInt)]

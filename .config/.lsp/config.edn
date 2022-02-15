@@ -1,4 +1,4 @@
-{:log-path "~/Library/Logs/clojure-lsp.log"
+{:log-path "/tmp/clojure-lsp.log"
  :notify-references-on-file-change true
  :hover                            {:arity-on-same-line? true
                                     :hide-file-location? true

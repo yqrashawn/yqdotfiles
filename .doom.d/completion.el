@@ -1,24 +1,5 @@
 ;;; completion.el -*- lexical-binding: t; -*-
 
-(defun +company--backends ()
-  (let (backends)
-    (let ((mode major-mode)
-          (modes (list major-mode)))
-      (while (setq mode (get mode 'derived-mode-parent))
-        (push mode modes))
-      (dolist (mode modes)
-        (dolist (backend (append (cdr (assq mode +company-backend-alist))
-                                 (default-value 'company-backends)))
-          (push backend backends)))
-      (delete-dups
-       (append (cl-loop for (mode . backends) in +company-backend-alist
-                        if (or (eq major-mode mode)  ; major modes
-                               (and (boundp mode)
-                                 (symbol-value mode)
-                                 (memq mode minor-mode-list))) ; minor modes
-                 append backends)
-         (nreverse backends))))))
-
 (after! prog-mode
   (set-company-backend! 'prog-mode
     'company-capf

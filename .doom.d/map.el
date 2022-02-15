@@ -368,36 +368,36 @@
     :i "C-y" #'yank
     :m "r" '+thing-edit-map
 
-    :textobj "F" #'+evil:defun-txtobj #'+evil:defun-txtobj
-    :textobj "f" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+    :textobj "g" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+    :textobj "G" #'+evil:whole-buffer-txtobj         #'+evil:whole-buffer-txtobj
 
     ;; XXX: copied from doom-emacs config, needs better way to custom this
     :m [tab] (cmds! (and (featurep! :editor snippets)
-                      (evil-visual-state-p)
-                      (or (eq evil-visual-selection 'line)
-                        (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
-               #'yas-insert-snippet
-               (and (featurep! :editor fold)
-                 (save-excursion (end-of-line) (invisible-p (point))))
-               #'+fold/toggle
-               outline-minor-mode
-               #'bicycle-cycle
+                         (evil-visual-state-p)
+                         (or (eq evil-visual-selection 'line)
+                           (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
+                  #'yas-insert-snippet
+                  (and (featurep! :editor fold)
+                    (save-excursion (end-of-line) (invisible-p (point))))
+                  #'+fold/toggle
+                  outline-minor-mode
+                  #'bicycle-cycle
 
-               ;; Fixes #4548: without this, this tab keybind overrides
-               ;; mode-local ones for modes that don't have an evil
-               ;; keybinding scheme or users who don't have :editor (evil
-               ;; +everywhere) enabled.
-               (or (doom-lookup-key
-                     [tab]
-                     (list (evil-get-auxiliary-keymap (current-local-map) evil-state)
-                       (current-local-map)))
-                 (doom-lookup-key
-                   (kbd "TAB")
-                   (list (evil-get-auxiliary-keymap (current-local-map) evil-state)))
-                 (doom-lookup-key (kbd "TAB") (list (current-local-map))))
-               it
-               (fboundp 'evil-jump-item)
-               #'evil-jump-item))
+                  ;; Fixes #4548: without this, this tab keybind overrides
+                  ;; mode-local ones for modes that don't have an evil
+                  ;; keybinding scheme or users who don't have :editor (evil
+                  ;; +everywhere) enabled.
+                  (or (doom-lookup-key
+                        [tab]
+                        (list (evil-get-auxiliary-keymap (current-local-map) evil-state)
+                          (current-local-map)))
+                    (doom-lookup-key
+                      (kbd "TAB")
+                      (list (evil-get-auxiliary-keymap (current-local-map) evil-state)))
+                    (doom-lookup-key (kbd "TAB") (list (current-local-map))))
+                  it
+                  (fboundp 'evil-jump-item)
+                  #'evil-jump-item))
   (:after vterm
     (:map vterm-mode-map
       :gi "C-y" #'vterm-yank))
@@ -414,15 +414,7 @@
       :g "<escape>" (general-simulate-key "C-g")
       :g "C-j" (general-simulate-key "<down>")
       :g "C-k" (general-simulate-key "<up>")))
-  ;; (:after evil-textobj-tree-sitter
-  ;;  :textobj ".f" (evil-textobj-tree-sitter-get-textobj "function.inner") (evil-textobj-tree-sitter-get-textobj "function.outer")
-  ;;  :textobj ".l" (evil-textobj-tree-sitter-get-textobj "block.inner") (evil-textobj-tree-sitter-get-textobj "block.outer")
-  ;;  :textobj ".C" (evil-textobj-tree-sitter-get-textobj "class.inner") (evil-textobj-tree-sitter-get-textobj "class.outer")
-  ;;  :textobj ".t" (evil-textobj-tree-sitter-get-textobj "condition.inner") (evil-textobj-tree-sitter-get-textobj "condition.outer")
-  ;;  :textobj ".L" (evil-textobj-tree-sitter-get-textobj "loop.inner") (evil-textobj-tree-sitter-get-textobj "loop.outer")
-  ;;  :textobj ".c" (evil-textobj-tree-sitter-get-textobj "call.inner") (evil-textobj-tree-sitter-get-textobj "call.outer")
-  ;;  :textobj ".s" (evil-textobj-tree-sitter-get-textobj "scopename.inner") (evil-textobj-tree-sitter-get-textobj "statement.outer")
-  ;;  :textobj ".p" (evil-textobj-tree-sitter-get-textobj "parameter.inner") (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+  ;; (:after evil-textobj-tree-sitter)
   (:after ranger
     (:map ranger-normal-mode-map
       :g "s" 'yq-s-map))
