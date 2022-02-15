@@ -215,3 +215,4 @@ local/bin/rust-analyzer
 /.vpython_cipd_cache/
 /.gsutil/
 /.cloudflared
+/.wrangler/

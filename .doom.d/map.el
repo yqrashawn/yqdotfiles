@@ -65,6 +65,7 @@
     :desc "Open scratch buffer" "bs" #'doom/switch-to-scratch-buffer
     :desc "Open scratch project buffer" "bS" #'doom/switch-to-project-scratch-buffer
     :desc "Toggle popup" "bm" #'++popup-messages
+    :desc "Toggle popup" "b RET" #'bookmark-set
     :desc "Find file" "ff" #'find-file
     :desc "Find file" "fj" #'dired-jump
     :desc "Open junk file" "fJ" #'yq/open-junk-file
@@ -413,7 +414,8 @@
     (:map swiper-map
       :g "<escape>" (general-simulate-key "C-g")
       :g "C-j" (general-simulate-key "<down>")
-      :g "C-k" (general-simulate-key "<up>")))
+      :g "C-k" (general-simulate-key "<up>")
+      :g "C-w" #'doom/delete-backward-word))
   ;; (:after evil-textobj-tree-sitter)
   (:after ranger
     (:map ranger-normal-mode-map

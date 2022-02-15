@@ -165,3 +165,14 @@
 ;;   :config
 ;;   (after! savehist
 ;;     (pushnew! savehist-additional-variables 'dogears-list)))
+
+(after! embark
+  (defadvice! +embark-swiper () :after #'embark-isearch (swiper-isearch-toggle))
+  (defadvice! +embark-insert-relative-path (orig-fn &optional file)
+    :around #'embark-insert-relative-path
+    (let ((default-directory (or (doom-project-root) default-directory)))
+      (funcall-interactively orig-fn file)))
+  (defadvice! +embark-save-relative-path (orig-fn &optional file)
+    :around #'embark-save-relative-path
+    (let ((default-directory (or (doom-project-root) default-directory)))
+      (funcall-interactively orig-fn file))))
