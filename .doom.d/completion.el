@@ -117,3 +117,11 @@
 
 (after! orderless
   (setq orderless-component-separator "[ ,j]"))
+
+(defun +company-abort ()
+  (when (fboundp 'company--active-p)
+    (when (company--active-p)
+      (company-abort))))
+
+(after! evil
+  (add-hook! 'evil-normal-state-entry-hook '+company-abort))
