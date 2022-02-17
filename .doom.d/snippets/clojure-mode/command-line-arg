@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: command-line-arg
+# key: carg
+# --
+*command-line-args*

@@ -411,6 +411,7 @@
                       [:7 :!TSO2]
                       [:8 :!TSO3]
                       [:9 :!TSO4]
+                      [:hyphen :!TSOhyphen]
                       [:x :!TSO5]
                       [:h [[:alf "search repos" "com.yqrashawn.ghjump"] ["in-alfred" 1]]]
                       [:j [:alf "searchGithub" "nikivi.search-the-web"]]

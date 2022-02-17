@@ -1,4 +1,4 @@
-{:lint-as {garden.def/defcssfn                     clojure.core/def
+{:lint-as {garden.def/defcssfn                     clojure.core/defn
            garden.def/defkeyframes                 clojure.core/def
            garden.def/defrule                      clojure.core/def
            garden.def/defstyles                    clojure.core/def

@@ -15,7 +15,7 @@
 
 (sh gmi "sync" :dir (str (System/getenv "HOME") "/.mail/account.gmail"))
 (sh gmi "sync" :dir (str (System/getenv "HOME") "/.mail/account.yqrashawn"))
-(sh notmuch "new")
+;; (sh notmuch "new")
 
 (defn notify [title subtitle message]
   (sh
