@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: shadow-repl
+# key: sdr
+# --
+(shadow/repl :${1})

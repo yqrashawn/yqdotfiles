@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: :cljs/quit
+# key: cjsq
+# --
+:cljs/quit

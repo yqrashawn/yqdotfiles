@@ -1,0 +1,4 @@
+# key: sdw
+# name: shadow-watch
+# --
+(shadow/watch :${1})

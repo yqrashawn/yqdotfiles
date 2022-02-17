@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: shadow-watch-and-repl
+# key: sdd
+# --
+(shadow/watch :${1})
+(shadow/repl :${1})

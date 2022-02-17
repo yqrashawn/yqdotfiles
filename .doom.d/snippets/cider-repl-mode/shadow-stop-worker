@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: shadow-stop-worker
+# key: sds
+# --
+(shadow/stop-worker :${1})
