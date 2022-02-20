@@ -1,4 +1,4 @@
-# key: sdR
+# key: sR
 # name: shadow-release
 # --
-(shadow/release :${1})
+(shadow/release :$1)

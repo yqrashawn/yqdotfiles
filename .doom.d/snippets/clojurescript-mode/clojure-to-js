@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: clojure-to-js
+# key: cj
+# --
+clj->js $1

@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: shadow-compile
-# key: sdc
+# key: sc
 # --
-(shadow/compile :${1})
+(shadow/compile :$1)

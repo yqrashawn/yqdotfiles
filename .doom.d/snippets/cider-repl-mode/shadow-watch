@@ -1,4 +1,4 @@
-# key: sdw
+# key: sw
 # name: shadow-watch
 # --
-(shadow/watch :${1})
+(shadow/watch :$1)
