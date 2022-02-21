@@ -48,23 +48,23 @@
           clojurescript-mode) . lispy-mode)
   :config
   ;; make lispy-eval works in babashka repl
-    (defadvice! +lispy-eval (orig-fn &rest args)
-      :around #'lispy-eval
-      (if (+in-clj-p)
-          (if (and lispy-mode (lispy-left-p))
-              (save-excursion
-                (call-interactively 'lispy-different)
-                (call-interactively 'cider-eval-last-sexp))
-            (call-interactively 'cider-eval-last-sexp))
-        (apply orig-fn args)))
+  (defadvice! +lispy-eval (orig-fn &rest args)
+    :around #'lispy-eval
+    (if (+in-clj-p)
+        (if (and lispy-mode (lispy-left-p))
+            (save-excursion
+              (call-interactively 'lispy-different)
+              (call-interactively 'cider-eval-last-sexp))
+          (call-interactively 'cider-eval-last-sexp))
+      (apply orig-fn args)))
 
-    (defadvice! +lispy-eval-and-insert (func &rest args)
-      :around #'lispy-eval-and-insert
-      (if (+in-clj-p)
-          (progn
-            (setq current-prefix-arg '(1))
-            (call-interactively 'cider-pprint-eval-last-sexp))
-        (apply func args))))
+  (defadvice! +lispy-eval-and-insert (func &rest args)
+    :around #'lispy-eval-and-insert
+    (if (+in-clj-p)
+        (progn
+          (setq current-prefix-arg '(1))
+          (call-interactively 'cider-pprint-eval-last-sexp))
+      (apply func args))))
 
 (after! cider
   (setq! cider-default-cljs-repl 'shadow)
@@ -106,7 +106,14 @@
 
   ;; (set-popup-rules!
   ;;   '(("^\\*cider-repl" :side right :size 0.5 :quit +doom/just-escaped-p :ttl nil)))
-  )
+
+  ;; prioritize shadow-cljs port
+  (defun nrepl-extract-port (dir)
+    "Read port from .nrepl-port, nrepl-port or target/repl-port files in directory DIR."
+    (or (nrepl--port-from-file (expand-file-name ".shadow-cljs/nrepl.port" dir))
+        (nrepl--port-from-file (expand-file-name "repl-port" dir))
+        (nrepl--port-from-file (expand-file-name ".nrepl-port" dir))
+        (nrepl--port-from-file (expand-file-name "target/repl-port" dir)))))
 
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
   (cmd! (setq-local evil-shift-width 1)))
