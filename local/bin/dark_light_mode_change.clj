@@ -7,6 +7,7 @@
    [babashka.fs :as fs]))
 
 (def theme (if (= (System/getenv "DARKMODE") "1") :dark :light))
+;; (def theme :dark)
 
 (defn- yml-comment [line]
   (str "# " line))

@@ -13,11 +13,9 @@
     <string>/tmp/dark-mode-notify-stdout.log</string>
     <key>ProgramArguments</key>
     <array>
-      <string>/usr/local/bin/dark-mode-notify</string>
       <string>/bin/sh</string>
       <string>-c</string>
-      <string>exec
-      $HOME/local/bin/dark_light_mode_change.clj</string>
+      <string>exec $HOME/local/bin/dark-mode-notify $HOME/local/bin/dark_light_mode_change.clj</string>
     </array>
   </dict>
 </plist>
