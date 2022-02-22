@@ -274,3 +274,11 @@ A prefix arg reverses this operation."
 
 (use-package! unmodified-buffer
   :hook (doom-first-file . unmodified-buffer-global-mode))
+
+;; TODO remove this once it's remove from core-editor.el
+;; https://github.com/hlissner/doom-emacs/issues/6127
+(undefadvice! doom--fix-helpful--autoloaded-p (fn &rest args)
+      :around #'helpful--autoloaded-p
+      (letf! (defun help-fns--autoloaded-p (sym _)
+               (funcall help-fns--autoloaded-p sym))
+        (apply fn args)))
