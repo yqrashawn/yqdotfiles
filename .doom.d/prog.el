@@ -124,3 +124,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 (defadvice! ++fold--ts-fold-p (orig)
   :around #'+fold--ts-fold-p
   nil)
+
+(after! format-all
+  ;; don't use shfmt for zsh
+  (defadvice! +format-all--probe (orig-fn &rest args)
+    :around #'format-all--probe
+    (if (s-ends-with? ".zsh" buffer-file-name)
+      '(nil nil)
+      (funcall orig-fn))))
