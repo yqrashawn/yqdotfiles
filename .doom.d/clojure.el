@@ -11,9 +11,9 @@
 ;;; clojure-mode
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t
-    clojure-verify-major-mode nil
-    clojure-align-reader-conditionals t
-    clojure-defun-indents '(fn-traced))
+         clojure-verify-major-mode nil
+         clojure-align-reader-conditionals t
+         clojure-defun-indents '(fn-traced))
 
   ;; #_ is not a logical sexp
   (defadvice! corgi/clojure--looking-at-non-logical-sexp (command)
@@ -139,7 +139,19 @@ creates a new one. Don't unnecessarily bother the user."
     (or (nrepl--port-from-file (expand-file-name ".shadow-cljs/nrepl.port" dir))
         (nrepl--port-from-file (expand-file-name "repl-port" dir))
         (nrepl--port-from-file (expand-file-name ".nrepl-port" dir))
-        (nrepl--port-from-file (expand-file-name "target/repl-port" dir)))))
+        (nrepl--port-from-file (expand-file-name "target/repl-port" dir))))
+
+  (defadvice! +cider-jack-in-clj
+    "Support babashka for cider-jack-in-clj"
+    (org-fn params)
+    :around #'cider-jack-in-clj
+    (interactive "P")
+    (if (save-excursion
+          (goto-char (point-min))
+          (end-of-line)
+          (re-search-forward "^#![^\n]*/bb" nil t))
+        (funcall-interactively orig-fn params)
+      (funcall-interactively #'corgi/cider-jack-in-babashka (doom-project-root)))))
 
 (use-package! clj-ns-name
   :after clojure-mode
