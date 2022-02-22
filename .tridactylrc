@@ -169,6 +169,29 @@ unbindurl mail.google.com   gi
 unbindurl mail.google.com   x
 
 unbindurl (www\.)?newsblur\.com   j
+unbindurl (www\.)?newsblur\.com   k
+unbindurl (www\.)?newsblur\.com   n
+unbindurl (www\.)?newsblur\.com   u
+unbindurl (www\.)?newsblur\.com   m
+unbindurl (www\.)?newsblur\.com   o
+unbindurl (www\.)?newsblur\.com   v
+unbindurl (www\.)?newsblur\.com   V
+unbindurl (www\.)?newsblur\.com   x
+unbindurl (www\.)?newsblur\.com   X
+unbindurl (www\.)?newsblur\.com   S
+unbindurl (www\.)?newsblur\.com   c
+unbindurl (www\.)?newsblur\.com   c
+unbindurl (www\.)?newsblur\.com   J
+unbindurl (www\.)?newsblur\.com   K
+unbindurl (www\.)?newsblur\.com   A
+unbindurl (www\.)?newsblur\.com   /
+unbindurl (www\.)?newsblur\.com   r
+unbindurl (www\.)?newsblur\.com   M
+unbindurl (www\.)?newsblur\.com   D
+unbindurl (www\.)?newsblur\.com   ?
+bindurl (www\.)?newsblur\.com , scrollpage 0.5
+bindurl (www\.)?newsblur\.com . scrollpage -0.5
+bindurl (www\.)?newsblur\.com R reload
 
 bindurl ^https://web.whatsapp.com f hint -c  [tabindex]:not(.two)>div,a
 bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a

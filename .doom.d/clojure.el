@@ -3,13 +3,18 @@
 
 (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
-(add-to-list 'magic-mode-alist '("^#!/.*\\(boot\\|clj\\|clojure\\|bb\\|lumo\\)$" . clojure-mode))
+(add-to-list 'magic-mode-alist '("^#![^\n]*/\\(clj\\|clojure\\|bb\\|lumo\\)" . clojure-mode))
 
+(add-hook! (clojure-mode clojurescript-mode clojurec-mode)
+  (cmd! (setq-local evil-shift-width 1)))
+
+;;; clojure-mode
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t
-         clojure-align-reader-conditionals t
-         clojure-defun-indents '(fn-traced)
-         clojure-verify-major-mode nil)
+    clojure-verify-major-mode nil
+    clojure-align-reader-conditionals t
+    clojure-defun-indents '(fn-traced))
+
   ;; #_ is not a logical sexp
   (defadvice! corgi/clojure--looking-at-non-logical-sexp (command)
     :around #'clojure--looking-at-non-logical-sexp
@@ -23,13 +28,13 @@
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil))
 
+;;; lispy
 (defun +in-babashka-p ()
   (and (memq major-mode '(clojure-mode))
        (functionp 'cider--babashka-version)
        (cider--babashka-version)))
 (defun +in-clj-p ()
   (memq major-mode '(clojure-mode clojurec-mode clojurescript-mode)))
-
 
 (use-package! lispy
   :diminish lispy " ʪ"
@@ -66,14 +71,21 @@
           (call-interactively 'cider-pprint-eval-last-sexp))
       (apply func args))))
 
+;;; cider
 (after! cider
+  ;; (setq! cider-preferred-build-tool 'clojure-cli)
   (setq! cider-default-cljs-repl 'shadow)
   (setq! cider-auto-jump-to-error nil)
-  ;; When asking for a "matching" REPL (clj/cljs), and no matching REPL is found,
-  ;; return any REPL that is there. This is so that cider-quit can be called
-  ;; repeatedly to close all REPLs in a process. It also means that , s s will go
-  ;; to any REPL if there is one open.
+
+  (defadvice cider-find-var (before add-evil-jump activate)
+    (evil-set-jump))
+
+
   (defadvice! corgi/around-cider-current-repl (command &optional type ensure)
+    "When asking for a \"matching\" REPL (clj/cljs), and no matching REPL is found,
+  return any REPL that is there. This is so that cider-quit can be called
+  repeatedly to close all REPLs in a process. It also means that , s s will go
+  to any REPL if there is one open."
     :around #'cider-current-repl
     (let ((repl (or
                  (if (not type)
@@ -85,11 +97,11 @@
           (cider--no-repls-user-error type)
         repl)))
 
-  ;; This essentially redefines cider-repls. The main thing it does is return all
-  ;; REPLs by using sesman-current-sessions (plural) instead of
-  ;; sesman-current-session. It also falls back to the babashka repl if no repls
-  ;; are connected/linked, so we can always eval.
   (defadvice! corgi/around-cider-repls (command &optional type ensure)
+    "This essentially redefines cider-repls. The main thing it does is return all
+  REPLs by using sesman-current-sessions (plural) instead of
+  sesman-current-session. It also falls back to the babashka repl if no repls
+  are connected/linked, so we can always eval."
     :around #'cider-repls
     (let ((type (cond
                  ((listp type)
@@ -104,6 +116,20 @@
                       repls)
           (list (get-buffer "*babashka-repl*")))))
 
+  (defadvice! corgi/around-cider--choose-reusable-repl-buffer (command params)
+    "Redefine cider--choose-reusable-repl-buffer to something more
+sensible. If any dead REPL buffers exist when creating a new one
+then simply delete them first. Return nil co `cider-creat-repl'
+creates a new one. Don't unnecessarily bother the user."
+    :around #'cider--choose-reusable-repl-buffer
+    (seq-do #'kill-buffer
+            (seq-filter (lambda (b)
+                          (with-current-buffer b
+                            (and (derived-mode-p 'cider-repl-mode)
+                                 (not (process-live-p (get-buffer-process b))))))
+                        (buffer-list)))
+    nil)
+
   ;; (set-popup-rules!
   ;;   '(("^\\*cider-repl" :side right :size 0.5 :quit +doom/just-escaped-p :ttl nil)))
 
@@ -115,5 +141,7 @@
         (nrepl--port-from-file (expand-file-name ".nrepl-port" dir))
         (nrepl--port-from-file (expand-file-name "target/repl-port" dir)))))
 
-(add-hook! (clojure-mode clojurescript-mode clojurec-mode)
-  (cmd! (setq-local evil-shift-width 1)))
+(use-package! clj-ns-name
+  :after clojure-mode
+  :config
+  (clj-ns-name-install))

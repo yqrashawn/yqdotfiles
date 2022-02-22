@@ -199,3 +199,32 @@
            :files ("company-tabnine-capf.el")
            ;; :build (:not compile)
            ))
+
+(package! walkclj
+  :recipe (:host github
+           :repo "plexus/walkclj"
+           :files ("walkclj.el")))
+
+(package! clj-ns-name
+  :recipe (:host github
+           :repo "plexus/plexmacs"
+           :files ("clj-ns-name/clj-ns-name.el")))
+
+(package! pprint-to-buffer
+  :recipe (:host github
+           :files ("pprint-to-buffer/pprint-to-buffer.el")
+           :repo "plexus/plexmacs"))
+
+;; (package! corkey
+;;   :recipe (:host github
+;;            :branch "main"
+;;            :files ("corkey/corkey.el"
+;;                    "corkey/corgi-keys.el"
+;;                    "corkey/corgi-signals.el"
+;;                    "corkey/user-keys-template.el"
+;;                    "corkey/user-signals-template.el")
+;;            :repo "lambdaisland/corgi-packages"))
+
+;; (package! elisp-slime-nav)
+
+(unpin! helpful)
