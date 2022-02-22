@@ -157,14 +157,18 @@ bind zI zoom 3
 bind zO zoom 0.3
 bind .  repeat
 bind <AS-ArrowUp><AS-ArrowUp><AS-ArrowDown><AS-ArrowDown><AS-ArrowLeft><AS-ArrowRight><AS-ArrowLeft><AS-ArrowRight>ba open https://www.youtube.com/watch?v=M3iOROuTuMA
+
 unbindurl app\.clickup\.com k
 unbindurl app\.clickup\.com j
 unbindurl app\.clickup\.com /
 unbindurl app\.clickup\.com n
+
 unbindurl mail.google.com   j
 unbindurl mail.google.com   k
 unbindurl mail.google.com   gi
 unbindurl mail.google.com   x
+
+unbindurl (www\.)?newsblur\.com   j
 
 bindurl ^https://web.whatsapp.com f hint -c  [tabindex]:not(.two)>div,a
 bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a
