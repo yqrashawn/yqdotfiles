@@ -216,3 +216,4 @@ local/bin/rust-analyzer
 /.gsutil/
 /.cloudflared
 /.wrangler/
+/.config/alacritty/current-theme.yml

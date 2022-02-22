@@ -11,9 +11,7 @@
 import:
   - ~/.config/alacritty/env.yml
   - ~/.config/alacritty/window.yml
-  # - ~/.config/alacritty/color.yml
-  # - ~/.config/alacritty/modus-vivendi.yml
-  - ~/.config/alacritty/modus-operandi.yml
+  - ~/.config/alacritty/current-theme.yml
   - ~/.config/alacritty/selection.yml
   - ~/.config/alacritty/cursor.yml
   - ~/.config/alacritty/hints.yml
