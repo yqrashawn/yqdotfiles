@@ -42,7 +42,7 @@
                   edn/read-string)
           new (map #(apply hash-map %) new)]
       (doseq [{:keys [authors subject]} new]
-        (put! c ["Notmuch" (str "New email from " authors) (str "📧" subject)]))
+        (put! c [(str "New email from " authors) (str "📧" subject) "New email from Notmuch"]))
       (put! c :end))))
 
 (let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
