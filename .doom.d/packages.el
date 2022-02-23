@@ -228,3 +228,4 @@
 ;; (package! elisp-slime-nav)
 
 (unpin! helpful)
+(package! cider-eval-sexp-fu)

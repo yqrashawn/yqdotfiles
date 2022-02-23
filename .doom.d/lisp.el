@@ -126,3 +126,27 @@ Instead keep them, with a newline after each comment."
   ;;         lisp-mode) . symex-initialize)
   :config
   (global-set-key (kbd "s-;") 'symex-mode-interface))
+
+(after! eval-sexp-fu
+  (after! lispy
+    (define-eval-sexp-fu-flash-command special-lispy-eval
+      (eval-sexp-fu-flash (when (ignore-errors (elisp--preceding-sexp))
+                            (with-esf-end-of-sexp
+                              (save-excursion
+                                (when (lispy-right-p)
+                                  (backward-sexp))
+                                (bounds-of-thing-at-point 'sexp)))))))
+  (after! eros
+    (define-eval-sexp-fu-flash-command eros-eval-defun
+      (eval-sexp-fu-flash (when (ignore-errors (elisp--preceding-sexp))
+                            (save-excursion
+                              (end-of-defun)
+                              (beginning-of-defun)
+                              (bounds-of-thing-at-point 'sexp))))))
+  (after! pprint-to-buffer
+    (define-eval-sexp-fu-flash-command pprint-to-buffer-last-sexp
+      (eval-sexp-fu-flash (when (ignore-errors (elisp--preceding-sexp))
+                            (with-esf-end-of-sexp
+                              (save-excursion
+                                (backward-sexp)
+                                (bounds-of-thing-at-point 'sexp))))))))
