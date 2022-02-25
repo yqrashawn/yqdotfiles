@@ -141,7 +141,7 @@ creates a new one. Don't unnecessarily bother the user."
         (nrepl--port-from-file (expand-file-name ".nrepl-port" dir))
         (nrepl--port-from-file (expand-file-name "target/repl-port" dir))))
 
-  (defadvice! +cider-jack-in-clj (org-fn params)
+  (defadvice! +cider-jack-in-clj (orig-fn params)
     "Support babashka for cider-jack-in-clj"
     :around #'cider-jack-in-clj
     (interactive "P")
@@ -149,8 +149,8 @@ creates a new one. Don't unnecessarily bother the user."
           (goto-char (point-min))
           (end-of-line)
           (re-search-forward "^#![^\n]*/bb" nil t))
-        (funcall-interactively orig-fn params)
-      (funcall-interactively #'corgi/cider-jack-in-babashka (doom-project-root))))
+        (funcall-interactively #'corgi/cider-jack-in-babashka (doom-project-root))
+      (funcall-interactively orig-fn params)))
   (require 'cider-eval-sexp-fu))
 
 (use-package! clj-ns-name
