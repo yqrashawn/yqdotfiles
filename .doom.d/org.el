@@ -26,7 +26,8 @@
     :quit nil
     :select t
     :modeline t
-    :autosave 'ignore))
+    :autosave 'ignore)
+  (add-hook! 'org-mode-hook 'org-modern-mode))
 
 (setq +org-roam-open-buffer-on-find-file nil)
 (after! org-roam

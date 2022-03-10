@@ -3,8 +3,8 @@
 bb="/usr/local/bin/bb -cp ~/.config/bblib/"
 
 # refocus on window/app closed/quit
-yabai -m signal --add event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent || yabai -m window --focus first"
-yabai -m signal --add event=application_terminated action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent || yabai -m window --focus first"
+# yabai -m signal --add event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent || yabai -m window --focus first"
+# yabai -m signal --add event=application_terminated action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent || yabai -m window --focus first"
 yabai -m signal --add event=application_activated action="~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
 yabai -m signal --add event=window_focused action="$bb ~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
 yabai -m signal --add event=application_front_switched action="$bb ~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"

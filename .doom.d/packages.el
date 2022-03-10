@@ -59,7 +59,7 @@
 (package! copy-as-format)
 (package! iflipb)
 (package! rg)
-(package! evil-iedit-state :recipe (:host github :repo "yqrashawn/evil-iedit-state" :branch "master"))
+(package! evil-iedit-state)
 ;; (package! evil-textobj-anyblock :disable t)
 (unpin! evil-textobj-anyblock)
 (package! evil-textobj-anyblock :recipe (:host github :repo "noctuid/evil-textobj-anyblock" :branch "master"))
@@ -231,3 +231,4 @@
 
 (unpin! helpful)
 (package! cider-eval-sexp-fu)
+(package! org-modern)

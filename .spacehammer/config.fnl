@@ -375,7 +375,7 @@
           :items [{:key :r
                    :title "Org Roam"
                    :action browser-org-roam-capture}
-                  {:key :N
+                  {:key :b
                    :title "Newsblur"
                    :action browser-newsblur}
                   {:key :n
