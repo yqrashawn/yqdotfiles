@@ -232,3 +232,4 @@
 (unpin! helpful)
 (package! cider-eval-sexp-fu)
 (package! org-modern)
+(package! dirvish)

@@ -87,8 +87,3 @@
 
 (after! evil-org
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
-
-;; https://github.com/hlissner/doom-emacs/issues/5785
-(after! general
-  (general-auto-unbind-keys :off)
-  (remove-hook 'doom-after-init-modules-hook #'general-auto-unbind-keys))

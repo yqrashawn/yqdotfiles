@@ -62,6 +62,10 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(when EMACS29+
+    ;; REVIEW See Wilfred/elisp-refs#35. Remove once fixed upstream.
+    (defvar read-symbol-positions-list nil))
+
 (load! "helper.el")
 (load! "map.el")
 (load! "better-default.el")

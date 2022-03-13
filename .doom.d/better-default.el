@@ -282,3 +282,16 @@ A prefix arg reverses this operation."
       (letf! (defun help-fns--autoloaded-p (sym _)
                (funcall help-fns--autoloaded-p sym))
         (apply fn args)))
+
+(use-package! dirvish
+  :defer t
+  :init
+  (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish"))
+  (defun +dired-hide-details-mode-1 ()
+    (dired-hide-details-mode -1))
+  (defun enable-dirvish-override-dired-mode ()
+    (dirvish-override-dired-mode 1))
+  (add-hook! 'dired-mode-hook 'enable-dirvish-override-dired-mode)
+  :config
+  (setq dirvish-mode-hook '())
+  (add-hook! 'dirvish-mode-hook '+dired-hide-details-mode-1))
