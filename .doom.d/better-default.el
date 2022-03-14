@@ -284,12 +284,13 @@ A prefix arg reverses this operation."
         (apply fn args)))
 
 (use-package! dirvish
-  :defer t
+  :after dired
   :init
   (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish"))
   (defun +dired-hide-details-mode-1 ()
     (dired-hide-details-mode -1))
   (defun enable-dirvish-override-dired-mode ()
+    (require 'dirvish)
     (dirvish-override-dired-mode 1))
   (add-hook! 'dired-mode-hook 'enable-dirvish-override-dired-mode)
   :config

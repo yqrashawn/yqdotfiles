@@ -65,6 +65,7 @@
          orgbox-start-time-of-evening "20:00"))
 
 (use-package! vulpea
+  :deferr t
   ;; hook into org-roam-db-autosync-mode you wish to enable
   ;; persistence of meta values (see respective section in README to
   ;; find out what meta means)
