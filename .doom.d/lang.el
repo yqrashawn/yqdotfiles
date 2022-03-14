@@ -35,14 +35,15 @@
 
 ;; (advice-add #'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
 (setq-default lsp-enable-file-watchers nil)
+(setq! lsp-use-plists t)
 (after! lsp-mode
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (when (featurep! :completion company)
-    (remove-hook! 'lsp-completion-mode-hook #'+lsp-init-company-backends-h))
+    )
   (setq!
-    ;; lsp-imenu-sort-methods '(position)
-    ;; lsp-eldoc-enable-hover nil
-    ;; lsp-disabled-clients '(javascript-typescript-langserver)
+;; lsp-imenu-sort-methods '(position)
+;; lsp-eldoc-enable-hover nil
+;; lsp-disabled-clients '(javascript-typescript-langserver)
     lsp-enable-file-watchers nil
     lsp-file-watch-threshold 200
     lsp-bash-highlight-parsing-errors t
@@ -52,28 +53,19 @@
     lsp-completion-show-detail nil
     lsp-completion-show-kind nil
     lsp-completion-sort-initial-results nil
-    lsp-eslint-enable t)
-  (pushnew! lsp-file-watch-ignored-directories
-    "[/\\\\]coverage'"
-    "[/\\\\]lcov-report'"
-    "[/\\\\]\\.log\\'"
-    "[/\\\\]\\.clj-kondo"
-    "[/\\\\]\\storybook-static"
-    "[/\\\\]\\.storybook"
-    "[/\\\\]releases"
-    "[/\\\\]\\.yarn"
-    "[/\\\\]\\.vscode"
-    "[/\\\\]build'"
-    "[/\\\\]\\.shadow-cljs"
-    "[/\\\\]cljs-runtime"
-    "[/\\\\]dist"
-    "[/\\\\]__snapshots__'"
-    "[/\\\\]sp_"
-    "[/\\\\]\\.cache\\'"))
+    )
+  (pushnew! lsp-file-watch-ignored-directories "[/\\\\]coverage'" "[/\\\\]lcov-report'" "[/\\\\]\\.log\\'" "[/\\\\]\\.clj-kondo" "[/\\\\]\\storybook-static" "[/\\\\]\\.storybook" "[/\\\\]releases" "[/\\\\]\\.yarn" "[/\\\\]\\.vscode" "[/\\\\]build'" "[/\\\\]\\.shadow-cljs" "[/\\\\]cljs-runtime" "[/\\\\]dist" "[/\\\\]__snapshots__'" "[/\\\\]sp_"))
+(after! consult-lsp
+  (defun +consult-lsp--diagnostics--transformer (file diag)
+    (unless (and
+             (string= (or (lsp-get diag :source) "") "typescript")
+             (s-contains? "Could not find a declaration file for module" (or (lsp-get diag :message) "")))
+      (consult-lsp--diagnostics--transformer file diag)))
+  (setq! consult-lsp-diagnostics-transformer-function '+consult-lsp--diagnostics--transformer))
 (after! lsp-ui
   (setq! lsp-ui-doc-show-with-cursor nil
-         lsp-ui-doc-header t
-         lsp-ui-doc-include-signature t))
+    lsp-ui-doc-header t
+    lsp-ui-doc-include-signature t))
 
 ;; (use-package! tree-sitter-langs
 ;;   :defer t
