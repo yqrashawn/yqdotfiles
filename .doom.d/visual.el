@@ -73,3 +73,19 @@
   (font-lock-add-keywords
     'web-mode
     (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+
+
+(use-package! modus-themes
+  :defer t
+  :init
+  (setq!
+    modus-themes-italic-constructs t
+    modus-themes-completions '((matches . (extrabold background intense))
+                                (selection . (semibold accented intense))
+                                (popup . (accented)))
+    modus-themes-mixed-fonts t
+    modus-themes-fringes 'subtle
+    modus-themes-lang-checkers '(straight-underline text-also)
+    modus-themes-mode-line '(borderless)
+    modus-themes-links '(neutral-underline faint)
+    modus-themes-region '(no-extend)))

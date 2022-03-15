@@ -296,3 +296,5 @@ A prefix arg reverses this operation."
   :config
   (setq dirvish-mode-hook '())
   (add-hook! 'dirvish-mode-hook '+dired-hide-details-mode-1))
+
+(setq! image-use-external-converter t)

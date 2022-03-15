@@ -380,7 +380,10 @@
                    :action browser-newsblur}
                   {:key :n
                    :title "Notion"
-                   :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "k"))}]}]))
+                   :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "k"))}
+                  {:key :t
+                   :title "Todoist"
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "i"))}]}]))
 
 (local firefox-items
        (concat
