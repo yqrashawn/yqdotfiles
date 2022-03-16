@@ -111,7 +111,12 @@
     company-box-color-icon nil
     company-box-max-candidates 15
     company-box-scrollbar nil
-    company-box-doc-delay 1.5))
+    company-box-doc-delay 1.5)
+  (defadvice! +company-box--set-mode (&rest args)
+    "stop company-box add company-pseudo-tooltip-frontend back"
+    :after #'company-box--set-mode
+    (delq! 'company-pseudo-tooltip-frontend company-frontends)
+    (delq! 'company-pseudo-tooltip-unless-just-one-frontend company-frontends)))
 
 ;; (use-package! corfu
 ;;   :hooks (doom-first-input-hook . corfu-global-mode))
