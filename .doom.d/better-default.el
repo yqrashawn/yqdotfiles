@@ -15,6 +15,7 @@
        auto-window-vscroll nil
        confirm-kill-processes nil
        browse-url-secondary-browser-function 'eww-browse-url
+       make-backup-files t
 
        ;; scroll
        hscroll-margin 5
