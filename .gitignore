@@ -218,3 +218,5 @@ local/bin/rust-analyzer
 /.wrangler/
 /.config/alacritty/current-theme.yml
 /.lapce/
+/.stack/
+/.config/carp/
