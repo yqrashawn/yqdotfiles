@@ -233,3 +233,15 @@
 (package! cider-eval-sexp-fu)
 (package! org-modern)
 (package! dirvish)
+(package! carp-mode
+  :recipe (:host github
+            :repo "carp-lang/carp-emacs"
+            :files ("carp-mode.el")))
+(package! carp-flycheck
+  :recipe (:host github
+            :repo "carp-lang/carp-emacs"
+            :files ("carp-flycheck.el")))
+(package! inf-carp-mode
+  :recipe (:host github
+            :repo "carp-lang/carp-emacs"
+            :files ("inf-carp-mode.el")))
