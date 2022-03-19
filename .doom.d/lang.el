@@ -93,3 +93,14 @@
   (plist-put turbo-log--ecmascript-configs :include-semicolon nil)
   (setq turbo-log-msg-format-template "\"🚀: %s\"")
   (setq turbo-log-allow-insert-without-tree-sitter-p t))
+
+(use-package! carp-mode
+  :defer t
+  :mode (("\.carp$" . carp-mode)))
+
+(use-package! inf-carp-mode
+  :defer t
+  :init
+  (setq! inf-carp-program (expand-file-name "~/Downloads/carp-v0.5.4-x86_64-macos/bin/carp"))
+  :config
+  (setenv "CARP_DIR" (expand-file-name "~/Downloads/carp-v0.5.4-x86_64-macos/")))
