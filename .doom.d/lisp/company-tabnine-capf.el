@@ -5,8 +5,6 @@
   :group 'company-tabnine-capf
   :type 'integer)
 
-;; (setq company-tabnine-binaries-folder "~/.emacs.d/.cache/tabnine")
-
 (defun company-tabnine-capf--annotation (candidate)
   "read annotation from candidate
 company-tabnine's annotation is stored in text properties, so smart!
@@ -24,11 +22,11 @@ so if annotation cannot read from properties, just put into company-capf"
 
 (defun company-tabnine-capf--mix-candidates (&optional tabnine-result capf-result)
   (cond
-     ((eq (length tabnine-result) 0) capf-result)
-     ((eq (length capf-result) 0) tabnine-result)
-     ((> (company-tabnine-capf--extract-tabnine-confidence (car tabnine-result)) company-tabnine-capf-threshold)
-      `(,(car tabnine-result) ,@(company-tabnine-capf--mix-candidates (cdr tabnine-result) capf-result)))
-     (t `(,@capf-result ,@tabnine-result))))
+   ((eq (length tabnine-result) 0) capf-result)
+   ((eq (length capf-result) 0) tabnine-result)
+   ((> (company-tabnine-capf--extract-tabnine-confidence (car tabnine-result)) company-tabnine-capf-threshold)
+    `(,(car tabnine-result) ,@(company-tabnine-capf--mix-candidates (cdr tabnine-result) capf-result)))
+   (t `(,@capf-result ,@tabnine-result))))
 
 (defun company-tabnine-capf--candidates (prefix)
   "combine and sort the company-tabnine and the company-capf results.

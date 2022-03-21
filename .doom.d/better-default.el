@@ -293,7 +293,9 @@ A prefix arg reverses this operation."
     (dired-hide-details-mode -1))
   (defun enable-dirvish-override-dired-mode ()
     (require 'dirvish)
-    (dirvish-override-dired-mode 1))
+    (unless dirvish-override-dired-mode
+      (dirvish-override-dired-mode 1)
+      (call-interactively 'dired-jump)))
   (add-hook! 'dired-mode-hook 'enable-dirvish-override-dired-mode)
   :config
   (setq dirvish-mode-hook '())

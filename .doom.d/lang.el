@@ -36,7 +36,12 @@
 ;; (advice-add #'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
 (setq-default lsp-enable-file-watchers nil)
 (setq! lsp-use-plists t)
+(defun ++lsp-init-company-backends-h ()
+         (when lsp-completion-mode
+           (set (make-local-variable 'company-backends)
+             (remq nil company-backends))))
 (after! lsp-mode
+  (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t)
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (when (featurep! :completion company)
     )

@@ -13,23 +13,23 @@
   (set-company-backend! 'text-mode
     '(:separate company-dabbrev company-yasnippet company-files company-ispell)))
 
-(use-package! company-tabnine-capf
-  :defer t
-  :init
-  (after! js2-mode
-    (set-company-backend! 'js2-mode 'company-tabnine-capf))
-  (after! rjsx-mode
-    (set-company-backend! 'rjsx-mode 'company-tabnine-capf))
-  (after! typescript-mode
-    (set-company-backend! 'typescript-mode 'company-tabnine-capf))
-  (after! conf-mode
-    (set-company-backend! 'conf-mode
-      'company-tabnine-capf
-      'company-files
-      'company-yasnippet
-      'company-keywords
-      'company-dabbrev-code
-      'company-dabbrev)))
+;; (use-package! company-tabnine-capf
+;;   :defer t
+;;   :init
+;;   (after! js2-mode
+;;     (set-company-backend! 'js2-mode 'company-tabnine-capf))
+;;   (after! rjsx-mode
+;;     (set-company-backend! 'rjsx-mode 'company-tabnine-capf))
+;;   (after! typescript-mode
+;;     (set-company-backend! 'typescript-mode 'company-tabnine-capf))
+;;   (after! conf-mode
+;;     (set-company-backend! 'conf-mode
+;;       'company-tabnine-capf
+;;       'company-files
+;;       'company-yasnippet
+;;       'company-keywords
+;;       'company-dabbrev-code
+;;       'company-dabbrev)))
 
 (use-package! company-flx
   :defer t
@@ -69,10 +69,28 @@
   :defer t
   :commands (company-tabnine-restart-server)
   :init
-  (setq! company-tabnine-binaries-folder "~/.TabNine/binaries/"
-         ;; company-tabnine-context-radius 6000
-         ;; company-tabnine-context-radius-after 6000
-         company-tabnine-log-file-path "~/Downloads/tabnine.log"))
+  (setq!
+   company-tabnine-binaries-folder "~/.TabNine/binaries/"
+   company-tabnine-wait 0.25
+   company-tabnine-max-num-results 5
+   company-tabnine-no-continue nil
+   ;; company-tabnine-context-radius 6000
+   ;; company-tabnine-context-radius-after 6000
+   company-tabnine-log-file-path "~/Downloads/tabnine.log")
+  (after! js2-mode
+    (set-company-backend! 'js2-mode 'company-tabnine))
+  (after! rjsx-mode
+    (set-company-backend! 'rjsx-mode 'company-tabnine))
+  (after! typescript-mode
+    (set-company-backend! 'typescript-mode 'company-tabnine))
+  (after! conf-mode
+    (set-company-backend! 'conf-mode
+      'company-tabnine
+      'company-files
+      'company-yasnippet
+      'company-keywords
+      'company-dabbrev-code
+      'company-dabbrev)))
 
 (use-package! company-ctags :defer t)
 
