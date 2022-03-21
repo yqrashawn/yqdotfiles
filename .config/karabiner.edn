@@ -423,7 +423,7 @@
                       [:k [[:alf "ffa-history" "net.deanishe.alfred.firefox-assistant"] ["in-alfred" 1]]]
                       ;; [:m [:alf "tab" "net.deanishe.alfred.safari"]]
                       [:m [:!Ca :!Cx "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --eval '(emacs-everywhere)'"]]
-                      [:y :!Cc nil {:delayed {:invoked [:!CSOgrave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]
+                      [:y :!Cc nil {:delayed {:invoked [:!!grave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]
                       [:o :!CTOS0]
                       [:0 [:alf "pasteBack" "yqrashawn.com.ewe"]]
                       [:semicolon [:alf "localport" "in.fech.localport"]]
