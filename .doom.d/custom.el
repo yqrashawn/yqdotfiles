@@ -4,11 +4,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((elisp-lint-indent-specs
-        (vulpea-utils-with-file . 1)
-        (vulpea-utils-with-note . 1)
-        (org-with-point-at . 1)
-        (org-element-map . 2))
+    '((buffer-save-without-query . t)
+       (elisp-lint-indent-specs
+         (vulpea-utils-with-file . 1)
+         (vulpea-utils-with-note . 1)
+         (org-with-point-at . 1)
+         (org-element-map . 2))
        (cider-shadow-cljs-default-options . "fr")
        (cider-ns-refresh-after-fn . "integrant.repl/resume")
        (cider-ns-refresh-before-fn . "integrant.repl/suspend")

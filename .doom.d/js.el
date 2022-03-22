@@ -6,7 +6,12 @@
   (setq! jest-executable "yarn test")
   (after! evil-collection
     (pushnew! evil-collection-mode-list 'jest-mode))
-  (pushnew! evil-normal-state-modes 'jest-mode))
+  (pushnew! evil-normal-state-modes 'jest-mode)
+  :config
+  (defadvice! +jest--project-root (orig-fn)
+    :around #'jest--project-root
+    (interactive)
+    (doom-project-root)))
 
 (use-package! rjsx-mode
   :defer t
