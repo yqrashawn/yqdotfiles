@@ -207,6 +207,8 @@
     :g "k" #'windmove-up
     :g "l" #'windmove-right)
   (:map yq-s-map
+    :g "s" #'+ss
+    :g "S" #'+sS
     :g "u" #'magit-dispatch
     :g "j" #'recentf-open-files
     :g "h" #'save-buffer
@@ -324,6 +326,12 @@
     :v "(" #'lispyville-wrap-round
     :v "{" #'lispyville-wrap-braces
     :v "[" #'lispyville-wrap-brackets)
+  ;; (:after symex
+  ;;   (:map symex-editing-mode-map
+  ;;     :o "j" #'symex-go-forward
+  ;;     :o "k" #'symex-go-backward
+  ;;     :o "h" #'symex-go-up
+  ;;     :o "l" #'symex-go-down))
   (:after json-mode
     (:map json-mode-map
       :g "C-c C-j" #'jq-interactively))
@@ -404,7 +412,7 @@
       :gi "C-y" #'vterm-yank))
   (:after side-hustle
     (:map side-hustle-mode-map
-      :g "TAB" #' side-hustle-show-item
+      :g "TAB" #'side-hustle-show-item
       :g "q" #'side-hustle-toggle))
   (:after proced
     (:map proced-mode-map

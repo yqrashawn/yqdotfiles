@@ -88,7 +88,9 @@ Instead keep them, with a newline after each comment."
   (setq! semanticdb-find-default-throttle '(file local project omniscience recursive)))
 
 ;;; lispyville
-(after! lispyville
+(use-package! lispyville
+  :defer t
+  :init
   (setq!
    lispyville-motions-put-into-special t
    lispyville-key-theme '(c-w
@@ -106,6 +108,7 @@ Instead keep them, with a newline after each comment."
                           escape
                           mark-special
                           mark-toggle))
+  :config
   (lispyville-set-key-theme)
   (lispy-define-key lispy-mode-map "v" #'lispyville-toggle-mark-type)
   (lispy-define-key lispy-mode-map "m" #'lispy-view))
@@ -118,14 +121,67 @@ Instead keep them, with a newline after each comment."
          parinfer-rust-check-before-enable nil))
 
 (use-package! symex
-  :defer t
-  ;; :hook ((scheme-mode
-  ;;         arc-mode
-  ;;         clojure-mode
-  ;;         clojurescript-mode
-  ;;         lisp-mode) . symex-initialize)
+  :after lispy
+  :init
+  (setq! symex-modal-backend 'evil)
   :config
-  (global-set-key (kbd "s-;") 'symex-mode-interface))
+  (pushnew! symex-clojure-modes 'cider-repl-mode)
+  (pushnew!
+    symex-lisp-modes
+    'hy-mode
+    'cider-repl-mode
+    'fennel-mode
+    'ielm-mode
+    'lfe-mode
+    'dune-mode)
+  (setq! symex--user-evil-keyspec
+         '(("j" . symex-go-forward)
+           ("k" . symex-go-backward)
+           ("l" . symex-go-up)
+           ("h" . symex-go-down)
+           ("C-j" . symex-climb-branch)
+           ("C-k" . symex-descend-branch)
+           ("C-a" . symex-goto-first)
+           ("C-e" . symex-goto-last)
+           ("M-j" . symex-goto-highest)
+           ("M-k" . symex-goto-lowest)
+           (">" . symex-capture-forward)
+           ("<" . symex-capture-backward)))
+  ;; cursor color
+  (defadvice! +evil-update-cursor-color-h-symex ()
+    :after #'+evil-update-cursor-color-h
+    (put 'cursor 'evil-symex-color (face-background 'hi-green)))
+  (defun +evil-symex-cursor-fn ()
+    (evil-set-cursor-color (get 'cursor 'evil-symex-color)))
+  (setq! evil-symex-state-cursor '+evil-symex-cursor-fn)
+
+  ;; toggle lispy-mode
+  (add-hook! 'evil-symex-state-entry-hook
+    (defun +symex-mode-interface ()
+      (lispy-mode -1)
+      (lispyville-mode -1)))
+  (add-hook! 'evil-symex-state-exit-hook
+    (defun +symex-state-exit ()
+      (lispy-mode 1)))
+
+  (remove-hook! 'evil-symex-state-exit-hook #'symex-disable-editing-minor-mode)
+  (defadvice! +evil-force-normal-state (orig)
+    :around #'evil-force-normal-state
+    (unless (evil-symex-state-p)
+      (symex-mode-interface)))
+
+  (symex-initialize)
+
+  ;; disable default symex-mode-map
+  (undefine-key! symex-mode-map "(" ")" "[" "]" "<backspace>" "<DEL>" "\"")
+  (general-evil-define-key '(symex) '(symex-editing-mode-map) "s" 'yq-s-map)
+  (global-set-key (kbd "s-;") #'symex-mode-interface))
+
+;; (use-package! rigpa
+;;   :after (evil symex)
+;;   :config
+;;   (setq rigpa-mode t)
+;;   (remove-hook! 'evil-symex-state-exit-hook #'symex-disable-editing-minor-mode))
 
 (after! eval-sexp-fu
   (after! lispy

@@ -38,6 +38,7 @@
   (memq major-mode '(clojure-mode clojurec-mode clojurescript-mode)))
 
 (use-package! lispy
+  :defer t
   :diminish lispy " ʪ"
   :hook ((ielm-mode
           lisp-mode
@@ -57,19 +58,19 @@
   (defadvice! +lispy-eval (orig-fn &rest args)
     :around #'lispy-eval
     (if (+in-clj-p)
-        (if (and lispy-mode (lispy-left-p))
-            (save-excursion
-              (call-interactively 'lispy-different)
-              (call-interactively 'cider-eval-last-sexp))
+      (if (and lispy-mode (lispy-left-p))
+        (save-excursion
+          (call-interactively 'lispy-different)
           (call-interactively 'cider-eval-last-sexp))
+        (call-interactively 'cider-eval-last-sexp))
       (apply orig-fn args)))
 
   (defadvice! +lispy-eval-and-insert (func &rest args)
     :around #'lispy-eval-and-insert
     (if (+in-clj-p)
-        (progn
-          (setq current-prefix-arg '(1))
-          (call-interactively 'cider-pprint-eval-last-sexp))
+      (progn
+        (setq current-prefix-arg '(1))
+        (call-interactively 'cider-pprint-eval-last-sexp))
       (apply func args))))
 
 ;;; cider
