@@ -151,6 +151,7 @@ Instead keep them, with a newline after each comment."
   (defadvice! +evil-update-cursor-color-h-symex ()
     :after #'+evil-update-cursor-color-h
     (put 'cursor 'evil-symex-color (face-background 'hi-green)))
+  (put 'cursor 'evil-symex-color (face-background 'hi-green))
   (defun +evil-symex-cursor-fn ()
     (evil-set-cursor-color (get 'cursor 'evil-symex-color)))
   (setq! evil-symex-state-cursor '+evil-symex-cursor-fn)
@@ -167,7 +168,7 @@ Instead keep them, with a newline after each comment."
   (remove-hook! 'evil-symex-state-exit-hook #'symex-disable-editing-minor-mode)
   (defadvice! +evil-force-normal-state (orig)
     :around #'evil-force-normal-state
-    (unless (evil-symex-state-p)
+    (if (and (not (evil-symex-state-p)) lispy-mode)
       (symex-mode-interface)))
 
   (symex-initialize)
