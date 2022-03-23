@@ -1,5 +1,5 @@
 #!/bin/bash
-export LANG=zh_CN.UTF-8;
+export LANG=zh_CN.UTF-8
 SESSION='Default'
 
 tmux -2 new-session -d -s $SESSION
@@ -8,8 +8,8 @@ tmux -2 new-session -d -s $SESSION
 tmux rename-window 'misc'
 
 # Setup a portal window
-tmux new-window -t $SESSION:2 -n 'portal'
-tmux send-keys "cd ~/workspace/office/conflux-portal" C-m
+tmux new-window -t $SESSION:2 -n 'helios'
+tmux send-keys "cd ~/workspace/office/helios" C-m
 
 # Setup a HOME window
 tmux new-window -t $SESSION:3 -n 'HOME'
