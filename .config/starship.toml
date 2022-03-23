@@ -2,6 +2,80 @@
 # Don't print a new line at the start of the prompt
 add_newline = true
 
+format = """
+$username\
+$hostname\
+$localip\
+$shlvl\
+$singularity\
+$kubernetes\
+$directory\
+$vcsh\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$cmake\
+$cobol\
+$container\
+$dart\
+$deno\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$golang\
+$helm\
+$java\
+$julia\
+$kotlin\
+$lua\
+$nim\
+$nodejs\
+$ocaml\
+$perl\
+$php\
+$pulumi\
+$purescript\
+$python\
+$rlang\
+$red\
+$ruby\
+$rust\
+$scala\
+$swift\
+$terraform\
+$vlang\
+$vagrant\
+$zig\
+$nix_shell\
+$conda\
+$memory_usage\
+$aws\
+$gcloud\
+$openstack\
+$azure\
+$env_var\
+$crystal\
+$custom\
+$sudo\
+$cmd_duration\
+$fill\
+$battery\
+$time\
+$line_break\
+$jobs\
+$status\
+$shell\
+$character"""
+
+[fill]
+symbol = "⠁ "
+
 [character]      # The name of the module we are confguring is "character"
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
@@ -12,9 +86,16 @@ truncation_length = 0
 truncate_to_repo = true
 
 [[battery.display]]
-threshold=50
+threshold=90
 
 [status]
+format = '[\[$symbol $status $common_meaning$signal_name$maybe_int\]]($style) '
+symbol="✖ "
+disabled=false
+map_symbol=true
+pipestatus=true
+
+[sudo]
 disabled=false
 
 [localip]
@@ -44,8 +125,14 @@ behind="behind⇣"
 diverged="diverged⇕"
 up_to_date=""
 untracked="untracked?"
-stashed="stashed$"
-modified="modified!"
-staged="staged+"
 renamed="renamed»"
 deleted="deleted✘"
+
+[time]
+disabled=false
+
+[custom.babashka]
+files = ["bb.edn"]
+command = "bb version"
+# command = "bb version | sed 's/babashka //'"
+# symbol="babashka "

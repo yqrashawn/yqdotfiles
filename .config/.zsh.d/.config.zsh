@@ -23,8 +23,10 @@ function vterm_printf() {
   fi
 }
 
-autoload -U add-zsh-hook
-add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+  autoload -U add-zsh-hook
+  add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+fi
 
 function vterm_cmd() {
   local vterm_elisp

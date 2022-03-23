@@ -302,3 +302,8 @@ A prefix arg reverses this operation."
   (add-hook! 'dirvish-mode-hook '+dired-hide-details-mode-1))
 
 (setq! image-use-external-converter t)
+
+(use-package! vterm
+  :defer t
+  :init
+  (setq! vterm-buffer-name-string "*vterm %s*"))
