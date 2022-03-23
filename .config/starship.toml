@@ -5,11 +5,47 @@ add_newline = true
 [character]      # The name of the module we are confguring is "character"
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
-vicmd_symbol = "[❮](bold green)"
+vicmd_symbol = "[❮](bold blue)"
 
 [directory]
 truncation_length = 0
 truncate_to_repo = true
 
 [[battery.display]]
-threshold = 50
+threshold=50
+
+[status]
+disabled=false
+
+[localip]
+disabled=false
+
+[shell]
+disabled = true
+style = "bold"
+
+[nodejs]
+style="green"
+symbol=" "
+
+[java]
+symbol = " "
+
+[aws]
+symbol = "  "
+[gcloud]
+disabled=true
+symbol = "  "
+
+[git_status]
+conflicted="conflicted="
+ahead="ahead⇡"
+behind="behind⇣"
+diverged="diverged⇕"
+up_to_date=""
+untracked="untracked?"
+stashed="stashed$"
+modified="modified!"
+staged="staged+"
+renamed="renamed»"
+deleted="deleted✘"
