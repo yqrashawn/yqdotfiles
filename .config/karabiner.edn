@@ -76,6 +76,11 @@
                         :Keybase
                         [:return_or_enter :!Sreturn_or_enter]
                         [:!Creturn_or_enter :return_or_enter]]}
+             {:des   "Discord return"
+              :rules [:Discord
+                      [:return_or_enter :!Sreturn_or_enter]
+                      [:!Tm :!Sreturn_or_enter]
+                      [:!Creturn_or_enter :return_or_enter]]}
              {:des   "mouse motion to scroll"
               :rules [{:type       :mouse_motion_to_scroll
                        :from       {:modifiers {:optional [:any]}}
@@ -734,6 +739,7 @@
                       :Alfred                        ["^com\\.runningwithcrayons\\.Alfred$"]
                       :Todoist                       ["^com\\.todoist\\.mac\\.Todoist$"]
                       :Keybase                       ["^keybase\\.Electron$"]
+                      :Discord                       ["^com\\.hnc\\.Discord$"]
                       :slidepad                      ["^com\\.slidepad\\.slidepad"]
                       :Browsers                      ["^org\\.mozilla\\.firefox$"
                                                       "^org\\.mozilla\\.firefoxdeveloperedition$"
