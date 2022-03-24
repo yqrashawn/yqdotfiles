@@ -19,6 +19,7 @@
              :hsl        "/usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
              :togg       "/usr/local/bin/hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
+             :yfocus "sh ~/.config/yabai/focus-window %s"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              :jump       "/usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
@@ -300,6 +301,7 @@
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       ;; [:k :same_wind_app :Emacs]
                       [:k [:hsl "/Applications/Emacs.app"]]
+                      ;; [:k [:yfocus "Emacs"]]
                       [:u [:togg "Newsblur"]]
                       ;; [:k [:opena "kitty"]]
                       ;; [:k [:opena "WezTerm.app"]]
@@ -312,7 +314,7 @@
                       [:comma :same_wind_app :Chromes]
                       ;; [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
                       [:l [:togg "Firefox Developer Edition"] :!Firefoxes]
-                      ;; [:l :same_wind_app :Firefoxes]
+                      [:l :same_wind_app :Firefoxes]
                       ;; [:l [:jump "Firefox Developer Edition" "Firefox Developer Edition"]]
                       [:n [:togg "Notion"]]
                       ;; [:n [:togg "Google Chrome Canary"]]
