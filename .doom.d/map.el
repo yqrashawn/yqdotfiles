@@ -315,6 +315,7 @@
       :n "tw" #'lispy-move-up
       :n "tJ" #'lispy-join
       :n "t/" #'lispy-splice
+      :n "tj" #'symex-evaluate
       :n "ts" #'lispy-split
       :n "tC" #'lispy-convolute
       :n "txb" #'lispy-bind-variable

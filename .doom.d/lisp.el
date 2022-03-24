@@ -1,5 +1,6 @@
 ;;; lisp.el -*- lexical-binding: t; -*-
 
+;;; lispy
 (el-patch-feature lispy)
 (after! lispy
   (setq! lispy-close-quotes-at-end-p nil
@@ -113,6 +114,7 @@ Instead keep them, with a newline after each comment."
   (lispy-define-key lispy-mode-map "v" #'lispyville-toggle-mark-type)
   (lispy-define-key lispy-mode-map "m" #'lispy-view))
 
+;;; parinfer
 (use-package! parinfer-rust-mode
   :defer t
   ;; :hook (emacs-lisp-mode clojure-mode clojurescript-mode)
@@ -120,33 +122,32 @@ Instead keep them, with a newline after each comment."
   (setq! parinfer-rust-preferred-mode "paren"
          parinfer-rust-check-before-enable nil))
 
+;;; symex
 (use-package! symex
   :after lispy
   :init
   (setq! symex-modal-backend 'evil)
   :config
-  (pushnew! symex-clojure-modes 'cider-repl-mode)
-  (pushnew!
-    symex-lisp-modes
-    'hy-mode
-    'cider-repl-mode
-    'fennel-mode
-    'ielm-mode
-    'lfe-mode
-    'dune-mode)
+  (setq! symex-lisp-modes +lispy-modes)
   (setq! symex--user-evil-keyspec
-         '(("j" . symex-go-forward)
-           ("k" . symex-go-backward)
-           ("l" . symex-go-up)
-           ("h" . symex-go-down)
-           ("C-j" . symex-climb-branch)
-           ("C-k" . symex-descend-branch)
-           ("C-a" . symex-goto-first)
-           ("C-e" . symex-goto-last)
-           ("M-j" . symex-goto-highest)
-           ("M-k" . symex-goto-lowest)
-           (">" . symex-capture-forward)
-           ("<" . symex-capture-backward)))
+    '(("j" . symex-go-forward)
+       ("k" . symex-go-backward)
+       ("l" . symex-go-up)
+       ("h" . symex-go-down)
+       ("C-j" . symex-climb-branch)
+       ("C-k" . symex-descend-branch)
+       ("C-a" . symex-goto-first)
+       ("C-e" . symex-goto-last)
+       ("M-j" . symex-goto-highest)
+       ("M-k" . symex-goto-lowest)
+       (">" . symex-capture-forward)
+       ("<" . symex-capture-backward)
+       ("[" . symex-soar-backward)
+       ("]" . symex-soar-forward)
+       ("{" . symex-create-square)
+       ("}" . symex-wrap-square)
+       ("M-[" . symex-leap-backward)
+       ("M-]" . symex-leap-forward)))
   ;; cursor color
   (defadvice! +evil-update-cursor-color-h-symex ()
     :after #'+evil-update-cursor-color-h
@@ -176,14 +177,19 @@ Instead keep them, with a newline after each comment."
   ;; disable default symex-mode-map
   (undefine-key! symex-mode-map "(" ")" "[" "]" "<backspace>" "<DEL>" "\"")
   (general-evil-define-key '(symex) '(symex-editing-mode-map) "s" 'yq-s-map)
-  (global-set-key (kbd "s-;") #'symex-mode-interface))
+  (global-set-key (kbd "s-;") #'symex-mode-interface)
 
-;; (use-package! rigpa
-;;   :after (evil symex)
-;;   :config
-;;   (setq rigpa-mode t)
-;;   (remove-hook! 'evil-symex-state-exit-hook #'symex-disable-editing-minor-mode))
+  (defadvice! +symex-evaluate (orig-fn count)
+    "evaluate at right paren"
+    :around #'symex-evaluate
+    (interactive "p")
+    (if (eq (char-after) 41)
+        (save-excursion
+          (evil-jump-item)
+          (call-interactively orig-fn count))
+      (call-interactively orig-fn count))))
 
+;;; eval-sexp-fu
 (after! eval-sexp-fu
   (after! lispy
     (define-eval-sexp-fu-flash-command special-lispy-eval
@@ -207,3 +213,15 @@ Instead keep them, with a newline after each comment."
                               (save-excursion
                                 (backward-sexp)
                                 (bounds-of-thing-at-point 'sexp))))))))
+
+;;; tweak
+(after! hideshow
+  (defadvice! +hs-hide-level (orig-fn arg)
+    "hs-hide-level when cursor at left paren in lispy-modes"
+    :around #'hs-hide-level
+    (interactive "p")
+    (if (and (+lispy-modes-p) (eq (char-after) 40))
+      (save-excursion
+        (backward-char)
+        (call-interactively orig-fn arg))
+      (call-interactively orig-fn arg))))

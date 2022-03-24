@@ -1,6 +1,5 @@
 ;;; lang/clojure.el -*- lexical-binding: t; -*-
 
-
 (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
 (add-to-list 'magic-mode-alist '("^#![^\n]*/\\(clj\\|clojure\\|bb\\|lumo\\)" . clojure-mode))
@@ -40,19 +39,8 @@
 (use-package! lispy
   :defer t
   :diminish lispy " ʪ"
-  :hook ((ielm-mode
-          lisp-mode
-          clojure-mode
-          clojurec-mode
-          scheme-mode
-          racket-mode
-          hy-mode
-          lfe-mode
-          dune-mode
-          fennel-mode
-          emacs-lisp-mode
-          cider-repl-mode
-          clojurescript-mode) . lispy-mode)
+  :init
+  (add-hook! +lispy-modes #'lispy-mode)
   :config
   ;; make lispy-eval works in babashka repl
   (defadvice! +lispy-eval (orig-fn &rest args)
@@ -76,8 +64,11 @@
 ;;; cider
 (after! cider
   ;; (setq! cider-preferred-build-tool 'clojure-cli)
-  (setq! cider-default-cljs-repl 'shadow)
-  (setq! cider-auto-jump-to-error nil)
+  (setq!
+    cider-default-cljs-repl 'shadow
+    cider-auto-jump-to-error nil
+    ;; cider-print-fn 'fipp
+    cider-print-fn 'puget)
 
   (defadvice cider-find-var (before add-evil-jump activate)
     (evil-set-jump))

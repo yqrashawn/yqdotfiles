@@ -712,3 +712,7 @@ _b_ranch _j_next _k_prev _h_up
   (interactive)
   (when 'symex-editing-mode
     (call-interactively #'symex-change-delimiter)))
+
+;;;###autoload
+(defun +lispy-modes-p ()
+  (memq major-mode +lispy-modes))
