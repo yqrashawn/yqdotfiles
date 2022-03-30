@@ -68,7 +68,9 @@
       (consult-lsp--diagnostics--transformer file diag)))
   (setq! consult-lsp-diagnostics-transformer-function '+consult-lsp--diagnostics--transformer))
 (after! lsp-ui
-  (setq! lsp-ui-doc-show-with-cursor nil
+  (setq!
+    lsp-ui-doc-show-with-cursor nil
+    lsp-ui-imenu-auto-refresh t
     lsp-ui-doc-header t
     lsp-ui-doc-include-signature t))
 

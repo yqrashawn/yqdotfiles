@@ -285,21 +285,21 @@ A prefix arg reverses this operation."
                (funcall help-fns--autoloaded-p sym))
         (apply fn args)))
 
-(use-package! dirvish
-  :after dired
-  :init
-  (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish"))
-  (defun +dired-hide-details-mode-1 ()
-    (dired-hide-details-mode -1))
-  (defun enable-dirvish-override-dired-mode ()
-    (require 'dirvish)
-    (unless dirvish-override-dired-mode
-      (dirvish-override-dired-mode 1)
-      (call-interactively 'dired-jump)))
-  (add-hook! 'dired-mode-hook 'enable-dirvish-override-dired-mode)
-  :config
-  (setq dirvish-mode-hook '())
-  (add-hook! 'dirvish-mode-hook '+dired-hide-details-mode-1))
+;; (use-package! dirvish
+;;   :after dired
+;;   :init
+;;   (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish"))
+;;   (defun +dired-hide-details-mode-1 ()
+;;     (dired-hide-details-mode -1))
+;;   (defun enable-dirvish-override-dired-mode ()
+;;     (require 'dirvish)
+;;     (unless dirvish-override-dired-mode
+;;       (dirvish-override-dired-mode 1)
+;;       (call-interactively 'dired-jump)))
+;;   (add-hook! 'dired-mode-hook 'enable-dirvish-override-dired-mode)
+;;   :config
+;;   (setq dirvish-mode-hook '())
+;;   (add-hook! 'dirvish-mode-hook '+dired-hide-details-mode-1))
 
 (setq! image-use-external-converter t)
 

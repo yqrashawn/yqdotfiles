@@ -221,3 +221,4 @@ local/bin/rust-analyzer
 /.stack/
 /.config/carp/
 /.bun/
+/.datomic/
