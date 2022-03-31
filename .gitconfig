@@ -49,6 +49,7 @@
 [color]
 	ui = true
 [alias]
+    dft = difftool
 	fetch = git fetch --tags
 	branches = !legit branches
 	publish = !legit publish
@@ -76,3 +77,14 @@
 	proxy = http://127.0.0.1:6152
 [include]
 	path = ~/.gitconfig.local
+
+[diff]
+  tool = difftastic
+[difftool]
+  prompt = false
+[difftool "difftastic"]
+  cmd = difft "$LOCAL" "$REMOTE"
+
+# Use a pager for large output, just like other git commands.
+[pager]
+  difftool = true

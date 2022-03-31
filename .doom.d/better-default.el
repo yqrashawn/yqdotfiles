@@ -309,6 +309,7 @@ A prefix arg reverses this operation."
   (setq! vterm-buffer-name-string "*vterm %s*"))
 
 (use-package! textsize
-  :hook (doom-first-file . textsize-mode)
+  :defer t
+  ;; :hook (doom-first-file . textsize-mode)
   :init
   (setq! textsize-default-points 18))
