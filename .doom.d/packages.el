@@ -247,3 +247,4 @@
            :repo "carp-lang/carp-emacs"
            :files ("inf-carp-mode.el")))
 (package! parseclj :recipe (:host github :repo "clojure-emacs/parseclj" :branch "main"))
+(package! textsize)
