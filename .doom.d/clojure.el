@@ -9,7 +9,6 @@
 
 ;;; clojure-mode
 (after! clojure-mode
-  (set-company-backend! 'js2-mode 'company-capf)
   (setq! clojure-toplevel-inside-comment-form t
          clojure-verify-major-mode nil
          clojure-align-reader-conditionals t
