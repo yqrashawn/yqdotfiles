@@ -70,7 +70,7 @@
     :desc "Find file" "fj" #'dired-jump
     :desc "Open junk file" "fJ" #'yq/open-junk-file
     :desc "Indent" "j=" #'yq/indent-region-or-buffer
-    :desc "Tab buffer" "TAB" (cmd! () (switch-to-nth-buffer 1))
+    ;; :desc "Tab buffer" "TAB" (cmd! () (switch-to-nth-buffer 1))
     ;; :desc "Tramp" "fT" #'counsel-tramp
     :desc "Git stage hunk" "gg" #'git-gutter:stage-hunk
     :desc "Magit status" "gs" #'magit-status
@@ -108,7 +108,7 @@
       :desc "Resume vertico" "l" #'vertico-repeat)
     (:prefix-map ("fe" . "Edit srcs")
       :desc "Find library" "l" #'find-library
-      :desc "Edit .doom.d config" "d" (cmd! (find-file-existing "~/.doom.d/config.el"))
+      :desc "Edit .doom.d config" "d" #'+open-emacs-config
       :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
       :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                                (call-interactively #'+default/search-project)))
@@ -209,6 +209,7 @@
   (:map yq-s-map
     :g "s" #'+ss
     :g "S" #'+sS
+    :g "p" #'projectile-switch-project
     :g "u" #'magit-dispatch
     :g "j" #'recentf-open-files
     :g "h" #'save-buffer

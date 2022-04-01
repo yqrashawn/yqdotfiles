@@ -31,12 +31,19 @@
 
 (after! projectile
   (setq! projectile-verbose t
-         projectile-enable-idle-timer t
-         projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
-         projectile-idle-timer-seconds 180)
+    projectile-enable-idle-timer t
+    projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
+    projectile-idle-timer-seconds 180)
   (pushnew! projectile-globally-ignored-directories "node_modules" ".shadow-cljs" ".lsp" ".storybook")
   (pushnew! projectile-project-root-files ".tabnine_root" "yarn.lock" ".yarnrc" ".eslintcache" ".node-version")
-  (pushnew! projectile-globally-ignored-file-suffixes ".min.js" ".min.css" ".map"))
+  (pushnew! projectile-globally-ignored-file-suffixes ".min.js" ".min.css" ".map")
+  (defadvice! +projectile-keep-project-p (orig-fn project)
+    :around #'projectile-keep-project-p
+    (cond
+     ((file-remote-p project nil t) (file-readable-p project))
+     ;; ((file-remote-p project))
+     ((not (file-remote-p project)) (file-readable-p project)))))
+
 (after! dired
   (setq! dired-recursive-deletes 'always
          dired-kill-when-opening-new-dired-buffer t))
