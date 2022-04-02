@@ -4,15 +4,22 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((eval let
-        ((tools-file
-           (concat
-             (car
-               (dir-locals-find-file "."))
-             "scripts/tools.el")))
-        (when
-          (file-exists-p tools-file)
-          (load-file tools-file)))
+    '((cider-default-cljs-repl . shadow)
+       (cider-shadow-cljs-default-options . "fr")
+       (eval let
+         ((tools-file
+            (concat
+              (car
+                (dir-locals-find-file "."))
+              "scripts/tools.el")))
+         (when
+           (file-exists-p tools-file)
+           (load-file tools-file)))
+       (eval load-file
+         (concat
+           (car
+             (dir-locals-find-file "."))
+           "scripts/tools.el"))
        (eval add-hook 'find-file-hook '+jest-setup-integration-test nil t)
        (eval defun +jest-setup-integration-test nil
          (if

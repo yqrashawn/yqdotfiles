@@ -8,7 +8,8 @@
   'company-dabbrev-code
   'company-dabbrev)
 
-(set-company-backend! 'prog-mode
+(set-company-backend! '(prog-mode js2-mode rjsx-mode typescript-mode conf-mode)
+  'company-tabnine
   'company-capf
   'company-files
   'company-yasnippet
@@ -18,24 +19,6 @@
 
 (set-company-backend! 'text-mode
   '(:separate company-dabbrev company-yasnippet company-files company-ispell))
-
-;; (use-package! company-tabnine-capf
-;;   :defer t
-;;   :init
-;;   (after! js2-mode
-;;     (set-company-backend! 'js2-mode 'company-tabnine-capf))
-;;   (after! rjsx-mode
-;;     (set-company-backend! 'rjsx-mode 'company-tabnine-capf))
-;;   (after! typescript-mode
-;;     (set-company-backend! 'typescript-mode 'company-tabnine-capf))
-;;   (after! conf-mode
-;;     (set-company-backend! 'conf-mode
-;;       'company-tabnine-capf
-;;       'company-files
-;;       'company-yasnippet
-;;       'company-keywords
-;;       'company-dabbrev-code
-;;       'company-dabbrev)))
 
 (use-package! company-flx
   :defer t
@@ -82,17 +65,7 @@
     company-tabnine-no-continue nil
     ;; company-tabnine-context-radius 6000
     ;; company-tabnine-context-radius-after 6000
-    company-tabnine-log-file-path "~/Downloads/tabnine.log")
-  (set-company-backend! 'js2-mode 'company-tabnine)
-  (set-company-backend! 'rjsx-mode 'company-tabnine)
-  (set-company-backend! 'typescript-mode 'company-tabnine)
-  (set-company-backend! 'conf-mode
-    'company-tabnine
-    'company-files
-    'company-yasnippet
-    'company-keywords
-    'company-dabbrev-code
-    'company-dabbrev))
+    company-tabnine-log-file-path "~/Downloads/tabnine.log"))
 
 (use-package! company-ctags :defer t)
 
