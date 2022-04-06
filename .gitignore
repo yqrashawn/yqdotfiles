@@ -222,3 +222,4 @@ local/bin/rust-analyzer
 /.config/carp/
 /.bun/
 /.datomic/
+/.swiftpm/

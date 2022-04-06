@@ -4,7 +4,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((cider-default-cljs-repl . shadow)
+    '((cider-shadow-cljs-default-options . "app")
+       (checkdoc-package-keywords-flag)
+       (buffer-save-without-query . t)
+       (cider-default-cljs-repl . shadow)
        (cider-shadow-cljs-default-options . "fr")
        (eval let
          ((tools-file
