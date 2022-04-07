@@ -17,6 +17,7 @@
       doom-localleader-alt-key "M-SPC ,")
 
 (map!
+  :gn "C-." #'+eshell/toggle
   :g "C-;" #'embark-act
   :g "C-c" nil
   :g "C-c C-c" #'eval-defun

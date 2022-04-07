@@ -45,9 +45,11 @@
                                       (> (nth 2 ti) 900000))
                               (funcall orig-fn)))))))
 
-(add-hook! 'doom-first-input-hook
-           (cmd! (if (boundp 'pixel-scroll-precision-mode)
-                     (pixel-scroll-precision-mode t))))
+(defun maybe-enable-pixel-scroll-precision-mode ()
+  (if (boundp 'pixel-scroll-precision-mode)
+                     (pixel-scroll-precision-mode t)))
+
+(add-hook! 'doom-first-input-hook 'maybe-enable-pixel-scroll-precision-mode)
 
 
 (after! js2-mode

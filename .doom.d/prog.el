@@ -132,3 +132,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (if (s-ends-with? ".zsh" buffer-file-name)
       '(nil nil)
       (funcall orig-fn))))
+
+(use-package! eshell-follow
+  :after eshell
+  :after-call eshell-follow-global-mode
+  :config
+  (eshell-follow-global-mode t))

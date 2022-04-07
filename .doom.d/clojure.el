@@ -9,6 +9,7 @@
 
 ;;; clojure-mode
 (after! clojure-mode
+  (setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
   (setq! clojure-toplevel-inside-comment-form t
          clojure-verify-major-mode nil
          clojure-align-reader-conditionals t
