@@ -2,11 +2,11 @@
 
 ############## BAR ##############
 sketchybar -m --bar height=25 \
-  blur_radius=50 \
+  blur_radius=0 \
   position=top \
   padding_left=10 \
   padding_right=10 \
-  color=0x44000000
+  color=0xff8a8a8a
 
 ############## GLOBAL DEFAULTS ##############
 sketchybar -m --default updates=when_shown \
@@ -178,55 +178,47 @@ sketchybar -m \
 # graph.color=0xff48aa2a
 
 # Stats
-sketchybar -m --query default_menu_items | grep 'Stats;'
-if (($? == 0)); then
-  sketchybar -m --add alias Stats,'CPU_Line chart' right \
-    --set Stats,'CPU_Line chart' \
-    associated_space=1 \
-    update_freq=5 \
-    icon.padding_left=-2 \
-    label.padding_right=-10
-
-  sketchybar -m --add alias Stats,'RAM_Line chart' right \
-    --set Stats,'RAM_Line chart' \
-    associated_space=1 \
-    update_freq=5 \
-    icon.padding_left=-2 \
-    label.padding_right=0
-fi
-
-# iStat Menus Status
-sketchybar -m --query default_menu_items | grep 'iStat Menus Status'
-if (($? == 0)); then
-  sketchybar -m --add alias 'iStat Menus Status',com.bjango.istatmenus.cpu right \
-    --set 'iStat Menus Status',com.bjango.istatmenus.cpu \
-    associated_space=1 \
-    update_freq=5 \
-    icon.padding_left=0 \
-    label.padding_right=-5
-
-  sketchybar -m --add alias 'iStat Menus Status',com.bjango.istatmenus.memory right \
-    --set 'iStat Menus Status',com.bjango.istatmenus.memory \
-    associated_space=1 \
-    update_freq=5 \
-    icon.padding_left=0 \
-    label.padding_right=-5
-fi
-sketchybar -m --query default_menu_items | grep 'xbar'
-if (($? == 0)); then
-  sketchybar -m --add alias xbar,Item-0 right \
-    --set xbar,Item-0 \
-    associated_space=1 \
-    update_freq=120 \
-    icon.padding_left=0 \
-    label.padding_right=-5
-  sketchybar -m --add alias xbar,Item-1 right \
-    --set xbar,Item-1 \
-    associated_space=1 \
-    update_freq=120 \
-    icon.padding_left=0 \
-    label.padding_right=-5
-fi
+sketchybar -m --add alias Stats,'CPU_Line chart' right \
+  --set Stats,'CPU_Line chart' \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=-2 \
+  label.padding_right=-10 \
+  \
+  --add alias Stats,'RAM_Line chart' right \
+  --set Stats,'RAM_Line chart' \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=-2 \
+  label.padding_right=0 \
+  \
+  --add alias 'iStat Menus Status',com.bjango.istatmenus.cpu right \
+  --set 'iStat Menus Status',com.bjango.istatmenus.cpu \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=0 \
+  label.padding_right=-5 \
+  \
+  --add alias 'iStat Menus Status',com.bjango.istatmenus.memory right \
+  --set 'iStat Menus Status',com.bjango.istatmenus.memory \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=0 \
+  label.padding_right=-5 \
+  \
+  --add alias xbar,Item-0 right \
+  --set xbar,Item-0 \
+  associated_space=1 \
+  update_freq=120 \
+  icon.padding_left=0 \
+  label.padding_right=-5 \
+  \
+  --add alias xbar,Item-1 right \
+  --set xbar,Item-1 \
+  associated_space=1 \
+  update_freq=120 \
+  icon.padding_left=0 \
+  label.padding_right=-5
 
 ###################### CENTER ITEMS ###################
 
@@ -246,3 +238,5 @@ echo "sketchybar configuration loaded.."
 
 # brew install --cask stats
 #       
+
+# sketchybar --add event theme_change AppleInterfaceThemeChangedNotification
