@@ -78,7 +78,8 @@
                  t))
              (insert "// eslint-disable-next-line no-unused-vars\12import {expect, describe, test, it, jest, afterAll, afterEach, beforeAll, beforeEach} from '@jest/globals' // prettier-ignore\12")
              (insert "// eslint-disable-next-line no-unused-vars\12import waitForExpect from 'wait-for-expect'\12"))))
-       (projectile-project-root . "~/.doom.d/"))))
+       (projectile-project-root . "~/.doom.d/")))
+ '(warning-suppress-types '((before-save-hook))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
