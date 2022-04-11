@@ -88,7 +88,7 @@ fi
 /usr/local/bin/yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
 /usr/local/bin/yabai -m rule --add app="^iStat Menus Status$" manage=off border=off mouse_follows_focus=off sticky=off
 /usr/local/bin/yabai -m rule --add app="CopyQ$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
-/usr/local/bin/yabai -m rule --add app="Todoist$" title="^Todoist$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
+# /usr/local/bin/yabai -m rule --add app="Todoist$" title="^Todoist$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
 # /usr/local/bin/yabai -m rule --add app="^Alacritty$" manage=off border=off grid='10:10:0:0:5:10'
 /usr/local/bin/yabai -m rule --add app="^Emacs$" title="^(Emacs Everywhere|edit - )" layer=above manage=off sticky=on
 /usr/local/bin/yabai -m rule --add app="^Firefox" title="^Extension: " layer=above manage=off sticky=on
