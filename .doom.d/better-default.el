@@ -313,3 +313,6 @@ A prefix arg reverses this operation."
   ;; :hook (doom-first-file . textsize-mode)
   :init
   (setq! textsize-default-points 18))
+
+(after! dired
+  (setq! dired-listing-switches "--all --human-readable -l --sort=time -v --group-directories-first"))
