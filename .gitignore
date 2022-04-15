@@ -223,3 +223,5 @@ local/bin/rust-analyzer
 /.bun/
 /.datomic/
 /.swiftpm/
+/.config/git/
+/.config/bat/

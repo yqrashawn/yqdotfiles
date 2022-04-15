@@ -11,6 +11,9 @@
 	show = delta
 [merge]
 	tool = ediff
+[mergetool "ediff"]
+	cmd = ~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
+	trustExitCode = true
 [interactive]
 	diffFilter = delta --color-only
 [delta]
@@ -29,9 +32,6 @@
 	line-numbers-right-style = cyan
 	line-numbers-minus-style = 124
 	line-numbers-plus-style = 28
-[mergetool "ediff"]
-	cmd = ~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
-	trustExitCode = true
 [github]
 	user = yqrashawn
 [color "diff-highlight"]
