@@ -225,3 +225,5 @@ local/bin/rust-analyzer
 /.swiftpm/
 /.config/git/
 /.config/bat/
+/.foundry/
+/.svm/

@@ -100,6 +100,7 @@
     ffmpeg
     pandoc
     cmake
+    goku
 
     # langs
     yarn
