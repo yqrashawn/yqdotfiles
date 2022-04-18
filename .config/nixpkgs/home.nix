@@ -1,11 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
-  home.username = "yqrashawn";
-  home.homeDirectory = "/Users/yqrashawn";
-
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
@@ -18,122 +13,6 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  home.packages = with pkgs; [
-    # clojure
-    clojure
-    clojure-lsp
-    ispell
-    isync
-    babashka
-    clj-kondo
-    joker
-    leiningen
-    obb
-    # nbb
-
-    # tools
-    notmuch
-    tmux
-    zsh
-    bash
-    git
-    neovim
-    mu
-    macvim
-    bitwarden-cli
-    # firefox
-    # firefox-devedition-bin
-    sqlite
-    yabai
-    sketchybar
-
-    # cli tools
-    ripgrep
-    htop
-    hub
-    mcfly
-    fnm
-    shellcheck
-    proselint
-    trash-cli
-    delta
-    duf # du
-    jq
-    fd
-    # httpie # failed to build
-    tldr
-    procs # ps
-    bottom # btm htop
-    thefuck
-    curlie # httpie
-    glances # htop
-    xh # httpie
-    shfmt
-    hunspell
-    enchant # ispell
-    w3m
-    starship
-    broot # ranger
-    direnv
-    exa
-    fasd
-    fzf
-    coreutils-full
-    pngquant
-    rbenv
-    jless # json viewer
-    gnupg
-    zoxide # fasd
-    lazygit
-    watchexec
-    wget
-    curl
-    # grip # markdown preview, failed to build
-    multimarkdown
-    brotli
-    automake
-    autoconf
-    bat
-    gnutls
-    openssl
-    ffmpeg
-    pandoc
-    cmake
-    goku
-
-    # langs
-    yarn
-    lua
-    deno
-    fennel
-    lua
-    luarocks
-    # zig # marked broken
-    go
-    plantuml
-    rustup
-
-    # entertainment
-    youtube-dl
-    yt-dlp
-    streamlink
-    mpv
-    you-get
-
-    # lib
-    # libgccjit
-    rlwrap
-    readline
-    llvm
-    texinfo
-    pkg-config
-    pcre
-
-    # not available
-    # du
-    # percol
-  ];
 
   programs.emacs = {
     enable = true;
@@ -316,5 +195,9 @@
       theme = "GitHub";
       italic-text = "always";
     };
+  };
+
+  programs.direnv = {
+    enable = true;
   };
 }
