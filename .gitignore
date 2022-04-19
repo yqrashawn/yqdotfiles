@@ -228,3 +228,4 @@ local/bin/rust-analyzer
 /.foundry/
 /.svm/
 /.config/tmux/
+/.local.zsh

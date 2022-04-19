@@ -1,4 +1,5 @@
-#!/usr/local/bin/bb
+#!/run/current-system/sw/bin/bb
+
 (ns dark-light-mode-change
   (:require
    [babashka.tasks :refer [shell]]
@@ -30,10 +31,16 @@
                                   (yml-comment cur-theme)))]
     (spit conf-file conf)))
 
+(def mcfly-lines {:dark  "unset MCFLY_LIGHT"
+                  :light "export MCFLY_LIGHT=TRUE"})
+
 (defn mcfly []
-  (if (= theme :dark)
-    (sh "export" "MCFLY_LIGHT=FALSE")
-    (sh "export" "MCFLY_LIGHT=TRUE")))
+  (let [conf-file (fs/file (fs/expand-home "~/.local.zsh"))
+        conf      (slurp conf-file)
+        cur       (get mcfly-lines (if (= theme :dark) :light :dark))
+        next      (get mcfly-lines theme)
+        conf      (-> conf (s/replace (re-pattern cur) next))]
+    (spit conf-file conf)))
 
 (defn emacs []
   (if (= theme :dark)
@@ -42,7 +49,7 @@
 
 (alacritty)
 (emacs)
-;; (mcfly)
+(mcfly)
 
 (comment
   (shell "launchctl load -w" (fs/expand-home "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))

@@ -418,3 +418,4 @@ set -g @continuum-restore 'on'
 # # /!\ do not remove the previous line
 
 set -g prefix C-q
+set -g prefix2 C-q
