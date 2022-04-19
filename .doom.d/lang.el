@@ -53,14 +53,19 @@
             (pushnew! company-backends 'company-capf)))))))
 
 (after! lsp-mode
+  (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+                    :major-modes '(nix-mode)
+                    :server-id 'nix))
   (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t)
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (when (featurep! :completion company)
     )
   (setq!
-;; lsp-imenu-sort-methods '(position)
-;; lsp-eldoc-enable-hover nil
-;; lsp-disabled-clients '(javascript-typescript-langserver)
+    ;; lsp-imenu-sort-methods '(position)
+    ;; lsp-eldoc-enable-hover nil
+    ;; lsp-disabled-clients '(javascript-typescript-langserver)
     lsp-enable-file-watchers nil
     lsp-file-watch-threshold 200
     lsp-bash-highlight-parsing-errors t

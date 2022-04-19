@@ -141,6 +141,8 @@ in
     pandoc
     cmake
     goku
+    nixfmt
+    rnix-lsp
 
     # langs
     yarn
