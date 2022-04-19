@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 
+let
+    username = builtins.getEnv "USER";
+    homeDir = "/Users/${username}";
+in
 {
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -10,6 +14,8 @@
   # the Home Manager release notes for a list of state version
   # changes in each release.
   home.stateVersion = "22.05";
+
+  home.packages = with pkgs; [];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -199,5 +205,18 @@
 
   programs.direnv = {
     enable = true;
+  };
+
+  programs.tmux = {
+    enable = true;
+    extraConfig = builtins.readFile "${homeDir}/.tmux.conf";
+  };
+
+  programs.fzf = {
+    enable = true;
+    defaultCommand = "fd --type f --hidden --follow --exclude .git";
+    changeDirWidgetCommand = "fd --type f --hidden --follow --exclude .git";
+    changeDirWidgetOptions = [ "--preview '${pkgs.tree}/bin/tree -C {} | head -200'" ];
+    historyWidgetOptions = [];
   };
 }

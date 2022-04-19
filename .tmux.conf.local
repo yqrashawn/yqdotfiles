@@ -43,7 +43,7 @@ tmux_conf_new_session_prompt=false
 # RGB 24-bit colour support (tmux >= 2.2), possible values are:
 #  - true
 #  - false (default)
-tmux_conf_24b_colour=true
+tmux_conf_24b_colour=false
 
 # default theme
 tmux_conf_theme_colour_1="#080808"    # dark gray
@@ -90,7 +90,7 @@ tmux_conf_theme_window_bg="default"
 # highlight focused pane (tmux >= 2.1), possible values are:
 #   - true
 #   - false (default)
-tmux_conf_theme_highlight_focused_pane=true
+tmux_conf_theme_highlight_focused_pane=false
 
 # focused pane colours:
 tmux_conf_theme_focused_pane_bg="$tmux_conf_theme_colour_2"
@@ -138,7 +138,7 @@ tmux_conf_theme_status_attr="none"
 #     - #{hostname_full_ssh}
 #     - #{username}
 #     - #{username_ssh}
-tmux_conf_theme_terminal_title="#h ❐ #S ● #I #W"
+tmux_conf_theme_terminal_title="#I ● #W #{pane_current_path}"
 
 # window status style
 #   - built-in variables are:
@@ -385,7 +385,7 @@ tmux_conf_uninstall_plugins_on_reload=true
 # visit https://github.com/tmux-plugins for available plugins
 set -g @plugin 'tmux-plugins/tmux-copycat'
 set -g @plugin 'tmux-plugins/tmux-cpu'
-#set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @continuum-restore 'on'
 
@@ -418,4 +418,3 @@ set -g @continuum-restore 'on'
 # # /!\ do not remove the previous line
 
 set -g prefix C-q
-set -g set-titles-string "#S / #W"

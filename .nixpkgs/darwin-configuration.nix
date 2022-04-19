@@ -92,6 +92,7 @@ in
     proselint
     trash-cli
     delta
+    du-dust
     duf # du
     jq
     fd
@@ -129,6 +130,11 @@ in
     automake
     autoconf
     bat
+    bat-extras.batdiff
+    bat-extras.batgrep
+    bat-extras.batman
+    bat-extras.batwatch
+    bat-extras.prettybat
     gnutls
     openssl
     ffmpeg

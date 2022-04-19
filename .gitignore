@@ -227,3 +227,4 @@ local/bin/rust-analyzer
 /.config/bat/
 /.foundry/
 /.svm/
+/.config/tmux/
