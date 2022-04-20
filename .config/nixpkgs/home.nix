@@ -1,10 +1,9 @@
 { config, pkgs, ... }:
 
 let
-    username = builtins.getEnv "USER";
-    homeDir = "/Users/${username}";
-in
-{
+  username = builtins.getEnv "USER";
+  homeDir = "/Users/${username}";
+in {
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
@@ -15,14 +14,12 @@ in
   # changes in each release.
   home.stateVersion = "22.05";
 
-  home.packages = with pkgs; [];
+  home.packages = with pkgs; [ ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.emacs = {
-    enable = true;
-  };
+  programs.emacs = { enable = true; };
 
   programs.git = {
     enable = true;
@@ -30,6 +27,9 @@ in
     userEmail = "namy.19@gmail.com";
     aliases = {
       prettylog = "...";
+      fix = "commit --amend --no-edit";
+      oops = "reset HEAD~1";
+      sub = "submodule update --init --recursive";
     };
     extraConfig = {
       core = {
@@ -37,18 +37,13 @@ in
         excludesfile = "~/.gitignore_global";
         precomposeUnicode = true;
       };
-      github = {
-        user = "yqrashawn";
-      };
+      github = { user = "yqrashawn"; };
       http = {
         proxy = "http://127.0.0.1:6152";
+        sslVerify = true;
       };
-      https = {
-        proxy = "http://127.0.0.1:6152";
-      };
-      include = {
-        path = "~/.gitconfig.local";
-      };
+      https = { proxy = "http://127.0.0.1:6152"; };
+      include = { path = "~/.gitconfig.local"; };
       alias = {
 
         dft = "difftool";
@@ -61,9 +56,11 @@ in
         resync = "!legit resync";
         undo = "!legit undo";
         # ---- git-submodule-update-checker
-        submodule-updates = "\"!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f\"";
+        submodule-updates = ''
+          "!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f"'';
         # ---- DWIM abort rebase, merge or cherry-pick
-        abort = "\"!f() { local command=$(git status | grep -o \"git \\w* --abort\"); echo $command; $($command); }; f\"";
+        abort = ''
+          "!f() { local command=$(git status | grep -o "git \w* --abort"); echo $command; $($command); }; f"'';
       };
       pager = {
         pager = "delta";
@@ -72,18 +69,12 @@ in
         show = "delta";
         difftool = true;
       };
-      diff = {
-        tool = "difftastic";
-      };
+      diff = { tool = "difftastic"; };
       difftool = {
         prompt = false;
-        difftastic = {
-          cmd = "difft \"$LOCAL\" \"$REMOTE\"";
-        };
+        difftastic = { cmd = ''difft "$LOCAL" "$REMOTE"''; };
       };
-      merge = {
-        tool = "ediff";
-      };
+      merge = { tool = "ediff"; };
       mergetool = {
         ediff = {
           cmd = "~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE";
@@ -98,15 +89,13 @@ in
           required = true;
         };
       };
-      interactive = {
-        diffFilter = "delta --color-only";
-      };
+      interactive = { diffFilter = "delta --color-only"; };
       delta = {
-        navigate=true;
+        navigate = true;
         features = "side-by-side line-numbers decorations";
         syntax-theme = "Dracula";
-        plus-style = "syntax \"#003800\"";
-        minus-style = "syntax \"#3f0001\"";
+        plus-style = ''syntax "#003800"'';
+        minus-style = ''syntax "#3f0001"'';
         decorations = {
           commit-decoration-style = "bold yellow box ul";
           file-style = "bold yellow ul";
@@ -139,12 +128,27 @@ in
       };
       push = {
         default = "simple";
+        followTags = true;
       };
       pull = {
         ff = "only";
+        rebase = true;
       };
-      init = {
-        defaultBranch = "main";
+      init = { defaultBranch = "main"; };
+
+      credential.helper = if pkgs.stdenvNoCC.isDarwin then
+        "osxkeychain"
+      else
+        "cache --timeout=1000000000";
+      commit.verbose = true;
+      fetch.prune = true;
+    };
+    lfs.enable = true;
+    delta = {
+      enable = true;
+      options = {
+        side-by-side = true;
+        line-numbers = true;
       };
     };
     ignores = [
@@ -161,7 +165,6 @@ in
       # it's better to unpack these files and commit the raw source
       # git has its own built in compression methods
       "*.iso"
-
 
       # Logs and databases #
       ######################
@@ -186,7 +189,7 @@ in
       # worklog
       "*.worklog.org"
       "*~"
-      "\#*#"
+      "#*#"
       "flycheck_*"
       "*.swp"
       ".clj-kondo/cache"
@@ -203,9 +206,7 @@ in
     };
   };
 
-  programs.direnv = {
-    enable = true;
-  };
+  programs.direnv = { enable = true; };
 
   programs.tmux = {
     enable = true;
@@ -216,7 +217,8 @@ in
     enable = true;
     defaultCommand = "fd --type f --hidden --follow --exclude .git";
     changeDirWidgetCommand = "fd --type f --hidden --follow --exclude .git";
-    changeDirWidgetOptions = [ "--preview '${pkgs.tree}/bin/tree -C {} | head -200'" ];
-    historyWidgetOptions = [];
+    changeDirWidgetOptions =
+      [ "--preview '${pkgs.tree}/bin/tree -C {} | head -200'" ];
+    historyWidgetOptions = [ ];
   };
 }

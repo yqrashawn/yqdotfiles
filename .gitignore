@@ -229,3 +229,7 @@ local/bin/rust-analyzer
 /.svm/
 /.config/tmux/
 /.local.zsh
+/.nixpkgs
+/.config/direnv/
+/.bashrc
+/.zfunc/
