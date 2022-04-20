@@ -19,7 +19,7 @@
              :hsl        "/usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
              :togg       "/usr/local/bin/hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
-             :yfocus "sh ~/.config/yabai/focus-window %s"
+             :yfocus     "sh ~/.config/yabai/focus-window %s"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
              :jump       "/usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
@@ -106,15 +106,19 @@
                          :invoked  ["test-mode-j-dbpress-mode" 0]
                          :held    "say 'j held down'"]]}
              {:des   "space cadet and switch input method shift"
-              :rules [[:left_shift [["lshift" 0] {:input
-                                                  ;; :cn
-                                                  :sougou}] :lshift]
+              :rules [[:left_shift [["lshift" 0]
+                                    :!CTOf16
+                                    ;; {:input
+                                    ;;  ;; :cn
+                                    ;;  :sougou}
+                                    ]:lshift]
                       [:##left_shift :left_shift :!lshift {:alone   ["lshift" 1]
                                                            :params  {:delay 300}
                                                            :delayed {:invoked  [["lshift" 0] ;; :!S9
                                                                                 ]
                                                                      :canceled ["lshift" 0]}}]
-                      [:right_shift [["rshift" 0] {:input :us}] :rshift]
+                      [:right_shift [["rshift" 0] :!CTSf16 ;; {:input :us}
+                                     ]:rshift]
                       [:##right_shift :right_shift :!lshift {:alone   ["rshift" 1]
                                                              :params  {:delay 300}
                                                              :delayed {:invoked  [["rshift" 0] ;; :!Sopen_bracket

@@ -4,7 +4,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((projectile-project-root . "~/Dropbox/ORG")
+    '((eval defun cider--running-nrepl-paths nil
+        '("~/.config/bblib/"))
+       (projectile-project-root . "~/Dropbox/ORG")
        (org-export-with-title . t)
        (org-export-with-properties)
        (eval require 'org-make-toc)
