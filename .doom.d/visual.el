@@ -36,14 +36,15 @@
 (add-hook! 'doom-first-file-hook #'global-display-fill-column-indicator-mode)
 
 (after! prog-mode
-  ;; unprettify when idle for 1 seconds
-  (defadvice! +prettify-symbols--post-command-hook (orig-fn)
-    :around #'prettify-symbols--post-command-hook
-    (run-with-timer 1 nil
-                    (cmd! (let ((ti (or (current-idle-time) '(0 0 0))))
-                            (when (or (> (nth 1 ti) 0)
-                                      (> (nth 2 ti) 900000))
-                              (funcall orig-fn)))))))
+  (when (featurep! :ui ligatures)
+    ;; unprettify when idle for 1 seconds
+    (defadvice! +prettify-symbols--post-command-hook (orig-fn)
+      :around #'prettify-symbols--post-command-hook
+      (run-with-timer 1 nil
+                      (cmd! (let ((ti (or (current-idle-time) '(0 0 0))))
+                              (when (or (> (nth 1 ti) 0)
+                                        (> (nth 2 ti) 900000))
+                                (funcall orig-fn))))))))
 
 (defun maybe-enable-pixel-scroll-precision-mode ()
   (if (boundp 'pixel-scroll-precision-mode)

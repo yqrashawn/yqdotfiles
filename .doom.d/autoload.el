@@ -723,3 +723,22 @@ _b_ranch _j_next _k_prev _h_up
   (require 'projectile)
   (let ((projectile-switch-project-action (cmd! (find-file-existing "~/.doom.d/config.el"))))
     (projectile-switch-project-by-name "~/.doom.d/")))
+
+;;;###autoload
+(defun ++compile ()
+  "Do compilaion in shell-mode with pwd"
+  (interactive)
+  (let ((default-directory (doom--sudo-file-path default-directory)))
+    (compilation-start compile-command t)))
+
+;;;###autoload
+(defun ++password! (&rest args)
+  (interactive)
+  (require 'auth-source)
+  (let ((match (car (auth-source-search :host "sudo.yqrashawn.com" :user "yqrashawn"))))
+    (if match
+        (let ((secret (plist-get match :secret)))
+          (if (functionp secret)
+              (funcall secret)
+            secret))
+      (error "Password not found for %S" params))))
