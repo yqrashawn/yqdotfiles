@@ -10,7 +10,8 @@
  :modifiers {:ro :right_option}
  :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
-             :yabai      "/usr/local/bin/bb -cp ~/.config/yabai %s"
+             :sh         "PATH=/run/current-system/sw/bin:/usr/local/bin:$PATH %s"
+             :yabai      "/run/current-system/sw/bin/yabai %s"
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
@@ -22,8 +23,8 @@
              :yfocus     "sh ~/.config/yabai/focus-window %s"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
-             :jump       "/usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
-             ;; :focus      "/usr/local/bin/yabai -m display --focus \"%s\" & /usr/local/bin/yabai -m space --focus \"%s\""
+             :jump       "/run/current-system/sw/bin/yabai -m window --focus $(yabai -m query --windows | /run/current-system/sw/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
+             ;; :focus      "yabai -m display --focus \"%s\" & yabai -m space --focus \"%s\""
              }
  :layers    {:tab-mode              {:key     :tab
                                      :afterup [{:set ["yabai-move-mode" 0]}
@@ -497,12 +498,12 @@
              {:des   "yabai mode"
               :rules [;; move windows
                       :yabai-warp-mode
-                      [:h "/usr/local/bin/yabai -m window --warp west"]
-                      [:j "/usr/local/bin/yabai -m window --warp south"]
-                      [:k "/usr/local/bin/yabai -m window --warp north"]
-                      [:l "/usr/local/bin/yabai -m window --warp east"]
-                      [:n "/usr/local/bin/yabai -m window --warp next"]
-                      [:p "/usr/local/bin/yabai -m window --warp prev"]
+                      [:h [:sh "yabai -m window --warp west"]]
+                      [:j [:sh "yabai -m window --warp south"]]
+                      [:k [:sh "yabai -m window --warp north"]]
+                      [:l [:sh "yabai -m window --warp east"]]
+                      [:n [:sh "yabai -m window --warp next"]]
+                      [:p [:sh "yabai -m window --warp prev"]]
                       ;; scale windows
                       :yabai-scale-mode
                       [:h "~/.config/yabai/resize left"]
@@ -515,29 +516,29 @@
                       [:7 "/usr/local/bin/brew services stop yabai"]
                       [:8 "/usr/local/bin/brew services start yabai"]
                       ;; focus mode
-                      [:h "/usr/local/bin/yabai -m window --focus west || /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows --display west | /usr/local/bin/jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]
-                      [:j "/usr/local/bin/yabai -m window --focus south"]
-                      [:k "/usr/local/bin/yabai -m window --focus north"]
-                      [:l "/usr/local/bin/yabai -m window --focus east || /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows --display east | /usr/local/bin/jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]
-                      ;; [:spacebar "/usr/local/bin/yabai -m window --focus prev"]
-                      [:n "/usr/local/bin/yabai -m space --focus next"]
-                      [:p "/usr/local/bin/yabai -m space --focus prev"]
+                      [:h [:sh "yabai -m window --focus west || yabai -m window --focus $(yabai -m query --windows --display west | jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
+                      [:j [:sh "yabai -m window --focus south"]]
+                      [:k [:sh "yabai -m window --focus north"]]
+                      [:l [:sh "yabai -m window --focus east || yabai -m window --focus $(yabai -m query --windows --display east | /usr/local/bin/jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
+                      ;; [:spacebar "yabai -m window --focus prev"]
+                      [:n [:sh "yabai -m space --focus next"]]
+                      [:p [:sh "yabai -m space --focus prev"]]
                       ;; yabai workspace
-                      [:1 "/usr/local/bin/yabai -m space --focus 1"]
-                      [:2 "/usr/local/bin/yabai -m space --focus 2"]
-                      [:3 "/usr/local/bin/yabai -m space --focus 3"]
-                      [:4 "/usr/local/bin/yabai -m space --focus 4"]
-                      [:a "/usr/local/bin/yabai -m window --toggle float"]
-                      [:b "/usr/local/bin/yabai -m window --toggle border"]
-                      [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
-                      [:!Sb "/usr/local/bin/yabai -m config layout bsp"]
-                      [:!Ss "/usr/local/bin/yabai -m config layout stack"]
-                      [:!Sf "/usr/local/bin/yabai -m config layout float"]
-                      [:m "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
-                      [:x "/usr/local/bin/yabai -m window --close"]
-                      [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
-                      [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
-                      [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
+                      [:1 [:sh "yabai -m space --focus 1"]]
+                      [:2 [:sh "yabai -m space --focus 2"]]
+                      [:3 [:sh "yabai -m space --focus 3"]]
+                      [:4 [:sh "yabai -m space --focus 4"]]
+                      [:a [:sh "yabai -m window --toggle float"]]
+                      [:b [:sh "yabai -m window --toggle border"]]
+                      [:0 [:sh "yabai -m window --toggle zoom-parent"]]
+                      [:!Sb [:sh "yabai -m config layout bsp"]]
+                      [:!Ss [:sh "yabai -m config layout stack"]]
+                      [:!Sf [:sh "yabai -m config layout float"]]
+                      [:m [:sh "yabai -m window --toggle zoom-fullscreen"]]
+                      [:x [:sh "yabai -m window --close"]]
+                      [:delete_or_backspace [:sh "yabai -m window --close"]]
+                      [:open_bracket [:sh "yabai -m window --space prev"]]
+                      [:close_bracket [:sh "yabai -m window --space next"]]]}
              {:des   "totalspace 2"
               :rules [;; move windows
                       :yabai-warp-mode
