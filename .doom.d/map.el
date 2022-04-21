@@ -69,6 +69,7 @@
     :desc "Toggle popup" "b RET" #'bookmark-set
     :desc "Find file" "ff" #'find-file
     :desc "Find file" "fj" #'dired-jump
+    :desc "Compile with auto sudo pwd" "c SPC" #'++compile
     :desc "Open junk file" "fJ" #'yq/open-junk-file
     :desc "Indent" "j=" #'yq/indent-region-or-buffer
     ;; :desc "Tab buffer" "TAB" (cmd! () (switch-to-nth-buffer 1))

@@ -316,3 +316,28 @@ A prefix arg reverses this operation."
 
 (after! dired
   (setq! dired-listing-switches "--all --human-readable -l --sort=time -v --group-directories-first"))
+
+(after! comint
+  (defun +comint-send-invisible-with-sudo-pwd (&rest args)
+    (let ((pwd (++password!))
+          (proc (get-buffer-process (current-buffer))))
+      (funcall comint-input-sender proc pwd)
+      (advice-remove 'comint-send-invisible '+comint-send-invisible-with-sudo-pwd)))
+
+  (defun comint-watch-for-password-prompt (string)
+    "Prompt in the minibuffer for password and send without echoing.
+Looks for a match to `comint-password-prompt-regexp' in order
+to detect the need to (prompt and) send a password.  Ignores any
+carriage returns (\\r) in STRING.
+
+This function could be in the list `comint-output-filter-functions'."
+    (when (let ((case-fold-search t))
+            (string-match comint-password-prompt-regexp
+                          (string-replace "\r" "" string)))
+      (with-current-buffer (current-buffer)
+        (let ((comint--prompt-recursion-depth
+               (1+ comint--prompt-recursion-depth)))
+          (if (> comint--prompt-recursion-depth 10)
+              (message "Password prompt recursion too deep")
+            (comint-send-invisible
+             (string-trim string "[ \n\r\t\v\f\b\a]+" "\n+"))))))))

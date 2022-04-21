@@ -728,14 +728,14 @@ _b_ranch _j_next _k_prev _h_up
 (defun ++compile ()
   "Do compilaion in shell-mode with pwd"
   (interactive)
-  (let ((default-directory (doom--sudo-file-path default-directory)))
-    (compilation-start compile-command t)))
+  (advice-add 'comint-send-invisible :around '+comint-send-invisible-with-sudo-pwd)
+  (compilation-start compile-command t))
 
 ;;;###autoload
 (defun ++password! (&rest args)
   (interactive)
   (require 'auth-source)
-  (let ((match (car (auth-source-search :host "sudo.yqrashawn.com" :user "yqrashawn"))))
+  (let ((match (car (auth-source-search :host "localhost" :user user-login-name))))
     (if match
         (let ((secret (plist-get match :secret)))
           (if (functionp secret)
