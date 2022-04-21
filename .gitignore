@@ -235,3 +235,4 @@ local/bin/rust-analyzer
 /.zfunc/
 /.config/yabai
 /.config/nixpkgs
+/.config/coc/

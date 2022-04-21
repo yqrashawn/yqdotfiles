@@ -1,5 +1,7 @@
 ;;; org.el -*- lexical-binding: t; -*-
 
+;; fix orgit problem
+(require 'ol)
 (setq org-journal-file-format "%Y-%m-%d-%a.org"
       org-noter-notes-search-path (expand-file-name "~/Dropbox/ORG/notes")
       org-roam-directory (expand-file-name "~/Dropbox/ORG")
@@ -17,7 +19,9 @@
          org-agenda-inhibit-startup t)
   (pushnew! org-tags-exclude-from-inheritance "project")
   (pushnew! org-agenda-files (concat org-roam-directory org-roam-dailies-directory))
-  (defadvice! +org-agenda--quit (&rest _) :before #'org-agenda--quit (org-save-all-org-buffers))
+  (defadvice! +org-agenda--quit (&rest _)
+    :before #'org-agenda--quit
+    (org-save-all-org-buffers))
   (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
   (set-popup-rule!
     "^\\*Capture\\*$\\|CAPTURE-.*$"

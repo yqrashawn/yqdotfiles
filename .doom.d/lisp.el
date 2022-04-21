@@ -148,6 +148,7 @@ Instead keep them, with a newline after each comment."
        ("}" . symex-wrap-square)
        ("M-[" . symex-leap-backward)
        ("M-]" . symex-leap-forward)))
+  (require 'hi-lock)
   ;; cursor color
   (defadvice! +evil-update-cursor-color-h-symex ()
     :after #'+evil-update-cursor-color-h

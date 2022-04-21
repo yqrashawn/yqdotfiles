@@ -299,3 +299,4 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (setq straight-vc-git-default-clone-depth 'full)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))
 (defalias 'defgeneric 'cl-defgeneric)
+(require 'bind-key)
