@@ -240,3 +240,4 @@ local/bin/rust-analyzer
 /.zcompdump-*
 .zshrc
 .zshenv
+/.fly/
