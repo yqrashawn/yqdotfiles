@@ -236,3 +236,7 @@ local/bin/rust-analyzer
 /.config/yabai
 /.config/nixpkgs
 /.config/coc/
+/.zsh/
+/.zcompdump-*
+.zshrc
+.zshenv
