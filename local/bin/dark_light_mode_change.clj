@@ -18,7 +18,7 @@
                   :light "- ~/.config/alacritty/modus-operandi.yml"})
 
 (defn alacritty []
-  (let [conf-file  (fs/file (fs/expand-home "~/.config/alacritty/current-theme.yml"))
+  (let [conf-file  (fs/file (fs/expand-home "~/.config/alacritty-current-theme.yml"))
         conf       (slurp conf-file)
         cur-theme  (get theme-lines (if (= theme :dark) :light :dark))
         next-theme (get theme-lines theme)

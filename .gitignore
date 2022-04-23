@@ -242,3 +242,5 @@ local/bin/rust-analyzer
 .zshenv
 /.fly/
 /.config/starship.toml
+/.config/alacritty-current-theme.yml
+/.config/alacritty
