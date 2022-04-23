@@ -241,3 +241,4 @@ local/bin/rust-analyzer
 .zshrc
 .zshenv
 /.fly/
+/.config/starship.toml
