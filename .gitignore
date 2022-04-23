@@ -246,3 +246,4 @@ local/bin/rust-analyzer
 /.config/alacritty
 /local/bin
 .ripgreprc
+.tmux.conf*
