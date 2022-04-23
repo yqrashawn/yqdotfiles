@@ -244,3 +244,5 @@ local/bin/rust-analyzer
 /.config/starship.toml
 /.config/alacritty-current-theme.yml
 /.config/alacritty
+/local/bin
+.ripgreprc
