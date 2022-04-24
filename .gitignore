@@ -247,3 +247,7 @@ local/bin/rust-analyzer
 /local/bin
 .ripgreprc
 .tmux.conf*
+/.clojure
+/.editorconfig
+/.hammerspoon
+/.spacehammer/
