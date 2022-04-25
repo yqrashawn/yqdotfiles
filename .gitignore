@@ -252,3 +252,4 @@ local/bin/rust-analyzer
 /.hammerspoon
 /.spacehammer/
 /.config/clojure/
+/.zcompcache/

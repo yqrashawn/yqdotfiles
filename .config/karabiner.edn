@@ -40,6 +40,7 @@
              :period-mode           {:key :period :afterup {:set ["period-comma-mode" 0]} :condi [:!emacs-s-mode :!tmux-windmove-mode :!k2-mode]}
              :comma-mode            {:key :comma :condi [:!emacs-s-mode :!tmux-windmove-mode]}
              :tmux-windmove-mode    {:key :q :condi [:Terminals :!comma-mode :!period-mode]}
+             :warp-windmove-mode    {:key :q :condi [:Warp :!comma-mode :!period-mode]}
              :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
              :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
  :simlayers {:test-mode             {:key :9}
@@ -494,7 +495,16 @@
                       [:2 [:!Tq :2]]
                       [:3 [:!Tq :3]]
                       [:4 [:!Tq :4]]
-                      [:5 [:!Tq :5]]]}
+                      [:5 [:!Tq :5]]
+                      :warp-windmove-mode
+                      [:return_or_enter :!Cn]
+                      [:b :!Cw]
+                      [:h :!COleft_arrow]
+                      [:j :!COdown_arrow]
+                      [:k :!COup_arrow]
+                      [:l :!COright_arrow]
+                      [:v :!Cd]
+                      [:s :!CSd]]}
              {:des   "yabai mode"
               :rules [;; move windows
                       :yabai-warp-mode
@@ -723,7 +733,9 @@
                                                       "^co\\.zeit\\.hyper$"
                                                       "^io\\.alacritty$"
                                                       "^com\\.github\\.wez\\.wezterm$"
-                                                      "^net\\.kovidgoyal\\.kitty$"]
+                                                      "^net\\.kovidgoyal\\.kitty$"
+                                                      ;; "^dev\\.warp\\.Warp.*"
+                                                      ]
                       :vim-mode-disabled-application ["^com\\.apple\\.Terminal$"
                                                       "^com\\.googlecode\\.iterm2$"
                                                       "^co\\.zeit\\.hyperterm$"
@@ -760,7 +772,8 @@
                       :Games                         ["^com\\.Klei\\.Dontstarve"]
                       :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]
-                      :CopyQ                         ["^io\\.github\\.hluk\\.CopyQ$"]}
+                      :CopyQ                         ["^io\\.github\\.hluk\\.CopyQ$"]
+                      :Warp                          ["^dev\\.warp\\.Warp"]}
  :input-sources      {:squirrel {:input_mode_id   "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
                                  :input_source_id "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel\\.Rime$"}
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
