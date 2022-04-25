@@ -1,7 +1,7 @@
 ;;; lang.el -*- lexical-binding: t; -*-
 
 (use-package! jq-mode :mode (("\\.jq$" . jq-mode)))
-(use-package! jenkinsfile-mode :mode ("\\Jenkinsfile\\'" . jenkinsfile-mode))
+;(use-package! jenkinsfile-mode :mode ("\\Jenkinsfile\\'" . jenkinsfile-mode))
 (use-package! adoc-mode :mode ("\\\.adoc\\\'" . adoc-mode))
 (use-package! nginx-mode
   :mode

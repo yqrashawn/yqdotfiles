@@ -253,3 +253,4 @@ local/bin/rust-analyzer
 /.spacehammer/
 /.config/clojure/
 /.zcompcache/
+/go/

@@ -101,7 +101,7 @@
 (package! company-tabnine)
 (package! company-ctags)
 
-(package! jenkinsfile-mode)
+;(package! jenkinsfile-mode)
 (package! jq-mode)
 (package! separedit)
 (package! help-fns+)

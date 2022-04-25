@@ -109,7 +109,7 @@
                          :held    "say 'j held down'"]]}
              {:des   "space cadet and switch input method shift"
               :rules [[:left_shift [["lshift" 0]
-                                    :!CTOf16
+                                    :!CTf17
                                     ;; {:input
                                     ;;  ;; :cn
                                     ;;  :sougou}
@@ -119,7 +119,7 @@
                                                            :delayed {:invoked  [["lshift" 0] ;; :!S9
                                                                                 ]
                                                                      :canceled ["lshift" 0]}}]
-                      [:right_shift [["rshift" 0] :!CTSf16 ;; {:input :us}
+                      [:right_shift [["rshift" 0] :!CTOf17 ;; {:input :us}
                                      ]:rshift]
                       [:##right_shift :right_shift :!lshift {:alone   ["rshift" 1]
                                                              :params  {:delay 300}
