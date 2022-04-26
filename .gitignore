@@ -254,3 +254,4 @@ local/bin/rust-analyzer
 /.config/clojure/
 /.zcompcache/
 /go/
+/.web3j/
