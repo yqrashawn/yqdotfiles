@@ -7,6 +7,8 @@
     '((eval defun cider--running-nrepl-paths nil
         '("~/.config/bblib/"))
        (projectile-project-root . "~/Dropbox/ORG")
+       (counsel-rg-base-command . ("rg" "--max-columns" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "-uu" "%s"))
+       (projectile-project-root . "~/Dropbox/ORG")
        (org-export-with-title . t)
        (org-export-with-properties)
        (eval require 'org-make-toc)

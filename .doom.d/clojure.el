@@ -7,9 +7,11 @@
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
   (cmd! (setq-local evil-shift-width 1)))
 
+(setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
+(setq-hook! '(clojure-mode-hook) lsp-lens-enable nil)
+
 ;;; clojure-mode
 (after! clojure-mode
-  (setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
   (setq! clojure-toplevel-inside-comment-form t
          clojure-verify-major-mode nil
          clojure-align-reader-conditionals t
