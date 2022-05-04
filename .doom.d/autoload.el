@@ -742,3 +742,12 @@ _b_ranch _j_next _k_prev _h_up
               (funcall secret)
             secret))
       (error "Password not found for %S" params))))
+
+;;;###autoload
+(defun json->edn ()
+  (interactive)
+  (shell-command-on-region (region-beginning)
+                           (region-end)
+                           "jet --pretty --keywordize keyword --from json --to edn"
+                           (current-buffer)
+                           t))

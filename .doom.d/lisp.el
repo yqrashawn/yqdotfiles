@@ -193,7 +193,7 @@ Instead keep them, with a newline after each comment."
 ;;; eval-sexp-fu
 (after! eval-sexp-fu
   (after! lispy
-    (define-eval-sexp-fu-flash-command special-lispy-eval
+    (define-eval-sexp-fu-flash-command lispy--eval
       (eval-sexp-fu-flash (when (ignore-errors (elisp--preceding-sexp))
                             (with-esf-end-of-sexp
                               (save-excursion
