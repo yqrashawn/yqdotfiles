@@ -529,7 +529,7 @@
                       [:h [:sh "yabai -m window --focus west || yabai -m window --focus $(yabai -m query --windows --display west | jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
                       [:j [:sh "yabai -m window --focus south"]]
                       [:k [:sh "yabai -m window --focus north"]]
-                      [:l [:sh "yabai -m window --focus east || yabai -m window --focus $(yabai -m query --windows --display east | /usr/local/bin/jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
+                      [:l [:sh "yabai -m window --focus east || yabai -m window --focus $(yabai -m query --windows --display east | jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
                       ;; [:spacebar "yabai -m window --focus prev"]
                       [:n [:sh "yabai -m space --focus next"]]
                       [:p [:sh "yabai -m space --focus prev"]]
@@ -549,15 +549,6 @@
                       [:delete_or_backspace [:sh "yabai -m window --close"]]
                       [:open_bracket [:sh "yabai -m window --space prev"]]
                       [:close_bracket [:sh "yabai -m window --space next"]]]}
-             {:des   "totalspace 2"
-              :rules [;; move windows
-                      :yabai-warp-mode
-                      [:i :!STOleft_arrow]
-                      [:o :!STOright_arrow]
-                      :tab-mode
-                      ;; focus mode
-                      [:i :!OSleft_arrow]
-                      [:o :!OSright_arrow]]}
              {:des   "comma mode"
               :rules [:comma-mode
                       [:a :open_bracket]
@@ -600,7 +591,8 @@
              {:des   "Mouse button"
               :rules [[{:pkey :button5} :mission_control]
                       [{:pkey :button4} [{:pkey :button1} {:pkey :button1} :!Cc] nil {:delayed {:invoked [:!!grave_accent_and_tilde ["in-alfred" 1]]} :params {:delay 200}}]
-                      [{:pkey :button3} :mission_control]]}
+                      [{:pkey :button3} :mission_control :kensington-virtual]
+                      [{:pkey :button3} :mission_control :kensington-tb]]}
              {:des   "Mouse Keys Mode v4 (rev 1)"
               :rules [[:##j {:mkey {:vwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
                       [:##h {:mkey {:hwheel 32}} [["mouse_keys_mode_v4_scroll" 1]] ["mouse_keys_mode_v4" 1]]
