@@ -152,3 +152,20 @@ creates a new one. Don't unnecessarily bother the user."
   :after clojure-mode
   :config
   (clj-ns-name-install))
+
+(after! clj-refactor
+  (defadvice! +cljr-add-require-to-ns (orig-fn &rest args)
+    :around #'cljr-add-require-to-ns
+    (interactive "P")
+    (evil-insert-state 1)
+    (call-interactively orig-fn cljs?))
+  (defadvice! +cljr-add-import-to-ns (orig-fn &rest args)
+    :around #'cljr-add-import-to-ns
+    (interactive "P")
+    (evil-insert-state 1)
+    (call-interactively orig-fn cljs?))
+  (defadvice! +cljr-add-use-to-ns (orig-fn &rest args)
+    :around #'cljr-add-use-to-ns
+    (interactive "P")
+    (evil-insert-state 1)
+    (call-interactively orig-fn cljs?)))
