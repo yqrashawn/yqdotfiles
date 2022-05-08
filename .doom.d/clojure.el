@@ -128,14 +128,6 @@ creates a new one. Don't unnecessarily bother the user."
   ;; (set-popup-rules!
   ;;   '(("^\\*cider-repl" :side right :size 0.5 :quit +doom/just-escaped-p :ttl nil)))
 
-  ;; prioritize shadow-cljs port
-  (defun nrepl-extract-port (dir)
-    "Read port from .nrepl-port, nrepl-port or target/repl-port files in directory DIR."
-    (or (nrepl--port-from-file (expand-file-name ".shadow-cljs/nrepl.port" dir))
-        (nrepl--port-from-file (expand-file-name "repl-port" dir))
-        (nrepl--port-from-file (expand-file-name ".nrepl-port" dir))
-        (nrepl--port-from-file (expand-file-name "target/repl-port" dir))))
-
   (defadvice! +cider-jack-in-clj (orig-fn params)
     "Support babashka for cider-jack-in-clj"
     :around #'cider-jack-in-clj
@@ -158,14 +150,14 @@ creates a new one. Don't unnecessarily bother the user."
     :around #'cljr-add-require-to-ns
     (interactive "P")
     (evil-insert-state 1)
-    (call-interactively orig-fn cljs?))
+    (call-interactively orig-fn))
   (defadvice! +cljr-add-import-to-ns (orig-fn &rest args)
     :around #'cljr-add-import-to-ns
     (interactive "P")
     (evil-insert-state 1)
-    (call-interactively orig-fn cljs?))
+    (call-interactively orig-fn))
   (defadvice! +cljr-add-use-to-ns (orig-fn &rest args)
     :around #'cljr-add-use-to-ns
     (interactive "P")
     (evil-insert-state 1)
-    (call-interactively orig-fn cljs?)))
+    (call-interactively orig-fn)))

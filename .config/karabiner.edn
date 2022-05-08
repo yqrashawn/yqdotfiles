@@ -27,8 +27,7 @@
              ;; :focus      "yabai -m display --focus \"%s\" & yabai -m space --focus \"%s\""
              }
  :layers    {:tab-mode              {:key     :tab
-                                     :afterup [{:set ["yabai-move-mode" 0]}
-                                               {:set ["yabai-scale-mode" 0]}
+                                     :afterup [{:set ["yabai-scale-mode" 0]}
                                                {:set ["yabai-warp-mode" 0]}
                                                {:set ["spec-mode" 0]}]
                                      :condi   [:!comma-mode :!period-mode]}

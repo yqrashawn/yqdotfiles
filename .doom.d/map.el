@@ -370,6 +370,7 @@
       :n "tt" (cmd! (lispyville-backward-up-list) (lispy-parens 1))
       :n "td" #'transpose-sexps
       :n "tw" #'lispy-move-up
+      :n "tl" #'+cljr-log-spy
       :n "tJ" #'lispy-join
       :n "t/" #'lispy-splice
       :n "tj" #'symex-evaluate
