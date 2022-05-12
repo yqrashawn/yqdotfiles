@@ -111,7 +111,7 @@
       :desc "Resume vertico" "l" #'vertico-repeat)
     (:prefix-map ("fe" . "Edit srcs")
       :desc "Find library" "l" #'find-library
-      :desc "Edit .doom.d config" "d" #'+open-emacs-config
+      :desc "Edit .doom.d config" "d" (cmd! (projectile-switch-project-by-name "~/.doom.d/"))
       :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
       :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                                (call-interactively #'+default/search-project)))
