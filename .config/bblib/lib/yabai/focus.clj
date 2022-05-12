@@ -1,5 +1,9 @@
+#!/run/current-system/sw/bin/bb
+
 (ns lib.yabai.focus
   (:require
+   [clojure.java.shell :refer [sh]]
+   [cheshire.core :as json]
    [lib.yabai.core :as y]))
 
 (defn m [direction]

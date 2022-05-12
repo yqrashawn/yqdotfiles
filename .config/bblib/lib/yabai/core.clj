@@ -1,4 +1,4 @@
-#!/usr/local/bin/bb
+#!/run/current-system/sw/bin/bb
 
 (ns lib.yabai.core
   (:require
@@ -7,7 +7,7 @@
 
 (defn m [& args]
   (let [args                   (mapv #(if (keyword? %) (name %) (str %)) args)
-        {:keys [exit out err]} (apply sh "/usr/local/bin/yabai" "-m" args)
+        {:keys [exit out err]} (apply sh "yabai" "-m" args)
         out                    (and out (json/parse-string out keyword))]
     (if (= exit 0)
       out

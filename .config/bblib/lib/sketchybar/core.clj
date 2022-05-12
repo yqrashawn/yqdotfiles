@@ -1,4 +1,4 @@
-#!/usr/local/bin/bb
+#!/run/current-system/sw/bin/bb
 
 (ns lib.sketchybar.core
   (:require
