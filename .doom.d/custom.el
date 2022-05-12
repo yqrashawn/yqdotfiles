@@ -5,9 +5,11 @@
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
     '((eval defun cider--running-nrepl-paths nil
-        '("~/.config/bblib/"))
+        '("~/Dropbox/sync/Alfred.alfredpreferences/workflows/user.workflow.B178FD26-4DD8-4281-922B-925CD4AC61CE/"))
+       (eval defun cider--running-nrepl-paths nil
+         '("~/.config/bblib/"))
        (projectile-project-root . "~/Dropbox/ORG")
-       (counsel-rg-base-command . ("rg" "--max-columns" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "-uu" "%s"))
+       (counsel-rg-base-command "rg" "--max-columns" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "-uu" "%s")
        (projectile-project-root . "~/Dropbox/ORG")
        (org-export-with-title . t)
        (org-export-with-properties)

@@ -718,13 +718,6 @@ _b_ranch _j_next _k_prev _h_up
   (memq major-mode +lispy-modes))
 
 ;;;###autoload
-(defun +open-emacs-config ()
-  (interactive)
-  (require 'projectile)
-  (let ((projectile-switch-project-action (cmd! (find-file-existing "~/.doom.d/config.el"))))
-    (projectile-switch-project-by-name "~/.doom.d/")))
-
-;;;###autoload
 (defun ++compile ()
   "Do compilaion in shell-mode with pwd"
   (interactive)
