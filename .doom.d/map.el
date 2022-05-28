@@ -486,6 +486,12 @@
       :g "C-j" (general-simulate-key "<down>")
       :g "C-k" (general-simulate-key "<up>")
       :g "C-w" #'doom/delete-backward-word))
+  (:after ivy
+    (:map ivy-minibuffer-map
+      :g "<escape>" (general-simulate-key "C-g")
+      :g "C-j" (general-simulate-key "<down>")
+      :g "C-k" (general-simulate-key "<up>")
+      :g "C-w" #'doom/delete-backward-word))
   ;; (:after evil-textobj-tree-sitter)
   (:after ranger
     (:map ranger-normal-mode-map
