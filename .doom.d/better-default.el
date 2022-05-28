@@ -341,6 +341,19 @@ This function could be in the list `comint-output-filter-functions'."
               (message "Password prompt recursion too deep")
             (comint-send-invisible
              (string-trim string "[ \n\r\t\v\f\b\a]+" "\n+"))))))))
+
+(after! hippie-exp
+  (setq! hippie-expand-try-functions-list
+    '(try-complete-file-name-partially
+       try-complete-file-name
+       try-expand-all-abbrevs
+       try-expand-dabbrev-visible
+       try-expand-dabbrev
+       try-expand-dabbrev-all-buffers
+       try-expand-dabbrev-from-kill
+       try-complete-lisp-symbol-partially
+       try-complete-lisp-symbol)))
+
 (use-package! detached
   :hook (doom-first-input . detached-init)
   :config
