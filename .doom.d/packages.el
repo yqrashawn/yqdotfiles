@@ -252,7 +252,9 @@
   :recipe (:type git :repo "https://git.sr.ht/~e-v/eshell-follow.el"))
 (package! plz :recipe (:host github :repo "alphapapa/plz.el"))
 (package! ement :recipe (:host github :repo "alphapapa/ement.el"))
+;; (package! esup)
 (package! vundo :recipe (:host github :repo "casouri/vundo"))
+(package! zoom)
 (package! evil-matchit)
 (package! evil-owl)
 (package! gc-buffers

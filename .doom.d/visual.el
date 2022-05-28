@@ -48,47 +48,59 @@
 
 (defun maybe-enable-pixel-scroll-precision-mode ()
   (if (boundp 'pixel-scroll-precision-mode)
-                     (pixel-scroll-precision-mode t)))
+      (pixel-scroll-precision-mode t)))
 
 (add-hook! 'doom-first-input-hook 'maybe-enable-pixel-scroll-precision-mode)
 
 
 (after! js2-mode
   (font-lock-add-keywords
-    'js2-mode
-    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+   'js2-mode
+   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
 (after! rjsx-mode
   (font-lock-add-keywords
-    'rjsx-mode
-    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+   'rjsx-mode
+   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
 (after! typescript-mode
   (font-lock-add-keywords
-    'typescript-mode
-    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+   'typescript-mode
+   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
 (after! clojure-mode
   (font-lock-add-keywords
-    'clojurescript-mode
-    (append `(("\"0x" (0 (+truncate-0x-hash))))))
+   'clojurescript-mode
+   (append `(("\"0x" (0 (+truncate-0x-hash))))))
   (font-lock-add-keywords
-    'clojure-mode
-    (append `(("\"0x" (0 (+truncate-0x-hash)))))))
+   'clojure-mode
+   (append `(("\"0x" (0 (+truncate-0x-hash)))))))
 (after! web-mode
   (font-lock-add-keywords
-    'web-mode
-    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
+   'web-mode
+   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
 
 
 (use-package! modus-themes
   :defer t
   :init
   (setq!
-    modus-themes-italic-constructs t
-    modus-themes-completions '((matches . (extrabold background intense))
-                                (selection . (semibold accented intense))
-                                (popup . (accented)))
-    modus-themes-mixed-fonts t
-    modus-themes-fringes 'subtle
-    modus-themes-lang-checkers '(straight-underline text-also)
-    modus-themes-mode-line '(borderless)
-    modus-themes-links '(neutral-underline faint)
-    modus-themes-region '(no-extend)))
+   modus-themes-italic-constructs t
+   modus-themes-completions '((matches . (extrabold background intense))
+                              (selection . (semibold accented intense))
+                              (popup . (accented)))
+   modus-themes-mixed-fonts t
+   modus-themes-fringes 'subtle
+   modus-themes-lang-checkers '(straight-underline text-also)
+   modus-themes-mode-line '(borderless)
+   modus-themes-links '(neutral-underline faint)
+   modus-themes-region '(no-extend)))
+
+(defun my-modus-themes-custom-faces ()
+  (modus-themes-with-colors
+    (custom-set-faces
+     ;; Replace green with blue if you use `modus-themes-deuteranopia'.
+     `(git-gutter-fr:added ((,class :foreground ,green-fringe-bg)))
+     `(git-gutter-fr:deleted ((,class :foreground ,red-fringe-bg)))
+     `(git-gutter-fr:modified ((,class :foreground ,yellow-fringe-bg))))))
+
+(add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
+
+(use-package! zoom :hook (doom-first-buffer))
