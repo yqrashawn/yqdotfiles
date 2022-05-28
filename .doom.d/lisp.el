@@ -8,7 +8,9 @@
   (defadvice! +lispy-tab (orig-fn)
     :around #'lispy-tab
     (if (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))
-        (and (functionp #'clojure-align) (call-interactively #'clojure-align))
+      (progn (and (functionp #'clojure-align) (call-interactively #'clojure-align))
+        (when (region-active-p)
+          (call-interactively orig-fn)))
       (call-interactively orig-fn)))
 
   (use-package! ccc                     ; for cursor style
@@ -83,7 +85,7 @@ Instead keep them, with a newline after each comment."
                     y))
              (t
               (cons x y))))
-     expr)))
+      expr)))
 
 (after! semantic
   (setq! semanticdb-find-default-throttle '(file local project omniscience recursive)))
