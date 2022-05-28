@@ -240,54 +240,54 @@
     :g "RET" #'hydra-change-mode/body
     :g "R" #'rg)
   (:map yq-cljr-map
-   :desc "Add import to ns" "ai" #'lsp-clojure-add-import-to-namespace
-   :desc "Add missing libspec" "am" #'lsp-clojure-add-missing-libspec
-   :desc "Add project dependency" "ap" #'cljr-add-project-dependency
-   :desc "Add require to ns" "ar" #'cljr-add-require-to-ns
-   :desc "Add stubs for the interface/protocol at point" "as" #'cljr-add-stubs
-   :desc "Add use to ns" "au" #'cljr-add-use-to-ns
-   :desc "Cycle if" "ci" #'clojure-cycle-if
-   :desc "Clean ns" "cn" #'lsp-clojure-clean-ns
-   :desc "Cycle coll" "cc" #'lsp-clojure-cycle-coll
-   :desc "Cycle privacy" "cp" #'lsp-clojure-cycle-privacy
-   :desc "Change function signature" "cs" #'cljr-change-function-signature
-   :desc "Cycle thread" "ct" #'cljr-cycle-thread
-   :desc "Destructure keys" "dk" #'cljr-destructure-keys
-   :desc "Extract constant" "ec" #'cljr-extract-constant
-   :desc "Extract form as def" "ed" #'cljr-extract-def
-   :desc "Extract function" "ef" #'lsp-clojure-extract-function
-   :desc "Expand let" "el" #'lsp-clojure-expand-let
-   :desc "Introduce let" "il" #'lsp-clojure-introduce-let
-   :desc "Create function from example" "fe" #'cljr-create-fn-from-example
-   :desc "Find usages" "fu" #'cljr-find-usages
-   :desc "Hotload dependency" "hd" #'cljr-hotload-dependency
-   :desc "Introduce let" "il" #'cljr-introduce-let
-   :desc "Inline symbol" "is" #'lsp-clojure-inline-symbol
-   :desc "Move form" "mf" #'cljr-move-form
-   :desc "Move to let" "ml" #'lsp-clojure-move-to-let
-   :desc "Project clean" "pc" #'cljr-project-clean
-   :desc "Promote function" "pf" #'cljr-promote-function
-   :desc "Rename file-or-dir" "rf" #'cljr-rename-file-or-dir
-   :desc "Remove let" "rl" #'cljr-remove-let
-   :desc "Add to or extend the require-macros form" "rm" #'cljr-require-macro
-   :desc "Rename symbol" "rs" #'cljr-rename-symbol
-   :desc "Show the project's changelog" "sc" #'cljr-show-changelog
-   :desc "Sort project dependencies" "sp" #'cljr-sort-project-dependencies
-   :desc "Stop referring" "sr" #'cljr-stop-referring
-   :desc "Thread first all" "tf" #'clojure-thread-first-all
-   :desc "Thread" "th" #'clojure-thread
-   :desc "Thread last all" "tl" #'clojure-thread-last-all
-   :desc "Unwind all" "ua" #'clojure-unwind-all
-   :desc "Update project dependencies" "up" #'cljr-update-project-dependencies
-   :desc "Unwind" "uw" #'clojure-unwind
-   :desc "Add declaration" "ad" #'cljr-add-declaration
-   :desc "Describe refactoring" "?" #'cljr-describe-refactoring
-   :desc "Parent menu for hydra menus" "hh" #'hydra-cljr-help-menu/body
-   :desc "Hydra menu for ns refactorings" "hn" #'hydra-cljr-ns-menu/body
-   :desc "Hydra menu for code refactorings" "hc" #'hydra-cljr-code-menu/body
-   :desc "Hydra menu for project refactorings" "hp" #'hydra-cljr-project-menu/body
-   :desc "Hydra menu for top level refactorings " "ht" #'hydra-cljr-toplevel-form-menu/body
-   :desc "Hydra menu for self features" "hs" #'hydra-cljr-cljr-menu/body)
+    :desc "Add import to ns" "ai" #'lsp-clojure-add-import-to-namespace
+    :desc "Add missing libspec" "am" #'lsp-clojure-add-missing-libspec
+    :desc "Add project dependency" "ap" #'cljr-add-project-dependency
+    :desc "Add require to ns" "ar" #'cljr-add-require-to-ns
+    :desc "Add stubs for the interface/protocol at point" "as" #'cljr-add-stubs
+    :desc "Add use to ns" "au" #'cljr-add-use-to-ns
+    :desc "Cycle if" "ci" #'clojure-cycle-if
+    :desc "Clean ns" "cn" #'lsp-clojure-clean-ns
+    :desc "Cycle coll" "cc" #'lsp-clojure-cycle-coll
+    :desc "Cycle privacy" "cp" #'lsp-clojure-cycle-privacy
+    :desc "Change function signature" "cs" #'cljr-change-function-signature
+    :desc "Cycle thread" "ct" #'cljr-cycle-thread
+    :desc "Destructure keys" "dk" #'cljr-destructure-keys
+    :desc "Extract constant" "ec" #'cljr-extract-constant
+    :desc "Extract form as def" "ed" #'cljr-extract-def
+    :desc "Extract function" "ef" #'lsp-clojure-extract-function
+    :desc "Expand let" "el" #'lsp-clojure-expand-let
+    :desc "Introduce let" "il" #'lsp-clojure-introduce-let
+    :desc "Create function from example" "fe" #'cljr-create-fn-from-example
+    :desc "Find usages" "fu" #'cljr-find-usages
+    :desc "Hotload dependency" "hd" #'cljr-hotload-dependency
+    :desc "Introduce let" "il" #'cljr-introduce-let
+    :desc "Inline symbol" "is" #'lsp-clojure-inline-symbol
+    :desc "Move form" "mf" #'cljr-move-form
+    :desc "Move to let" "ml" #'lsp-clojure-move-to-let
+    :desc "Project clean" "pc" #'cljr-project-clean
+    :desc "Promote function" "pf" #'cljr-promote-function
+    :desc "Rename file-or-dir" "rf" #'cljr-rename-file-or-dir
+    :desc "Remove let" "rl" #'cljr-remove-let
+    :desc "Add to or extend the require-macros form" "rm" #'cljr-require-macro
+    :desc "Rename symbol" "rs" #'cljr-rename-symbol
+    :desc "Show the project's changelog" "sc" #'cljr-show-changelog
+    :desc "Sort project dependencies" "sp" #'cljr-sort-project-dependencies
+    :desc "Stop referring" "sr" #'cljr-stop-referring
+    :desc "Thread first all" "tf" #'clojure-thread-first-all
+    :desc "Thread" "th" #'clojure-thread
+    :desc "Thread last all" "tl" #'clojure-thread-last-all
+    :desc "Unwind all" "ua" #'clojure-unwind-all
+    :desc "Update project dependencies" "up" #'cljr-update-project-dependencies
+    :desc "Unwind" "uw" #'clojure-unwind
+    :desc "Add declaration" "ad" #'cljr-add-declaration
+    :desc "Describe refactoring" "?" #'cljr-describe-refactoring
+    :desc "Parent menu for hydra menus" "hh" #'hydra-cljr-help-menu/body
+    :desc "Hydra menu for ns refactorings" "hn" #'hydra-cljr-ns-menu/body
+    :desc "Hydra menu for code refactorings" "hc" #'hydra-cljr-code-menu/body
+    :desc "Hydra menu for project refactorings" "hp" #'hydra-cljr-project-menu/body
+    :desc "Hydra menu for top level refactorings " "ht" #'hydra-cljr-toplevel-form-menu/body
+    :desc "Hydra menu for self features" "hs" #'hydra-cljr-cljr-menu/body)
   ;; (:map +thing-edit-map
   ;;  :g "," (cmd! (message "this operator is %s" evil-this-operator))
   ;;  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
@@ -466,6 +466,9 @@
                it
                (fboundp 'evil-jump-item)
                #'evil-jump-item))
+  (:after evil-matchit
+    (:map evil-matchit-mode-map
+      :mnv "RET" #'evilmi-jump-items))
   (:after vterm
     (:map vterm-mode-map
       :gi "C-y" #'vterm-yank))
@@ -515,4 +518,8 @@
       :n "gs" #'elfeed-show-new-live-search))
   (:after pprint-to-buffer
     (:map emacs-lisp-mode-map
-      :g "C-c C-p" #'pprint-to-buffer-last-sexp)))
+      :g "C-c C-p" #'pprint-to-buffer-last-sexp))
+  (:after detach
+    [remap async-shell-command] #'detached-shell-command
+    [remap compile] detached-compile
+    [remap recompile] detached-compile-recompile))

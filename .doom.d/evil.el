@@ -87,3 +87,15 @@
 
 (after! evil-org
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
+
+
+(use-package evil-owl
+  :hook (doom-first-buffer . evil-owl-mode)
+  :disabled
+  :after evil
+  :init
+  (setq evil-owl-display-method 'posframe
+        evil-owl-extra-posframe-args '(:width 50 :height 20)
+        evil-owl-max-string-length 50))
+
+(use-package! evil-matchit :hook (doom-first-input . global-evil-matchit-mode) :after evil)

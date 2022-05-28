@@ -341,3 +341,9 @@ This function could be in the list `comint-output-filter-functions'."
               (message "Password prompt recursion too deep")
             (comint-send-invisible
              (string-trim string "[ \n\r\t\v\f\b\a]+" "\n+"))))))))
+(use-package! detached
+  :hook (doom-first-input . detached-init)
+  :config
+  (setq! detached-show-output-on-attach t))
+
+(use-package! gc-buffers :hook (doom-first-buffer . gc-buffers-mode))
