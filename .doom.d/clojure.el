@@ -30,11 +30,17 @@
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil))
 
+(defun +setup-clojure-mode ()
+  (add-hook! 'before-save-hook #'clojure-sort-ns))
+
+(add-hook! '(clojure-mode clojurescript-mode clojurec-mode) '+setup-clojure-mode)
+
 ;;; lispy
 (defun +in-babashka-p ()
   (and (memq major-mode '(clojure-mode))
        (functionp 'cider--babashka-version)
        (cider--babashka-version)))
+
 (defun +in-clj-p ()
   (memq major-mode '(clojure-mode clojurec-mode clojurescript-mode)))
 
@@ -64,6 +70,19 @@
       (apply func args))))
 
 ;;; cider
+(add-hook! cider-mode
+  (defun +clojure-use-cider-over-lsp ()
+    (pushnew! completion-at-point-functions #'cider-complete-at-point)
+    (setq-local cider-font-lock-dynamically '(macro core deprecated))
+    (setq-local lsp-completion-enable nil)))
+(add-hook! 'cider-disconnected-hook
+  (defun +clojure-use-lsp-over-cider ()
+    (delq! #'cider-complete-at-point completion-at-point-functions)
+    (setq-local cider-font-lock-dynamically nil)
+    (setq-local lsp-completion-enable t)))
+(add-hook! 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+(add-hook! 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+
 (after! cider
   ;; (setq! cider-preferred-build-tool 'clojure-cli)
   (setq!
