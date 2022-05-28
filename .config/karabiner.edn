@@ -267,8 +267,8 @@
              {:des   "s-mode in browser"
               :rules [:browser-s-mode
                       ;; vertical tab for firefox
-                      [:j :!CSclose_bracket :Firefoxes]
-                      [:k :!CSopen_bracket :Firefoxes]
+                      ;; [:j :!CSclose_bracket :Firefoxes]
+                      ;; [:k :!CSopen_bracket :Firefoxes]
                       [:j :!CSopen_bracket]
                       [:k :!CSclose_bracket]
                       [:h :!Copen_bracket]
@@ -313,7 +313,8 @@
 
                       [:quote [:togg "ClickUp"]]
                       [:t [:togg "/Applications/Todoist.app"]]
-                      [:p [:togg "Figma"]]
+                      [:p [:togg "Adobe Photoshop 2022"]]
+                      ;; [:p [:togg "Figma"]]
                       ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e :return_or_enter] :!Chromes]
                       [:comma [:togg "Google Chrome"] :!Chromes]
                       [:comma :same_wind_app :Chromes]

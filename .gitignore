@@ -255,3 +255,7 @@ local/bin/rust-analyzer
 /.zcompcache/
 /go/
 /.web3j/
+/.asdfrc
+/.asdf/
+/.react-native-cli/
+/.tool-versions
