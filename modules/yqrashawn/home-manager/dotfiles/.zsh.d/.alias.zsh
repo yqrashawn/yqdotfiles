@@ -30,7 +30,7 @@ alias lstt='exa --sort=modified --time=created --long --all -r | sed 15q'
 # alias l="ls -lF ${colorflag}"
 # alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
 alias reload="exec $SHELL -l"
-alias rreload="rm -rf ~/.cache/prezto/zcompdump && exec $SHELL -l"
+alias rreload="rm -rf ~/.cache/prezto/zcompdump || true && exec $SHELL -l"
 
 
 # servers
