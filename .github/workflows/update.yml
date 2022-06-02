@@ -3,7 +3,7 @@ name: Auto Update Flake Inputs
 on:
   schedule:
     # run this daily at 8am UTC, or roughly 4am eastern
-    - cron: '0 8 * * *'
+    - cron: "0 8 * * *"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -33,16 +33,16 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: flakebot
           force: true
       - name: pull-request-action
         uses: vsoch/pull-request-action@1.0.19
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-          PULL_REQUEST_FROM_BRANCH: 'flakebot'
-          PULL_REQUEST_BRANCH: 'master'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_FROM_BRANCH: "flakebot"
+          PULL_REQUEST_BRANCH: "master"
           MAINTAINER_CANT_MODIFY: true
           PASS_IF_EXISTS: true
           PASS_ON_ERROR: true
-          PULL_REQUEST_TITLE: 'Update Flake Inputs'
+          PULL_REQUEST_TITLE: "Update Flake Inputs"
