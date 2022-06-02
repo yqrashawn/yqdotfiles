@@ -121,7 +121,7 @@
       # lua
       # luajit
       # stylua
-      deno
+      # deno
       fennel
       luarocks
       # zig # marked broken
