@@ -1,6 +1,0 @@
-[submodule ".hammerspoon"]
-	path = .hammerspoon
-	url = git@github.com:agzam/spacehammer.git
-[submodule ".clojure"]
-	path = .clojure
-	url = git@github.com:yqrashawn/clojure-deps-edn.git

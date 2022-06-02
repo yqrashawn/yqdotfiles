@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "searchGithubCodeIssues" in workflow "nikivi.search-the-web" with argument ""

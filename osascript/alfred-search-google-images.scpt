@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "searchGoogleImages" in workflow "net.deanishe.alfred-searchio" with argument ""

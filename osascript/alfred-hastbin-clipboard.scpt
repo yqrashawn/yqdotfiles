@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "hastebinFromClipboard" in workflow "co.jmes.hastebin" with argument ""

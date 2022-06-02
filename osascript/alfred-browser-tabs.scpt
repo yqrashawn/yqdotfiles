@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "browserTabs" in workflow "com.clintonstrong.SearchTabs" with argument ""

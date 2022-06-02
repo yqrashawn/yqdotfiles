@@ -1,1 +1,0 @@
-/Users/yqrashawn/Dropbox/Mackup/.p10k.zsh

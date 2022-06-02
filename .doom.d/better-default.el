@@ -46,7 +46,9 @@
                                  (delete-overlay ol)
                                  ol)
        ispell-dictionary "en_US"
-       ispell-personal-dictionary "~/.config/personal_dict"
+       ispell-personal-dictionary (if (file-exists-p "~/Dropbox/sync/personal_dict")
+                                      "~/Dropbox/sync/personal_dict"
+                                    nil)
        dired-quick-sort-suppress-setup-warning t)
 
 (after! recentf

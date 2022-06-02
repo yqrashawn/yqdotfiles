@@ -1,1 +1,0 @@
-/Users/yqrashawn/Dropbox/Mackup/.phoenix.js

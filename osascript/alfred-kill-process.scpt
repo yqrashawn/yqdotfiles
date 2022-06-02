@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "killProcess" in workflow "com.ngreenstein.alfred-process-killer" with argument ""

@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "showCalendar" in workflow "zmin.calendar" with argument ""

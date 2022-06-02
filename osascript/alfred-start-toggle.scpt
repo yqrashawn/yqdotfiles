@@ -1,1 +1,0 @@
-tell application "Alfred 3" to run trigger "startToggl" in workflow "com.jason0x43.alfred-toggl" with argument ""
