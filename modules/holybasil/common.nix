@@ -118,7 +118,7 @@
 
       # langs
       yarn
-      lua
+      # lua
       luajit
       stylua
       # deno
