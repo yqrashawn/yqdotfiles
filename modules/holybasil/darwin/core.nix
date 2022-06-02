@@ -53,7 +53,6 @@ in {
   nix.nixPath = [ "darwin=/etc/${config.environment.etc.darwin.target}" ];
   nix.extraOptions = ''
     extra-platforms = x86_64-darwin aarch64-darwin
-    plugin-files = ${pkgs.nix-doc}/lib/libnix_doc_plugin.so
   '';
 
   # auto manage nixbld users with nix darwin
