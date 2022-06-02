@@ -76,7 +76,7 @@
       gnupg
       zoxide # fasd
       lazygit
-      watchexec
+      # watchexec
       wget
       curl
       rsync
