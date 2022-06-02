@@ -10,7 +10,7 @@
     # enableFzfHistory = true;
     # enableFzfGit = true;
     interactiveShellInit = ''
-      export PATH="$HOME/.fnm/current/bin:/Applications/Emacs.app/Contents/MacOS/bin:/Applications/Sublime Text.app/Contents/SharedSupport/bin:$HOME/.emacs.d/bin:$HOME/local/bin/funcs:$HOME/local/bin:$PATH"
+      export PATH="$HOME/.fnm/current/bin:/Applications/Emacs.app/Contents/MacOS/bin:/Applications/Sublime Text.app/Contents/SharedSupport/bin:$HOME/.emacs.d/bin:$HOME/local/bin/funcs:$HOME/local/bin:/opt/homebrew/bin:$PATH"
     '';
   };
 }
