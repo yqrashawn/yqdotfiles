@@ -52,7 +52,7 @@
 (mcfly)
 
 (comment
-  (shell "launchctl load -w" (fs/expand-home "~/Library/LaunchAgents/com.holybasil.dark-mode-notify.plist"))
-  (shell "launchctl remove com.holybasil.dark-mode-notify")
+  (shell "launchctl load -w" (fs/expand-home "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))
+  (shell "launchctl remove com.yqrashawn.dark-mode-notify")
   (shell "osascript" "-l" "JavaScript" "-e" "Application('System Events').appearancePreferences.darkMode=true")
   (shell "osascript" "-l" "JavaScript" "-e" "Application('System Events').appearancePreferences.darkMode=false"))

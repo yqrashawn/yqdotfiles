@@ -42,6 +42,35 @@
       target = ".zfunc";
       recursive = true;
     };
+    percol = {
+      source = ./.percol.d;
+      target = ".percol.d";
+      recursive = true;
+    };
+    prettier = {
+      source = ./.prettierrc;
+      target = ".perttierrc";
+    };
+    textlint = {
+      source = ./.textlintrc;
+      target = ".textlintrc";
+    };
+    nvm = {
+      source = ./.nvmrc;
+      target = ".nvmrc";
+    };
+    shadow-cljs = {
+      source = ./shadow-cljs.edn;
+      target = ".shadow-cljs/config.edn";
+    };
+    gitignoreglobal = {
+      source = ./gitignore_global;
+      target = ".gitignore_global";
+    };
+    mdl = {
+      source = ./.mdlrc;
+      target = ".mdlrc";
+    };
     # npmrc = {
     #   text = ''
     #     prefix = ${config.home.sessionVariables.NODE_PATH};
@@ -56,6 +85,29 @@
     yabai = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./yabai;
       recursive = true;
+    };
+    karabiner = {
+      source = ./karabiner.edn;
+      target = "karabiner.edn";
+    };
+    topgrade = {
+      source = ./topgrade.toml;
+      target = "topgrade.toml";
+    };
+    bblib = {
+      source = ./bblib;
+      recursive = true;
+    };
+    "clj-kondo/config.edn" = { source = ./clj-kondo.edn; };
+    ".zsh.d" = {
+      source = ./.zsh.d;
+      recursive = true;
+    };
+    "broot/conf.hjson" = { source = ./broot.hjson; };
+    ".lsp/config.edn" = { source = ./lsp.edn; };
+    htop = {
+      source = ./htoprc;
+      target = "htop/htoprc";
     };
     alacritty = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./alacritty;
