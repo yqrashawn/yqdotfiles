@@ -1,0 +1,1 @@
+tell application "Alfred 3" to run trigger "copyBrowserMarkDown" in workflow "com.uniqon.lazylink" with argument ""

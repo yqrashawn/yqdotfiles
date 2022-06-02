@@ -1,0 +1,11 @@
+wkhtmltopdf --no-background \
+            --run-script 'document.body.removeChild(document.querySelector(".published-on")); document.body.removeChild(document.querySelector(".email-comment")); document.body.removeChild(document.querySelector("#disqus_thread")); document.body.removeChild(document.querySelector("#disqus_loader")); document.body.removeChild(document.querySelector("footer")); document.body.removeChild(document.querySelector("header")); document.body.removeChild(document.querySelector(".menu-espanso")); document.querySelector(".mail-address").innerText = "namy.19@gmail.com";var mail = document.querySelector(".mail-address");document.getElementsByClassName("phone-number")[0].innerText="phone: 13021234545"' \
+            --no-outline \
+            --enable-forms \
+            --no-footer-line \
+            --no-header-line \
+            --zoom 3.4 \
+            --no-stop-slow-scripts \
+            --print-media-type \
+            http://yqrashawn.com/2017/11/29/resume/ \
+            ~/Downloads/resume.pdf

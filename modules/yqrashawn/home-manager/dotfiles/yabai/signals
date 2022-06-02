@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+export PATH=/run/current-system/sw/bin:$PATH
+
+bb="bb -cp ~/.config/bblib/"
+
+# refocus on window/app closed/quit
+# yabai -m signal --add event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent || yabai -m window --focus first"
+# yabai -m signal --add event=application_terminated action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus recent || yabai -m window --focus first"
+yabai -m signal --add event=application_activated action="~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
+yabai -m signal --add event=window_focused action="$bb ~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
+yabai -m signal --add event=application_front_switched action="$bb ~/.config/yabai/un-recent-zoom-fullscreen-if-same-space"
+# yabai -m signal --add event=window_focused action="$bb ~/.config/yabai/display-app-title"
+# yabai -m signal --add event=window_title_changed action="$bb ~/.config/yabai/display-app-title"
+# yabai -m signal --add event=application_front_switched action="$bb ~/.config/yabai/display-app-title"
+yabai -m signal --add event=display_removed action="$bb ~/.config/yabai/rules.clj"
+yabai -m signal --add event=display_added action="$bb ~/.config/yabai/rules.clj"
+# yabai -m signal --add event=application_activated action="~/.config/yabai/rules"
+# yabai -m signal --add event=window_destroyed action="~/.config/yabai/rules"

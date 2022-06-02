@@ -1,0 +1,473 @@
+# Key bindings
+#
+# Key bindings are specified as a list of objects. For example, this is the
+# default paste binding:
+#
+# `- { key: V, mods: Control|Shift, action: Paste }`
+#
+# Each key binding will specify a:
+#
+# - `key`: Identifier of the key pressed
+#
+#    - A-Z
+#    - F1-F24
+#    - Key0-Key9
+#
+#    A full list with available key codes can be found here:
+#    https://docs.rs/glutin/*/glutin/event/enum.VirtualKeyCode.html#variants
+#
+#    Instead of using the name of the keys, the `key` field also supports using
+#    the scancode of the desired key. Scancodes have to be specified as a
+#    decimal number. This command will allow you to display the hex scancodes
+#    for certain keys:
+#
+#       `showkey --scancodes`.
+#
+# Then exactly one of:
+#
+# - `chars`: Send a byte sequence to the running application
+#
+#    The `chars` field writes the specified string to the terminal. This makes
+#    it possible to pass escape sequences. To find escape codes for bindings
+#    like `PageUp` (`"\x1b[5~"`), you can run the command `showkey -a` outside
+#    of tmux. Note that applications use terminfo to map escape sequences back
+#    to keys. It is therefore required to update the terminfo when changing an
+#    escape sequence.
+#
+# - `action`: Execute a predefined action
+#
+#   - ToggleViMode
+#   - SearchForward
+#       Start searching toward the right of the search origin.
+#   - SearchBackward
+#       Start searching toward the left of the search origin.
+#   - Copy
+#   - Paste
+#   - IncreaseFontSize
+#   - DecreaseFontSize
+#   - ResetFontSize
+#   - ScrollPageUp
+#   - ScrollPageDown
+#   - ScrollHalfPageUp
+#   - ScrollHalfPageDown
+#   - ScrollLineUp
+#   - ScrollLineDown
+#   - ScrollToTop
+#   - ScrollToBottom
+#   - ClearHistory
+#       Remove the terminal's scrollback history.
+#   - Hide
+#       Hide the Alacritty window.
+#   - Minimize
+#       Minimize the Alacritty window.
+#   - Quit
+#       Quit Alacritty.
+#   - ToggleFullscreen
+#   - SpawnNewInstance
+#       Spawn a new instance of Alacritty.
+#   - ClearLogNotice
+#       Clear Alacritty's UI warning and error notice.
+#   - ClearSelection
+#       Remove the active selection.
+#   - ReceiveChar
+#   - None
+#
+# - Vi mode exclusive actions:
+#
+#   - Open
+#       Perform the action of the first matching hint under the vi mode cursor
+#       with `mouse.enabled` set to `true`.
+#   - ToggleNormalSelection
+#   - ToggleLineSelection
+#   - ToggleBlockSelection
+#   - ToggleSemanticSelection
+#       Toggle semantic selection based on `selection.semantic_escape_chars`.
+#
+# - Vi mode exclusive cursor motion actions:
+#
+#   - Up
+#       One line up.
+#   - Down
+#       One line down.
+#   - Left
+#       One character left.
+#   - Right
+#       One character right.
+#   - First
+#       First column, or beginning of the line when already at the first column.
+#   - Last
+#       Last column, or beginning of the line when already at the last column.
+#   - FirstOccupied
+#       First non-empty cell in this terminal row, or first non-empty cell of
+#       the line when already at the first cell of the row.
+#   - High
+#       Top of the screen.
+#   - Middle
+#       Center of the screen.
+#   - Low
+#       Bottom of the screen.
+#   - SemanticLeft
+#       Start of the previous semantically separated word.
+#   - SemanticRight
+#       Start of the next semantically separated word.
+#   - SemanticLeftEnd
+#       End of the previous semantically separated word.
+#   - SemanticRightEnd
+#       End of the next semantically separated word.
+#   - WordLeft
+#       Start of the previous whitespace separated word.
+#   - WordRight
+#       Start of the next whitespace separated word.
+#   - WordLeftEnd
+#       End of the previous whitespace separated word.
+#   - WordRightEnd
+#       End of the next whitespace separated word.
+#   - Bracket
+#       Character matching the bracket at the cursor's location.
+#   - SearchNext
+#       Beginning of the next match.
+#   - SearchPrevious
+#       Beginning of the previous match.
+#   - SearchStart
+#       Start of the match to the left of the vi mode cursor.
+#   - SearchEnd
+#       End of the match to the right of the vi mode cursor.
+#
+# - Search mode exclusive actions:
+#   - SearchFocusNext
+#       Move the focus to the next search match.
+#   - SearchFocusPrevious
+#       Move the focus to the previous search match.
+#   - SearchConfirm
+#   - SearchCancel
+#   - SearchClear
+#       Reset the search regex.
+#   - SearchDeleteWord
+#       Delete the last word in the search regex.
+#   - SearchHistoryPrevious
+#       Go to the previous regex in the search history.
+#   - SearchHistoryNext
+#       Go to the next regex in the search history.
+#
+# - macOS exclusive actions:
+#   - ToggleSimpleFullscreen
+#       Enter fullscreen without occupying another space.
+#
+# - Linux/BSD exclusive actions:
+#
+#   - CopySelection
+#       Copy from the selection buffer.
+#   - PasteSelection
+#       Paste from the selection buffer.
+#
+# - `command`: Fork and execute a specified command plus arguments
+#
+#    The `command` field must be a map containing a `program` string and an
+#    `args` array of command line parameter strings. For example:
+#       `{ program: "alacritty", args: ["-e", "vttest"] }`
+#
+# And optionally:
+#
+# - `mods`: Key modifiers to filter binding actions
+#
+#    - Command
+#    - Control
+#    - Option
+#    - Super
+#    - Shift
+#    - Alt
+#
+#    Multiple `mods` can be combined using `|` like this:
+#       `mods: Control|Shift`.
+#    Whitespace and capitalization are relevant and must match the example.
+#
+# - `mode`: Indicate a binding for only specific terminal reported modes
+#
+#    This is mainly used to send applications the correct escape sequences
+#    when in different modes.
+#
+#    - AppCursor
+#    - AppKeypad
+#    - Search
+#    - Alt
+#    - Vi
+#
+#    A `~` operator can be used before a mode to apply the binding whenever
+#    the mode is *not* active, e.g. `~Alt`.
+#
+# Bindings are always filled by default, but will be replaced when a new
+# binding with the same triggers is defined. To unset a default binding, it can
+# be mapped to the `ReceiveChar` action. Alternatively, you can use `None` for
+# a no-op if you do not wish to receive input characters for that binding.
+#
+# If the same trigger is assigned to multiple actions, all of them are executed
+# in the order they were defined in.
+key_bindings:
+  - { key: Home, chars: "\eOH", mode: AppCursor }
+  - { key: Home, chars: "\e[H", mode: ~AppCursor }
+  - { key: End, chars: "\eOF", mode: AppCursor }
+  - { key: End, chars: "\e[F", mode: ~AppCursor }
+  - { key: Key0, mods: Command, action: ResetFontSize }
+  - { key: Equals, mods: Command, action: IncreaseFontSize }
+  - { key: Minus, mods: Command, action: DecreaseFontSize }
+  - { key: PageUp, mods: Shift, chars: "\e[5;2~" }
+  - { key: PageUp, mods: Control, chars: "\e[5;5~" }
+  - { key: PageUp, chars: "\e[5~" }
+  - { key: PageDown, mods: Shift, chars: "\e[6;2~" }
+  - { key: PageDown, mods: Control, chars: "\e[6;5~" }
+  - { key: PageDown, chars: "\e[6~" }
+  - { key: Tab, mods: Shift, chars: "\e[Z" }
+  - { key: Back, chars: "" }
+  - { key: Back, mods: Alt, chars: "\e" }
+  - { key: Insert, chars: "\e[2~" }
+  - { key: Delete, chars: "\e[3~" }
+  - { key: Left, mods: Shift, chars: "\e[1;2D" }
+  - { key: Left, mods: Control, chars: "\e[1;5D" }
+  - { key: Left, mods: Alt, chars: "\e[1;3D" }
+  - { key: Left, chars: "\e[D", mode: ~AppCursor }
+  - { key: Left, chars: "\eOD", mode: AppCursor }
+  - { key: Right, mods: Shift, chars: "\e[1;2C" }
+  - { key: Right, mods: Control, chars: "\e[1;5C" }
+  - { key: Right, mods: Alt, chars: "\e[1;3C" }
+  - { key: Right, chars: "\e[C", mode: ~AppCursor }
+  - { key: Right, chars: "\eOC", mode: AppCursor }
+  - { key: Up, mods: Shift, chars: "\e[1;2A" }
+  - { key: Up, mods: Control, chars: "\e[1;5A" }
+  - { key: Up, mods: Alt, chars: "\e[1;3A" }
+  - { key: Up, chars: "\e[A", mode: ~AppCursor }
+  - { key: Up, chars: "\eOA", mode: AppCursor }
+  - { key: Down, mods: Shift, chars: "\e[1;2B" }
+  - { key: Down, mods: Control, chars: "\e[1;5B" }
+  - { key: Down, mods: Alt, chars: "\e[1;3B" }
+  - { key: Down, chars: "\e[B", mode: ~AppCursor }
+  - { key: Down, chars: "\eOB", mode: AppCursor }
+  - { key: F1, chars: "\eOP" }
+  - { key: F2, chars: "\eOQ" }
+  - { key: F3, chars: "\eOR" }
+  - { key: F4, chars: "\eOS" }
+  - { key: F5, chars: "\e[15~" }
+  - { key: F6, chars: "\e[17~" }
+  - { key: F7, chars: "\e[18~" }
+  - { key: F8, chars: "\e[19~" }
+  - { key: F9, chars: "\e[20~" }
+  - { key: F10, chars: "\e[21~" }
+  - { key: F11, chars: "\e[23~" }
+  - { key: F12, chars: "\e[24~" }
+  - { key: F1, mods: Shift, chars: "\e[1;2P" }
+  - { key: F2, mods: Shift, chars: "\e[1;2Q" }
+  - { key: F3, mods: Shift, chars: "\e[1;2R" }
+  - { key: F4, mods: Shift, chars: "\e[1;2S" }
+  - { key: F5, mods: Shift, chars: "\e[15;2~" }
+  - { key: F6, mods: Shift, chars: "\e[17;2~" }
+  - { key: F7, mods: Shift, chars: "\e[18;2~" }
+  - { key: F8, mods: Shift, chars: "\e[19;2~" }
+  - { key: F9, mods: Shift, chars: "\e[20;2~" }
+  - { key: F10, mods: Shift, chars: "\e[21;2~" }
+  - { key: F11, mods: Shift, chars: "\e[23;2~" }
+  - { key: F12, mods: Shift, chars: "\e[24;2~" }
+  - { key: F1, mods: Control, chars: "\e[1;5P" }
+  - { key: F2, mods: Control, chars: "\e[1;5Q" }
+  - { key: F3, mods: Control, chars: "\e[1;5R" }
+  - { key: F4, mods: Control, chars: "\e[1;5S" }
+  - { key: F5, mods: Control, chars: "\e[15;5~" }
+  - { key: F6, mods: Control, chars: "\e[17;5~" }
+  - { key: F7, mods: Control, chars: "\e[18;5~" }
+  - { key: F8, mods: Control, chars: "\e[19;5~" }
+  - { key: F9, mods: Control, chars: "\e[20;5~" }
+  - { key: F10, mods: Control, chars: "\e[21;5~" }
+  - { key: F11, mods: Control, chars: "\e[23;5~" }
+  - { key: F12, mods: Control, chars: "\e[24;5~" }
+  - { key: F1, mods: Alt, chars: "\e[1;6P" }
+  - { key: F2, mods: Alt, chars: "\e[1;6Q" }
+  - { key: F3, mods: Alt, chars: "\e[1;6R" }
+  - { key: F4, mods: Alt, chars: "\e[1;6S" }
+  - { key: F5, mods: Alt, chars: "\e[15;6~" }
+  - { key: F6, mods: Alt, chars: "\e[17;6~" }
+  - { key: F7, mods: Alt, chars: "\e[18;6~" }
+  - { key: F8, mods: Alt, chars: "\e[19;6~" }
+  - { key: F9, mods: Alt, chars: "\e[20;6~" }
+  - { key: F10, mods: Alt, chars: "\e[21;6~" }
+  - { key: F11, mods: Alt, chars: "\e[23;6~" }
+  - { key: F12, mods: Alt, chars: "\e[24;6~" }
+  - { key: F1, mods: Command, chars: "\e[1;3P" }
+  - { key: F2, mods: Command, chars: "\e[1;3Q" }
+  - { key: F3, mods: Command, chars: "\e[1;3R" }
+  - { key: F4, mods: Command, chars: "\e[1;3S" }
+  - { key: F5, mods: Command, chars: "\e[15;3~" }
+  - { key: F6, mods: Command, chars: "\e[17;3~" }
+  - { key: F7, mods: Command, chars: "\e[18;3~" }
+  - { key: F8, mods: Command, chars: "\e[19;3~" }
+  - { key: F9, mods: Command, chars: "\e[20;3~" }
+  - { key: F10, mods: Command, chars: "\e[21;3~" }
+  - { key: F11, mods: Command, chars: "\e[23;3~" }
+  - { key: F12, mods: Command, chars: "\e[24;3~" }
+  - { key: NumpadEnter, chars: "\n" }
+  - { key: N, mods: Command, action: SpawnNewInstance }
+
+  - { key: Grave, mods: Alt, chars: "\e`" }
+  # Alt + `
+  - { key: Grave, mods: Alt|Shift, chars: "\e~" }
+  # Alt + ~
+  - { key: Period, mods: Alt, chars: "\e." }
+  # Alt + .
+  - { key: Key8, mods: Alt|Shift, chars: "\e*" }
+  # Alt + *
+  - { key: Key3, mods: Alt|Shift, chars: "\e#" }
+  # Alt + #
+  - { key: Comma, mods: Alt|Shift, chars: "\e<" }
+  # Alt + <
+  - { key: Period, mods: Alt|Shift, chars: "\e>" }
+  # Alt + >
+  - { key: Key5, mods: Alt|Shift, chars: "\e%" }
+  # Alt + %
+  - { key: Key6, mods: Alt|Shift, chars: "\e^" }
+  # Alt + ^
+  - { key: Backslash, mods: Alt, chars: "\e\\" }
+  # Alt + \
+  - { key: Backslash, mods: Alt|Shift, chars: "\e|" }
+  # Alt + |
+  - { key: Apostrophe, mods: Alt, chars: "\e'" }
+  # Alt + '
+  # ----------------------------------------------------------------------------------------------------
+  - { key: Key1, mods: Alt, chars: "\e1" }
+  - { key: Key2, mods: Alt, chars: "\e2" }
+  - { key: Key3, mods: Alt, chars: "\e3" }
+  - { key: Key4, mods: Alt, chars: "\e4" }
+  - { key: Key5, mods: Alt, chars: "\e5" }
+  - { key: Key6, mods: Alt, chars: "\e6" }
+  - { key: Key7, mods: Alt, chars: "\e7" }
+  - { key: Key8, mods: Alt, chars: "\e8" }
+  - { key: Key9, mods: Alt, chars: "\e9" }
+  - { key: Key0, mods: Alt, chars: "\e0" }
+  - { key: Minus, mods: Alt, chars: "\e-" }
+  - { key: Equals, mods: Alt, chars: "\e=" }
+  - { key: A, mods: Alt, chars: "\ea" }
+  - { key: B, mods: Alt, chars: "\eb" }
+  - { key: C, mods: Alt, chars: "\ec" }
+  - { key: D, mods: Alt, chars: "\ed" }
+  - { key: E, mods: Alt, chars: "\ee" }
+  - { key: F, mods: Alt, chars: "\ef" }
+  - { key: G, mods: Alt, chars: "\eg" }
+  - { key: H, mods: Alt, chars: "\eh" }
+  - { key: I, mods: Alt, chars: "\ei" }
+  - { key: J, mods: Alt, chars: "\ej" }
+  - { key: K, mods: Alt, chars: "\ek" }
+  - { key: L, mods: Alt, chars: "\el" }
+  - { key: M, mods: Alt, chars: "\em" }
+  - { key: N, mods: Alt, chars: "\en" }
+  - { key: O, mods: Alt, chars: "\eo" }
+  - { key: P, mods: Alt, chars: "\ep" }
+  - { key: Q, mods: Alt, chars: "\eq" }
+  - { key: R, mods: Alt, chars: "\er" }
+  - { key: S, mods: Alt, chars: "\es" }
+  - { key: T, mods: Alt, chars: "\et" }
+  - { key: U, mods: Alt, chars: "\eu" }
+  - { key: V, mods: Alt, chars: "\ev" }
+  - { key: W, mods: Alt, chars: "\ew" }
+  - { key: X, mods: Alt, chars: "\ex" }
+  - { key: Y, mods: Alt, chars: "\ey" }
+  - { key: Z, mods: Alt, chars: "\ez" }
+  - { key: Escape, mods: Alt, chars: "\e" }
+  - { key: Key1, mods: Alt|Shift, chars: "\e!" }
+  - { key: Key2, mods: Alt|Shift, chars: "\e#" }
+  - { key: Key3, mods: Alt|Shift, chars: "\e$" }
+  - { key: Key4, mods: Alt|Shift, chars: "\e$" }
+  - { key: Key5, mods: Alt|Shift, chars: "\e%" }
+  - { key: Key6, mods: Alt|Shift, chars: "\e^" }
+  - { key: Key7, mods: Alt|Shift, chars: "\e&" }
+  - { key: Key8, mods: Alt|Shift, chars: "\e*" }
+  - { key: Key9, mods: Alt|Shift, chars: "\e(" }
+  - { key: Key0, mods: Alt|Shift, chars: "\e)" }
+  - { key: Minus, mods: Alt|Shift, chars: "\e_" }
+  - { key: Equals, mods: Alt|Shift, chars: "\e+" }
+  - { key: A, mods: Alt|Shift, chars: "\eA" }
+  - { key: B, mods: Alt|Shift, chars: "\eB" }
+  - { key: C, mods: Alt|Shift, chars: "\eC" }
+  - { key: D, mods: Alt|Shift, chars: "\eD" }
+  - { key: E, mods: Alt|Shift, chars: "\eE" }
+  - { key: F, mods: Alt|Shift, chars: "\eF" }
+  - { key: G, mods: Alt|Shift, chars: "\eG" }
+  - { key: H, mods: Alt|Shift, chars: "\eH" }
+  - { key: I, mods: Alt|Shift, chars: "\eI" }
+  - { key: J, mods: Alt|Shift, chars: "\eJ" }
+  - { key: K, mods: Alt|Shift, chars: "\eK" }
+  - { key: L, mods: Alt|Shift, chars: "\eL" }
+  - { key: M, mods: Alt|Shift, chars: "\eM" }
+  - { key: N, mods: Alt|Shift, chars: "\eN" }
+  - { key: O, mods: Alt|Shift, chars: "\eO" }
+  - { key: P, mods: Alt|Shift, chars: "\eP" }
+  - { key: Q, mods: Alt|Shift, chars: "\eQ" }
+  - { key: R, mods: Alt|Shift, chars: "\eR" }
+  - { key: S, mods: Alt|Shift, chars: "\eS" }
+  - { key: T, mods: Alt|Shift, chars: "\eT" }
+  - { key: U, mods: Alt|Shift, chars: "\eU" }
+  - { key: V, mods: Alt|Shift, chars: "\eV" }
+  - { key: W, mods: Alt|Shift, chars: "\eW" }
+  - { key: X, mods: Alt|Shift, chars: "\eX" }
+  - { key: Y, mods: Alt|Shift, chars: "\eY" }
+  - { key: Z, mods: Alt|Shift, chars: "\eZ" }
+
+  - { key: Space, mods: Control, chars: "\0" }
+  - { key: Space, mods: Alt, chars: "\e " }
+  - { key: Space, mods: Alt|Shift, chars: "\e " }
+
+  - { key: Semicolon, mods: Alt, chars: "\e;" }
+  - { key: Semicolon, mods: Alt|Shift, chars: "\e:" }
+
+  - { key: LBracket, mods: Alt, chars: "\e[" }
+  - { key: RBracket, mods: Alt, chars: "\e]" }
+  - { key: LBracket, mods: Alt|Shift, chars: "\e{" }
+  - { key: RBracket, mods: Alt|Shift, chars: "\e}" }
+
+  - { key: V, mods: Command, action: Paste }
+  - { key: C, mods: Command, action: Copy }
+  - { key: Paste, action: Paste }
+  - { key: Paste, mods: Command, action: Paste }
+  - { key: Copy, action: Copy }
+  - { key: N, mods: Command, action: SpawnNewInstance }
+  # - { key: W, mods: Command, action: Hide }
+  - { key: H, mods: Command, action: Hide }
+  - { key: Q, mods: Command, action: Quit }
+  - { key: G, mods: Control, chars: "\a" }
+
+  - { key: Semicolon, mods: Control, chars: "\e+\e+C;" }
+  - { key: Semicolon, mods: Control|Shift, chars: "\e+\e+C:" }
+
+  - { key: Period, mods: Control, chars: "\e+\e+C." }
+  - { key: Period, mods: Control|Shift, chars: "\e+\e+C>" }
+
+  - { key: Comma, mods: Control, chars: "\e+\e+C," }
+  - { key: Comma, mods: Control|Shift, chars: "\e+\e+C<" }
+
+  - { key: Apostrophe, mods: Control|Shift, chars: "\e+\e+C\"" }
+  - { key: Apostrophe, mods: Control, chars: "\e+\e+C'" }
+
+  - { key: Slash, mods: Control, chars: "\x1f" }
+  - { key: Slash, mods: Control|Shift, chars: "\e+\e+C?" }
+  - { key: Q, mods: Control, chars: "\x11" }
+  - { key: A, mods: Command, chars: "@@a" }
+  - { key: B, mods: Command, chars: "@@b" }
+  # - { key: C, mods: Command, chars: "@@c" }
+  - { key: D, mods: Command, chars: "@@d" }
+  - { key: E, mods: Command, chars: "@@e" }
+  - { key: F, mods: Command, chars: "@@f" }
+  - { key: G, mods: Command, chars: "@@g" }
+  - { key: H, mods: Command, chars: "@@h" }
+  - { key: I, mods: Command, chars: "@@i" }
+  - { key: J, mods: Command, chars: "@@j" }
+  - { key: K, mods: Command, chars: "@@k" }
+  - { key: L, mods: Command, chars: "@@l" }
+  - { key: M, mods: Command, chars: "@@m" }
+  # - { key: N, mods: Command, chars: "@@n" }
+  - { key: O, mods: Command, chars: "@@o" }
+  - { key: P, mods: Command, chars: "@@p" }
+  # - { key: Q, mods: Command, chars: "@@q" }
+  - { key: R, mods: Command, chars: "@@r" }
+  - { key: S, mods: Command, chars: "@@s" }
+  - { key: T, mods: Command, chars: "@@t" }
+  - { key: U, mods: Command, chars: "@@u" }
+  # - { key: V, mods: Command, chars: "@@v" }
+  - { key: W, mods: Command, chars: "@@w" }
+  - { key: X, mods: Command, chars: "@@x" }
+  - { key: Y, mods: Command, chars: "@@y" }
+  - { key: Z, mods: Command, chars: "@@z" }

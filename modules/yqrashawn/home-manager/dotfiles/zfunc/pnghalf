@@ -1,0 +1,4 @@
+pnghalf () {
+  convert -resize 50% $@ $@
+}
+pnghalf "$@"

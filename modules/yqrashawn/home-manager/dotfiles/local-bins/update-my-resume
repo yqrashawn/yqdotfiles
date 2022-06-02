@@ -1,0 +1,6 @@
+sh ~/local/bin/get-my-resume \
+&& cp ~/Downloads/resume.pdf ~/workspace/HOME/yqrashawn.github.io/about/ \
+&& git -C ~/workspace/HOME/yqrashawn.github.io/ pull \
+&& git -C ~/workspace/HOME/yqrashawn.github.io/ add ~/workspace/HOME/yqrashawn.github.io/about/resume.pdf \
+&& git -C ~/workspace/HOME/yqrashawn.github.io/ commit -m 'update resume' \
+&& git -C ~/workspace/HOME/yqrashawn.github.io/ push

@@ -1,0 +1,8 @@
+HERE=$(realpath $1)
+TARGET=$(realpath $2)
+BASE1=$(basename "$HERE")
+echo "mv ${HERE} ${TARGET}"
+mv ${HERE} ${TARGET}
+echo "ln -s ${TARGET}/${BASE1} ${HERE}"
+ln -s ${TARGET}/${BASE1} ${HERE}
+echo "Finish!"

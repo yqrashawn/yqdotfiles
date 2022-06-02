@@ -1,0 +1,6 @@
+
+pngopti () {
+  optipng -o7 $@
+}
+
+pngopti "$@"

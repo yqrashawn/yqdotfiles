@@ -1,0 +1,3 @@
+import:
+  - ~/.config/alacritty/modus-operandi.yml
+  # - ~/.config/alacritty/modus-vivendi.yml

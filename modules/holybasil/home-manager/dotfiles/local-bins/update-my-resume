@@ -1,0 +1,6 @@
+sh ~/local/bin/get-my-resume \
+&& cp ~/Downloads/resume.pdf ~/workspace/HOME/holybasil.github.io/about/ \
+&& git -C ~/workspace/HOME/holybasil.github.io/ pull \
+&& git -C ~/workspace/HOME/holybasil.github.io/ add ~/workspace/HOME/holybasil.github.io/about/resume.pdf \
+&& git -C ~/workspace/HOME/holybasil.github.io/ commit -m 'update resume' \
+&& git -C ~/workspace/HOME/holybasil.github.io/ push

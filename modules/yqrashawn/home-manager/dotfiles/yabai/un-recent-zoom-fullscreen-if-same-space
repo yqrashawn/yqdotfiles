@@ -1,0 +1,15 @@
+#!/run/current-system/sw/bin/bb
+
+(ns yabai.layout
+  (:require
+   [cheshire.core :as json]
+   [clojure.java.shell :refer [sh]]))
+
+(let [{cur-win-space :space}             (-> (apply sh ["yabai" "-m" "query" "--windows" "--window"])
+                                             :out
+                                             (json/parse-string keyword))
+      {:keys [zoom-fullscreen id space]} (-> (apply sh ["yabai" "-m" "query" "--windows" "--window" "recent"])
+                                             :out
+                                             (json/parse-string keyword))]
+  (when (and (= zoom-fullscreen 1) (= cur-win-space space))
+    (apply sh ["yabai" "-m" "window" id "--toggle" "zoom-fullscreen"])))

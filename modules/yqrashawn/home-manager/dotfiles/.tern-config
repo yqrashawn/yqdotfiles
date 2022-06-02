@@ -1,0 +1,21 @@
+{
+  "plugins": {
+    "complete_strings": {
+      "maxLength": 15
+    },
+    "es_modules": {},
+    "commonjs": {},
+    "node": {},
+    "node_resolve": {},
+    "modules": {
+      "dontLond": "/unmin|min|build/"
+    }
+  },
+  "libs": [
+    "ecma5",
+    "ecma6",
+    "browser",
+    "ecmascript"
+  ],
+  "ecmaVersion": 6
+}

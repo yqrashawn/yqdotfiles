@@ -115,7 +115,7 @@
       :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
       :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                                (call-interactively #'+default/search-project)))
-      :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.config/karabiner.edn"))
+      :desc "Edit goku edn config" "k" (cmd! (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
       :desc "Edit nix config" "n" (cmd! (projectile-switch-project-by-name "~/.nixpkgs/"))
       :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
       :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))

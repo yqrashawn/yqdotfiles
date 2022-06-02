@@ -1,0 +1,147 @@
+#!/usr/bin/env sh
+
+export PATH=/run/current-system/sw/bin:$PATH
+
+DISPLAY_COUNT=$(yabai -m query --displays | jq length)
+if [[ $DISPLAY_COUNT -eq 1 ]] && [[ "$($HOME/local/bin/has-lg-4k-hdr)" ]]; then
+  yabai -m rule --add app="^Alacritty$" space=1
+  yabai -m rule --add app="^Emacs$" space=1
+  yabai -m rule --add app="^Firefox Developer Edition$" space=1
+  yabai -m rule --add app="^Orion$" space=1
+  yabai -m rule --add app="^Microsoft Edge" space=1
+  yabai -m rule --add app="^Google Chrome$" space=1
+
+  yabai -m rule --add app="^Mail$" space=1
+  yabai -m rule --add app="^Newsblur$" space=1
+  yabai -m rule --add app="^Reeder$" space=1
+  yabai -m rule --add app="^Figma$" space=1
+  yabai -m rule --add app="^Adobe Photoshop" space=1
+
+  yabai -m rule --add app="^ClickUp$" space=2
+  yabai -m rule --add app="^Logseq$" space=2
+  yabai -m rule --add app="^Roam$" space=2
+  yabai -m rule --add app="^NotePlan$" space=2
+  yabai -m rule --add app="^Notion$" space=2
+  yabai -m rule --add app="^Todoist$" space=2
+
+  yabai -m rule --add app="^Keybase$" manage=on space=3
+  yabai -m rule --add app="^Discord$" manage=on space=3
+  yabai -m rule --add app="^Telegram$" manage=on space=3
+
+  yabai -m rule --add app="^NeteaseMusic$" manage=on space=4
+  yabai -m rule --add app="^Endel$" manage=on space=4
+  yabai -m rule --add app="^TIDAL$" manage=on space=4
+elif [[ $DISPLAY_COUNT -eq 1 ]] && [[ "$($HOME/local/bin/home-4k)" ]]; then
+  yabai -m rule --add app="^Alacritty$" space=1 manage=off
+  yabai -m rule --add app="^Emacs$" space=1
+  yabai -m rule --add app="^Firefox Developer Edition$" space=1 manage=off
+  yabai -m rule --add app="^Orion$" space=1 manage=off
+  yabai -m rule --add app="^Microsoft Edge" space=1 manage=off
+  yabai -m rule --add app="^Google Chrome$" space=1
+
+  yabai -m rule --add app="^Mail$" space=1 manage=off
+  yabai -m rule --add app="^Newsblur$" space=1 manage=off
+  yabai -m rule --add app="^Reeder$" space=1 manage=off
+  yabai -m rule --add app="^Figma$" space=1 manage=off
+  yabai -m rule --add app="^Adobe Photoshop" space=1 manage=off
+
+  yabai -m rule --add app="^ClickUp$" space=1 manage=off
+  yabai -m rule --add app="^Roam$" space=1 manage=off
+  yabai -m rule --add app="^NotePlan$" space=1 manage=off
+  yabai -m rule --add app="^Notion$" space=1 manage=off
+  yabai -m rule --add app="^Todoist$" space=1 manage=off
+
+  yabai -m rule --add app="^Keybase$" manage=on space=3
+  yabai -m rule --add app="^Discord$" manage=on space=2
+  yabai -m rule --add app="^Telegram$" manage=on space=2
+  yabai -m rule --add app="^DingTalk$" space=1 manage=off
+  yabai -m rule --add app="^Slack$" space=1 manage=off
+  yabai -m rule --add app="^Baidu" space=1 manage=off
+  yabai -m rule --add app="^Finder$" space=1 manage=off
+
+  yabai -m rule --add app="^NeteaseMusic$" manage=on space=4
+  yabai -m rule --add app="^Endel$" manage=on space=4
+  yabai -m rule --add app="^TIDAL$" manage=on space=4
+elif [[ $DISPLAY_COUNT -eq 2 ]]; then
+  yabai -m rule --add app="^Alacritty$" space=1
+  yabai -m rule --add app="^Emacs$" space=1
+  yabai -m rule --add app="^Firefox Developer Edition$" space=6
+  yabai -m rule --add app="^Orion$" space=6
+
+  yabai -m rule --add app="^Logseq$" space=2
+  yabai -m rule --add app="^Roam$" space=2
+  yabai -m rule --add app="^NotePlan$" space=2
+  yabai -m rule --add app="^Notion$" space=2
+  yabai -m rule --add app="^Todoist$" space=2
+  yabai -m rule --add app="^Google Chrome$" space=7
+
+  yabai -m rule --add app="^Mail$" space=3
+  yabai -m rule --add app="^Newsblur$" space=3
+  yabai -m rule --add app="^Reeder$" space=3
+  yabai -m rule --add app="^Figma$" space=8
+  yabai -m rule --add app="^Adobe Photoshop" space=8
+  yabai -m rule --add app="^ClickUp$" space=8
+
+  yabai -m rule --add app="^WeChat$" manage=on space=9
+  yabai -m rule --add app="^DingTalk$" space=9
+
+  yabai -m rule --add app="^Keybase$" manage=on space=5
+  yabai -m rule --add app="^Discord$" manage=on space=5
+  yabai -m rule --add app="^Telegram$" manage=on space=5
+  yabai -m rule --add app="^Endel$" manage=on space=10
+  yabai -m rule --add app="^NeteaseMusic$" manage=on space=10
+  yabai -m rule --add app="^TIDAL$" manage=on space=10
+else
+  yabai -m rule --add app=".*" space=1
+fi
+
+### float
+yabai -m rule --add app="^Emacs$" title="^ *Minibuf.*\*$" manage=off
+yabai -m rule --add app="^WeChat$" manage=off
+yabai -m rule --add app="^CleanMyMac.*$" manage=off
+yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^Twitterrific$" manage=off
+yabai -m rule --add app="^Dash$" manage=off
+yabai -m rule --add app="^Slidepad$" manage=off border=off
+yabai -m rule --add app="^Sensei$" manage=off
+yabai -m rule --add app="^Finder$" title="^/Volumes/" manage=off
+yabai -m rule --add app="^Install$" manage=off
+yabai -m rule --add app="^Image2icon$" manage=off
+yabai -m rule --add app="^Surge$" manage=off
+yabai -m rule --add app="^Alfred Preferences$" manage=off
+# yabai -m rule --add app="^Raycast$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="(T|t)encent" manage=off
+yabai -m rule --add app="腾讯" manage=off
+yabai -m rule --add app="^iShot$" manage=off
+yabai -m rule --add app="^DingTalk$" title="Window" manage=off
+yabai -m rule --add app="^Expressions$" manage=off
+yabai -m rule --add app="^Digital Colou?r Meter$" sticky=on
+yabai -m rule --add app="^Google Drive$" manage=off
+yabai -m rule --add app="^ToothFairy$" manage=off
+yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
+yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
+yabai -m rule --add app="^iStat Menus Status$" manage=off border=off mouse_follows_focus=off sticky=off
+yabai -m rule --add app="CopyQ$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
+# yabai -m rule --add app="Todoist$" title="^Todoist$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
+# yabai -m rule --add app="^Alacritty$" manage=off border=off grid='10:10:0:0:5:10'
+yabai -m rule --add app="^Emacs$" title="^(Emacs Everywhere|edit - )" layer=above manage=off sticky=on
+yabai -m rule --add app="^Firefox" title="^Extension: " layer=above manage=off sticky=on
+yabai -m rule --add app="^Google Chrome$" title="^(MetaMask|Fluent)$" layer=above manage=off sticky=on
+yabai -m rule --add app="^Firefox" title="^(MetaMask|Fluent)$" layer=above manage=off sticky=on
+yabai -m rule --add app="^Microsoft Edge" title="^(MetaMask|Fluent)$" layer=above manage=off sticky=on
+yabai -m rule --add app="^AutoSwitchInput$" title="^Window" border=off manage=off
+yabai -m rule --add app="^AutoSwitchInputPro$" title="^Window" border=off manage=off
+yabai -m rule --add app="^BetterZip$" border=off manage=off
+yabai -m rule --add app="^SwitchResX" border=off manage=off
+yabai -m rule --add app="^mpv$" border=off manage=off
+yabai -m rule --add app="Chrom" title="^Task Manager" border=off manage=off
+yabai -m rule --add app="^Microsoft Edge" title="^Task Manager" border=off manage=off
+yabai -m rule --add app="^Orion$" title="^(Extensions|General|Apperance|Browsing|Sync|Privacy|Search|Websites)$" border=off manage=off
+# yabai -m rule --add app=".*" topmost=off
+
+# Do not manage windows with certain titles eg. Copying files or moving to bin
+yabai -m rule --add title="(Copy|Bin|About This Mac|Info)" manage=off
+
+# Do not manage some apps which are not resizable
+yabai -m rule --add app="^(Preview|Finder|Calendar|Calculator|System Preferences|[sS]tats|yabai|[Jj]et[Bb]rains [Tt]ool[Bb]ox)$" manage=off border=off

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ioreg -l -w 0 | grep SecureInput | awk 'BEGIN {FS="[^a-zA-Z0-9]+"} {print $8}' | uniq | xargs -n 1 ps aux

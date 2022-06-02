@@ -1,0 +1,1 @@
+tell application "Alfred 3" to run trigger "launchAlfredPreferecnes" in workflow "yqrashawn.workflow.launcher" with argument ""

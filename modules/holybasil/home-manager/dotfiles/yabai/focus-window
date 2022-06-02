@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+export PATH=/run/current-system/sw/bin/:/usr/local/bin:$PATH
+APP_NAME=$@
+WINS=$(yabai -m query --windows)
+WIN=$(echo $WINS | jq ".[] | select(.app == \"${APP_NAME}\")")
+FOCUSED=$(echo $WIN | jq '."has-focus"')
+ID=$(echo $WIN | jq '.id')
+
+function focus {
+  yabai -m window $ID --focus
+}
+
+[ $FOCUSED != true ] && focus || true

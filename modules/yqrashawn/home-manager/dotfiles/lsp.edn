@@ -1,0 +1,11 @@
+{:log-path "/tmp/clojure-lsp.log"
+ :notify-references-on-file-change true
+ :hover                            {:arity-on-same-line? true
+                                    :hide-file-location? true
+                                    :clojuredocs         true}
+ :clean                            {;; :ns-inner-blocks-indentation :next-line
+                                    :sort {:ns      true
+                                           :require true
+                                           :import  true
+                                           :refer   {:max-line-length 80}}}
+ :linters                          {:clj-kondo {:async-custom-lint? true}}}

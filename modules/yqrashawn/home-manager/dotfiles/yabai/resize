@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+export PATH=/run/current-system/sw/bin/:$PATH
+
+function resize {
+  while [[ "$1" ]]; do
+    yabai -m window --resize "$2":"$1"
+    shift
+    shift
+  done
+}
+
+function main {
+  case "${1:0:1}" in
+    "l") resize "-20:0" "left" "-40:0" "right" ;;
+    "r") resize "20:0" "left" "40:0" "right" ;;
+    "d") resize "0:20" "top" "0:40" "bottom" ;;
+    "u") resize "0:-20" "top" "0:-40" "bottom" ;;
+  esac
+}
+
+main "$@"

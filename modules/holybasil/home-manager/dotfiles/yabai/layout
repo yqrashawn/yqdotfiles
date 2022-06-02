@@ -1,0 +1,33 @@
+#!/run/current-system/sw/bin/bb
+
+(ns yabai.layout
+  (:require
+   ;; [clojure.string :as s]
+   [cheshire.core :as json]
+   [clojure.java.shell :refer [sh]]))
+
+;; code
+;; emacs alacritty firefox chrome figma
+;; message
+;; slack keybase dingtalk discord telegram wechat
+;; plan
+;; notion clickup
+;; coffee
+;; firefox newsblur twitterific
+(def config {:display {1 :main 2 :second 3 :third 4 :forth}
+             :mode {:code {}
+                    :message {}
+                    :plan {}
+                    :coffee {}}})
+
+(defn y [& args]
+  (let [args (mapv #(if (keyword? %) (name %) (str %)) args)
+        {:keys [exit out err]} (apply sh "yabai" "-m" args)
+        out (and out (json/parse-string out keyword))]
+    (if (= exit 0)
+      out
+      (throw (java.lang.Exception. err)))))
+
+(defn main []
+  (let [displays (y :query :--displays)]
+    (doseq [{:keys [index spaces]} displays])))

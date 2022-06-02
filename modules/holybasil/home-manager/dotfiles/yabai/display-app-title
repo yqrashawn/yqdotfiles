@@ -1,0 +1,39 @@
+#!/run/current-system/sw/bin/bb
+
+(ns yabai.display-title
+  (:require
+   [cheshire.core :as json]
+   [clojure.java.shell :refer [sh]]
+   [clojure.string :as str]))
+
+(def app-name {"Firefox Developer Edition" "FDE"})
+
+(defn yabai [& args]
+  (let [args                   (mapv #(if (keyword? %) (name %) (str %)) args)
+        {:keys [exit out err]} (apply sh "yabai" "-m" args)
+        out                    (and out (json/parse-string out keyword))]
+    (if (= exit 0)
+      out
+      (throw (java.lang.Exception. err)))))
+
+(defn sketchybar [& args]
+  (let [args                   (mapv #(if (keyword? %) (name %) (str %)) args)
+        {:keys [exit out err]} (apply sh "/usr/local/bin/sketchybar" "-m" args)
+        ;; out                    (and out (json/parse-string out keyword))
+        ]
+    (if (= exit 0)
+      out
+      (throw (java.lang.Exception. err)))))
+
+(defn cur-win [] (yabai :query :--windows :--window))
+
+(defn shorten-app-name [app]
+  (get app-name app app))
+
+(let [{:keys [title app]} (cur-win)
+      short-app-name      (shorten-app-name app)
+      valid-title         (and (string? title) (pos? (count title)))
+      rst                 (cond (not valid-title)                           short-app-name
+                                (and valid-title (str/includes? title app)) title
+                                :else                                       (str short-app-name " - " title))]
+  (sketchybar :--set :apptitle (str "label=" rst)))

@@ -1,0 +1,242 @@
+#!/usr/bin/env bash
+
+############## BAR ##############
+sketchybar -m --bar height=25 \
+  blur_radius=0 \
+  position=top \
+  padding_left=10 \
+  padding_right=10 \
+  color=0xff8a8a8a
+
+############## GLOBAL DEFAULTS ##############
+sketchybar -m --default updates=when_shown \
+  drawing=on \
+  cache_scripts=on \
+  label.highlight_color=0xff48aa2a \
+  icon.font="PragmataPro:Bold:16.0" \
+  icon.color=0xffffffff \
+  label.font="PragmataPro:Bold:16.0" \
+  label.color=0xffffffff
+
+############## SPACE DEFAULTS ##############
+sketchybar -m --default label.padding_left=2 \
+  label.padding_right=2 \
+  icon.padding_left=8 \
+  label.padding_right=8
+
+############## PRIMARY DISPLAY SPACES ##############
+sketchybar -m \
+  --add space space1 left \
+  --set space1 associated_space=1 \
+  associated_display=1 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=1 \
+  click_script="yabai -m space --focus 1" \
+  \
+  --add space space2 left \
+  --set space2 associated_space=2 \
+  associated_display=1 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=2 \
+  click_script="yabai -m space --focus 2" \
+  \
+  --add space space3 left \
+  --set space3 associated_space=3 \
+  associated_display=1 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=3 \
+  click_script="yabai -m space --focus 3" \
+  \
+  --add space space4 left \
+  --set space4 associated_space=4 \
+  associated_display=1 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=4 \
+  click_script="yabai -m space --focus 4" \
+  \
+  --add space space5 left \
+  --set space5 associated_space=5 \
+  associated_display=1 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=5 \
+  click_script="yabai -m space --focus 5"
+
+############## SECONDARY DISPLAY SPACES ##############
+sketchybar -m \
+  --add space space6 left \
+  --set space6 associated_space=6 \
+  associated_display=2 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=6 \
+  click_script="yabai -m space --focus 6" \
+  \
+  --add space space7 left \
+  --set space7 associated_space=7 \
+  associated_display=2 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=7 \
+  click_script="yabai -m space --focus 7" \
+  \
+  --add space space8 left \
+  --set space8 associated_space=8 \
+  associated_display=2 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=8 \
+  click_script="yabai -m space --focus 8" \
+  \
+  --add space space9 left \
+  --set space9 associated_space=9 \
+  associated_display=2 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=9 \
+  click_script="yabai -m space --focus 9" \
+  \
+  --add space space0 left \
+  --set space0 associated_space=10 \
+  associated_display=2 \
+  script="~/.config/sketchybar/plugins/space.sh" \
+  label=0 \
+  click_script="yabai -m space --focus 10"
+
+############## ITEM DEFAULTS ###############
+sketchybar -m --default label.padding_left=2 \
+  icon.padding_right=2 \
+  icon.padding_left=6 \
+  label.padding_right=6
+
+############## LEFT ITEMS ##############
+sketchybar -m --add item space_separator left \
+  --set space_separator icon= \
+  associated_space=1 \
+  associated_space=3 \
+  icon.padding_left=0 \
+  label.padding_right=0 \
+  icon.font="PragmataPro:Bold:16.0" \
+  \
+  --add item topmem left \
+  --set topmem associated_space=1 \
+  icon.padding_left=0 \
+  update_freq=15 \
+  script="~/.config/sketchybar/plugins/topmem.sh" \
+  \
+  --add item kbur left \
+  --set kbur \
+  icon.font="PragmataPro:Bold:16.0" \
+  label.color=0xffff0000 \
+  update_freq=60 \
+  script="~/.config/sketchybar/plugins/keybase_unread.sh" \
+  click_script="hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Keybase\")'" \
+  \
+  --add item ghactcheck left \
+  --set ghactcheck \
+  icon.font="PragmataPro:Bold:16.0" \
+  label.color=0xffff0000 \
+  update_freq=120 \
+  script="bb -cp ~/.config/bblib ~/.config/sketchybar/plugins/failed_gh_action_in_repos.clj"
+
+############## RIGHT ITEMS ##############
+sketchybar -m --add item battery right \
+  --set battery \
+  update_freq=20 \
+  script="~/.config/sketchybar/plugins/power.sh" \
+  label.font="PragmataPro:Bold:16.0" \
+  icon.font="PragmataPro:Bold:16.0"
+
+sketchybar -m --add item clock right \
+  --set clock update_freq=10 \
+  script="~/.config/sketchybar/plugins/clock.sh" # \
+# \
+# --add item notmuch right \
+# --set notmuch associated_space=1,2,3 \
+# update_freq=300 \
+# script="~/.config/sketchybar/plugins/notmuch.sh" \
+# icon.font="PragmataPro:Bold:16.0" \
+# icon= \
+# label.padding_right=-2
+# \ click_script="hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Mail\")'"
+
+# Creating Graphs
+sketchybar -m \
+  --add item topproc left \
+  --set topproc associated_space=1 \
+  icon.padding_left=0 \
+  update_freq=15 \
+  script="~/.config/sketchybar/plugins/topproc.sh" # \
+# \
+# --add graph cpu_user right 30 \
+# --set cpu_user graph.color=0xffffffff \
+# update_freq=2 \
+# width=0 \
+# associated_space=1 \
+# label.padding_left=0 \
+# script="~/.config/sketchybar/plugins/cpu_graph.sh" \
+# lazy=on \
+# \
+# --add graph cpu_sys right 30 \
+# --set cpu_sys label.padding_left=0 \
+# associated_space=1 \
+# graph.color=0xff48aa2a
+
+# Stats
+sketchybar -m --add alias Stats,'CPU_Line chart' right \
+  --set Stats,'CPU_Line chart' \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=-2 \
+  label.padding_right=-10 \
+  \
+  --add alias Stats,'RAM_Line chart' right \
+  --set Stats,'RAM_Line chart' \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=-2 \
+  label.padding_right=0 \
+  \
+  --add alias 'iStat Menus Status',com.bjango.istatmenus.cpu right \
+  --set 'iStat Menus Status',com.bjango.istatmenus.cpu \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=0 \
+  label.padding_right=-5 \
+  \
+  --add alias 'iStat Menus Status',com.bjango.istatmenus.memory right \
+  --set 'iStat Menus Status',com.bjango.istatmenus.memory \
+  associated_space=1 \
+  update_freq=5 \
+  icon.padding_left=0 \
+  label.padding_right=-5 \
+  \
+  --add alias xbar,Item-0 right \
+  --set xbar,Item-0 \
+  associated_space=1 \
+  update_freq=120 \
+  icon.padding_left=0 \
+  label.padding_right=-5 \
+  \
+  --add alias xbar,Item-1 right \
+  --set xbar,Item-1 \
+  associated_space=1 \
+  update_freq=120 \
+  icon.padding_left=0 \
+  label.padding_right=-5
+
+###################### CENTER ITEMS ###################
+
+sketchybar -m --add item apptitle center
+
+# Adding custom events which can listen on distributed notifications from other running processes
+# sketchybar -m --add event spotify_change "com.spotify.client.PlaybackStateChanged"										\
+#               --add item spotifyIndicator center                                                                          \
+#               --set spotifyIndicator script="~/.config/sketchybar/plugins/spotifyIndicator.sh"                            \
+#               --set spotifyIndicator click_script="osascript -e 'tell application                  \"Spotify\" to pause'" \
+#               --subscribe spotifyIndicator spotify_change
+
+############## FINALIZING THE SETUP ##############
+sketchybar -m --update
+
+echo "sketchybar configuration loaded.."
+
+# brew install --cask stats
+#       
+
+# sketchybar --add event theme_change AppleInterfaceThemeChangedNotification

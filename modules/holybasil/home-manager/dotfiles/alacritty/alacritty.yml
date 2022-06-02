@@ -1,0 +1,51 @@
+# Configuration for Alacritty, the GPU enhanced terminal emulator.
+
+# Import additional configuration files
+#
+# Imports are loaded in order, skipping all missing files, with the importing
+# file being loaded last. If a field is already present in a previous import, it
+# will be replaced.
+#
+# All imports must either be absolute paths starting with `/`, or paths relative
+# to the user's home directory starting with `~/`.
+import:
+  - ~/.config/alacritty/env.yml
+  - ~/.config/alacritty/window.yml
+  - ~/.config/alacritty-current-theme.yml
+  - ~/.config/alacritty/selection.yml
+  - ~/.config/alacritty/cursor.yml
+  - ~/.config/alacritty/hints.yml
+  - ~/.config/alacritty/bell.yml
+  - ~/.config/alacritty/shell.yml
+  - ~/.config/alacritty/mouse.yml
+  - ~/.config/alacritty/key.yml
+
+# Live config reload (changes require restart)
+live_config_reload: true
+
+# Startup directory
+#
+# Directory the shell is started in. If this is unset, or `None`, the working
+# directory of the parent process will be used.
+#working_directory: None
+
+# Send ESC (\x1b) before characters when alt is pressed.
+alt_send_esc: true
+
+debug:
+  # Display the time it takes to redraw each frame.
+  render_timer: false
+  # Keep the log file after quitting Alacritty.
+  #persistent_logging: false
+  # Log level
+  #
+  # Values for `log_level`:
+  #   - Off
+  #   - Error
+  #   - Warn
+  #   - Info
+  #   - Debug
+  #   - Trace
+  #log_level: Warn
+  # Print all received window events.
+  #print_events: false

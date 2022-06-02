@@ -1,0 +1,1 @@
+rdrview -H --disable-sandbox  $@ | w3m -dump -cols 80 -T text/html

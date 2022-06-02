@@ -1,0 +1,1 @@
+tell application "Alfred 3" to run trigger "launchMail" in workflow "yqrashawn.workflow.launcher" with argument "test"

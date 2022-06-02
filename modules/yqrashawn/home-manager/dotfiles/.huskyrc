@@ -1,0 +1,4 @@
+#!/bin/sh
+unset GIT_LITERAL_PATHSPECS
+eval "$(fnm env)"
+fnm --log-level=error use --install-if-missing

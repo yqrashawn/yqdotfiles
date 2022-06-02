@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "nodejs version is $(node --version)" 
+cd ~/local/bin && ndb yarn --cwd ~/local/bin/ $1

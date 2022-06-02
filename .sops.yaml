@@ -1,0 +1,7 @@
+keys:
+  - &yqrashawn B198FB15EC5C13012E940B37E394C5D9A8E535A6
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+      - pgp:
+          - *yqrashawn

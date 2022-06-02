@@ -1,0 +1,7 @@
+for i in *
+do
+    if test -f "$i"
+    then
+      cp /dev/null $i
+    fi
+done

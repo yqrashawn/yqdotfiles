@@ -1,0 +1,1 @@
+find . -depth  -type d  -empty -exec rmdir {} \;

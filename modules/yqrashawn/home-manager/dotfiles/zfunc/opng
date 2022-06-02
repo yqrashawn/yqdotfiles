@@ -1,0 +1,5 @@
+opng () {
+  pngq $@
+  pngopti $@
+}
+opng "$@"

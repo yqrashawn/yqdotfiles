@@ -1,0 +1,61 @@
+#################### gmail
+# Based on http://www.macs.hw.ac.uk/~rs46/posts/2014-01-13-mu4e-email-client.html
+IMAPAccount gmail
+Host imap.gmail.com
+Port 993
+User namy.19@gmail.com
+PassCmd "security find-generic-password  -s mbsync-gmail -w"
+SSLType IMAPS
+AuthMechs LOGIN
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+SubFolders Verbatim
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/Inbox
+
+Channel gmail
+Far :gmail-remote:
+Near :gmail-local:
+Patterns *
+# Patterns * "All Mail"
+# Patterns "![Gmail]/All Mail"
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail" !Homes
+Sync All
+Create Both
+Expunge Both
+SyncState *
+
+# Channels and Groups
+# (so that we can rename local directories and flatten the hierarchy)
+# Group gmail
+
+# #################### cfx
+# IMAPAccount cfx
+# Host outlook.office365.com
+# Port 993
+# User yuxiao.zhang@confluxnetwork.org
+# PassCmd "security find-generic-password  -s mbsync-cfx -w"
+# SSLType IMAPS
+# SSLVersion TLSv1.2
+# AuthMechs LOGIN
+
+# IMAPStore cfx-remote
+# Account cfx
+
+# MaildirStore cfx-local
+# SubFolders Verbatim
+# Path ~/mail/cfx/
+# Inbox ~/mail/cfx/Inbox
+
+# Channel cfx
+# Far :cfx-remote:
+# Near :cfx-local:
+# Patterns *
+# # Patterns INBOX Inbox Archive Trash Junk Sent Drafts Later "All Mail"
+# Sync All
+# Create Both
+# Expunge Both
+# SyncState *

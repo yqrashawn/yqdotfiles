@@ -1,0 +1,16 @@
+[
+  {
+    "key": "R",
+    "hideOnPopup": false,
+    "action": 4,
+    "title": "Org Roam Capture",
+    "script": "location.href =\n  \"org-protocol://roam-ref?template=r&ref=\" +\n  encodeURIComponent(location.href) +\n  \"&title=\" +\n  encodeURIComponent(document.title) +\n  \"&body=\" +\n  encodeURIComponent(window.getSelection())"
+  },
+  {
+    "key": "N",
+    "hideOnPopup": false,
+    "action": 4,
+    "title": "Share to Newblur",
+    "script": "function newsblur_bookmarklet() {\n  var d = document\n  var z = d.createElement(\"scr\" + \"ipt\")\n  var b = d.body\n  var l = d.location\n  try {\n    if (!b) {\n      throw 0\n    }\n    d.title = \"(Sharing...) \" + d.title\n    z.setAttribute(\n      \"src\",\n      \"https://www.newsblur.com/api/add_site_load_script/920dbbdbc7b3?url=\" +\n        encodeURIComponent(l.href) +\n        \"&time=\" +\n        new Date().getTime()\n    )\n    b.appendChild(z)\n  } catch (e) {\n    alert(\"Please wait until the page has loaded.\")\n  }\n}\nnewsblur_bookmarklet()\nvoid 0"
+  }
+]

@@ -1,0 +1,34 @@
+# -*- mode: shell-script -*-
+#!/usr/bin/env bash
+
+# https://github.com/hoytech/vmtouch/blob/master/vmtouch.pod
+echo 'killing prev vmtouch process...'
+killall vmtouch &> /dev/null
+
+# FILES=(
+#   '~/.emacs.d'
+#   '/Applications/Emacs.app'
+#   '/usr/local/bin/emacs'
+#   '/usr/local/bin/emacsclient'
+#   '~/.zprezto'
+#   '~/workspace/office'
+#   '~/workspace/third/metamask-extension'
+#   '~/org-mode/lisp'
+#   '~/org-mode/contrib/lisp'
+#   '~/.config/.zsh.d'
+#   '~/.config/karabiner'
+# )
+
+echo 'touching pages...'
+vmtouch -ldf -i .git -i .md \
+        ~/.emacs.d \
+        /Applications/Emacs.app \
+        /usr/local/bin/emacs \
+        /usr/local/bin/emacsclient \
+        ~/.zprezto
+        # ~/workspace/office \
+        # ~/workspace/third/metamask-extension \
+        # ~/org-mode/lisp \
+        # ~/org-mode/contrib/lisp \
+        # ~/.config/.zsh.d \
+        # ~/.config/karabiner

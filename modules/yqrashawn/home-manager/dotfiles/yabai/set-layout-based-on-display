@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+export PATH=/run/current-system/sw/bin:$PATH
+
+# general space settings
+if [ "$($HOME/local/bin/has-lg-4k-hdr)" ]; then
+  yabai -m config layout bsp
+elif [ "$($HOME/local/bin/home-4k)" ]; then
+  yabai -m config layout bsp
+elif [ "$(yabai -m query --displays | jq length)" -eq 1 ]; then
+  yabai -m config layout stack
+else
+  yabai -m config layout bsp
+fi

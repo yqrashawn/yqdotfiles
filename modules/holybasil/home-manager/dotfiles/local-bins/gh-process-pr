@@ -1,0 +1,24 @@
+#!/usr/local/bin/bb
+
+(ns gh-process-pr
+  (:require
+   [clojure.string :as str]
+   [cheshire.core :as json]
+   [lib.github.pr :as ghpr]
+   [lib.github.notification :as ghnoti]
+   [lib.github.core :as gh]))
+
+(def intrested-repos
+  [["Conflux-Chain" "helios"]
+   ;; ["holybasil" "yqdotfiles"]
+   ])
+(def intrested-repos-full-name (mapv #(str/join "/" %) intrested-repos))
+
+(defn process-pr []
+  (doseq [[owner name] intrested-repos]
+    (doseq [pr (ghpr/my-open-pr owner name)]
+      (let [pr (ghpr/cget owner name (:number pr))]
+        (prn pr)
+        (ghpr/interested-pr? pr true)))))
+
+(comment (process-pr))

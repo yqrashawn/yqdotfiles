@@ -1,0 +1,40 @@
+#!/bin/sh
+
+export YQ_BLOG_DEV_MODE="false"
+rm -rf $HOME/blog/build/blog
+
+# create the output directory (and parents):
+mkdir -p $HOME/blog/build/blog
+
+
+# get help on the following parameters: «python ./lazyblorg.py --help»
+
+# when setting up your own system, you might want to:
+# 1. have separate directories for generating your blog and staging/publishing your blog
+# 2. rename everything with «2del» to an appropriate name
+# 3. copy generated blog data to staging/publishing directory
+# 4. point --previous-metadata to the corresponding pk-file in your staging/publishing directory
+# 5. modify --orgfiles so that your org-mode files are parsed
+#    don't forget to include your version of «about-placeholder.org» and «blog-format.org»
+
+PYTHONPATH="~/blog/lazyblorg:" $HOME/blog/lazyblorg/lazyblorg.py \
+          --targetdir $HOME/blog/build/blog/ \
+          --previous-metadata $HOME/blog/lazyblorg/2del-metadata.pk \
+          --new-metadata $HOME/blog/lazyblorg/2del-metadata.pk \
+          --logfile $HOME/blog/2del-logfile.org \
+          --orgfiles $HOME/Dropbox/ORG/blog/writes.org \
+                     $HOME/Dropbox/ORG/blog/work-blog.org \
+                     $HOME/Dropbox/ORG/blog/resume.org \
+                     $HOME/blog/lazyblorg/templates/blog-format.org $@
+
+#END
+
+cp $HOME/blog/lazyblorg/templates/public_voit.css $HOME/workspace/HOME/yqrashawn.github.io/public/css/YQ.css
+cp $HOME/blog/lazyblorg/templates/menu.js $HOME/workspace/HOME/yqrashawn.github.io/public/js/menu.js
+cp -r $HOME/blog/build/blog/* $HOME/workspace/HOME/yqrashawn.github.io/
+cd $HOME/workspace/HOME/yqrashawn.github.io/
+# sh $HOME/local/bin/get-my-resume
+git pull origin master
+git add .
+git commit --all -m "new post"
+git push origin master

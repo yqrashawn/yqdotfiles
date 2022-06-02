@@ -1,0 +1,1 @@
+system_profiler SPDisplaysDataType | grep 'LG HDR 4K'

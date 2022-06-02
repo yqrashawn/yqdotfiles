@@ -1,0 +1,131 @@
+#!/usr/bin/ruby
+# require 'json#!/usr/local/bin/ruby
+# require 'json/stream'
+require 'json'
+require 'uri'
+require 'zlib'
+
+
+
+# url = 'http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
+$GBIM_TEXTURE_PATH="http://gb9.bimsop.com/assets/m2/"
+$NEED_GZIP=false
+
+def valid_json?(json)
+  JSON.parse(json)
+  return true
+rescue JSON::ParserError => e
+  return false
+end
+
+def downloadImage(uri)
+  if uri.include?("##")
+    uri = uri.gsub(/##/, "")
+  end
+  uri = uri.gsub(/\\/, "/")
+  uri_arr = uri.split("/")
+  uri_arr.pop()
+  subDir = uri_arr.join('/')
+  system 'wget', URI.encode($GBIM_TEXTURE_PATH + uri), '-P', $modelFolder + subDir, :out=>:close, :err=>['/dev/null', 'a']
+  puts $GBIM_TEXTURE_PATH + uri
+end
+
+def unzip(filePath)
+  if $NEED_GZIP and File.file?(filePath)
+    Zlib::GzipReader.open(filePath) { |gz|
+      decompressed = gz.read
+      File.open( filePath , 'w'){|file| file.write(decompressed)}
+    }
+  end
+rescue Zlib::GzipFile::Error => err
+  return false
+end
+
+url = ARGV[0]
+if !url
+  puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
+elsif !url.respond_to?(:to_s)
+  puts 'invalid argument, try -> dgbim http://gb9.bimsop.com/peacock/1-1501661691279/1-1501661691279.gbim'
+else
+  puts '----------------Downloading------------------'
+  if url.end_with? '.gbim'
+    decoded = URI.decode(url) # gbim url
+
+    arr = decoded.split('/')
+    $modelName = arr[arr.length - 1].sub('.gbim', '')
+    infoUrl = decoded.sub('.gbim', '.sum.json')
+
+    basePath = decoded.sub($modelName + '.gbim', '')
+    $modelFolder = "#{ENV["HOME"]}/Downloads/models/#{$modelName}/"
+    # $modelFolder = $modelFolder.sub(/\(/, "\\\(");
+    # $modelFolder = $modelFolder.sub(/\)/, "\\\)");
+    # puts $modelFolder
+
+    # download_output = system "wget #{URI.encode(infoUrl)} -P #{$modelFolder}", :out=>:close, :err=>['/dev/null', 'a']
+    # puts infoUrl
+
+    download_output = system 'wget', URI.encode(decoded), '-P', $modelFolder, :out=>:close, :err=>['/dev/null', 'a']
+
+    if download_output
+      puts decoded
+
+      pi = system 'wget', URI.encode(decoded.sub('.gbim', '.pi')), '-P', $modelFolder, :out=>:close, :err=>['/dev/null','a']
+      # puts "wget #{URI.encode(decoded.sub('.gbim', '.pi'))} -P #{$modelFolder}"
+      if !pi
+        puts "error:#{$?}"
+      end
+      puts decoded.sub('.gbim', '.pi')
+
+      pc = system 'wget', URI.encode(decoded.sub('.gbim', '.pc')), '-P', $modelFolder, :out=>:close, :err=>['/dev/null','a']
+      if !pc
+        puts "error:#{$?}"
+      end
+      puts decoded.sub('.gbim', '.pc')
+
+      # download images
+      $gbim_str = File.read($modelFolder + $modelName + '.gbim', :encoding => 'bom|utf-8')
+      unless valid_json?($gbim_str)
+        Zlib::GzipReader.open($modelFolder + $modelName + '.gbim') {|gz|
+          $gbim_str = gz.read
+          File.open($modelFolder + $modelName + '.gbim', 'w') { |file| file.write($gbim_str) }
+          $gbim_str = File.read($modelFolder + $modelName + '.gbim', :encoding => 'bom|utf-8')
+        }
+        $NEED_GZIP = true
+
+        # modelName = $modelName.sub(/\(/, "\\\(")
+        # modelName = modelName.sub(/\)/, "\\\)")
+        unzip($modelFolder + $modelName + '.pi')
+        unzip($modelFolder + $modelName + '.pc')
+      end
+
+      # puts $gbim_str
+      # gbim = JSON::Stream::Parser.parse($gbim_str);
+      gbim = JSON.parse($gbim_str);
+      images = gbim["images"];
+      puts ''
+      puts '---------------Checking Texture--------------'
+      images.each { |index, image_info| downloadImage(image_info["uri"]) }
+
+      # download buffers
+      buffer_count = gbim["buffers"].length
+      count = 0
+      puts ''
+      puts '--------------Downloading Buffers-----------'
+      # modelName = $modelName.sub(/\(/, "\\\(")
+      # modelName = modelName.sub(/\)/, "\\\)")
+      while download_output
+        break if count == buffer_count
+        bin = ".#{count + 1}.bin"
+        download_output = system 'wget', URI.encode(decoded.sub('.gbim', bin)), '-P', $modelFolder, :out=>:close, :err=>['/dev/null','a']
+
+        unzip($modelFolder + $modelName + bin)
+        puts decoded.sub('.gbim', bin)
+        count += 1
+      end
+      puts ''
+      puts '------------------Finished-------------------'
+    end
+  else
+    puts 'gbim download went wrong'
+  end
+end

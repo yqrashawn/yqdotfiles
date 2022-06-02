@@ -1,0 +1,23 @@
+#!/bin/bash
+export LANG=zh_CN.UTF-8
+SESSION='Default'
+
+tmux -2 new-session -d -s $SESSION
+
+# Setup a window for home dir
+tmux rename-window 'misc'
+
+# Setup a portal window
+tmux new-window -t $SESSION:2 -n 'helios'
+tmux send-keys "cd ~/workspace/office/helios" C-m
+
+# Setup a HOME window
+tmux new-window -t $SESSION:3 -n 'HOME'
+tmux send-keys "cd ~/workspace/home/" C-m
+
+tmux select-window -t $SESSION:1
+# Set default window
+# tmux select-window -t $SESSION:0
+
+# Attach to session
+tmux -2 attach-session -t $SESSION

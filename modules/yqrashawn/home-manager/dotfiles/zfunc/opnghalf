@@ -1,0 +1,7 @@
+opnghalf () {
+  convert -resize 50% $@ $@
+  pngq $@
+  pngopti $@
+}
+
+opnghalf "$@"

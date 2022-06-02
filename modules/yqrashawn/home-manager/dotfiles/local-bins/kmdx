@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+
+// https://github.com/yarnpkg/yarn/issues/6453
+const { execSync } = require("child_process");
+
+// Customize
+// ===
+const PASSWORD = process.env.SUDO_PASSWORD || "FILL_PASSWORD_HERE_BUT_FFS_DON_NOT_SHARE_IT_ANYWHERE" // TODO: Better security, see note about sudo-prompt
+
+// Keep
+// ===
+const PLIST = "/System/Volumes/Data/.Spotlight-V100/VolumeConfiguration.plist"
+const BUDDY = "/usr/libexec/PlistBuddy"
+
+// Helpers
+// ---
+// TODO: Do nicer, but sudo-prompt not working on Catalina https://github.com/jorangreef/sudo-prompt/issues/109
+const execSyncSudo = (input, options = {}) => execSync(`printf "${PASSWORD}\n" | sudo -S ${input}`, options)
+const cleanArray = input => input.toString().split("\n").map(x => x.trim()).filter(x => x.length)
+
+// Collect info
+// ===
+const candidates = cleanArray(execSync(`fd -uuu --prune -a -t d node_modules`))
+const existing = cleanArray(execSyncSudo(`${BUDDY} -c "Print :Exclusions" ${PLIST} | sed -e 1d -e '$d'`)) // TODO: Nicer way of getting pure array of results
+const toAdd = candidates.filter(x => !existing.includes(x))
+
+console.log(`Candidates: ${candidates.length}, Existing: ${existing.length}, To add: ${toAdd.length}`)
+
+// Uncomment to clear and add everything
+// execSyncSudo(`${BUDDY} -c "Delete :Exclusions" ${PLIST}`)
+// execSyncSudo(`${BUDDY} -c "Add :Exclusions array" ${PLIST}`)
+// replace toAdd with candidates on the next line
+
+// Execute
+// ===
+toAdd.forEach(item => {
+  // TODO: Optimize, but `PlistBuddy -c … -c … -c … did not work` even though it should
+  execSyncSudo(`${BUDDY} -c "Add :Exclusions: string ${item}" ${PLIST}`)
+})
+// TODO: Check if necessary – according to blog posts, it shouldn't be needed. But it did not work for me without it
+execSyncSudo(`sudo launchctl stop com.apple.metadata.mds && sudo launchctl start com.apple.metadata.mds`)
+
+// Report
+// ===
+console.log("Current content of Exclusions:")
+console.log("===")
+execSyncSudo(`${BUDDY} -c "Print :Exclusions" ${PLIST}`, { stdio: 'inherit' })
+
+console.log("")
+console.log("👀 Check and verify at System Preferences > Spotlight > Privacy")
+
+// Notes
+// ===
+/*
+Inspired by https://mattprice.me/2020/programmatically-modify-spotlight-ignore/
+Inspired by https://github.com/yarnpkg/yarn/issues/6453#issuecomment-476048618
+
+`defaults` does not work, throws: `The domain/default pair of (..., Exclusions) does not exist`, otherwise the code would be sth like this
+defaults read $PLIST Exclusions
+defaults write $PLIST Exclusions -array-add $PATH
+*/
