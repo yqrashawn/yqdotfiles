@@ -118,9 +118,9 @@
 
       # langs
       yarn
-      # lua
-      # luajit
-      # stylua
+      lua
+      luajit
+      stylua
       # deno
       fennel
       luarocks
