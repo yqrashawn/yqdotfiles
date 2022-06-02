@@ -137,12 +137,12 @@
 
       # langs
       yarn
-      # lua
-      luajit
+      lua
+      # luajit
       stylua
       deno
       fennel
-      luarocks
+      # luarocks
       # zig # marked broken
       go
       plantuml

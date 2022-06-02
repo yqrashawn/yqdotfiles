@@ -118,8 +118,8 @@
 
       # langs
       yarn
-      # lua
-      luajit
+      lua
+      # luajit
       stylua
       # deno
       fennel

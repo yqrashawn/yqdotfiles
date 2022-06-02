@@ -10,20 +10,20 @@
  :modifiers {:ro :right_option}
  :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
-             :sh         "PATH=/run/current-system/sw/bin:/usr/local/bin:$PATH %s"
-             :yabai      "/run/current-system/sw/bin/yabai %s"
+             :sh         "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH %s"
+             :yabai      "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai %s"
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
              :opena      "open -a \"%s\""
-             :hs         "/usr/local/bin/hs -A -n -q -t 0.1 -c '(\"%s\")'"
-             :hsl        "/usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
+             :hs         "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '(\"%s\")'"
+             :hsl        "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              :show       "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
-             :togg       "/usr/local/bin/hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
+             :togg       "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
              :yfocus     "sh ~/.config/yabai/focus-window %s"
              :toggle     "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
              :type       "osascript -e 'tell application \"System Events\" to keystroke \"%s\" as text'"
-             :jump       "/run/current-system/sw/bin/yabai -m window --focus $(yabai -m query --windows | /run/current-system/sw/bin/jq 'map(select(.app == \"%s\")) | first | .id') || /usr/local/bin/hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
+             :jump       "export PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai -m window --focus $(yabai -m query --windows | jq 'map(select(.app == \"%s\")) | first | .id') || hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
              ;; :focus      "yabai -m display --focus \"%s\" & yabai -m space --focus \"%s\""
              }
  :layers    {:tab-mode              {:key     :tab
@@ -531,8 +531,8 @@
                       :tab-mode
                       [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
                       [:!Thyphen "~/.config/yabai/rules && ~/.config/yabai/set-layout-based-on-display"]
-                      [:7 "/usr/local/bin/brew services stop yabai"]
-                      [:8 "/usr/local/bin/brew services start yabai"]
+                      [:7 "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH brew services stop yabai"]
+                      [:8 "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH brew services start yabai"]
                       ;; focus mode
                       [:h [:sh "yabai -m window --focus west || yabai -m window --focus $(yabai -m query --windows --display west | jq 'map(select(.visible == 1)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
                       [:j [:sh "yabai -m window --focus south"]]
