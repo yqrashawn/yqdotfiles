@@ -11,7 +11,6 @@ in {
     extraFunctions = [ "zargs" "zmv" ];
     pmodules = [
       "environment"
-      "tmux"
       "terminal"
       "editor"
       # "history"
@@ -49,7 +48,6 @@ in {
       tabTitleFormat = "%m: %s %d";
       multiplexerTitleFormat = "%n@%m: %s %d";
     };
-    tmux = { autoStartLocal = true; };
     ssh.identities = [ "id_rsa" "id_rsa_holy" "id_rsa_website_jump" ];
   };
 }
