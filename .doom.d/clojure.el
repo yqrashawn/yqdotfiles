@@ -33,7 +33,7 @@
 (defun +setup-clojure-mode ()
   (add-hook! 'before-save-hook #'clojure-sort-ns))
 
-(add-hook! '(clojure-mode clojurescript-mode clojurec-mode) '+setup-clojure-mode)
+(add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
 
 ;;; lispy
 (defun +in-babashka-p ()

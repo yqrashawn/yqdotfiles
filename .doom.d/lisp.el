@@ -114,7 +114,9 @@ Instead keep them, with a newline after each comment."
   :config
   (lispyville-set-key-theme)
   (lispy-define-key lispy-mode-map "v" #'lispyville-toggle-mark-type)
-  (lispy-define-key lispy-mode-map "m" #'lispy-view))
+  (lispy-define-key lispy-mode-map "m" #'lispy-view)
+  (lispy-define-key lispy-mode-map "p" #'lispy-paste)
+  (lispy-define-key lispy-mode-map "P" #'lispy-eval-other-window))
 
 ;;; parinfer
 (use-package! parinfer-rust-mode
