@@ -594,7 +594,7 @@
                          "Preview"]]
 
    ;; :default_handler ffd
-   :default_handler edge}})
+   :default_handler chrm}})
 
 (comment
  (local col hs.drawing.color.x11))
