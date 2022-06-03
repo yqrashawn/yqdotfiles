@@ -100,13 +100,13 @@ in {
 
     SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
 
-    universalaccess = {
-      reduceTransparency = true;
-      # Use scroll gesture with the Ctrl (^) modifier key to zoom
-      closeViewScrollWheelToggle = true;
-      # zoom view focus follow keyboard
-      closeViewZoomFollowsFocus = true;
-    };
+    # universalaccess = {
+    #   reduceTransparency = true;
+    #   # Use scroll gesture with the Ctrl (^) modifier key to zoom
+    #   closeViewScrollWheelToggle = true;
+    #   # zoom view focus follow keyboard
+    #   closeViewZoomFollowsFocus = true;
+    # };
 
     # login window settings
     loginwindow = {
