@@ -97,7 +97,8 @@
       ffmpeg
       pandoc
       cmake
-      # goku
+      goku
+      joker
       nix
       nixfmt
       nixpkgs-fmt

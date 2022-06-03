@@ -2,6 +2,7 @@
   homebrew = {
     casks = [
       # "bartender"
+      "iterm2"
       "neteasemusic"
       "spectacle"
       "setapp"
