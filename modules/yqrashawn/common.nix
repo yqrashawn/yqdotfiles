@@ -135,6 +135,7 @@
       jet
       asdf-vm
 
+      redis
       # langs
       yarn
       lua
