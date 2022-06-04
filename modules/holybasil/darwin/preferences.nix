@@ -150,7 +150,7 @@ in {
       Dragging = false;
       # Whether to enable trackpad right click.  The default is false.
       TrackpadRightClick = true;
-      TrackpadThreeFingerDrag = true;
+      TrackpadThreeFingerDrag = false;
 
       # silent clicking = 0, default = 1
       ActuationStrength = 0;

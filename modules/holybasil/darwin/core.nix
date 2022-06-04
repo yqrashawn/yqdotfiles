@@ -82,10 +82,7 @@ in {
         launchanim = false;
         orientation = "right";
       };
-      trackpad = {
-        Clicking = true;
-        TrackpadThreeFingerDrag = true;
-      };
+      trackpad = { Clicking = true; };
     };
     keyboard = {
       enableKeyMapping = true;
