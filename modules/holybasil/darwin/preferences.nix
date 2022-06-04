@@ -56,8 +56,8 @@ in {
       # Sets the speed speed of window resizing. The default is given in the example.
       NSWindowResizeTime = "0.001";
 
-      InitialKeyRepeat = 10;
-      KeyRepeat = 1;
+      InitialKeyRepeat = null;
+      KeyRepeat = null;
 
       PMPrintingExpandedStateForPrint = true;
       PMPrintingExpandedStateForPrint2 = true;
