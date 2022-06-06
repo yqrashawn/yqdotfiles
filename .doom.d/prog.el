@@ -107,19 +107,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (shell-command (format "cd %s; find . -type d | sort | du -h" dir2-path) buf2)
     (ediff-buffers buf1 buf2)))
 
-(use-package! dtache
-  :hook (doom-input-hook . dtache-initialize)
-  :config
-  (defadvice! my/dtache--add-end-of-session-notification-advice (orig-fn session)
-    :around #'dtache--add-end-of-session-notification
-    (let ((dtache-timer-configuration
-           '(:seconds 0.5 :repeat 0.5 :function run-with-idle-timer)))
-      (dtache--session-timer session)))
-
-  (setq! dtache-db-directory doom-cache-dir
-    dtache-session-directory (expand-file-name "dtache" (temporary-file-directory))))
-
-
 ;; tmp https://github.com/hlissner/doom-emacs/pull/5401
 (defadvice! ++fold--ts-fold-p (orig)
   :around #'+fold--ts-fold-p

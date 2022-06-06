@@ -182,8 +182,7 @@
 (package! fit-text-scale)
 ;; (package! code-review :recipe (:host github :repo "wandersoncferreira/code-review"))
 ;; (package! centered-cursor-mode)
-(package! meow)
-(package! dtache :recipe (:type git :host gitlab :repo "niklaseklund/dtache"))
+;; (package! meow)
 (package! embark)
 (package! keycast)
 (package! elfeed-protocol)
@@ -211,7 +210,7 @@
 (package! clj-ns-name
   :recipe (:host github
            :repo "plexus/plexmacs"
-           :files ("clj-ns-name/clj-ns-name.el")))
+            :files ("clj-ns-name/clj-ns-name.el")))
 
 (package! pprint-to-buffer
   :recipe (:host github
