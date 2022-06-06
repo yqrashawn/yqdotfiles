@@ -17,14 +17,6 @@
          clojure-align-reader-conditionals t
          clojure-defun-indents '(fn-traced))
 
-  ;; #_ is not a logical sexp
-  (defadvice! corgi/clojure--looking-at-non-logical-sexp (command)
-    :around #'clojure--looking-at-non-logical-sexp
-    "Return non-nil if text after point is \"non-logical\" sexp.
-\"Non-logical\" sexp are ^metadata and #reader.macros."
-    (comment-normalize-vars)
-    (comment-forward (point-max))
-    (looking-at-p "\\(?:#?\\^\\)\\|#:?:?[[:alpha:]]\\|#_"))
 
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     lsp-ui-sideline-show-code-actions nil
