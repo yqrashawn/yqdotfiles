@@ -1,0 +1,6 @@
+dotup () {
+  pushd .
+  cd ~/.nixpkgs/
+  sysdo switch --darwin $@ 
+  popd
+}

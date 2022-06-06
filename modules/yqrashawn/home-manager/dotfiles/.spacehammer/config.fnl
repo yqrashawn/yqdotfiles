@@ -424,7 +424,12 @@
         :items browser-items})
 
 (local chrome-config
-       {:key "Google Chrome Canary"
+       {:key "Google Chrome"
+        :keys browser-keys
+        :items browser-items})
+
+(local edge-config
+       {:key "Microsoft Edge Beta"
         :keys browser-keys
         :items browser-items})
 
@@ -471,7 +476,7 @@
 (local slack-config
        {:key "Slack"
         :keys [{:mods [:cmd]
-                :key  :l
+                :key :l
                 :action "slack:scroll-to-bottom"}
                {:mods [:ctrl]
                 :key :r
@@ -525,6 +530,7 @@
 (local apps
        [brave-config
         chrome-config
+        edge-config
         firefox-config
         emacs-config
         grammarly-config

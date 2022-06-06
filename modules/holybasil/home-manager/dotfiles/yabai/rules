@@ -66,6 +66,7 @@ elif [[ $DISPLAY_COUNT -eq 2 ]]; then
   yabai -m rule --add app="^Alacritty$" space=1
   yabai -m rule --add app="^Emacs$" space=1
   yabai -m rule --add app="^Firefox Developer Edition$" space=6
+  yabai -m rule --add app="^Microsoft Edge Beta$" space=6
   yabai -m rule --add app="^Orion$" space=6
 
   yabai -m rule --add app="^Logseq$" space=2
