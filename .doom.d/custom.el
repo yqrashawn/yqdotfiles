@@ -4,8 +4,55 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((eval defun cider--running-nrepl-paths nil
-        '("~/Dropbox/sync/Alfred.alfredpreferences/workflows/user.workflow.B178FD26-4DD8-4281-922B-925CD4AC61CE/"))
+    '((js2-mode-show-strict-warnings)
+       (js2-mode-show-parse-errors)
+       (eval define-clojure-indent
+         (l/matcha
+           '(1
+              (:defn)))
+         (l/matche
+           '(1
+              (:defn)))
+         (p.types/def-abstract-type
+           '(1
+              (:defn)))
+         (p.types/defprotocol+
+           '(1
+              (:defn)))
+         (p.types/defrecord+
+           '(2 nil nil
+              (:defn)))
+         (p.types/deftype+
+           '(2 nil nil
+              (:defn)))
+         (p/def-map-type
+           '(2 nil nil
+              (:defn)))
+         (p/defprotocol+
+           '(1
+              (:defn)))
+         (p/defrecord+
+           '(2 nil nil
+              (:defn)))
+         (p/deftype+
+           '(2 nil nil
+              (:defn)))
+         (tools.macro/macrolet
+           '(1
+              ((:defn))
+              :form)))
+       (eval put 'p.types/defprotocol+ 'clojure-doc-string-elt 2)
+       (eval put 's/defn 'clojure-doc-string-elt 2)
+       (eval put 'setting/defsetting 'clojure-doc-string-elt 2)
+       (eval put 'defsetting 'clojure-doc-string-elt 2)
+       (eval put 'api/defendpoint-async 'clojure-doc-string-elt 3)
+       (eval put 'api/defendpoint 'clojure-doc-string-elt 3)
+       (eval put 'define-premium-feature 'clojure-doc-string-elt 2)
+       (eval put 'defendpoint-async 'clojure-doc-string-elt 3)
+       (eval put 'defendpoint 'clojure-doc-string-elt 3)
+       (ftf-project-finders ftf-get-top-git-dir)
+       (eval defun cider--running-nrepl-paths nil
+         '("~/Dropbox/sync/Alfred.alfredpreferences/workflows/user.workflow.B178FD26-4DD8-4281-922B-925CD4AC61CE/"))
        (eval defun cider--running-nrepl-paths nil
          '("~/.config/bblib/"))
        (projectile-project-root . "~/Dropbox/ORG")
