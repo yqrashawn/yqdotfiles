@@ -1,0 +1,16 @@
+dotupforce () {
+  read "yn?This will fetch and reset your ~/.nixpkgs to origin/master. Do you want to proceed? (y/n) "
+
+  if [[ "$yn" =~ ^[Yy]$ ]]
+  then
+    # echo "Please enter root password"
+    # sudo echo "OK"
+    pushd .
+    cd ~/.nixpkgs/
+    git fetch --all
+    git reset --hard origin/master
+    reload
+    sysdo switch --darwin $@
+    popd
+  fi
+}
