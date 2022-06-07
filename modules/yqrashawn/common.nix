@@ -144,6 +144,7 @@
       stylua
       deno
       fennel
+      # janet # broken
       # luarocks
       # zig # marked broken
       go
