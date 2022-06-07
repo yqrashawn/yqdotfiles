@@ -124,3 +124,44 @@
 
 (after! evil
   (add-hook! 'evil-normal-state-entry-hook '+company-abort))
+
+(use-package! fuz-bin
+  :ensure t
+  :after orderless
+  :config
+  (setq fuz-bin--bin-dir (concat straight-base-dir "straight/repos/fuz-bin/bin/"))
+  (fuz-bin-load-dyn))
+
+(use-package! fussy
+  ;; :ensure t
+  :after fuz-bin
+  :config
+  (setq! fussy-filter-fn 'fussy-filter-fast
+         fussy-score-fn 'fussy-fuz-bin-score)
+  (setq completion-styles '(fussy))
+  ;; (delq! 'orderless +vertico-company-completion-styles)
+  ;; (pushnew! +vertico-company-completion-styles 'fussy)
+  (add-to-list '+vertico-company-completion-styles 'fussy t)
+  (setq!
+   ;; For example, project-find-file uses 'project-files which uses
+   ;; substring completion by default. Set to nil to make sure it's using
+   ;; flx.
+   completion-category-defaults nil
+   completion-category-overrides nil)
+
+  (after! company-mode
+    (defadvice! bb-company-capf (f &rest args)
+      :around #'company--transform-candidates
+      "Manage `completion-styles'."
+      (if (length< company-prefix 2)
+          (let ((completion-styles (remq 'fussy completion-styles)))
+            (apply f args))
+        (apply f args)))
+
+    (defadvice! bb-company-transformers (f &rest args)
+      :around #'company-capf
+      "Manage `company-transformers'."
+      (if (length< company-prefix 2)
+          (apply f args)
+        (let ((company-transformers '(fussy-company-sort-by-completion-score)))
+          (apply f args))))))

@@ -259,3 +259,10 @@
 (package! gc-buffers
   :recipe (:type git :repo "https://codeberg.org/akib/emacs-gc-buffers.git"))
 (package! detached)
+
+(package! fuz-bin
+  :recipe (:host github :repo "jcs-elpa/fuz-bin"))
+(package! fussy
+  :recipe (:host github :repo "jojojames/fussy"))
+
+;; (disable-packages! orderless)
