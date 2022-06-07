@@ -69,7 +69,6 @@
     inputs@{ self, nixpkgs, darwin, home-manager, sops-nix, flake-utils, ... }:
     let
       inherit (darwin.lib) darwinSystem;
-      inherit (nixpkgs.lib) nixosSystem;
       inherit (home-manager.lib) homeManagerConfiguration;
       inherit (flake-utils.lib) eachDefaultSystem eachSystem;
       inherit (builtins) listToAttrs map;
@@ -97,20 +96,6 @@
         darwinSystem {
           inherit system;
           modules = baseModules ++ extraModules;
-          specialArgs = { inherit inputs nixpkgs stable; };
-        };
-
-      # generate a base nixos configuration with the
-      # specified overlays, hardware modules, and any extraModules applied
-      mkNixosConfig = { system ? "x86_64-linux", nixpkgs ? inputs.nixos-unstable
-        , stable ? inputs.stable, hardwareModules, baseModules ? [
-          home-manager.nixosModules.home-manager
-          sops-nix.nixosModules.sops
-          ./modules/yqrashawn/nixos
-        ], extraModules ? [ ] }:
-        nixosSystem {
-          inherit system;
-          modules = baseModules ++ hardwareModules ++ extraModules;
           specialArgs = { inherit inputs nixpkgs stable; };
         };
 
@@ -146,15 +131,7 @@
             # darwinServer =
             #   self.homeConfigurations.darwinServer.activationPackage;
           };
-        }) nixpkgs.lib.platforms.darwin) ++
-        # linux checks
-        (map (system: {
-          name = system;
-          value = {
-            nixos = self.nixosConfigurations.phil.config.system.build.toplevel;
-            # server = self.homeConfigurations.server.activationPackage;
-          };
-        }) nixpkgs.lib.platforms.linux));
+        }) nixpkgs.lib.platforms.darwin));
 
       darwinConfigurations = {
         yqrashawn = mkDarwinConfig {
@@ -186,16 +163,6 @@
           system = "x86_64-darwin";
           extraModules =
             [ ./profiles/work.nix ./modules/yqrashawn/darwin/apps-minimal.nix ];
-        };
-      };
-
-      nixosConfigurations = {
-        phil = mkNixosConfig {
-          hardwareModules = [
-            ./modules/yqrashawn/hardware/phil.nix
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t460s
-          ];
-          extraModules = [ ./profiles/yqrashawn.nix ];
         };
       };
 
