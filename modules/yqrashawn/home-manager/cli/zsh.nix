@@ -9,7 +9,7 @@ let
     [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     . $HOME/.asdf/plugins/java/set-java-home.zsh
-    asdf global java adoptopenjdk-11.0.15+10
+    asdf global java graalvm-22.1.0+java17
     asdf global clojure 1.10.3.1087
 
     export FNM_MULTISHELL_PATH=$HOME/.fnm/current
