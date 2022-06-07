@@ -176,7 +176,5 @@ alias yup="yarn upgrade"
 # geth local dev
 alias gethld="geth --rpc --dev --miner.threads 1 console"
 
-alias ssh="ssh -F =(gpg2 --decrypt ~/.ssh/config.gpg 2>/dev/null) "
-alias scp="scp -F =(gpg2 --decrypt ~/.ssh/config.gpg 2>/dev/null) "
 # alias bb="bb -cp ~/.config/bblib/"
 alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
