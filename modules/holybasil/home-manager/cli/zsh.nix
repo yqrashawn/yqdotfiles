@@ -79,6 +79,8 @@ let
     yw = "yarn workspace";
     curl = "curlie";
 
+    gfc1 = "git clone --depth 1";
+
     brewh = "brew home";
     brewss = "brew services start";
     brewsr = "brew services restart";
