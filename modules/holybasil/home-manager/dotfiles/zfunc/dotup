@@ -1,6 +1,8 @@
 dotup () {
+  echo "Please enter root password"
+  sudo echo "OK"
   pushd .
   cd ~/.nixpkgs/
-  sysdo switch --darwin $@ 
+  sysdo switch --darwin $@
   popd
 }
