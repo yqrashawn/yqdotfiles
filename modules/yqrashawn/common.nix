@@ -69,7 +69,7 @@
       # gitui
       # httpie # failed to build
       tealdeer # tldr in rust
-      procs # ps
+      # procs # ps
       bottom # btm htop
       thefuck
       curlie # httpie
@@ -137,6 +137,7 @@
 
       redis
       # langs
+      tree-sitter
       yarn
       lua
       # luajit

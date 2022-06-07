@@ -147,14 +147,14 @@ in {
     profileExtra = profileExtra;
     plugins = [
       {
-        name = "fzf-tab";
+        name = "zsh-fzf-tab";
+        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
         file = "fzf-tab.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "master";
-          sha256 = "sha256-ixUnuNtxxmiigeVjzuV5uG6rIBPY/1vdBZF2/Qv0Trs=";
-        };
+      }
+      {
+        name = "zsh-autoquoter";
+        src = inputs.zsh-autoquoter;
+        file = "zsh-autoquoter.zsh";
       }
       {
         name = "fast-syntax-highlighting";

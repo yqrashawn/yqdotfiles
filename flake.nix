@@ -63,6 +63,10 @@
       url = "github:djui/alias-tips";
       flake = false;
     };
+    zsh-autoquoter = {
+      url = "github:ianthehenry/zsh-autoquoter";
+      flake = false;
+    };
   };
 
   outputs =

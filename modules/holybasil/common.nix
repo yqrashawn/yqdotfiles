@@ -53,7 +53,7 @@
       # gitui
       # httpie # failed to build
       tealdeer # tldr in rust
-      procs # ps
+      # procs # ps
       bottom # btm htop
       thefuck
       curlie # httpie

@@ -315,6 +315,7 @@
         "stable": "stable",
         "zsh-abbrev-alias": "zsh-abbrev-alias",
         "zsh-alias-tips": "zsh-alias-tips",
+        "zsh-autoquoter": "zsh-autoquoter",
         "zsh-f-sy-h": "zsh-f-sy-h"
       }
     },
@@ -415,6 +416,22 @@
       "original": {
         "owner": "djui",
         "repo": "alias-tips",
+        "type": "github"
+      }
+    },
+    "zsh-autoquoter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1652318839,
+        "narHash": "sha256-r0jdo+YFTOejvNMTqzXi5ftcLzDpuKejX0wMFwqKdJY=",
+        "owner": "ianthehenry",
+        "repo": "zsh-autoquoter",
+        "rev": "819a615fbfd2ad25c5d311080e3a325696b45de7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ianthehenry",
+        "repo": "zsh-autoquoter",
         "type": "github"
       }
     },
