@@ -148,7 +148,7 @@ in {
     plugins = [
       {
         name = "zsh-fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+        src = inputs.zsh-fzf-tab;
         file = "fzf-tab.plugin.zsh";
       }
       {

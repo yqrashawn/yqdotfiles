@@ -368,7 +368,8 @@
         "zsh-abbrev-alias": "zsh-abbrev-alias",
         "zsh-alias-tips": "zsh-alias-tips",
         "zsh-autoquoter": "zsh-autoquoter",
-        "zsh-f-sy-h": "zsh-f-sy-h"
+        "zsh-f-sy-h": "zsh-f-sy-h",
+        "zsh-fzf-tab": "zsh-fzf-tab"
       }
     },
     "small": {
@@ -515,6 +516,22 @@
       "original": {
         "owner": "z-shell",
         "repo": "F-Sy-H",
+        "type": "github"
+      }
+    },
+    "zsh-fzf-tab": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1650015730,
+        "narHash": "sha256-ixUnuNtxxmiigeVjzuV5uG6rIBPY/1vdBZF2/Qv0Trs=",
+        "owner": "Aloxaf",
+        "repo": "fzf-tab",
+        "rev": "7e0eee64df6c7c81a57792674646b5feaf89f263",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Aloxaf",
+        "repo": "fzf-tab",
         "type": "github"
       }
     }

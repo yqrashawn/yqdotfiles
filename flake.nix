@@ -63,6 +63,10 @@
       url = "github:djui/alias-tips";
       flake = false;
     };
+    zsh-fzf-tab = {
+      url = "github:Aloxaf/fzf-tab";
+      flake = false;
+    };
     zsh-autoquoter = {
       url = "github:ianthehenry/zsh-autoquoter";
       flake = false;

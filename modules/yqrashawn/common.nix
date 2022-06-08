@@ -138,12 +138,32 @@
       redis
       # langs
       tree-sitter
+      nodePackages.typescript
+      nodePackages.markdownlint-cli2
+      nodePackages.prettier
+      nodePackages.nodemon
+      nodePackages.serve
+      nodePackages.surge
+      nodePackages.neovim
+      nodePackages.live-server
+      nodePackages.web-ext
+      nodePackages.textlint
+      nodePackages.textlint-rule-write-good
+      nodePackages.typescript-language-server
+      nodePackages.vscode-css-languageserver-bin
+      nodePackages.vscode-html-languageserver-bin
+      nodePackages.vscode-css-languageserver-bin
+      nodePackages.vscode-json-languageserver
+      nodePackages.dockerfile-language-server-nodejs
+      nodePackages.bash-language-server
+      nodePackages.yaml-language-server
       yarn
       lua
       # luajit
       stylua
       deno
       fennel
+      # janet # broken
       # luarocks
       # zig # marked broken
       go
