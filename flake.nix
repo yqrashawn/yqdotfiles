@@ -67,6 +67,10 @@
       url = "github:Aloxaf/fzf-tab";
       flake = false;
     };
+    tmux-conf = {
+      url = "github:gpakosz/.tmux";
+      flake = false;
+    };
     zsh-autoquoter = {
       url = "github:ianthehenry/zsh-autoquoter";
       flake = false;

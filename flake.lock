@@ -248,6 +248,7 @@
         "sops-nix": "sops-nix",
         "spacehammer": "spacehammer",
         "stable": "stable",
+        "tmux-conf": "tmux-conf",
         "zsh-abbrev-alias": "zsh-abbrev-alias",
         "zsh-alias-tips": "zsh-alias-tips",
         "zsh-autoquoter": "zsh-autoquoter",
@@ -318,6 +319,22 @@
         "owner": "nixos",
         "ref": "nixos-21.11",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "tmux-conf": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1653286113,
+        "narHash": "sha256-mZLqa0Wb6ojzBzF7hvAyWF2hOwZ0gqJsxEUmt6+3eaA=",
+        "owner": "gpakosz",
+        "repo": ".tmux",
+        "rev": "f1cc46812bbefa977f59e7b9926c5a3bcdd6e626",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gpakosz",
+        "repo": ".tmux",
         "type": "github"
       }
     },
