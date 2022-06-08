@@ -1,7 +1,7 @@
 { inputs, config, pkgs, ... }: {
   homebrew = {
     enable = true;
-    autoUpdate = false;
+    autoUpdate = true;
     global = {
       brewfile = true;
       noLock = true;

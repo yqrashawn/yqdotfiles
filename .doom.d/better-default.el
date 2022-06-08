@@ -3,53 +3,54 @@
 (pushnew! global-hl-line-modes 'dired-mode 'occur-mode 'grep-mode)
 (delq! 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
-       use-short-answers t
-       max-specpdl-size 10000
-       max-lisp-eval-depth 10000
-       save-interprogram-paste-before-kill nil
-       save-silently t
-       echo-keystrokes 1e-6
-       split-window-keep-point t
-       require-final-newline nil
-       mode-require-final-newline nil
-       auto-window-vscroll nil
-       confirm-kill-processes nil
-       browse-url-secondary-browser-function 'eww-browse-url
-       make-backup-files t
+  use-short-answers t
+  max-specpdl-size 10000
+  max-lisp-eval-depth 10000
+  save-interprogram-paste-before-kill nil
+  save-silently t
+  echo-keystrokes 1e-6
+  split-window-keep-point t
+  require-final-newline nil
+  mode-require-final-newline nil
+  auto-window-vscroll nil
+  confirm-kill-processes nil
+  browse-url-secondary-browser-function 'eww-browse-url
+  make-backup-files t
 
-       ;; scroll
-       hscroll-margin 5
-       hscroll-step 0
-       ;; Emacs spends too much effort recentering the screen if you scroll the
-       ;; cursor more than N lines past window edges (where N is the settings of
-       ;; `scroll-conservatively'). This is especially slow in larger files
-       ;; during large-scale scrolling commands. If kept over 100, the window is
-       ;; never automatically recentered.
-       scroll-conservatively 0
-       scroll-margin 0
-       scroll-preserve-screen-position nil
-       ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
-       ;; for tall lines.
-       auto-window-vscroll nil
-       ;; mouse
-       mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
-       mouse-wheel-scroll-amount-horizontal 2
-       confirm-kill-emacs nil
-       url-proxy-services
-       '(("http" . "127.0.0.1:6152")
-         ("https" . "127.0.0.1:6153"))
-       url-proxy-services nil
-       blink-matching-paren t
-       ;; blink-matching-paren 'jump
-       blink-matching--overlay (let ((ol (make-overlay (point) (point) nil t)))
-                                 (overlay-put ol 'face 'custom-invalid)
-                                 (delete-overlay ol)
-                                 ol)
-       ispell-dictionary "en_US"
-       ispell-personal-dictionary (if (file-exists-p "~/Dropbox/sync/personal_dict")
-                                      "~/Dropbox/sync/personal_dict"
-                                    nil)
-       dired-quick-sort-suppress-setup-warning t)
+  ;; scroll
+  hscroll-margin 5
+  hscroll-step 0
+  ;; Emacs spends too much effort recentering the screen if you scroll the
+  ;; cursor more than N lines past window edges (where N is the settings of
+  ;; `scroll-conservatively'). This is especially slow in larger files
+  ;; during large-scale scrolling commands. If kept over 100, the window is
+  ;; never automatically recentered.
+  scroll-conservatively 0
+  scroll-margin 0
+  scroll-preserve-screen-position nil
+  ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
+  ;; for tall lines.
+  auto-window-vscroll nil
+  ;; mouse
+  mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
+  mouse-wheel-scroll-amount-horizontal 2
+  confirm-kill-emacs nil
+  url-proxy-services
+  '(("http" . "127.0.0.1:6152")
+     ("https" . "127.0.0.1:6153"))
+  url-proxy-services nil
+  blink-matching-paren t
+  ;; blink-matching-paren 'jump
+  blink-matching--overlay (let ((ol (make-overlay (point) (point) nil t)))
+                            (overlay-put ol 'face 'custom-invalid)
+                            (delete-overlay ol)
+                            ol)
+  ispell-dictionary "en_US"
+  ispell-personal-dictionary (if (file-exists-p "~/Dropbox/sync/personal_dict")
+                               "~/Dropbox/sync/personal_dict"
+                               nil)
+  dired-quick-sort-suppress-setup-warning t
+  insert-directory-program "/run/current-system/sw/bin/ls")
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
@@ -365,3 +366,75 @@ This function could be in the list `comint-output-filter-functions'."
   (setq! detached-show-output-on-attach t))
 
 (use-package! gc-buffers :hook (doom-first-buffer . gc-buffers-mode))
+
+
+;; https://github.com/doomemacs/doomemacs/issues/5182
+(defun doom--get-default-font (&optional font)
+  (cl-some #'doom--font-to-spec
+           (delq
+            nil (list font
+                      (unless (equal font doom-font) doom-font)
+                      (face-font 'default t)
+                      (with-temp-buffer (face-font 'default))))))
+
+(defun doom--font-to-spec (font)
+  (cond ((fontp font)   (font-spec :name (font-xlfd-name doom-font)))
+        ((stringp font) (font-spec :name font))
+        ((vectorp font) (font-spec :name (x-compose-font-name font)))))
+
+(defadvice! fixed-doom-normalize-font (font)
+  :override #'doom-normalize-font
+  (cl-check-type font (or font string vector))
+  (let ((font (doom--font-to-spec font))
+        (default-font (doom--get-default-font font)))
+    (dolist (prop (list (cons :weight 'normal)
+                        (cons :slant  'normal)
+                        (cons :width  'normal)
+                        (cons :size   (font-get default-font :size))))
+      (cl-destructuring-bind (key . val) prop
+        (when (or (font-get font key))
+          (font-put font key (or (font-get default-font key) val)))))
+    font))
+
+(defadvice! fixed-doom-adjust-font-size (increment &optional fixed-size-p font-alist)
+  :override #'doom-adjust-font-size
+  (unless (display-multi-font-p)
+    (user-error "Cannot resize fonts in terminal Emacs"))
+  (condition-case-unless-debug e
+      (let (changed)
+        (dolist (sym '((doom-font . default)
+                       (doom-serif-font . fixed-pitch-serif)
+                       (doom-variable-pitch-font . variable-pitch))
+                     (when changed
+                       (doom-init-fonts-h 'reload)
+                       t))
+          (cl-destructuring-bind (var . face) sym
+            (if (null increment)
+                (when (get var 'initial-value)
+                  (set var (get var 'initial-value))
+                  (put var 'initial-value nil)
+                  (setq changed t))
+              (let* ((original-font (or (symbol-value var)
+                                        (face-font face t)
+                                        (with-temp-buffer (face-font face))))
+                     (font (doom-normalize-font original-font))
+                     (dfont (or (if-let* ((remap-font (alist-get var font-alist))
+                                          (remap-xlfd (doom-normalize-font remap-font)))
+                                    remap-xlfd
+                                  (purecopy font))
+                                (error "Could not decompose %s font" var))))
+                (let* ((step      (if fixed-size-p 0 (* increment doom-font-increment)))
+                       (orig-size (font-get font :size))
+                       (new-size  (if fixed-size-p increment (+ orig-size step))))
+                  (cond ((<= new-size 0)
+                         (error "`%s' font is too small to be resized (%d)" var new-size))
+                        ((= orig-size new-size)
+                         (user-error "Could not resize `%s' for some reason" var))
+                        ((setq changed t)
+                         (unless (get var 'initial-value)
+                           (put var 'initial-value original-font))
+                         (font-put dfont :size new-size)
+                         (set var dfont)))))))))
+    (error
+     (ignore-errors (doom-adjust-font-size nil))
+     (signal (car e) (cdr e)))))

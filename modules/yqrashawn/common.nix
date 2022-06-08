@@ -51,9 +51,13 @@
       sqlite
       yabai
       sketchybar
+      cmus
 
       # cli tools
       ripgrep
+      woff2
+      cmus
+      zola
       git-interactive-rebase-tool
       htop
       hub
@@ -162,6 +166,7 @@
       nodePackages.bash-language-server
       nodePackages.yaml-language-server
       yarn
+      php
       lua
       # luajit
       stylua
@@ -209,6 +214,7 @@
     };
     # list of acceptable shells in /etc/shells
     shells = with pkgs; [ bash zsh ];
+    systemPath = [ "/run/current-system/sw/bin" ];
   };
 
   fonts.fonts = with pkgs; [ jetbrains-mono ];

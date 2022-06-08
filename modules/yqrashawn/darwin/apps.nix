@@ -20,7 +20,7 @@
       "discord"
       "dropbox"
       "calibre"
-      "vivaldi"
+      # "vivaldi"
       "ngrok"
       "adguard-nightly"
       # "syncthing"
