@@ -20,9 +20,9 @@
 (set-company-backend! 'text-mode
   '(:separate company-dabbrev company-yasnippet company-files company-ispell))
 
-(use-package! company-flx
-  :defer t
-  :init (add-hook! emacs-lisp-mode #'company-flx-mode))
+;; (use-package! company-flx
+;;   :defer t
+;;   :init (add-hook! emacs-lisp-mode #'company-flx-mode))
 
 (defvar yq//company-numbers '(59 ?a ?s ?d ?f ?g ?h ?j ?k ?l))
 

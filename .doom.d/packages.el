@@ -52,7 +52,7 @@
 (package! zoxide)
 (package! mwim)
 (package! emamux)
-(package! company-flx)
+;; (package! company-flx)
 (package! ccc)
 (package! el-patch)
 (package! git-link)
