@@ -134,11 +134,15 @@
       flyctl
       jet
       asdf-vm
+      commitizen
 
       redis
       # langs
       tree-sitter
+      nodePackages.eslint
+      nodePackages.diagnostic-languageserver
       nodePackages.typescript
+      nodePackages.eslint_d
       nodePackages.markdownlint-cli2
       nodePackages.prettier
       nodePackages.nodemon

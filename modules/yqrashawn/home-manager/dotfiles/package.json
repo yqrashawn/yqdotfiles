@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@cfxjs/fullnode": ">=0",
+    "cjstoesm": ">=0",
+    "create-react-app": ">=0",
+    "create-vite": ">=0",
+    "expo-cli": ">=0",
+    "ganache-cli": ">=0",
+    "marked": ">=0",
+    "nbb": ">=0",
+    "ndb": ">=0",
+    "prettier-plugin-solidity": ">=1.0.0-beta19",
+    "shadow-cljs": ">=0",
+    "tree-sitter-cli": ">=0"
+  }
+}

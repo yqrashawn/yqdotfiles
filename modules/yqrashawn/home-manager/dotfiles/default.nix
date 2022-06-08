@@ -194,5 +194,9 @@
       target = "./clojure";
       recursive = true;
     };
+    yarn-global = {
+      source = ./package.json;
+      target = "./yarn/global/package.json";
+    };
   };
 }
