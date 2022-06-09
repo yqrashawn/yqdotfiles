@@ -39,7 +39,7 @@ jobs:
       - name: pull-request-action
         uses: vsoch/pull-request-action@1.0.19
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHT }}
           PULL_REQUEST_FROM_BRANCH: "flakebot"
           PULL_REQUEST_BRANCH: "master"
           MAINTAINER_CANT_MODIFY: true
