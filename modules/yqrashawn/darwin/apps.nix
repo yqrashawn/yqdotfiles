@@ -2,6 +2,8 @@
   imports = [ ./apps-minimal.nix ];
   homebrew = {
     casks = [
+      "docker"
+      "espanso"
       "xbar"
       "gfxcardstatus"
       "uhk-agent"
@@ -10,7 +12,6 @@
       "slack"
       "bitwarden"
       "clickup"
-      # "fork"
       "gpg-suite-no-mail"
       "firefox"
       "firefox-developer-edition"
@@ -20,7 +21,6 @@
       "discord"
       "dropbox"
       "calibre"
-      # "vivaldi"
       "ngrok"
       "adguard-nightly"
       # "syncthing"

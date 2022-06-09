@@ -28,7 +28,6 @@
       ispell
       isync
       babashka
-      clj-kondo
       joker
       leiningen
       obb
@@ -51,7 +50,6 @@
       sqlite
       yabai
       sketchybar
-      cmus
 
       # cli tools
       ripgrep
@@ -62,14 +60,18 @@
       htop
       hub
       fnm
+      doxygen
       shellcheck
       proselint
       trash-cli
       delta
+      entr
+      # proxychains-ng # build failed
       du-dust
       duf # du
       jq
       fd
+      ctags
       # gitui
       # httpie # failed to build
       tealdeer # tldr in rust
@@ -81,13 +83,17 @@
       xh # httpie
       shfmt
       hunspell
+      ccache
+      # dotenv-linter # failed
+      reattach-to-user-namespace
+      terminal-notifier
       enchant # ispell
       w3m
       starship
       broot # ranger
       direnv
       exa
-      fasd
+      # fasd
       fzf
       skim
       coreutils-full
@@ -106,6 +112,8 @@
       treefmt
       # grip # markdown preview, failed to build
       multimarkdown
+      languagetool
+      mujs
       brotli
       automake
       autoconf
@@ -138,7 +146,16 @@
       flyctl
       jet
       asdf-vm
+      vmtouch
       commitizen
+      graphviz
+      perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
+      git-absorb # https://github.com/tummychow/git-absorb
+      gnumake
+      cmake
+      dtach
+      # python39Packages.percol # build failed
+      # docker-compose_2
 
       redis
       # langs
@@ -176,15 +193,18 @@
       # luarocks
       # zig # marked broken
       go
+      # golangci-lint
       plantuml
       rustup
       rust-analyzer
       (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
       python3
       ghc
+      chez
       sbcl
-      perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
-      git-absorb # https://github.com/tummychow/git-absorb
+      clang-tools
+      ninja
+      perl
       # openjdk
 
       # entertainment
@@ -195,17 +215,19 @@
       you-get
 
       # lib
-      # libgccjit
+      libgccjit
       rlwrap
       readline
       llvm
       # texinfo # cllision to pod2texi
       pkg-config
       pcre
+      harfbuzz
+      librsvg
+      imagemagick
 
       # not available
       # du
-      # percol
     ];
     etc = {
       home-manager.source = "${inputs.home-manager}";

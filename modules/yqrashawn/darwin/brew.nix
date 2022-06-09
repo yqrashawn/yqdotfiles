@@ -23,6 +23,18 @@
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
     # '';
+    brews = [
+      "curl"
+      "php"
+      "fcitx-remote-for-osx"
+      "luarocks"
+      "zig"
+      # "dum"
+      "clj-kondo"
+      "percol"
+      "proxychains-ng"
+      "dotenv-linter"
+    ];
     casks = [ "hammerspoon" ];
   };
 }
