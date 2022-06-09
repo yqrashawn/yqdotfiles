@@ -20,6 +20,10 @@ let
   };
 in {
   imports = [ ./daemons ./user-agents ];
+
+  security.pki.certificateFiles =
+    [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" ];
+
   # environment setup
   environment = {
     loginShell = pkgs.zsh;
