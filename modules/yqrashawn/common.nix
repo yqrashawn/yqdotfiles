@@ -101,7 +101,7 @@
       lazygit
       watchexec
       wget
-      curl
+      # curl
       rsync
       treefmt
       # grip # markdown preview, failed to build

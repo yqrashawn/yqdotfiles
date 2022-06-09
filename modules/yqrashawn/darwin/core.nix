@@ -22,7 +22,7 @@ in {
   imports = [ ./daemons ./user-agents ];
 
   security.pki.certificateFiles =
-    [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" ];
+    [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" "/etc/ssl/cert.pem" ];
 
   # environment setup
   environment = {
