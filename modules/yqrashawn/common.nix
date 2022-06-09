@@ -59,8 +59,11 @@
       git-interactive-rebase-tool
       htop
       hub
+      gh
       fnm
       doxygen
+      gmailctl
+      leiningen
       shellcheck
       proselint
       trash-cli
@@ -103,6 +106,7 @@
       rbenv
       jless # json viewer
       gnupg
+      less
       zoxide # fasd
       lazygit
       watchexec
@@ -125,6 +129,7 @@
       bat-extras.prettybat
       gnutls
       openssl
+      feroxbuster
       ffmpeg
       pandoc
       cmake
@@ -133,7 +138,6 @@
       nixfmt
       nixpkgs-fmt
       rnix-lsp
-      pandoc
       openssh
       neofetch
       parallel
@@ -145,6 +149,7 @@
       gawk
       flyctl
       jet
+      sd
       asdf-vm
       vmtouch
       commitizen
@@ -202,7 +207,10 @@
       ghc
       chez
       sbcl
+      guile
+      roswell
       clang-tools
+      html-tidy
       ninja
       perl
       # openjdk
@@ -216,15 +224,18 @@
 
       # lib
       libgccjit
+      zlib
       rlwrap
       readline
       llvm
       # texinfo # cllision to pod2texi
       pkg-config
-      pcre
+      # pcre
+      # pcre2
       harfbuzz
       librsvg
       imagemagick
+      # openjpeg
 
       # not available
       # du

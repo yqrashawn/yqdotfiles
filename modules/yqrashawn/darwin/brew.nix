@@ -31,8 +31,11 @@
       "zig"
       # "dum"
       "clj-kondo"
+      "editorconfig"
+      "grip"
       "percol"
       "proxychains-ng"
+      "datalevin"
       "dotenv-linter"
     ];
     casks = [ "hammerspoon" ];
