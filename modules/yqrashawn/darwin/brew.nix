@@ -33,6 +33,7 @@
       "clj-kondo"
       "editorconfig"
       "grip"
+      # "fennel"
       "percol"
       "proxychains-ng"
       "datalevin"

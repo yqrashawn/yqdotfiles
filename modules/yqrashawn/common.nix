@@ -193,7 +193,7 @@
       # luajit
       stylua
       deno
-      fennel
+      # fennel
       # janet # broken
       # luarocks
       # zig # marked broken
