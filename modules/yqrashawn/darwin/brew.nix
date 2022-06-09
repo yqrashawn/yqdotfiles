@@ -23,6 +23,7 @@
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
     # '';
+    brews = [ "curl" "php" "fcitx-remote-for-osx" "luarocks" "zig" "dum" ];
     casks = [ "hammerspoon" ];
   };
 }

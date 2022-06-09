@@ -62,10 +62,12 @@
       htop
       hub
       fnm
+      doxygen
       shellcheck
       proselint
       trash-cli
       delta
+      entr
       du-dust
       duf # du
       jq
@@ -139,6 +141,14 @@
       jet
       asdf-vm
       commitizen
+      graphviz
+      perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
+      git-absorb # https://github.com/tummychow/git-absorb
+      gnumake
+      cmake
+      sketchybar
+      dtach
+      # docker-compose_2
 
       redis
       # langs
@@ -176,15 +186,15 @@
       # luarocks
       # zig # marked broken
       go
+      # golangci-lint
       plantuml
       rustup
       rust-analyzer
       (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
       python3
       ghc
+      chez
       sbcl
-      perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
-      git-absorb # https://github.com/tummychow/git-absorb
       # openjdk
 
       # entertainment
@@ -195,13 +205,16 @@
       you-get
 
       # lib
-      # libgccjit
+      libgccjit
       rlwrap
       readline
       llvm
       # texinfo # cllision to pod2texi
       pkg-config
       pcre
+      harfbuzz
+      librsvg
+      imagemagick
 
       # not available
       # du
