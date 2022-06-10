@@ -24,6 +24,7 @@
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
+      "libgccjit"
       # "docker-completion"
       "curl"
       "php"

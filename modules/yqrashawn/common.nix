@@ -226,7 +226,7 @@
       you-get
 
       # lib
-      libgccjit
+      # libgccjit
       zlib
       rlwrap
       readline
