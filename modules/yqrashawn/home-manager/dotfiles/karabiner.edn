@@ -307,7 +307,7 @@
                       [:j [:togg "Alacritty"]]
                       ;; [:k [:open "/Applications/Emacs.app"]]
                       ;; [:k :same_wind_app :Emacs]
-                      [:k [:hsl "/Applications/Emacs.app"]]
+                      ;; [:k [:hsl "/Applications/Emacs.app"]]
                       ;; [:k [:yfocus "Emacs"]]
                       [:u [:togg "Newsblur"]]
                       ;; [:k [:opena "kitty"]]
@@ -782,8 +782,12 @@
                       :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
                       :sougou   {:input_source_id "^com\\.sogou\\.inputmethod\\.sogou\\.pinyin$"}
                       :abc      {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}
-                      :logcg    {:input_mode_id   "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$",
-                                 :input_source_id "^com\\.logcg\\.inputmethod\\.LogInputMac2\\.LogInputMac2SP$",
+                      :logcg    {:input_mode_id   "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$"
+                                 :input_source_id "^com\\.logcg\\.inputmethod\\.LogInputMac2\\.LogInputMac2SP$"
                                  :language        "zh-Hans"}
                       :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
+
+
+
+
