@@ -57,7 +57,7 @@
       bottom # btm htop
       thefuck
       curlie # httpie
-      glances # htop
+      # glances # htop
       xh # httpie
       shfmt
       enchant # ispell
