@@ -24,6 +24,7 @@
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
+      "openssl@3" # conflux-rust
       "libgccjit"
       # "docker-completion"
       "curl"

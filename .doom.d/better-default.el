@@ -291,21 +291,25 @@ A prefix arg reverses this operation."
                (funcall help-fns--autoloaded-p sym))
         (apply fn args)))
 
-;; (use-package! dirvish
-;;   :after dired
-;;   :init
-;;   (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish"))
-;;   (defun +dired-hide-details-mode-1 ()
-;;     (dired-hide-details-mode -1))
-;;   (defun enable-dirvish-override-dired-mode ()
-;;     (require 'dirvish)
-;;     (unless dirvish-override-dired-mode
-;;       (dirvish-override-dired-mode 1)
-;;       (call-interactively 'dired-jump)))
-;;   (add-hook! 'dired-mode-hook 'enable-dirvish-override-dired-mode)
-;;   :config
-;;   (setq dirvish-mode-hook '())
-;;   (add-hook! 'dirvish-mode-hook '+dired-hide-details-mode-1))
+(use-package! dirvish
+  :hook (doom-first-input . dirvish-override-dired-mode)
+  :init
+  (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish")
+         dirvish-hide-details t
+         dirvish-keep-alive-on-quit nil
+         dirvish-header-line-format nil
+         dirvish-attributes '(file-size collapse vc-state subtree-state))
+  :config
+  (dirvish-define-preview exa (file)
+    "Use `exa' to generate directory preview."
+    (when (file-directory-p file)       ; we only interest in directories here
+      `(shell . ("exa" "--color=always" "-al" ,file)))) ; use the output of `exa' command as preview
+  (pushnew! dirvish-preview-dispatchers 'exa)
+
+  (defadvice! ++dired/quit-all ()
+    :before #'+dired/quit-all
+    (mapc #'kill-buffer (doom-buffers-in-mode 'dirvish-mode)))
+  (require 'dirvish-vc))
 
 (setq! image-use-external-converter t)
 
@@ -321,7 +325,7 @@ A prefix arg reverses this operation."
   (setq! textsize-default-points 18))
 
 (after! dired
-  (setq! dired-listing-switches "--all --human-readable -l --sort=time -v --group-directories-first"))
+  (setq! dired-listing-switches "-l --all --human-readable --time-style=long-iso --no-group --sort=time -v --group-directories-first"))
 
 (after! comint
   (defun +comint-send-invisible-with-sudo-pwd (&rest args)

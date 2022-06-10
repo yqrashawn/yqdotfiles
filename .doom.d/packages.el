@@ -232,7 +232,7 @@
 (unpin! helpful company-mode)
 (package! cider-eval-sexp-fu)
 (package! org-modern)
-;; (package! dirvish)
+(package! dirvish)
 (package! carp-mode
   :recipe (:host github
            :repo "carp-lang/carp-emacs"
