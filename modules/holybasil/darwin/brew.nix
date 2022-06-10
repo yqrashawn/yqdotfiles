@@ -22,7 +22,7 @@
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
     # '';
-    brews = [ "curl" "php" "luarocks" "dum" ];
+    brews = [ "curl" "php" "luarocks" ];
     casks = [ "hammerspoon" ];
   };
 }

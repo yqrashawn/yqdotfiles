@@ -24,6 +24,7 @@
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
+      # "docker-completion"
       "curl"
       "php"
       "fcitx-remote-for-osx"
@@ -38,7 +39,33 @@
       "proxychains-ng"
       "datalevin"
       "dotenv-linter"
+      "cloudflared"
+      "janet"
     ];
-    casks = [ "hammerspoon" ];
+    casks = [
+      "hammerspoon"
+      "font-fira-mono-nerd-font"
+      "font-freefont"
+      "font-hack-nerd-font"
+      "font-hasklug-nerd-font"
+      "font-inconsolata-go-nerd-font"
+      "font-inconsolata-lgc-nerd-font"
+      "font-inconsolata-nerd-font"
+      "font-iosevka-nerd-font"
+      "font-jetbrains-mono-nerd-font"
+      "font-liberation-nerd-font"
+      "font-meslo-lg-nerd-font"
+      "font-monofur-nerd-font"
+      "font-monoid-nerd-font"
+      "font-mononoki-nerd-font"
+      "font-profont-nerd-font"
+      "font-roboto-mono-nerd-font"
+      "font-sauce-code-pro-nerd-font"
+      "font-code-new-roman-nerd-font"
+      "font-dejavu-sans-mono-nerd-font"
+      "font-fira-code-nerd-font"
+      "font-ubuntu-mono-nerd-font"
+      "font-ubuntu-nerd-font"
+    ];
   };
 }

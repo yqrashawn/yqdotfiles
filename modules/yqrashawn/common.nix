@@ -129,6 +129,8 @@
       bat-extras.prettybat
       gnutls
       openssl
+      pinentry
+      pinentry_mac
       feroxbuster
       ffmpeg
       pandoc
@@ -188,7 +190,7 @@
       nodePackages.bash-language-server
       nodePackages.yaml-language-server
       yarn
-      php
+      # php
       lua
       # luajit
       stylua
