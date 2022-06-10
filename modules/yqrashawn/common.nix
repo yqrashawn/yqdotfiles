@@ -185,6 +185,7 @@
       nodePackages.vscode-css-languageserver-bin
       nodePackages.vscode-html-languageserver-bin
       nodePackages.vscode-css-languageserver-bin
+      nodePackages.vscode-langservers-extracted
       nodePackages.vscode-json-languageserver
       nodePackages.dockerfile-language-server-nodejs
       nodePackages.bash-language-server

@@ -37,7 +37,7 @@ in {
       LSP_USE_PLISTS = "true";
       HTTPS_PROXY = "http://127.0.0.1:6152";
       HTTP_PROXY = "http://127.0.0.1:6152";
-      ALL_PROXY = "socks5://127.0.0.1:6153";
+      ALL_PROXY = "socks5://127.0.0.1:6152";
     };
 
     # launchDaemons = {
