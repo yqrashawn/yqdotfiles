@@ -419,3 +419,5 @@ set -g @continuum-restore 'on'
 
 set -g prefix C-q
 set -g prefix2 C-q
+
+set -s escape-time 0

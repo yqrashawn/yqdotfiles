@@ -85,6 +85,7 @@ let
     brewss = "brew services start";
     brewsr = "brew services restart";
     brewsx = "brew services stop";
+    e = "~/local/bin/em";
   };
 in {
   imports = [ ./prezto.nix ];
