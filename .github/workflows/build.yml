@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - flakebot
   pull_request_target:
     branches:
       - master
