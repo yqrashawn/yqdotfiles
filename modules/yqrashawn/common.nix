@@ -167,6 +167,7 @@
       redis
       # langs
       tree-sitter
+      nodePackages.expo-cli
       nodePackages.eslint
       nodePackages.diagnostic-languageserver
       nodePackages.typescript
@@ -224,6 +225,7 @@
       streamlink
       mpv
       you-get
+      watchman
 
       # lib
       # libgccjit
