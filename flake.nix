@@ -75,6 +75,26 @@
       url = "github:ianthehenry/zsh-autoquoter";
       flake = false;
     };
+    asdf-java = {
+      url = "github:halcyon/asdf-java";
+      flake = false;
+    };
+    asdf-clojure = {
+      url = "github:halcyon/asdf-clojure";
+      flake = false;
+    };
+    asdf-nodejs = {
+      url = "github:asdf-vm/asdf-nodejs";
+      flake = false;
+    };
+    asdf-python = {
+      url = "github:danhper/asdf-python";
+      flake = false;
+    };
+    asdf-ruby = {
+      url = "github:asdf-vm/asdf-ruby";
+      flake = false;
+    };
   };
 
   outputs =

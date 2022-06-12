@@ -60,7 +60,7 @@
       htop
       hub
       gh
-      fnm
+      # fnm
       doxygen
       gmailctl
       leiningen

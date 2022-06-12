@@ -11,30 +11,33 @@ let
     . $HOME/.asdf/plugins/java/set-java-home.zsh
     asdf global java graalvm-22.1.0+java17
     asdf global clojure 1.10.3.1087
+    asdf global ruby 3.1.2
+    asdf global python 3.10.5
+    asdf global nodejs 16.15.1
 
-    export FNM_MULTISHELL_PATH=$HOME/.fnm/current
-    export FNM_DIR=$HOME/.fnm/
-    export FNM_NODE_DIST_MIRROR=https://nodejs.org/dist
-    export FNM_LOGLEVEL=info
-    autoload -U add-zsh-hook
-    _fnm_autoload_hook () {
-      if [[ -f .node-version && -r .node-version ]]; then
-        fnm --log-level=error use --install-if-missing
-      elif [[ -f .nvmrc && -r .nvmrc ]]; then
-        fnm --log-level=error use --install-if-missing
-      fi
-    }
+    # export FNM_MULTISHELL_PATH=$HOME/.fnm/current
+    # export FNM_DIR=$HOME/.fnm/
+    # export FNM_NODE_DIST_MIRROR=https://nodejs.org/dist
+    # export FNM_LOGLEVEL=info
+    # autoload -U add-zsh-hook
+    # _fnm_autoload_hook () {
+    #   if [[ -f .node-version && -r .node-version ]]; then
+    #     fnm --log-level=error use --install-if-missing
+    #   elif [[ -f .nvmrc && -r .nvmrc ]]; then
+    #     fnm --log-level=error use --install-if-missing
+    #   fi
+    # }
 
-    add-zsh-hook chpwd _fnm_autoload_hook \
-      && _fnm_autoload_hook
+    # add-zsh-hook chpwd _fnm_autoload_hook \
+    #   && _fnm_autoload_hook
 
-    if ! typeset -f _fnm > /dev/null; then
-      fpath=(${pkgs.fnm}/share/zsh/site-functions $fpath)
-    fi
+    # if ! typeset -f _fnm > /dev/null; then
+    #   fpath=(${pkgs.fnm}/share/zsh/site-functions $fpath)
+    # fi
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
-    eval "$(fnm env)"
+    # eval "$(fnm env)"
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {

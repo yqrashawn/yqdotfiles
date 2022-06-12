@@ -71,6 +71,31 @@
       source = ./.mdlrc;
       target = ".mdlrc";
     };
+    asdf-java = {
+      source = inputs.asdf-java;
+      target = "./.asdf/plugins/java";
+      recursive = true;
+    };
+    asdf-clojure = {
+      source = inputs.asdf-clojure;
+      target = "./.asdf/plugins/clojure";
+      recursive = true;
+    };
+    asdf-nodejs = {
+      source = inputs.asdf-nodejs;
+      target = "./.asdf/plugins/nodejs";
+      recursive = true;
+    };
+    asdf-ruby = {
+      source = inputs.asdf-ruby;
+      target = "./.asdf/plugins/ruby";
+      recursive = true;
+    };
+    asdf-python = {
+      source = inputs.asdf-python;
+      target = "./.asdf/plugins/python";
+      recursive = true;
+    };
     # npmrc = {
     #   text = ''
     #     prefix = ${config.home.sessionVariables.NODE_PATH};

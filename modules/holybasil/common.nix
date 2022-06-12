@@ -41,7 +41,7 @@
       htop
       git-interactive-rebase-tool
       hub
-      fnm
+      # fnm
       shellcheck
       proselint
       trash-cli

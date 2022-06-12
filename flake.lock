@@ -1,5 +1,85 @@
 {
   "nodes": {
+    "asdf-clojure": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1623377738,
+        "narHash": "sha256-WYp4KKP7e41ENkmsQN2eeLU45EsE0i4SBU6kD3Gb9aE=",
+        "owner": "halcyon",
+        "repo": "asdf-clojure",
+        "rev": "0b1b2bbd00a89ff65094b65a5ff378a924cdfca9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "halcyon",
+        "repo": "asdf-clojure",
+        "type": "github"
+      }
+    },
+    "asdf-java": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1654222964,
+        "narHash": "sha256-ddfRFsKxCyhs1YYcVlnANWZEkRBs8g+yvLoVeY21V9U=",
+        "owner": "halcyon",
+        "repo": "asdf-java",
+        "rev": "460d8f7378138706e0fbc906f9b87b87ade868e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "halcyon",
+        "repo": "asdf-java",
+        "type": "github"
+      }
+    },
+    "asdf-nodejs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1651064073,
+        "narHash": "sha256-F172Cn279oJuiEyYxS16D52vw4aDBRhliT+jp+1igNk=",
+        "owner": "asdf-vm",
+        "repo": "asdf-nodejs",
+        "rev": "b2d06a768d9a14186db72018df10604bdb384436",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-vm",
+        "repo": "asdf-nodejs",
+        "type": "github"
+      }
+    },
+    "asdf-python": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1651872172,
+        "narHash": "sha256-0Oc2kx7l1OTjZ+x96Nf1zl+3+Jnq+D/yFxY8G0XSJTg=",
+        "owner": "danhper",
+        "repo": "asdf-python",
+        "rev": "57ef7770236261445efaee8394e53ed25ec8a24f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "danhper",
+        "repo": "asdf-python",
+        "type": "github"
+      }
+    },
+    "asdf-ruby": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1654871451,
+        "narHash": "sha256-O27PT/y0Ds7oaARhxE6BaI6WFnpppb6b4D0mYYsDtZk=",
+        "owner": "asdf-vm",
+        "repo": "asdf-ruby",
+        "rev": "36117f50f16b0ba675dccfa824b9ba21c7cad297",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-vm",
+        "repo": "asdf-ruby",
+        "type": "github"
+      }
+    },
     "clojure-deps-edn": {
       "flake": false,
       "locked": {
@@ -350,6 +430,11 @@
     },
     "root": {
       "inputs": {
+        "asdf-clojure": "asdf-clojure",
+        "asdf-java": "asdf-java",
+        "asdf-nodejs": "asdf-nodejs",
+        "asdf-python": "asdf-python",
+        "asdf-ruby": "asdf-ruby",
         "clojure-deps-edn": "clojure-deps-edn",
         "comma": "comma",
         "darwin": "darwin",
