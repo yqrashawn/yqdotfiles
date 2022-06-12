@@ -39,18 +39,15 @@
 
 (defun ++lsp-init-company-backends-h ()
   (when lsp-completion-mode
-    (set (make-local-variable 'company-backends)
-      (remq nil company-backends))
-    (let ((first-backend (car company-backends)))
-      (cond
-        ((eq 'company-tabnine first-backend)
-          (set (make-local-variable 'company-backends)
-            (remq 'company-tabnine company-backends))
-          (set (make-local-variable 'company-backends)
-            (pushnew! company-backends 'company-capf 'company-tabnine)))
-        ((not (eq 'company-capf first-backend))
-          (set (make-local-variable 'company-backends)
-            (pushnew! company-backends 'company-capf)))))))
+    (make-local-variable 'company-backends)
+    (setq company-backends (remq nil company-backends))
+    (setq company-backends (remq 'company-tabnine company-backends))
+    (setq company-backends (remq 'company-capf company-backends))
+    (cond
+     ((memq major-mode +lispy-modes)
+      (setq company-backends (pushnew! company-backends 'company-tabnine 'company-capf)))
+     (t
+      (setq company-backends (pushnew! company-backends 'company-capf 'company-tabnine))))))
 
 (after! lsp-mode
   (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
