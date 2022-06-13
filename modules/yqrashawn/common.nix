@@ -81,6 +81,8 @@
       # procs # ps
       bottom # btm htop
       thefuck
+      nix-tree
+      nix-linter
       curlie # httpie
       # glances # htop
       xh # httpie
@@ -154,7 +156,7 @@
       sd
       asdf-vm
       vmtouch
-      commitizen
+      # commitizen
       graphviz
       perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
       git-absorb # https://github.com/tummychow/git-absorb
@@ -222,7 +224,7 @@
       # entertainment
       youtube-dl
       yt-dlp
-      streamlink
+      # streamlink
       mpv
       you-get
       watchman
