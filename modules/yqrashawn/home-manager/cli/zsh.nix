@@ -15,29 +15,9 @@ let
     asdf global python 3.10.5
     asdf global nodejs 16.15.1
 
-    # export FNM_MULTISHELL_PATH=$HOME/.fnm/current
-    # export FNM_DIR=$HOME/.fnm/
-    # export FNM_NODE_DIST_MIRROR=https://nodejs.org/dist
-    # export FNM_LOGLEVEL=info
-    # autoload -U add-zsh-hook
-    # _fnm_autoload_hook () {
-    #   if [[ -f .node-version && -r .node-version ]]; then
-    #     fnm --log-level=error use --install-if-missing
-    #   elif [[ -f .nvmrc && -r .nvmrc ]]; then
-    #     fnm --log-level=error use --install-if-missing
-    #   fi
-    # }
-
-    # add-zsh-hook chpwd _fnm_autoload_hook \
-    #   && _fnm_autoload_hook
-
-    # if ! typeset -f _fnm > /dev/null; then
-    #   fpath=(${pkgs.fnm}/share/zsh/site-functions $fpath)
-    # fi
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
-    # eval "$(fnm env)"
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
@@ -130,6 +110,11 @@ in {
       TERM = "xterm-256color";
     };
     shellAliases = aliases;
+    loginExtra = ''
+      # https://github.com/alacritty/alacritty/issues/2950
+      # disable alacritty icon bouncing
+      printf "\e[?1042l"
+    '';
     initExtra = ''
       # Stop TRAMP (in Emacs) from hanging or term/shell from echoing back commands
       #if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then
