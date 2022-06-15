@@ -5,6 +5,8 @@
     userName = "yqrashawn";
     userEmail = "namy.19@gmail.com";
     aliases = {
+      ignore =
+        "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
       prettylog = "...";
       fix = "commit --amend --no-edit";
       oops = "reset HEAD~1";

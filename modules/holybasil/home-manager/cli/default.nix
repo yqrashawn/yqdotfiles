@@ -8,7 +8,6 @@
     ./bat.nix
     ./mcfly.nix
     ./zoxide.nix
-    ./git.nix
     ./exa.nix
   ];
   home.packages = [ pkgs.tree ];

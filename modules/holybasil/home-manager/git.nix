@@ -5,6 +5,8 @@
     userName = "holybasil";
     userEmail = "holybasil.1128@gmail.com";
     aliases = {
+      ignore =
+        "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
       prettylog = "...";
       fix = "commit --amend --no-edit";
       oops = "reset HEAD~1";
@@ -12,7 +14,7 @@
     };
     extraConfig = {
       core = {
-        editor = "emacsclient";
+        editor = "code";
         excludesfile = "~/.gitignore_global";
         precomposeUnicode = true;
       };
@@ -99,7 +101,7 @@
         "osxkeychain"
       else
         "cache --timeout=1000000000";
-      commit.verbose = true;
+      commit.verbose = false;
       fetch.prune = true;
     };
     lfs.enable = true;
