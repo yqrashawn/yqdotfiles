@@ -1,8 +1,9 @@
 dotup () {
+  export NIXPKGS_ALLOW_BROKEN=1
   echo "Please enter root password"
   sudo echo "OK"
   pushd .
   cd ~/.nixpkgs/
-  sysdo switch --darwin $@
+  nix -extra-exterimental-features "nix-command flakes" develop --impure -c sysdo switch holybasil
   popd
 }
