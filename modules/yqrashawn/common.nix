@@ -163,6 +163,7 @@
       gnumake
       cmake
       dtach
+      difftastic
       # python39Packages.percol # build failed
       # docker-compose_2
 
