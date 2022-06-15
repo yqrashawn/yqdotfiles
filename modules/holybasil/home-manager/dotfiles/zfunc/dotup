@@ -4,6 +4,6 @@ dotup () {
   sudo echo "OK"
   pushd .
   cd ~/.nixpkgs/
-  nix -extra-exterimental-features "nix-command flakes" develop --impure -c sysdo switch holybasil
+  nix --extra-exterimental-features "nix-command flakes" develop --impure -c sysdo switch holybasil
   popd
 }

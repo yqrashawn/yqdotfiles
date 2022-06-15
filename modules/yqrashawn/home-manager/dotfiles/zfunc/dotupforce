@@ -10,7 +10,7 @@ dotupforce () {
     git fetch --all
     git reset --hard origin/master
     reload
-    sysdo switch --darwin $@
+    nix --extra-exterimental-features "nix-command flakes" develop --impure -c sysdo switch yqrashawn-intel
     popd
   fi
 }
