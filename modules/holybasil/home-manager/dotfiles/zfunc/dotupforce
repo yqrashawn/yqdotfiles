@@ -10,7 +10,8 @@ dotupforce () {
     git fetch --all
     git reset --hard origin/master
     reload
-    sysdo switch --darwin $@
+    export NIXPKGS_ALLOW_BROKEN=1
+    nix -extra-exterimental-features "nix-command flakes" develop --impure -c sysdo switch holybasil
     popd
   fi
 }
