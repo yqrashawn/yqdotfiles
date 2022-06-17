@@ -65,14 +65,15 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
   (add-hook! 'yaml-mode-hook 'enable-add-log-current-defun-using-which-function))
 
-(use-package! side-hustle
-  :defer t
-  :config
-  (defadvice! ++fold/toggle (orig-fn)
-    :around #'+fold/toggle
-    (if (eq major-mode 'side-hustle-mode)
-        (call-interactively #'side-hustle-show-item)
-      (call-interactively orig-fn))))
+;; imenu sidebar
+;; (use-package! side-hustle
+;;   :defer t
+;;   :config
+;;   (defadvice! ++fold/toggle (orig-fn)
+;;     :around #'+fold/toggle
+;;     (if (eq major-mode 'side-hustle-mode)
+;;         (call-interactively #'side-hustle-show-item)
+;;       (call-interactively orig-fn))))
 
 ;; (defadvice! ++syntax-init-popups-h (orig-fn)
 ;;   :around #'+syntax-init-popups-h

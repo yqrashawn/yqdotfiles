@@ -136,7 +136,7 @@
 
 (package! yaml-imenu)
 ;; (package! imenu-list)
-(package! side-hustle)
+;; (package! side-hustle)
 ;; (package! github-review)
 (package! comb)
 (package! wucuo)
@@ -233,6 +233,7 @@
 (package! cider-eval-sexp-fu)
 (package! org-modern)
 (package! dirvish)
+;; carp
 (package! carp-mode
   :recipe (:host github
            :repo "carp-lang/carp-emacs"
@@ -249,13 +250,13 @@
 (package! textsize)
 (package! eshell-follow
   :recipe (:type git :repo "https://git.sr.ht/~e-v/eshell-follow.el"))
-(package! plz :recipe (:host github :repo "alphapapa/plz.el"))
-(package! ement :recipe (:host github :repo "alphapapa/ement.el"))
+;; (package! plz :recipe (:host github :repo "alphapapa/plz.el")) ;; http library
+;; (package! ement :recipe (:host github :repo "alphapapa/ement.el")) ;; matrix client
 ;; (package! esup)
 (package! vundo :recipe (:host github :repo "casouri/vundo"))
-(package! zoom)
+;; (package! zoom) ;; balance window
 (package! evil-matchit)
-(package! evil-owl)
+;; (package! evil-owl)
 (package! gc-buffers
   :recipe (:type git :repo "https://codeberg.org/akib/emacs-gc-buffers.git"))
 (package! detached)

@@ -140,7 +140,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        hydra
        indent-guides     ; highlighted indent columns
        ;; (ligatures +extra +pragmata-pro) ligatures and symbols to make your code pretty again
-       minimap           ; show a map of the code on the side
+       ;minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -250,9 +250,9 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;ledger            ; be audit you can be
        (lua +fennel +lsp)  ; one-based indices? one-based indices
        (markdown +grip)    ; writing docs for people to ignore
-       ;;nim               ; python + lisp at the speed of c
-       nix                 ; I hereby declare "nix geht mehr!"
-       ;;ocaml             ; an objective camel
+       ;;(nim +tree-sitter); python + lisp at the speed of c
+       (nix +tree-sitter)                 ; I hereby declare "nix geht mehr!"
+       ;;(ocaml +tree-sitter)             ; an objective camel
        (org +dragndrop +hugo +journal +noter +pandoc +pretty +roam2 +present) ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        plantuml            ; diagrams for confusing people more
@@ -274,7 +274,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;terra             ; Earth and Moon in alignment for performance.
        (web +lsp +tree-sitter)               ; the tubes
        (yaml +lsp)              ; JSON, but readable
-       (zig +lsp)               ; C, but simpler
+       (zig +lsp +tree-sitter)               ; C, but simpler
 
        :email
        ;; (mu4e +gmail +org)
@@ -285,8 +285,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;calendar
        ;;emms
        everywhere        ; *leave* Emacs!? You must be joking
-       irc               ; how neckbeards socialize
-       rss               ; emacs as an RSS reader
+       ;;irc               ; how neckbeards socialize
+       ;;rss               ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config

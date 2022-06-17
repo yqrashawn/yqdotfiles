@@ -103,4 +103,4 @@
 
 (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
 
-(use-package! zoom :hook (doom-first-buffer))
+;; (use-package! zoom :hook (doom-first-buffer))
