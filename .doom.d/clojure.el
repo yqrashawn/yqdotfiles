@@ -171,4 +171,10 @@ creates a new one. Don't unnecessarily bother the user."
     :around #'cljr-add-use-to-ns
     (interactive "P")
     (evil-insert-state 1)
-    (call-interactively orig-fn)))
+    (call-interactively orig-fn))
+
+  (after! cider
+    ;; https://ag91.github.io/blog/2022/06/09/make-adding-a-clojure-require-more-interactive-with-cider-and-cljr/
+    (defun +make-cljr-add-use-snippet-interactive ()
+      (setq-local cljr--add-use-snippet "[${1:$$(yas-choose-value (ignore-errors (cider-sync-request:ns-list)))} :refer ${2:[$3]}]"))
+    (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive)))
