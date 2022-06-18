@@ -34,6 +34,7 @@
   (add-hook! 'org-mode-hook 'org-modern-mode))
 
 (setq +org-roam-open-buffer-on-find-file nil)
+
 (after! org-roam
   (pushnew! org-default-properties "ROAM_ALIASES" "ROAM_REFS" "CREATED")
   (setq!
@@ -59,7 +60,7 @@
 #+TITLE: ${title}
 
 * Description")
-      :unnarrowed t))))
+       :unnarrowed t))))
 
 (use-package! orgbox
   :commands (orgbox orgbox-schedule)
@@ -74,7 +75,6 @@
   ;; persistence of meta values (see respective section in README to
   ;; find out what meta means)
   :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
-
 
 (defun +org-has-todo-p ()
   "Return non-nil if current buffer has any todo entry.
