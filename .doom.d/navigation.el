@@ -183,3 +183,6 @@
     :around #'embark-save-relative-path
     (let ((default-directory (or (doom-project-root) default-directory)))
       (funcall-interactively orig-fn file))))
+
+(use-package! projectile
+  :commands (projectile-switch-project-by-name))
