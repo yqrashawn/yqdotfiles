@@ -4,7 +4,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((js2-mode-show-strict-warnings)
+    '((eval let
+        ((tools-file
+           (concat
+             (pwd)
+             "scripts/tools.el")))
+        (when
+          (file-exists-p tools-file)
+          (load-file tools-file)))
+       (js2-mode-show-strict-warnings)
        (js2-mode-show-parse-errors)
        (eval define-clojure-indent
          (l/matcha
@@ -13,16 +21,16 @@
          (l/matche
            '(1
               (:defn)))
-         (p.types/def-abstract-type
+         (p\.types/def-abstract-type
            '(1
               (:defn)))
-         (p.types/defprotocol+
+         (p\.types/defprotocol+
            '(1
               (:defn)))
-         (p.types/defrecord+
+         (p\.types/defrecord+
            '(2 nil nil
               (:defn)))
-         (p.types/deftype+
+         (p\.types/deftype+
            '(2 nil nil
               (:defn)))
          (p/def-map-type
@@ -37,11 +45,11 @@
          (p/deftype+
            '(2 nil nil
               (:defn)))
-         (tools.macro/macrolet
+         (tools\.macro/macrolet
            '(1
               ((:defn))
               :form)))
-       (eval put 'p.types/defprotocol+ 'clojure-doc-string-elt 2)
+       (eval put 'p\.types/defprotocol+ 'clojure-doc-string-elt 2)
        (eval put 's/defn 'clojure-doc-string-elt 2)
        (eval put 'setting/defsetting 'clojure-doc-string-elt 2)
        (eval put 'defsetting 'clojure-doc-string-elt 2)
@@ -129,8 +137,12 @@
                (re-search-forward "from.*@jest/globals"
                  (point-max)
                  t))
-             (insert "// eslint-disable-next-line no-unused-vars\12import {expect, describe, test, it, jest, afterAll, afterEach, beforeAll, beforeEach} from '@jest/globals' // prettier-ignore\12")
-             (insert "// eslint-disable-next-line no-unused-vars\12import waitForExpect from 'wait-for-expect'\12"))))
+             (insert "// eslint-disable-next-line no-unused-vars
+import {expect, describe, test, it, jest, afterAll, afterEach, beforeAll, beforeEach} from '@jest/globals' // prettier-ignore
+")
+             (insert "// eslint-disable-next-line no-unused-vars
+import waitForExpect from 'wait-for-expect'
+"))))
        (projectile-project-root . "~/.doom.d/")))
  '(warning-suppress-types '((before-save-hook))))
 (custom-set-faces
