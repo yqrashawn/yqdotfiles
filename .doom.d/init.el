@@ -261,7 +261,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
-       rest                ; Emacs as a REST client
+       (rest +jq)                ; Emacs as a REST client
        ;;rst               ; ReST in peace
        (ruby +rails +rbenv +lsp +tree-sitter); 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp +tree-sitter)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
@@ -299,4 +299,4 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (setq straight-vc-git-default-clone-depth 'full)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))
 (defalias 'defgeneric 'cl-defgeneric)
-(require 'bind-key)
+;; (require 'bind-key)
