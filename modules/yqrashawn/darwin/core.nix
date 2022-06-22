@@ -65,6 +65,7 @@ in {
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   services.lorri.enable = true;
+  # services.emacs.package = pkgs.emacsMacport;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

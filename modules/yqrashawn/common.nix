@@ -23,6 +23,7 @@
   # environment setup
   environment = {
     systemPackages = with pkgs; [
+      # emacsMacport
       # clojure
       clojure-lsp
       ispell
