@@ -68,8 +68,11 @@
 
 (use-package! loccur :commands loccur-current)
 (use-package! double-saber
+  :defer t
   :init
-  (add-hook! occur-mode (cmd! (double-saber-mode 1) (setq-local double-saber-start-line 5)))
+  (add-hook! occur-mode
+    (double-saber-mode 1)
+    (setq-local double-saber-start-line 5))
   (defadvice ivy-wgrep-change-to-wgrep-mode (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
     "disable `double-saber-mode' when enter wgrep mode"
     (interactive)
@@ -186,3 +189,11 @@
 
 (use-package! projectile
   :commands (projectile-switch-project-by-name))
+
+(defadvice! ++workspace/close-window-or-workspace (orig-fn)
+  "Don't delete workspace if only visible window is magit-status buffer"
+  :around #'+workspace/close-window-or-workspace
+  (if (and (memq major-mode '(magit-status-mode))
+        (not (cdr (doom-visible-windows))))
+    nil
+    (funcall orig-fn)))

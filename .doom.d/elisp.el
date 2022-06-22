@@ -12,7 +12,7 @@
 (use-package! highlight-function-calls :hook (emacs-lisp-mode . highlight-function-calls-mode))
 (use-package! easy-escape :hook (emacs-lisp-mode . easy-escape-minor-mode)) ; elisp regexp
 
-(add-hook! 'emacs-lisp-mode-hook (cmd! (require 'cider)))
+(add-hook! 'emacs-lisp-mode-hook (require 'cider))
 
 ;; (use-package! elisp-slime-nav
 ;;   :hook ((emacs-lisp-mode ielm-mode) . turn-on-elisp-slime-nav-mode))

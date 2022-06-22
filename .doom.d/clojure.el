@@ -5,7 +5,7 @@
 (add-to-list 'magic-mode-alist '("^#![^\n]*/\\(clj\\|clojure\\|bb\\|lumo\\)" . clojure-mode))
 
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
-  (cmd! (setq-local evil-shift-width 1)))
+  (setq-local evil-shift-width 1))
 
 (setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
 (setq-hook! '(clojure-mode-hook) lsp-lens-enable nil)
@@ -62,16 +62,16 @@
       (apply func args))))
 
 ;;; cider
-(add-hook! cider-mode
-  (defun +clojure-use-cider-over-lsp ()
+(defun +clojure-use-cider-over-lsp ()
     (pushnew! completion-at-point-functions #'cider-complete-at-point)
     (setq-local cider-font-lock-dynamically '(macro core deprecated))
-    (setq-local lsp-completion-enable nil)))
-(add-hook! 'cider-disconnected-hook
-  (defun +clojure-use-lsp-over-cider ()
+    (setq-local lsp-completion-enable nil))
+(defun +clojure-use-lsp-over-cider ()
     (delq! #'cider-complete-at-point completion-at-point-functions)
     (setq-local cider-font-lock-dynamically nil)
-    (setq-local lsp-completion-enable t)))
+    (setq-local lsp-completion-enable t))
+(add-hook! cider-mode '+clojure-use-cider-over-lsp)
+(add-hook! 'cider-disconnected-hook '+clojure-use-lsp-over-cider)
 (add-hook! 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
 (add-hook! 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
 

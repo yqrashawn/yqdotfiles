@@ -90,7 +90,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 (use-package! smerge-mode
   :defer t
   :config
-  (add-hook! 'smerge-mode-hook (cmd! (flycheck-mode -1))))
+  (add-hook! 'smerge-mode-hook (flycheck-mode -1)))
 
 (defun ar/ediff-dir-content-size ()
   "Diff all subdirectories (sizes only) in two directories."

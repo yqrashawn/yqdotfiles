@@ -126,7 +126,6 @@
   (add-hook! 'evil-normal-state-entry-hook '+company-abort))
 
 (use-package! fuz-bin
-  :ensure t
   :after orderless
   :config
   (setq fuz-bin--bin-dir (concat straight-base-dir "straight/repos/fuz-bin/bin/"))

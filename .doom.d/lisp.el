@@ -14,6 +14,7 @@
       (call-interactively orig-fn)))
 
   (use-package! ccc                     ; for cursor style
+    :after lispy
     :init
     (defun +lispy-update-cursor-style ()
       (when (and lispy-mode (evil-insert-state-p))
@@ -163,13 +164,13 @@ Instead keep them, with a newline after each comment."
   (setq! evil-symex-state-cursor '+evil-symex-cursor-fn)
 
   ;; toggle lispy-mode
-  (add-hook! 'evil-symex-state-entry-hook
-    (defun +symex-mode-interface ()
+  (defun +symex-mode-interface ()
       (lispy-mode -1)
-      (lispyville-mode -1)))
-  (add-hook! 'evil-symex-state-exit-hook
-    (defun +symex-state-exit ()
-      (lispy-mode 1)))
+      (lispyville-mode -1))
+  (defun +symex-state-exit ()
+      (lispy-mode 1))
+  (add-hook! 'evil-symex-state-entry-hook '+symex-mode-interface)
+  (add-hook! 'evil-symex-state-exit-hook '+symex-state-exit)
 
   (remove-hook! 'evil-symex-state-exit-hook #'symex-disable-editing-minor-mode)
   (defadvice! +evil-force-normal-state (orig)
@@ -189,9 +190,9 @@ Instead keep them, with a newline after each comment."
     :around #'symex-evaluate
     (interactive "p")
     (if (eq (char-after) 41)
-        (save-excursion
-          (evil-jump-item)
-          (call-interactively orig-fn count))
+      (save-excursion
+        (evil-jump-item)
+        (call-interactively orig-fn count))
       (call-interactively orig-fn count))))
 
 ;;; eval-sexp-fu
