@@ -46,7 +46,7 @@
 
 (after! dired
   (setq! dired-recursive-deletes 'always
-         dired-kill-when-opening-new-dired-buffer t))
+         dired-kill-when-opening-new-dired-buffer nil))
 (after! dired-aux
   (setq! dired-create-destination-dirs 'always
          dired-isearch-filenames 'dwim))

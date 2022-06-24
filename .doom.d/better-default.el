@@ -290,25 +290,21 @@ A prefix arg reverses this operation."
                (funcall help-fns--autoloaded-p sym))
         (apply fn args)))
 
-(use-package! dirvish
-  :hook (doom-first-input . dirvish-override-dired-mode)
-  :init
-  (setq! dirvish-cache-dir (concat doom-cache-dir "dirvish")
-         dirvish-hide-details t
-         dirvish-keep-alive-on-quit nil
-         dirvish-header-line-format nil
-         dirvish-attributes '(file-size collapse vc-state subtree-state))
-  :config
-  (dirvish-define-preview exa (file)
-    "Use `exa' to generate directory preview."
-    (when (file-directory-p file)       ; we only interest in directories here
-      `(shell . ("exa" "--color=always" "-al" ,file)))) ; use the output of `exa' command as preview
-  (pushnew! dirvish-preview-dispatchers 'exa)
+;; (after! dirvish
+;;   (setq!
+;;    ;; dirvish-keep-alive-on-quit nil
+;;    ;; dirvish-header-line-format nil
+;;    dirvish-attributes '(file-size git-msg))
+;;   (dirvish-define-preview exa (file)
+;;     "Use `exa' to generate directory preview."
+;;     (when (file-directory-p file)       ; we only interest in directories here
+;;       `(shell . ("exa" "--color=always" "-al" ,file)))) ; use the output of `exa' command as preview
+;;   (pushnew! dirvish-preview-dispatchers 'exa)
 
-  (defadvice! ++dired/quit-all ()
-    :before #'+dired/quit-all
-    (mapc #'kill-buffer (doom-buffers-in-mode 'dirvish-mode)))
-  (require 'dirvish-vc))
+;;   (defadvice! ++dired/quit-all ()
+;;     :before #'+dired/quit-all
+;;     (mapc #'kill-buffer (doom-buffers-in-mode 'dirvish-mode)))
+;;   (require 'dirvish-vc))
 
 (setq! image-use-external-converter t)
 
