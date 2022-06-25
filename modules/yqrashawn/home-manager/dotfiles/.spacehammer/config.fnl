@@ -600,7 +600,7 @@
                          "Preview"]]
 
    ;; :default_handler ffd
-   :default_handler edge}})
+   :default_handler orion}})
 
 (comment
  (local col hs.drawing.color.x11))

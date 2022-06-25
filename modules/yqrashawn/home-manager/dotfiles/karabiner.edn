@@ -271,6 +271,8 @@
                       ;; [:k :!CSopen_bracket :Firefoxes]
                       [:j :!CSclose_bracket :Edge]
                       [:k :!CSopen_bracket :Edge]
+                      [:j :!CSclose_bracket :Orion]
+                      [:k :!CSopen_bracket :Orion]
                       [:j :!CSopen_bracket]
                       [:k :!CSclose_bracket]
                       [:h :!Copen_bracket]
@@ -323,10 +325,10 @@
                       ;; [:comma [:open "/Applications/Firefox Developer Edition.app/"] :!Firefoxes]
                       ;; [:l [:togg "Firefox Developer Edition"] :!Firefoxes]
                       ;; [:l :same_wind_app :Firefoxes]
-                      ;; [:l [:togg "Orion"] :!Orion]
-                      ;; [:l [:togg :same_wind_app] :Orion]
-                      [:l [:togg "Microsoft Edge Beta"] :!Edge]
-                      [:l [:togg :same_wind_app] :Edge]
+                      [:l [:togg "Orion"] :!Orion]
+                      [:l [:togg :same_wind_app] :Orion]
+                      ;; [:l [:togg "Microsoft Edge Beta"] :!Edge]
+                      ;; [:l [:togg :same_wind_app] :Edge]
                       ;; [:l [:togg "Vivaldi"] :!VV]
                       ;; [:l [:togg :same_wind_app] :VV]
                       ;; [:l [:jump "Firefox Developer Edition" "Firefox Developer Edition"]]
@@ -763,7 +765,8 @@
                       :Keybase                       ["^keybase\\.Electron$"]
                       :Discord                       ["^com\\.hnc\\.Discord$"]
                       :slidepad                      ["^com\\.slidepad\\.slidepad"]
-                      :Browsers                      ["^org\\.mozilla\\.firefox$"
+                      :Browsers                      ["^com\\.kagi\\.kagimacOS$"
+                                                      "^org\\.mozilla\\.firefox$"
                                                       "^org\\.mozilla\\.firefoxdeveloperedition$"
                                                       "^com\\.google\\.Chrome$"
                                                       "^org\\.chromium\\.Chromium$"
