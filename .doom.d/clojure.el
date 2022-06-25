@@ -13,14 +13,17 @@
 ;;; clojure-mode
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t
-         clojure-verify-major-mode nil
-         clojure-align-reader-conditionals t
-         clojure-defun-indents '(fn-traced))
+    clojure-verify-major-mode nil
+    clojure-align-reader-conditionals t
+    clojure-defun-indents '(fn-traced))
 
 
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     lsp-ui-sideline-show-code-actions nil
-    lsp-ui-sideline-show-diagnostics nil))
+    lsp-ui-sideline-show-diagnostics nil)
+  (set-formatter! 'cljstyle "cljstyle pipe" :modes '(clojure-mode clojurescript-mode clojurec-mode))
+  ;; (setq cider-clojure-cli-global-options "-T:portal-cli")
+  )
 
 (defun +setup-clojure-mode ()
   (add-hook! 'before-save-hook #'clojure-sort-ns))

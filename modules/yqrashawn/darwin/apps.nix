@@ -2,6 +2,7 @@
   imports = [ ./apps-minimal.nix ];
   homebrew = {
     casks = [
+      "cljstyle"
       "docker"
       "espanso"
       "xbar"
