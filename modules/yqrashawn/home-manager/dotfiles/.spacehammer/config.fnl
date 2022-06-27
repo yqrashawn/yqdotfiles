@@ -119,7 +119,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Windows
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (local window-jumps
        [{:mods [:cmd]
          :key "hjkl"
@@ -279,6 +278,14 @@
         {:key :a
          :title (.. "Launch " music-app)
          :action (activator music-app)}])
+(local insert-bindings
+       [return
+        {:key :o
+         :title "Org Link"
+         :action (fn [] (hs.osascript.applescript "tell application id \"com.runningwithcrayons.Alfred\" to run trigger \"yqlink-org\" in workflow \"com.yqrashawn.yqlink\" with argument \"\""))}
+        {:key :m
+         :title "MD Link"
+         :action (fn [] (hs.osascript.applescript "tell application id \"com.runningwithcrayons.Alfred\" to run trigger \"yqlink-md\" in workflow \"com.yqrashawn.yqlink\" with argument \"\""))}])
 
 (local emacs-bindings
        [return
@@ -327,6 +334,9 @@
         {:key   :m
          :title "Media"
          :items media-bindings}
+         {:key :i
+          :title "Insert"
+          :items insert-bindings}
         ;; {:key   :x
         ;;  :title "Emacs"
         ;;  :items emacs-bindings}
@@ -599,8 +609,9 @@
                          false
                          "Preview"]]
 
-   ;; :default_handler ffd
-   :default_handler orion}})
+   :default_handler ffd
+   ;; :default_handler orion
+   }})
 
 (comment
  (local col hs.drawing.color.x11))
