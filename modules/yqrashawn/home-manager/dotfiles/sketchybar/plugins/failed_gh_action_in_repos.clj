@@ -1,10 +1,10 @@
-#!/usr/local/bin/bb
+#!/usr/bin/env bb
 
 (ns failed-gh-action-in-repos
   (:require
    [lib.github.checks :as checks]
-   [lib.sketchybar.core :as skb]
-   [lib.github.pr :as pr]))
+   [lib.github.pr :as pr]
+   [lib.sketchybar.core :as skb]))
 
 (let [d          (->> (pr/my-open-pr "Conflux-Chain" "helios")
                       (filter #(-> :user :login (= "yqrashawn" %)))

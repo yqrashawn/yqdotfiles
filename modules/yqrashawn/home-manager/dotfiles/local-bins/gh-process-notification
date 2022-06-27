@@ -1,12 +1,12 @@
-#!/usr/local/bin/bb
+#!/usr/bin/env bb
 
 (ns gh-interested-pr
   (:require
-   [clojure.string :as str]
    [cheshire.core :as json]
-   [lib.github.pr :as ghpr]
+   [clojure.string :as str]
+   [lib.github.core :as gh]
    [lib.github.notification :as ghnoti]
-   [lib.github.core :as gh]))
+   [lib.github.pr :as ghpr]))
 
 (def intrested-repos [["Conflux-Chain" "helios"]])
 (def intrested-repos-full-name (mapv #(str/join "/" %) intrested-repos))

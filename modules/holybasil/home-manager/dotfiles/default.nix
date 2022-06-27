@@ -107,17 +107,9 @@
   xdg.enable = true;
   xdg.configFile = {
     "nixpkgs/config.nix".source = ../../config.nix;
-    yabai = lib.mkIf pkgs.stdenvNoCC.isDarwin {
-      source = ./yabai;
-      recursive = true;
-    };
     karabiner = {
       source = ./karabiner.edn;
       target = "karabiner.edn";
-    };
-    topgrade = {
-      source = ./topgrade.toml;
-      target = "topgrade.toml";
     };
     bblib = {
       source = ./bblib;

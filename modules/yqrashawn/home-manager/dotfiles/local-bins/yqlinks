@@ -1,0 +1,52 @@
+#!/run/current-system/sw/bin/bb
+
+(ns yqlinks
+  (:require
+   [babashka.curl :as curl]
+   [clojure.java.shell :as shell]
+   [clojure.string :as s]
+   [clojure.tools.cli :refer [parse-opts]]))
+
+(s/trim-newline (:out (shell/sh "pbpaste")))
+
+(defn get-html [url]
+  (let [res                   (curl/get url)
+        {:keys [status body]} res]
+    (when (< status 400)
+      body)))
+
+(defn html->title [html]
+  (-> (re-seq #"<title>(?<title>.*)</title>" html)
+      first
+      second
+      s/trim))
+
+(defn org-link [title url]
+  (format "[[%s][%s]]" url title))
+
+(defn md-link [title url]
+  (format "[%s](%s)" title url))
+
+(def cli-opts
+  [["-t" "--type TYPE" "Output link type"
+    :default :md
+    :parse-fn keyword
+    :validate [(fn [type] (some? (#{:md :org} type))) "Must be one of md or org"]]
+   ["-u" "--url URL" "Input url"]])
+
+(defn- main []
+  (let [{:keys [options]}  (parse-opts *command-line-args* cli-opts)
+        {:keys [url type]} options
+        ->link             (if (= type :md) md-link org-link)
+        url                (or url (s/trim-newline (:out (shell/sh "pbpaste"))))
+        url (re-find #"(?i)^(?:(?:https?)://)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))?\.?)(?::\d{2,5})?(?:[/?#]\S*)?$" url)]
+    (when (and url type)
+      (-> url
+          get-html
+          html->title
+          (->link url)
+          println)
+      ;; (System/exit 0)
+      )))
+
+(main)

@@ -1,18 +1,18 @@
-#!/usr/local/bin/bb
+#!/usr/bin/env bb
 
 (ns html2dash
   (:require
-   [clojure.string :as str]
    [babashka.fs :as fs]
    [babashka.pods :as pods]
+   [clojure.string :as str]
    [selmer.parser :as selmer]))
 
 (pods/load-pod 'retrogradeorbit/bootleg "0.1.9")
 (require
-  '[pod.retrogradeorbit.bootleg.utils :refer [convert-to]]
-  '[pod.retrogradeorbit.bootleg.enlive :as enlive]
-  '[pod.retrogradeorbit.hickory.select :as s]
-  '[pod.retrogradeorbit.hickory.render :refer [hickory-to-html]])
+ '[pod.retrogradeorbit.bootleg.utils :refer [convert-to]]
+ '[pod.retrogradeorbit.bootleg.enlive :as enlive]
+ '[pod.retrogradeorbit.hickory.select :as s]
+ '[pod.retrogradeorbit.hickory.render :refer [hickory-to-html]])
 
 (pods/load-pod 'org.babashka/go-sqlite3 "0.0.1")
 (require '[pod.babashka.go-sqlite3 :as sqlite])
@@ -44,8 +44,8 @@
   (->> elm
        (s/select containers-selector)
        (sequence (comp
-                   (map elm->child-elms)
-                   (map f)))))
+                  (map elm->child-elms)
+                  (map f)))))
 
 (defn empty-entry-name? [name]
   (empty? (str/replace name #"\p{Z}" "")))
@@ -78,14 +78,14 @@
   (assert (-> body-elm :attrs :class #{"sectionbody"}))
   [(heading-elm->text heading-elm)
    (map-container-children
-     entry-tuple->title+html+commands
-     (s/and (s/tag :div) (s/class :sect2))
-     body-elm)])
+    entry-tuple->title+html+commands
+    (s/and (s/tag :div) (s/class :sect2))
+    body-elm)])
 
 (def hickory->categories
   (partial map-container-children
-    category-tuple->title+entries
-    (s/and (s/tag :div) (s/class :sect1))))
+           category-tuple->title+entries
+           (s/and (s/tag :div) (s/class :sect1))))
 
 (def html (slurp "web-cheatsheet.html"))
 (def hickory (convert-to html :hickory)) ; = (->> html hick/parse hick/as-hickory)
@@ -95,34 +95,34 @@
   [cheatsheet-data]
   (->> cheatsheet-data
        (mapcat
-         (fn [[category-id entries]]
-           (conj
-             (mapcat
-               (fn [[entry-name _html commands]]
-                 (let [entry-url (format "index.html#//dash_ref_%s/Entry/%s/0"
-                                   category-id entry-name)]
-                   (conj
-                     (map
-                       (fn [command]
-                         [(str/replace command "_" " ") :Command entry-url]) ; navigating to the parent entry is simpler to impl. and good enough :)
-                       commands)
-                     [entry-name :Entry entry-url])))
-               entries)
-             [category-id :Category (format "index.html#//dash_ref/Category/%s/1" category-id)])))))
+        (fn [[category-id entries]]
+          (conj
+           (mapcat
+            (fn [[entry-name _html commands]]
+              (let [entry-url (format "index.html#//dash_ref_%s/Entry/%s/0"
+                                      category-id entry-name)]
+                (conj
+                 (map
+                  (fn [command]
+                    [(str/replace command "_" " ") :Command entry-url]) ; navigating to the parent entry is simpler to impl. and good enough :)
+                  commands)
+                 [entry-name :Entry entry-url])))
+            entries)
+           [category-id :Category (format "index.html#//dash_ref/Category/%s/1" category-id)])))))
 
 (defn init-index! [index-file]
   (sqlite/execute! index-file
-    ["create table searchIndex(id integer primary key, name TEXT, type TEXT, path TEXT)"])
+                   ["create table searchIndex(id integer primary key, name TEXT, type TEXT, path TEXT)"])
   index-file)
 
 (defn build-index! [index-file cheatsheet-data]
   (sqlite/execute! index-file
-    ["insert into searchIndex(name, type, path) values (?,?,?)"
-     "AsciiDoctor" "Category" "index.html"])
+                   ["insert into searchIndex(name, type, path) values (?,?,?)"
+                    "AsciiDoctor" "Category" "index.html"])
   (doseq [index-triple (cheatsheet-data->index-triples cheatsheet-data)]
     (sqlite/execute! index-file
-      (into ["insert into searchIndex(name, type, path) values (?,?,?)"]
-        (map name index-triple))))
+                     (into ["insert into searchIndex(name, type, path) values (?,?,?)"]
+                           (map name index-triple))))
   index-file)
 
 ;; --------------------- do it all
@@ -144,7 +144,7 @@
     (fs/copy-tree "resources/Contents" docset-contents)
 
     (spit html-file
-      (selmer/render-file "./cheatsheet.template.html" {:categories cheatsheet-data}))
+          (selmer/render-file "./cheatsheet.template.html" {:categories cheatsheet-data}))
 
     (printf "DocSet file `%s` written\n" html-file)
 
@@ -159,7 +159,7 @@
     (selmer/set-resource-path! (System/getProperty "user.dir"))
 
     (spit "AsciiDoctor.rb"
-      (selmer/render-file "./cheatsheet.template.rb" {:categories cheatsheet-data}))
+          (selmer/render-file "./cheatsheet.template.rb" {:categories cheatsheet-data}))
 
     (printf "AsciiDoctor.rb written\n")))
 
@@ -169,9 +169,8 @@
 (comment
 
   (sqlite/query
-    index-file
+   index-file
     ;"AsciiDoctor.docset//Contents/Resources/docSet.dsidx"
-    ["select * from searchIndex"])
+   ["select * from searchIndex"])
 
-  (selmer/cache-off!)
-  )
+  (selmer/cache-off!))

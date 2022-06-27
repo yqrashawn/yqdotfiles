@@ -1,12 +1,12 @@
-#!/usr/local/bin/bb
+#!/usr/bin/env bb
 
 (ns notmuch
   (:require
    [clojure.core.async :refer [chan go-loop <! put! <!!]]
    ;; [babashka.process :as p :refer [process]]
    [clojure.edn :as edn]
-   [clojure.string :as s]
-   [clojure.java.shell :refer [sh]]))
+   [clojure.java.shell :refer [sh]]
+   [clojure.string :as s]))
 
 (defonce c (chan))
 (defonce gmi "/usr/local/bin/gmi")
