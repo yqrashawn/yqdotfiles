@@ -353,6 +353,7 @@
                       [:period [:togg "Paw"]]
                       ;; [:equal_sign [:open "/Applications/Textual.app"]]
                       [:equal_sign [:togg "Textual"]]
+                      [:hyphen [:togg "LogSeq"]]
                       ;; [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
                       [:8 [:togg "Karabiner-EventViewer"]]
                       ;; [:b [:open "/Applications/Bee.app"]]
