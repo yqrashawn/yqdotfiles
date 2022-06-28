@@ -293,7 +293,7 @@
   ;;  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
   ;;  :g "E" (+thing-edit-gen-evil-op-f 'email))
   (:after org
-    [remap org-insert-link ar/org-insert-link-dwim])
+    [remap org-insert-link] 'ar/org-insert-link-dwim)
   (:after evil-snipe
     (:map evil-snipe-override-mode-map
       :nm "s" nil)

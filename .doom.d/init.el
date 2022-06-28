@@ -293,10 +293,13 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;literate
   (default +bindings +smartparens))
 
+;; https://discourse.doomemacs.org/t/using-lsp-use-plists-with-doom/2832
+(setenv "LSP_USE_PLISTS" "1")
+
 ;; needs to put this in init.el
 ;; https://github.com/hlissner/doom-emacs/issues/401
-(setq evil-respect-visual-line-mode nil)
-(setq straight-vc-git-default-clone-depth 'full)
+;; (setq evil-respect-visual-line-mode nil)
+;; (setq straight-vc-git-default-clone-depth 'full)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))
 (defalias 'defgeneric 'cl-defgeneric)
 ;; (require 'bind-key)
