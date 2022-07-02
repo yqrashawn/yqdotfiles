@@ -8,7 +8,7 @@
       "xbar"
       "gfxcardstatus"
       "uhk-agent"
-      "microsoft-edge-beta"
+      # "microsoft-edge-beta"
       "kitty"
       "slack"
       "bitwarden"

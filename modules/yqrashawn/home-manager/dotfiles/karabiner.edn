@@ -8,8 +8,8 @@
              :regex_match_any [{:key :period}
                                {:key :8 :modi [:left_shift] :lazy true}]}
  :modifiers {:ro :right_option}
- :templates {:launch     "osascript -e 'tell application \"Alfred 4\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
-             :alf        "open /Applications/Alfred\\ 4.app && osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\"'"
+ :templates {:launch     "osascript -e 'tell application \"Alfred 5\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
+             :alf        "open /Applications/Alfred\\ 5.app && osascript -e 'tell application \"Alfred 5\" to run trigger \"%s\" in workflow \"%s\"'"
              :sh         "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH %s"
              :yabai      "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai %s"
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"

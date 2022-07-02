@@ -112,7 +112,7 @@
       less
       zoxide # fasd
       lazygit
-      watchexec
+      # watchexec
       wget
       # curl
       rsync
@@ -213,7 +213,7 @@
       (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
       python3
       ghc
-      chez
+      # chez
       sbcl
       guile
       roswell

@@ -19,6 +19,8 @@
       "railwaycat/emacsmacport"
       "koekeishiya/formulae"
       "teamookla/speedtest"
+      "borkdude/brew"
+      "huahaiy/brew"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
