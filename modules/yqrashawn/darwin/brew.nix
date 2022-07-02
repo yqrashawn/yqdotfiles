@@ -19,6 +19,8 @@
       "railwaycat/emacsmacport"
       "koekeishiya/formulae"
       "teamookla/speedtest"
+      "borkdude/brew"
+      "huahaiy/brew"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
@@ -30,7 +32,7 @@
       "curl"
       "php"
       "fcitx-remote-for-osx"
-      "luarocks"
+      # "luarocks"
       "zig"
       # "dum"
       "clj-kondo"

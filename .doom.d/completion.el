@@ -125,18 +125,25 @@
 (after! evil
   (add-hook! 'evil-normal-state-entry-hook '+company-abort))
 
-(use-package! fuz-bin
+;; (use-package! fuz-bin
+;;   :after orderless
+;;   :config
+;;   (setq fuz-bin--bin-dir (concat straight-base-dir "straight/repos/fuz-bin/bin/"))
+;;   (fuz-bin-load-dyn))
+
+(use-package! fuz
   :after orderless
   :config
-  (setq fuz-bin--bin-dir (concat straight-base-dir "straight/repos/fuz-bin/bin/"))
-  (fuz-bin-load-dyn))
+  (unless (require 'fuz-core nil t)
+    (fuz-build-and-load-dymod)))
 
 (use-package! fussy
   ;; :ensure t
-  :after fuz-bin
+  ;; :after fuz-bin
+  :after fuz
   :config
   (setq! fussy-filter-fn 'fussy-filter-fast
-         fussy-score-fn 'fussy-fuz-bin-score)
+         fussy-score-fn 'fussy-fuz-score)
   (setq completion-styles '(fussy))
   ;; (delq! 'orderless +vertico-company-completion-styles)
   ;; (pushnew! +vertico-company-completion-styles 'fussy)

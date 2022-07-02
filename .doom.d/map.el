@@ -321,22 +321,22 @@
     (:map ivy-switch-buffer-map
       "C-d" #'ivy-switch-buffer-kill))
   (:after dired
-   (:map dired-mode-map
-     ;; :n "q" #'quit-window
-     ;; :n "TAB" #'dirvish-subtree-toggle
-     ;; :n "*" #'dirvish-mark-menu
-     ;; :n "o" #'dirvish-quicksort
-     ;; :n "M-p" #'dirvish-history-go-backward
-     ;; :n "M-n" #'dirvish-history-go-forward
-     ;; :n "F" #'dirvish-fd
-     ;; [remap dired-summary] #'dirvish-dispatch
-     ;; [remap dired-do-redisplay] #'dirvish-ls-switches-menu
+    (:map dired-mode-map
+      ;; :n "q" #'quit-window
+      ;; :n "TAB" #'dirvish-subtree-toggle
+      ;; :n "*" #'dirvish-mark-menu
+      ;; :n "o" #'dirvish-quicksort
+      ;; :n "M-p" #'dirvish-history-go-backward
+      ;; :n "M-n" #'dirvish-history-go-forward
+      ;; :n "F" #'dirvish-fd
+      ;; [remap dired-summary] #'dirvish-dispatch
+      ;; [remap dired-do-redisplay] #'dirvish-ls-switches-menu
 
-     :n "l" #'dired-find-file
-     :n "h" #'dired-up-directory
+      :n "l" #'dired-find-file
+      :n "h" #'dired-up-directory
 
-     :n "F" #'fd-dired
-     :n "gb" #'yq/open-with-alfred))
+      :n "F" #'fd-dired
+      :n "gb" #'yq/open-with-alfred))
   (:after double-saber
     (:map double-saber-mode-map
       :n "x" #'double-saber-narrow

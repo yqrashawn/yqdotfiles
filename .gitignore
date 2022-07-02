@@ -10,3 +10,6 @@ __pycache__/
 /tags
 /modules/yqrashawn/home-manager/dotfiles/.datomic/*
 !/modules/yqrashawn/home-manager/dotfiles/.datomic/dev-local.edn
+/modules/yqrashawn/home-manager/dotfiles/.shadow-cljs/classpath.edn
+/modules/yqrashawn/home-manager/dotfiles/.lsp/.cache
+/modules/yqrashawn/home-manager/dotfiles/.clj-kondo/.cache

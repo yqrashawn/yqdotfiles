@@ -262,6 +262,8 @@
 
 (package! fuz-bin
   :recipe (:host github :repo "jcs-elpa/fuz-bin"))
+(package! fuz
+  :recipe (:host github :repo "rustify-emacs/fuz.el"))
 (package! fussy
   :recipe (:host github :repo "jojojames/fussy"))
 
