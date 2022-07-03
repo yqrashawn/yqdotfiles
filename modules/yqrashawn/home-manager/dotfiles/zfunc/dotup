@@ -3,6 +3,6 @@ dotup () {
   sudo echo "OK"
   pushd .
   cd ~/.nixpkgs/
-  nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch yqrashawn-intel
+  nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch $@
   popd
 }

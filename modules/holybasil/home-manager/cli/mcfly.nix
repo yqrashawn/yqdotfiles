@@ -4,7 +4,7 @@
   programs.mcfly = {
     enable = true;
     keyScheme = "vim";
-    enableFuzzySearch = true;
+    fuzzySearchFactor = 3;
     enableZshIntegration = true;
     enableBashIntegration = true;
     enableFishIntegration = true;

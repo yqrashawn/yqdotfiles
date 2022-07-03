@@ -20,8 +20,9 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     stable.url = "github:nixos/nixpkgs/nixos-21.11";
-    nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    # use for overlay and kitty
     small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
 
@@ -230,14 +231,14 @@
     eachDefaultSystem (system:
       let
         inherit (lib.my) mapModules mapModulesRec mapHosts;
-        lib = nixpkgs.lib.extend (self: super: {
+        lib = inputs.stable.lib.extend (self: super: {
           my = import ./lib {
             inherit pkgs inputs;
             lib = self;
           };
         });
 
-        pkgs = import nixpkgs {
+        pkgs = import inputs.stable {
           inherit system;
           overlays = [ inputs.devshell.overlay ];
         };
