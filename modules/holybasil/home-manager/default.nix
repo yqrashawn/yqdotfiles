@@ -44,8 +44,8 @@ in {
     stateVersion = "20.09";
     sessionVariables = {
       GPG_TTY = "/dev/ttys000";
-      EDITOR = "emacsclient";
-      VISUAL = "emacsclient";
+      EDITOR = "code";
+      VISUAL = "code";
       CLICOLOR = 1;
       LSCOLORS = "ExFxBxDxCxegedabagacad";
       # KAGGLE_CONFIG_DIR = "${config.xdg.configHome}/kaggle";

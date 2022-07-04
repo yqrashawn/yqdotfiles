@@ -13,5 +13,6 @@ dotupforce () {
     export NIXPKGS_ALLOW_BROKEN=1
     nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch holybasil
     popd
+    reload
   fi
 }

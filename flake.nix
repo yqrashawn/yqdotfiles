@@ -20,6 +20,7 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     stable.url = "github:nixos/nixpkgs/nixos-21.11";
+    # nixpkgs-master.url = "github:nixos/nixpkgs/master";
     # nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     # use for overlay and kitty

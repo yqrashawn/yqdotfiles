@@ -15,29 +15,21 @@ let
     asdf global python 3.10.5
     asdf global nodejs 16.15.1
 
-    # export FNM_MULTISHELL_PATH=$HOME/.fnm/current
-    # export FNM_DIR=$HOME/.fnm/
-    # export FNM_NODE_DIST_MIRROR=https://nodejs.org/dist
-    # export FNM_LOGLEVEL=info
-    # autoload -U add-zsh-hook
-    # _fnm_autoload_hook () {
-    #   if [[ -f .node-version && -r .node-version ]]; then
-    #     fnm --log-level=error use --install-if-missing
-    #   elif [[ -f .nvmrc && -r .nvmrc ]]; then
-    #     fnm --log-level=error use --install-if-missing
-    #   fi
-    # }
-
-    # add-zsh-hook chpwd _fnm_autoload_hook \
-    #   && _fnm_autoload_hook
-
-    # if ! typeset -f _fnm > /dev/null; then
-    #   fpath=(${pkgs.fnm}/share/zsh/site-functions $fpath)
-    # fi
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
     # eval "$(fnm env)"
+  '';
+  bashProfileExtra = ''
+    ${lib.optionalString pkgs.stdenvNoCC.isLinux
+    "[[ -e /etc/profile ]] && source /etc/profile"}
+    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+    . $HOME/.asdf/plugins/java/set-java-home.bash
+    asdf global java adoptopenjdk-11.0.15+10
+    asdf global clojure 1.10.3.1087
+    asdf global ruby 3.1.2
+    asdf global python 3.10.5
+    asdf global nodejs 16.15.1
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
@@ -96,7 +88,7 @@ in {
   programs.bash.initExtra = ''
     ${functions}
   '';
-  programs.bash.profileExtra = profileExtra;
+  programs.bash.profileExtra = bashProfileExtra;
   programs.zsh = let
     mkZshPlugin = { pkg, file ? "${pkg.pname}.plugin.zsh" }: rec {
       name = pkg.pname;
@@ -123,8 +115,8 @@ in {
       GPG_TTY = "/dev/ttys000";
       DEFAULT_USER = "${config.home.username}";
       CLICOLOR = 1;
-      EDITOR = "emacsclient";
-      VISUAL = "emacsclient";
+      EDITOR = "code";
+      VISUAL = "code";
       LS_COLORS = "ExFxBxDxCxegedabagacad";
       TERM = "xterm-256color";
     };

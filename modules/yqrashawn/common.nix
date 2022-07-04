@@ -200,7 +200,7 @@
       lua
       # luajit
       stylua
-      deno
+      # deno
       # fennel
       # janet # broken
       # luarocks

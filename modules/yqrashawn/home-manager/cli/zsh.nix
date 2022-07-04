@@ -19,6 +19,17 @@ let
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
   '';
+  bashProfileExtra = ''
+    ${lib.optionalString pkgs.stdenvNoCC.isLinux
+    "[[ -e /etc/profile ]] && source /etc/profile"}
+    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+    . $HOME/.asdf/plugins/java/set-java-home.bash
+    asdf global java graalvm-22.1.0+java17
+    asdf global clojure 1.10.3.1087
+    asdf global ruby 3.1.2
+    asdf global python 3.10.5
+    asdf global nodejs 16.15.1
+  '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
     # darwin specific aliases
@@ -77,7 +88,7 @@ in {
   programs.bash.initExtra = ''
     ${functions}
   '';
-  programs.bash.profileExtra = profileExtra;
+  programs.bash.profileExtra = bashProfileExtra;
   programs.zsh = let
     mkZshPlugin = { pkg, file ? "${pkg.pname}.plugin.zsh" }: rec {
       name = pkg.pname;

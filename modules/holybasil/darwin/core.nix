@@ -33,7 +33,7 @@ in {
       profile = { source = ./root-profile; };
     };
     variables = {
-      EDITOR = "emacsclient";
+      EDITOR = "code";
       LSP_USE_PLISTS = "true";
       HTTPS_PROXY = "http://127.0.0.1:6152";
       HTTP_PROXY = "http://127.0.0.1:6152";
