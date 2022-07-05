@@ -237,6 +237,7 @@
       rlwrap
       readline
       llvm
+      glib # libvterm
       # texinfo # cllision to pod2texi
       pkg-config
       # pcre

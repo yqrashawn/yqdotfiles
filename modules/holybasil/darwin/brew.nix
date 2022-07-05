@@ -18,11 +18,12 @@
       "homebrew/command-not-found"
       "koekeishiya/formulae"
       "teamookla/speedtest"
+      "homebrew/cask-drivers"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [ "curl" "php" "luarocks" ];
-    casks = [ "hammerspoon" ];
+    casks = [ "hammerspoon" "wacom-tablet" ];
   };
 }

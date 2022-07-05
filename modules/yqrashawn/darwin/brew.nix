@@ -21,6 +21,7 @@
       "teamookla/speedtest"
       "borkdude/brew"
       "huahaiy/brew"
+      "homebrew/cask-drivers"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
