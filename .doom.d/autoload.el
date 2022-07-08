@@ -114,17 +114,17 @@ If the universal prefix argument is used then kill also the window."
   (catch 'tag
     (mapcar (lambda (b)
               (unless
-                  (or
-                   (minibufferp b)
-                   (string-match "^ " (buffer-name b))
-                   (string-match "\*" (buffer-name b))
-                   (equal b (current-buffer)))
+                (or
+                  (minibufferp b)
+                  (string-match "^ " (buffer-name b))
+                  (string-match "\*" (buffer-name b))
+                  (equal b (current-buffer)))
                 (if (= n 1)
-                    (progn
-                      (switch-to-buffer b)
-                      (throw 'tag nil))
+                  (progn
+                    (switch-to-buffer b)
+                    (throw 'tag nil))
                   (setq n (- n 1)))))
-            (buffer-list))))
+      (buffer-list))))
 
 ;;;###autoload
 (defun diff-last-two-kills ()

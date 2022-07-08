@@ -253,7 +253,7 @@ in {
       stable.source = "${inputs.stable}";
     };
     # list of acceptable shells in /etc/shells
-    shells = with pkgs; [ bash zsh ];
+    shells = with pkgs; [ bash zsh "/bin/bash" "/bin/zsh" ];
     systemPath = [ "/run/current-system/sw/bin" ];
   };
 

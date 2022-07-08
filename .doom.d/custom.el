@@ -4,14 +4,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((eval let
-        ((tools-file
-           (concat
-             (pwd)
-             "scripts/tools.el")))
-        (when
-          (file-exists-p tools-file)
-          (load-file tools-file)))
+    '((eval progn
+        (pp-buffer)
+        (indent-buffer))
+       (eval let
+         ((tools-file
+            (concat
+              (pwd)
+              "scripts/tools.el")))
+         (when
+           (file-exists-p tools-file)
+           (load-file tools-file)))
        (js2-mode-show-strict-warnings)
        (js2-mode-show-parse-errors)
        (eval define-clojure-indent

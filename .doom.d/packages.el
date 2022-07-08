@@ -268,3 +268,6 @@
   :recipe (:host github :repo "jojojames/fussy"))
 
 ;; (disable-packages! orderless)
+
+(package! jsonian :recipe (:host github :repo "iwahbe/jsonian"))
+(disable-packages! json-mode)

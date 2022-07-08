@@ -437,3 +437,6 @@ This function could be in the list `comint-output-filter-functions'."
     (error
      (ignore-errors (doom-adjust-font-size nil))
      (signal (car e) (cdr e)))))
+
+(unless (fboundp 'indent-buffer)
+  (defalias 'indent-buffer #'pp-buffer))
