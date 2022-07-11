@@ -132,6 +132,22 @@
         "type": "github"
       }
     },
+    "darwin-stable": {
+      "locked": {
+        "lastModified": 1656782578,
+        "narHash": "sha256-1eMCBEqJplPotTo/SZ/t5HU6Sf2I8qKlZi9MX7jv9fw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "573603b7fdb9feb0eb8efc16ee18a015c667ab1b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-21.11-darwin",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "devshell": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -360,6 +376,22 @@
         "type": "github"
       }
     },
+    "own": {
+      "locked": {
+        "lastModified": 1657550942,
+        "narHash": "sha256-2+w1CdprKLkpgjrOwX5AWfvNLeLkDApIcNYUOGJcK9Y=",
+        "owner": "yqrashawn",
+        "repo": "nixpkgs",
+        "rev": "4e87ee3d6a601b6f40a33299c784974f54753e15",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yqrashawn",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "asdf-clojure": "asdf-clojure",
@@ -370,6 +402,7 @@
         "clojure-deps-edn": "clojure-deps-edn",
         "comma": "comma",
         "darwin": "darwin",
+        "darwin-stable": "darwin-stable",
         "devshell": "devshell",
         "emacs-overlay": "emacs-overlay",
         "flake-compat": "flake-compat",
@@ -377,6 +410,7 @@
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
+        "own": "own",
         "small": "small",
         "sops-nix": "sops-nix",
         "spacehammer": "spacehammer",

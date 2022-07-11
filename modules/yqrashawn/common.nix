@@ -1,5 +1,8 @@
 { inputs, config, pkgs, ... }:
 let
+  # old = with pkgs.old; [ ];
+  own = with pkgs.own; [ lieer ];
+  darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [ notmuch yt-dlp streamlink mpv you-get python3 ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
@@ -168,7 +171,6 @@ in {
         cmake
         dtach
         difftastic
-        lieer
         # python39Packages.percol # build failed
         # docker-compose_2
 
@@ -247,7 +249,7 @@ in {
 
         # not available
         # du
-      ] ++ stables;
+      ] ++ stables ++ darwins ++ own; # ++ old;
     etc = {
       home-manager.source = "${inputs.home-manager}";
       nixpkgs.source = "${pkgs.path}";

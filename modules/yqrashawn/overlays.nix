@@ -11,6 +11,9 @@ in {
       # expose other channels via overlays
       stable = import inputs.stable { system = prev.system; };
       small = import inputs.small { system = prev.system; };
+      darwins = import inputs.darwin-stable { system = prev.system; };
+      own = import inputs.own { system = prev.system; };
+      # old = import inputs.old { system = prev.system; };
       # emacsMacport = import overlays.emacsMacport { system = prev.system; };
     })
   ];
