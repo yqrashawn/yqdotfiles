@@ -110,4 +110,5 @@ requiring confirmation."
 (use-package! abridge-diff :hook (magit-status-mode . abridge-diff-mode))
 (use-package! magit-cz :after magit)
 (after! with-editor (add-hook! 'with-editor-mode-hook #'evil-insert-state))
-(use-package smeargle :commands (smeargle))
+(use-package! smeargle :commands (smeargle))
+(use-package! magit-delta :hook (magit-mode . magit-delta-mode))

@@ -18,6 +18,7 @@
         excludesfile = "~/.gitignore_global";
         precomposeUnicode = true;
       };
+      add = { interactive = { useBuiltin = false; }; };
       github = { user = "yqrashawn"; };
       http = {
         proxy = "http://127.0.0.1:6152";
@@ -26,8 +27,6 @@
       https = { proxy = "http://127.0.0.1:6152"; };
       include = { path = "~/.gitconfig.local"; };
       alias = {
-
-        dft = "difftool";
         fetch = "git fetch --tags";
         branches = "!legit branches";
         publish = "!legit publish";
@@ -42,18 +41,6 @@
         # ---- DWIM abort rebase, merge or cherry-pick
         abort = ''
           "!f() { local command=$(git status | grep -o "git \w* --abort"); echo $command; $($command); }; f"'';
-      };
-      pager = {
-        pager = "delta";
-        diff = "delta";
-        reflog = "delta";
-        show = "delta";
-        difftool = true;
-      };
-      diff = { tool = "difftastic"; };
-      difftool = {
-        prompt = false;
-        difftastic = { cmd = ''difft "$LOCAL" "$REMOTE"''; };
       };
       merge = { tool = "ediff"; };
       mergetool = {
@@ -105,18 +92,8 @@
       fetch.prune = true;
     };
     lfs.enable = true;
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
-        features = "side-by-side line-numbers decorations";
-        syntax-theme = "Dracula";
-        plus-style = ''syntax "#003800"'';
-        minus-style = ''syntax "#3f0001"'';
-        side-by-site = true;
-        line-numbers = true;
-      };
-    };
+    delta = { enable = true; };
+    # difftastic = { enable = true; };
     ignores = [
       # Compiled source #
       ###################
