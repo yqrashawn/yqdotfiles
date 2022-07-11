@@ -168,6 +168,7 @@ unbindurl mail.google.com   k
 unbindurl mail.google.com   gi
 unbindurl mail.google.com   x
 
+unbindurl (www\.)?newsblur\.com   s
 unbindurl (www\.)?newsblur\.com   j
 unbindurl (www\.)?newsblur\.com   k
 unbindurl (www\.)?newsblur\.com   n

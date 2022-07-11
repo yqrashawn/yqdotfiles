@@ -94,8 +94,8 @@
                       [{:pkey :button2} ["mmts" 0] ["mmts" 1]]]}
              {:des "mouse left hand mode"
               :rules
-              [[[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1] ["mouse_left_hand" 0]]
-               [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 0] ["mouse_left_hand" 1]]
+              [;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1] ["mouse_left_hand" 0]]
+               ;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 0] ["mouse_left_hand" 1]]
                :mouse_left_hand
                [{:pkey :button2} {:pkey :button1}]
                [{:pkey :button1} {:pkey :button2}]
