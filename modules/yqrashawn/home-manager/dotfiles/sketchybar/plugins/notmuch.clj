@@ -9,17 +9,14 @@
    [clojure.string :as s]))
 
 (defonce c (chan))
-(defonce gmi "/usr/local/bin/gmi")
-(defonce notmuch "/usr/local/bin/notmuch")
-(defonce alerter "/usr/local/bin/alerter")
 
-(sh gmi "sync" :dir (str (System/getenv "HOME") "/.mail/account.gmail"))
-(sh gmi "sync" :dir (str (System/getenv "HOME") "/.mail/account.yqrashawn"))
-(sh notmuch "new")
+(sh "gmi" "sync" :dir (str (System/getenv "HOME") "/.mail/account.gmail"))
+(sh "gmi" "sync" :dir (str (System/getenv "HOME") "/.mail/account.yqrashawn"))
+(sh "notmuch" "new")
 
 (defn notify [title subtitle message]
   (sh
-   alerter
+   "alerter"
    "-message" message
    "-timeout" "30"
    "-group" "NOTMUCH"
@@ -30,14 +27,14 @@
    "-subtitle" subtitle))
 
 (defn set-label [label]
-  (sh "/usr/local/bin/sketchybar" "-m" "--set" "notmuch" (str "label=" label)))
+  (sh "sketchybar" "-m" "--set" "notmuch" (str "label=" label)))
 
 (defn new-unread? []
-  (when (pos? (-> (sh notmuch "count" (str "tag:inbox and tag:unread and date:5m.."))
+  (when (pos? (-> (sh "notmuch" "count" (str "tag:inbox and tag:unread and date:5m.."))
                   :out
                   s/trim-newline
                   Integer/parseInt))
-    (let [new (-> (sh notmuch "search" "--format" "sexp" "tag:inbox and tag:unread and date:5m..")
+    (let [new (-> (sh "notmuch" "search" "--format" "sexp" "tag:inbox and tag:unread and date:5m..")
                   :out
                   edn/read-string)
           new (map #(apply hash-map %) new)]
@@ -45,7 +42,7 @@
         (put! c [(str "New email from " authors) (str "📧" subject) "New email from Notmuch"]))
       (put! c :end))))
 
-(let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
+(let [unread-count (-> (sh "notmuch" "count" "tag:inbox and tag:unread")
                        :out
                        s/trim-newline
                        Integer/parseInt)]

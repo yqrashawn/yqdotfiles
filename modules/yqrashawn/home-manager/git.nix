@@ -42,36 +42,12 @@
         abort = ''
           "!f() { local command=$(git status | grep -o "git \w* --abort"); echo $command; $($command); }; f"'';
       };
-      merge = { tool = "ediff"; };
-      mergetool = {
-        ediff = {
-          cmd = "~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE";
-          trustExitCode = true;
-        };
-      };
       filter = {
         lfs = {
           clean = "git-lfs clean -- %f";
           smudge = "git-lfs smudge -- %f";
           process = "git-lfs filter-process";
           required = true;
-        };
-      };
-      color = {
-        ui = true;
-        diff = {
-          # meta = 277;
-          frag = "magenta bold";
-          commit = "227 bold";
-          old = "red bold";
-          new = "green bold";
-          whitespacw = "red reverse";
-        };
-        diff-highlight = {
-          oldNormal = "red bold";
-          oldHighlight = "red bold 52";
-          newNormal = "green bold";
-          newHighlight = "green bold 22";
         };
       };
       push = {

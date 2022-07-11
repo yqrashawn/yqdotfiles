@@ -168,6 +168,7 @@ in {
         cmake
         dtach
         difftastic
+        lieer
         # python39Packages.percol # build failed
         # docker-compose_2
 
