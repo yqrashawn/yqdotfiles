@@ -133,9 +133,6 @@
       rustup
       rust-analyzer
       (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
-      python3
-      # ghc
-      # sbcl
       perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
       git-absorb # https://github.com/tummychow/git-absorb
       # openjdk

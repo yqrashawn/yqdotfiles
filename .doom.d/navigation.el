@@ -46,7 +46,25 @@
 
 (after! dired
   (setq! dired-recursive-deletes 'always
-         dired-kill-when-opening-new-dired-buffer nil))
+         dired-kill-when-opening-new-dired-buffer nil)
+  (cl-defun dwim-shell-command-on-marked-files (buffer-name script &key utils extensions shell-util shell-args shell-pipe post-process-template on-completion)
+    "Execute SCRIPT, using BUFFER-NAME.
+See `dwim-shell-command-execute-script' for all other params."
+    (dwim-shell-command-execute-script buffer-name script
+                                       :files (dwim-shell-command--marked-files)
+                                       :utils utils
+                                       :extensions extensions
+                                       :shell-util shell-util
+                                       :shell-args shell-args
+                                       :shell-pipe shell-pipe
+                                       :post-process-template post-process-template
+                                       :on-completion on-completion))
+
+  (defun dwim-shell-command--marked-files ()
+    "Return buffer file (if available) or marked files for a `dired' buffer."
+    (if (buffer-file-name)
+        (list (buffer-file-name))
+      (dired-get-marked-files))))
 (after! dired-aux
   (setq! dired-create-destination-dirs 'always
          dired-isearch-filenames 'dwim))

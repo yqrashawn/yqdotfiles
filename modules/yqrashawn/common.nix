@@ -168,6 +168,7 @@ in {
         cmake
         dtach
         difftastic
+        lieer
         # python39Packages.percol # build failed
         # docker-compose_2
 
@@ -215,10 +216,10 @@ in {
         rust-analyzer
         (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
 
-        ghc
+        # ghc
         # chez
         sbcl
-        guile
+        # guile
         roswell
         clang-tools
         html-tidy
