@@ -1,7 +1,10 @@
 { inputs, config, pkgs, ... }:
 let
   # old = with pkgs.old; [ ];
-  own = with pkgs.own; [ lieer ];
+  own = with pkgs.own;
+    [
+      lieer # cyrus_sasl_xoauth2
+    ];
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [ notmuch yt-dlp streamlink mpv you-get python3 ];
 in {
@@ -234,6 +237,8 @@ in {
         # lib
         # libgccjit
         zlib
+        libtool
+        # cyrus_sasl
         rlwrap
         readline
         llvm

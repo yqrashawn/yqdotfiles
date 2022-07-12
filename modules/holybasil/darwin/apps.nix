@@ -21,7 +21,7 @@
       "dropbox"
       "calibre"
       "vivaldi"
-      "ngrok"
+      # "ngrok"
       "adguard-nightly"
       # "syncthing"
       "stats"

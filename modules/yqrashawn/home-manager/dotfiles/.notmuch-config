@@ -11,7 +11,7 @@
 # configured here named ".notmuch".
 #
 [database]
-path=/Users/yqrashawn/.mail
+path=/Users/yqrashawn/mail
 
 # User configuration
 #
@@ -29,6 +29,7 @@ path=/Users/yqrashawn/.mail
 # address to which the original email was addressed.
 #
 [user]
+name=Rashawn Zhang
 primary_email=namy.19@gmail.com
 
 # Configuration for "notmuch new"
@@ -83,3 +84,4 @@ exclude_tags=deleted;trash;junk;spam;
 #	commands will notice tag changes and update flags in filenames
 #
 [maildir]
+synchronize_flags=true
