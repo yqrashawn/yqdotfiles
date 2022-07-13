@@ -131,7 +131,11 @@
 ;;   (setq fuz-bin--bin-dir (concat straight-base-dir "straight/repos/fuz-bin/bin/"))
 ;;   (fuz-bin-load-dyn))
 
+;; (use-package! orderless
+;;   :commands (orderless-filter))
+
 (use-package! fuz
+  ;; :after-call doom-first-input-hook
   :after orderless
   :config
   (unless (require 'fuz-core nil t)
@@ -142,7 +146,7 @@
   ;; :after fuz-bin
   :after fuz
   :config
-  (setq! fussy-filter-fn 'fussy-filter-fast
+  (setq! fussy-filter-fn 'fussy-filter-default
          fussy-score-fn 'fussy-fuz-score)
   (setq completion-styles '(fussy))
   ;; (delq! 'orderless +vertico-company-completion-styles)
@@ -156,18 +160,16 @@
    completion-category-overrides nil)
 
   (after! company-mode
-    (defadvice! bb-company-capf (f &rest args)
-      :around #'company--transform-candidates
+    (defadvice! j-company-capf (f &rest args)
+      :around #'company-capf
       "Manage `completion-styles'."
-      (if (length< company-prefix 2)
-          (let ((completion-styles (remq 'fussy completion-styles)))
-            (apply f args))
+      (let ((fussy-max-candidate-limit 5000)
+            (fussy-default-regex-fn 'fussy-pattern-first-letter)
+            (fussy-prefer-prefix nil))
         (apply f args)))
 
-    (defadvice! bb-company-transformers (f &rest args)
-      :around #'company-capf
+    (defadvice! j-company-transformers (f &rest args)
+      :around #'company--transform-candidates
       "Manage `company-transformers'."
-      (if (length< company-prefix 2)
-          (apply f args)
-        (let ((company-transformers '(fussy-company-sort-by-completion-score)))
-          (apply f args))))))
+      (let ((company-transformers '(fussy-company-sort-by-completion-score)))
+        (apply f args)))))
