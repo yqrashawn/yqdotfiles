@@ -21,7 +21,7 @@ Inbox ~/mail/namy.19@gmail.com/Inbox
 SubFolders Verbatim
 
 MaildirStore namy.19@gmail.com-archive
-Path ~/mail/archive-namy.19@gmail.com/
+Path ~/mail/namy.19@gmail.com/Archive
 
 Channel namy.19@gmail.com-archive
 Far ":namy.19@gmail.com-remote:[Google Mail]/All Mail"

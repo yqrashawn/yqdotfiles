@@ -76,14 +76,13 @@
       source = ./.notmuch-config;
       target = ".notmuch-config";
     };
-
     gmailieer1 = {
       source = ./gmailieer.main.json;
-      target = ".mail/account.gmail/.gmailieer.json";
+      target = "mail/namy.19@gmail.com/.gmailieer.json";
     };
     gmailieer2 = {
       source = ./gmailieer.2.json;
-      target = ".mail/account.yqrashawn/.gmailieer.json";
+      target = "mail/yqrashawn@gamil.com/.gmailieer.json";
     };
     shadow-cljs = {
       source = ./shadow-cljs.edn;

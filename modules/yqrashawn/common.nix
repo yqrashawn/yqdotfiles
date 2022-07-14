@@ -1,10 +1,7 @@
 { inputs, config, pkgs, ... }:
 let
   # old = with pkgs.old; [ ];
-  own = with pkgs.own;
-    [
-      lieer # cyrus_sasl_xoauth2
-    ];
+  own = with pkgs.own; [ lieer isync-isync cyrus_sasl_xoauth2 ];
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [ notmuch yt-dlp streamlink mpv you-get python3 ];
 in {
@@ -37,7 +34,7 @@ in {
         # clojure
         clojure-lsp
         ispell
-        isync
+        # isync
         babashka
         joker
         leiningen
@@ -238,7 +235,7 @@ in {
         # libgccjit
         zlib
         libtool
-        # cyrus_sasl
+        cyrus_sasl # isync xoauth2
         rlwrap
         readline
         llvm

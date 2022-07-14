@@ -12,7 +12,7 @@
 (after! notmuch
   (defun +notmuch-get-sync-command ()
     "custom notmuch sync command"
-    "cd ~/.mail/account.gmail && gmi sync && notmuch new")
+    "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new")
   (setq! mm-text-html-renderer 'w3m-standalone)
   (setq! +notmuch-delete-tags '("+deleted" "-inbox" "-unread")
          notmuch-show-indent-messages-width 2)
