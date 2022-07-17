@@ -216,7 +216,7 @@ in {
         plantuml
         rustup
         rust-analyzer
-        (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
+        (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph rubocop ]))
 
         # ghc
         # chez
