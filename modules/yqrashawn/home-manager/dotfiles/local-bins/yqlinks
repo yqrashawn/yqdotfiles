@@ -7,15 +7,17 @@
    [clojure.string :as s]
    [clojure.tools.cli :refer [parse-opts]]))
 
-(defonce http-uri-re #"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)")
+(def http-uri-re #"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)")
+;; (def http-uri-re #"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
+;; (defonce http-uri-re #"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)")
 
 (defn get-html [url]
-  (let [res                   (curl/get url {:headers {"User-Agent" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0) Gecko/20100101 Firefox/102.0"
-                                                       "Accept" "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
-                                                       "Accept-Language" "en-US,en;q=0.7,zh-CN;q=0.3"}})
+  (let [res
+        (curl/get url {:headers {"User-Agent"      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0) Gecko/20100101 Firefox/102.0"
+                                 "Accept"          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+                                 "Accept-Language" "en-US,en;q=0.7,zh-CN;q=0.3"}})
         {:keys [status body]} res]
-    (when (< status 400)
-      body)))
+    body))
 
 (defn html->title [html]
   (-> (re-seq #"<title.*>(?<title>.*)</title>" html)
@@ -43,11 +45,14 @@
         url                (or url (s/trim-newline (:out (shell/sh "pbpaste"))))
         url                (first (re-find http-uri-re url))]
     (when (and url type)
-      (-> url
-          get-html
-          html->title
-          (->link url)
-          println)
+      (try
+        (-> url
+            get-html
+            html->title
+            (->link url)
+            println)
+        (catch Exception e
+          (println e)))
       ;; (System/exit 0)
       )))
 
