@@ -3,7 +3,15 @@ let
   # old = with pkgs.old; [ ];
   own = with pkgs.own; [ lieer isync-isync cyrus_sasl_xoauth2 ];
   darwins = with pkgs.darwins; [ ];
-  stables = with pkgs.stable; [ notmuch yt-dlp streamlink mpv you-get python3 ];
+  stables = with pkgs.stable; [
+    notmuch
+    yt-dlp
+    streamlink
+    mpv
+    you-get
+    python3
+    black
+  ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -177,6 +185,8 @@ in {
         redis
         # langs
         tree-sitter
+        nodePackages.js-beautify
+        nodePackages.stylelint
         nodePackages.expo-cli
         nodePackages.eslint
         nodePackages.diagnostic-languageserver
@@ -211,7 +221,13 @@ in {
         # janet # broken
         # luarocks
         # zig # marked broken
+        # zls
         go
+        gopls
+        gore
+        gomodifytags
+        gotests
+        solc
         # golangci-lint
         plantuml
         rustup
@@ -228,6 +244,7 @@ in {
         ninja
         perl
         # openjdk
+        # nim
 
         watchman
 

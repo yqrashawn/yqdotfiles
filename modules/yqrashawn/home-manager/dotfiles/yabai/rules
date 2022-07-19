@@ -135,6 +135,7 @@ yabai -m rule --add app="^AutoSwitchInputPro$" title="^Window" border=off manage
 yabai -m rule --add app="^BetterZip$" border=off manage=off
 yabai -m rule --add app="^SwitchResX" border=off manage=off
 yabai -m rule --add app="^mpv$" border=off manage=off
+yabai -m rule --add app="^AdGuard" border=off manage=off
 yabai -m rule --add app="Chrom" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^Microsoft Edge" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^BusyCal" border=off manage=off

@@ -11,6 +11,7 @@ let
     . $HOME/.asdf/plugins/java/set-java-home.zsh
     asdf global java graalvm-22.1.0+java17
     asdf global clojure 1.10.3.1087
+    asdf global nim 1.6.6
     asdf global ruby 3.1.2
     asdf global python 3.10.5
     asdf global nodejs 16.15.1
@@ -26,6 +27,7 @@ let
     . $HOME/.asdf/plugins/java/set-java-home.bash
     asdf global java graalvm-22.1.0+java17
     asdf global clojure 1.10.3.1087
+    asdf global nim 1.6.6
     asdf global ruby 3.1.2
     asdf global python 3.10.5
     asdf global nodejs 16.15.1

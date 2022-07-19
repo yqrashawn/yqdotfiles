@@ -47,6 +47,7 @@
       "dotenv-linter"
       "cloudflared"
       "janet"
+      "pngpaste"
     ];
     casks = [
       "hammerspoon"

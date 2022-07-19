@@ -250,7 +250,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;ledger            ; be audit you can be
        (lua +fennel +lsp)  ; one-based indices? one-based indices
        (markdown +grip)    ; writing docs for people to ignore
-       ;;(nim +tree-sitter); python + lisp at the speed of c
+       (nim +tree-sitter)  ; python + lisp at the speed of c
        (nix +tree-sitter)                 ; I hereby declare "nix geht mehr!"
        ;;(ocaml +tree-sitter)             ; an objective camel
        (org +dragndrop +hugo +journal +noter +pandoc +pretty +roam2 +present) ; organize your plain life in plain text
