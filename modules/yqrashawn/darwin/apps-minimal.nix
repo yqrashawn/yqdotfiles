@@ -15,6 +15,7 @@
       "karabiner-elements"
       "google-chrome"
       "keybase"
+      "input-source-pro"
       # "emacs-mac"
       "raycast"
       "visual-studio-code"
