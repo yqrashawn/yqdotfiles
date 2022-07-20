@@ -115,6 +115,7 @@ in {
         exa
         # fasd
         fzf
+        zsh-fzf-tab
         skim
         coreutils-full
         gnused

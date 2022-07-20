@@ -98,6 +98,7 @@ in {
   in {
     enable = true;
     autocd = true;
+    enableCompletion = true;
     # enableSyntaxHighlighting = true;
     enableAutosuggestions = true;
     shellGlobalAliases = {
@@ -121,6 +122,11 @@ in {
       TERM = "xterm-256color";
     };
     shellAliases = aliases;
+    initExtraBeforeCompInit = ''
+      fpath+=/nix/var/nix/profiles/system/sw/share/zsh/site-functions
+      fpath+=/nix/var/nix/profiles/system/sw/share/zsh/$ZSH_VERSION/functions
+      fpath+=/nix/var/nix/profiles/system/sw/share/zsh/vendor-completions
+    '';
     initExtra = ''
       # Stop TRAMP (in Emacs) from hanging or term/shell from echoing back commands
       #if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then

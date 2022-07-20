@@ -70,10 +70,6 @@
       url = "github:djui/alias-tips";
       flake = false;
     };
-    zsh-fzf-tab = {
-      url = "github:Aloxaf/fzf-tab";
-      flake = false;
-    };
     tmux-conf = {
       url = "github:gpakosz/.tmux";
       flake = false;

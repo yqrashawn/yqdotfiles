@@ -67,6 +67,7 @@
       exa
       # fasd
       fzf
+      zsh-fzf-tab
       coreutils-full
       gnused
       pngquant
