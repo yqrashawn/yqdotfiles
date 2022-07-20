@@ -134,12 +134,13 @@ yabai -m rule --add app="^AutoSwitchInput$" title="^Window" border=off manage=of
 yabai -m rule --add app="^AutoSwitchInputPro$" title="^Window" border=off manage=off
 yabai -m rule --add app="^BetterZip$" border=off manage=off
 yabai -m rule --add app="^SwitchResX" border=off manage=off
-yabai -m rule --add app="^mpv$" border=off manage=off
+yabai -m rule --add app="^(mpv|Elmedia Player|IINA|Infuse)$" border=off manage=off
 yabai -m rule --add app="^AdGuard" border=off manage=off
 yabai -m rule --add app="Chrom" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^Microsoft Edge" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^BusyCal" border=off manage=off
 yabai -m rule --add app="^Orion$" title="^(Extensions|General|Apperance|Browsing|Sync|Privacy|Search|Websites)$" border=off manage=off
+yabai -m rule --add app="^Kaleidoscope$" border=off manage=off
 # yabai -m rule --add app=".*" topmost=off
 
 # Do not manage windows with certain titles eg. Copying files or moving to bin
