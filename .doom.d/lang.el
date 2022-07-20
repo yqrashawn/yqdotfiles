@@ -7,10 +7,11 @@
   :mode
   (("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)
    ("nginx.conf" . nginx-mode))
-  :config
-  (set-company-backend! 'nginx-mode #'company-nginx))
+  ;; :config
+  ;; (set-company-backend! 'nginx-mode #'company-nginx)
+  )
 (use-package! dotenv-mode :mode (("\\\.env\\..*\\\'" . dotenv-mode)))
-(use-package! company-nginx :defer t)
+;; (use-package! company-nginx :defer t)
 (pushnew! auto-mode-alist
           '("\\.aspell\\.en\\.pws\\'" . conf-mode)
           '("\\.meta\\'" . conf-mode)

@@ -107,7 +107,7 @@
 (package! help-fns+)
 (package! adoc-mode)
 (package! nginx-mode)
-(package! company-nginx)
+;; (package! company-nginx)
 (package! dotenv-mode)
 (package! crontab-mode)
 

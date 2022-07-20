@@ -3,7 +3,7 @@
   homebrew = {
     casks = [
       "google-chat"
-      "voov-meeting"
+      # "voov-meeting"
       "cljstyle"
       "docker"
       "espanso"

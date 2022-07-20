@@ -182,6 +182,8 @@ in {
         difftastic
         # python39Packages.percol # build failed
         # docker-compose_2
+        urlview
+        tmux-mem-cpu-load
 
         redis
         # langs

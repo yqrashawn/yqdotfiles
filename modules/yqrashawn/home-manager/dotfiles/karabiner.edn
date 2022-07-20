@@ -484,6 +484,7 @@
                       [:k [:!Tq :!Sk]] ;; resize window
                       [:l [:!Tq :!Sl]] ;; resize window
                       :tmux-windmove-mode
+                      [:spacebar [:!Tq :spacebar]] ;; https://github.com/fcsonline/tmux-thumbs
                       [:return_or_enter [:!Tq :c]] ;; new session
                       [:semicolon [:!Tq :!Ssemicolon]]
                       ;; [:comma [:!Tq :comma]] ;; rename tmux pane
