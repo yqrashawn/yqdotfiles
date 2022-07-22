@@ -38,6 +38,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        # gomobile
         # emacsMacport
         # clojure
         clojure-lsp
