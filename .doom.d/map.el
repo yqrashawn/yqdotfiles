@@ -85,6 +85,7 @@
     :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
     :desc "Line numbers" "tl" #'doom/toggle-line-numbers
     :desc "Imenu sidebar" "cb" #'side-hustle-toggle
+    :desc "Git timemachine" "gt" #'git-timemachine
     ;; :desc "RSS" "on" #'=elfeed-dashboard
     :desc "RSS" "on" #'=rss
     (:prefix-map ("e" . "Edit")

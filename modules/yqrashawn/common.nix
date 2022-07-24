@@ -255,7 +255,7 @@ in {
         # lib
         # libgccjit
         zlib
-        libtool
+        # libtool # https://github.com/WiseLibs/better-sqlite3/issues/243
         cyrus_sasl # isync xoauth2
         rlwrap
         readline
