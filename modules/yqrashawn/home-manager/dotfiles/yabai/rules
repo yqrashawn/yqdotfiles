@@ -142,6 +142,7 @@ yabai -m rule --add app="^BusyCal" border=off manage=off
 yabai -m rule --add app="^Orion$" title="^(Extensions|General|Apperance|Browsing|Sync|Privacy|Search|Websites)$" border=off manage=off
 yabai -m rule --add app="^Kaleidoscope$" border=off manage=off
 yabai -m rule --add app="^World Clock" border=off manage=off
+yabai -m rule --add app="^Session$" border=off manage=off
 # yabai -m rule --add app=".*" topmost=off
 
 # Do not manage windows with certain titles eg. Copying files or moving to bin
