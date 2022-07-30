@@ -144,6 +144,7 @@
   (:map help-map
     "K" #'describe-keymap)
   (:map ctl-x-map
+    :g "C-b" #'ibuffer
     :g "C-r" #'recentf-open-files
     :g "1" #'spacemacs/toggle-maximize-buffer
     :g "C-&" (lambda (&optional arg)
@@ -540,4 +541,7 @@
   (:after detach
     [remap async-shell-command] #'detached-shell-command
     [remap compile] detached-compile
-    [remap recompile] detached-compile-recompile))
+    [remap recompile] detached-compile-recompile)
+  (:after ibuffer
+    (:map ibuffer-mode-map
+      :n "gX" #'ibuffer-do-kill-lines)))

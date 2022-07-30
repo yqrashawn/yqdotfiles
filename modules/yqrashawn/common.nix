@@ -103,7 +103,12 @@ in {
         # glances # htop
         xh # httpie
         shfmt
+        aspell
+        aspellDicts.en
+        aspellDicts.en-computers
+        aspellDicts.en-science
         hunspell
+        hunspellDicts.en_US-large
         ccache
         # dotenv-linter # failed
         reattach-to-user-namespace

@@ -47,8 +47,7 @@
                             ol)
   ispell-dictionary "en_US"
   ispell-personal-dictionary (if (file-exists-p "~/Dropbox/sync/personal_dict")
-                               "~/Dropbox/sync/personal_dict"
-                               nil)
+                               "~/Dropbox/sync/personal_dict")
   dired-quick-sort-suppress-setup-warning t
   insert-directory-program "/run/current-system/sw/bin/ls")
 

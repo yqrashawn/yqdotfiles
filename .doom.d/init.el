@@ -185,7 +185,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
        :checkers
        (syntax +childframe); tasing you for every semicolon you forget
-       (spell +flyspell +hunspell) ; tasing you for misspelling mispelling
+       (spell +aspell) ; tasing you for misspelling mispelling
        grammar           ; tasing grammar mistake every you make
 
        :tools

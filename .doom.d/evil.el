@@ -98,4 +98,9 @@
         evil-owl-extra-posframe-args '(:width 50 :height 20)
         evil-owl-max-string-length 50))
 
-(use-package! evil-matchit :hook (doom-first-input . global-evil-matchit-mode) :after evil)
+(use-package! evil-matchit
+  :hook (doom-first-input . global-evil-matchit-mode)
+  :after evil
+  :config
+  (add-hook! '(ibuffer-mode-hook dired-mode-hook magit-status-mode-hook magit-log-mode-hook)
+    #'turn-off-evil-matchit-mode))

@@ -26,7 +26,7 @@ in {
 
   # environment setup
   environment = {
-    pathsToLink = [ "/share/zsh" ];
+    pathsToLink = [ "/share/zsh" "/share/hunspell" "/share/aspell" ];
     loginShell = pkgs.zsh;
     # backupFileExtension = "backup";
     etc = {
