@@ -26,7 +26,7 @@
   )
 
 (defun +setup-clojure-mode ()
-  (add-hook! 'before-save-hook #'clojure-sort-ns))
+  (add-hook! 'before-save-hook '(+clojure-clean-log-ns clojure-sort-ns)))
 
 (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
 

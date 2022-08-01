@@ -754,18 +754,75 @@ _b_ranch _j_next _k_prev _h_up
       (string= (string (following-char)) ")"))))
 
 ;;;###autoload
+(defun +cljr-project-has-dep? (dep-regex)
+  (when (doom-project-root)
+    (let ((s-matches-regex (-partial 's-matches? dep-regex)))
+      (or
+        (let ((dep-file (concat (doom-project-root) "deps.edn")))
+          (and (f-exists? dep-file)
+            (funcall s-matches-regex (f-read dep-file))))
+        (let ((dep-file (concat (doom-project-root) "shadow-cljs.edn")))
+          (and (f-exists? dep-file)
+            (funcall s-matches-regex (f-read dep-file))))
+        (let ((dep-file (concat (doom-project-root) "project.clj")))
+          (and (f-exists? dep-file)
+            (funcall s-matches-regex (f-read dep-file))))
+        (let ((dep-file (concat (doom-project-root) "bb.edn")))
+          (and (f-exists? dep-file)
+            (funcall s-matches-regex (f-read dep-file))))))))
+
+;;;###autoload
+(defun +cljr--log-spy (arg)
+  (interactive "P")
+  (save-excursion
+    (evil-emacs-state 1)
+    (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
+    (call-interactively 'lispy-parens)
+    (unless (string= (string (following-char)) " ") (forward-char))
+    (insert (if (string= (string (following-char)) " ") "log/spy" "log/spy "))
+    (lispy-left 1)
+    (evil-normal-state 1))
+  (unless (+lispy-special-p) (lispy-left 1)))
+
+;;;###autoload
 (defun +cljr-log-spy (arg)
   (interactive "P")
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
+    (let ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
+          (glogi? (+cljr-project-has-dep? "lambdaisland/glogi"))
+          (timbre? (+cljr-project-has-dep? "timbre")))
+      (cond
+       (has-as-log? (call-interactively '+cljr--log-spy arg))
+       ((+cljr-project-has-dep? "lambdaisland/glogi")
+        (save-excursion
+          (cljr--insert-in-ns ":require")
+          (insert "[lambdaisland.glogi :as log]"))
+        (call-interactively '+cljr--log-spy arg))
+       ((+cljr-project-has-dep? "timbre")
+        (save-excursion
+          (cljr--insert-in-ns ":require")
+          (insert "[taoensso.timbre :as log]"))
+        (call-interactively '+cljr--log-spy arg))
+       ((+cljr-project-has-dep? "pedestal.log")
+        (save-excursion
+          (cljr--insert-in-ns ":require")
+          (insert "[io.pedestal.log :as log]"))
+        (call-interactively '+cljr--log-spy arg))))))
+
+;;;###autoload
+(defun +clojure-clean-log-ns ()
+  (interactive)
+  (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
     (save-excursion
-      (evil-emacs-state 1)
-      (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
-      (call-interactively 'lispy-parens)
-      (unless (string= (string (following-char)) " ") (forward-char))
-      (insert (if (string= (string (following-char)) " ") "log/spy" "log/spy "))
-      (lispy-left 1)
-      (evil-normal-state 1))
-    (unless (+lispy-special-p) (lispy-left 1))))
+      (goto-char (point-max))
+      (when (and
+             (ignore-errors (save-excursion (re-search-backward ":as log\\]")))
+             (not (ignore-errors (save-excursion (re-search-backward "(log/")))))
+        (and (ignore-errors (re-search-backward "\\[lambdaisland.glogi :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (goto-char (point-max))
+        (and (ignore-errors (re-search-backward "\\[taoensso.timbre :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (goto-char (point-max))
+        (and (ignore-errors (re-search-backward "\\[io.pedestal.log :as log\\]")) (call-interactively #'lispyville-delete-whole-line))))))
 
 ;; https://xenodium.com/png-to-icns-emacs-dwim-style/
 ;;;###autoload
