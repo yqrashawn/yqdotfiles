@@ -9,58 +9,27 @@
                                 "--cookie"
                                 ,(concat doom-cache-dir "newsblur-cookie")))
 
-(setq! elfeed-feeds '(("newsblur+https://yqrashawn@newsblur.com"
-                        :use-authinfo t)))
-
-;; with org
-;; (defadvice! ++elfeed (&rest _)
-;;   :after #'elfeed
-;;   "Make elfeed-org autotags rules works with elfeed-protocol."
-;;   (setq! elfeed-protocol-tags (or elfeed-feeds '()))
-;;   (setq! elfeed-feeds (list
-;;                        (list "newsblur+https://yqrashawn@newsblur.com"
-;;                              :use-authinfo t
-;;                              :autotags elfeed-protocol-tags))))
 
 (after! elfeed
-  (run-with-idle-timer 300 t #'elfeed-update)
+  (elfeed-set-timeout 36000)
+  ;; (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
     ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
-    elfeed-search-filter "+unread @3-months-ago -ghstar -twitter -metamask"
+    ;; elfeed-search-filter "+unread -releases -crypto -design"
+    elfeed-search-filter "+unread +p1"
     elfeed-search-trailing-width 60)
-  (add-hook 'elfeed-search-mode-hook 'elfeed-update)
-  (elfeed-set-timeout 36000)
+  (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
   (setq elfeed-protocol-enabled-protocols '(newsblur))
+  (defadvice elfeed (after configure-elfeed-feeds activate)
+    "Make elfeed-org autotags rules works with elfeed-protocol."
+    (setq elfeed-protocol-tags elfeed-feeds)
+    (setq elfeed-feeds (list
+                         (list "newsblur+https://yqrashawn@newsblur.com"
+                           :use-authinfo t
+                           :autotags elfeed-protocol-tags))))
   (elfeed-protocol-enable)
-  ;; (setq elfeed-new-entry-hook (list))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com"  :add '(reddit)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r\\/emacs"  :add '(emacs)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/Clojure"  :add '(clojure)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :before "2 weeks ago" :add '2wo))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "github\\.com" :add '(github)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "conflux\\.fun" :add '(crypto conflux)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "twitter\\.com" :add '(twitter)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "planet\\.clojure" :add '(clojure)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "metamask" :add '(metamask crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "china" :add '(china)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "protocol\\.com" :add '(protocol news)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "\\/\\/community\\..*\\.\w" :add '(community)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "ethereum"  :add '(ethereum crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "ethereum"  :add '(ethereum crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "solana"  :add '(solana crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "polygon"  :add '(polygon crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "curve"  :add '(curve crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "uniswap"  :add '(uniswap crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "crypto"  :add '(crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "clojure"  :add '(clojure)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "emacs"  :add '(emacs)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-title "emacs"  :add '(emacs)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "uxdesign\\.cc"  :add '(ux)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "Hacker News" :add '(hn)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "New releases from starred repo" :add '(ghstar)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-title "bankless" :add '(crypto)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "yqrashawn@newsblur\\.com::http:\\/\\/github\\.com" :add '(ghn)))
-  (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "yqrashawn@newsblur\\.com::http:\\/\\/github\\.com" :add '(ghn))))
+
+  (load-file (expand-file-name "~/Dropbox/sync/elfeed.el")))
 
 (defun +elfeed-debug ()
   (interactive)
@@ -85,3 +54,56 @@
   (setq elfeed-dashboard-file "~/.doom.d/elfeed-dashboard.org")
   ;; update feed counts on elfeed-quit
   (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
+
+(cl-defun elfeed-make-tagger
+    (&key feed-title feed-url entry-title entry-link after before
+          add remove callback)
+  "Create a function that adds or removes tags on matching entries.
+
+FEED-TITLE, FEED-URL, ENTRY-TITLE, and ENTRY-LINK are regular
+expressions or a list (not <regex>), which indicates a negative
+match. AFTER and BEFORE are relative times (see
+`elfeed-time-duration'). Entries must match all provided
+expressions. If an entry matches, add tags ADD and remove tags
+REMOVE.
+
+Examples,
+
+  (elfeed-make-tagger :feed-url \"youtube\\\\.com\"
+                      :add '(video youtube))
+
+  (elfeed-make-tagger :before \"1 week ago\"
+                      :remove 'unread)
+
+  (elfeed-make-tagger :feed-url \"example\\\\.com\"
+                      :entry-title '(not \"something interesting\")
+                      :add 'junk)
+
+The returned function should be added to `elfeed-new-entry-hook'."
+  (let ((after-time  (and after  (elfeed-time-duration after)))
+        (before-time (and before (elfeed-time-duration before))))
+    (when (and add (symbolp add)) (setf add (list add)))
+    (when (and remove (symbolp remove)) (setf remove (list remove)))
+    (lambda (entry)
+      (let ((feed (elfeed-entry-feed entry))
+            (date (elfeed-entry-date entry))
+            (case-fold-search t))
+        (cl-flet ((match (r s)
+                         (or (null r)
+                             (if (listp r)
+                                 (not (string-match-p (cl-second r) s))
+                               (string-match-p r s)))))
+          (when (and
+                 (match feed-title  (elfeed-feed-title  feed))
+                 (match feed-url    (elfeed-feed-url    feed))
+                 (match entry-title (elfeed-entry-title entry))
+                 (match entry-link  (elfeed-entry-link  entry))
+                 (or (not after-time)  (> date (- (float-time) after-time)))
+                 (or (not before-time) (< date (- (float-time) before-time))))
+            (when add
+              (apply #'elfeed-tag entry add))
+            (when remove
+              (apply #'elfeed-untag entry remove))
+            (when callback
+              (funcall callback entry))
+            entry))))))
