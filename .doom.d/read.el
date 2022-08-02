@@ -12,8 +12,9 @@
 
 (after! elfeed
   (elfeed-set-timeout 36000)
-  ;; (run-with-idle-timer 300 t #'elfeed-update)
+  (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
+    elfeed-protocol-newsblur-maxpages 200
     ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
     ;; elfeed-search-filter "+unread -releases -crypto -design"
     elfeed-search-filter "+unread +p1"

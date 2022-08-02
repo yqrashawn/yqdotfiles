@@ -544,4 +544,10 @@
     [remap recompile] detached-compile-recompile)
   (:after ibuffer
     (:map ibuffer-mode-map
-      :n "gX" #'ibuffer-do-kill-lines)))
+      :n "gX" #'ibuffer-do-kill-lines))
+  (:after cider
+    (:map cider-inspector-mode-map
+      :n "C-j" #'cider-inspector-next-inspectable-object
+      :n "C-k" #'cider-inspector-previous-inspectable-object
+      :n "gj" #'cider-inspector-next-page
+      :n "gk" #'cider-inspector-prev-page)))

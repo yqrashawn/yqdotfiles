@@ -116,6 +116,7 @@ in {
         enchant # ispell
         w3m
         starship
+        neofetch
         broot # ranger
         direnv
         exa
@@ -249,6 +250,7 @@ in {
         # guile
         roswell
         clang-tools
+        cmake-format
         html-tidy
         ninja
         perl
