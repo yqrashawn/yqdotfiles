@@ -14,6 +14,7 @@ let
     asdf global ruby 3.1.2
     asdf global python 3.10.5
     asdf global nodejs 16.15.1
+    asdf global golang 1.18.4
 
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
