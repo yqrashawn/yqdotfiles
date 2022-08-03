@@ -274,3 +274,5 @@
 (package! magit-delta)
 (package! emacsql-sqlite-module)
 (package! magit-libgit)
+(package! todoist)
+(package! sqlite3)

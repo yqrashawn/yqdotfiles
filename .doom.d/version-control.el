@@ -93,7 +93,7 @@ requiring confirmation."
 
 (after! forge
   ;; https://github.com/magit/forge/issues/300
-  (setq! forge-database-connector (if EMACS29+ 'sqlite-builtin 'libsqlite3))
+  (setq! forge-database-connector (if EMACS29+ 'sqlite-builtin 'sqlite-module))
 
   ;; https://emacs-pe.github.io/2015/06/30/magit-github-pr/
   (defun marsam/add-pull-request-refs (&optional remote local-ns)
