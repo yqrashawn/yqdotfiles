@@ -273,3 +273,4 @@
 (disable-packages! json-mode)
 (package! magit-delta)
 (package! emacsql-sqlite-module)
+(package! magit-libgit)
