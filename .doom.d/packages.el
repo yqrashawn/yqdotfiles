@@ -272,3 +272,4 @@
 (package! jsonian :recipe (:host github :repo "iwahbe/jsonian"))
 (disable-packages! json-mode)
 (package! magit-delta)
+(package! emacsql-sqlite-module)
