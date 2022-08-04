@@ -276,3 +276,5 @@
 (package! magit-libgit)
 (package! todoist)
 (package! sqlite3)
+;; (package! relative-date :recipe (:host github :repo "rougier/relative-date"))
+(package! fancy-compilation)
