@@ -58,6 +58,10 @@
       flake = false;
     };
 
+    forgit = {
+      url = "github:wfxr/forgit";
+      flake = false;
+    };
     zsh-f-sy-h = {
       url = "github:z-shell/F-Sy-H";
       flake = false;
@@ -96,6 +100,14 @@
     };
     asdf-ruby = {
       url = "github:asdf-vm/asdf-ruby";
+      flake = false;
+    };
+    asdf-golang = {
+      url = "github:kennyp/asdf-golang";
+      flake = false;
+    };
+    asdf-nim = {
+      url = "github:asdf-community/asdf-nim";
       flake = false;
     };
   };

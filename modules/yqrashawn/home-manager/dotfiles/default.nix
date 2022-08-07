@@ -163,6 +163,16 @@
       target = "./.asdf/plugins/python";
       recursive = true;
     };
+    asdf-golang = {
+      source = inputs.asdf-golang;
+      target = "./.asdf/plugins/golang";
+      recursive = true;
+    };
+    asdf-nim = {
+      source = inputs.asdf-nim;
+      target = "./.asdf/plugins/nim";
+      recursive = true;
+    };
     # npmrc = {
     #   text = ''
     #     prefix = ${config.home.sessionVariables.NODE_PATH};

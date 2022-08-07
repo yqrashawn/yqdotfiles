@@ -17,15 +17,13 @@
     readOnlyStore = true;
     nixPath = builtins.map
       (source: "${source}=/etc/${config.environment.etc.${source}.target}") [
-      "home-manager"
-      "nixpkgs"
-      "stable"
-    ];
+        "home-manager"
+        "nixpkgs"
+        "stable"
+      ];
 
-    binaryCaches = [
-      "https://cache.nixos.org"
-      "https://nix-community.cachix.org"
-    ];
+    binaryCaches =
+      [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
 
     binaryCachePublicKeys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="

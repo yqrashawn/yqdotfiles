@@ -182,6 +182,11 @@ in {
         name = "alias-tips";
         src = inputs.zsh-alias-tips;
       }
+      {
+        name = "forgit";
+        src = inputs.forgit;
+        file = "forgit.plugin.zsh";
+      }
       # {
       #   name = "zsh-abbrev-alias";
       #   src = inputs.zsh-abbrev-alias;
