@@ -56,7 +56,8 @@
       # procs # ps
       bottom # btm htop
       thefuck
-      curlie # httpie
+      # curlie
+      httpie
       # glances # htop
       xh # httpie
       shfmt

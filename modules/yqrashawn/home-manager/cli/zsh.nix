@@ -74,7 +74,8 @@ let
     yd = "yarn dev";
     yx = "yarn remove";
     yw = "yarn workspace";
-    curl = "curlie";
+    # curl = "curlie";
+    curl = "httpie";
 
     gfc1 = "git clone --depth 1";
 

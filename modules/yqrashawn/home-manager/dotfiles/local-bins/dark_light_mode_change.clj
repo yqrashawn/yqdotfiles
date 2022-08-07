@@ -2,10 +2,10 @@
 
 (ns dark-light-mode-change
   (:require
+   [babashka.fs :as fs]
    [babashka.tasks :refer [shell]]
    [clojure.java.shell :refer [sh]]
-   [clojure.string :as s]
-   [babashka.fs :as fs]))
+   [clojure.string :as s]))
 
 (def theme (if (= (System/getenv "DARKMODE") "1") :dark :light))
 ;; (def theme :dark)
@@ -36,7 +36,7 @@
 
 (defn mcfly []
   (let [conf-file (fs/file (fs/expand-home "~/.local.zsh"))
-        conf      (slurp conf-file)
+        conf      (or (try (slurp conf-file) (catch Exception _)) (get mcfly-lines :light))
         cur       (get mcfly-lines (if (= theme :dark) :light :dark))
         next      (get mcfly-lines theme)
         conf      (-> conf (s/replace (re-pattern cur) next))]
@@ -44,12 +44,12 @@
 
 (defn emacs []
   (if (= theme :dark)
-    (sh "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'modus-vivendi :no-confirm)")
-    (sh "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'modus-operandi :no-confirm)")))
+    (sh "emacsclient" "-n" "-q" "-e" "(load-theme 'modus-vivendi :no-confirm)")
+    (sh "emacsclient" "-n" "-q" "-e" "(load-theme 'modus-operandi :no-confirm)")))
 
-(alacritty)
-(emacs)
-(mcfly)
+(try (alacritty) (catch Exception _))
+(try (emacs) (catch Exception _))
+(try (mcfly) (catch Exception _))
 
 (comment
   (shell "launchctl load -w" (fs/expand-home "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))

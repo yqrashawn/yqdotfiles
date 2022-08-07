@@ -99,7 +99,8 @@ in {
         thefuck
         nix-tree
         nix-linter
-        curlie # httpie
+        # curlie
+        httpie
         # glances # htop
         xh # httpie
         shfmt
@@ -134,6 +135,7 @@ in {
         less
         zoxide # fasd
         lazygit
+        git-branchless
         # watchexec
         wget
         # curl
