@@ -106,8 +106,85 @@
       url = "github:kennyp/asdf-golang";
       flake = false;
     };
+    # https://github.com/smashedtoatoms/asdf-sbcl
+    asdf-sbcl = {
+      url = "github:smashedtoatoms/asdf-sbcl";
+      flake = false;
+    };
+    asdf-deno = {
+      url = "github:asdf-community/asdf-deno";
+      flake = false;
+    };
+    asdf-crystal = {
+      url = "github:asdf-community/asdf-crystal";
+      flake = false;
+    };
+    asdf-elixir = {
+      url = "github:asdf-vm/asdf-elixir";
+      flake = false;
+    };
+    asdf-haskell = {
+      url = "github:asdf-community/asdf-haskell";
+      flake = false;
+    };
+    asdf-janet = {
+      url = "github:Jakski/asdf-janet";
+      flake = false;
+    };
+    asdf-lua = {
+      url = "github:Stratus3D/asdf-lua";
+      flake = false;
+    };
+    asdf-ocaml = {
+      url = "github:asdf-community/asdf-ocaml";
+      flake = false;
+    };
+    asdf-chezscheme = {
+      url = "github:asdf-community/asdf-chezscheme";
+      flake = false;
+    };
+    asdf-bun = {
+      url = "github:cometkim/asdf-bun";
+      flake = false;
+    };
+    asdf-pnpm = {
+      url = "github:jonathanmorley/asdf-pnpm";
+      flake = false;
+    };
+    asdf-racket = {
+      url = "github:asdf-community/asdf-racket";
+      flake = false;
+    };
+    asdf-scala = {
+      url = "github:asdf-community/asdf-scala";
+      flake = false;
+    };
+    asdf-hashicorp = {
+      url = "github:asdf-community/asdf-hashicorp";
+      flake = false;
+    };
+    asdf-solidity = {
+      url = "github:diegodorado/asdf-solidity";
+      flake = false;
+    };
     asdf-nim = {
       url = "github:asdf-community/asdf-nim";
+      flake = false;
+    };
+    asdf-v = {
+      url = "github:ndac-todoroki/asdf-v";
+      flake = false;
+    };
+    asdf-yarn = {
+      url = "github:twuni/asdf-yarn";
+      flake = false;
+    };
+    asdf-zig = {
+      url = "github:cheetah/asdf-zig";
+      flake = false;
+    };
+    asdf-ninja = {
+      url = "github:asdf-community/asdf-ninja";
       flake = false;
     };
   };

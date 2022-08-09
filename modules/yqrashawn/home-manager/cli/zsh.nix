@@ -9,13 +9,16 @@ let
     [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     . $HOME/.asdf/plugins/java/set-java-home.zsh
-    asdf global java graalvm-22.1.0+java17
-    asdf global clojure 1.10.3.1087
-    asdf global nim 1.6.6
-    asdf global ruby 3.1.2
-    asdf global python 3.10.5
-    asdf global nodejs 16.15.1
-    asdf global golang 1.18.4
+    #asdf global java graalvm-22.1.0+java17
+    #asdf global clojure 1.10.3.1087
+    #asdf global nim 1.6.6
+    #asdf global ruby 3.1.2
+    #asdf global python 3.10.5
+    #asdf global nodejs 16.15.1
+    #asdf global golang 1.18.4
+    #asdf global yarn 1.22.19
+    #asdf global pnpm 7.9.0
+    #asdf global lua 5.4.4
 
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
@@ -26,12 +29,6 @@ let
     "[[ -e /etc/profile ]] && source /etc/profile"}
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     . $HOME/.asdf/plugins/java/set-java-home.bash
-    asdf global java graalvm-22.1.0+java17
-    asdf global clojure 1.10.3.1087
-    asdf global nim 1.6.6
-    asdf global ruby 3.1.2
-    asdf global python 3.10.5
-    asdf global nodejs 16.15.1
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {

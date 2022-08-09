@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "asdf-bun": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1657518724,
+        "narHash": "sha256-1CTVOBPmK/rA7jGbabKcBDjDsZTR3l2iB3mMJhjqMPk=",
+        "owner": "cometkim",
+        "repo": "asdf-bun",
+        "rev": "aa5d37631cee4d4f9082ef5136bbf1403b5669b3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cometkim",
+        "repo": "asdf-bun",
+        "type": "github"
+      }
+    },
+    "asdf-chezscheme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638457080,
+        "narHash": "sha256-wCWT8kpORPkCXMcummQHEKwB8T2Jh8pXgFS6pF6KEdw=",
+        "owner": "asdf-community",
+        "repo": "asdf-chezscheme",
+        "rev": "2dc5be8c50172865caba5a8931d185b8935d1f9d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-chezscheme",
+        "type": "github"
+      }
+    },
     "asdf-clojure": {
       "flake": false,
       "locked": {
@@ -13,6 +45,54 @@
       "original": {
         "owner": "halcyon",
         "repo": "asdf-clojure",
+        "type": "github"
+      }
+    },
+    "asdf-crystal": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646187131,
+        "narHash": "sha256-x2pGAA+KJpOR5OzFY8bpMLs2CTy269rxj+5B+xZCqwU=",
+        "owner": "asdf-community",
+        "repo": "asdf-crystal",
+        "rev": "f8347c072a53a55a89d25f59e2ab9e8990a566f7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-crystal",
+        "type": "github"
+      }
+    },
+    "asdf-deno": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646232004,
+        "narHash": "sha256-nNDTcB3t9jzYYL1I7lr3z02Zrgu12o2QAsvU/g5V2Bo=",
+        "owner": "asdf-community",
+        "repo": "asdf-deno",
+        "rev": "87442feea2bedfd4eb8d93d6b76061c5f01de3c6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-deno",
+        "type": "github"
+      }
+    },
+    "asdf-elixir": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1652357803,
+        "narHash": "sha256-rQvQTTOKldzRRF+WbPdb5gdyM7TVOEcgHLgyobRRptQ=",
+        "owner": "asdf-vm",
+        "repo": "asdf-elixir",
+        "rev": "d08f506b72faddff571b819f586219295bf89d99",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-vm",
+        "repo": "asdf-elixir",
         "type": "github"
       }
     },
@@ -32,6 +112,54 @@
         "type": "github"
       }
     },
+    "asdf-hashicorp": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1655232623,
+        "narHash": "sha256-VJQrPnFgBlKUE2XJR8R6bnIggUjakmes16C4CAOGL08=",
+        "owner": "asdf-community",
+        "repo": "asdf-hashicorp",
+        "rev": "bc4dec6e99c501d126bf2f699190e4a0c9a10b3e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-hashicorp",
+        "type": "github"
+      }
+    },
+    "asdf-haskell": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638457068,
+        "narHash": "sha256-1C0zCABSbfQAuaCTq2XZ7aCVnPQ17JoihXf9qpnpRO0=",
+        "owner": "asdf-community",
+        "repo": "asdf-haskell",
+        "rev": "63d7da6c3956ce0701bde94fd16ae9e5f2aa6fe6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-haskell",
+        "type": "github"
+      }
+    },
+    "asdf-janet": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1643210039,
+        "narHash": "sha256-mcCzndw7f+ciwgPBH5sW6nVZu1eeq9y+qci3tjjhDzo=",
+        "owner": "Jakski",
+        "repo": "asdf-janet",
+        "rev": "3eefdfa010c7846c4e8d14ce827b62d158654ec0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Jakski",
+        "repo": "asdf-janet",
+        "type": "github"
+      }
+    },
     "asdf-java": {
       "flake": false,
       "locked": {
@@ -45,6 +173,22 @@
       "original": {
         "owner": "halcyon",
         "repo": "asdf-java",
+        "type": "github"
+      }
+    },
+    "asdf-lua": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1649723169,
+        "narHash": "sha256-mFzV5xhblLmxGwexHUBmpW5GJQsk0GTZlteLZa+eC+c=",
+        "owner": "Stratus3D",
+        "repo": "asdf-lua",
+        "rev": "d99f76c280241950c288503eb89d2532085d9fd4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Stratus3D",
+        "repo": "asdf-lua",
         "type": "github"
       }
     },
@@ -64,6 +208,22 @@
         "type": "github"
       }
     },
+    "asdf-ninja": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638457113,
+        "narHash": "sha256-oE5uY8728Q1qu1m0iFzoQ587NtE+upkRIlf8BvEsPIc=",
+        "owner": "asdf-community",
+        "repo": "asdf-ninja",
+        "rev": "fc8d33fe7704ddec262c3c3e1783d4fa7cbd09a7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-ninja",
+        "type": "github"
+      }
+    },
     "asdf-nodejs": {
       "flake": false,
       "locked": {
@@ -77,6 +237,38 @@
       "original": {
         "owner": "asdf-vm",
         "repo": "asdf-nodejs",
+        "type": "github"
+      }
+    },
+    "asdf-ocaml": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638457084,
+        "narHash": "sha256-GqnV8n0WMolb4O+Lykz4Fr0dPFRONqiGBOF9EHnafAg=",
+        "owner": "asdf-community",
+        "repo": "asdf-ocaml",
+        "rev": "eeb4436cb3b02db9e2255c2e5f891277ef32efc1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-ocaml",
+        "type": "github"
+      }
+    },
+    "asdf-pnpm": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1643988269,
+        "narHash": "sha256-5TNWYwyhK3D0sZe+UPjdp0ISWNggR+whemOPS05wOAI=",
+        "owner": "jonathanmorley",
+        "repo": "asdf-pnpm",
+        "rev": "95752a9deb38497fbfe379f773a1a0eec93be183",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jonathanmorley",
+        "repo": "asdf-pnpm",
         "type": "github"
       }
     },
@@ -96,6 +288,22 @@
         "type": "github"
       }
     },
+    "asdf-racket": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638457077,
+        "narHash": "sha256-k+j0qTE4cb6Oe4ATXDb7M2ELnm10z92leOEw8Qqmkhc=",
+        "owner": "asdf-community",
+        "repo": "asdf-racket",
+        "rev": "9ae974f0eb24d33e02a386de63b690d8e7e6fa28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-racket",
+        "type": "github"
+      }
+    },
     "asdf-ruby": {
       "flake": false,
       "locked": {
@@ -109,6 +317,102 @@
       "original": {
         "owner": "asdf-vm",
         "repo": "asdf-ruby",
+        "type": "github"
+      }
+    },
+    "asdf-sbcl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1659361860,
+        "narHash": "sha256-oWmXSrPaueBbIWUiNhVRtyE2mpf+3c1tCqD+S0x7Osg=",
+        "owner": "smashedtoatoms",
+        "repo": "asdf-sbcl",
+        "rev": "a68575f1744b51e2af9ce9aed541727094af4b81",
+        "type": "github"
+      },
+      "original": {
+        "owner": "smashedtoatoms",
+        "repo": "asdf-sbcl",
+        "type": "github"
+      }
+    },
+    "asdf-scala": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646700332,
+        "narHash": "sha256-7w/bubqgp/D8wITvOGEDDDJCSiHp6A939yLWyjn1kr0=",
+        "owner": "asdf-community",
+        "repo": "asdf-scala",
+        "rev": "481212723bbf8ebe08476097c47da6c037a9b57c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-scala",
+        "type": "github"
+      }
+    },
+    "asdf-solidity": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1618751269,
+        "narHash": "sha256-lDDLafT+p6iSu/b598jNRUBOHuA98f975FeySD5GGHs=",
+        "owner": "diegodorado",
+        "repo": "asdf-solidity",
+        "rev": "cde20cacaec6cd32fc2da88ec3a745d069074fff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "diegodorado",
+        "repo": "asdf-solidity",
+        "type": "github"
+      }
+    },
+    "asdf-v": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1580113338,
+        "narHash": "sha256-tevJMZENpzJQNdr1HxYz+1BVuz7Jk/0I1S+VHnD1ghQ=",
+        "owner": "ndac-todoroki",
+        "repo": "asdf-v",
+        "rev": "92fc3860600cc18d7ac00cab8777bcc452bb591f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ndac-todoroki",
+        "repo": "asdf-v",
+        "type": "github"
+      }
+    },
+    "asdf-yarn": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1611438553,
+        "narHash": "sha256-ILLi5yzSYcpDidq1b6LE2M2yga8jB+R4kJ759eo26PY=",
+        "owner": "twuni",
+        "repo": "asdf-yarn",
+        "rev": "376c5407ef22c82fa56e4bd9f6a9108354063acb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "twuni",
+        "repo": "asdf-yarn",
+        "type": "github"
+      }
+    },
+    "asdf-zig": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1616752858,
+        "narHash": "sha256-1roXngNXvJpxNg1sDAhpQYK48+9mAz0OG+oDETDDgb4=",
+        "owner": "cheetah",
+        "repo": "asdf-zig",
+        "rev": "aeda7a3b0a084efc4bd9772b8c72ae26ad3ee969",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cheetah",
+        "repo": "asdf-zig",
         "type": "github"
       }
     },
@@ -426,13 +730,32 @@
     },
     "root": {
       "inputs": {
+        "asdf-bun": "asdf-bun",
+        "asdf-chezscheme": "asdf-chezscheme",
         "asdf-clojure": "asdf-clojure",
+        "asdf-crystal": "asdf-crystal",
+        "asdf-deno": "asdf-deno",
+        "asdf-elixir": "asdf-elixir",
         "asdf-golang": "asdf-golang",
+        "asdf-hashicorp": "asdf-hashicorp",
+        "asdf-haskell": "asdf-haskell",
+        "asdf-janet": "asdf-janet",
         "asdf-java": "asdf-java",
+        "asdf-lua": "asdf-lua",
         "asdf-nim": "asdf-nim",
+        "asdf-ninja": "asdf-ninja",
         "asdf-nodejs": "asdf-nodejs",
+        "asdf-ocaml": "asdf-ocaml",
+        "asdf-pnpm": "asdf-pnpm",
         "asdf-python": "asdf-python",
+        "asdf-racket": "asdf-racket",
         "asdf-ruby": "asdf-ruby",
+        "asdf-sbcl": "asdf-sbcl",
+        "asdf-scala": "asdf-scala",
+        "asdf-solidity": "asdf-solidity",
+        "asdf-v": "asdf-v",
+        "asdf-yarn": "asdf-yarn",
+        "asdf-zig": "asdf-zig",
         "clojure-deps-edn": "clojure-deps-edn",
         "comma": "comma",
         "darwin": "darwin",

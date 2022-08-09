@@ -33,7 +33,7 @@ Expunge Both
 # Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail"
 # Patterns * ![Gmail]* "[Gmail]/Chats"
 # include everything
-Patterns * !deleted !Templates "!Deleted Messages" !RSS !Trash  [Gmail]* "![Gmail]/Spam" "![Gmail]/Trash"
+Patterns * [Gmail]* !deleted !Templates "!Deleted Messages" !RSS !RSS/* !Trash "![Gmail]/Spam" "![Gmail]/Trash"
 # sync changes both ways (read, archived, etc.)
 Sync All
 # Save the synchronization state files in the relevant directory

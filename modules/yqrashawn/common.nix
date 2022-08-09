@@ -45,7 +45,6 @@ in {
         # clojure
         clojure-lsp
         ispell
-        # isync
         babashka
         joker
         leiningen
@@ -72,6 +71,7 @@ in {
 
         # cli tools
         ripgrep
+        ugrep
         woff2
         cmus
         zola
@@ -225,9 +225,9 @@ in {
         nodePackages.dockerfile-language-server-nodejs
         nodePackages.bash-language-server
         nodePackages.yaml-language-server
-        yarn
+        # yarn
         # php
-        lua
+        # lua
         # luajit
         stylua
         # deno
@@ -236,7 +236,7 @@ in {
         # luarocks
         # zig # marked broken
         # zls
-        go
+        # go
         gopls
         gore
         gomodifytags
@@ -249,25 +249,19 @@ in {
         (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph rubocop ]))
 
         # ghc
-        # chez
-        sbcl
         # guile
-        roswell
+        # roswell
         clang-tools
         cmake-format
         html-tidy
-        ninja
         perl
         # openjdk
-        # nim
 
         watchman
 
         # lib
-        # libgccjit
         zlib
         libtool # https://github.com/WiseLibs/better-sqlite3/issues/243
-        # cyrus_sasl # isync xoauth2
         rlwrap
         readline
         llvm
