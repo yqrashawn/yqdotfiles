@@ -47,8 +47,8 @@ primary_email=namy.19@gmail.com
 #		in the mail store.
 #
 [new]
-tags=new;
-ignore=/.*[.](json|lock|bak)$/
+tags=Inbox;
+ignore=/.*[.](json|lock|bak|mbsyncstate|uidvalidity)$/
 
 # Search configuration
 #

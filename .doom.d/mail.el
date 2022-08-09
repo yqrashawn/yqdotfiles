@@ -12,9 +12,11 @@
 (after! notmuch
   (defun +notmuch-get-sync-command ()
     "custom notmuch sync command"
-    "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new")
+    ;; "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new"
+    "mbsync -a && notmuch new")
   (setq! mm-text-html-renderer 'w3m-standalone)
-  (setq! +notmuch-delete-tags '("+deleted" "-inbox" "-unread")
+  (setq! +notmuch-delete-tags '("+deleted" "-inbox" "-unread" "-Inbox")
+         notmuch-archive-tags '("-inbox" "-unread" "-Inbox" "-new")
          notmuch-show-indent-messages-width 2)
   (set-popup-rule! "^\\*notmuch-hello" :ignore t)
   (set-popup-rule! "^\\*subject:" :ignore t))

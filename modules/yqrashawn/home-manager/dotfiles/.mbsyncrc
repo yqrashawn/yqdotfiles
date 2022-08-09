@@ -20,47 +20,34 @@ Path ~/mail/namy.19@gmail.com/
 Inbox ~/mail/namy.19@gmail.com/Inbox
 SubFolders Verbatim
 
-MaildirStore namy.19@gmail.com-archive
-Path ~/mail/namy.19@gmail.com/Archive
 
-Channel namy.19@gmail.com-archive
-Far ":namy.19@gmail.com-remote:[Google Mail]/All Mail"
-Near ":namy.19@gmail.com-archive:Archive"
+Channel namy.19@gmail.com-remote
+Far :namy.19@gmail.com-remote:
+Near :namy.19@gmail.com-local:
+# create new mailboxes both sides
+Create Both
+# delete both sides
+Expunge Both
+# exclude everything under the internal [Gmail] folder, except the interesting folders
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail"
+# Patterns * ![Gmail]* "[Gmail]/Chats"
+# include everything
+Patterns * !deleted !Templates "!Deleted Messages" !RSS !Trash  [Gmail]* "![Gmail]/Spam" "![Gmail]/Trash"
+# sync changes both ways (read, archived, etc.)
 Sync All
+# Save the synchronization state files in the relevant directory
+SyncState *
 
-Channel namy.19@gmail.com-trash
-Far ":namy.19@gmail.com-remote:[Google Mail]/Bin"
-Near ":namy.19@gmail.com-archive:Trash"
-Sync Pull
+# ## Archive All Mail
+# MaildirStore namy.19@gmail.com-archive
+# Path ~/mail/namy.19@gmail.com/Archive
 
-Channel namy.19@gmail.com-drafts
-Far ":namy.19@gmail.com-remote:[Google Mail]/Drafts"
-Near ":namy.19@gmail.com-local:Drafts"
-Sync Pull
-Expunge Both
-
-Channel namy.19@gmail.com-sent
-Far ":namy.19@gmail.com-remote:[Google Mail]/Sent Mail"
-Near ":namy.19@gmail.com-local:Sent"
-Sync Pull
-Expunge Both
-
-Channel namy.19@gmail.com-inbox
-Far ":namy.19@gmail.com-remote:INBOX"
-Near ":namy.19@gmail.com-local:Inbox"
-Sync All
-Expunge Both
-
-Group namy.19@gmail.com
-Channel namy.19@gmail.com-trash
-Channel namy.19@gmail.com-inbox
-Channel namy.19@gmail.com-drafts
-Channel namy.19@gmail.com-sent
-Channel namy.19@gmail.com-archive
-
-Group all
-Channel namy.19@gmail.com-trash
-Channel namy.19@gmail.com-inbox
-Channel namy.19@gmail.com-drafts
-Channel namy.19@gmail.com-sent
-Channel namy.19@gmail.com-archive
+# Channel namy.19@gmail.com-remote-archive
+# Far :namy.19@gmail.com-remote-archive:
+# Near :namy.19@gmail.com-archive:
+# Create Both
+# Expunge Both
+# Patterns "[Gmail]/All Mail"
+# Sync All
+# SyncState *

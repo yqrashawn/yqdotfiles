@@ -1,7 +1,7 @@
 { inputs, config, pkgs, ... }:
 let
   # old = with pkgs.old; [ ];
-  own = with pkgs.own; [ lieer isync-isync cyrus_sasl_xoauth2 ];
+  own = with pkgs.own; [ lieer ];
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [
     notmuch
@@ -38,6 +38,8 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        isync-isync
+        # cyrus_sasl_xoauth2
         # gomobile
         # emacsMacport
         # clojure
@@ -264,8 +266,8 @@ in {
         # lib
         # libgccjit
         zlib
-        # libtool # https://github.com/WiseLibs/better-sqlite3/issues/243
-        cyrus_sasl # isync xoauth2
+        libtool # https://github.com/WiseLibs/better-sqlite3/issues/243
+        # cyrus_sasl # isync xoauth2
         rlwrap
         readline
         llvm
