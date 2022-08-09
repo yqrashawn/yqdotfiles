@@ -12,6 +12,7 @@
 #
 [database]
 path=/Users/yqrashawn/mail
+hook_dir=/Users/yqrashawn/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/
 
 # User configuration
 #
@@ -47,7 +48,7 @@ primary_email=namy.19@gmail.com
 #		in the mail store.
 #
 [new]
-tags=Inbox;
+tags=new;
 ignore=/.*[.](json|lock|bak|mbsyncstate|uidvalidity)$/
 
 # Search configuration

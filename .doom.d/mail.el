@@ -15,8 +15,8 @@
     ;; "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new"
     "mbsync -a && notmuch new")
   (setq! mm-text-html-renderer 'w3m-standalone)
-  (setq! +notmuch-delete-tags '("+deleted" "-inbox" "-unread" "-Inbox")
-         notmuch-archive-tags '("-inbox" "-unread" "-Inbox" "-new")
+  (setq! +notmuch-delete-tags '("+deleted" "-unread" "-inbox")
+         notmuch-archive-tags '("-inbox" "-unread" "-new" "+arched")
          notmuch-show-indent-messages-width 2)
   (set-popup-rule! "^\\*notmuch-hello" :ignore t)
   (set-popup-rule! "^\\*subject:" :ignore t))

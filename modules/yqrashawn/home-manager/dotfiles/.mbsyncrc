@@ -8,7 +8,7 @@ IMAPAccount namy.19@gmail.com
 Host imap.gmail.com
 User namy.19@gmail.com
 AuthMechs XOAUTH2
-PassCmd "oauth2get google namy.19@gmail.com"
+PassCmd "/Users/yqrashawn/.asdf/shims/oauth2get google namy.19@gmail.com"
 SSLType IMAPS
 SSLVersions TLSv1.1 TLSv1.2
 

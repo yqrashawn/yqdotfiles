@@ -680,7 +680,7 @@ _b_ranch _j_next _k_prev _h_up
 
 ;;;###autoload
 (defun ++notmuch-start ()
-  (notmuch-search "tag:Inbox" nil nil 1 nil))
+  (notmuch-search "tag:inbox" nil nil 1 nil))
 
 ;;;###autoload
 (defun browse-url-mpv (url &optional single)
