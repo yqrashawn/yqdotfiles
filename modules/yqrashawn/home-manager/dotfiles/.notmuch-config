@@ -49,7 +49,7 @@ primary_email=namy.19@gmail.com
 #
 [new]
 tags=new;
-ignore=/.*[.](json|lock|bak|mbsyncstate|uidvalidity)$/
+ignore=/.*[.](json|lock|bak|mbsyncstate|uidvalidity|db)$/
 
 # Search configuration
 #

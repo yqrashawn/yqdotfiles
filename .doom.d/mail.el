@@ -13,10 +13,10 @@
   (defun +notmuch-get-sync-command ()
     "custom notmuch sync command"
     ;; "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new"
-    "mbsync -a && notmuch new")
+    "bash ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync && mbsync -a && notmuch new")
   (setq! mm-text-html-renderer 'w3m-standalone)
   (setq! +notmuch-delete-tags '("+deleted" "-unread" "-inbox")
-         notmuch-archive-tags '("-inbox" "-unread" "-new" "+arched")
+         notmuch-archive-tags '("-inbox" "-unread")
          notmuch-show-indent-messages-width 2)
   (set-popup-rule! "^\\*notmuch-hello" :ignore t)
   (set-popup-rule! "^\\*subject:" :ignore t))

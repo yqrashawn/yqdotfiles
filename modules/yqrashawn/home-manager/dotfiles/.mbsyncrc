@@ -1,7 +1,7 @@
 # https://usher.dev/posts/my-email-setup/
 # https://cvanelteren.github.io/post/mu4e/
-Expunge None
-Create Near
+# Expunge None
+# Create Near
 SyncState *
 
 IMAPAccount namy.19@gmail.com
@@ -33,21 +33,21 @@ Expunge Both
 # Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "![Gmail]/All Mail"
 # Patterns * ![Gmail]* "[Gmail]/Chats"
 # include everything
-Patterns * [Gmail]* !deleted !Templates "!Deleted Messages" !RSS !RSS/* !Trash "![Gmail]/Spam" "![Gmail]/Trash"
+Patterns * [Gmail]* !deleted !Templates "!Deleted Messages" !Newton !RSS !RSS/* !Trash "![Gmail]/Spam" "![Gmail]/All Mail"
 # sync changes both ways (read, archived, etc.)
 Sync All
 # Save the synchronization state files in the relevant directory
 SyncState *
 
-# ## Archive All Mail
-# MaildirStore namy.19@gmail.com-archive
-# Path ~/mail/namy.19@gmail.com/Archive
+## Archive All Mail
+MaildirStore namy.19@gmail.com-ALL_MAIL
+Path ~/mail/namy.19@gmail.com/ALL_MAIL/
+SubFolders Verbatim
 
-# Channel namy.19@gmail.com-remote-archive
-# Far :namy.19@gmail.com-remote-archive:
-# Near :namy.19@gmail.com-archive:
-# Create Both
-# Expunge Both
-# Patterns "[Gmail]/All Mail"
-# Sync All
-# SyncState *
+Channel namy.19@gmail.com-remote-ALL_MAIL
+Far :namy.19@gmail.com-remote:
+Near :namy.19@gmail.com-ALL_MAIL:
+Create Near
+Expunge Near
+Patterns "[Gmail]/All Mail"
+Sync Pull

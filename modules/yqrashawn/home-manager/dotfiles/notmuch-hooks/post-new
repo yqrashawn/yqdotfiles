@@ -4,4 +4,5 @@ set -e
 
 echo -n Filtering new messages
 notmuch tag -new +inbox "folder:/Inbox/"
+notmuch tag -new "tag:deleted"
 notmuch tag -new "tag:new"
