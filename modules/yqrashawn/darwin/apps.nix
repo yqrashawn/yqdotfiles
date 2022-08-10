@@ -15,7 +15,7 @@
       "slack"
       "bitwarden"
       "clickup"
-      "gpg-suite-no-mail"
+      # "gpg-suite-no-mail"
       "firefox"
       "firefox-developer-edition"
       "todoist"

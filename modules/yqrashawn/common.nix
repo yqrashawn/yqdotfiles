@@ -39,10 +39,8 @@ in {
     systemPackages = with pkgs;
       [
         isync-isync
-        # cyrus_sasl_xoauth2
         # gomobile
         # emacsMacport
-        # clojure
         clojure-lsp
         ispell
         babashka
@@ -67,7 +65,7 @@ in {
         # firefox-devedition-bin
         sqlite
         yabai
-        sketchybar
+        # sketchybar
 
         # cli tools
         ripgrep
@@ -160,6 +158,7 @@ in {
         openssl
         pinentry
         pinentry_mac
+        # pinentry-emacs
         feroxbuster
         ffmpeg
         pandoc
@@ -225,18 +224,9 @@ in {
         nodePackages.dockerfile-language-server-nodejs
         nodePackages.bash-language-server
         nodePackages.yaml-language-server
-        # yarn
         # php
-        # lua
-        # luajit
         stylua
-        # deno
-        # fennel
-        # janet # broken
-        # luarocks
-        # zig # marked broken
         # zls
-        # go
         gopls
         gore
         gomodifytags

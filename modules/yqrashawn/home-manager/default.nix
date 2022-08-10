@@ -28,6 +28,22 @@ in {
     path =
       "${config.home.homeDirectory}/.nixpkgs/modules/yqrashawn/home-manager";
   };
+  # services.gpg-agent = {
+  #   enable = true;
+  #   defaultCacheTtl = 1800;
+  #   maxCacheTtl = 7200;
+  #   enableSshSupport = true;
+  #   # use auth subkey's keygrip: gpg2 -K --with-keygrip
+  #   sshKeys = [ "5B933C7D6CE851F0E0F78A3ADE540FD1E48811C1" ];
+  #   enableBashIntegration = true;
+  #   enableZshIntegration = true;
+  #   extraConfig = ''
+  #     allow-emacs-pinentry
+  #     allow-loopback-pinentry
+  #     log-file /var/log/gpg-agent.log
+  #     use-standard-socket
+  #   '';
+  # };
 
   home = let
     NODE_GLOBAL =

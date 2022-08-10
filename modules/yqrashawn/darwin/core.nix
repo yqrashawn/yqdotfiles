@@ -62,10 +62,21 @@ in {
 
   # auto manage nixbld users with nix darwin
   users.nix.configureBuildUsers = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
+  programs.info.enable = true;
+  programs.man.enable = true;
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   services.lorri.enable = true;
+  # services.yabai = {
+  #   enable = true;
+  #   enableScriptingAddition = true;
+  # };
   # services.emacs.package = pkgs.emacsMacport;
 
   # Used for backwards compatibility, please read the changelog before changing.
