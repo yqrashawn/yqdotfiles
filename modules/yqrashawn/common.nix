@@ -38,7 +38,9 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        lapce
         isync-isync
+        msmtp
         # gomobile
         # emacsMacport
         clojure-lsp

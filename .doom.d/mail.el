@@ -14,9 +14,14 @@
     "custom notmuch sync command"
     ;; "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new"
     "bash ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync && mbsync -a && notmuch new")
-  (setq! mm-text-html-renderer 'w3m-standalone)
-  (setq! +notmuch-delete-tags '("+deleted" "-unread" "-inbox")
-         notmuch-archive-tags '("-inbox" "-unread")
-         notmuch-show-indent-messages-width 2)
+  (setq!
+   mm-text-html-renderer 'w3m-standalone
+   sendmail-program (executable-find "msmtp")
+   send-mail-function 'smtpmail-send-it
+   message-sendmail-f-is-evil t
+   message-sendmail-extra-arguments '("--read-envelope-from")
+   +notmuch-delete-tags '("+deleted" "-unread" "-inbox")
+   notmuch-archive-tags '("-inbox" "-unread")
+   notmuch-show-indent-messages-width 2)
   (set-popup-rule! "^\\*notmuch-hello" :ignore t)
   (set-popup-rule! "^\\*subject:" :ignore t))

@@ -122,6 +122,10 @@
       source = ./.mbsyncrc;
       target = ".mbsyncrc";
     };
+    msmtprc = {
+      source = ./.msmtprc;
+      target = ".msmtprc";
+    };
     mailcap = {
       source = ./.mailcap;
       target = ".mailcap";

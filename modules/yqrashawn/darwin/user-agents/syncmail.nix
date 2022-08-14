@@ -8,7 +8,7 @@
       RunAtLoad = true;
       TimeOut = 600;
       ExitTimeOut = 600;
-      StartInterval = 600;
+      StartInterval = 300;
     };
   };
 }
