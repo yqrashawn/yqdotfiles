@@ -44,10 +44,10 @@ MaildirStore namy.19@gmail.com-ALL_MAIL
 Path ~/mail/namy.19@gmail.com/ALL_MAIL/
 SubFolders Verbatim
 
-Channel namy.19@gmail.com-remote-ALL_MAIL
-Far :namy.19@gmail.com-remote:
-Near :namy.19@gmail.com-ALL_MAIL:
-Create Near
-Expunge Near
-Patterns "[Gmail]/All Mail"
-Sync Pull
+# Channel namy.19@gmail.com-remote-ALL_MAIL
+# Far :namy.19@gmail.com-remote:
+# Near :namy.19@gmail.com-ALL_MAIL:
+# Create Near
+# Expunge Near
+# Patterns "[Gmail]/All Mail"
+# Sync Pull

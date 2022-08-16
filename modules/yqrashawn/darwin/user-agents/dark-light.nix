@@ -4,7 +4,7 @@ let localBin = "${config.user.home}/local/bin";
 in {
   launchd.user.agents.dark-light = {
     command =
-      "${localBin}/dark-mode-notify ${localBin}/dark_light_mode_change.clj";
+      "${localBin}/dark-mode-notify ${pkgs.babashka}/bin/bb -f ${localBin}/dark_light_mode_change.clj";
     serviceConfig = {
       RunAtLoad = true;
       KeepAlive = true;

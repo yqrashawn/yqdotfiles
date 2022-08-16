@@ -22,7 +22,7 @@ if [[ $DISPLAY_COUNT -eq 1 ]] && [[ "$($HOME/local/bin/has-lg-4k-hdr)" ]]; then
   yabai -m rule --add app="^Roam$" space=2
   yabai -m rule --add app="^NotePlan$" space=2
   yabai -m rule --add app="^Notion$" space=2
-  yabai -m rule --add app="^Todoist$" space=2
+  # yabai -m rule --add app="^Todoist$" space=2
 
   yabai -m rule --add app="^Keybase$" manage=on space=3
   yabai -m rule --add app="^Discord$" manage=on space=3
@@ -74,7 +74,7 @@ elif [[ $DISPLAY_COUNT -eq 2 ]]; then
   yabai -m rule --add app="^Roam$" space=2
   yabai -m rule --add app="^NotePlan$" space=2
   yabai -m rule --add app="^Notion$" space=2
-  yabai -m rule --add app="^Todoist$" space=2
+  # yabai -m rule --add app="^Todoist$" space=2
   yabai -m rule --add app="^Google Chrome$" space=7
 
   yabai -m rule --add app="^Mail$" space=3
@@ -122,8 +122,8 @@ yabai -m rule --add app="^ToothFairy$" manage=off
 yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
 yabai -m rule --add app="^CleanShot X$" layer=above manage=off border=off mouse_follows_focus=off sticky=off
 yabai -m rule --add app="^iStat Menus Status$" manage=off border=off mouse_follows_focus=off sticky=off
-yabai -m rule --add app="CopyQ$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
-# yabai -m rule --add app="Todoist$" title="^Todoist$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
+yabai -m rule --add app="^CopyQ$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
+yabai -m rule --add app="^Todoist$" layer=above manage=off border=off mouse_follows_focus=off
 # yabai -m rule --add app="^Alacritty$" manage=off border=off grid='10:10:0:0:5:10'
 yabai -m rule --add app="^Emacs$" title="^(Emacs Everywhere|edit - )" layer=above manage=off sticky=on
 yabai -m rule --add app="^Firefox" title="^Extension: " layer=above manage=off sticky=on

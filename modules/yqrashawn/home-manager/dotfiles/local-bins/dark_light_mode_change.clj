@@ -44,8 +44,8 @@
 
 (defn emacs []
   (if (= theme :dark)
-    (sh "emacsclient" "-n" "-q" "-e" "(load-theme 'modus-vivendi :no-confirm)")
-    (sh "emacsclient" "-n" "-q" "-e" "(load-theme 'modus-operandi :no-confirm)")))
+    (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'modus-vivendi :no-confirm)")
+    (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'modus-operandi :no-confirm)")))
 
 (try (alacritty) (catch Exception _))
 (try (emacs) (catch Exception _))
