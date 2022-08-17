@@ -21,7 +21,7 @@
    message-sendmail-f-is-evil t
    message-sendmail-extra-arguments '("--read-envelope-from")
    +notmuch-delete-tags '("+deleted" "-unread" "-inbox")
-   notmuch-archive-tags '("-inbox" "-unread")
+   notmuch-archive-tags '("-inbox" "-unread" "+archived")
    notmuch-show-indent-messages-width 2)
   (set-popup-rule! "^\\*notmuch-hello" :ignore t)
   (set-popup-rule! "^\\*subject:" :ignore t))

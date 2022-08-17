@@ -6,7 +6,7 @@ echo "Moving messages according to notmuch tags"
 notmuch new --no-hooks
 
 # Archive files that are NOT tagged Inbox
-filter="folder:/Inbox/ -tag:inbox"
+filter="folder:/Inbox/ tag:archived -tag:inbox"
 echo "$(notmuch count $filter) archived messages"
 notmuch search --output=files --format=text0 $filter | xargs -0 --no-run-if-empty mv -t "$HOME/mail/namy.19@gmail.com/[Gmail]/Archived/cur"
 # notmuch search --output=files --format=text0 $filter | xargs -0 --no-run-if-empty rm

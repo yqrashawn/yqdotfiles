@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: {
   launchd.user.agents.syncmail = {
     serviceConfig = {
+      Disabled = true;
       Program = "${pkgs.babashka}/bin/bb";
       ProgramArguments = [ "-f" "${config.user.home}/local/bin/syncmail" ];
       StandardErrorPath = "/tmp/syncmail.error.log";
