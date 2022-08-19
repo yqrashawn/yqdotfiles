@@ -101,7 +101,7 @@ in {
         thefuck
         nix-tree
         nix-linter
-        # curlie
+        httpstat # curlie
         httpie
         # glances # htop
         xh # httpie
@@ -203,7 +203,7 @@ in {
         tree-sitter
         nodePackages.js-beautify
         nodePackages.stylelint
-        nodePackages.expo-cli
+        # nodePackages.expo-cli
         nodePackages.eslint
         nodePackages.diagnostic-languageserver
         nodePackages.typescript

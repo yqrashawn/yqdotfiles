@@ -15,7 +15,7 @@ let
     #asdf global ruby 3.1.2
     #asdf global python 3.10.5
     #asdf global nodejs 16.15.1
-    #asdf global golang 1.18.4
+    #asdf global golang 1.19
     #asdf global yarn 1.22.19
     #asdf global pnpm 7.9.0
     #asdf global lua 5.4.4
@@ -72,7 +72,7 @@ let
     yx = "yarn remove";
     yw = "yarn workspace";
     # curl = "curlie";
-    curl = "httpie";
+    # curl = "httpie";
 
     gfc1 = "git clone --depth 1";
 

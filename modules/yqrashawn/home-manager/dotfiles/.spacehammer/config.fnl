@@ -382,12 +382,15 @@
         menu-items
         [{:key :c
           :title "Capture"
-          :items [{:key :r
-                   :title "Org Roam"
-                   :action browser-org-roam-capture}
+          :items [;; {:key :r
+                  ;;  :title "Org Roam"
+                  ;;  :action browser-org-roam-capture}
                   {:key :b
                    :title "Newsblur"
                    :action browser-newsblur}
+                  {:key :r
+                   :title "Raindrop"
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "s"))}
                   {:key :n
                    :title "Notion"
                    :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "k"))}
