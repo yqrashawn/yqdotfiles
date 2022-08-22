@@ -18,6 +18,7 @@ let
     #asdf global golang 1.19
     #asdf global yarn 1.22.19
     #asdf global pnpm 7.9.0
+    #asdf global deno 1.24.3
     #asdf global lua 5.4.4
 
     if ! typeset -f _asdf > /dev/null; then
