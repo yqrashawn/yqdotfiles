@@ -120,6 +120,7 @@ yabai -m rule --add app="Chrom" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^Microsoft Edge" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^BusyCal" border=off manage=off
 yabai -m rule --add app="^Orion$" title="^(Extensions|General|Apperance|Browsing|Sync|Privacy|Search|Websites)$" border=off manage=off
+yabai -m rule --add app="^Newton$" title="^Settings$" border=off manage=off
 yabai -m rule --add app="^Kaleidoscope$" border=off manage=off
 yabai -m rule --add app="^World Clock" border=off manage=off
 yabai -m rule --add app="^Session$" border=off manage=off
