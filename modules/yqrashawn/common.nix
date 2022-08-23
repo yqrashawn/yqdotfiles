@@ -89,6 +89,7 @@ in {
         entr
         # proxychains-ng # build failed
         du-dust
+        man
         duf # du
         jq
         fd

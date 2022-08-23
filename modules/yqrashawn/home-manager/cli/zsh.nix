@@ -20,6 +20,7 @@ let
     #asdf global pnpm 7.9.0
     #asdf global deno 1.24.3
     #asdf global lua 5.4.4
+    #asdf global bun 0.1.10
 
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
