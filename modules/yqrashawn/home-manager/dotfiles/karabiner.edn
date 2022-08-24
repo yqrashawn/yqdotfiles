@@ -83,6 +83,29 @@
                       [:return_or_enter :!Sreturn_or_enter]
                       [:!Tm :!Sreturn_or_enter]
                       [:!Creturn_or_enter :return_or_enter]]}
+             {:des "trackpad + keyboard"
+              :rules
+              [{:type       :basic
+                :from       {:key_code :f}
+                :to         [{:pointing_button :button1}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
+               {:type       :basic
+                :from       {:key_code :d}
+                :to         [{:pointing_button :button2}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
+               {:type       :basic
+                :from       {:key_code :r}
+                :to         [{:pointing_button :button1}
+                             {:pointing_button :button1}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
+               {:type       :basic
+                :from       {:key_code :c}
+                :to         [{:key_code :down_arrow}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
+               {:type       :basic
+                :from       {:key_code :v}
+                :to         [{:key_code :up_arrow}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}]}
              {:des   "mouse motion to scroll"
               :rules [{:type       :mouse_motion_to_scroll
                        :from       {:modifiers {:optional [:any]}}
@@ -337,7 +360,7 @@
                       [:return_or_enter [:togg "Brave Browser"]]
                       ;; [:m [:open "/Applications/Mail.app"]]
                       ;; [:m [:open "/Applications/Setapp/Newton.app"]]
-                      [:m [:togg "Newton"]]
+                      [:m [:togg "Mail"]]
                       ;; [:m [:launch "Mail"]]
                       ;; [:v [:open "/Applications/WeChat.app"]]
                       ;; [:v [:launch "WeChat"]]
