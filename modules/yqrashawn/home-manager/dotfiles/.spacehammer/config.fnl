@@ -396,7 +396,7 @@
                    :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "k"))}
                   {:key :t
                    :title "Todoist"
-                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "i"))}]}]))
+                   :action (fn [] (hs.eventtap.keyStroke ["cmd" "ctrl"] "t"))}]}]))
 
 (local firefox-items
        (concat
