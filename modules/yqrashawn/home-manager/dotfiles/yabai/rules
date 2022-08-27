@@ -154,7 +154,7 @@ yabai -m rule --add app="^AutoSwitchInput$" title="^Window" border=off manage=of
 yabai -m rule --add app="^AutoSwitchInputPro$" title="^Window" border=off manage=off
 yabai -m rule --add app="^BetterZip$" border=off manage=off
 yabai -m rule --add app="^SwitchResX" border=off manage=off
-yabai -m rule --add app="^(mpv|Elmedia Player|IINA|Infuse)$" border=off manage=off
+yabai -m rule --add app="^(mpv|Elmedia Player|IINA|Infuse|Boom 3D)$" border=off manage=off
 yabai -m rule --add app="^AdGuard" border=off manage=off
 yabai -m rule --add app="Chrom" title="^Task Manager" border=off manage=off
 yabai -m rule --add app="^Microsoft Edge" title="^Task Manager" border=off manage=off
@@ -166,6 +166,7 @@ yabai -m rule --add app="^World Clock" border=off manage=off
 yabai -m rule --add app="^Session$" border=off manage=off
 yabai -m rule --add app="^Adobe Photoshop" title="^(Export As|Save)$" border=off manage=off
 yabai -m rule --add app="^Simulator" border=off manage=off
+yabai -m rule --add app="^Mail$" title="^(General|Accounts|Jumk Mail|Fonts & Colors|Viewing|Composing|Signatures|Rules|Extensions|Privacy)$" border=off manage=off
 # yabai -m rule --add app=".*" topmost=off
 
 # Do not manage windows with certain titles eg. Copying files or moving to bin
