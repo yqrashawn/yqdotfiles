@@ -273,7 +273,7 @@
 (disable-packages! json-mode)
 (package! magit-delta)
 (package! emacsql-sqlite-module)
-(package! magit-libgit)
+;; (package! magit-libgit)
 (package! todoist)
 (package! sqlite3)
 ;; (package! relative-date :recipe (:host github :repo "rougier/relative-date"))

@@ -1,7 +1,9 @@
 { inputs, config, pkgs, ... }:
 let
   # old = with pkgs.old; [ ];
-  own = with pkgs.own; [ lieer ];
+  own = with pkgs.own;
+    [ # lieer
+    ];
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [
     notmuch

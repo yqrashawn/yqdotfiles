@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+xcrun simctl list devices available

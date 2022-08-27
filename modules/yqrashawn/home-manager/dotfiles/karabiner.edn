@@ -11,7 +11,7 @@
  :templates {:launch     "osascript -e 'tell application \"Alfred 5\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
              :alf        "open /Applications/Alfred\\ 5.app && osascript -e 'tell application \"Alfred 5\" to run trigger \"%s\" in workflow \"%s\"'"
              :sh         "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH %s"
-             :yabai      "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai %s"
+             :yabai      "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai -m %s"
              :km         "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :kb-maestro "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :open       "open \"%s\""
@@ -28,11 +28,13 @@
              }
  :layers    {:tab-mode              {:key     :tab
                                      :afterup [{:set ["yabai-scale-mode" 0]}
+                                               {:set ["yabai-toggle-mode" 0]}
                                                {:set ["yabai-warp-mode" 0]}
                                                {:set ["spec-mode" 0]}]
                                      :condi   [:!comma-mode :!period-mode]}
-             :yabai-scale-mode      {:key :c :condi :tab-mode}
-             :yabai-warp-mode       {:key :r :condi :tab-mode}
+             :yabai-scale-mode      {:key :c :condi [:tab-mode :!yabai-warp-mode :!yabai-config-mode]}
+             :yabai-warp-mode       {:key :r :condi [:tab-mode :!yabai-config-mode :!yabai-scale-mode]}
+             :yabai-config-mode     {:key :f :condi [:tab-mode :!yabai-warp-mode :!yabai-warp-mode]}
              :emacs-windmove-mode   {:key :q :condi [:Emacs :!comma-mode :!period-mode]}
              :emacs-windresize-mode {:key :c :condi :emacs-windmove-mode}
              :emacs-bufmove-mode    {:key :f :condi :emacs-windmove-mode}
@@ -94,9 +96,17 @@
                 :to         [{:pointing_button :button2}]
                 :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
                {:type       :basic
-                :from       {:key_code :r}
+                :from       {:key_code :g}
                 :to         [{:pointing_button :button1}
                              {:pointing_button :button1}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
+               {:type       :basic
+                :from       {:key_code :r}
+                :to         [{:mouse_key {:vertical_wheel -128}}]
+                :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
+               {:type       :basic
+                :from       {:key_code :e}
+                :to         [{:mouse_key {:vertical_wheel 128}}]
                 :conditions [{:type :variable_unless :name "multitouch_extension_finger_count_total" :value 0}]}
                {:type       :basic
                 :from       {:key_code :c}
@@ -340,8 +350,8 @@
 
                       [:quote [:togg "ClickUp"]]
                       [:t [:togg "/Applications/Todoist.app"]]
-                      [:p [:togg "Adobe Photoshop 2022"]]
-                      ;; [:p [:togg "Figma"]]
+                      ;; [:p [:togg "Adobe Photoshop 2022"]]
+                      [:p [:togg "Figma"]]
                       ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e :return_or_enter] :!Chromes]
                       [:comma [:togg "Google Chrome"] :!Chromes]
                       [:comma :same_wind_app :Chromes]
@@ -371,7 +381,7 @@
                       [:6 :!!z]
                       [:9 [:open "/Applications/PDF Expert.app"]]
                       ;; [:h [:togg "DingTalk"]]
-                      [:h [:togg "Slack"]]
+                      [:h [:togg "Discord"]]
                       [:r [:togg "Reeder"]]
                       ;; [:r [:opena "Roam Research"]]
                       ;; [:period [:open "/Applications/SetApp/Paw.app"]]
@@ -446,7 +456,7 @@
              {:des   "alfred mode"
               :rules [[:l :!COi :browsers-alfred-mode]
                       [:p :!OSa :browsers-alfred-mode]
-                      [:quote :!COt :browsers-alfred-mode]
+                      [:quote :!OSt :browsers-alfred-mode]
                       [:0 [:!Cl [:type "chrome://extensions/"]] :browsers-alfred-mode]
                       ;; [:8 [:!Cl [:type "chrome-extension://pkjpciobmjhfjaddkiehmknaclajlkgf/home.html"]] :browsers-alfred-mode]
                       [:8 [:!Cl [:type "chrome-extension://ojaliajmdjhmljfhmphkaehfhanfgpfg/home.html"]] :browsers-alfred-mode {:delayed {:invoked :return_or_enter}}]
@@ -546,18 +556,20 @@
              {:des   "yabai mode"
               :rules [;; move windows
                       :yabai-warp-mode
-                      [:h [:sh "yabai -m window --warp west"]]
-                      [:j [:sh "yabai -m window --warp south"]]
-                      [:k [:sh "yabai -m window --warp north"]]
-                      [:l [:sh "yabai -m window --warp east"]]
-                      [:n [:sh "yabai -m window --warp next"]]
-                      [:p [:sh "yabai -m window --warp prev"]]
+                      [:h [:yabai "window --warp west"]]
+                      [:j [:yabai "window --warp south"]]
+                      [:k [:yabai "window --warp north"]]
+                      [:l [:yabai "window --warp east"]]
+                      [:n [:yabai "window --warp next"]]
+                      [:p [:yabai "window --warp prev"]]
                       ;; scale windows
                       :yabai-scale-mode
                       [:h "~/.config/yabai/resize left"]
                       [:j "~/.config/yabai/resize down"]
                       [:k "~/.config/yabai/resize up"]
                       [:l "~/.config/yabai/resize right"]
+                      :yabai-config-mode
+                      [:spacebar [:yabai "window --toggle float"]]
                       :tab-mode
                       [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
                       [:!Thyphen "~/.config/yabai/rules && ~/.config/yabai/set-layout-based-on-display"]
@@ -569,24 +581,24 @@
                       [:k [:sh "/opt/homebrew/bin/yabai -m window --focus north || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display north | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
                       [:l [:sh "/opt/homebrew/bin/yabai -m window --focus east || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display east | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
                       ;; [:spacebar "yabai -m window --focus prev"]
-                      [:n [:sh "yabai -m space --focus next"]]
-                      [:p [:sh "yabai -m space --focus prev"]]
+                      [:n [:yabai "space --focus next"]]
+                      [:p [:yabai "space --focus prev"]]
                       ;; yabai workspace
-                      [:1 [:sh "yabai -m space --focus 1"]]
-                      [:2 [:sh "yabai -m space --focus 2"]]
-                      [:3 [:sh "yabai -m space --focus 3"]]
-                      [:4 [:sh "yabai -m space --focus 4"]]
-                      [:a [:sh "yabai -m window --toggle float"]]
-                      [:b [:sh "yabai -m window --toggle border"]]
-                      [:0 [:sh "yabai -m window --toggle zoom-parent"]]
-                      [:!Sb [:sh "yabai -m config layout bsp"]]
-                      [:!Ss [:sh "yabai -m config layout stack"]]
-                      [:!Sf [:sh "yabai -m config layout float"]]
-                      [:m [:sh "yabai -m window --toggle zoom-fullscreen"]]
-                      [:x [:sh "yabai -m window --close"]]
-                      [:delete_or_backspace [:sh "yabai -m window --close"]]
-                      [:open_bracket [:sh "yabai -m window --space prev"]]
-                      [:close_bracket [:sh "yabai -m window --space next"]]]}
+                      ;; [:1 [:yabai "space --focus 1"]]
+                      ;; [:2 [:yabai "space --focus 2"]]
+                      ;; [:3 [:yabai "space --focus 3"]]
+                      ;; [:4 [:yabai "space --focus 4"]]
+                      ;; [:a [:yabai "window --toggle float"]]
+                      ;; [:b [:yabai "window --toggle border"]]
+                      [:return_or_enter [:yabai "window --toggle zoom-parent"]]
+                      [:!Sb [:yabai "config layout bsp"]]
+                      [:!Ss [:yabai "config layout stack"]]
+                      [:!Sf [:yabai "config layout float"]]
+                      [:m [:yabai "window --toggle zoom-fullscreen"]]
+                      [:x [:yabai "window --close"]]
+                      [:delete_or_backspace [:yabai "window --close"]]
+                      [:open_bracket [:sh "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh prev"]]
+                      [:close_bracket [:sh "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh next"]]]}
              {:des   "comma mode"
               :rules [:comma-mode
                       [:a :open_bracket]

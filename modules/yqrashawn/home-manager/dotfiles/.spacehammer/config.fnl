@@ -313,6 +313,100 @@
   (hs.eventtap.keyStroke ["alt" "shift"] "9")
   (hs.eventtap.keyStroke [] "N"))
 
+(local desktop-binding
+       [return
+        {:key :t
+         :title "Toggle"
+         :items [{:key :f
+                  :title "float"
+                  :action (fn [] (hs.execute "yabai -m window --toggle float"))}
+                 {:key :T
+                  :mods [:shift]
+                  :title "topmost"
+                  :action (fn [] (hs.execute "yabai -m window --toggle float"))}
+                 {:key :B
+                  :mods [:shift]
+                  :title "border"
+                  :action (fn [] (hs.execute "yabai -m window --toggle float"))}
+                 {:key :m
+                  :mods []
+                  :title "zoom-parent"
+                  :action (fn [] (hs.execute "yabai -m window --toggle float"))}
+                 {:key :b
+                  :mods [:shift]
+                  :title "bsp layout"
+                  :action (fn [] (hs.execute "yabai -m config layout bsp"))}
+                 {:key :s
+                  :mods [:shift]
+                  :title "bsp layout"
+                  :action (fn [] (hs.execute "yabai -m config layout stack"))}
+                 {:key :f
+                  :mods [:shift]
+                  :title "bsp layout"
+                  :action (fn [] (hs.execute "yabai -m config layout float"))}]}
+        {:key :1
+         :title "To display 1"
+         :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh 1"))}
+        {:key :2
+         :title "To display 2"
+         :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh 2"))}
+        {:key :3
+         :title "To display 3"
+         :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh 3"))}
+        {:key :s
+         :title "To display space"
+         :items [{:key :1
+                  :title "D1"
+                  :items [{:key :1
+                           :title "S1"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 1"))}
+                          {:key :2
+                           :title "S2"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 2"))}
+                          {:key :3
+                           :title "S3"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 3"))}
+                          {:key :4
+                           :title "S4"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 4"))}
+                          {:key :5
+                           :title "S5"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 5"))}]}
+                 {:key :2
+                  :title ""
+                  :items [{:key :1
+                           :title "S1"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 6"))}
+                          {:key :2
+                           :title "S2"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 7"))}
+                          {:key :3
+                           :title "S3"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 8"))}
+                          {:key :4
+                           :title "S4"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 9"))}
+                          {:key :5
+                           :title "S5"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 10"))}]}
+                 {:key :3
+                  :title ""
+                  :items [{:key :1
+                           :title "S1"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 11"))}
+                          {:key :2
+                           :title "S2"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 12"))}
+                          {:key :3
+                           :title "S3"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 13"))}
+                          {:key :4
+                           :title "S4"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 14"))}
+                          {:key :5
+                           :title "S5"
+                           :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 15"))}]}]}])
+
 (local menu-items
        [ ;; {:key    :space
         ;;  :title  "Alfred"
@@ -337,6 +431,9 @@
          {:key :i
           :title "Insert"
           :items insert-bindings}
+         {:key :y
+          :title "Yabai"
+          :items desktop-binding}
         ;; {:key   :x
         ;;  :title "Emacs"
         ;;  :items emacs-bindings}
@@ -408,7 +505,7 @@
                    :items [{:key :b
                             :title "Open sidebar"
                             :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "y"))}
-                           {:key :space
+                           {:key :f
                             :title "Fill pass"
                             :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "l"))}
                            {:key :g
@@ -416,10 +513,14 @@
                             :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "9"))}]}
                   {:key :d
                    :title "Toggle dark mode"
-                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "a"))}
-                  {:key :t
-                   :title "Toggle tree tab"
-                   :action (fn [] (hs.eventtap.keyStroke ["cmd" "ctrl"] "e"))}]}]))
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "d"))}
+                  {:key :s
+                   :title "Toggle sidebery"
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "t"))}
+                  ;; {:key :t
+                  ;;  :title "Toggle tree tab"
+                  ;;  :action (fn [] (hs.eventtap.keyStroke ["cmd" "ctrl"] "e"))}
+                  ]}]))
 
 (local clickup-config
        {:key "ClickUp"
