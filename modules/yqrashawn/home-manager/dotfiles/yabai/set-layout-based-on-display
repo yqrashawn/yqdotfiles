@@ -2,12 +2,28 @@
 
 export PATH=/run/current-system/sw/bin:$PATH
 
+DISPLAY_COUNT=$(yabai -m query --displays | jq length)
+
 # general space settings
-if [ "$($HOME/local/bin/has-lg-4k-hdr)" ]; then
+if [[ $DISPLAY_COUNT -eq 2 ]]; then
   yabai -m config layout bsp
-elif [ "$($HOME/local/bin/home-4k)" ]; then
-  yabai -m config layout bsp
-elif [ "$(yabai -m query --displays | jq length)" -eq 1 ]; then
+elif [[ $DISPLAY_COUNT -eq 3 ]]; then
+  yabai -m space 1 --layout bsp
+  yabai -m space 2 --layout bsp
+  yabai -m space 3 --layout bsp
+  yabai -m space 4 --layout bsp
+  yabai -m space 5 --layout bsp
+  yabai -m space 6 --layout bsp
+  yabai -m space 7 --layout bsp
+  yabai -m space 8 --layout bsp
+  yabai -m space 9 --layout bsp
+  yabai -m space 10 --layout bsp
+  yabai -m space 11 --layout stack
+  yabai -m space 12 --layout stack
+  yabai -m space 13 --layout stack
+  yabai -m space 14 --layout stack
+  yabai -m space 15 --layout stack
+elif [[ $DISPLAY_COUNT -eq 1 ]]; then
   yabai -m config layout stack
 else
   yabai -m config layout bsp

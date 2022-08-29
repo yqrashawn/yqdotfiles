@@ -80,11 +80,17 @@
                         :Keybase
                         [:return_or_enter :!Sreturn_or_enter]
                         [:!Creturn_or_enter :return_or_enter]]}
-             {:des   "Discord return"
-              :rules [:Discord
-                      [:return_or_enter :!Sreturn_or_enter]
-                      [:!Tm :!Sreturn_or_enter]
-                      [:!Creturn_or_enter :return_or_enter]]}
+             ;; {:des   "Discord return"
+             ;;  :rules [:Discord
+             ;;          [:return_or_enter :!Sreturn_or_enter]
+             ;;          [:!Tm :!Sreturn_or_enter]
+             ;;          [:!Creturn_or_enter :return_or_enter]]}
+             {:des "Discord"
+              :rules
+              [:Discord
+               ;; navigate between unread channels
+               [:up_arrow :!OSup_arrow :alfred-mode]
+               [:down_arrow :!OSdown_arrow :alfred-mode]]}
              {:des "trackpad + keyboard"
               :rules
               [{:type       :basic
