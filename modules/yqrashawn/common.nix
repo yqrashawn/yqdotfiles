@@ -9,7 +9,8 @@ let
     notmuch
     yt-dlp
     streamlink
-    mpv
+    # mpv
+    mpv-unwrapped
     you-get
     python3
     black
@@ -257,7 +258,7 @@ in {
 
         # lib
         zlib
-        libtool # https://github.com/WiseLibs/better-sqlite3/issues/243
+        # libtool # https://github.com/WiseLibs/better-sqlite3/issues/243
         rlwrap
         readline
         llvm

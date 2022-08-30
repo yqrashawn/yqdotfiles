@@ -60,9 +60,10 @@ elif [[ $DISPLAY_COUNT -eq 3 ]]; then
   # yabai -m rule --add app="^Slack$" manage=on space=6
 
   # # sound
-  # yabai -m rule --add app="^Endel$" manage=on space=7
-  # yabai -m rule --add app="^NeteaseMusic$" manage=on space=7
-  # yabai -m rule --add app="^TIDAL$" manage=on space=7
+  yabai -m rule --add app="^Spotify" space=7
+  yabai -m rule --add app="^Endel$" space=7
+  yabai -m rule --add app="^NeteaseMusic$" space=7
+  yabai -m rule --add app="^TIDAL$" space=7
 
   # # browser
   # yabai -m rule --add app="^Orion$" space=13
@@ -140,7 +141,6 @@ yabai -m rule --add app="^Digital Colou?r Meter$" sticky=on
 yabai -m rule --add app="^Google Drive$" manage=off
 yabai -m rule --add app="^ToothFairy$" manage=off
 yabai -m rule --add app="^Typora$" title="^Preferences$" manage=off
-yabai -m rule --add app="^CleanShot" manage=off border=off mouse_follows_focus=off sticky=off
 yabai -m rule --add app="^iStat Menus Status$" manage=off border=off mouse_follows_focus=off sticky=off
 yabai -m rule --add app="^CopyQ$" layer=above manage=off border=off mouse_follows_focus=off sticky=on
 yabai -m rule --add app="^Todoist$" manage=off border=off mouse_follows_focus=off
@@ -167,6 +167,8 @@ yabai -m rule --add app="^Session$" border=off manage=off
 yabai -m rule --add app="^Adobe Photoshop" title="^(Export As|Save)$" border=off manage=off
 yabai -m rule --add app="^Simulator" border=off manage=off
 yabai -m rule --add app="^Mail$" title="^(General|Accounts|Jumk Mail|Fonts & Colors|Viewing|Composing|Signatures|Rules|Extensions|Privacy)$" border=off manage=off
+yabai -m rule --add app="^CleanShot" manage=off border=off mouse_follows_focus=off sticky=off
+yabai -m rule --add app="^PixelSnap" manage=off border=off mouse_follows_focus=off sticky=off
 # yabai -m rule --add app=".*" topmost=off
 
 # Do not manage windows with certain titles eg. Copying files or moving to bin

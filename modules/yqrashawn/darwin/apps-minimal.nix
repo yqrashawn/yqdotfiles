@@ -14,7 +14,7 @@
       "monitorcontrol"
       "karabiner-elements"
       "google-chrome"
-      "keybase"
+      # "keybase"
       "input-source-pro"
       # "emacs-mac"
       "raycast"
