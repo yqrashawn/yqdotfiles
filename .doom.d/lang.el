@@ -29,7 +29,7 @@
   )
 
 ;; (setq! +lsp-company-backends
-;;          (if (featurep! :editor snippets)
+;;          (if (modulep! :editor snippets)
 ;;              '(:separate company-tabnine-capf company-files company-yasnippet)
 ;;            '(:separate company-tabnine-capf company-files)))
 (setq! +lsp-company-backends nil)
@@ -58,7 +58,7 @@
                     :server-id 'nix))
   (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t)
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
-  (when (featurep! :completion company)
+  (when (modulep! :completion company)
     )
   (setq!
     ;; lsp-imenu-sort-methods '(position)

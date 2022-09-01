@@ -34,7 +34,7 @@ yabai -m config focus_follows_mouse off
 
 ## Specify which display a newly created window should be managed in.
 # yabai -m config window_origin_display focused
-yabai -m config window_origin_display default
+# yabai -m config window_origin_display default
 # yabai -m config window_origin_display cursor
 
 ## Specify whether managed windows should become the first or second leaf-node.

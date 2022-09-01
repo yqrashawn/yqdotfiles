@@ -453,7 +453,7 @@
     :textobj "G" #'+evil:whole-buffer-txtobj #'+evil:whole-buffer-txtobj
 
     ;; XXX: copied from doom-emacs config, needs better way to custom this
-    :m [tab] (cmds! (and (featurep! :editor snippets)
+    :m [tab] (cmds! (and (modulep! :editor snippets)
                       (evil-visual-state-p)
                       (or (eq evil-visual-selection 'line)
                         (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))

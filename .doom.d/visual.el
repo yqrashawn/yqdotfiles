@@ -36,7 +36,7 @@
 (add-hook! 'doom-first-file-hook #'global-display-fill-column-indicator-mode)
 
 (after! prog-mode
-  (when (featurep! :ui ligatures)
+  (when (modulep! :ui ligatures)
     ;; unprettify when idle for 1 seconds
     (defadvice! +prettify-symbols--post-command-hook (orig-fn)
       :around #'prettify-symbols--post-command-hook

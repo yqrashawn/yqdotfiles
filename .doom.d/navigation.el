@@ -126,6 +126,7 @@ See `dwim-shell-command-execute-script' for all other params."
       (setq path default-directory))
     (zoxide-run t "add" path)
 
+    (require 's)
     (let ((b (buffer-file-name)))
       (unless (or (s-ends-with? ".git" b)
                 (s-contains? "/.git/" b))
