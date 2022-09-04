@@ -73,45 +73,45 @@ elif [[ $DISPLAY_COUNT -eq 3 ]]; then
   # yabai -m rule --add app="^Station$" space=13
   # yabai -m rule --add app="^Wavebox$" space=13
 elif [[ $DISPLAY_COUNT -eq 2 ]]; then
-  yabai -m rule --add app="^Alacritty$" space=1 manage=off
-  yabai -m rule --add app="^Emacs$" space=1
-  yabai -m rule --add app="^Firefox Developer Edition$" space=1
-  yabai -m rule --add app="^Google Chrome$" space=1
-  yabai -m rule --add app="^Figma$" space=1
-  yabai -m rule --add app="^Adobe Photoshop" space=1
+  # yabai -m rule --add app="^Alacritty$" space=1 manage=off
+  # yabai -m rule --add app="^Emacs$" space=1
+  # yabai -m rule --add app="^Firefox Developer Edition$" space=1
+  # yabai -m rule --add app="^Google Chrome$" space=1
+  # yabai -m rule --add app="^Figma$" space=1
+  # yabai -m rule --add app="^Adobe Photoshop" space=1
 
-  # task
-  yabai -m rule --add app="^Logseq$" space=9
-  yabai -m rule --add app="^Roam$" space=9
-  yabai -m rule --add app="^NotePlan$" space=9
-  yabai -m rule --add app="^Notion$" space=9
-  yabai -m rule --add app="^Todoist$" space=9
-  yabai -m rule --add app="^Mail$" space=9
-  yabai -m rule --add app="^Newton$" space=9
-  yabai -m rule --add app="^Reeder$" space=9
-  yabai -m rule --add app="^ClickUp$" space=9
-  yabai -m rule --add app="^Raindrop" space=9
+  # # task
+  # yabai -m rule --add app="^Logseq$" space=9
+  # yabai -m rule --add app="^Roam$" space=9
+  # yabai -m rule --add app="^NotePlan$" space=9
+  # yabai -m rule --add app="^Notion$" space=9
+  # yabai -m rule --add app="^Todoist$" space=9
+  # yabai -m rule --add app="^Mail$" space=9
+  # yabai -m rule --add app="^Newton$" space=9
+  # yabai -m rule --add app="^Reeder$" space=9
+  # yabai -m rule --add app="^ClickUp$" space=9
+  # yabai -m rule --add app="^Raindrop" space=9
 
-  # chat
-  yabai -m rule --add app="^WeChat$" manage=on space=6
-  yabai -m rule --add app="^DingTalk$" space=6
-  yabai -m rule --add app="^Keybase$" manage=on space=6
-  yabai -m rule --add app="^Discord$" manage=on space=6
-  yabai -m rule --add app="^Telegram$" manage=on space=6
-  yabai -m rule --add app="^Slack$" manage=on space=6
+  # # chat
+  # yabai -m rule --add app="^WeChat$" manage=on space=6
+  # yabai -m rule --add app="^DingTalk$" space=6
+  # yabai -m rule --add app="^Keybase$" manage=on space=6
+  # yabai -m rule --add app="^Discord$" manage=on space=6
+  # yabai -m rule --add app="^Telegram$" manage=on space=6
+  # yabai -m rule --add app="^Slack$" manage=on space=6
 
-  # sound
-  yabai -m rule --add app="^Endel$" manage=on space=7
-  yabai -m rule --add app="^NeteaseMusic$" manage=on space=7
-  yabai -m rule --add app="^TIDAL$" manage=on space=7
+  # # sound
+  # yabai -m rule --add app="^Endel$" manage=on space=7
+  # yabai -m rule --add app="^NeteaseMusic$" manage=on space=7
+  # yabai -m rule --add app="^TIDAL$" manage=on space=7
 
-  # browser
-  yabai -m rule --add app="^Orion$" space=8
-  yabai -m rule --add app="^Safari$" space=8
-  yabai -m rule --add app="^SigmaOS$" space=8
-  yabai -m rule --add app="^Shift$" space=8
-  yabai -m rule --add app="^Station$" space=8
-  yabai -m rule --add app="^Wavebox$" space=8
+  # # browser
+  # yabai -m rule --add app="^Orion$" space=8
+  # yabai -m rule --add app="^Safari$" space=8
+  # yabai -m rule --add app="^SigmaOS$" space=8
+  # yabai -m rule --add app="^Shift$" space=8
+  # yabai -m rule --add app="^Station$" space=8
+  # yabai -m rule --add app="^Wavebox$" space=8
 else
   yabai -m rule --add app=".*" space=1
 fi
