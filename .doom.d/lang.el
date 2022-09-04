@@ -46,7 +46,8 @@
     (setq company-backends (remq 'company-capf company-backends))
     (cond
      ((memq major-mode +lispy-modes)
-      (setq company-backends (pushnew! company-backends 'company-tabnine 'company-capf)))
+       (setq company-backends (pushnew! company-backends ;; 'company-tabnine
+                                'company-capf)))
      (t
       (setq company-backends (pushnew! company-backends 'company-capf 'company-tabnine))))))
 
