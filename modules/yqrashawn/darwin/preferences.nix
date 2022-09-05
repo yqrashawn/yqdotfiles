@@ -54,7 +54,7 @@ in {
       NSScrollAnimationEnabled = true;
 
       # Sets the speed speed of window resizing. The default is given in the example.
-      NSWindowResizeTime = "0.001";
+      NSWindowResizeTime = 1.0e-3;
 
       InitialKeyRepeat = 10;
       KeyRepeat = 1;
@@ -69,7 +69,7 @@ in {
       "com.apple.mouse.tapBehavior" = 1;
 
       # Sets the beep/alert volume level from 0.000 (muted) to 1.000 (100% volume).
-      "com.apple.sound.beep.volume" = "0.6065307";
+      "com.apple.sound.beep.volume" = 0.606531;
 
       # Make a feedback sound when the system volume changed. This setting accepts the integers 0 or 1. Defaults to 1
       "com.apple.sound.beep.feedback" = 1;
@@ -80,13 +80,13 @@ in {
       "com.apple.trackpad.trackpadCornerClickBehavior" = null;
 
       # trackpad tracking speed 0-3
-      "com.apple.trackpad.scaling" = "2.8";
+      "com.apple.trackpad.scaling" = 2.8;
 
       # Enable spring loading for directories
       "com.apple.springing.enabled" = true;
 
       # Remove the spring loading delay for directories
-      "com.apple.springing.delay" = "0";
+      "com.apple.springing.delay" = 0.0;
       "com.apple.swipescrolldirection" = true;
 
       AppleMeasurementUnits = "Centimeters";
@@ -172,12 +172,12 @@ in {
       # auto show and hide dock
       autohide = true;
       # remove delay for showing dock
-      autohide-delay = "0.0";
+      autohide-delay = 0.0;
       # how fast is the dock showing animation
-      autohide-time-modifier = "0.0";
+      autohide-time-modifier = 0.0;
       dashboard-in-overlay = false;
       enable-spring-load-actions-on-all-items = true;
-      expose-animation-duration = "0.01";
+      expose-animation-duration = 1.0e-2;
       expose-group-by-app = false;
       # app launch animation
       launchanim = false;

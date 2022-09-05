@@ -61,7 +61,7 @@ in {
   '';
 
   # auto manage nixbld users with nix darwin
-  users.nix.configureBuildUsers = true;
+  nix.configureBuildUsers = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;

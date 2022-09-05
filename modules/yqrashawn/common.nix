@@ -219,7 +219,7 @@ in {
         nodePackages.surge
         nodePackages.neovim
         nodePackages.live-server
-        nodePackages.web-ext
+        # nodePackages.web-ext
         nodePackages.textlint
         nodePackages.textlint-rule-write-good
         nodePackages.typescript-language-server
