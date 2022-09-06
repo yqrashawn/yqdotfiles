@@ -53,7 +53,7 @@
 (package! mwim)
 (package! emamux)
 ;; (package! company-flx)
-(package! ccc)
+;; (package! ccc)
 (package! el-patch)
 (package! git-link)
 (package! copy-as-format)
@@ -278,3 +278,4 @@
 (package! sqlite3)
 ;; (package! relative-date :recipe (:host github :repo "rougier/relative-date"))
 (package! fancy-compilation)
+;; (package! cursory)

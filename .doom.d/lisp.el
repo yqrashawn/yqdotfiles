@@ -13,18 +13,15 @@
           (call-interactively orig-fn)))
       (call-interactively orig-fn)))
 
-  (use-package! ccc                     ; for cursor style
-    :after lispy
-    :init
-    (defun +lispy-update-cursor-style ()
+  (defun +lispy-update-cursor-style ()
       (when (and lispy-mode (evil-insert-state-p))
         (if (or (lispy-right-p) (lispy-left-p) (region-active-p))
             (progn (setq-local cursor-type '(bar . 3))
-                   (ccc-set-buffer-local-cursor-color "plum1"))
+                   (evil-set-cursor-color (face-foreground 'error)))
           (progn (setq-local cursor-type '(bar . 3))
-                 (ccc-set-buffer-local-cursor-color "green")))))
-    :config
-    (add-hook 'post-command-hook '+lispy-update-cursor-style))
+            (evil-set-cursor-color (face-foreground 'default))))))
+
+  (add-hook 'post-command-hook '+lispy-update-cursor-style)
 
   (after! hydra
     (defhydra lh-knight ()
@@ -157,8 +154,8 @@ Instead keep them, with a newline after each comment."
   ;; cursor color
   (defadvice! +evil-update-cursor-color-h-symex ()
     :after #'+evil-update-cursor-color-h
-    (put 'cursor 'evil-symex-color (face-background 'hi-green)))
-  (put 'cursor 'evil-symex-color (face-background 'hi-green))
+    (put 'cursor 'evil-symex-color (face-foreground 'error)))
+  (put 'cursor 'evil-symex-color (face-foreground 'error))
   (defun +evil-symex-cursor-fn ()
     (evil-set-cursor-color (get 'cursor 'evil-symex-color)))
   (setq! evil-symex-state-cursor '+evil-symex-cursor-fn)

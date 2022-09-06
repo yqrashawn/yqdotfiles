@@ -4,9 +4,26 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((eval progn
-        (pp-buffer)
-        (indent-buffer))
+    '((elisp-lint-indent-specs
+        (if-let* . 2)
+        (when-let* . 1)
+        (let* . defun)
+        (nrepl-dbind-response . 2)
+        (cider-save-marker . 1)
+        (cider-propertize-region . 1)
+        (cider-map-repls . 1)
+        (cider--jack-in . 1)
+        (cider--make-result-overlay . 1)
+        (insert-label . defun)
+        (insert-align-label . defun)
+        (insert-rect . defun)
+        (cl-defun . 2)
+        (with-parsed-tramp-file-name . 2)
+        (thread-first . 0)
+        (thread-last . 0))
+       (eval progn
+         (pp-buffer)
+         (indent-buffer))
        (eval let
          ((tools-file
             (concat
