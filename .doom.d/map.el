@@ -484,7 +484,12 @@
       :mnv "RET" #'evilmi-jump-items))
   (:after vterm
     (:map vterm-mode-map
-      :gi "C-y" #'vterm-yank))
+      :gi "C-y" #'vterm-yank
+      :g "C-l" #'recenter-top-bottom
+      :i "C-l" #'vterm-clear
+      :i "C-e" #'vterm-send-C-e
+      :i "C-a" #'vterm-send-C-a
+      :i "C-w" #'vterm-send-C-w))
   (:after side-hustle
     (:map side-hustle-mode-map
       :g "TAB" #'side-hustle-show-item
@@ -550,4 +555,9 @@
       :n "C-j" #'cider-inspector-next-inspectable-object
       :n "C-k" #'cider-inspector-previous-inspectable-object
       :n "gj" #'cider-inspector-next-page
-      :n "gk" #'cider-inspector-prev-page)))
+      :n "gk" #'cider-inspector-prev-page))
+  (:after forge
+    (:map forge-pullreq-list-mode-map
+      :n "RET" #'forge-visit-topic
+      :n "o" #'forge-browse-topic
+      :n "'" #'forge-dispatch)))

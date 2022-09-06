@@ -338,11 +338,11 @@
                   :action (fn [] (hs.execute "yabai -m config layout bsp"))}
                  {:key :s
                   :mods [:shift]
-                  :title "bsp layout"
+                  :title "stack layout"
                   :action (fn [] (hs.execute "yabai -m config layout stack"))}
                  {:key :f
                   :mods [:shift]
-                  :title "bsp layout"
+                  :title "float layout"
                   :action (fn [] (hs.execute "yabai -m config layout float"))}]}
         {:key :1
          :title "To display 1"

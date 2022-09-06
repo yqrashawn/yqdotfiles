@@ -105,7 +105,7 @@
 
 ;; (use-package! zoom :hook (doom-first-buffer))
 
-(use-package! fancy-compilation
-  :after compile
-  :config
-  (fancy-compilation-mode))
+;; (use-package! fancy-compilation
+;;   :after compile
+;;   :config
+;;   (fancy-compilation-mode))
