@@ -74,6 +74,7 @@ in {
 
         # cli tools
         ripgrep
+        ripgrep-all
         ugrep
         woff2
         cmus

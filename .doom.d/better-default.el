@@ -227,7 +227,8 @@ A prefix arg reverses this operation."
   (advice-remove #'wgrep-abort-changes #'+popup-close-a)
   (advice-remove #'wgrep-finish-edit #'+popup-close-a))
 
-(setq! xref-search-program 'rg)
+;; (setq! xref-search-program 'rg)
+(setq! xref-search-program 'ugrep)
 
 (add-hook! 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 (setq frame-title-format '("%b"))

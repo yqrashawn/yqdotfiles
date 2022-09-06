@@ -3,11 +3,15 @@
 (use-package! iflipb
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
-  (setq! iflipb-always-ignore-buffers
-         (lambda (name)
-           (or (string-match-p "^magit" name)
-               (string-match-p "^\*" name)
-               (string-match-p "^ " name)))))
+  (defun +iflipb-always-ignore-buffers (name)
+    (or (string-match-p "^magit" name)
+        (and (string-match-p "^\*" name)
+             (not (string-match-p "scratch" name)))
+      (string-match-p "^ " name)))
+  (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
+  (defun +iflipb-ignore-buffers (name)
+    (get-buffer-window name 'visible))
+  (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers))
 
 (after! vertico
   (setq! vertico-count 10

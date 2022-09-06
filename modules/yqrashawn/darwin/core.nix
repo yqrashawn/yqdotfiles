@@ -111,9 +111,9 @@ in {
   };
 
   documentation = {
-    enable = false;
-    doc.enable = false;
-    info.enable = false;
-    man.enable = false;
+    enable = true;
+    doc.enable = true;
+    info.enable = true;
+    man.enable = true;
   };
 }
