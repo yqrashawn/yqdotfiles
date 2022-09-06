@@ -49,30 +49,30 @@
   (defadvice! +lispy-eval (orig-fn &rest args)
     :around #'lispy-eval
     (if (+in-clj-p)
-      (if (and lispy-mode (lispy-left-p))
-        (save-excursion
-          (call-interactively 'lispy-different)
+        (if (and lispy-mode (lispy-left-p))
+            (save-excursion
+              (call-interactively 'lispy-different)
+              (call-interactively 'cider-eval-last-sexp))
           (call-interactively 'cider-eval-last-sexp))
-        (call-interactively 'cider-eval-last-sexp))
       (apply orig-fn args)))
 
   (defadvice! +lispy-eval-and-insert (func &rest args)
     :around #'lispy-eval-and-insert
     (if (+in-clj-p)
-      (progn
-        (setq current-prefix-arg '(1))
-        (call-interactively 'cider-pprint-eval-last-sexp))
+        (progn
+          (setq current-prefix-arg '(1))
+          (call-interactively 'cider-pprint-eval-last-sexp))
       (apply func args))))
 
 ;;; cider
 (defun +clojure-use-cider-over-lsp ()
-    (pushnew! completion-at-point-functions #'cider-complete-at-point)
-    (setq-local cider-font-lock-dynamically '(macro core deprecated))
-    (setq-local lsp-completion-enable nil))
+  (pushnew! completion-at-point-functions #'cider-complete-at-point)
+  (setq-local cider-font-lock-dynamically '(macro core deprecated))
+  (setq-local lsp-completion-enable nil))
 (defun +clojure-use-lsp-over-cider ()
-    (delq! #'cider-complete-at-point completion-at-point-functions)
-    (setq-local cider-font-lock-dynamically nil)
-    (setq-local lsp-completion-enable t))
+  (delq! #'cider-complete-at-point completion-at-point-functions)
+  (setq-local cider-font-lock-dynamically nil)
+  (setq-local lsp-completion-enable t))
 (add-hook! cider-mode '+clojure-use-cider-over-lsp)
 (add-hook! 'cider-disconnected-hook '+clojure-use-lsp-over-cider)
 (add-hook! 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
@@ -81,10 +81,10 @@
 (after! cider
   ;; (setq! cider-preferred-build-tool 'clojure-cli)
   (setq!
-    cider-default-cljs-repl 'shadow
-    cider-auto-jump-to-error nil
-    ;; cider-print-fn 'fipp
-    cider-print-fn 'puget)
+   cider-default-cljs-repl 'shadow
+   cider-auto-jump-to-error nil
+   ;; cider-print-fn 'fipp
+   cider-print-fn 'puget)
 
   (defadvice cider-find-var (before add-evil-jump activate)
     (evil-set-jump))
@@ -152,7 +152,26 @@ creates a new one. Don't unnecessarily bother the user."
           (re-search-forward "^#![^\n]*/bb" nil t))
         (funcall-interactively #'corgi/cider-jack-in-babashka (doom-project-root))
       (funcall-interactively orig-fn params)))
-  (require 'cider-eval-sexp-fu))
+  (require 'cider-eval-sexp-fu)
+
+  (defun +cider-test-execute-cljs ()
+    (interactive)
+    (let* ((ns (clojure-find-ns))
+           (def (clojure-find-def)) ; it's a list of the form (deftest something)
+           (deftype (car def))
+           (var (cadr def))
+           (form (format "(cljs.test/test-var #'%s/%s)" ns var)))
+      (if (and ns (member deftype cider-test-defining-forms))
+          (progn
+            (call-interactively #'cider-eval-defun-at-point)
+            (cider-interactive-eval form nil nil (cider--nrepl-pr-request-map)))
+        (message "No test at point"))))
+
+  (defadvice! +cider-test-run-test (orig-fn)
+    :around #'cider-test-run-test
+    (if (eq major-mode 'clojurescript-mode)
+        (call-interactively '+cider-test-execute-cljs)
+      (call-interactively orig-fn))))
 
 (use-package! clj-ns-name
   :after clojure-mode
