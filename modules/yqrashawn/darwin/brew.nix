@@ -1,10 +1,11 @@
 { inputs, config, pkgs, ... }: {
   homebrew = {
     enable = true;
-    autoUpdate = true;
+    # https://daiderd.com/nix-darwin/manual/index.html#opt-homebrew.global
     global = {
+      lockfiles = true;
+      autoUpdate = true;
       brewfile = true;
-      noLock = true;
     };
 
     taps = [
@@ -51,6 +52,7 @@
     ];
     casks = [
       "hammerspoon"
+      "font-inter"
       "font-fira-mono-nerd-font"
       "font-freefont"
       "font-hack-nerd-font"

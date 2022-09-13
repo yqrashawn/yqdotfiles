@@ -51,7 +51,7 @@ in {
         babashka
         joker
         leiningen
-        obb
+        # obb
         # nbb
 
         # tools
