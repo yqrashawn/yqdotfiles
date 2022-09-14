@@ -440,3 +440,9 @@ This function could be in the list `comint-output-filter-functions'."
 
 (unless (fboundp 'indent-buffer)
   (defalias 'indent-buffer #'pp-buffer))
+
+(setq!
+  ;; langtool-language-tool-server-jar "/run/current-system/sw/bin/languagetool"
+  langtool-java-bin (executable-find "java")
+  ;; langtool-bin nil
+  langtool-bin "/run/current-system/sw/bin/languagetool-commandline")
