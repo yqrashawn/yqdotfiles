@@ -4,8 +4,10 @@
 (el-patch-feature lispy)
 (after! lispy
   (setq! lispy-close-quotes-at-end-p nil
-         lispy-eval-display-style 'overlay)
+    lispy-eval-display-style 'overlay)
+
   (defadvice! +lispy-tab (orig-fn)
+    "use `clojure-align' for lispy-tab in clojure modes"
     :around #'lispy-tab
     (if (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))
       (progn (and (functionp #'clojure-align) (call-interactively #'clojure-align))
@@ -14,12 +16,13 @@
       (call-interactively orig-fn)))
 
   (defun +lispy-update-cursor-style ()
-      (when (and lispy-mode (evil-insert-state-p))
-        (if (or (lispy-right-p) (lispy-left-p) (region-active-p))
-            (progn (setq-local cursor-type '(bar . 3))
-                   (evil-set-cursor-color (face-foreground 'error)))
+    "error color when cursor in lispy special mode"
+    (when (and lispy-mode (evil-insert-state-p))
+      (if (or (lispy-right-p) (lispy-left-p) (region-active-p))
           (progn (setq-local cursor-type '(bar . 3))
-            (evil-set-cursor-color (face-foreground 'default))))))
+                 (evil-set-cursor-color (face-foreground 'error)))
+        (progn (setq-local cursor-type '(bar . 3))
+               (evil-set-cursor-color (face-foreground 'default))))))
 
   (add-hook 'post-command-hook '+lispy-update-cursor-style)
 
@@ -38,51 +41,51 @@
       ("z" nil)))
 
   (el-patch-defun lispy-outline-level ()
-    "Compute the outline level of the heading at point."
+    "Compute the outline level of the heading at point. Support ; for lispy outline"
     (save-excursion
       (save-match-data
         (end-of-line)
         (if (re-search-backward lispy-outline nil t)
-            (max (el-patch-swap (cl-count ?* (match-string 0))
-                                (- (cl-count ?\; (match-string 0)) 2)) 1)
+          (max (el-patch-swap (cl-count ?* (match-string 0))
+                 (- (cl-count ?\; (match-string 0)) 2)) 1)
           0))))
   (el-patch-defun lispy-backtick ()
-    "Insert `."
+    "Insert `. use markdown style backtick in clojure modes"
     (interactive)
     (if (region-active-p)
-        (el-patch-swap (lispy--surround-region "`" "`")
-                       (if (memq major-mode '(clojure-mode clojurescript-mode))
-                           (lispy--surround-region "`" "`")
-                         (lispy--surround-region "`" "'")))
+      (el-patch-swap (lispy--surround-region "`" "`")
+        (if (memq major-mode '(clojure-mode clojurescript-mode))
+          (lispy--surround-region "`" "`")
+          (lispy--surround-region "`" "'")))
       (el-patch-swap (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")
-                     (if (memq major-mode '(clojure-mode clojurescript-mode))
-                         (lispy--space-unless "\\s-\\|\\s(\\|[:?`]\\|\\\\")
-                       (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")))
+        (if (memq major-mode '(clojure-mode clojurescript-mode))
+          (lispy--space-unless "\\s-\\|\\s(\\|[:?`]\\|\\\\")
+          (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")))
       (insert "`")))
   (el-patch-defun lispy--oneline (expr &optional ignore-comments)
     "Remove newlines from EXPR.
 When IGNORE-COMMENTS is not nil, don't remove comments.
 Instead keep them, with a newline after each comment."
     (lispy-mapcan-tree
-     (lambda (x y)
-       (cond ((el-patch-swap (equal x '(ly-raw newline))
-                             (or (equal x '(ly-raw newline))
-                                 (equal x '(ly-raw clojure-symbol ","))))
-              y)
-             ((lispy--raw-comment-p x)
-              (if (null ignore-comments)
-                  (progn
-                    (push x lispy--oneline-comments)
-                    y)
-                (if (equal (car y) '(ly-raw newline))
-                    (cons x y)
-                  `(,x (ly-raw newline) ,@y))))
-             ((and (lispy--raw-string-p x)
-                   (null ignore-comments))
-              (cons `(ly-raw string ,(replace-regexp-in-string "\n" "\\\\n" (cl-caddr x)))
-                    y))
-             (t
-              (cons x y))))
+      (lambda (x y)
+        (cond ((el-patch-swap (equal x '(ly-raw newline))
+                 (or (equal x '(ly-raw newline))
+                   (equal x '(ly-raw clojure-symbol ","))))
+                y)
+          ((lispy--raw-comment-p x)
+            (if (null ignore-comments)
+              (progn
+                (push x lispy--oneline-comments)
+                y)
+              (if (equal (car y) '(ly-raw newline))
+                (cons x y)
+                `(,x (ly-raw newline) ,@y))))
+          ((and (lispy--raw-string-p x)
+             (null ignore-comments))
+            (cons `(ly-raw string ,(replace-regexp-in-string "\n" "\\\\n" (cl-caddr x)))
+              y))
+          (t
+            (cons x y))))
       expr)))
 
 (after! semantic
@@ -132,26 +135,26 @@ Instead keep them, with a newline after each comment."
   :config
   (setq! symex-lisp-modes +lispy-modes)
   (setq! symex--user-evil-keyspec
-    '(("j" . symex-go-forward)
-       ("k" . symex-go-backward)
-       ("l" . symex-go-up)
-       ("h" . symex-go-down)
-       ("C-j" . symex-climb-branch)
-       ("C-k" . symex-descend-branch)
-       ("C-a" . symex-goto-first)
-       ("C-e" . symex-goto-last)
-       ("M-j" . symex-goto-highest)
-       ("M-k" . symex-goto-lowest)
-       (">" . symex-capture-forward)
-       ("<" . symex-capture-backward)
-       ("[" . symex-soar-backward)
-       ("]" . symex-soar-forward)
-       ("{" . symex-create-square)
-       ("}" . symex-wrap-square)
-       ("M-[" . symex-leap-backward)
-       ("M-]" . symex-leap-forward)))
+         '(("j" . symex-go-forward)
+           ("k" . symex-go-backward)
+           ("l" . symex-go-up)
+           ("h" . symex-go-down)
+           ("C-j" . symex-climb-branch)
+           ("C-k" . symex-descend-branch)
+           ("C-a" . symex-goto-first)
+           ("C-e" . symex-goto-last)
+           ("M-j" . symex-goto-highest)
+           ("M-k" . symex-goto-lowest)
+           (">" . symex-capture-forward)
+           ("<" . symex-capture-backward)
+           ("[" . symex-soar-backward)
+           ("]" . symex-soar-forward)
+           ("{" . symex-create-square)
+           ("}" . symex-wrap-square)
+           ("M-[" . symex-leap-backward)
+           ("M-]" . symex-leap-forward)))
   (require 'hi-lock)
-  ;; cursor color
+  ;; error color for symex cursor color
   (defadvice! +evil-update-cursor-color-h-symex ()
     :after #'+evil-update-cursor-color-h
     (put 'cursor 'evil-symex-color (face-foreground 'error)))
@@ -162,10 +165,10 @@ Instead keep them, with a newline after each comment."
 
   ;; toggle lispy-mode
   (defun +symex-mode-interface ()
-      (lispy-mode -1)
-      (lispyville-mode -1))
+    (lispy-mode -1)
+    (lispyville-mode -1))
   (defun +symex-state-exit ()
-      (lispy-mode 1))
+    (lispy-mode 1))
   (add-hook! 'evil-symex-state-entry-hook '+symex-mode-interface)
   (add-hook! 'evil-symex-state-exit-hook '+symex-state-exit)
 
@@ -173,7 +176,7 @@ Instead keep them, with a newline after each comment."
   (defadvice! +evil-force-normal-state (orig)
     :around #'evil-force-normal-state
     (if (and (not (evil-symex-state-p)) lispy-mode)
-      (symex-mode-interface)))
+        (symex-mode-interface)))
 
   (symex-initialize)
 
@@ -187,9 +190,9 @@ Instead keep them, with a newline after each comment."
     :around #'symex-evaluate
     (interactive "p")
     (if (eq (char-after) 41)
-      (save-excursion
-        (evil-jump-item)
-        (call-interactively orig-fn count))
+        (save-excursion
+          (evil-jump-item)
+          (call-interactively orig-fn count))
       (call-interactively orig-fn count))))
 
 ;;; eval-sexp-fu

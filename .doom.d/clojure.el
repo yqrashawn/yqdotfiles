@@ -21,11 +21,13 @@
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil)
+  ;; use clj style to format code
   (set-formatter! 'cljstyle "cljstyle pipe" :modes '(clojure-mode clojurescript-mode clojurec-mode))
   ;; (setq cider-clojure-cli-global-options "-T:portal-cli")
   )
 
 (defun +setup-clojure-mode ()
+  "sort namespace, cleanup log namespace on save"
   (add-hook! 'before-save-hook '(+clojure-clean-log-ns clojure-sort-ns)))
 
 (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
@@ -50,6 +52,7 @@
     :around #'lispy-eval
     (if (+in-clj-p)
         (if (and lispy-mode (lispy-left-p))
+            ;; eval on the right side
             (save-excursion
               (call-interactively 'lispy-different)
               (call-interactively 'cider-eval-last-sexp))
@@ -66,10 +69,12 @@
 
 ;;; cider
 (defun +clojure-use-cider-over-lsp ()
+  "use cider over clojure-lsp for completion when cider is not connected"
   (pushnew! completion-at-point-functions #'cider-complete-at-point)
-  (setq-local cider-font-lock-dynamically '(macro core deprecated))
+  (setq-local cider-font-lock-dynamically '(macro core deprecated function var core))
   (setq-local lsp-completion-enable nil))
 (defun +clojure-use-lsp-over-cider ()
+  "use clojure-lsp over cider for completion when cider is not connected"
   (delq! #'cider-complete-at-point completion-at-point-functions)
   (setq-local cider-font-lock-dynamically nil)
   (setq-local lsp-completion-enable t))
@@ -79,8 +84,8 @@
 (add-hook! 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
 
 (after! cider
-  ;; (setq! cider-preferred-build-tool 'clojure-cli)
   (setq!
+   ;; cider-preferred-build-tool 'clojure-cli
    cider-default-cljs-repl 'shadow
    cider-auto-jump-to-error nil
    ;; cider-print-fn 'fipp
@@ -155,6 +160,7 @@ creates a new one. Don't unnecessarily bother the user."
   (require 'cider-eval-sexp-fu)
 
   (defun +cider-test-execute-cljs ()
+    "able to run `deftest' in cljs file, not support showing test result"
     (interactive)
     (let* ((ns (clojure-find-ns))
            (def (clojure-find-def)) ; it's a list of the form (deftest something)
@@ -173,12 +179,14 @@ creates a new one. Don't unnecessarily bother the user."
         (call-interactively '+cider-test-execute-cljs)
       (call-interactively orig-fn))))
 
+;; use ns rather than file name for clj buffer name
 (use-package! clj-ns-name
   :after clojure-mode
   :config
   (clj-ns-name-install))
 
 (after! clj-refactor
+  ;; enter evil-insert-state for some cljr fn
   (defadvice! +cljr-add-require-to-ns (orig-fn &rest args)
     :around #'cljr-add-require-to-ns
     (interactive "P")
