@@ -10,6 +10,8 @@
       "rectangle"
       "alacritty"
       "figma"
+      "orion"
+      "miro"
       "iina"
       "monitorcontrol"
       "karabiner-elements"
