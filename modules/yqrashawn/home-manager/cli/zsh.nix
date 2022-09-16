@@ -15,7 +15,7 @@ let
     #asdf global ruby 3.1.2
     #asdf global python 3.10.5
     #asdf global nodejs 16.15.1
-    #asdf global golang 1.19
+    #asdf global golang 1.18.6
     #asdf global yarn 1.22.19
     #asdf global pnpm 7.9.0
     #asdf global deno 1.24.3

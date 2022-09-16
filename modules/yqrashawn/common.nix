@@ -235,7 +235,7 @@ in {
         # php
         stylua
         # zls
-        gopls
+        # gopls
         gore
         gomodifytags
         gotests
