@@ -848,3 +848,38 @@ _b_ranch _j_next _k_prev _h_up
     iconutil -c icns `<<fne>>.iconset'"
    :utils '("sips" "iconutil")
    :extensions "png"))
+
+;;;###autoload
+(defun +latest-modified-dir (path &optional filter-fn)
+  (require 'f)
+  (let* ((dirnames (f-directories path
+                                  (or filter-fn 'identity)))
+         (dirnames-with-attr (seq-map
+                              (lambda (dirname)
+                                (list dirname (float-time (file-attribute-modification-time (file-attributes dirname)))))
+                              dirnames))
+         (latest-dir (car
+                      (car
+                       (seq-sort
+                        (lambda (dir-a dir-b)
+                          (> (nth 1 dir-a)
+                             (nth 1 dir-b)))
+                        dirnames-with-attr)))))
+    latest-dir))
+
+;;;###autoload
+(defun status-go-geth-log ()
+  (interactive)
+  (require 'f)
+  (require 's)
+  (when IS-MAC
+    (find-file
+      (concat
+        (+latest-modified-dir
+          (concat (+latest-modified-dir "~/Library/Developer/CoreSimulator/Devices/"
+                    (lambda (dirname)
+                      (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
+            "/data/Containers/Data/Application")
+          (lambda (dirname)
+                      (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
+        "/Library/ethereum/mainnet_rpc_dev/geth.log"))))
