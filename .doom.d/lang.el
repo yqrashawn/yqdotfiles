@@ -119,7 +119,7 @@
 
 (use-package! carp-mode
   :defer t
-  :mode (("\.carp$" . carp-mode)))
+  :mode (("\\.carp$" . carp-mode)))
 
 (use-package! inf-carp-mode
   :defer t
@@ -127,3 +127,7 @@
   (setq! inf-carp-program (expand-file-name "~/Downloads/carp-v0.5.4-x86_64-macos/bin/carp"))
   :config
   (setenv "CARP_DIR" (expand-file-name "~/Downloads/carp-v0.5.4-x86_64-macos/")))
+
+(use-package! protobuf-mode
+  :mode
+  (("\\.proto" . protobuf-mode)))
