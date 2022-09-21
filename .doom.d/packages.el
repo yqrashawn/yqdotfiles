@@ -279,4 +279,5 @@
 ;; (package! relative-date :recipe (:host github :repo "rougier/relative-date"))
 ;; (package! fancy-compilation)
 ;; (package! cursory)
+(package! ef-themes)
 (package! protobuf-mode)
