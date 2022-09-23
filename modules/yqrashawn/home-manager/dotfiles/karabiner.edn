@@ -170,21 +170,35 @@
                         [:##m :right_control nil {:alone :m}]]}
              {:des   "resize window, remap Rectangle"
               :rules [:k2-mode
-                      [:return_or_enter :!COc]
-                      [:spacebar :!COf]
-                      [:escape :!COf]
-                      [:y :!CTleft_arrow]        ;; upper left
-                      [:n :!CSTleft_arrow]       ;; lower left
-                      [:o :!CTright_arrow]       ;; upper right
-                      [:period :!CTSright_arrow] ;; lower right
-                      [:h :!COleft_arrow]        ;; left half
-                      [:l :!COright_arrow]       ;; right half
-                      [:k :!COup_arrow]          ;; top half
-                      [:j :!COdown_arrow]
-                      [:hyphen :!TOShyphen]
-                      [:equal_sign :!TOSequal_sign]
-                      [:open_bracket :!COTopen_bracket]
-                      [:close_bracket :!COTclose_bracket]]}
+                      [:return_or_enter :!TSOreturn_or_enter] ;; almost maximize
+                      [:spacebar :!TSOspacebar]               ;; maximize
+                      [:t :!TSOt]                             ;; center maximize
+                      [:r :!TOSr]       ;; restore
+                      ;; [:y :!TOSy] ;; upper left
+                      ;; [:n :!TOSn] ;; lower left
+                      ;; [:o :!TOSo] ;; upper right
+                      ;; [:period :!TOSperiod] ;; lower right
+
+                      [:h :!TOSleft_arrow]  ;; left half
+                      [:l :!TOSright_arrow] ;; right half
+                      [:k :!TOSup_arrow]    ;; top half
+                      [:j :!TOSdown_arrow]  ;; bottom half
+
+                      [:1 :!TOS1]                   ;; register 1
+                      [:3 :!TOS3]                   ;; register 3
+                      [:4 :!TOS4]                   ;; register 4
+                      [:5 :!TOS5]                   ;; register 5
+                      [:6 :!TOS6]                   ;; register 6
+                      [:7 :!TOS7]                   ;; register 7
+                      [:8 :!TOS8]                   ;; register 8
+                      [:9 :!TOS9]                   ;; register 9
+                      [:0 :!TOS0]                   ;; register 0
+                      [:hyphen :!TOShyphen]         ;; shrink
+                      [:equal_sign :!TOSequal_sign] ;; enlarge
+
+                      [:open_bracket :!TOSopen_bracket] ;; prev display
+                      [:close_bracket :!TOSclose_bracket] ;; next display
+                      ]}
              ;; {:des   "spacebar ctrl"
              ;;  :rules [[[:spacebar :f] [:spacebar :f]]
              ;;          [[:spacebar :w] [:spacebar :w]]

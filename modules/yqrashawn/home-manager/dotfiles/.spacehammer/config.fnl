@@ -11,6 +11,7 @@
 ;;
 
 
+;;; top
 (require-macros :lib.macros)
 (local log (hs.logger.new "\tcore.fnl\t" "debug"))
 (local windows (require :windows))
@@ -22,18 +23,9 @@
         :logf logf} (require :lib.functional))
 
 (hs.application.enableSpotlightForNameSearches true)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; WARNING
-;; Make sure you are customizing ~/.spacehammer/config.fnl and not
-;; ~/.hammerspoon/config.fnl
-;; Otherwise you will lose your customizations on upstream changes.
-;; A copy of this file should already exist in your ~/.spacehammer directory.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Table of Contents
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Body
+;;;; Table of Contents
 
 ;; [x] w - windows
 ;; [x] |-- w - Last window
@@ -76,14 +68,10 @@
 ;; [x] alt-p - prev-app
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Initialize
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Initialize
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Actions
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Actions
 
 (fn activator
   [app-name]
@@ -101,9 +89,7 @@
     (windows.activate-app app-name)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; General
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; General
 
 ;; If you would like to customize this we recommend copying this file to
 ;; ~/.spacehammer/config.fnl. That will be used in place of the default
@@ -116,9 +102,47 @@
         :action :previous})
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Windows
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; keycodes.map
+;; https://github.com/Hammerspoon/hammerspoon/blob/master/extensions/keycodes/keycodes.lua#L74
+;;;; Rectangle
+(local rectangle
+       {:key :l
+        :title "Rectangle"
+        :items [{:key :t
+                 :title "Tile"
+                 :items [{:key :return
+                          :title "Maximize"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "return"))}
+                         {:key :space
+                          :title "Center Maximize"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "space"))}
+                         {:key :h
+                          :title "left"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "h"))}
+                         {:key :l
+                          :title "right"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "l"))}
+                         {:key :k
+                          :title "top"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "k"))}
+                         {:key :j
+                          :title "bottom"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "j"))}]}
+                {:key :s
+                 :title "Stash"
+                 :items [{:key :h
+                          :title "left"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "7"))}
+                         {:key :l
+                          :title "right"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "0"))}
+                         {:key :l
+                          :title "top"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "9"))}
+                         {:key :l
+                          :title "bottom"
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "8"))}]}]})
+;;;; Windows
 (local window-jumps
        [{:mods [:cmd]
          :key "hjkl"
@@ -243,10 +267,7 @@
           :title "Undo"
           :action "windows:undo-action"}]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Apps Menu
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;;; Apps Menu
 (local app-bindings
        [return
         {:key :k
@@ -278,6 +299,7 @@
         {:key :a
          :title (.. "Launch " music-app)
          :action (activator music-app)}])
+
 (local insert-bindings
        [return
         {:key :o
@@ -302,10 +324,7 @@
          :title "Full Screen"
          :action "emacs:full-screen"}])
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Main Menu & Config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;;; Main Menu & Config
 (fn browser-org-roam-capture []
   (hs.eventtap.keyStroke ["alt" "shift"] "9")
   (hs.eventtap.keyStroke [] "R"))
@@ -408,7 +427,8 @@
                            :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 15"))}]}]}])
 
 (local menu-items
-       [ ;; {:key    :space
+       [rectangle
+        ;; {:key    :space
         ;;  :title  "Alfred"
         ;;  :action (activator "Alfred 4")}
         ;; {:key   :w
@@ -417,23 +437,23 @@
         ;;  :exit "windows:exit-window-menu"
         ;;  :items window-bindings}
         {:key "'"
-          :title "Edit with Emacs"
-          :action "emacs:edit-with-emacs"}
-        {:key   :a
+         :title "Edit with Emacs"
+         :action "emacs:edit-with-emacs"}
+        {:key :a
          :title "Apps"
          :items app-bindings}
-        {:key    :j
-         :title  "Jump"
+        {:key :j
+         :title "Jump"
          :action "windows:jump"}
-        {:key   :m
+        {:key :m
          :title "Media"
          :items media-bindings}
-         {:key :i
-          :title "Insert"
-          :items insert-bindings}
-         {:key :y
-          :title "Yabai"
-          :items desktop-binding}
+        {:key :i
+         :title "Insert"
+         :items insert-bindings}
+        {:key :y
+         :title "Yabai"
+         :items desktop-binding}
         ;; {:key   :x
         ;;  :title "Emacs"
         ;;  :items emacs-bindings}
@@ -465,10 +485,7 @@
         ;;  :action (activator "Alacritty")}
         ])
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; App Specific Config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;;; App Specific Config
 (local browser-keys
        [{:mods [:cmd :shift]
          :key :l
@@ -662,9 +679,7 @@
         :apps  apps
         :hyper {:key :F17}})
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Spoon
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Spoon
 (hs.loadSpoon "SpoonInstall")
 (set spoon.SpoonInstall.use_syncinstall true)
 (local Install spoon.SpoonInstall)
@@ -720,8 +735,6 @@
 (comment
  (local col hs.drawing.color.x11))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Exports
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Exports
 
 config

@@ -7,7 +7,7 @@
       "setapp"
       "notion"
       "hammerspoon"
-      "rectangle"
+      "rectangle-pro"
       "alacritty"
       "figma"
       "orion"
