@@ -3,7 +3,7 @@
     casks = [
       # "bartender"
       "neteasemusic"
-      "spectacle"
+      # "spectacle"
       "setapp"
       "notion"
       "hammerspoon"
