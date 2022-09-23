@@ -63,6 +63,7 @@ in {
         bash
         git
         neovim
+        helix
         mu
         # macvim # use vim
         bitwarden-cli

@@ -195,7 +195,7 @@ in {
     ];
     oh-my-zsh = {
       enable = false;
-      plugins = [ "direnv" "aliases" "emacs" "yarn" "globalias" ];
+      plugins = [ "direnv" "aliases" "emacs" "yarn" "globalias" "take" ];
     };
   };
 }

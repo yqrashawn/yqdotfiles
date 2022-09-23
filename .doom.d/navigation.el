@@ -10,7 +10,8 @@
         (string-match-p "^ " name)))
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
   (defun +iflipb-ignore-buffers (name)
-    (get-buffer-window name 'visible))
+    ;; (get-buffer-window name 'visible)
+    )
   (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers))
 
 (after! vertico
