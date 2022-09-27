@@ -255,6 +255,7 @@ in {
         html-tidy
         perl
         # openjdk
+        zprint
 
         watchman
 

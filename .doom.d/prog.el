@@ -13,34 +13,52 @@
 (use-package! copy-as-format :defer t)
 (use-package! separedit :defer t)
 
-(after! format-all
-  (setq +format-on-save-enabled-modes
-        '(not emacs-lisp-mode           ; elisp's mechanisms are good enough
-              sql-mode                  ; sqlformat is currently broken
-              tex-mode                  ; latexindent is broken
-              latex-mode
-              org-msg-edit-mode
-              rjsx-mode
-              js2-mode
-              js-mode
-              js3-mode))
-  ;; (defadvice! +format-all--formatter-executable (orig-fn formatter)
-  ;;   :around #'format-all--formatter-executable
-  ;;   (let* ((home (concat (getenv "HOME") "/"))
-  ;;          (root (doom-project-root))
-  ;;          (root (if (or (not root) (string= home root)) (expand-file-name "~/.config/yarn/global/") root)))
-  ;;     (if (file-executable-p (concat root "node_modules/" ".bin/" (symbol-name formatter)))
-  ;;         (concat root "node_modules/" ".bin/" (symbol-name formatter))
-  ;;       (apply orig-fn formatter))))
+;; (after! format-all
+;;   ;; don't use shfmt for zsh
+;;   (defadvice! +format-all--probe (orig-fn &rest args)
+;;     :around #'format-all--probe
+;;     (if (s-ends-with? ".zsh" buffer-file-name)
+;;         '(nil nil)
+;;       (funcall orig-fn)))
 
-  ;; run prettier after lsp format (eslint)
-  ;; (defadvice! ++format/region-or-buffer (orig-fn)
-  ;;   :around #'+format/region-or-buffer
-  ;;   (ignore-errors (call-interactively orig-fn))
-  ;;   (when (memq major-mode '(rjsx-mode js-mode js2-mode typescript-mode))
-  ;;    (let ((+format-with-lsp nil))
-  ;;      (ignore-errors (call-interactively orig-fn)))))
-  )
+;;   ;; (define-format-all-formatter zprint
+;;   ;;   (:executable "zprint")
+;;   ;;   (:install)
+;;   ;;   (:modes clojure-mode clojurec-mode clojurescript-mode)
+;;   ;;   (:format (format-all--buffer-easy executable "-w")))
+;;   (setq +format-on-save-enabled-modes
+;;         '(not
+;;           emacs-lisp-mode               ; elisp's mechanisms are good enough
+;;           sql-mode                      ; sqlformat is currently broken
+;;           tex-mode                      ; latexindent is broken
+;;           nix-mode
+;;           go-mode
+;;           latex-mode
+;;           org-msg-edit-mode
+;;           rjsx-mode
+;;           js2-mode
+;;           js-mode
+;;           js3-mode
+;;           clojurec-mode
+;;           clojurescript-mode
+;;           clojure-mode))
+;;   ;; (defadvice! +format-all--formatter-executable (orig-fn formatter)
+;;   ;;   :around #'format-all--formatter-executable
+;;   ;;   (let* ((home (concat (getenv "HOME") "/"))
+;;   ;;          (root (doom-project-root))
+;;   ;;          (root (if (or (not root) (string= home root)) (expand-file-name "~/.config/yarn/global/") root)))
+;;   ;;     (if (file-executable-p (concat root "node_modules/" ".bin/" (symbol-name formatter)))
+;;   ;;         (concat root "node_modules/" ".bin/" (symbol-name formatter))
+;;   ;;       (apply orig-fn formatter))))
+
+;;   ;; run prettier after lsp format (eslint)
+;;   ;; (defadvice! ++format/region-or-buffer (orig-fn)
+;;   ;;   :around #'+format/region-or-buffer
+;;   ;;   (ignore-errors (call-interactively orig-fn))
+;;   ;;   (when (memq major-mode '(rjsx-mode js-mode js2-mode typescript-mode))
+;;   ;;    (let ((+format-with-lsp nil))
+;;   ;;      (ignore-errors (call-interactively orig-fn)))))
+;;   )
 
 (use-package! yaml-imenu
   :hook (yaml-mode . yaml-imenu-enable)
@@ -85,7 +103,14 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 ;;   :after evil)
 
 (use-package! apheleia
-  :hook ((js2-mode rjsx-mode) . apheleia-mode))
+  ;; :hook ((nix-mode js2-mode rjsx-mode clojurescript-mode clojurec-mode clojure-mode go-mode) . apheleia-mode)
+  :hook (doom-first-file . apheleia-global-mode)
+  :config
+  (pushnew! apheleia-mode-alist
+            '(clojure-mode . zprint)
+            '(clojurec-mode . zprint)
+            '(clojurescript-mode . zprint))
+  (pushnew! apheleia-formatters '(zprint . ("zprint"))))
 
 (use-package! smerge-mode
   :defer t
@@ -112,14 +137,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 (defadvice! ++fold--ts-fold-p (orig)
   :around #'+fold--ts-fold-p
   nil)
-
-(after! format-all
-  ;; don't use shfmt for zsh
-  (defadvice! +format-all--probe (orig-fn &rest args)
-    :around #'format-all--probe
-    (if (s-ends-with? ".zsh" buffer-file-name)
-      '(nil nil)
-      (funcall orig-fn))))
 
 (use-package! eshell-follow
   :after eshell

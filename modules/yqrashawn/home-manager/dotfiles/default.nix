@@ -56,6 +56,10 @@
       source = ./.prettierrc;
       target = ".perttierrc";
     };
+    zprint = {
+      source = ./.zprintrc;
+      target = ".zprintrc";
+    };
     tern = {
       source = ./.tern-config;
       target = ".tern-config";
