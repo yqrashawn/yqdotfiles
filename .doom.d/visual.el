@@ -31,7 +31,11 @@
 (use-package! elcord
   :hook (doom-first-file . elcord-mode)
   :init
-  (setq! elcord-quiet t))
+  (setq! elcord-quiet t
+         elcord-use-major-mode-as-main-icon t
+         elcord-display-buffer-details nil)
+  :config
+  (pushnew! elcord-boring-buffers-regexp-list "scratch\\*"))
 (use-package! idle-highlight-mode :hook (doom-first-file))
 (add-hook! 'doom-first-file-hook #'global-display-fill-column-indicator-mode)
 
