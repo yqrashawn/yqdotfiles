@@ -22,7 +22,7 @@
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil)
   ;; use clj style to format code
-  (set-formatter! 'cljstyle "cljstyle pipe" :modes '(clojure-mode clojurescript-mode clojurec-mode))
+  ;; (set-formatter! 'cljstyle "cljstyle pipe" :modes '(clojure-mode clojurescript-mode clojurec-mode))
   ;; (setq cider-clojure-cli-global-options "-T:portal-cli")
   )
 
@@ -89,7 +89,9 @@
    cider-default-cljs-repl 'shadow
    cider-auto-jump-to-error nil
    ;; cider-print-fn 'fipp
-   cider-print-fn 'puget)
+   cider-print-fn 'puget
+   ;; cider-format-code-options '(("indents" (("letsubs" 0))))
+   )
 
   (defadvice cider-find-var (before add-evil-jump activate)
     (evil-set-jump))
