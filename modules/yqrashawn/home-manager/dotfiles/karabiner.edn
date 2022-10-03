@@ -836,7 +836,8 @@
                                                       "^com\\.microsoft\\.edgemac\\.Beta$"
                                                       "^com\\.brave\\.Browser$"]
                       :wechat                        ["^com\\.tencent\\.xinWeChat$"]
-                      :Games                         ["^com\\.Klei\\.Dontstarve"]
+                      :Games                         ["^com\\.Klei\\."
+                                                      "^unity\\.Klei\\."]
                       :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
                       :2Do                           ["^com\\.guidedways\\.TodoMac$"]
                       :CopyQ                         ["^io\\.github\\.hluk\\.CopyQ$"]
