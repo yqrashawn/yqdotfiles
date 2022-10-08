@@ -28,7 +28,8 @@
 
 (defun +setup-clojure-mode ()
   "sort namespace, cleanup log namespace on save"
-  (add-hook! 'before-save-hook '(+clojure-clean-log-ns clojure-sort-ns)))
+  (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns ;; 'cider-format-buffer
+    ))
 
 (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
 

@@ -1,2 +1,17 @@
-{:map {:comma? false :sort-in-code? false :sort? false} :style :community}
-
+{:style [;; community style
+         ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
+         :community
+         ;; justify pairs in map, binding, pair
+         ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#justified
+         :justified
+         ;; respect blank line
+         ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
+         :respect-bl
+         ;; respect newline in vector starts with keyword (:hiccup vec)
+         ;; TODO: support vec with react/... as first element
+         ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#keyword-respect-nl
+         :keyword-respect-nl
+         ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#no-hang-all-hang
+         :all-hang]
+ :map   {:comma? false}
+ :width 80}
