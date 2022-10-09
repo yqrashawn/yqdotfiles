@@ -456,6 +456,8 @@
            [:6 :!!z]
            [:9 [:open "/Applications/PDF Expert.app"]]
            ;; [:h [:togg "DingTalk"]]
+           [:h [:togg "Discord"] :Slack]
+           [:h [:togg "Slack"] :Discord]
            [:h [:togg "Discord"]]
            [:r [:togg "Reeder"]]
            ;; [:r [:opena "Roam Research"]]
@@ -858,6 +860,7 @@
               "^com\\.google\\.Chrome\\.canary$" "^com\\.apple\\.Safari$"
               "^com\\.microsoft\\.VSCode(Insiders)?$" "^com\\.brave\\.Browser$"]
   :Alfred ["^com\\.runningwithcrayons\\.Alfred$"]
+  :Slack ["^com\\.tinyspeck\\.slackmacgap$"]
   :Todoist ["^com\\.todoist\\.mac\\.Todoist$"]
   :Keybase ["^keybase\\.Electron$"]
   :Discord ["^com\\.hnc\\.Discord$"]
