@@ -112,7 +112,9 @@
     (delq! 'company-pseudo-tooltip-unless-just-one-frontend company-frontends)))
 
 ;; (use-package! corfu
-;;   :hooks (doom-first-input-hook . corfu-global-mode))
+;;   :hook (doom-first-input . corfu-global-mode)
+;;   :init
+;;   (setq! corfu-auto t))
 
 (after! orderless
   (setq orderless-component-separator "[ ,j]"))
@@ -147,11 +149,20 @@
   :after fuz
   :config
   (setq! fussy-filter-fn 'fussy-filter-default
+         fussy-use-cache t
          fussy-score-fn 'fussy-fuz-score)
-  (setq completion-styles '(fussy))
+
+  (after! consult
+    (defadvice! +consult-recent-file (f)
+      :around #'consult-recent-file
+      (let ((completion-styles '(orderless fussy)))
+        (call-interactively f))))
+
+  (pushnew! completion-styles 'fussy)
+  ;; (setq completion-styles '(fussy))
   ;; (delq! 'orderless +vertico-company-completion-styles)
-  ;; (pushnew! +vertico-company-completion-styles 'fussy)
-  (add-to-list '+vertico-company-completion-styles 'fussy t)
+  (pushnew! +vertico-company-completion-styles 'fussy)
+  ;; (add-to-list '+vertico-company-completion-styles 'fussy t)
   (setq!
    ;; For example, project-find-file uses 'project-files which uses
    ;; substring completion by default. Set to nil to make sure it's using
@@ -163,13 +174,20 @@
     (defadvice! j-company-capf (f &rest args)
       :around #'company-capf
       "Manage `completion-styles'."
-      (let ((fussy-max-candidate-limit 5000)
-            (fussy-default-regex-fn 'fussy-pattern-first-letter)
-            (fussy-prefer-prefix nil))
-        (apply f args)))
+      (if (length= company-prefix 0)
+          ;; Don't use `company' for 0 length prefixes.
+          (let ((completion-styles (remq 'fussy completion-styles)))
+            (apply f args))
+        (let ((fussy-max-candidate-limit 5000)
+              (fussy-default-regex-fn 'fussy-pattern-first-letter)
+              (fussy-prefer-prefix nil))
+          (apply f args))))
 
     (defadvice! j-company-transformers (f &rest args)
       :around #'company--transform-candidates
       "Manage `company-transformers'."
-      (let ((company-transformers '(fussy-company-sort-by-completion-score)))
-        (apply f args)))))
+      (if (length= company-prefix 0)
+          ;; Don't use `company' for 0 length prefixes.
+          (apply f args)
+        (let ((company-transformers '(fussy-company-sort-by-completion-score)))
+          (apply f args))))))
