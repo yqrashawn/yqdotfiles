@@ -151,11 +151,6 @@ See `dwim-shell-command-execute-script' for all other params."
 
 (use-package! reveal-in-osx-finder :defer t)
 
-;; (use-package! corfu
-;;   :hook (doom-first-input . corfu-global-mode)
-;;   :init
-;;   (setq! corfu-auto t))
-
 ;; (use-package affe
 ;;   :defer t
 ;;   :config

@@ -102,5 +102,5 @@
   :hook (doom-first-input . global-evil-matchit-mode)
   :after evil
   :config
-  (add-hook! '(ibuffer-mode-hook dired-mode-hook magit-status-mode-hook magit-log-mode-hook)
+  (add-hook! '(ibuffer-mode-hook dired-mode-hook magit-status-mode-hook magit-log-mode-hook cider-inspector-mode)
     #'turn-off-evil-matchit-mode))
