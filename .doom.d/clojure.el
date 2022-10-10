@@ -16,8 +16,27 @@
     clojure-verify-major-mode nil
     clojure-align-reader-conditionals t
     clojure-defun-indents '(fn-traced))
+  ;; letsubs in status-mobile defview
+  (pushnew! clojure-align-binding-forms "letsubs")
+  ;; better-cond
+  (pushnew! clojure-align-cond-forms "bc/cond" "b/cond")
 
 
+  (require 'clojure-mode-extra-font-locking)
+  (pushnew! clojure-built-in-vars "defview")
+  (defun +re-add-clojure-mode-extra-font-locking ()
+    (font-lock-add-keywords 'clojure-mode
+      `((,(concat "(\\(?:\.*/\\)?"
+            (regexp-opt clojure-built-in-vars t)
+            "\\>")
+          1 font-lock-builtin-face)))
+
+    (font-lock-add-keywords 'clojure-mode
+      `((,(concat "\\<"
+            (regexp-opt clojure-built-in-dynamic-vars t)
+            "\\>")
+          0 font-lock-builtin-face))))
+  (+re-add-clojure-mode-extra-font-locking)
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil)
