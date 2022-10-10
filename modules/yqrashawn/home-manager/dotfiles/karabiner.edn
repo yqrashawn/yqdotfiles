@@ -420,7 +420,8 @@
            ;; [:k [:opena "WezTerm.app"]]
 
            [:quote [:togg "ClickUp"]]
-           [:t [:togg "/Applications/Todoist.app"]]
+           [:t [:togg "Todoist"] :BusyCal]
+           [:t [:togg "BusyCal"] :!BusyCal]
            ;; [:p [:togg "Adobe Photoshop 2022"]]
            [:p [:togg "Figma"]]
            ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e
@@ -456,9 +457,8 @@
            [:6 :!!z]
            [:9 [:open "/Applications/PDF Expert.app"]]
            ;; [:h [:togg "DingTalk"]]
-           [:h [:togg "Discord"] :Slack]
+           [:h [:togg "Discord"] :!Discord]
            [:h [:togg "Slack"] :Discord]
-           [:h [:togg "Discord"]]
            [:r [:togg "Reeder"]]
            ;; [:r [:opena "Roam Research"]]
            ;; [:period [:open "/Applications/SetApp/Paw.app"]]
@@ -862,6 +862,7 @@
   :Alfred ["^com\\.runningwithcrayons\\.Alfred$"]
   :Slack ["^com\\.tinyspeck\\.slackmacgap$"]
   :Todoist ["^com\\.todoist\\.mac\\.Todoist$"]
+  :BusyCal ["^com\\.busymac\\.busycal"]
   :Keybase ["^keybase\\.Electron$"]
   :Discord ["^com\\.hnc\\.Discord$"]
   :slidepad ["^com\\.slidepad\\.slidepad"]
