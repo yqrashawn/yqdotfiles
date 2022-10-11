@@ -92,6 +92,11 @@ requiring confirmation."
 (use-package! magit-delta :hook (magit-mode . magit-delta-mode))
 
 (after! forge
+  (defadvice! +forge-topic-setup-buffer (topic)
+    "Refetch topic on open"
+    :after #'forge-topic-setup-buffer
+    (forge-pull-topic topic))
+
   ;; https://github.com/magit/forge/issues/300
   (setq! forge-database-connector (if (> emacs-major-version 28) 'sqlite-builtin 'sqlite-module)
          forge-topic-list-limit '(20 . 5))
