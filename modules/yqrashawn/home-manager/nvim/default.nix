@@ -10,7 +10,8 @@
     '';
     readVimConfig = file:
       if (lib.strings.hasSuffix ".lua" (builtins.toString file)) then
-        wrapLuaConfig (builtins.readFile file) else
+        wrapLuaConfig (builtins.readFile file)
+      else
         builtins.readFile file;
     pluginWithCfg = { plugin, file }: {
       inherit plugin;
@@ -18,34 +19,37 @@
     };
   };
 
-  programs.neovim =
-    {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      vimdiffAlias = true;
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
 
-      # nvim plugin providers
-      withNodeJs = true;
-      withRuby = true;
-      withPython3 = true;
+    # nvim plugin providers
+    withNodeJs = true;
+    withRuby = true;
+    withPython3 = true;
 
-      # share vim plugins since nothing is specific to nvim
-      plugins = with pkgs.vimPlugins; [
-        # basics
-        vim-sensible
-        vim-fugitive
-        vim-sandwich
-        vim-commentary
-        vim-nix
+    # share vim plugins since nothing is specific to nvim
+    plugins = with pkgs.vimPlugins; [
+      # basics
+      vim-sensible
+      vim-fugitive
+      vim-sandwich
+      vim-commentary
+      vim-nix
+      vim-which-key
 
-        # vim addon utilities
-        direnv-vim
-        ranger-vim
-      ];
-      extraConfig = ''
-        ${config.lib.vimUtils.readVimConfig ./settings.lua}
-      '';
-    };
+      # vim addon utilities
+      direnv-vim
+      ranger-vim
+      neogit
+    ];
+    # coc = { enable = true; };
+    extraPackages = with pkgs; [ tree-sitter ];
+    extraConfig = ''
+      ${config.lib.vimUtils.readVimConfig ./settings.lua}
+    '';
+  };
 
 }

@@ -1,10 +1,3 @@
 { lib, ... }: {
-  imports = [
-    ./coc
-    ./fzf
-    ./lualine-nvim
-    ./theme
-    ./treesitter
-    ./vim-closetag
-  ];
+  imports = [ ./coc ./fzf ./lualine-nvim ./theme ./treesitter ./vim-closetag ];
 }

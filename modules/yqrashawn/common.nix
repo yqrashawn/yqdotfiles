@@ -62,7 +62,6 @@ in {
         zsh
         bash
         git
-        neovim
         helix
         mu
         # macvim # use vim
