@@ -7,6 +7,7 @@
 (after! magit
   (setq!
     magit-fetch-modules-jobs 10
+    magit-diff-expansion-threshold 20
     transient-default-level 7
     magit-log-margin '(t age-abbreviated magit-log-margin-width t 18)
     magit-section-initial-visibility-alist '((stashes . hide)
