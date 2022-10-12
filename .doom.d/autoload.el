@@ -882,7 +882,7 @@ _b_ranch _j_next _k_prev _h_up
             "/data/Containers/Data/Application")
           (lambda (dirname)
                       (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
-        "/Library/ethereum/mainnet_rpc_dev/geth.log"))))
+        "/Library/geth.log"))))
 
 ;;;###autoload
 (defun +magit-toggle-performance ()
