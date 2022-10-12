@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+make run-ios SIMULATOR='iPhone 11 Pro'

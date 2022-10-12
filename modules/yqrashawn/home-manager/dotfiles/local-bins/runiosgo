@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+make run-ios STATUS_GO_SRC_OVERRIDE=/Users/yqrashawn/workspace/office/status-go SIMULATOR='iPhone 11 Pro'
