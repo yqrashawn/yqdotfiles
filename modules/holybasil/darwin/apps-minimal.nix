@@ -14,6 +14,7 @@
       "iina"
       "monitorcontrol"
       "karabiner-elements"
+      "input-source-pro"
       "google-chrome"
       "keybase"
       "raycast"
