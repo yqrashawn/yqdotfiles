@@ -284,3 +284,4 @@
 ;; find all major/minor modes and there relations
 (package! mode-minder :recipe (:host github :repo "jdtsmith/mode-minder"))
 (package! clojure-mode-extra-font-locking)
+(package! dwim-shell-command :recipe (:type git :host github :repo "xenodium/dwim-shell-command"))
