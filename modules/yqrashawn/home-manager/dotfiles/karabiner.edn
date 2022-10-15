@@ -215,10 +215,10 @@
            [:spacebar :!TSOspacebar] ;; maximize
            [:t :!TSOt] ;; center maximize
            [:r :!TOSr] ;; restore
-           ;; [:y :!TOSy] ;; upper left
-           ;; [:n :!TOSn] ;; lower left
-           ;; [:o :!TOSo] ;; upper right
-           ;; [:period :!TOSperiod] ;; lower right
+           [:y :!TOSy] ;; upper left
+           [:n :!TOSn] ;; lower left
+           [:o :!TOSo] ;; upper right
+           [:period :!TOSperiod] ;; lower right
 
            [:h :!TOSleft_arrow] ;; left half
            [:l :!TOSright_arrow] ;; right half

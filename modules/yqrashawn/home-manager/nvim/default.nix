@@ -45,7 +45,6 @@
       ranger-vim
       neogit
     ];
-    # coc = { enable = true; };
     extraPackages = with pkgs; [ tree-sitter ];
     extraConfig = ''
       ${config.lib.vimUtils.readVimConfig ./settings.lua}
