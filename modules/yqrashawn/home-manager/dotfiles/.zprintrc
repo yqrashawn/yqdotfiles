@@ -1,35 +1,36 @@
 ;; -*- mode: clojure -*-
 ;; vi: ft=clojure
-{:width     80
- :style     [;; community style
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
-             :community
+{:cwd-zprintrc? true
+ :width         80
+ :style         [;; community style
+                 ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
+                 :community
 
-             ;; no comma in map
-             :no-comma
+                 ;; no comma in map
+                 :no-comma
 
-             ;; only force defn arities into newline when exceeds the width
-             :defn-arities-off
+                 ;; only force defn arities into newline when exceeds the width
+                 :defn-arities-off
 
-             ;; disable this, better controled by people
-             ;; :hiccup-style-vector
+                 ;; disable this, better controled by people
+                 ;; :hiccup-style-vector
 
-             ;; justify kv pairs in maps, bindings and pairs
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#justified
-             :justified-20
+                 ;; justify kv pairs in maps, bindings and pairs
+                 ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#justified
+                 :justified-20
 
-             ;; respect all newlines
-             :respect-nl
+                 ;; respect all newlines
+                 :respect-nl
 
-             ;; respect blank line
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
-             :respect-bl
+                 ;; respect blank line
+                 ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
+                 :respect-bl
 
-             :comment-to-prev-line-if-too-long]
- :fn-map    {"list-comp"       :binding
-             "defview"         "defn"
-             "letsubs"         "let"
-             "with-deps-check" "with-meta"}
+                 :comment-to-prev-line-if-too-long]
+ :fn-map        {"list-comp"       :binding
+                 "defview"         "defn"
+                 "letsubs"         "let"
+                 "with-deps-check" "with-meta"}
  :style-map
  {:no-comma         {:map {:comma? false}}
   :justified-20     {:doc

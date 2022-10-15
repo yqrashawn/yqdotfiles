@@ -107,15 +107,15 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :hook (doom-first-file . apheleia-global-mode)
   :config
   (pushnew! apheleia-mode-alist
-            '(clojure-mode . zprint)
-            '(clojurec-mode . zprint)
-            '(clojurescript-mode . zprint))
-  
-  ;; (pushnew! apheleia-mode-alist
-  ;;           '(clojure-mode . cljstyle)
-  ;;           '(clojurec-mode . cljstyle)
-  ;;           '(clojurescript-mode . cljstyle))
+    '(clojure-mode . zprint)
+    '(clojurec-mode . zprint)
+    '(clojurescript-mode . zprint))
+  (defun +cider-format-buffer (&rest args)
+    (interactive)
+    (require 'cider)
+    (cider-format-buffer))
   (pushnew! apheleia-formatters '(cljstyle . ("cljstyle" "pipe")))
+  (pushnew! apheleia-formatters '(cljfmt . +cider-format-buffer))
   (pushnew! apheleia-formatters '(zprint . ("zprint" "{:search-config? true}"))))
 
 (use-package! smerge-mode
