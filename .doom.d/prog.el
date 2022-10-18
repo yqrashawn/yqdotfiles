@@ -114,8 +114,12 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (interactive)
     (require 'cider)
     (cider-format-buffer))
+  (defun +clojure-lsp-format-buffer (&rest args)
+    (interactive)
+    (if lsp-mode
+        (lsp-format-buffer)))
   (pushnew! apheleia-formatters '(cljstyle . ("cljstyle" "pipe")))
-  (pushnew! apheleia-formatters '(cljfmt . +cider-format-buffer))
+  (pushnew! apheleia-formatters '(cljfmt . +clojure-lsp-format-buffer))
   (pushnew! apheleia-formatters '(zprint . ("zprint" "{:search-config? true}"))))
 
 (use-package! smerge-mode
