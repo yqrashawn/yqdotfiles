@@ -144,7 +144,7 @@
 ;; (package! evil-textobj-tree-sitter)
 (package! jsonnet-mode)
 (package! apheleia :recipe (:type git :host github :repo "raxod502/apheleia"))
-(package! vulpea)
+;; (package! vulpea)
 (package! deadgrep)
 (package! declutter :recipe (:type git :host github :repo "sanel/declutter"))
 (package! turbo-log :recipe (:type git :host github :repo "Artawower/turbo-log"))

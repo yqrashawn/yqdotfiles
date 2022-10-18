@@ -41,6 +41,10 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        # (docker.override (args: {
+        #   buildxSupport = true;
+        #   composeSupport = true;
+        # }))
         lapce
         isync-isync
         msmtp
