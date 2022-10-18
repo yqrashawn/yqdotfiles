@@ -946,12 +946,14 @@ _b_ranch _j_next _k_prev _h_up
       (progn
         (+remove-clojure-in-apheleia-mode-alist)
         (pushnew! apheleia-mode-alist
-                  '(clojure-mode . cljfmt)
-                  '(clojurec-mode . cljfmt)
-                  '(clojurescript-mode . cljfmt)))
+          '(clojure-mode . cljfmt)
+          '(clojurec-mode . cljfmt)
+          '(clojurescript-mode . cljfmt))
+        (message "Using cljfmt"))
     (progn
       (+remove-clojure-in-apheleia-mode-alist)
       (pushnew! apheleia-mode-alist
-                '(clojure-mode . zprint)
-                '(clojurec-mode . zprint)
-                '(clojurescript-mode . zprint)))))
+        '(clojure-mode . zprint)
+        '(clojurec-mode . zprint)
+        '(clojurescript-mode . zprint))
+      (message "Using zprint"))))
