@@ -41,10 +41,12 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
-        # (docker.override (args: {
-        #   buildxSupport = true;
-        #   composeSupport = true;
-        # }))
+        (docker.override (args: {
+          buildxSupport = true;
+          composeSupport = true;
+        }))
+        docker-machine
+        colima
         lapce
         isync-isync
         msmtp
