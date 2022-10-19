@@ -485,6 +485,7 @@
             {:alone :return_or_enter}]]}
   {:des   "adv2"
    :rules [:adv2
+           [:f22 :fn]
            [:##return_or_enter :right_command nil {:alone :return_or_enter}]
            [:##delete_or_backspace :left_command nil
             {:alone :delete_or_backspace}]
@@ -537,20 +538,7 @@
     [:p :!OSa :browsers-alfred-mode]
     [:quote :!OSt :browsers-alfred-mode]
     [:0 [:!Cl [:type "chrome://extensions/"]] :browsers-alfred-mode]
-    ;; [:8 [:!Cl [:type
-    ;; "chrome-extension://pkjpciobmjhfjaddkiehmknaclajlkgf/home.html"]]
-    ;; :browsers-alfred-mode]
-    [:8
-     [:!Cl
-      [:type "chrome-extension://ojaliajmdjhmljfhmphkaehfhanfgpfg/home.html"]]
-     :browsers-alfred-mode {:delayed {:invoked :return_or_enter}}]
-    ;; [:9 [:!Cl [:type
-    ;; "chrome://extensions/?id=pkjpciobmjhfjaddkiehmknaclajlkgf"]]
-    ;; :browsers-alfred-mode]
-    [:9
-     [:!Cl
-      [:type "chrome-extension://ojaliajmdjhmljfhmphkaehfhanfgpfg/popup.html"]]
-     :browsers-alfred-mode {:delayed {:invoked :return_or_enter}}]
+    [:8 :!OSt :browsers-alfred-mode]
     [:l :!CTslash :finder-alfred-mode]
     [:!CTk [:!CTk ["in-alfred" 1]]]
     [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
