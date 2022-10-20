@@ -11,6 +11,7 @@
       "xbar"
       "gfxcardstatus"
       "uhk-agent"
+      "roam-research"
       "kitty"
       "slack"
       "bitwarden"

@@ -774,14 +774,18 @@ _b_ranch _j_next _k_prev _h_up
 ;;;###autoload
 (defun +cljr--log-spy (arg)
   (interactive "P")
-  (save-excursion
-    (evil-emacs-state 1)
-    (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
-    (call-interactively 'lispy-parens)
-    (unless (string= (string (following-char)) " ") (forward-char))
-    (insert (if (string= (string (following-char)) " ") "log/spy" "log/spy "))
-    (lispy-left 1)
-    (evil-normal-state 1))
+  (let ((log-spy-str (if (and (boundp '+cljr--log-spy-with-error)
+                           +cljr--log-spy-with-error)
+                       "log/spy :error"
+                       "log/spy")))
+    (save-excursion
+      (evil-emacs-state 1)
+      (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
+      (call-interactively 'lispy-parens)
+      (unless (string= (string (following-char)) " ") (forward-char))
+      (insert (if (string= (string (following-char)) " ") log-spy-str  (concat log-spy-str " ")))
+      (lispy-left 1)
+      (evil-normal-state 1)))
   (unless (+lispy-special-p) (lispy-left 1)))
 
 ;;;###autoload

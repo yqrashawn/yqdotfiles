@@ -75,7 +75,7 @@ in {
         # firefox
         # firefox-devedition-bin
         sqlite
-        yabai
+        # yabai
         # sketchybar
 
         # cli tools

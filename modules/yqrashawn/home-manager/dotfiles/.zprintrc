@@ -1,7 +1,7 @@
 ;; -*- mode: clojure -*-
 ;; vi: ft=clojure
 {:cwd-zprintrc? true
- :width         80
+ :width         105
  :style         [;; community style
                  ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
                  :community
@@ -9,15 +9,12 @@
                  ;; no comma in map
                  :no-comma
 
-                 ;; only force defn arities into newline when exceeds the width
-                 :defn-arities-off
-
                  ;; disable this, better controled by people
                  ;; :hiccup-style-vector
 
                  ;; justify kv pairs in maps, bindings and pairs
                  ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#justified
-                 :justified-20
+                 :justified-50
 
                  ;; respect all newlines
                  :respect-nl
@@ -33,83 +30,12 @@
                  "with-deps-check" "with-meta"}
  :style-map
  {:no-comma         {:map {:comma? false}}
-  :justified-20     {:doc
+  :justified-50     {:doc
                      "Justify everything with less than 20 char difference"
-                     :binding {:justify? true :justify {:max-variance 20}}
-                     :map     {:justify? true :justify {:max-variance 20}}
-                     :pair    {:justify? true :justify {:max-variance 20}}}
+                     :binding {:justify? true :justify {:max-variance 50}}
+                     :map     {:justify? true :justify {:max-variance 50}}
+                     :pair    {:justify? true :justify {:max-variance 50}}}
 
   :comment-to-prev-line-if-too-long
   {:doc     "Move comment to the prev line if it's too long"
-   :comment {:wrap? true :inline? false}}
-
-  ;; :hiccup-style-vector
-  ;;   {:doc    "Better hiccup vector format"
-  ;;    :vector {:option-fn
-  ;;             ;; same as the the default :keyword-respect-nl fn with small
-  ;;             tweak
-  ;;             ;; to
-  ;;             ;; count ["react/..." {:style ... :size ...}] as hiccup vector
-  ;;             (fn [options element-count
-  ;;             non-whitespace-non-comment-element-seq]
-  ;;               (let [[first-element second-element]
-  ;;                     non-whitespace-non-comment-element-seq
-  ;;                     k?   (keyword? first-element)
-  ;;                     sym? (symbol? first-element)]
-  ;;                 (cond
-  ;;                   k?   (when (not= k? (:respect-nl? (:vector options)))
-  ;;                          {:vector {:respect-nl? k?}})
-  ;;                   sym?
-  ;;                   (let [;; check if first element is symbol of a component
-  ;;                         ;; eg. react/view rn/view text/text
-  ;;                         components-symbol-namespaces #{"react" "text" "quo"
-  ;;                         "rn"
-  ;;                                                        "button" "animation"
-  ;;                                                        "icon" "community"}
-  ;;                         symbol-namespace (namespace first-element)
-  ;;                         symbol-starts-with-namespace?
-  ;;                         (fn [valid-ns]
-  ;;                           (clojure.string/starts-with? symbol-namespace
-  ;;                                                        valid-ns))
-  ;;                         valid-symbol-with-component-namespace?
-  ;;                         (and symbol-namespace
-  ;;                              (some symbol-starts-with-namespace?
-  ;;                                    components-symbol-namespaces))
-  ;;
-  ;;                         ;; check if second element is a component option
-  ;;                         map
-  ;;                         ;; eg. {:style ... :size ...}
-  ;;                         components-options-key #{:style :size :color :width
-  ;;                                                  :height :type :disabled
-  ;;                                                  :on-press :on-change
-  ;;                                                  :accessibility-label
-  ;;                                                  :title
-  ;;                                                  :label :name :icon}
-  ;;
-  ;;                         second-element-keys (and (map? second-element)
-  ;;                                                  (keys second-element))
-  ;;                         second-element-is-component-option?
-  ;;                         (fn [k] (some #{k} components-options-key))
-  ;;                         valid-symbol? (or
-  ;;                                        valid-symbol-with-component-namespace?
-  ;;                                        (and second-element-keys
-  ;;                                             (some
-  ;;                                              second-element-is-component-option?
-  ;;                                              second-element-keys)))]
-  ;;                     (when (not= valid-symbol? (:respect-nl? (:vector
-  ;;                     options)))
-  ;;                       {:vector {:respect-nl? (boolean valid-symbol?)}}))
-  ;;                   ;; not a hiccup-like vector
-  ;;                   :else nil)))}}
-
-  ;; code from
-  ;; https://github.com/kkinnear/zprint/blob/2da480dda16a683846f57df0941f70a5ae1000d1/src/zprint/config.cljc#L940
-  :defn-arities-off
-  {:doc    "Only force defn arities into newline when exceeds the width"
-   :fn-map {"defn"  [:none
-                     {:list {:option-fn (partial rodfn
-                                                 {:multi-arity-nl? false})}}]
-            "defn-" [:none
-                     {:list {:option-fn (partial rodfn
-                                                 {:multi-arity-nl?
-                                                  false})}}]}}}}
+   :comment {:wrap? true :inline? false}}}}
