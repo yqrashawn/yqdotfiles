@@ -16,6 +16,7 @@
       "monitorcontrol"
       "karabiner-elements"
       "google-chrome"
+      "bettertouchtool"
       # "keybase"
       "input-source-pro"
       # "emacs-mac"

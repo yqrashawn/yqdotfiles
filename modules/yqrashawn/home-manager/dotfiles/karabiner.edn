@@ -412,7 +412,7 @@
            [:k [:hsl "/Applications/Emacs.app"]]
            ;; [:k [:yfocus "Emacs"]]
            ;; [:u [:togg "Logseq"]]
-           [:u [:togg "Roam Research"]]
+           [:u [[:togg "Roam Research"] [:togg "Roam Research"] [:togg "Roam Research"]]]
            ;; [:k [:opena "kitty"]]
            ;; [:k [:opena "WezTerm.app"]]
 

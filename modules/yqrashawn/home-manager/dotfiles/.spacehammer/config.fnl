@@ -136,10 +136,10 @@
                          {:key :l
                           :title "right"
                           :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "0"))}
-                         {:key :l
+                         {:key :k
                           :title "top"
                           :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "9"))}
-                         {:key :l
+                         {:key :j
                           :title "bottom"
                           :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "8"))}]}]})
 ;;;; Windows
