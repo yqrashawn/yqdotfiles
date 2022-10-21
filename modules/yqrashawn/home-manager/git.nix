@@ -24,7 +24,10 @@
         proxy = "http://127.0.0.1:6152";
         sslVerify = true;
       };
-      https = { proxy = "http://127.0.0.1:6152"; };
+      https = {
+        proxy = "http://127.0.0.1:6152";
+        sslVerify = true;
+      };
       include = { path = "~/.gitconfig.local"; };
       alias = {
         fetch = "git fetch --tags";
@@ -67,9 +70,15 @@
         "cache --timeout=1000000000";
       commit.verbose = true;
       fetch.prune = true;
+
+      diff = {
+        external =
+          "${pkgs.difftastic}/bin/difft --color auto --background $(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo dark || echo light) --display side-by-side";
+      };
     };
     lfs.enable = true;
-    delta = { enable = true; };
+    # delta = { enable = true; };
+    # custom in extraConfig.diff.external
     # difftastic = { enable = true; };
     ignores = [
       # Compiled source #

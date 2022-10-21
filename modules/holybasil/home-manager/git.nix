@@ -43,25 +43,6 @@
         abort = ''
           "!f() { local command=$(git status | grep -o "git \w* --abort"); echo $command; $($command); }; f"'';
       };
-      pager = {
-        pager = "delta";
-        diff = "delta";
-        reflog = "delta";
-        show = "delta";
-        difftool = true;
-      };
-      diff = { tool = "difftastic"; };
-      difftool = {
-        prompt = false;
-        difftastic = { cmd = ''difft "$LOCAL" "$REMOTE"''; };
-      };
-      merge = { tool = "ediff"; };
-      mergetool = {
-        ediff = {
-          cmd = "~/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE";
-          trustExitCode = true;
-        };
-      };
       filter = {
         lfs = {
           clean = "git-lfs clean -- %f";
