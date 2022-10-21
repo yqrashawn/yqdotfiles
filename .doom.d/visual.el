@@ -113,3 +113,5 @@
 ;;   :after compile
 ;;   :config
 ;;   (fancy-compilation-mode))
+
+(use-package! topsy :hook (prog-mode . topsy-mode))
