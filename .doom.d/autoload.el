@@ -904,8 +904,8 @@ _b_ranch _j_next _k_prev _h_up
               magit-diff-highlight-hunk-body t
               magit-diff-paint-whitespace t
               magit-diff-paint-whitespace-lines t
-              magit-diff-refine-hunk nil
-              magit-revision-insert-related-refs nil
+              magit-diff-refine-hunk t
+              magit-revision-insert-related-refs 'mixed
               magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv)
               magit-revision-use-hash-sections 'quicker
               magit-diff-expansion-threshold 20)
@@ -933,7 +933,7 @@ _b_ranch _j_next _k_prev _h_up
            (remove-hook! 'magit-refs-sections-hook 'magit-insert-tags)
            (remove-hook! 'server-switch-hook 'magit-commit-diff)
            (setq! magit-git-debug nil)
-           (message "enter magit highperf"))))
+      (message "enter magit highperf"))))
 
 ;;;###autoload
 (defun +remove-clojure-in-apheleia-mode-alist ()

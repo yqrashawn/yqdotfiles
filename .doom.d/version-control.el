@@ -4,10 +4,28 @@
 (add-hook! 'doom-first-file-hook #'magit-wip-mode #'magit-auto-revert-mode)
 
 (el-patch-feature magit-apply)
+
+(after! git-commit
+  (setq! git-commit-major-mode 'markdown-mode
+         git-commit-summary-max-length 75
+         git-commit-fill-column 75))
+
 (after! magit
   (setq!
+    magit-openpgp-default-signing-key "B198FB15EC5C13012E940B37E394C5D9A8E535A6"
     magit-fetch-modules-jobs 10
     magit-diff-expansion-threshold 20
+    magit-diff-refine-hunk t
+    magit-revision-insert-related-refs 'mixed
+    magit-revision-show-gravatars t
+    magit-revision-fill-summary-line 80
+    magit-prefer-remote-upstream t
+    magit-process-popup-time 60
+    magit-process-log-max 10
+    magit-refs-show-commit-count 'all
+    ;; magit-status-goto-file-position t
+    magit-log-show-refname-after-summary t
+    magit-status-show-hashes-in-headers nil
     transient-default-level 7
     magit-log-margin '(t age-abbreviated magit-log-margin-width t 18)
     magit-section-initial-visibility-alist '((stashes . hide)
@@ -15,16 +33,14 @@
                                               (staged . show))
     ;; magit-blame-echo-style 'margin
     magit-repository-directories '(("~/.emacs.d" . 0)
-                                    ;; ("~/.emacs.d/straight/repos/" . 1)
-                                    ("~/workspace/home/" . 1)
-                                    ("~/workspace/office/" . 1)
-                                    ;; ("~/workspace/third/" . 1)
-                                    )
+                                   ;; ("~/.emacs.d/straight/repos/" . 1)
+                                   ;; ("~/workspace/third/" . 1)
+                                   ("~/workspace/home/" . 1)
+                                   ("~/workspace/office/" . 1))
     magit-branch-prefer-remote-upstream '("master" "main" "dev" "develop" "next")
-    magit-branch-adjust-remote-upstream-alist
-    '(("origin/dev" . ("dev" "main"))
-       ("origin/main" . "^dev$"))
-    magit-published-branches '("origin/master" "origin/dev" "origin/develop"))
+    magit-branch-adjust-remote-upstream-alist '(("origin/devlope" . "\\/"))
+    magit-published-branches '("origin/master" "origin/main" "origin/dev" "origin/develop")
+    magit-clone-set-remote.pushDefault t)
   (pushnew! magit-no-confirm 'stage-all-changes)
   (add-hook! 'magit-process-mode-hook #'++doom-apply-ansi-color-to-compilation-buffer-h)
   (transient-define-argument magit-merge:--strategy-option ()
@@ -58,7 +74,7 @@
     (setf (alist-get 'my-magit-command ivy-re-builders-alist) #'ivy--regex-fuzzy)
     (pushnew! ivy-re-builders-alist '(magit-log-other . ivy--regex-fuzzy)))
   (add-function :before magit-completing-read-function #'my-magit-command)
-  
+
   ;; (add-hook 'magit-mode-hook '+marsam/add-pull-request-refs)
 
   (el-patch-defun magit-stage-file (file)

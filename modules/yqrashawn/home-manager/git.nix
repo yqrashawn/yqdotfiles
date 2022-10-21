@@ -50,6 +50,7 @@
           required = true;
         };
       };
+      branch = { autosetuprebase = "always"; };
       push = {
         default = "simple";
         followTags = true;
