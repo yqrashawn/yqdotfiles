@@ -18,6 +18,7 @@ in {
     # ./kitty
     ./dotfiles
     ./git.nix
+    # ./mpv.nix
     # ./1password
   ];
 
