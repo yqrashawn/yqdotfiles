@@ -1,41 +1,49 @@
 ;; -*- mode: clojure -*-
 ;; vi: ft=clojure
-{:cwd-zprintrc? true
- :width         105
- :style         [;; community style
-                 ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
-                 :community
+{:width     105
+ :style     [;; community style
+             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
+             :community
 
-                 ;; no comma in map
-                 :no-comma
+             ;; no comma in map
+             :no-comma
 
-                 ;; disable this, better controled by people
-                 ;; :hiccup-style-vector
+             :custom-justify
 
-                 ;; justify kv pairs in maps, bindings and pairs
-                 ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#justified
-                 :justified-50
+             ;; justify :as, :refer ... in (ns :require (...)) form
+             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#require-justify
+             :require-justify
 
-                 ;; respect all newlines
-                 :respect-nl
+             ;; respect all newlines
+             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-nl
+             :respect-nl
 
-                 ;; respect blank line
-                 ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
-                 :respect-bl
-
-                 :comment-to-prev-line-if-too-long]
- :fn-map        {"list-comp"       :binding
-                 "defview"         "defn"
-                 "letsubs"         "let"
-                 "with-deps-check" "with-meta"}
+             ;; respect blank line
+             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
+             :respect-bl]
+ :fn-map
+ {"reg-sub"         :arg1-pair
+  "list-comp"       :binding
+  "defview"         :arg1-body
+  "letsubs"         :binding
+  "testing"         :arg1-body
+  "with-deps-check" :arg1-body
+  "ns"              [:arg1-body
+                     {:list   {:respect-nl? false}
+                      :vector {:respect-nl? false}}]
+  "->"              [:noarg1-body
+                     {:list               {:constant-pair? false :force-nl? false}
+                      :next-inner-restore [[:list :constant-pair?]]}]
+  "set!"            "reset!"
+  "assoc-when"      "assoc"
+  "assoc-some"      "assoc"
+  "conj-when"       "conj"
+  "conj-some"       "conj"}
  :style-map
- {:no-comma         {:map {:comma? false}}
-  :justified-50     {:doc
-                     "Justify everything with less than 20 char difference"
-                     :binding {:justify? true :justify {:max-variance 50}}
-                     :map     {:justify? true :justify {:max-variance 50}}
-                     :pair    {:justify? true :justify {:max-variance 50}}}
-
-  :comment-to-prev-line-if-too-long
-  {:doc     "Move comment to the prev line if it's too long"
-   :comment {:wrap? true :inline? false}}}}
+ {:no-comma       {:map {:comma? false}}
+  :rj-var         {:pair {:justify {:max-variance 1000}}}
+  :custom-justify
+  {:doc     "Justify everything using pre-1.1.2 approach"
+   :binding {:justify? true :justify {:max-variance 1000}}
+   :map     {:justify? true :justify {:max-variance 1000}}
+   :pair    {:justify? true :justify {:max-variance 1000}}}}}
