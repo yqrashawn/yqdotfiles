@@ -287,3 +287,8 @@
 (package! dwim-shell-command :recipe (:type git :host github :repo "xenodium/dwim-shell-command"))
 (package! consult-tramp :recipe (:type git :host github :repo "Ladicle/consult-tramp"))
 (package! topsy)
+(package! evil-textobj-anyblock
+  :recipe (:host github
+           :repo "willghatch/evil-textobj-anyblock"
+           :branch "fix-inner-block")
+  :pin "29280cd71a05429364cdceef2ff595ae8afade4d")
