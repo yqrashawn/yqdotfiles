@@ -326,6 +326,7 @@
       target = "./clojure";
       recursive = true;
     };
+    "mpv/mpv.conf" = { source = ./mpv.conf; };
     yarn-global = {
       source = ./package.json;
       target = "./yarn/global/package.json";
