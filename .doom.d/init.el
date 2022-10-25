@@ -303,4 +303,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 ;; (setq straight-vc-git-default-clone-depth 'full)
 (add-hook 'tty-setup-hook (lambda () (load! "./tty/config.el")))
 (defalias 'defgeneric 'cl-defgeneric)
+
+;; don't resize based on fonts etc, make the startup faster
+;; https://tony-zorman.com/posts/2022-10-22-emacs-potpourri.html
+(setq frame-inhibit-implied-resize nil)
 ;; (require 'bind-key)
