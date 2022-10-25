@@ -9,10 +9,8 @@ alias upgradenix="sudo -i sh -c 'nix-channel --update && nix-env -iA nixpkgs.nix
 
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
-
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-
 
 alias iconfig='ifconfig | awk '\''{if ( $1 >= "en" && $2 >= "flags" && $3 == "mtu") {print $1}; if ( $1 == "inet" || $1 == "status:"){print $0};}'\''|egrep "en|lo|inet"'
 # check network state
@@ -31,7 +29,6 @@ alias lstt='exa --sort=modified --time=created --long --all -r | sed 15q'
 # alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
 alias reload="exec $SHELL -l"
 alias rreload="rm -rf ~/.cache/prezto/zcompdump || true && exec $SHELL -l"
-
 
 # servers
 alias rbserv='ruby -run -e httpd . -p 8000'
@@ -56,10 +53,9 @@ alias t='emacsclient -t'
 alias vvv='vimr'
 alias m='mvim'
 alias wdired='roamer'
-alias emacsd='vmtouch -efq ~/.doom.d/ && vmtouch -qtf ~/.doom.d/ && vmtouch -efq ~/.emacs.d/ && vmtouch -qtf ~/.emacs.d/ && vmtouch -ef /Applications/Emacs.app/ && vmtouch -qtf /Applications/Emacs.app/'
 
 function mlock {
-  vmtouch -efq $@ && vmtouch -qtf $@
+    vmtouch -efq $@ && vmtouch -qtf $@
 }
 
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
@@ -76,10 +72,10 @@ alias sf='proxychains4 -f /etc/proxychains.conf'
 alias aria2c='aria2c --enable-rpc --rpc-listen-all'
 
 # macOS has no `md5sum`, so use `md5` as a fallback
-command -v md5sum > /dev/null || alias md5sum="md5"
+command -v md5sum >/dev/null || alias md5sum="md5"
 
 # macOS has no `sha1sum`, so use `shasum` as a fallback
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
+command -v sha1sum >/dev/null || alias sha1sum="shasum"
 
 # misc
 alias rm='trash'
@@ -105,22 +101,22 @@ alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
 
 # png
 function pngopti {
-  optipng -o7 $@
+    optipng -o7 $@
 }
 function pngq {
-  pngquant --force --speed 1 --output $@ $@
+    pngquant --force --speed 1 --output $@ $@
 }
 function opng {
-  pngq $@
-  pngopti $@
+    pngq $@
+    pngopti $@
 }
 function pnghalf {
-  convert -resize 50% $@ $@
+    convert -resize 50% $@ $@
 }
 function opnghalf {
-  convert -resize 50% $@ $@
-  pngq $@
-  pngopti $@
+    convert -resize 50% $@ $@
+    pngq $@
+    pngopti $@
 }
 
 # update email
@@ -133,7 +129,7 @@ alias cleanup_dsstore="find . -name '*.DS_Store' -type f -ls -delete"
 alias ungz='gunzip -k'
 
 function gwss {
-  e -e "(magit-status)"
+    e -e "(magit-status)"
 }
 
 #diff

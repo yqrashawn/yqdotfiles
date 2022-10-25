@@ -1,0 +1,8 @@
+#!/bin/sh
+
+vmtouch -efq ~/.doom.d
+vmtouch -efq ~/.emacs.d
+vmtouch -efq /opt/homebrew/opt/emacs-mac
+vmtouch -tfq ~/.doom.d
+vmtouch -tfq ~/.emacs.d
+vmtouch -tfq /opt/homebrew/opt/emacs-mac
