@@ -961,3 +961,28 @@ _b_ranch _j_next _k_prev _h_up
         '(clojurec-mode . zprint)
         '(clojurescript-mode . zprint))
       (message "Using zprint"))))
+
+;;;###autoload
+(defun +doom/toggle-line-numbers ()
+  "Toggle line numbers.
+
+Cycles through regular, relative and no line numbers. The order depends on what
+`display-line-numbers-type' is set to. If you're using Emacs 26+, and
+visual-line-mode is on, this skips relative and uses visual instead.
+
+See `display-line-numbers' for what these values mean."
+  (interactive)
+  (defvar doom--line-number-style display-line-numbers-type)
+  (let* ((styles `(t ,(if visual-line-mode 'visual t) nil))
+         (order (cons display-line-numbers-type (remq display-line-numbers-type styles)))
+         (queue (memq doom--line-number-style order))
+         (next (if (= (length queue) 1)
+                   (car order)
+                 (car (cdr queue)))))
+    (setq doom--line-number-style next)
+    (setq display-line-numbers next)
+    (message "Switched to %s line numbers"
+             (pcase next
+               (`t "normal")
+               (`nil "disabled")
+               (_ (symbol-name next))))))

@@ -142,10 +142,6 @@
   (unless (derived-mode-p 'prog-mode)
     (funcall orig-fn)))
 
-;; use SPC t l to toggle line numbers
-(setq display-line-numbers-type nil)
-
-
 (set-popup-rules!
   '(("^\\*[Hh]elp" :slot 2 :side right :vslot -8 :size 0.35 :select t :quit current)
      ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)

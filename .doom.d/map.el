@@ -83,7 +83,7 @@
     :desc "Locate file" "sD" #'locate
     :desc "Toggle debug on error" "tD" #'toggle-debug-on-error
     :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
-    :desc "Line numbers" "tl" #'doom/toggle-line-numbers
+    :desc "Line numbers" "tl" #'+doom/toggle-line-numbers
     :desc "Imenu sidebar" "cb" #'side-hustle-toggle
     :desc "Git timemachine" "gt" #'git-timemachine
     ;; :desc "RSS" "on" #'=elfeed-dashboard
@@ -117,9 +117,9 @@
       :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                                (call-interactively #'+default/search-project)))
       :desc "Edit goku edn config" "k" (cmd!
-                                        (let ((projectile-switch-project-action (cmd!)))
-                                          (projectile-switch-project-by-name "~/.nixpkgs/"))
-                                        (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
+                                         (let ((projectile-switch-project-action (cmd!)))
+                                           (projectile-switch-project-by-name "~/.nixpkgs/"))
+                                         (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
       :desc "Edit nix config" "n" (cmd! (projectile-switch-project-by-name "~/.nixpkgs/"))
       :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
       :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
