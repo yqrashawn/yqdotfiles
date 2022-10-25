@@ -1,0 +1,3 @@
+#!/bin/sh
+
+watchexec -e go -w ./ "go test -v $1 -mod=vendor -run $2"
