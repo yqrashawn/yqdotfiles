@@ -34,11 +34,39 @@
     plugins = with pkgs.vimPlugins; [
       # basics
       vim-sensible
-      vim-fugitive
       vim-sandwich
       vim-commentary
       vim-nix
       vim-which-key
+
+      # Text objects
+      nvim-autopairs
+      nvim-comment
+      nvim-surround
+
+      # Appearance
+      bufferline-nvim
+      indent-blankline-nvim
+      lualine-nvim
+      nvim-colorizer-lua
+
+      # Fuzzy Finder
+      cheatsheet-nvim
+      telescope-fzf-native-nvim
+      telescope-nvim
+
+      # General Deps
+      nui-nvim
+      plenary-nvim
+      popup-nvim
+
+      # Project management
+      direnv-vim
+      project-nvim
+
+      # Git
+      gitsigns-nvim
+      vim-fugitive
 
       # vim addon utilities
       direnv-vim

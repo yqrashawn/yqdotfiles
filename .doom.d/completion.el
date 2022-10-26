@@ -152,11 +152,15 @@
          fussy-use-cache t
          fussy-score-fn 'fussy-fuz-score)
 
-  (after! consult
-    (defadvice! +consult-recent-file (f)
-      :around #'consult-recent-file
-      (let ((completion-styles '(orderless fussy)))
-        (call-interactively f))))
+  ;; (after! consult
+  ;;   (defadvice! +consult-recent-file (f)
+  ;;     :around #'consult-recent-file
+  ;;     (let ((completion-styles '(orderless fussy)))
+  ;;       (call-interactively f)))
+  ;;   (defadvice! +consult-buffer (f)
+  ;;     :around #'consult-buffer
+  ;;     (let ((completion-styles '(orderless fussy)))
+  ;;       (call-interactively f))))
 
   (pushnew! completion-styles 'fussy)
   ;; (setq completion-styles '(fussy))

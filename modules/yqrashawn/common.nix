@@ -242,6 +242,7 @@ in {
         stylua
         # zls
         # gopls
+        sqls
         gore
         gomodifytags
         gotests
