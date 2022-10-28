@@ -221,7 +221,8 @@
   (:map yq-s-map
     :g "s" #'+ss
     :g "S" #'+sS
-    :g "p" #'projectile-switch-project
+    :g "P" #'doom/find-file-in-other-project
+    :g "p" #'++projectile-switch-project-and-rename-workspace
     :g "u" #'magit-dispatch
     :g "j" #'recentf-open-files
     :g "h" #'save-buffer

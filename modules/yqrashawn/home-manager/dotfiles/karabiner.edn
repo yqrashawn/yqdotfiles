@@ -601,6 +601,9 @@
            [:s [:!Tx :2]]
            [:m [:!Tx :1]]
            [:b [:!Tx :0]]
+           ;; prev/next workspace
+           [:p [:spacebar :tab :open_bracket]]
+           [:n [:spacebar :tab :close_bracket]]
            :tmux-windresize-mode
            [:h [:!Tq :!Sh]] ;; resize window
            [:j [:!Tq :!Sj]] ;; resize window

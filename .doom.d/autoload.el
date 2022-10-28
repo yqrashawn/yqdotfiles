@@ -986,3 +986,14 @@ See `display-line-numbers' for what these values mean."
                (`t "normal")
                (`nil "disabled")
                (_ (symbol-name next))))))
+
+;;;###autoload
+(defun ++projectile-switch-project-and-rename-workspace ()
+  "Switch to a project's magit-status buffer and prompt for new workspace name
+
+This is for per workspace each task setup"
+  (interactive)
+  (let ((projectile-current-project-on-switch 'keep)
+        (+workspaces-switch-project-function #'magit-status))
+    (call-interactively #'projectile-switch-project)
+    (call-interactively #'+workspace/rename)))

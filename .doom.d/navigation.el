@@ -4,15 +4,14 @@
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
   (defun +iflipb-always-ignore-buffers (name)
-    (or (string-match-p "^magit-" name)
-        (and (string-match-p "^\*" name)
-             (not (string-match-p "scratch" name)))
-        (string-match-p "^ " name)))
+    (with-current-buffer name
+      (memq major-mode '(dired-mode))))
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
   (defun +iflipb-ignore-buffers (name)
-    ;; (get-buffer-window name 'visible)
-    )
-  (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers))
+    (get-buffer-window name 'visible))
+  (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers)
+  :config
+  (setq! iflipb-buffer-list-function #'doom-buffer-list))
 
 (after! vertico
   (setq! vertico-count 10
@@ -216,3 +215,5 @@ See `dwim-shell-command-execute-script' for all other params."
         (not (cdr (doom-visible-windows))))
     nil
     (funcall orig-fn)))
+
+(setq! +workspaces-on-switch-project-behavior t)
