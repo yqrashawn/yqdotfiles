@@ -115,3 +115,7 @@
 ;;   (fancy-compilation-mode))
 
 (use-package! topsy :hook (prog-mode . topsy-mode))
+
+(after! doom-modeline
+  (setq! doom-modeline-persp-name t
+         doom-modeline-persp-icon nil))
