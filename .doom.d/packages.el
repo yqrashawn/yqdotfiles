@@ -157,7 +157,7 @@
   ;; mu4e
   link-hint
   fd-dired
-  code-review
+  ;; code-review
   clj-refactor
   clojure-mode)
 

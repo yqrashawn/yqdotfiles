@@ -102,6 +102,7 @@ in {
         man
         duf # du
         jq
+        yq
         fd
         ctags
         # gitui

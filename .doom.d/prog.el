@@ -153,3 +153,5 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :after-call eshell-follow-global-mode
   :config
   (eshell-follow-global-mode t))
+
+(add-hook! go-mode '(hl-line-mode which-func-mode))
