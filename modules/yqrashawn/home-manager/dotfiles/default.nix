@@ -32,6 +32,10 @@
       target = "local/bin";
       recursive = true;
     };
+    # inputrc = {
+    #   srouce = ./.inputrc;
+    #   target = ".inputrc";
+    # };
     raycast = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./raycast;
       target = ".local/bin/raycast";
