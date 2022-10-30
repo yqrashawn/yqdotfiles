@@ -704,6 +704,7 @@
   :loglevel "error"
   :config
   {:url_patterns [["zoommtg:" "us.zoom.xos"]
+                  ["https://www.notion.so/" "notion.id"]
                   ["tg:" "ru.keepcoder.Telegram"]
                   ["https://yqrashawn.deta.dev.*" chrm]
                   ;; ["http://localhost:.*" chrm]
