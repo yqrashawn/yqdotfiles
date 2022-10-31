@@ -993,6 +993,7 @@ See `display-line-numbers' for what these values mean."
 
 This is for per workspace each task setup"
   (interactive)
+  (require 'projectile)
   (let ((projectile-current-project-on-switch 'keep)
         (+workspaces-switch-project-function #'magit-status))
     (call-interactively #'projectile-switch-project)

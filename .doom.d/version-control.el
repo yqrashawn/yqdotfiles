@@ -140,3 +140,52 @@ requiring confirmation."
       (marsam/add-pull-request-refs remote)))
   (defadvice! +forge-pull (&optional repo until) :after #'forge-pull
     (+marsam/add-pull-request-refs)))
+
+(after! code-review
+  ;; https://github.com/wandersoncferreira/code-review/pull/228/files
+  (defun code-review-section--magit-diff-insert-file-section
+    (file orig status modes rename header binary long-status)
+  "Overwrite the original Magit function on `magit-diff.el' FILE.
+ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the original fn."
+
+  ;;; --- beg -- code-review specific code.
+  ;;; I need to set a reference point for the first hunk header
+  ;;; so the positioning of comments is done correctly.
+  (let* ((raw-path-name (substring-no-properties file))
+         (clean-path (if (string-prefix-p "b/" raw-path-name)
+                         (replace-regexp-in-string "^b\\/" "" raw-path-name)
+                       raw-path-name)))
+    (code-review-db--curr-path-update clean-path))
+    ;;; --- end -- code-review specific code.
+  (insert ?\n)
+  (magit-insert-section section
+    (file file (or (equal status "deleted")
+                   (derived-mode-p 'magit-status-mode)))
+    (insert (propertize (format "%-10s %s" status
+                                (if (or (not orig) (equal orig file))
+                                    file
+                                  (format "%s -> %s" orig file)))
+                        'font-lock-face 'magit-diff-file-heading))
+    (when long-status
+      (insert (format " (%s)" long-status)))
+    (magit-insert-heading)
+    (unless (equal orig file)
+      (oset section source orig))
+    (oset section header header)
+    (when modes
+      (magit-insert-section (hunk '(chmod))
+        (insert modes)
+        (magit-insert-heading)))
+    (when rename
+      (magit-insert-section (hunk '(rename))
+        (insert rename)
+        (magit-insert-heading)))
+    (when (string-match-p "Binary files.*" header)
+      (magit-insert-section (code-review-binary-file-section file)
+        (insert (propertize "Visit file"
+                            'face 'code-review-request-review-face
+                            'mouse-face 'highlight
+                            'help-echo "Visit the file in Dired buffer"
+                            'keymap 'code-review-binary-file-section-map))
+        (magit-insert-heading)))
+    (magit-wash-sequence #'magit-diff-wash-hunk))))
