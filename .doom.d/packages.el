@@ -292,3 +292,6 @@
            :repo "willghatch/evil-textobj-anyblock"
            :branch "fix-inner-block")
   :pin "29280cd71a05429364cdceef2ff595ae8afade4d")
+
+(package! languagetool)
+(disable-packages! langtool)

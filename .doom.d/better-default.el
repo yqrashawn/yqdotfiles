@@ -438,7 +438,73 @@ This function could be in the list `comint-output-filter-functions'."
   (defalias 'indent-buffer #'pp-buffer))
 
 (setq!
+  langtool-http-server-host "api.languagetoolplus.com"
+  langtool-http-server-port 443
   ;; langtool-language-tool-server-jar "/run/current-system/sw/bin/languagetool"
   langtool-java-bin (executable-find "java")
   ;; langtool-bin nil
   langtool-bin "/run/current-system/sw/bin/languagetool-commandline")
+
+(use-package! languagetool
+  :hook ((org-mode markdown-mode rst-mode asciidoc-mode latex-mode LaTeX-mode) . languagetool-server-mode)
+  :init
+  (setq!
+    languagetool-api-key "foo"
+    languagetool-username user-mail-address
+    languagetool-server-url "https://api.languagetoolplus.com"
+    languagetool-server-port 443
+    languagetool-mother-tongue "zh-CN")
+  :config
+  (defadvice! +languagetool-server-parse-request (orig-fn)
+    :around #'languagetool-server-parse-request
+    "Return a json-like object with LanguageTool Server request arguments parsed.
+
+Return the arguments as an assoc list of string which will be
+used in the POST request made to the LanguageTool server."
+    (let ((arguments (json-new-object)))
+
+      ;; Appends the correction language information
+      (setq arguments (json-add-to-object arguments "language" languagetool-correction-language))
+
+      ;; Appends the mother tongue information
+      (when (stringp languagetool-mother-tongue)
+        (setq arguments (json-add-to-object arguments "motherTongue" languagetool-mother-tongue)))
+
+      ;; Add LanguageTool Preamium features
+      (when (stringp languagetool-api-key)
+        (setq arguments (json-add-to-object arguments
+                                            "tokenV2"
+                                            (-> (auth-source-search :host "api.languagetoolplus.com"
+                                                                    :user languagetool-username)
+                                                car
+                                                (plist-get :api_token)))))
+
+      (when (stringp languagetool-username)
+        (setq arguments (json-add-to-object arguments "username" languagetool-username)))
+
+      (setq arguments (json-add-to-object arguments "level" "picky"))
+      (setq arguments (json-add-to-object arguments "preferredVariants" "en-US,de-DE,pt-BR,ca-ES"))
+      (setq arguments (json-add-to-object arguments "preferredLanguages" "en,zh"))
+
+      ;; Appends the disabled rules
+      (let ((rules ""))
+        ;; Global disabled rules
+        (dolist (rule languagetool-disabled-rules)
+          (if (string= rules "")
+              (setq rules (concat rules rule))
+            (setq rules (concat rules "," rule))))
+        ;; Local disabled rules
+        (dolist (rule languagetool-local-disabled-rules)
+          (if (string= rules "")
+              (setq rules (concat rules rule))
+            (setq rules (concat rules "," rule))))
+        (unless (string= rules "")
+          (setq arguments (json-add-to-object arguments "disabledRules" rules))))
+
+      ;; Add the buffer contents
+      (setq arguments (json-add-to-object arguments
+                                          "text"
+                                          (buffer-substring-no-properties
+                                           (point-min)
+                                           (point-max))))
+      arguments)))
