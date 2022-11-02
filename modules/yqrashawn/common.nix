@@ -46,6 +46,7 @@ in {
           composeSupport = true;
         }))
         docker-machine
+        docker-credential-helpers
         colima
         lapce
         isync-isync

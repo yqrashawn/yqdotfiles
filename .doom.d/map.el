@@ -537,7 +537,7 @@
       :gn "r" #'code-review-transient-api
       :nv "i" #'code-review-comment-add-or-edit
       :n "M-RET" #'code-review-comment-add-or-edit
-      :n "RET" #'magit-diff-visit-file))
+      :gn "RET" #'magit-diff-visit-file))
   (:after elfeed
     (:map elfeed-show-mode-map
       :n "gy" #'elfeed-show-yank
