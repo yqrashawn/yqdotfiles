@@ -244,6 +244,7 @@ in {
         stylua
         # zls
         # gopls
+        golint
         sqls
         gore
         gomodifytags
