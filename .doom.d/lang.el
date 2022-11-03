@@ -73,8 +73,7 @@
     lsp-eslint-auto-fix-on-save t
     lsp-completion-show-detail nil
     lsp-completion-show-kind nil
-    lsp-completion-sort-initial-results nil
-    )
+    lsp-completion-sort-initial-results nil)
   (pushnew! lsp-file-watch-ignored-directories "[/\\\\]coverage'" "[/\\\\]lcov-report'" "[/\\\\]\\.log\\'" "[/\\\\]\\.clj-kondo" "[/\\\\]\\storybook-static" "[/\\\\]\\.storybook" "[/\\\\]releases" "[/\\\\]\\.yarn" "[/\\\\]\\.vscode" "[/\\\\]build'" "[/\\\\]\\.shadow-cljs" "[/\\\\]cljs-runtime" "[/\\\\]dist" "[/\\\\]__snapshots__'" "[/\\\\]sp_"))
 (after! consult-lsp
   (defun +consult-lsp--diagnostics--transformer (file diag)

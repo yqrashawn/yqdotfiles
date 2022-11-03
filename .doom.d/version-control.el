@@ -142,6 +142,7 @@ requiring confirmation."
     (+marsam/add-pull-request-refs)))
 
 (after! code-review
+  (setq! code-review-lgtm-message "Thanks for your contribution. LGTM! :thumbsup:")
   ;; https://github.com/wandersoncferreira/code-review/pull/228/files
   (defun code-review-section--magit-diff-insert-file-section
     (file orig status modes rename header binary long-status)

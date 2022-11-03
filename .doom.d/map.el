@@ -112,14 +112,15 @@
       :desc "Resume vertico" "l" #'vertico-repeat)
     (:prefix-map ("fe" . "Edit srcs")
       :desc "Find library" "l" #'find-library
-      :desc "Edit .doom.d config" "d" (cmd! (projectile-switch-project-by-name "~/.doom.d/"))
+      :desc "Edit .doom.d config" "d" (cmd! (let ((default-directory (expand-file-name "~/.doom.d/")))
+                                              (call-interactively #'find-file)))
       :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
       :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                                (call-interactively #'+default/search-project)))
       :desc "Edit goku edn config" "k" (cmd!
-                                         (let ((projectile-switch-project-action (cmd!)))
-                                           (projectile-switch-project-by-name "~/.nixpkgs/"))
-                                         (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
+                                        ;; (let ((projectile-switch-project-action (cmd!)))
+                                        ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
+                                        (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
       :desc "Edit nix config" "n" (cmd! (projectile-switch-project-by-name "~/.nixpkgs/"))
       :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
       :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
@@ -537,7 +538,7 @@
       :gn "r" #'code-review-transient-api
       :nv "i" #'code-review-comment-add-or-edit
       :n "M-RET" #'code-review-comment-add-or-edit
-      :gn "RET" #'magit-diff-visit-file))
+      :gn "RET" #'magit-diff-visit-file-other-window))
   (:after elfeed
     (:map elfeed-show-mode-map
       :n "gy" #'elfeed-show-yank
