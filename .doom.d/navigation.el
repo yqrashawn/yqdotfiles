@@ -4,11 +4,15 @@
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
   (defun +iflipb-always-ignore-buffers (name)
-    (with-current-buffer name
-      (memq major-mode '(dired-mode))))
+    (let ((b (get-buffer name)))
+      (cond
+        ((s-starts-with? " " name) t)
+        ((memq (buffer-local-value 'major-mode b) '(dired-mode)) t))))
+  (iflipb-interesting-buffers)
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
   (defun +iflipb-ignore-buffers (name)
-    (get-buffer-window name 'visible))
+    (unless (eq (buffer-name (current-buffer)) name)
+      (get-buffer-window name t)))
   (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers)
   :config
   (setq! iflipb-buffer-list-function #'doom-buffer-list))
