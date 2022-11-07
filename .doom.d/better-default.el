@@ -445,16 +445,7 @@ This function could be in the list `comint-output-filter-functions'."
   ;; langtool-bin nil
   langtool-bin "/run/current-system/sw/bin/languagetool-commandline")
 
-(use-package! languagetool
-  :hook ((org-mode markdown-mode rst-mode asciidoc-mode latex-mode LaTeX-mode) . languagetool-server-mode)
-  :init
-  (setq!
-    languagetool-api-key "foo"
-    languagetool-username user-mail-address
-    languagetool-server-url "https://api.languagetoolplus.com"
-    languagetool-server-port 443
-    languagetool-mother-tongue "zh-CN")
-  :config
+(after! languagetool-server
   (defadvice! +languagetool-server-parse-request (orig-fn)
     :around #'languagetool-server-parse-request
     "Return a json-like object with LanguageTool Server request arguments parsed.
@@ -508,3 +499,13 @@ used in the POST request made to the LanguageTool server."
                                            (point-min)
                                            (point-max))))
       arguments)))
+
+(use-package! languagetool
+  :hook ((org-mode markdown-mode rst-mode asciidoc-mode latex-mode LaTeX-mode) . languagetool-server-mode)
+  :init
+  (setq!
+   languagetool-api-key "foo"
+   languagetool-username user-mail-address
+   languagetool-server-url "https://api.languagetoolplus.com"
+   languagetool-server-port 443
+   languagetool-mother-tongue "zh-CN"))

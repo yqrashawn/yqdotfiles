@@ -8,7 +8,6 @@
       (cond
         ((s-starts-with? " " name) t)
         ((memq (buffer-local-value 'major-mode b) '(dired-mode)) t))))
-  (iflipb-interesting-buffers)
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
   (defun +iflipb-ignore-buffers (name)
     (unless (eq (buffer-name (current-buffer)) name)

@@ -690,7 +690,7 @@ _b_ranch _j_next _k_prev _h_up
 (defun =elfeed-dashboard ()
   "Activate (or switch to) `elfeed' in its workspace."
   (interactive)
-  (if (featurep! :ui workspaces)
+  (if (modulep! :ui workspaces)
       (progn
         (+workspace-switch +rss-workspace-name t)
         (doom/switch-to-scratch-buffer)
