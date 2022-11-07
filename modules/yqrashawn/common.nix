@@ -114,7 +114,8 @@ in {
         thefuck
         nix-tree
         nix-linter
-        httpstat # curlie
+        httpstat
+        curlie
         httpie
         # glances # htop
         xh # httpie
