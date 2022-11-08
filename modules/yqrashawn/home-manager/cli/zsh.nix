@@ -30,7 +30,7 @@ let
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    . $HOME/.asdf/plugins/java/set-java-home.bash
+    export JAVA_HOME=$(asdf where java)
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {

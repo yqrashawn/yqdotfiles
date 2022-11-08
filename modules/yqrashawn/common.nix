@@ -45,6 +45,8 @@ in {
           buildxSupport = true;
           composeSupport = true;
         }))
+        mutagen
+        mutagen-compose
         docker-machine
         docker-credential-helpers
         colima

@@ -1,21 +1,21 @@
-{:profiles           {:Goku
-                      {:default true :sim 50 :delay 500 :alone 500 :held 500}}
- :tos                {:same_wind_app   {:key  :grave_accent_and_tilde
-                                        :modi [:left_command]
-                                        :lazy true}
-                      :prev_app        {:key  :tab
-                                        :modi [:left_command]
-                                        :lazy true}
-                      :left_paren      {:key :9 :modi [:left_shift] :lazy true}
-                      :right_paren     {:key :0 :modi [:left_shift] :lazy true}
-                      :home_dir        [{:key  :grave_accent_and_tilde
-                                         :modi [:left_shift]
-                                         :lazy true} {:key :slash}]
-                      :regex_match_any [{:key :period}
-                                        {:key  :8
-                                         :modi [:left_shift]
-                                         :lazy true}]}
- :modifiers          {:ro :right_option}
+{:profiles  {:Goku
+             {:default true :sim 50 :delay 500 :alone 500 :held 500}}
+ :tos       {:same_wind_app   {:key  :grave_accent_and_tilde
+                               :modi [:left_command]
+                               :lazy true}
+             :prev_app        {:key  :tab
+                               :modi [:left_command]
+                               :lazy true}
+             :left_paren      {:key :9 :modi [:left_shift] :lazy true}
+             :right_paren     {:key :0 :modi [:left_shift] :lazy true}
+             :home_dir        [{:key  :grave_accent_and_tilde
+                                :modi [:left_shift]
+                                :lazy true} {:key :slash}]
+             :regex_match_any [{:key :period}
+                               {:key  :8
+                                :modi [:left_shift]
+                                :lazy true}]}
+ :modifiers {:ro :right_option}
  :templates
  {:launch
   "osascript -e 'tell application \"Alfred 5\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
@@ -29,8 +29,8 @@
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
   :kb-maestro
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-  :open       "open \"%s\""
-  :opena      "open -a \"%s\""
+  :open   "open \"%s\""
+  :opena  "open -a \"%s\""
   :hs
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '(\"%s\")'"
   :hsl
@@ -39,7 +39,7 @@
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
   :togg
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
-  :yfocus     "sh ~/.config/yabai/focus-window %s"
+  :yfocus "sh ~/.config/yabai/focus-window %s"
   :toggle
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
   :type
@@ -48,7 +48,7 @@
   "export PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai -m window --focus $(yabai -m query --windows | jq 'map(select(.app == \"%s\")) | first | .id') || hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
   ;; :focus      "yabai -m display --focus \"%s\" & yabai -m space --focus
   ;; \"%s\""
- }
+  }
  :layers
  {:tab-mode              {:key     :tab
                           :afterup [{:set ["yabai-scale-mode" 0]}
@@ -193,7 +193,7 @@
               {:delayed {:canceled ["test-mode-j-dbpress-mode" 0]}}
               :invoked ["test-mode-j-dbpress-mode" 0]
               :held "say 'j held down'"]]}
-  {:des   "space cadet and switch input method shift"
+  {:des "space cadet and switch input method shift"
    :rules
    [[:left_shift [["lshift" 0] :!CTf17] :lshift]
     [:##left_shift :left_shift :!lshift
@@ -239,7 +239,7 @@
 
            [:open_bracket :!TOSopen_bracket] ;; prev display
            [:close_bracket :!TOSclose_bracket] ;; next display
-          ]}
+           ]}
   ;; {:des   "spacebar ctrl"
   ;;  :rules [[[:spacebar :f] [:spacebar :f]]
   ;;          [[:spacebar :w] [:spacebar :w]]
@@ -453,7 +453,7 @@
            [:f [:togg "Finder"]]
            [:y :!!x]
            [:6 :!!z]
-           [:9 [:open "/Applications/PDF Expert.app"]]
+           ;; [:9 [:open "/Applications/PDF Expert.app"]]
            ;; [:h [:togg "DingTalk"]]
            [:h [:togg "Discord"] :!Discord]
            [:h [:togg "Slack"] :Discord]
@@ -463,9 +463,11 @@
            [:hyphen [:togg "Paw"]]
            ;; [:equal_sign [:open "/Applications/Textual.app"]]
            [:equal_sign [:togg "Textual"]]
-           [:period [:togg "Keybase"]]
+           [:period [:togg "Surge Dashboard"] :Surge]
+           [:period [:togg "Surge"]]
            ;; [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
            [:8 [:togg "Karabiner-EventViewer"]]
+           [:9 [:togg "Proxyman"]]
            ;; [:b [:open "/Applications/Bee.app"]]
            ;; [:c [:open "/Applications/Visual Studio Code.app"]]
            [:c [:togg "Visual Studio Code"]]
@@ -498,7 +500,7 @@
    :rules [[:##left_control :left_control
             [:adv2 :uhk :hhkb-bt :hhkb :hhkb-tmk :filco-minila]
             {:alone :escape}]]}
-  {:des   "FILCO MINILA Change left_alt to left_command"
+  {:des "FILCO MINILA Change left_alt to left_command"
    :rules
    [:filco-minila
     [:##grave_accent_and_tilde :backslash]
@@ -514,7 +516,7 @@
            [:application :right_command nil {:alone :prev_app}]]}
   {:des   "Change left_option to f18 when used alone"
    :rules [[:left_option :left_option nil {:alone [:f18]}]]}
-  {:des   "Quit application by pressing command-q twice"
+  {:des "Quit application by pressing command-q twice"
    :rules
    [[:!C#Pq [:!Cq ["command-q" 0] [:noti :cmdq]] ["command-q" 1]]
     [:!C#Pq [[:noti :cmdq "Press Again to QUIT"] ["command-q" 1]] nil
@@ -534,7 +536,7 @@
            ;; [[:m :l] [[:alf "winswitch" "ru.mandrigin.alfred.sww"]
            ;; ["in-alfred" 1]]]
            [[:m :l] :f18]]}
-  {:des   "alfred mode"
+  {:des "alfred mode"
    :rules
    [[:l :!COi :browsers-alfred-mode]
     [:p :!OSa :browsers-alfred-mode]
@@ -643,7 +645,7 @@
            [:l :!COright_arrow]
            [:v :!Cd]
            [:s :!CSd]]}
-  {:des   "yabai mode"
+  {:des "yabai mode"
    :rules
    [;; move windows
     :yabai-warp-mode
@@ -727,7 +729,7 @@
            [:w :equal_sign]
            [:e :!Sopen_bracket]
            [:r :!Sclose_bracket]]}
-  {:des   "chrome debug mode"
+  {:des "chrome debug mode"
    :rules
    [:!Debuggers
     [:f10 :mute]
@@ -840,74 +842,76 @@
    "^com\\.parallels\\.winapp\\." "^org\\.x\\.X11$" "^com\\.apple\\.x11$"
    "^org\\.macosforge\\.xquartz\\.X11$" "^org\\.macports\\.X11$"
    "^com\\.sublimetext\\." "^com\\.microsoft\\.VSCode(Insiders)?$"]
-  :VSCode                        ["^com\\.microsoft\\.VSCode(Insiders)?$"]
+  :VSCode       ["^com\\.microsoft\\.VSCode(Insiders)?$"]
   :Emacs-and-Terminals
   ["^org\\.gnu\\.Emacs$" "^org\\.gnu\\.AquamacsEmacs$" "^org\\.gnu\\.Aquamacs$"
    "^com\\.apple\\.Terminal$" "^com\\.googlecode\\.iterm2$"
    "^co\\.zeit\\.hyperterm$" "^co\\.zeit\\.hyper$" "^io\\.alacritty$"
    "^com\\.github\\.wez\\.wezterm$" "^net\\.kovidgoyal\\.kitty$"]
-  :Emacs                         ["^org\\.gnu\\.Emacs$" "^org\\.gnu\\.AquamacsEmacs$"
-                                  "^org\\.gnu\\.Aquamacs$"]
-  :Chromes                       ["^org\\.chromium\\.Chromium$"
-                                  "^com\\.google\\.Chrome$"
-                                  "^com\\.google\\.Chrome\\.dev$"
-                                  "^com\\.google\\.Chrome\\.canary$"
-                                  "^com\\.microsoft\\.edgemac\\.Beta$"
-                                  "^com\\.brave\\.Browser$"]
-  :Chrome                        ["^com\\.google\\.Chrome$"]
-  :ChromeCanary                  ["^com\\.google\\.Chrome\\.canary$"]
-  :Chromium                      ["^org\\.chromium\\.Chromium$"]
-  :Orion                         ["^com\\.kagi\\.kagimacOS$"]
-  :Edge                          ["^com\\.microsoft\\.edgemac\\.Beta$"]
-  :VV                            ["^com\\.vivaldi\\.Vivaldi$"]
-  :Firefoxes                     ["^org\\.mozilla\\.firefox$"
-                                  "^org\\.mozilla\\.firefoxdeveloperedition$"]
-  :Terminals                     ["^com\\.apple\\.Terminal$"
-                                  "^com\\.googlecode\\.iterm2$"
-                                  "^co\\.zeit\\.hyperterm$" "^co\\.zeit\\.hyper$"
-                                  "^io\\.alacritty$"
-                                  "^com\\.github\\.wez\\.wezterm$"
-                                  "^net\\.kovidgoyal\\.kitty$"
-                                  ;; "^dev\\.warp\\.Warp.*"
-                                 ]
+  :Emacs        ["^org\\.gnu\\.Emacs$" "^org\\.gnu\\.AquamacsEmacs$"
+                 "^org\\.gnu\\.Aquamacs$"]
+  :Chromes      ["^org\\.chromium\\.Chromium$"
+                 "^com\\.google\\.Chrome$"
+                 "^com\\.google\\.Chrome\\.dev$"
+                 "^com\\.google\\.Chrome\\.canary$"
+                 "^com\\.microsoft\\.edgemac\\.Beta$"
+                 "^com\\.brave\\.Browser$"]
+  :Chrome       ["^com\\.google\\.Chrome$"]
+  :ChromeCanary ["^com\\.google\\.Chrome\\.canary$"]
+  :Chromium     ["^org\\.chromium\\.Chromium$"]
+  :Orion        ["^com\\.kagi\\.kagimacOS$"]
+  :Edge         ["^com\\.microsoft\\.edgemac\\.Beta$"]
+  :VV           ["^com\\.vivaldi\\.Vivaldi$"]
+  :Firefoxes    ["^org\\.mozilla\\.firefox$"
+                 "^org\\.mozilla\\.firefoxdeveloperedition$"]
+  :Terminals    ["^com\\.apple\\.Terminal$"
+                 "^com\\.googlecode\\.iterm2$"
+                 "^co\\.zeit\\.hyperterm$" "^co\\.zeit\\.hyper$"
+                 "^io\\.alacritty$"
+                 "^com\\.github\\.wez\\.wezterm$"
+                 "^net\\.kovidgoyal\\.kitty$"
+                 ;; "^dev\\.warp\\.Warp.*"
+                 ]
   :vim-mode-disabled-application
   ["^com\\.apple\\.Terminal$" "^com\\.googlecode\\.iterm2$"
    "^co\\.zeit\\.hyperterm$" "^co\\.zeit\\.hyper$" "^io\\.alacritty$"
    "^com\\.github\\.wez\\.wezterm$" "^net\\.kovidgoyal\\.kitty$" "^org\\.vim\\."
    "^com\\.qvacua\\.VimR$"]
-  :Finder                        ["^com\\.apple\\.finder$"]
-  :Debuggers                     ["^org\\.mozilla\\.firefox$"
-                                  "^com\\.microsoft\\.edgemac\\.Beta$"
-                                  "^org\\.mozilla\\.firefoxdeveloperedition$"
-                                  "^com\\.google\\.Chrome$"
-                                  "^org\\.chromium\\.Chromium$"
-                                  "^com\\.google\\.Chrome\\.canary$"
-                                  "^com\\.apple\\.Safari$"
-                                  "^com\\.microsoft\\.VSCode(Insiders)?$"
-                                  "^com\\.brave\\.Browser$"]
-  :Alfred                        ["^com\\.runningwithcrayons\\.Alfred$"]
-  :Slack                         ["^com\\.tinyspeck\\.slackmacgap$"]
-  :Todoist                       ["^com\\.todoist\\.mac\\.Todoist$"]
-  :BusyCal                       ["^com\\.busymac\\.busycal"]
-  :Keybase                       ["^keybase\\.Electron$"]
-  :Discord                       ["^com\\.hnc\\.Discord$"]
-  :slidepad                      ["^com\\.slidepad\\.slidepad"]
-  :Browsers                      ["^com\\.kagi\\.kagimacOS$"
-                                  "^org\\.mozilla\\.firefox$"
-                                  "^org\\.mozilla\\.firefoxdeveloperedition$"
-                                  "^com\\.google\\.Chrome$"
-                                  "^org\\.chromium\\.Chromium$"
-                                  "^com\\.google\\.Chrome\\.canary$"
-                                  "^com\\.apple\\.Safari$"
-                                  "^com\\.microsoft\\.edgemac\\.Beta$"
-                                  "^com\\.brave\\.Browser$"]
-  :wechat                        ["^com\\.tencent\\.xinWeChat$"]
-  :Games                         ["^unity\\." "^com\\.Klei\\." "^unity\\.Klei\\."
-                                  "^org\\.Terraria"]
-  :REBL                          ["^net\\.java\\.openjdk\\.cmd$"]
-  :2Do                           ["^com\\.guidedways\\.TodoMac$"]
-  :CopyQ                         ["^io\\.github\\.hluk\\.CopyQ$"]
-  :Warp                          ["^dev\\.warp\\.Warp"]}
+  :Finder       ["^com\\.apple\\.finder$"]
+  :Debuggers    ["^org\\.mozilla\\.firefox$"
+                 "^com\\.microsoft\\.edgemac\\.Beta$"
+                 "^org\\.mozilla\\.firefoxdeveloperedition$"
+                 "^com\\.google\\.Chrome$"
+                 "^org\\.chromium\\.Chromium$"
+                 "^com\\.google\\.Chrome\\.canary$"
+                 "^com\\.apple\\.Safari$"
+                 "^com\\.microsoft\\.VSCode(Insiders)?$"
+                 "^com\\.brave\\.Browser$"]
+  :Alfred       ["^com\\.runningwithcrayons\\.Alfred$"]
+  :Slack        ["^com\\.tinyspeck\\.slackmacgap$"]
+  :Todoist      ["^com\\.todoist\\.mac\\.Todoist$"]
+  :BusyCal      ["^com\\.busymac\\.busycal"]
+  :Keybase      ["^keybase\\.Electron$"]
+  :Discord      ["^com\\.hnc\\.Discord$"]
+  :slidepad     ["^com\\.slidepad\\.slidepad"]
+  :Browsers     ["^com\\.kagi\\.kagimacOS$"
+                 "^org\\.mozilla\\.firefox$"
+                 "^org\\.mozilla\\.firefoxdeveloperedition$"
+                 "^com\\.google\\.Chrome$"
+                 "^org\\.chromium\\.Chromium$"
+                 "^com\\.google\\.Chrome\\.canary$"
+                 "^com\\.apple\\.Safari$"
+                 "^com\\.microsoft\\.edgemac\\.Beta$"
+                 "^com\\.brave\\.Browser$"]
+  :wechat       ["^com\\.tencent\\.xinWeChat$"]
+  :Games        ["^unity\\." "^com\\.Klei\\." "^unity\\.Klei\\."
+                 "^org\\.Terraria"]
+  :REBL         ["^net\\.java\\.openjdk\\.cmd$"]
+  :Surge        ["^com\\.nssurge\\.surge-mac"]
+  :SurgeDash    ["^com\\.nssurge\\.surge-dashboard"]
+  :2Do          ["^com\\.guidedways\\.TodoMac$"]
+  :CopyQ        ["^io\\.github\\.hluk\\.CopyQ$"]
+  :Warp         ["^dev\\.warp\\.Warp"]}
  :input-sources
  {:squirrel {:input_mode_id
              "^com\\.googlecode\\.rimeime\\.inputmethod\\.Squirrel$"
@@ -916,10 +920,10 @@
   :us       {:input_source_id "^com\\.apple\\.keylayout\\.US$"}
   :sougou   {:input_source_id "^com\\.sogou\\.inputmethod\\.sogou\\.pinyin$"}
   :abc      {:input_source_id "^com\\.apple\\.keylayout\\.ABC$"}
-  :logcg    {:input_mode_id   "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$"
+  :logcg    {:input_mode_id "^com\\.logcg\\.inputmethod\\.LogInputMac2SP$"
              :input_source_id
              "^com\\.logcg\\.inputmethod\\.LogInputMac2\\.LogInputMac2SP$"
-             :language        "zh-Hans"}
+             :language      "zh-Hans"}
   :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
 

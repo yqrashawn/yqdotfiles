@@ -530,7 +530,7 @@
                             :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "9"))}]}
                   {:key :d
                    :title "Toggle dark mode"
-                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "d"))}
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "o"))}
                   {:key :s
                    :title "Toggle sidebery"
                    :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "t"))}

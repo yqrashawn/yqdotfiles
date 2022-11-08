@@ -1,26 +1,29 @@
 ;; -*- mode: clojure -*-
 ;; vi: ft=clojure
-{:width     105
- :style     [;; community style
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
-             :community
+{:search-config? true
+ :cwd-zprintrc?  true
+ :width          80
+ :style          [;; community style
+                  ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#community
+                  :community
 
-             ;; no comma in map
-             :no-comma
+                  ;; no comma in map
+                  :no-comma
 
-             :custom-justify
+                  :rj-var
 
-             ;; justify :as, :refer ... in (ns :require (...)) form
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#require-justify
-             :require-justify
+                  ;; justify :as, :refer ... in (ns :require (...)) form
+                  ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#require-justify
+                  :require-justify
 
-             ;; respect all newlines
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-nl
-             :respect-nl
 
-             ;; respect blank line
-             ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
-             :respect-bl]
+                  ;; respect all newlines
+                  ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-nl
+                  :respect-nl
+
+                  ;; respect blank line
+                  ;; https://github.com/kkinnear/zprint/blob/main/doc/reference.md#respect-bl
+                  :respect-bl]
  :fn-map
  {"reg-sub"         :arg1-pair
   "list-comp"       :binding
@@ -32,7 +35,8 @@
                      {:list   {:respect-nl? false}
                       :vector {:respect-nl? false}}]
   "->"              [:noarg1-body
-                     {:list               {:constant-pair? false :force-nl? false}
+                     {:list               {:constant-pair? false
+                                           :force-nl?      false}
                       :next-inner-restore [[:list :constant-pair?]]}]
   "set!"            "reset!"
   "assoc-when"      "assoc"
@@ -40,10 +44,4 @@
   "conj-when"       "conj"
   "conj-some"       "conj"}
  :style-map
- {:no-comma       {:map {:comma? false}}
-  :rj-var         {:pair {:justify {:max-variance 1000}}}
-  :custom-justify
-  {:doc     "Justify everything using pre-1.1.2 approach"
-   :binding {:justify? true :justify {:max-variance 1000}}
-   :map     {:justify? true :justify {:max-variance 1000}}
-   :pair    {:justify? true :justify {:max-variance 1000}}}}}
+ {:no-comma {:map {:comma? false}}}}

@@ -163,11 +163,11 @@
     "asdf-java": {
       "flake": false,
       "locked": {
-        "lastModified": 1664248204,
-        "narHash": "sha256-6YTSIu5zs5kgJlirUZ9iEA+6BOW2Csb2ljQnjfQFRtY=",
+        "lastModified": 1667874704,
+        "narHash": "sha256-qS2mces44agEprduzdGS95i5kOOsGNqUJgxCKPdpSII=",
         "owner": "halcyon",
         "repo": "asdf-java",
-        "rev": "2df9a2e0f9a634342a6aa6ff9f4c60a0e4dca356",
+        "rev": "b76a5e3130084f8efcc965feac1ef48ade78bd5d",
         "type": "github"
       },
       "original": {
@@ -227,11 +227,11 @@
     "asdf-nodejs": {
       "flake": false,
       "locked": {
-        "lastModified": 1662088964,
-        "narHash": "sha256-t9tLuYvGOFRPtKGdqGuwVisHab14D8x8GZ860OsrFZk=",
+        "lastModified": 1666825103,
+        "narHash": "sha256-kCNSB0/9Ybtq1D+ZSmrnvlI0uSAK0zKbgxKxNuLR7h0=",
         "owner": "asdf-vm",
         "repo": "asdf-nodejs",
-        "rev": "65441d3752992176c10800ef8bf898b864397978",
+        "rev": "c9e5df443b932f22e79e178a52866b053065be80",
         "type": "github"
       },
       "original": {

@@ -1,0 +1,30 @@
+#!/run/current-system/sw/bin/bash
+
+set -u
+
+cert_file=$(mktemp -t "custom-surge-ca-cert-XXXXXXXXXX")
+openssl s_client -4 -proxy 127.0.0.1:6152 -connect ios.wps.cn:443 </dev/null 2>/dev/null |
+    sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' >$cert_file
+
+install_ca() {
+    echo "=> Attempt installing on $1"
+    echo "=> It might require password to install the Certificate to KeyStore (sudo command) **"
+
+    keytool -import -noprompt -alias custom-cert-$(date +%Y%m%d%H%M%S) -file "$cert_file" -keystore "$1" -storepass changeit
+    echo
+}
+
+install_certificate() {
+    path=$JAVA_HOME
+
+    if [ -f "$path"/jre/lib/security/cacerts ]; then
+        install_ca "$path"/jre/lib/security/cacerts
+    fi
+
+    # not sure but some machines don't have the jre folder
+    if [ -f "$path"/lib/security/cacerts ]; then
+        install_ca "$path"/lib/security/cacerts
+    fi
+}
+
+install_certificate

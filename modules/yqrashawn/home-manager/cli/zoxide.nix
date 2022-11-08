@@ -6,5 +6,4 @@
     enableBashIntegration = true;
     enableZshIntegration = true;
   };
-
 }

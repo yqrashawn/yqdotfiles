@@ -178,7 +178,7 @@
 (package! adoc-mode)
 (package! sly-quicklisp)
 (package! sly-asdf)
-(package! string-edit)
+(package! string-edit-at-point)
 (package! fit-text-scale)
 ;; (package! code-review :recipe (:host github :repo "wandersoncferreira/code-review"))
 ;; (package! centered-cursor-mode)
