@@ -172,10 +172,6 @@ See `dwim-shell-command-execute-script' for all other params."
 ;;   ;; Manual preview key for `affe-grep'
 ;;   (consult-customize affe-grep :preview-key (kbd "M-.")))
 
-(use-package! spacehammer
-  :commands (spacehammer/edit-with-emacs spacehammer/fix-frame spacehammer/activate-capture-frame spacehammer/switch-to-app)
-  :load-path "~/.hammerspoon/")
-
 (setq! ranger-return-to-ranger t
        ranger-show-hidden 'format
        ranger-persistent-sort t)

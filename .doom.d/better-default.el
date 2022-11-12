@@ -509,3 +509,36 @@ used in the POST request made to the LanguageTool server."
    languagetool-server-url "https://api.languagetoolplus.com"
    languagetool-server-port 443
    languagetool-mother-tongue "zh-CN"))
+
+(after! emacs-everywhere
+  (setq! emacs-everywhere-paste-command
+         (pcase emacs-everywhere--display-server
+           ('quartz (list "osascript" "-e" "delay 0.3 \n tell application \"System Events\" to keystroke \"v\" using command down"))
+           ('x11 (list "xdotool" "key" "--clearmodifiers" "Shift+Insert"))
+           ((or 'wayland 'unknown)
+            (list "notify-send"
+                  "No paste command defined for emacs-everywhere"
+                  "-a" "Emacs" "-i" "emacs"))))
+  (defadvice! +emacs-everywhere-app-info-osx (orig-fn)
+    :around #'emacs-everywhere-app-info-osx
+    "Return information on the active window, on osx."
+    (emacs-everywhere-ensure-oscascript-compiled)
+    (let ((default-directory emacs-everywhere--dir))
+      (let ((app-name (emacs-everywhere-call
+                       "osascript" "app-name"))
+            (window-title (emacs-everywhere-call
+                           "osascript" "window-title"))
+            (window-geometry (mapcar #'string-to-number
+                                     (split-string
+                                      (emacs-everywhere-call
+                                       "osascript" "window-geometry") ", "))))
+        (make-emacs-everywhere-app
+         :id (if (string= "firefox" app-name)
+                 "Firefox Developer Edition"
+               app-name)
+         :class app-name
+         :title window-title
+         :geometry window-geometry))))
+  (defadvice! +emacs-everywhere-markdown-p (orig-fn)
+    :around #'emacs-everywhere-markdown-p
+    t))
