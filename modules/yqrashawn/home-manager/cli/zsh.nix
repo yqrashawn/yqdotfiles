@@ -73,6 +73,8 @@ let
     yd = "yarn dev";
     yx = "yarn remove";
     yw = "yarn workspace";
+    mpva = "mpv --no-video";
+    mpvv = "mpv --no-audio";
     # curl = "curlie";
     # curl = "httpie";
 
