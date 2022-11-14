@@ -542,3 +542,9 @@ used in the POST request made to the LanguageTool server."
   (defadvice! +emacs-everywhere-markdown-p (orig-fn)
     :around #'emacs-everywhere-markdown-p
     t))
+
+
+(setq! consult-tramp-method "ssh"
+       ;; tramp-ssh-controlmaster-options
+       ;; "-o ControlMaster=auto -o ControlPath=tramp.%%C -o ControlPersist=600"
+       )
