@@ -41,8 +41,10 @@
   :g "s-u" #'revert-buffer
   :g "s-i" #'side-notes-toggle-notes
   :g "C-M-s-7" '+windmove-map
-  :g "C-M-s-j" #'iflipb-next-buffer
-  :g "C-M-s-k" #'iflipb-previous-buffer
+  ;; :g "C-M-s-j" #'iflipb-next-buffer
+  ;; :g "C-M-s-k" #'iflipb-previous-buffer
+  :g "C-M-s-j" #'next-buffer
+  :g "C-M-s-k" #'previous-buffer
   ;; :g "C-M-s-j" #'dogears-forward
   ;; :g "C-M-s-k" #'dogears-back
   :g "C-a" #'mwim-beginning-of-code-or-line
@@ -190,8 +192,10 @@
     :g "[" #'goto-last-change
     :g "" #'goto-last-change-reverse)
   (:map ctl-x-9-map
-    :g "j" #'iflipb-next-buffer
-    :g "k" #'iflipb-previous-buffer
+    ;; :g "j" #'iflipb-next-buffer
+    ;; :g "k" #'iflipb-previous-buffer
+    :g "j" #'next-buffer
+    :g "k" #'previous-buffer
     ;; :g "j" #'dogears-forward
     ;; :g "k" #'dogears-back
     )

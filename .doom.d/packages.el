@@ -57,7 +57,7 @@
 (package! el-patch)
 (package! git-link)
 (package! copy-as-format)
-(package! iflipb)
+;; (package! iflipb)
 (package! rg)
 (package! evil-iedit-state)
 ;; (package! evil-textobj-anyblock :disable t)

@@ -1,6 +1,7 @@
 ;;; navigation.el -*- lexical-binding: t; -*-
 
 (use-package! iflipb
+  :disabled t
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
   (defun +iflipb-always-ignore-buffers (name)
