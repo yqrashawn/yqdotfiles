@@ -538,10 +538,7 @@ used in the POST request made to the LanguageTool server."
                app-name)
          :class app-name
          :title window-title
-         :geometry window-geometry))))
-  (defadvice! +emacs-everywhere-markdown-p (orig-fn)
-    :around #'emacs-everywhere-markdown-p
-    t))
+          :geometry window-geometry)))))
 
 
 (setq! consult-tramp-method "ssh"
