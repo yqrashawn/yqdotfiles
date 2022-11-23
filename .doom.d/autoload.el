@@ -776,7 +776,7 @@ _b_ranch _j_next _k_prev _h_up
   (interactive "P")
   (let ((log-spy-str (if (and (boundp '+cljr--log-spy-with-error)
                            +cljr--log-spy-with-error)
-                       "log/spy :error"
+                       "log/spy :info"
                        "log/spy")))
     (save-excursion
       (evil-emacs-state 1)
