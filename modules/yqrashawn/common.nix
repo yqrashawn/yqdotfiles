@@ -45,6 +45,8 @@ in {
           buildxSupport = true;
           composeSupport = true;
         }))
+        docker-compose
+        docker-buildx
         mutagen
         mutagen-compose
         docker-machine
