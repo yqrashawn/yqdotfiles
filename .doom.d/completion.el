@@ -136,21 +136,28 @@
 ;; (use-package! orderless
 ;;   :commands (orderless-filter))
 
-(use-package! fuz
-  ;; :after-call doom-first-input-hook
+;; (use-package! fuz
+;;   ;; :after-call doom-first-input-hook
+;;   :after orderless
+;;   :config
+;;   (unless (require 'fuz-core nil t)
+;;     (fuz-build-and-load-dymod)))
+
+(use-package! flx-rs
   :after orderless
   :config
-  (unless (require 'fuz-core nil t)
-    (fuz-build-and-load-dymod)))
+  (flx-rs-load-dyn)
+  (advice-add 'flx-score :override #'flx-rs-score))
 
 (use-package! fussy
   ;; :ensure t
   ;; :after fuz-bin
-  :after fuz
+  ;; :after fuz
+  :after flx-rs
   :config
   (setq! fussy-filter-fn 'fussy-filter-default
          fussy-use-cache t
-         fussy-score-fn 'fussy-fuz-score)
+         fussy-score-fn 'flx-rs-score)
 
   ;; (after! consult
   ;;   (defadvice! +consult-recent-file (f)
