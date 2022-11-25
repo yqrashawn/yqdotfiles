@@ -91,6 +91,7 @@ in {
         cmus
         zola
         git-interactive-rebase-tool
+        btop
         htop
         hub
         gh
@@ -255,7 +256,7 @@ in {
         gomodifytags
         gotests
         solc
-        # golangci-lint
+        golangci-lint
         plantuml
         rustup
         rust-analyzer

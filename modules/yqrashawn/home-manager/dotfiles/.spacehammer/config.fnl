@@ -539,6 +539,29 @@
                   ;;  :action (fn [] (hs.eventtap.keyStroke ["cmd" "ctrl"] "e"))}
                   ]}]))
 
+(local sidekick-items
+       (concat
+        browser-items
+        [{:key "e"
+          :title "Extension"
+          :items [{:key :b
+                   :title "Bitwarden"
+                   :items [{:key :b
+                            :title "Open sidebar"
+                            :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "y"))}
+                           {:key :f
+                            :title "Fill pass"
+                            :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "l"))}
+                           {:key :g
+                            :title "Gen pass"
+                            :action (fn [] (hs.eventtap.keyStroke ["cmd" "shift"] "9"))}]}
+                  {:key :d
+                   :title "Toggle dark mode"
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "d"))}
+                  {:key :s
+                   :title "Toggle sessions"
+                   :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "t"))}]}]))
+
 (local clickup-config
        {:key "ClickUp"
         :keys browser-keys
@@ -568,6 +591,11 @@
        {:key "Firefox Developer Edition"
         :keys browser-keys
         :items firefox-items})
+
+(local sidekick-config
+       {:key "Sidekick"
+        :keys browser-keys
+        :items sidekick-items})
 
 (local emacs-config
        {:key "Emacs"
@@ -663,6 +691,7 @@
         chrome-config
         edge-config
         firefox-config
+        sidekick-config
         emacs-config
         grammarly-config
         hammerspoon-config

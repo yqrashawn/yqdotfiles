@@ -110,8 +110,9 @@
              [:spacebar ["capspace" 1] nil
               {:alone :spacebar :afterup ["capspace" 0]}] :capspace
              [:##i :page_up] [:##k :page_down]]}
+
   #_{:des "Keybase return"
-     :rules [;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
+     :rules [ ;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
              :Keybase
              [:return_or_enter :!Sreturn_or_enter]
              [:!Creturn_or_enter :return_or_enter]]}
@@ -178,7 +179,7 @@
            [{:pkey :button1} ["mmts" 0] ["mmts" 1]]
            [{:pkey :button2} ["mmts" 0] ["mmts" 1]]]}
   {:des "mouse left hand mode"
-   :rules [;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1]
+   :rules [ ;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1]
            ;; ["mouse_left_hand" 0]]
            ;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 0]
            ;; ["mouse_left_hand" 1]]
@@ -212,34 +213,34 @@
   {:des "resize window, remap Rectangle"
    :rules [:k2-mode
            [:return_or_enter :!TSOreturn_or_enter] ;; almost maximize
-           [:spacebar :!TSOspacebar] ;; maximize
-           [:t :!TSOt] ;; center maximize
-           [:r :!TOSr] ;; restore
-           [:y :!TOSy] ;; upper left
-           [:n :!TOSn] ;; lower left
-           [:o :!TOSo] ;; upper right
-           [:period :!TOSperiod] ;; lower right
+           [:spacebar :!TSOspacebar]               ;; maximize
+           [:t :!TSOt]                             ;; center maximize
+           [:r :!TOSr]                             ;; restore
+           [:y :!TOSy]                             ;; upper left
+           [:n :!TOSn]                             ;; lower left
+           [:o :!TOSo]                             ;; upper right
+           [:period :!TOSperiod]                   ;; lower right
 
-           [:h :!TOSleft_arrow] ;; left half
+           [:h :!TOSleft_arrow]  ;; left half
            [:l :!TOSright_arrow] ;; right half
-           [:k :!TOSup_arrow] ;; top half
-           [:j :!TOSdown_arrow] ;; bottom half
+           [:k :!TOSup_arrow]    ;; top half
+           [:j :!TOSdown_arrow]  ;; bottom half
 
-           [:1 :!TOS1] ;; register 1
-           [:3 :!TOS3] ;; register 3
-           [:4 :!TOS4] ;; register 4
-           [:5 :!TOS5] ;; register 5
-           [:6 :!TOS6] ;; register 6
-           [:7 :!TOS7] ;; register 7
-           [:8 :!TOS8] ;; register 8
-           [:9 :!TOS9] ;; register 9
-           [:0 :!TOS0] ;; register 0
-           [:hyphen :!TOShyphen] ;; shrink
+           [:1 :!TOS1]                   ;; register 1
+           [:3 :!TOS3]                   ;; register 3
+           [:4 :!TOS4]                   ;; register 4
+           [:5 :!TOS5]                   ;; register 5
+           [:6 :!TOS6]                   ;; register 6
+           [:7 :!TOS7]                   ;; register 7
+           [:8 :!TOS8]                   ;; register 8
+           [:9 :!TOS9]                   ;; register 9
+           [:0 :!TOS0]                   ;; register 0
+           [:hyphen :!TOShyphen]         ;; shrink
            [:equal_sign :!TOSequal_sign] ;; enlarge
 
-           [:open_bracket :!TOSopen_bracket] ;; prev display
+           [:open_bracket :!TOSopen_bracket]   ;; prev display
            [:close_bracket :!TOSclose_bracket] ;; next display
-          ]}
+           ]}
   ;; {:des   "spacebar ctrl"
   ;;  :rules [[[:spacebar :f] [:spacebar :f]]
   ;;          [[:spacebar :w] [:spacebar :w]]
@@ -430,6 +431,8 @@
            ;; :!Firefoxes]
            [:l [:togg "Firefox Developer Edition"] :!Firefoxes]
            [:l :same_wind_app :Firefoxes]
+           ;; [:l [:togg "Sidekick"] :!Sidekick]
+           ;; [:l :same_wind_app :Sidekick]
            ;; [:l [:togg "Orion"] :!Orion]
            ;; [:l [:togg :same_wind_app] :Orion]
            ;; [:l [:togg "Microsoft Edge Beta"] :!Edge]
@@ -527,7 +530,7 @@
   ;;  :rules [[:right_option :left_option nil {:alone ["osascript
   ;;  ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
   {:des "some simultaneous keys"
-   :rules [;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"]
+   :rules [ ;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"]
            ;; ["in-alfred" 1]]]
            [[:h :l] :!TSO6]
            [[:h :k] :!TOSf17]
@@ -546,7 +549,9 @@
     [:l :!CTslash :finder-alfred-mode]
     [:!CTk [:!CTk ["in-alfred" 1]]]
     [:!Tg [:escape ["in-alfred" 0]] ["in-alfred" 1]]
-    :alfred-mode [:i [:z :i]]
+    :alfred-mode
+    [:i [:z :i]]
+    [:n :!OSz]
     [:6 :!TSO1]
     [:7 :!TSO2]
     [:8 :!TSO3]
@@ -614,17 +619,17 @@
            [:return_or_enter [:!Tq :c]] ;; new session
            [:semicolon [:!Tq :!Ssemicolon]]
            ;; [:comma [:!Tq :comma]] ;; rename tmux pane
-           [:m [:!Tq :z]] ;; size window
-           [:f [:!Tq :slash]] ;; find and switch window
-           [:w [:!Tq :w]] ;; list and switch window/pane
-           [:b [:!Tq :x]] ;; kill pane
+           [:m [:!Tq :z]]                       ;; size window
+           [:f [:!Tq :slash]]                   ;; find and switch window
+           [:w [:!Tq :w]]                       ;; list and switch window/pane
+           [:b [:!Tq :x]]                       ;; kill pane
            [:open_bracket [:!Tq :open_bracket]] ;; esc
-           [:h [:!Tq :h]] ;; focuse window
-           [:j [:!Tq :j]] ;; focuse window
-           [:k [:!Tq :k]] ;; focuse window
-           [:l [:!Tq :l]] ;; focuse window
-           [:v [:!Tq :!Shyphen]] ;; v split
-           [:s [:!Tq :hyphen]] ;; s split
+           [:h [:!Tq :h]]                       ;; focuse window
+           [:j [:!Tq :j]]                       ;; focuse window
+           [:k [:!Tq :k]]                       ;; focuse window
+           [:l [:!Tq :l]]                       ;; focuse window
+           [:v [:!Tq :!Shyphen]]                ;; v split
+           [:s [:!Tq :hyphen]]                  ;; s split
            [:n [:!Tq :!Tl]]
            [:p [:!Tq :!Th]]
            [:comma [:!Tq :!Th]]
@@ -645,7 +650,7 @@
            [:s :!CSd]]}
   {:des "yabai mode"
    :rules
-   [;; move windows
+   [ ;; move windows
     :yabai-warp-mode
     [:h [:yabai "window --warp west"]]
     [:j [:yabai "window --warp south"]]
@@ -853,7 +858,9 @@
             "^com\\.google\\.Chrome\\.dev$"
             "^com\\.google\\.Chrome\\.canary$"
             "^com\\.microsoft\\.edgemac\\.Beta$"
-            "^com\\.brave\\.Browser$"]
+            "^com\\.brave\\.Browser$"
+            "^com\\.pushplaylabsi\\.sidekick$"]
+  :Sidekick ["^com\\.pushplaylabsi\\.sidekick$"]
   :Chrome ["^com\\.google\\.Chrome$"]
   :ChromeCanary ["^com\\.google\\.Chrome\\.canary$"]
   :Chromium ["^org\\.chromium\\.Chromium$"]
@@ -900,7 +907,8 @@
              "^com\\.google\\.Chrome\\.canary$"
              "^com\\.apple\\.Safari$"
              "^com\\.microsoft\\.edgemac\\.Beta$"
-             "^com\\.brave\\.Browser$"]
+             "^com\\.brave\\.Browser$"
+             "^com\\.pushplaylabs\\.sidekick$"]
   :wechat ["^com\\.tencent\\.xinWeChat$"]
   :Games ["^unity\\." "^com\\.Klei\\." "^unity\\.Klei\\."
           "^org\\.Terraria"]
