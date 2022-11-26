@@ -46,8 +46,8 @@
     (setq company-backends (remq 'company-capf company-backends))
     (cond
      ((memq major-mode +lispy-modes)
-       (setq company-backends (pushnew! company-backends ;; 'company-tabnine
-                                'company-capf)))
+      (setq company-backends (pushnew! company-backends ;; 'company-tabnine
+                                       'company-capf)))
      (t
       (setq company-backends (pushnew! company-backends 'company-capf 'company-tabnine))))))
 
@@ -60,22 +60,31 @@
                     :server-id 'nix))
   (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t)
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
-  (when (modulep! :completion company)
-    )
+  (when (modulep! :completion company))
   (setq!
-    ;; lsp-imenu-sort-methods '(position)
-    ;; lsp-eldoc-enable-hover nil
-    ;; lsp-disabled-clients '(javascript-typescript-langserver)
-    lsp-enable-file-watchers nil
-    lsp-file-watch-threshold 200
-    lsp-bash-highlight-parsing-errors t
-    lsp-eslint-package-manager "yarn"
-    lsp-eslint-run "onSave"
-    lsp-eslint-auto-fix-on-save t
-    lsp-completion-show-detail nil
-    lsp-completion-show-kind nil
-    lsp-completion-sort-initial-results nil)
-  (pushnew! lsp-file-watch-ignored-directories "[/\\\\]coverage'" "[/\\\\]lcov-report'" "[/\\\\]\\.log\\'" "[/\\\\]\\.clj-kondo" "[/\\\\]\\storybook-static" "[/\\\\]\\.storybook" "[/\\\\]releases" "[/\\\\]\\.yarn" "[/\\\\]\\.vscode" "[/\\\\]build'" "[/\\\\]\\.shadow-cljs" "[/\\\\]cljs-runtime" "[/\\\\]dist" "[/\\\\]__snapshots__'" "[/\\\\]sp_"))
+   ;; lsp-imenu-sort-methods '(position)
+   ;; lsp-eldoc-enable-hover nil
+   ;; lsp-disabled-clients '(javascript-typescript-langserver)
+   lsp-enable-file-watchers nil
+   lsp-file-watch-threshold 200
+   lsp-bash-highlight-parsing-errors t
+   lsp-eslint-package-manager "yarn"
+   lsp-eslint-run "onSave"
+   lsp-eslint-auto-fix-on-save t
+   lsp-completion-show-detail nil
+   lsp-completion-show-kind nil
+   lsp-completion-sort-initial-results nil)
+  (pushnew! lsp-file-watch-ignored-directories "[/\\\\]coverage'" "[/\\\\]lcov-report'" "[/\\\\]\\.log\\'" "[/\\\\]\\.clj-kondo" "[/\\\\]\\storybook-static" "[/\\\\]\\.storybook" "[/\\\\]releases" "[/\\\\]\\.yarn" "[/\\\\]\\.vscode" "[/\\\\]build'" "[/\\\\]\\.shadow-cljs" "[/\\\\]cljs-runtime" "[/\\\\]dist" "[/\\\\]__snapshots__'" "[/\\\\]sp_")
+  (after! flycheck
+    (defadvice! +flycheck-get-next-checker-for-buffer (orig-fn checker)
+      "support multiple flycheck checkers with lsp checker"
+      :around #'flycheck-get-next-checker-for-buffer
+      (if (eq checker 'lsp)
+          (cond
+           ((derived-mode-p 'go-mode) 'golangci-lint)
+           (t (funcall orig-fn checker)))
+        (funcall orig-fn checker)))))
+
 (after! consult-lsp
   (defun +consult-lsp--diagnostics--transformer (file diag)
     (unless (and
@@ -83,12 +92,13 @@
              (s-contains? "Could not find a declaration file for module" (or (lsp-get diag :message) "")))
       (consult-lsp--diagnostics--transformer file diag)))
   (setq! consult-lsp-diagnostics-transformer-function '+consult-lsp--diagnostics--transformer))
+
 (after! lsp-ui
   (setq!
-    lsp-ui-doc-show-with-cursor nil
-    lsp-ui-imenu-auto-refresh t
-    lsp-ui-doc-header t
-    lsp-ui-doc-include-signature t))
+   lsp-ui-doc-show-with-cursor nil
+   lsp-ui-imenu-auto-refresh t
+   lsp-ui-doc-header t
+   lsp-ui-doc-include-signature t))
 
 ;; (use-package! tree-sitter-langs
 ;;   :defer t
