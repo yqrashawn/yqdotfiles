@@ -17,7 +17,7 @@
     magit-diff-expansion-threshold 20
     magit-diff-refine-hunk t
     magit-revision-insert-related-refs 'mixed
-    magit-revision-show-gravatars t
+    magit-revision-show-gravatars nil
     magit-revision-fill-summary-line 80
     magit-prefer-remote-upstream t
     magit-process-popup-time 60
