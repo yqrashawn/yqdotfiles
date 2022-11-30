@@ -41,6 +41,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        kitty-themes
         (docker.override (args: {
           buildxSupport = true;
           composeSupport = true;

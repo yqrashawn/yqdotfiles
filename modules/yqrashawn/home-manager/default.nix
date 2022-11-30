@@ -15,7 +15,7 @@ in {
   imports = [
     ./nvim
     ./cli
-    # ./kitty
+    ./kitty
     ./dotfiles
     ./git.nix
     # ./mpv.nix

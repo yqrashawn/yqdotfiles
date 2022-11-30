@@ -13,6 +13,21 @@
 (defn- yml-comment [line]
   (str "# " line))
 
+;;; kitty
+(defn kitty []
+  (let [conf       (fs/file (fs/expand-home "~/.config/kitty/current-theme.conf"))
+        dark       (fs/file (fs/expand-home "~/.config/kitty/dark.conf"))
+        light      (fs/file (fs/expand-home "~/.config/kitty/light.conf"))
+        next-theme (if (= theme :dark) dark light)]
+    (spit conf (slurp next-theme))))
+
+(defn reload-kitty-conf []
+  (when-let [kitty-pid (-> (:out (sh "pgrep" "kitty"))
+                           s/trim-newline
+                           (s/split #"\n")
+                           first)]
+    (sh "kill" "-USR1" kitty-pid)))
+
 ;;; alacritty
 (def theme-lines {:dark  "- ~/.config/alacritty/modus-vivendi.yml"
                   :light "- ~/.config/alacritty/modus-operandi.yml"})
@@ -49,11 +64,18 @@
     (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'ef-night :no-confirm)")
     (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'ef-day :no-confirm)")))
 
+(try (kitty) (reload-kitty-conf) (catch Exception _))
 (try (alacritty) (catch Exception _))
 (try (emacs) (catch Exception _))
 (try (mcfly) (catch Exception _))
 
 (comment
+  (when-let [kitty-pid (-> (:out (sh "pgrep" "kitty"))
+                           s/trim-newline
+                           (s/split #"\n")
+                           first)]
+    (sh "kill" "-USR1" kitty-pid))
+  (slurp (:out (shell "pgrep -d x kitty")))
   (shell "launchctl load -w" (fs/expand-home "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))
   (shell "launchctl remove com.yqrashawn.dark-mode-notify")
   (shell "osascript" "-l" "JavaScript" "-e" "Application('System Events').appearancePreferences.darkMode=true")
