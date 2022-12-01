@@ -401,6 +401,7 @@ set -g @plugin 'sainnhe/tmux-fzf'
 set -g @plugin 'fcsonline/tmux-thumbs'
 
 set -g @continuum-restore 'on'
+set -g @continuum-save-interval '10'
 
 # https://github.com/tmux/tmux/issues/2363
 set -g @thumbs-command 'tmux set-buffer -w "{}"'

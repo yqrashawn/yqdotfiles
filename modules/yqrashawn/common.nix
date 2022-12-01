@@ -41,6 +41,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        zellij
         kitty-themes
         (docker.override (args: {
           buildxSupport = true;
