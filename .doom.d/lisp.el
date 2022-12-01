@@ -157,8 +157,8 @@ Instead keep them, with a newline after each comment."
   ;; error color for symex cursor color
   (defadvice! +evil-update-cursor-color-h-symex ()
     :after #'+evil-update-cursor-color-h
-    (put 'cursor 'evil-symex-color (face-foreground 'error)))
-  (put 'cursor 'evil-symex-color (face-foreground 'error))
+    (put 'cursor 'evil-symex-color (face-background 'highlight)))
+  (put 'cursor 'evil-symex-color (face-background 'highlight))
   (defun +evil-symex-cursor-fn ()
     (evil-set-cursor-color (get 'cursor 'evil-symex-color)))
   (setq! evil-symex-state-cursor '+evil-symex-cursor-fn)
