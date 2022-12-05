@@ -459,8 +459,10 @@
            [:6 :!!z]
            ;; [:9 [:open "/Applications/PDF Expert.app"]]
            ;; [:h [:togg "DingTalk"]]
-           [:h [:togg "Discord"] :!Discord]
-           [:h [:togg "Slack"] :Discord]
+
+           [:h [:togg "Discord"] :Slack]
+           [:h [:togg "Slack"] :Status]
+           [:h [:togg "Status"] :!Status]
            [:r [:togg "Reeder"]]
            ;; [:r [:opena "Roam Research"]]
            ;; [:period [:open "/Applications/SetApp/Paw.app"]]
@@ -899,6 +901,7 @@
   :BusyCal                ["^com\\.busymac\\.busycal"]
   :Keybase                ["^keybase\\.Electron$"]
   :Discord                ["^com\\.hnc\\.Discord$"]
+  :Status                 ["^im\\.Status\\.NimStatusClient$"]
   :slidepad               ["^com\\.slidepad\\.slidepad"]
   :Browsers               ["^com\\.kagi\\.kagimacOS$"
                            "^org\\.mozilla\\.firefox$"
