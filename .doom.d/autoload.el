@@ -998,3 +998,13 @@ This is for per workspace each task setup"
         (+workspaces-switch-project-function #'magit-status))
     (call-interactively #'projectile-switch-project)
     (call-interactively #'+workspace/rename)))
+
+;;;###autoload
+(defun clerk-show ()
+  (interactive)
+  (when-let
+      ((filename
+        (buffer-file-name)))
+    (save-buffer)
+    (cider-interactive-eval
+     (concat "(nextjournal.clerk/show! \"" filename "\")"))))

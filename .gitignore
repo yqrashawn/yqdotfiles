@@ -3,7 +3,6 @@ result
 .direnv/
 .vscode/
 venv/
-env/
 __pycache__/
 /.lsp/
 /.clj-kondo/
@@ -13,3 +12,7 @@ __pycache__/
 /modules/yqrashawn/home-manager/dotfiles/.shadow-cljs/classpath.edn
 /modules/yqrashawn/home-manager/dotfiles/.lsp/.cache
 /modules/yqrashawn/home-manager/dotfiles/.clj-kondo/.cache
+/.cpcache/
+/.clerk/
+/public/
+/.nrepl-port

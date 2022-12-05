@@ -1,0 +1,26 @@
+{:paths   ["src"]
+ :deps    {io.github.nextjournal/clerk {:mvn/version "0.12.699"}}
+
+ :aliases
+ {:dev   {:extra-paths ["env/dev"]}
+
+  :nextjournal/clerk
+  {:extra-paths ["notebooks"]
+   :exec-fn     nextjournal.clerk/build!
+   :exec-args   {;; :index ["notebooks/default.clj"]
+                 :paths ["notebooks/default.clj"]}
+   ;; TODO: add all notebooks you want to have built ☝️
+   ;; if you just want to build one notebook, set `:index`
+
+   ;; ;; optional list of aliases to include in the build
+   ;; :nextjournal.clerk/aliases [:dev]
+  }
+
+  :cider
+  {:extra-deps {nrepl/nrepl       {:mvn/version "1.0.0"}
+                cider/cider-nrepl {:mvn/version "0.28.7"}
+                refactor-nrepl/refactor-nrepl {:mvn/version "3.6.0"}}
+   :main-opts
+   ["-m" "nrepl.cmdline" "--middleware"
+    "[refactor-nrepl.middleware/wrap-refactor,cider.nrepl/cider-middleware]"
+    "-i"]}}}
