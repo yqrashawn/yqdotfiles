@@ -6,6 +6,11 @@ on:
   pull_request_target:
     branches:
       - master
+
+concurrency:
+  group: "builds"
+  cancel-in-progress: true
+
 jobs:
   build:
     strategy:
