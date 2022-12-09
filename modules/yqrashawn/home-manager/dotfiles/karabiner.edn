@@ -460,8 +460,8 @@
            ;; [:9 [:open "/Applications/PDF Expert.app"]]
            ;; [:h [:togg "DingTalk"]]
 
-           [:h [:togg "Discord"] :Slack]
-           [:h [:togg "Slack"] :Status]
+           ;; [:h [:togg "Discord"] :Slack]
+           ;; [:h [:togg "Slack"] :Status]
            [:h [:togg "Status"] :!Status]
            [:r [:togg "Reeder"]]
            ;; [:r [:opena "Roam Research"]]
