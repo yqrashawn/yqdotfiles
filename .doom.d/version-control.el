@@ -16,7 +16,7 @@
     magit-fetch-modules-jobs 10
     magit-diff-expansion-threshold 20
     magit-diff-refine-hunk t
-    magit-revision-insert-related-refs 'mixed
+    magit-revision-insert-related-refs t
     magit-revision-show-gravatars nil
     magit-revision-fill-summary-line 80
     magit-prefer-remote-upstream t
