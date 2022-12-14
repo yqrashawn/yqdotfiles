@@ -408,7 +408,7 @@
            ;; [:j [:f16 :!Sa :l :a :c :r :i :t :t :y :return_or_enter]]
 
            ;; [:j [:togg "Alacritty"]]
-           [:j [:togg "/Applications/kitty.app"]]
+           [:j [:hsl "/Applications/kitty.app"]]
            ;; [:k [:open "/Applications/Emacs.app"]]
            ;; [:k :same_wind_app :Emacs]
            [:k [:hsl "/Applications/Emacs.app"]]
