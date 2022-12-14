@@ -109,7 +109,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (pushnew! apheleia-mode-alist
     '(clojure-mode . zprint)
     '(clojurec-mode . zprint)
-    '(clojurescript-mode . zprint))
+    '(clojurescript-mode . zprint)
+    '(sql-mode . pg-fluff))
   (defun +cider-format-buffer (&rest args)
     (interactive)
     (require 'cider)
@@ -120,7 +121,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
         (lsp-format-buffer)))
   (pushnew! apheleia-formatters '(cljstyle . ("cljstyle" "pipe")))
   (pushnew! apheleia-formatters '(cljfmt . +clojure-lsp-format-buffer))
-  (pushnew! apheleia-formatters '(zprint . ("zprint" "{:search-config? true}"))))
+  (pushnew! apheleia-formatters '(zprint . ("zprint" "{:search-config? true}")))
+  (pushnew! apheleia-formatters '(pg-fluff . ("sqlfluff" "fix" "--nocolor" "--dialect" "postgres" "--force" "-"))))
 
 (use-package! smerge-mode
   :defer t

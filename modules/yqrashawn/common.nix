@@ -127,6 +127,8 @@ in {
         # glances # htop
         xh # httpie
         shfmt
+        pgformatter
+        sqlfluff
         aspell
         aspellDicts.en
         aspellDicts.en-computers
