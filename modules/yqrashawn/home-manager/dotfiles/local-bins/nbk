@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 cd ~/.nixpkgs
-clj -X:dev:cider:nextjournal/clerk
+clojure -M:dev:cider:nextjournal/clerk
