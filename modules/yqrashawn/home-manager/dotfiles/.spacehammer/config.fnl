@@ -733,12 +733,12 @@
   :loglevel "error"
   :config
   {:url_patterns [["zoommtg:" "us.zoom.xos"]
-                  ["https://www.notion.so/" "notion.id"]
+                  ;; ["https://www.notion.so/" "notion.id"]
                   ["tg:" "ru.keepcoder.Telegram"]
-                  ["https://yqrashawn.deta.dev.*" chrm]
+                  ;; ["https://yqrashawn.deta.dev.*" chrm]
                   ;; ["http://localhost:.*" chrm]
-                  ["http://localhost:.*" chrm]
-                  ["https://app.clickup.com" clickup]
+                  ;; ["http://localhost:.*" ffd]
+                  ;; ["https://app.clickup.com" clickup]
                   ["https://www.figma.com/file" figma]
                   ["https://alidocs.dingtalk.com" chrm]
                   ;; ["https://todoist.com/app" todoist]
