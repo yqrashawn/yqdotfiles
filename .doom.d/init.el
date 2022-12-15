@@ -119,6 +119,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
     (apply #'call-process program nil straight-byte-compilation-buffer nil args)))
 
 (doom! :input
+       ;;bidi              ; (tfel ot) thgir etirw uoy gnipleh
        ;;chinese
        ;;japanese
        ;;layout            ; auie,ctsrnm is the superior home row
@@ -139,7 +140,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        indent-guides     ; highlighted indent columns
-       ;; (ligatures +extra +pragmata-pro) ligatures and symbols to make your code pretty again
+       (ligatures +extra +pragmata-pro) ; ligatures and symbols to make your code pretty again
        ;minimap           ; show a map of the code on the side
        ;; (modeline +light) ; snazzy, Atom-inspired modeline, plus API
        modeline           ; snazzy, Atom-inspired modeline, plus API
@@ -150,8 +151,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;tabs              ; a tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        unicode           ; extended unicode support for various languages
-       ;;vc-gutter         ; vcs diff in the fringe
-       ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       (vc-gutter +pretty); vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
@@ -174,71 +175,75 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        :emacs
        dired             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       (ibuffer +icons)         ; interactive buffer management
+       (ibuffer +icons)  ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
        eshell            ; the elisp shell that works everywhere
-       ;;shell             ; simple shell REPL for Emacs
-       ;;term              ; basic terminal emulator for Emacs
-       vterm               ; the best terminal emulation in Emacs
+       ;;shell           ; simple shell REPL for Emacs
+       ;;term            ; basic terminal emulator for Emacs
+       vterm             ; the best terminal emulation in Emacs
 
        :checkers
        (syntax +childframe); tasing you for every semicolon you forget
-       (spell +aspell) ; tasing you for misspelling mispelling
-       grammar           ; tasing grammar mistake every you make
+       (spell +aspell)     ; tasing you for misspelling mispelling
+       grammar             ; tasing grammar mistake every you make
 
        :tools
        ;;ansible
+       ;;biblio            ; Writes a PhD for you (citation needed)
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        direnv
        docker
-       editorconfig      ; let someone else argue about tabs vs spaces
+       editorconfig        ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
-       gist              ; interacting with github gists
+       gist                ; interacting with github gists
        (lookup +dectionary +docsets)              ; navigate your code and its documentation
        lsp
        (magit +forge)      ; a git porcelain for Emacs
-       ;;make              ; run make tasks from Emacs
+       make                ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
-       pdf               ; pdf enhancements
+       pdf                 ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
-       rgb               ; creating color strings
-       taskrunner        ; taskrunner for all your projects
+       rgb                 ; creating color strings
+       taskrunner          ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
-       tmux              ; an API for interacting with tmux
-       ;;upload            ; map local to remote projects via ssh/ftp
+       tmux                ; an API for interacting with tmux
        tree-sitter
+       ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
        (:if IS-MAC macos)  ; improve compatibility with macOS
-       tty               ; improve the terminal Emacs experience
+       tty                 ; improve the terminal Emacs experience
 
        :lang
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
-       ;;cc                ; C > C++ == 1
-       (clojure +lsp)           ; java with a lisp
-       common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;(cc +lsp)         ; C > C++ == 1
+       (clojure +lsp)      ; java with a lisp
+       common-lisp         ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
-       data              ; config/data formats
+       data                ; config/data formats
        ;;(dart +flutter)   ; paint ui and not much else
+       ;;dhall
        ;;elixir            ; erlang done right
        ;;elm               ; care for a cup of TEA?
-       emacs-lisp        ; drown in parentheses
+       emacs-lisp          ; drown in parentheses
        ;;erlang            ; an elegant language for a more civilized age
        ;;ess               ; emacs speaks statistics
        ;;factor
        ;;faust             ; dsp, but you get to keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
        (go +lsp +tree-sitter)           ; the hipster dialect
-       ;;(haskell +dante)  ; a language that's lazier than I am
+       (graphql +lsp)      ; Give queries a REST
+       ;;(haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        (json +lsp +tree-sitter)              ; At least it ain't XML
@@ -251,10 +256,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;ledger            ; be audit you can be
        (lua +fennel +lsp)  ; one-based indices? one-based indices
        (markdown +grip)    ; writing docs for people to ignore
-       (nim +tree-sitter)  ; python + lisp at the speed of c
-       (nix +tree-sitter)                 ; I hereby declare "nix geht mehr!"
+       nim                 ; python + lisp at the speed of c
+       (nix +tree-sitter)  ; I hereby declare "nix geht mehr!"
        ;;(ocaml +tree-sitter)             ; an objective camel
-       (org +dragndrop +hugo +journal +noter +pandoc +pretty +roam2 +present) ; organize your plain life in plain text
+       (org +dragndrop +hugo +journal +pandoc +pretty +roam2 +present +pomodoro) ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        plantuml            ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
@@ -262,7 +267,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
-       (rest +jq)                ; Emacs as a REST client
+       (rest +jq)          ; Emacs as a REST client
        ;;rst               ; ReST in peace
        (ruby +rails +rbenv +lsp +tree-sitter); 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp +tree-sitter)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
@@ -285,14 +290,14 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        :app
        ;;calendar
        ;;emms
-       everywhere        ; *leave* Emacs!? You must be joking
+       everywhere          ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
-       rss               ; emacs as an RSS reader
+       (rss +org)          ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
        ;;literate
-  (default +bindings +smartparens))
+       (default +bindings +smartparens))
 
 ;; https://discourse.doomemacs.org/t/using-lsp-use-plists-with-doom/2832
 (setenv "LSP_USE_PLISTS" "1")
