@@ -379,6 +379,14 @@
       :g "C-x @ 6 8" (cmd! (company-complete-number 8))
       :g "C-x @ 6 9" (cmd! (company-complete-number 9))
       :g "C-x @ 6 0" (cmd! (company-complete-number 0))))
+  (:after corfu
+    (:map corfu-map
+      :gi "C-l" #'corfu-insert
+      ;; :gi "ESC" #'keyboard-escape-quit
+      :gi "C-d" nil
+      :gi "C-m" nil
+      :gi "C-n" nil
+      :gi "C-p" nil))
   (:after lispy
     (:map lispy-mode-map
       :g "C-a" #'mwim-beginning-of-code-or-line

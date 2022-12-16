@@ -99,7 +99,7 @@
 (package! highlight-function-calls)
 (package! easy-escape)
 (package! company-tabnine)
-(package! company-ctags)
+;; (package! company-ctags)
 
 ;(package! jenkinsfile-mode)
 (package! jq-mode)
@@ -115,7 +115,7 @@
 
 (package! reveal-in-osx-finder)
 
-(package! company-manually)
+;; (package! company-manually)
 (package! vlang-mode :recipe (:type git :host github :repo "Naheel-Azawy/vlang-mode"))
 (package! ivy-dired-history)
 
@@ -228,7 +228,9 @@
 
 ;; (package! elisp-slime-nav)
 
-(unpin! helpful company-mode)
+(unpin! helpful
+  ;; company-mode
+  )
 (package! cider-eval-sexp-fu)
 (package! org-modern)
 ;; carp

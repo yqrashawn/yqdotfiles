@@ -1,24 +1,25 @@
 ;;; completion.el -*- lexical-binding: t; -*-
 
-(set-company-backend! +lispy-modes
-  'company-capf
-  'company-files
-  'company-yasnippet
-  'company-keywords
-  'company-dabbrev-code
-  'company-dabbrev)
+(when (modulep! :completion company)
+  (set-company-backend! +lispy-modes
+    'company-capf
+    'company-files
+    'company-yasnippet
+    'company-keywords
+    'company-dabbrev-code
+    'company-dabbrev)
 
-(set-company-backend! '(prog-mode js2-mode rjsx-mode typescript-mode conf-mode)
-  'company-tabnine
-  'company-capf
-  'company-files
-  'company-yasnippet
-  'company-keywords
-  'company-dabbrev-code
-  'company-dabbrev)
+  (set-company-backend! '(prog-mode js2-mode rjsx-mode typescript-mode conf-mode)
+    'company-tabnine
+    'company-capf
+    'company-files
+    'company-yasnippet
+    'company-keywords
+    'company-dabbrev-code
+    'company-dabbrev)
 
-(set-company-backend! 'text-mode
-  '(:separate company-dabbrev company-yasnippet company-files company-ispell))
+  (set-company-backend! 'text-mode
+    '(:separate company-dabbrev company-yasnippet company-files company-ispell)))
 
 ;; (use-package! company-flx
 ;;   :defer t
@@ -56,31 +57,33 @@
 
 (use-package! company-tabnine
   :defer t
+  :after company
   :commands (company-tabnine-restart-server)
   :init
   (setq!
-    company-tabnine-binaries-folder "~/.TabNine/binaries/"
-    company-tabnine-wait 0.25
-    company-tabnine-max-num-results 5
-    company-tabnine-no-continue nil
-    ;; company-tabnine-context-radius 6000
-    ;; company-tabnine-context-radius-after 6000
-    company-tabnine-log-file-path "~/Downloads/tabnine.log"))
+   company-tabnine-binaries-folder "~/.TabNine/binaries/"
+   company-tabnine-wait 0.25
+   company-tabnine-max-num-results 5
+   company-tabnine-no-continue nil
+   ;; company-tabnine-context-radius 6000
+   ;; company-tabnine-context-radius-after 6000
+   company-tabnine-log-file-path "~/Downloads/tabnine.log"))
 
-(use-package! company-ctags :defer t)
+;; (use-package! company-ctags :defer t)
 
-;; try fix company overlay performance
-;; TODO: check if this works
-(defadvice! +company-tng-frontend (orig command)
-  :around #'company-tng-frontend
-  (overlay-recenter (point))
-  (setq-local inhibit-field-text-motion t)
-  (funcall orig command))
-(defadvice! +company-enable-overriding-keymap (orig keymap)
-  :around #'company-enable-overriding-keymap
-  (if keymap (setq-local inhibit-field-text-motion t)
-    (setq-local inhibit-field-text-motion nil))
-  (funcall orig keymap))
+(after! company
+  ;; try fix company overlay performance
+  ;; TODO: check if this works
+  (defadvice! +company-tng-frontend (orig command)
+    :around #'company-tng-frontend
+    (overlay-recenter (point))
+    (setq-local inhibit-field-text-motion t)
+    (funcall orig command))
+  (defadvice! +company-enable-overriding-keymap (orig keymap)
+    :around #'company-enable-overriding-keymap
+    (if keymap (setq-local inhibit-field-text-motion t)
+      (setq-local inhibit-field-text-motion nil))
+    (funcall orig keymap)))
 
 ;; try to speed up the overlay
 (defvar last-post-command-position 0
@@ -125,7 +128,8 @@
       (company-abort))))
 
 (after! evil
-  (add-hook! 'evil-normal-state-entry-hook '+company-abort))
+  (when (modulep! :completion company)
+    (add-hook! 'evil-normal-state-entry-hook '+company-abort)))
 
 ;; (use-package! fuz-bin
 ;;   :after orderless

@@ -318,19 +318,20 @@ _g_  gfm      _o_ org        _m_ markdown
 ;;;###autoload
 (defun yq/toggle-company-tabnine ()
   (interactive)
-  (company-tabnine-restart-server)
-  (if company-tabnine--disabled
+  (when (fboundp 'company-tabnine-restart-server)
+    (company-tabnine-restart-server)
+    (if company-tabnine--disabled
       (progn
         ;; (setq company-idle-delay 0)
         (setq company-tabnine--disabled nil)
         ;; (when lsp-mode
         ;;   (call-interactively #'lsp-workspace-shutdown))
         (message "Turn on company-tabnine"))
-    (progn
-      ;; (setq company-idle-delay 0.2)
-      (setq company-tabnine--disabled t)
-      ;; (call-interactively #'revert-buffer)
-      (message "Turn off company-tabnine"))))
+      (progn
+        ;; (setq company-idle-delay 0.2)
+        (setq company-tabnine--disabled t)
+        ;; (call-interactively #'revert-buffer)
+        (message "Turn off company-tabnine")))))
 
 ;;;###autoload
 (defun +tree-sitter-manybe-enable ()
@@ -346,7 +347,7 @@ _g_  gfm      _o_ org        _m_ markdown
   (interactive)
   (if (eq major-mode 'vterm-mode)
       (vterm--self-insert)
-    (if (and company-mode (eq (preceding-char) ?,))
+    (if (and (modulep! :editor evil) company-mode (eq (preceding-char) ?,))
         (progn (delete-char -1 nil)
                (+company/complete))
       (call-interactively #'self-insert-command))))

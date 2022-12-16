@@ -58,9 +58,9 @@
    (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
                     :major-modes '(nix-mode)
                     :server-id 'nix))
-  (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t)
+  (when (modulep! :completion company)
+    (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t))
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
-  (when (modulep! :completion company))
   (setq!
    ;; lsp-imenu-sort-methods '(position)
    ;; lsp-eldoc-enable-hover nil
