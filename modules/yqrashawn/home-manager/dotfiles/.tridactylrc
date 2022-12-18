@@ -197,6 +197,14 @@ bindurl newsblur\.com R reload
 bindurl ^https://web.whatsapp.com f hint -c  [tabindex]:not(.two)>div,a
 bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a
 
+unbindurl ownmacbook:13331   j
+unbindurl ownmacbook:13331   k
+unbindurl ownmacbook:13331   y
+unbindurl ownmacbook:13331   a
+unbindurl ownmacbook:13331   o
+unbindurl ownmacbook:13331   .
+unbindurl ownmacbook:13331   #
+
 " Include numbers in tab names, to make 'b' and '<A-<number>>'
 " switching easier.
 guiset tabs numbers
