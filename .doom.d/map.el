@@ -312,7 +312,8 @@
     (:map evil-snipe-override-mode-map
       :nm "s" nil)
     (:map evil-snipe-local-mode-map
-      :nm "s" nil))
+      :nm "s" nil)
+    [remap evil-find-char] #'evil-snipe-f)
   (:after evil-iedit
     (:map evil-iedit-state-map
       "V" nil))
