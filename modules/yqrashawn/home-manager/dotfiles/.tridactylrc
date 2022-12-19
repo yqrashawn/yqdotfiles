@@ -204,6 +204,11 @@ unbindurl ownmacbook:13331   a
 unbindurl ownmacbook:13331   o
 unbindurl ownmacbook:13331   .
 unbindurl ownmacbook:13331   #
+unbindurl ownmacbook:13331   x
+
+unbindurl ^https://todoist.com/app /
+unbindurl ^https://todoist.com/app j
+unbindurl ^https://todoist.com/app k
 
 " Include numbers in tab names, to make 'b' and '<A-<number>>'
 " switching easier.

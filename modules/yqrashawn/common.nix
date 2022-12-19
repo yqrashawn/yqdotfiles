@@ -114,7 +114,7 @@ in {
         fd
         ctags
         # gitui
-        # httpie # failed to build
+        httpie # failed to build
         tealdeer # tldr in rust
         # procs # ps
         bottom # btm htop
