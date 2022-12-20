@@ -918,7 +918,9 @@
                            "^com\\.pushplaylabs\\.sidekick$"]
   :wechat                 ["^com\\.tencent\\.xinWeChat$"]
   :Games                  ["^unity\\." "^com\\.Klei\\." "^unity\\.Klei\\."
-                           "^org\\.Terraria"]
+                           "^org\\.Terraria"
+                           "\\.rimworld$"
+                           "Zomboid$"]
   :REBL                   ["^net\\.java\\.openjdk\\.cmd$"]
   :Surge                  ["^com\\.nssurge\\.surge-mac"]
   :SurgeDash              ["^com\\.nssurge\\.surge-dashboard"]

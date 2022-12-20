@@ -114,7 +114,7 @@ in {
         fd
         ctags
         # gitui
-        httpie # failed to build
+        # httpie # failed to build
         tealdeer # tldr in rust
         # procs # ps
         bottom # btm htop
@@ -123,7 +123,6 @@ in {
         nix-linter
         httpstat
         curlie
-        httpie
         # glances # htop
         xh # httpie
         shfmt
@@ -188,7 +187,6 @@ in {
         feroxbuster
         ffmpeg
         pandoc
-        cmake
         # goku
         nix
         nixfmt
