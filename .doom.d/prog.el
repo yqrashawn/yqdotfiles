@@ -157,3 +157,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (eshell-follow-global-mode t))
 
 (add-hook! go-mode '(hl-line-mode which-func-mode))
+
+(use-package! eat
+  :commands (eat)
+  :init
+  (setq! eat-kill-buffer-on-exit t
+         eat-enable-yank-to-terminal t)
+  :config
+  (pushnew! evil-emacs-state-modes 'eat-mode))

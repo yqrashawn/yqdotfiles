@@ -49,7 +49,8 @@
   ;; :g "C-M-s-k" #'dogears-back
   :g "C-a" #'mwim-beginning-of-code-or-line
   :g "C-e" #'mwim-end-of-code-or-line
-  :g "C-'" #'yq/vterm-toggle
+  ;; :g "C-'" #'yq/vterm-toggle
+  :g "C-'" #'+eat
   [remap split-window-below] #'evil-window-split
   [remap split-window-right] #'evil-window-vsplit
   [remap xterm-paste] #'yank

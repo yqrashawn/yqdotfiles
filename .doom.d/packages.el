@@ -298,3 +298,5 @@
 (package! languagetool)
 (disable-packages! langtool)
 (package! consult-git-log-grep)
+
+(package! eat)

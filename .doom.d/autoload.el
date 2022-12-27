@@ -1009,3 +1009,17 @@ This is for per workspace each task setup"
     (save-buffer)
     (cider-interactive-eval
      (concat "(nextjournal.clerk/show! \"" filename "\")"))))
+
+;;;###autoload
+(defun +eat ()
+  (interactive)
+  (let* ((target-eat-buffer-name (if current-prefix-arg
+                                     (format "*eat*<%s>" current-prefix-arg)
+                                   "*eat*"))
+         (target-eat-buffer (get-buffer target-eat-buffer-name))
+         (target-eat-buffer-window (and target-eat-buffer (get-buffer-window target-eat-buffer-name))))
+    (if target-eat-buffer-window
+        (select-window target-eat-buffer-window)
+      (progn
+        (evil-window-vsplit)
+        (eat shell-file-name current-prefix-arg)))))
