@@ -52,6 +52,7 @@
       (setq company-backends (pushnew! company-backends 'company-capf 'company-tabnine))))))
 
 (after! lsp-mode
+  (setq! lsp-completion-provider :none)
   (setq-hook! '(go-mode-hook) lsp-headerline-breadcrumb-enable t)
   (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
   (lsp-register-client

@@ -166,9 +166,17 @@
   :after fzf-native
   :config
   (setq! fussy-filter-fn 'fussy-filter-default
-         fussy-use-cache t
-         fussy-default-regex-fn #'fussy-pattern-flex-2
-         fussy-score-fn 'fussy-fzf-native-score)
+    fussy-use-cache t
+    fussy-default-regex-fn #'fussy-pattern-flex-2
+    fussy-score-fn 'fussy-fzf-native-score)
+
+  (after! corfu
+    (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
+    (add-hook 'corfu-mode-hook
+              (lambda ()
+                (setq-local fussy-max-candidate-limit 5000
+                            fussy-default-regex-fn 'fussy-pattern-first-letter
+                            fussy-prefer-prefix nil))))
 
   ;; (after! consult
   ;;   (defadvice! +consult-recent-file (f)
@@ -186,30 +194,30 @@
   (pushnew! +vertico-company-completion-styles 'fussy)
   ;; (add-to-list '+vertico-company-completion-styles 'fussy t)
   (setq!
-   ;; For example, project-find-file uses 'project-files which uses
-   ;; substring completion by default. Set to nil to make sure it's using
-   ;; flx.
-   completion-category-defaults nil
-   completion-category-overrides nil)
+    ;; For example, project-find-file uses 'project-files which uses
+    ;; substring completion by default. Set to nil to make sure it's using
+    ;; flx.
+    completion-category-defaults nil
+    completion-category-overrides nil)
 
-  (after! company-mode
+  (after! company
     (defadvice! j-company-capf (f &rest args)
       :around #'company-capf
       "Manage `completion-styles'."
       (if (length= company-prefix 0)
-          ;; Don't use `company' for 0 length prefixes.
-          (let ((completion-styles (remq 'fussy completion-styles)))
-            (apply f args))
+        ;; Don't use `company' for 0 length prefixes.
+        (let ((completion-styles (remq 'fussy completion-styles)))
+          (apply f args))
         (let ((fussy-max-candidate-limit 5000)
-              (fussy-default-regex-fn 'fussy-pattern-first-letter)
-              (fussy-prefer-prefix nil))
+               (fussy-default-regex-fn 'fussy-pattern-first-letter)
+               (fussy-prefer-prefix nil))
           (apply f args))))
 
     (defadvice! j-company-transformers (f &rest args)
       :around #'company--transform-candidates
       "Manage `company-transformers'."
       (if (length= company-prefix 0)
-          ;; Don't use `company' for 0 length prefixes.
-          (apply f args)
+        ;; Don't use `company' for 0 length prefixes.
+        (apply f args)
         (let ((company-transformers '(fussy-company-sort-by-completion-score)))
           (apply f args))))))

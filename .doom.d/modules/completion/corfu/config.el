@@ -2,6 +2,37 @@
 
 ;; Corfu completion module
 
+(defvar +corfu-global-capes
+  '(cape-yasnippet
+    :completion
+    cape-dict)
+  "A list of global capes to be available at all times.
+The key :completion is used to specify where completion candidates should be
+placed, otherwise they come first.")
+
+(defvar +corfu-capf-hosts
+  '(lsp-completion-at-point
+    eglot-completion-at-point
+    elisp-completion-at-point
+    tags-completion-at-point-function)
+  "A prioritised list of host capfs to create a super cape onto from
+  `+corfu-global-capes'.")
+
+(defun +corfu--load-capes ()
+  "Load all capes specified in `+corfu-global-capes'."
+  (interactive)
+  (when-let ((host (cl-intersection +corfu-capf-hosts completion-at-point-functions)))
+    (setq-local
+     completion-at-point-functions
+     (cl-substitute
+      (apply #'cape-super-capf (cl-substitute (car host) :completion (cl-pushnew :completion +corfu-global-capes)))
+      (car host)
+      completion-at-point-functions))))
+
+(add-hook 'lsp-mode-hook #'+corfu--load-capes)
+(add-hook 'eglot-mode-hook #'+corfu--load-capes)
+(add-hook 'change-major-mode-hook #'+corfu--load-capes)
+
 (use-package! corfu
   :custom
   (corfu-separator ?\s)
@@ -33,7 +64,7 @@
   (add-hook 'doom-init-modules-hook
             (lambda ()
               (after! lsp-mode
-                (setq lsp-completion-provider :none))))
+                (setq! lsp-completion-provider :none))))
 
   ;; Set orderless filtering for LSP-mode completions
   ;; TODO: expose a Doom variable to control this part
@@ -172,13 +203,7 @@
   (setq evil-collection-corfu-key-themes '(default magic-return)))
 
 (use-package! cape-yasnippet
-  :after cape
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-yasnippet)
-  (after! lsp-mode
-    (add-hook 'lsp-managed-mode-hook #'cape-yasnippet--lsp))
-  (after! eglot
-    (add-hook 'eglot-managed-mode-hook #'cape-yasnippet--eglot)))
+  :after cape)
 
 ;; Override :config default mapping by waiting for after corfu is loaded
 (add-hook! 'doom-after-modules-config-hook

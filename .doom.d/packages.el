@@ -98,7 +98,7 @@
 (package! lisp-extra-font-lock :recipe (:host github :repo "Lindydancer/lisp-extra-font-lock"))
 (package! highlight-function-calls)
 (package! easy-escape)
-(package! company-tabnine)
+;; (package! company-tabnine)
 ;; (package! company-ctags)
 
 ;(package! jenkinsfile-mode)
@@ -300,3 +300,5 @@
 (package! consult-git-log-grep)
 
 (package! eat)
+
+(disable-packages! company)

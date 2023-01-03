@@ -545,3 +545,5 @@ used in the POST request made to the LanguageTool server."
        ;; tramp-ssh-controlmaster-options
        ;; "-o ControlMaster=auto -o ControlPath=tramp.%%C -o ControlPersist=600"
        )
+
+(pushnew! vc-directory-exclusion-list "node_modules")

@@ -135,7 +135,7 @@ in {
         hunspell
         hunspellDicts.en_US-large
         ccache
-        # dotenv-linter # failed
+        dotenv-linter # failed
         reattach-to-user-namespace
         terminal-notifier
         enchant # ispell

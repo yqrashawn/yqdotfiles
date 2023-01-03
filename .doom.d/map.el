@@ -246,7 +246,7 @@
     :g "n" #'evil-avy-goto-char-timer
     :g "k" #'bury-buffer
     ;; :g "m" #'+ivy/projectile-find-file
-    :g "m" #'project-find-file
+    :g "m" #'projectile-find-file
     :g "l" #'imenu
     :g "f" #'+default/search-project
     :g "F" #'+default/search-project-for-symbol-at-point

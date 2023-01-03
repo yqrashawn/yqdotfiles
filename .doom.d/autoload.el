@@ -347,7 +347,10 @@ _g_  gfm      _o_ org        _m_ markdown
   (interactive)
   (if (eq major-mode 'vterm-mode)
       (vterm--self-insert)
-    (if (and (modulep! :editor evil) company-mode (eq (preceding-char) ?,))
+    (if (and (modulep! :editor evil)
+             (modulep! :completion company)
+             company-mode
+             (eq (preceding-char) ?,))
         (progn (delete-char -1 nil)
                (+company/complete))
       (call-interactively #'self-insert-command))))

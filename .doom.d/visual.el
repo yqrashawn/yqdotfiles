@@ -135,22 +135,17 @@
    modus-themes-completions '((matches . (extrabold background intense))
                               (selection . (semibold accented intense))
                               (popup . (accented)))
-   modus-themes-mixed-fonts t
-   modus-themes-fringes 'subtle
-   modus-themes-lang-checkers '(straight-underline text-also)
-   modus-themes-mode-line '(borderless)
-   modus-themes-links '(neutral-underline faint)
-   modus-themes-region '(no-extend)))
+   modus-themes-mixed-fonts t))
 
-(defun my-modus-themes-custom-faces ()
-  (modus-themes-with-colors
-    (custom-set-faces
-     ;; Replace green with blue if you use `modus-themes-deuteranopia'.
-     `(git-gutter-fr:added ((,class :foreground ,green-fringe-bg)))
-     `(git-gutter-fr:deleted ((,class :foreground ,red-fringe-bg)))
-     `(git-gutter-fr:modified ((,class :foreground ,yellow-fringe-bg))))))
+;; (defun my-modus-themes-custom-faces ()
+;;   (modus-themes-with-colors
+;;     (custom-set-faces
+;;      ;; Replace green with blue if you use `modus-themes-deuteranopia'.
+;;      `(git-gutter-fr:added ((,class :foreground ,green-fringe-bg)))
+;;      `(git-gutter-fr:deleted ((,class :foreground ,red-fringe-bg)))
+;;      `(git-gutter-fr:modified ((,class :foreground ,yellow-fringe-bg))))))
 
-(add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
+;; (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
 
 ;; (use-package! zoom :hook (doom-first-buffer))
 

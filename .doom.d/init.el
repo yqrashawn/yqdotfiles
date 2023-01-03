@@ -125,8 +125,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       ;; (corfu +orderless +icons +minibuffer)
-       (company +childframe) ; the ultimate code completion backend
+       (corfu +orderless +icons +minibuffer)
+       ;; (company +childframe) ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy +fuzzy)     ; a search engine for love and life
