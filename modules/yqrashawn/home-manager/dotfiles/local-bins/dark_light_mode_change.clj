@@ -1,27 +1,27 @@
 #!/run/current-system/sw/bin/bb
 
 (ns dark-light-mode-change
-  (:require
-   [babashka.fs :as fs]
-   [babashka.tasks :refer [shell]]
-   [clojure.java.shell :refer [sh]]
-   [clojure.string :as s]))
+  (:require [babashka.fs :as fs]
+            [babashka.tasks :refer [shell]]
+            [clojure.java.shell :refer [sh]]
+            [clojure.string :as s]))
 
 (def theme (if (= (System/getenv "DARKMODE") "1") :dark :light))
 ;; (def theme :dark)
 
-(defn- yml-comment [line]
-  (str "# " line))
+(defn- yml-comment [line] (str "# " line))
 
 ;;; kitty
-(defn kitty []
-  (let [conf       (fs/file (fs/expand-home "~/.config/kitty/current-theme.conf"))
-        dark       (fs/file (fs/expand-home "~/.config/kitty/dark.conf"))
-        light      (fs/file (fs/expand-home "~/.config/kitty/light.conf"))
+(defn kitty
+  []
+  (let [conf (fs/file (fs/expand-home "~/.config/kitty/current-theme.conf"))
+        dark (fs/file (fs/expand-home "~/.config/kitty/dark.conf"))
+        light (fs/file (fs/expand-home "~/.config/kitty/light.conf"))
         next-theme (if (= theme :dark) dark light)]
     (spit conf (slurp next-theme))))
 
-(defn reload-kitty-conf []
+(defn reload-kitty-conf
+  []
   (when-let [kitty-pid (-> (:out (sh "pgrep" "kitty"))
                            s/trim-newline
                            (s/split #"\n")
@@ -29,40 +29,51 @@
     (sh "kill" "-USR1" kitty-pid)))
 
 ;;; alacritty
-(def theme-lines {:dark  "- ~/.config/alacritty/modus-vivendi.yml"
-                  :light "- ~/.config/alacritty/modus-operandi.yml"})
+(def theme-lines
+  {:dark "- ~/.config/alacritty/modus-vivendi.yml",
+   :light "- ~/.config/alacritty/modus-operandi.yml"})
 
-(defn alacritty []
-  (let [conf-file  (fs/file (fs/expand-home "~/.config/alacritty-current-theme.yml"))
-        conf       (slurp conf-file)
-        cur-theme  (get theme-lines (if (= theme :dark) :light :dark))
+(defn alacritty
+  []
+  (let [conf-file (fs/file (fs/expand-home
+                             "~/.config/alacritty-current-theme.yml"))
+        conf (slurp conf-file)
+        cur-theme (get theme-lines (if (= theme :dark) :light :dark))
         next-theme (get theme-lines theme)
         ;; uncomment all
-        conf       (-> conf
-                       (s/replace (re-pattern (yml-comment cur-theme)) cur-theme)
-                       (s/replace (re-pattern (yml-comment next-theme)) next-theme))
-        conf       (-> conf
-                       (s/replace (re-pattern cur-theme)
-                                  (yml-comment cur-theme)))]
+        conf (-> conf
+                 (s/replace (re-pattern (yml-comment cur-theme)) cur-theme)
+                 (s/replace (re-pattern (yml-comment next-theme)) next-theme))
+        conf (-> conf
+                 (s/replace (re-pattern cur-theme) (yml-comment cur-theme)))]
     (spit conf-file conf)))
 
-(def mcfly-lines {:dark  "unset MCFLY_LIGHT"
-                  :light "export MCFLY_LIGHT=TRUE"})
+(def mcfly-lines {:dark "unset MCFLY_LIGHT", :light "export MCFLY_LIGHT=TRUE"})
 
-(defn mcfly []
+(defn mcfly
+  []
   (let [conf-file (fs/file (fs/expand-home "~/.local.zsh"))
-        conf      (or (try (slurp conf-file) (catch Exception _)) (get mcfly-lines :light))
-        cur       (get mcfly-lines (if (= theme :dark) :light :dark))
-        next      (get mcfly-lines theme)
-        conf      (-> conf (s/replace (re-pattern cur) next))]
+        conf (or (try (slurp conf-file) (catch Exception _))
+                 (get mcfly-lines :light))
+        cur (get mcfly-lines (if (= theme :dark) :light :dark))
+        next (get mcfly-lines theme)
+        conf (-> conf
+                 (s/replace (re-pattern cur) next))]
     (spit conf-file conf)))
 
-(defn emacs []
+(defn emacs
+  []
   (if (= theme :dark)
-    ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'modus-vivendi :no-confirm)")
-    ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'modus-operandi :no-confirm)")
-    (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'ef-night :no-confirm)")
-    (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme 'ef-day :no-confirm)")))
+    ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme
+    ;; 'modus-vivendi :no-confirm)")
+    ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme
+    ;; 'modus-operandi :no-confirm)")
+    (sh "/opt/homebrew/bin/emacsclient"
+        "-n" "-q"
+        "-e" "(load-theme 'ef-cherie :no-confirm)")
+    (sh "/opt/homebrew/bin/emacsclient"
+        "-n" "-q"
+        "-e" "(load-theme 'ef-day :no-confirm)")))
 
 (try (kitty) (reload-kitty-conf) (catch Exception _))
 (try (alacritty) (catch Exception _))
@@ -76,7 +87,15 @@
                            first)]
     (sh "kill" "-USR1" kitty-pid))
   (slurp (:out (shell "pgrep -d x kitty")))
-  (shell "launchctl load -w" (fs/expand-home "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))
+  (shell "launchctl load -w"
+         (fs/expand-home
+           "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))
   (shell "launchctl remove com.yqrashawn.dark-mode-notify")
-  (shell "osascript" "-l" "JavaScript" "-e" "Application('System Events').appearancePreferences.darkMode=true")
-  (shell "osascript" "-l" "JavaScript" "-e" "Application('System Events').appearancePreferences.darkMode=false"))
+  (shell "osascript"
+         "-l" "JavaScript"
+         "-e"
+           "Application('System Events').appearancePreferences.darkMode=true")
+  (shell "osascript"
+         "-l" "JavaScript"
+         "-e"
+           "Application('System Events').appearancePreferences.darkMode=false"))
