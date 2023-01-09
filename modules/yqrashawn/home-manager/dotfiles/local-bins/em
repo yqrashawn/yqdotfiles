@@ -1,11 +1,17 @@
 #!/bin/bash
-BG_RED=`tput setaf 1`
-BG_GREEN=`tput setaf 2`
-BOLD=`tput bold`
-RESET=`tput sgr0`
+BG_RED=$(tput setaf 1)
+BG_GREEN=$(tput setaf 2)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 
 EMACS='/Applications/Emacs.app'
-EMACS_CLIENT='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
+if [[ -f "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient" ]]; then
+    EMACS_CLIENT='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
+fi
+
+if [[ -f "/opt/homebrew/bin/emacsclient" ]]; then
+    EMACS_CLIENT='/opt/homebrew/bin/emacsclient'
+fi
 
 DEFAULT_EVAL='(switch-to-buffer "*scratch*")'
 DEFAULT_ARGS="-e"
@@ -20,12 +26,11 @@ NO_WAIT='-n'
 #     fi
 # }
 function run_client() {
-  emacsclient -nw $@
+    ${EMACS_CLIENT} -nw $@
 }
 
 echo -e "Checking Emacs server status...\c"
-if pgrep -f "[E,e]macs" &> /dev/null
-then
+if pgrep -f "[E,e]macs" &>/dev/null; then
     echo "${BOLD}${BG_GREEN}Active${RESET}"
     echo -e "Connecting...\c"
     run_client $*
