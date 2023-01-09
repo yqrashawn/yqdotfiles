@@ -105,7 +105,7 @@ in {
         trash-cli
         delta
         entr
-        # proxychains-ng # build failed
+        proxychains-ng # build failed
         du-dust
         man
         duf # du

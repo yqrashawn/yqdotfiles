@@ -43,7 +43,7 @@
       "grip"
       # "fennel"
       "percol"
-      "proxychains-ng"
+      # "proxychains-ng"
       "datalevin"
       "dotenv-linter"
       "cloudflared"
