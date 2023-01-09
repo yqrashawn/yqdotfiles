@@ -10,8 +10,16 @@
 (setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
 (setq-hook! '(clojure-mode-hook) lsp-lens-enable nil)
 
+(defun +clojure-setup-formatter ()
+  (interactive)
+  (let ((using-zprint (seq-some (lambda (a) (eq (cdr a) 'zprint)) apheleia-mode-alist))
+         (use-zprint (and (boundp '+clojure-use-zprint-formatter) +clojure-use-zprint-formatter)))
+    (unless (eq using-zprint use-zprint)
+      (+toggle-zprint-as-clojure-formatter))))
+
 ;;; clojure-mode
 (after! clojure-mode
+  (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+clojure-setup-formatter)
   (setq! clojure-toplevel-inside-comment-form t
     clojure-verify-major-mode nil
     clojure-align-reader-conditionals t

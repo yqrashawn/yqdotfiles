@@ -6,7 +6,8 @@
  '(org-safe-remote-resources
     '("\\`https://raw\\.githubusercontent\\.com/yqrashawn/org-html-themes/master/org/theme-bigblow\\.setup\\'"))
  '(safe-local-variable-values
-    '((+cljr--log-spy-with-error . t)
+    '((+clojure-use-zprint-formatter . t)
+       (+cljr--log-spy-with-error . t)
        (elisp-lint-indent-specs
          (describe . 1)
          (it . 1)
