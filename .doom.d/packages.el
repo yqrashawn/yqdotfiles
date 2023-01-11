@@ -151,6 +151,7 @@
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin!
+  evil
   doom-snippets
   cider
   lispy

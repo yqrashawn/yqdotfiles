@@ -10,20 +10,12 @@
 (setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
 (setq-hook! '(clojure-mode-hook) lsp-lens-enable nil)
 
-(defun +clojure-setup-formatter ()
-  (interactive)
-  (let ((using-zprint (seq-some (lambda (a) (eq (cdr a) 'zprint)) apheleia-mode-alist))
-         (use-zprint (and (boundp '+clojure-use-zprint-formatter) +clojure-use-zprint-formatter)))
-    (unless (eq using-zprint use-zprint)
-      (+toggle-zprint-as-clojure-formatter))))
-
 ;;; clojure-mode
 (after! clojure-mode
-  (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+clojure-setup-formatter)
   (setq! clojure-toplevel-inside-comment-form t
-    clojure-verify-major-mode nil
-    clojure-align-reader-conditionals t
-    clojure-defun-indents '(fn-traced))
+         clojure-verify-major-mode nil
+         clojure-align-reader-conditionals t
+         clojure-defun-indents '(fn-traced))
   ;; letsubs in status-mobile defview
   (pushnew! clojure-align-binding-forms "letsubs")
   ;; better-cond
@@ -34,29 +26,26 @@
   (pushnew! clojure-built-in-vars "defview")
   (defun +re-add-clojure-mode-extra-font-locking ()
     (font-lock-add-keywords 'clojure-mode
-      `((,(concat "(\\(?:\.*/\\)?"
-            (regexp-opt clojure-built-in-vars t)
-            "\\>")
-          1 font-lock-builtin-face)))
+                            `((,(concat "(\\(?:\.*/\\)?"
+                                        (regexp-opt clojure-built-in-vars t)
+                                        "\\>")
+                               1 font-lock-builtin-face)))
 
     (font-lock-add-keywords 'clojure-mode
-      `((,(concat "\\<"
-            (regexp-opt clojure-built-in-dynamic-vars t)
-            "\\>")
-          0 font-lock-builtin-face))))
+                            `((,(concat "\\<"
+                                        (regexp-opt clojure-built-in-dynamic-vars t)
+                                        "\\>")
+                               0 font-lock-builtin-face))))
   (+re-add-clojure-mode-extra-font-locking)
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil)
-  ;; use clj style to format code
-  ;; (set-formatter! 'cljstyle "cljstyle pipe" :modes '(clojure-mode clojurescript-mode clojurec-mode))
   ;; (setq cider-clojure-cli-global-options "-T:portal-cli")
   )
 
 (defun +setup-clojure-mode ()
   "sort namespace, cleanup log namespace on save"
-  (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns ;; 'cider-format-buffer
-    ))
+  (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns))
 
 (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
 
