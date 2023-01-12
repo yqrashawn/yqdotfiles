@@ -121,13 +121,13 @@
       :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                                (call-interactively #'+default/search-project)))
       :desc "Edit goku edn config" "k" (cmd!
-                                        ;; (let ((projectile-switch-project-action (cmd!)))
-                                        ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
-                                        (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
+                                         ;; (let ((projectile-switch-project-action (cmd!)))
+                                         ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
+                                         (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
       :desc "Edit nix config" "n" (cmd!
-                                   ;; (projectile-switch-project-by-name "~/.nixpkgs/")
-                                   (let ((default-directory (expand-file-name "~/.nixpkgs/")))
-                                     (call-interactively #'project-find-file)))
+                                    ;; (projectile-switch-project-by-name "~/.nixpkgs/")
+                                    (let ((default-directory (expand-file-name "~/.nixpkgs/")))
+                                      (call-interactively #'project-find-file)))
       :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
       :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
       :desc "Find library" "l" #'find-library))
@@ -582,4 +582,7 @@
     (:map forge-pullreq-list-mode-map
       :n "RET" #'forge-visit-topic
       :n "o" #'forge-browse-topic
-      :n "'" #'forge-dispatch)))
+      :n "'" #'forge-dispatch))
+  (:after eat
+    (:map eat-mode-map
+      :g "C-c DEL" #'+workspace/close-window-or-workspace)))

@@ -173,6 +173,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :commands (eat)
   :init
   (setq! eat-kill-buffer-on-exit t
-         eat-enable-yank-to-terminal t)
+    eat-enable-yank-to-terminal t)
   :config
+  (defun +eat-deleted-window-after-kill-buffer ()
+    (if (featurep 'evil) (evil-window-delete) (delete-window)))
+  (defun +eat-setup ()
+    (add-hook! 'kill-buffer-hook :local '+eat-deleted-window-after-kill-buffer))
+  (add-hook! 'eat-mode-hook '+eat-setup)
   (pushnew! evil-emacs-state-modes 'eat-mode))
