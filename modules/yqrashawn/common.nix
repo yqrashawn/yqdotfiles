@@ -216,6 +216,7 @@ in {
         difftastic
         # python39Packages.percol # build failed
         # docker-compose_2
+        docker-slim
         urlview
         tmux-mem-cpu-load
 
