@@ -120,7 +120,7 @@ in {
         bottom # btm htop
         thefuck
         nix-tree
-        nix-linter
+        # nix-linter # build failed
         httpstat
         curlie
         # glances # htop
