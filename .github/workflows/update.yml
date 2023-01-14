@@ -30,7 +30,7 @@ jobs:
           git checkout -B flakebot
       - name: Update and commit lockfile
         env:
-          NIX_CONFIG: access_tokens = github.com=${{secrets.GITHUB_TOKEN}}
+          NIX_CONFIG: access-tokens = github.com=${{secrets.GITHUB_TOKEN}}
         run: nix flake update --commit-lock-file
       - name: Push changes
         uses: ad-m/github-push-action@master
