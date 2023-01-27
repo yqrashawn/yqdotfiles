@@ -8,7 +8,7 @@ on:
       - master
 
 concurrency:
-  group: "builds"
+  group: ${{ github.ref }}-builds
   cancel-in-progress: true
 
 jobs:
