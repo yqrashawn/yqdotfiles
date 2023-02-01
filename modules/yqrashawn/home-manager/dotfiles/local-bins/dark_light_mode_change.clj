@@ -68,10 +68,10 @@
     ;; 'modus-vivendi :no-confirm)")
     ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme
     ;; 'modus-operandi :no-confirm)")
-    (sh "/opt/homebrew/bin/emacsclient"
+    (sh "emacsclient"
         "-n" "-q"
         "-e" "(load-theme 'ef-cherie :no-confirm)")
-    (sh "/opt/homebrew/bin/emacsclient"
+    (sh "emacsclient"
         "-n" "-q"
         "-e" "(load-theme 'ef-day :no-confirm)")))
 

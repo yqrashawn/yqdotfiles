@@ -58,7 +58,20 @@ in {
         isync-isync
         msmtp
         # gomobile
-        # emacsMacport
+        (emacs.override (args: {
+          # withMacport = true;
+          withNS = true;
+          # macportVersion = "master";
+          withSQLite3 = true;
+          withWebP = true;
+          withImageMagick = true;
+          # withXwidgets = true;
+          nativeComp = true;
+          webkitgtk = true;
+          # texinfo = true;
+          # autoreconfHook = true;
+          withCsrc = true;
+        }))
         clojure-lsp
         ispell
         babashka

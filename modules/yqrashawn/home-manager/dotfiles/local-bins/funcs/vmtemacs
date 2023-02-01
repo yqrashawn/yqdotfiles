@@ -1,8 +1,18 @@
-#!/bin/sh
+#!/bin/bash
+
+if [[ -f "/opt/homebrew/bin/emacsclient" ]]; then
+    EMACS_OPT=/opt/homebrew/opt/emacs-mac
+fi
+if [[ -f "/run/current-system/sw/bin/emacsclient" ]]; then
+    EMACS_PATH=$(which emacs)
+    echo "${EMACS_PATH}"
+    EMACS_OPT=$(nix-store -q "${EMACS_PATH}")
+    echo "${EMACS_OPT}"
+fi
 
 vmtouch -efq ~/.doom.d
 vmtouch -efq ~/.emacs.d
-vmtouch -efq /opt/homebrew/opt/emacs-mac
+vmtouch -efq "${EMACS_OPT}"
 vmtouch -tfq ~/.doom.d
 vmtouch -tfq ~/.emacs.d
-vmtouch -tfq /opt/homebrew/opt/emacs-mac
+vmtouch -tfq "${EMACS_OPT}"

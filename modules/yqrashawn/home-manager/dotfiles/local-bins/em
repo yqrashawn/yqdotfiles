@@ -4,13 +4,24 @@ BG_GREEN=$(tput setaf 2)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
-EMACS='/Applications/Emacs.app'
+if [[ -f "/Applications/Emacs.app" ]]; then
+    EMACS='/Applications/Emacs.app'
+fi
+
+if [[ -f "/Applications/Nix Apps/Emacs.app" ]]; then
+    EMACS='/Applications/Nix Apps/Emacs.app'
+fi
+
 if [[ -f "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient" ]]; then
     EMACS_CLIENT='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
 fi
 
 if [[ -f "/opt/homebrew/bin/emacsclient" ]]; then
     EMACS_CLIENT='/opt/homebrew/bin/emacsclient'
+fi
+
+if [[ -f "/run/current-system/sw/bin/emacsclient" ]]; then
+    EMACS_CLIENT='/run/current-system/sw/bin/emacsclient'
 fi
 
 DEFAULT_EVAL='(switch-to-buffer "*scratch*")'
