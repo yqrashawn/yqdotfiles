@@ -206,6 +206,16 @@ unbindurl ownmacbook:13331   .
 unbindurl ownmacbook:13331   #
 unbindurl ownmacbook:13331   x
 
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   j
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   k
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   y
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   a
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   o
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   .
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   #
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   x
+
+
 unbindurl ^https://todoist.com/app /
 unbindurl ^https://todoist.com/app j
 unbindurl ^https://todoist.com/app k
