@@ -3,15 +3,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ignored-local-variable-values '((+clojure-use-zprint-formatter)))
  '(org-safe-remote-resources
     '("\\`https://raw\\.githubusercontent\\.com/yqrashawn/org-html-themes/master/org/theme-bigblow\\.setup\\'"))
  '(safe-local-variable-values
-    '((cider-ns-refresh-after-fn . "integrant.repl/resume")
+    '((+cljr--log-spy-with-error . t)
+       (+clojure-use-zprint-formatter . t)
+       (cider-ns-refresh-after-fn . "integrant.repl/resume")
        (cider-ns-refresh-before-fn . "integrant.repl/suspend")
        (mangle-whitespace . t)
-       (+clojure-use-zprint-formatter . t)
-       (+cljr--log-spy-with-error . t)
        (elisp-lint-indent-specs
          (describe . 1)
          (it . 1)
