@@ -1,6 +1,6 @@
 { config, pkgs, ... }: {
   programs.kitty = {
-    enable = true;
+    enable = false;
     package = pkgs.kitty;
     font = {
       name = "PragmataPro Mono Liga Regular";

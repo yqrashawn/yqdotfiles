@@ -169,7 +169,6 @@ in {
         optipng
         rbenv
         jless # json viewer
-        gnupg
         less
         zoxide # fasd
         lazygit
@@ -195,8 +194,8 @@ in {
         gnutls
         openssl
         pinentry
-        pinentry_mac
         # pinentry-emacs
+        pinentry_mac
         feroxbuster
         ffmpeg
         pandoc
