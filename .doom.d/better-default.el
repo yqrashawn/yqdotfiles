@@ -547,3 +547,16 @@ used in the POST request made to the LanguageTool server."
        )
 
 (pushnew! vc-directory-exclusion-list "node_modules")
+
+(after! osx-trash
+  (defadvice! +osx-trash-move-file-to-trash (orig-fn file-name)
+    :around #'osx-trash-move-file-to-trash
+    (let ((file-name (expand-file-name file-name)))
+      (with-temp-buffer
+        (let ((retcode (condition-case nil
+                           (call-process "trash" nil t nil "-f" file-name)
+                         (file-error
+                          (call-process "osascript" nil t nil
+                                        osx-trash-script-file file-name)))))
+          (unless (equal retcode 0)
+            (error "Failed to trash %S: %S" file-name (buffer-string))))))))
