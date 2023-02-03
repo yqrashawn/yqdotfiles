@@ -7,7 +7,9 @@
  '(org-safe-remote-resources
     '("\\`https://raw\\.githubusercontent\\.com/yqrashawn/org-html-themes/master/org/theme-bigblow\\.setup\\'"))
  '(safe-local-variable-values
-    '((mangle-whitespace . t)
+    '((cider-ns-refresh-after-fn . "integrant.repl/resume")
+       (cider-ns-refresh-before-fn . "integrant.repl/suspend")
+       (mangle-whitespace . t)
        (+clojure-use-zprint-formatter . t)
        (+cljr--log-spy-with-error . t)
        (elisp-lint-indent-specs

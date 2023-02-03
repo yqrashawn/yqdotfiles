@@ -35,7 +35,7 @@ in {
   #   maxCacheTtl = 7200;
   #   enableSshSupport = true;
   #   # use auth subkey's keygrip: gpg2 -K --with-keygrip
-  #   sshKeys = [ "5B933C7D6CE851F0E0F78A3ADE540FD1E48811C1" ];
+  #   sshKeys = [ "B198FB15EC5C13012E940B37E394C5D9A8E535A6" ];
   #   enableBashIntegration = true;
   #   enableZshIntegration = true;
   #   extraConfig = ''
