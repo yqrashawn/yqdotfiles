@@ -215,4 +215,22 @@ in {
     enableKeyMapping = true;
     remapCapsLockToControl = true;
   };
+
+  system.activationScripts = {
+    extraUserActivation = {
+      text = ''
+        rm -rf ~/.doom.d || true
+        ln -s ~/.nixpkgs/.doom.d ~/.doom.d
+
+        rm -rf ~/.config/karabiner.edn || true
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
+
+        rm -rf ~/.config/yabai || true
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai ~/.config/yabai
+
+        rm -rf ~/Dropbox || true
+        ln -s ~/Library/CloudStorage/Dropbox ~/Dropbox
+      '';
+    };
+  };
 }
