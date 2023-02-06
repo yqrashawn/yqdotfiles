@@ -230,6 +230,9 @@ in {
 
         rm -rf ~/Dropbox || true
         ln -s ~/Library/CloudStorage/Dropbox ~/Dropbox
+
+        rm -rf ~/.tridactylrc || true
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.tridactylrc ~/.tridactylrc
       '';
     };
   };

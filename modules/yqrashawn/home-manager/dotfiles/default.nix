@@ -72,10 +72,10 @@
       source = ./.textlintrc;
       target = ".textlintrc";
     };
-    tridactyl = {
-      source = ./.tridactylrc;
-      target = ".tridactylrc";
-    };
+    # tridactyl = {
+    #   source = ./.tridactylrc;
+    #   target = ".tridactylrc";
+    # };
     nvm = {
       source = ./.nvmrc;
       target = ".nvmrc";

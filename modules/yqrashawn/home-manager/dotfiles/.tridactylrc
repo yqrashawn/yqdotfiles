@@ -206,6 +206,15 @@ unbindurl ownmacbook:13331   .
 unbindurl ownmacbook:13331   #
 unbindurl ownmacbook:13331   x
 
+unbindurl gh.status.im   j
+unbindurl gh.status.im   k
+unbindurl gh.status.im   y
+unbindurl gh.status.im   a
+unbindurl gh.status.im   o
+unbindurl gh.status.im   .
+unbindurl gh.status.im   #
+unbindurl gh.status.im   x
+
 unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   j
 unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   k
 unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   y
