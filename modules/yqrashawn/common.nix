@@ -58,7 +58,7 @@ in {
         isync-isync
         msmtp
         # gomobile
-        (emacs.override (args: {
+        (emacsUnstable.override (args: {
           # withMacport = true;
           withNS = true;
           # macportVersion = "master";
