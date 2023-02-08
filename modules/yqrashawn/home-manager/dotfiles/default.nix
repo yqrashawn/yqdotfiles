@@ -101,10 +101,10 @@
       target = ".lein";
       recursive = true;
     };
-    ssh = {
-      source = ./ssh.gpg;
-      target = ".ssh/config.gpg";
-    };
+    # ssh = {
+    #   source = ./ssh.gpg;
+    #   target = ".ssh/config.gpg";
+    # };
     osascript = {
       source = ./osascript;
       target = "osascript";
