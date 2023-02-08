@@ -101,22 +101,6 @@
    lsp-ui-doc-header t
    lsp-ui-doc-include-signature t))
 
-;; (use-package! tree-sitter-langs
-;;   :defer t
-;;   ;; :config
-;;   ;; (pushnew! tree-sitter-major-mode-language-alist
-;;   ;;           '(clojure-mode . clojure)
-;;   ;;           '(clojurescript-mode . clojure)
-;;   ;;           '(clojurec-mode . clojure))
-;;   )
-
-;; (use-package! tree-sitter
-;;   :defer t
-;;   :hook ((prog-mode text-mode) . +tree-sitter-manybe-enable)
-;;   ;; :init
-;;   ;; (setq! tree-sitter-hl-use-font-lock-keywords nil)
-;;   )
-
 (use-package! adoc-mode
   :mode (("\\.adoc$" . adoc-mode)
          ("\\.asciidoc$" . adoc-mode)))

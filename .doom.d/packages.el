@@ -163,13 +163,6 @@
   clojure-mode)
 
 (package! elcord)
-;; (package! tree-sitter
-;;   ;; :pin "c7a1c34549cad41a3618c6f17e0e9dabd3e98fe1"
-;;   )
-;; (package! tree-sitter-langs
-;;   ;; :pin "e7b8db7c4006c04a4bc1fc6865ec31f223843192"
-;;   )
-;; (package! cider :pin "40e65fd6a35c1de8d1542b3c570ebd5546b55a3d")
 (package! parinfer-rust-mode)
 (package! idle-highlight-mode)
 (package! symex :recipe (:host github :repo "countvajhula/symex.el"))
@@ -274,10 +267,7 @@
 (package! jsonian :recipe (:host github :repo "iwahbe/jsonian"))
 (disable-packages! json-mode)
 (package! magit-delta)
-(package! emacsql-sqlite-module)
-;; (package! magit-libgit)
 (package! todoist)
-(package! sqlite3)
 ;; (package! relative-date :recipe (:host github :repo "rougier/relative-date"))
 ;; (package! fancy-compilation)
 ;; (package! cursory)
@@ -301,5 +291,10 @@
 (package! consult-git-log-grep)
 
 (package! eat)
+
+;; (package! magit-libgit)
+(package! emacsql-sqlite-builtin)
+;; (package! sqlite3)
+;; (package! emacsql-sqlite-module)
 
 (disable-packages! company)

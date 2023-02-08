@@ -6,7 +6,10 @@
  '(org-safe-remote-resources
     '("\\`https://raw\\.githubusercontent\\.com/yqrashawn/org-html-themes/master/org/theme-bigblow\\.setup\\'"))
  '(safe-local-variable-values
-    '((+cljr--log-spy-with-error . t)
+    '((vc-prepare-patches-separately)
+       (diff-add-log-use-relative-names . t)
+       (vc-git-annotate-switches . "-w")
+       (+cljr--log-spy-with-error . t)
        (+clojure-use-zprint-formatter . t)
        (cider-ns-refresh-after-fn . "integrant.repl/resume")
        (cider-ns-refresh-before-fn . "integrant.repl/suspend")

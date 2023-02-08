@@ -30,6 +30,10 @@
     sops-nix.url = "github:Mic92/sops-nix";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs29-src = {
+      url = "github:emacs-mirror/emacs/emacs-29";
+      flake = false;
+    };
 
     comma = {
       url = "github:nix-community/comma";

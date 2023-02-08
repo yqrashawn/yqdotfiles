@@ -5,7 +5,14 @@ let
 in {
   nixpkgs.overlays = [
     overlays
-    inputs.emacs-overlay.overlay
+    inputs.emacs-overlay.overlays.default
+    (final: prev: {
+      emacs29 = prev.emacsGit.overrideAttrs (old: {
+        name = "emacs29";
+        version = "29.0-${inputs.emacs29-src.shortRev}";
+        src = inputs.emacs29-src;
+      });
+    })
     # channels
     (final: prev: {
       # expose other channels via overlays
