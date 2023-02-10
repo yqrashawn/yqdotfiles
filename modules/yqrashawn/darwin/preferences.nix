@@ -234,6 +234,9 @@ in {
         rm -rf ~/.tridactylrc || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.tridactylrc ~/.tridactylrc
 
+        rm -rf ~/.authinfo.gpg || true
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.authinfo.gpg ~/.authinfo.gpg
+
         rm ~/.ssh/config || true
         ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg
       '';

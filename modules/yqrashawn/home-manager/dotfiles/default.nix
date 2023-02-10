@@ -110,10 +110,10 @@
       target = "osascript";
       recursive = true;
     };
-    authinfo = {
-      source = ./.authinfo.gpg;
-      target = ".authinfo.gpg";
-    };
+    # authinfo = {
+    #   source = ./.authinfo.gpg;
+    #   target = ".authinfo.gpg";
+    # };
     tabnine = {
       source = ./TabNine.toml;
       target = "Library/Preferences/TabNine/TabNine.toml";
