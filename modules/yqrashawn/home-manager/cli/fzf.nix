@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  useSkim = true;
+  useSkim = false;
   useFzf = !useSkim;
   fuzz = let fd = "${pkgs.fd}/bin/fd";
   in rec {

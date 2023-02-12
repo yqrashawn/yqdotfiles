@@ -48,37 +48,19 @@
                  (s/replace (re-pattern cur-theme) (yml-comment cur-theme)))]
     (spit conf-file conf)))
 
-(def mcfly-lines {:dark "unset MCFLY_LIGHT", :light "export MCFLY_LIGHT=TRUE"})
-
-(defn mcfly
-  []
-  (let [conf-file (fs/file (fs/expand-home "~/.local.zsh"))
-        conf (or (try (slurp conf-file) (catch Exception _))
-                 (get mcfly-lines :light))
-        cur (get mcfly-lines (if (= theme :dark) :light :dark))
-        next (get mcfly-lines theme)
-        conf (-> conf
-                 (s/replace (re-pattern cur) next))]
-    (spit conf-file conf)))
-
 (defn emacs
   []
   (if (= theme :dark)
-    ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme
-    ;; 'modus-vivendi :no-confirm)")
-    ;; (sh "/opt/homebrew/bin/emacsclient" "-n" "-q" "-e" "(load-theme
-    ;; 'modus-operandi :no-confirm)")
-    (sh "emacsclient"
+    (sh "/run/current-system/sw/bin/emacsclient"
         "-n" "-q"
         "-e" "(load-theme 'ef-cherie :no-confirm)")
-    (sh "emacsclient"
+    (sh "/run/current-system/sw/bin/emacsclient"
         "-n" "-q"
         "-e" "(load-theme 'ef-day :no-confirm)")))
 
 (try (kitty) (reload-kitty-conf) (catch Exception _))
 (try (alacritty) (catch Exception _))
 (try (emacs) (catch Exception _))
-(try (mcfly) (catch Exception _))
 
 (comment
   (when-let [kitty-pid (-> (:out (sh "pgrep" "kitty"))

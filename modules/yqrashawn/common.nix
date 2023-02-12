@@ -161,7 +161,6 @@ in {
         # fasd
         fzf
         zsh-fzf-tab
-        skim
         coreutils-full
         findutils # xargs
         gnused

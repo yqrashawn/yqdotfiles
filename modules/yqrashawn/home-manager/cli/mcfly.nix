@@ -5,7 +5,7 @@
     enable = true;
     keyScheme = "vim";
     fuzzySearchFactor = 3;
-    enableZshIntegration = true;
+    enableZshIntegration = false;
     enableBashIntegration = true;
     enableFishIntegration = true;
   };
