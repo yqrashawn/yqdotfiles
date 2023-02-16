@@ -798,23 +798,34 @@ _b_ranch _j_next _k_prev _h_up
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
     (let ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
           (glogi? (+cljr-project-has-dep? "lambdaisland/glogi"))
-          (timbre? (+cljr-project-has-dep? "timbre")))
+          (timbre? (+cljr-project-has-dep? "timbre"))
+          (pedestal? (+cljr-project-has-dep? "pedestal.log"))
+          (tools-logging? (+cljr-project-has-dep? "tools.logging")))
       (cond
        (has-as-log? (call-interactively '+cljr--log-spy arg))
-       ((+cljr-project-has-dep? "lambdaisland/glogi")
+
+       (glogi?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[lambdaisland.glogi :as log]"))
         (call-interactively '+cljr--log-spy arg))
-       ((+cljr-project-has-dep? "timbre")
+
+       (timbre?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[taoensso.timbre :as log]"))
         (call-interactively '+cljr--log-spy arg))
-       ((+cljr-project-has-dep? "pedestal.log")
+
+       (pedestal?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[io.pedestal.log :as log]"))
+        (call-interactively '+cljr--log-spy arg))
+
+       (tools-logging?
+        (save-excursion
+          (cljr--insert-in-ns ":require")
+          (insert "[clojure.tools.logging :as log]"))
         (call-interactively '+cljr--log-spy arg))))))
 
 ;;;###autoload
