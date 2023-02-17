@@ -637,6 +637,7 @@
            [:w [:!Tq :w]]                       ;; list and switch window/pane
            [:b [:!Tq :x]]                       ;; kill pane
            [:open_bracket [:!Tq :open_bracket]] ;; esc
+           [:slash [:!Tq :slash]]               ;; tmux copycat
            [:h [:!Tq :h]]                       ;; focuse window
            [:j [:!Tq :j]]                       ;; focuse window
            [:k [:!Tq :k]]                       ;; focuse window

@@ -338,7 +338,7 @@ tmux_conf_copy_to_os_clipboard=true
 # this is the place to override or undo settings
 
 # increase history size
-#set -g history-limit 10000
+set -g history-limit 50000
 
 # start with mouse mode enabled
 #set -g mouse on
@@ -394,11 +394,29 @@ tmux_conf_uninstall_plugins_on_reload=true
 
 # to enable a plugin, use the 'set -g @plugin' syntax:
 # visit https://github.com/tmux-plugins for available plugins
+
+# prefix + ctrl-f - simple file search
+# prefix + ctrl-g - jumping over git status files (best used after git status command)
+# prefix + alt-h - jumping over SHA-1/SHA-256 hashes (best used after git log command)
+# prefix + ctrl-u - url search (http, ftp and git urls)
+# prefix + ctrl-d - number search (mnemonic d, as digit)
+# prefix + alt-i - ip address search
+# prefix + slash
 set -g @plugin 'tmux-plugins/tmux-copycat'
+
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'sainnhe/tmux-fzf'
+
+# prefix + F
+# set -g @plugin 'sainnhe/tmux-fzf'
+
+# prefix + space
 set -g @plugin 'fcsonline/tmux-thumbs'
+
+# prefix + P to start/stop logging
+# prefix + alt + P save complete pane history to file
+# log saved at $HOME/tmux-history-#{session_name}-#{window_index}-#{pane_index}-%Y%m%dT%H%M%S.log
+set -g @plugin 'tmux-plugins/tmux-logging'
 
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '10'
