@@ -181,3 +181,5 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (add-hook! 'kill-buffer-hook :local '+eat-deleted-window-after-kill-buffer))
   (add-hook! 'eat-mode-hook '+eat-setup)
   (pushnew! evil-emacs-state-modes 'eat-mode))
+
+(use-package! treesit-auto :hook (doom-first-file . global-treesit-auto-mode))

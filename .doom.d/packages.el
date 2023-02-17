@@ -298,3 +298,5 @@
 ;; (package! emacsql-sqlite-module)
 
 (disable-packages! company)
+
+(package! treesit-auto)
