@@ -118,6 +118,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
                 "\n")))
     (apply #'call-process program nil straight-byte-compilation-buffer nil args)))
 
+(defvar native-comp-deferred-compilation-deny-list nil)
+
 (doom! :input
        ;;bidi              ; (tfel ot) thgir etirw uoy gnipleh
        ;;chinese
