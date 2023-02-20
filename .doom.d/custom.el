@@ -6,7 +6,63 @@
  '(org-safe-remote-resources
     '("\\`https://raw\\.githubusercontent\\.com/yqrashawn/org-html-themes/master/org/theme-bigblow\\.setup\\'"))
  '(safe-local-variable-values
-    '((vc-prepare-patches-separately)
+    '((eval add-hook 'before-save-hook
+        (lambda nil
+          (if
+            (fboundp 'org-make-toc)
+            (org-make-toc)
+            (message-box "Please install org-make-toc.")))
+        nil t)
+       (org-edit-src-content-indentation 0)
+       (eval cl-flet
+         ((enhance-imenu-lisp
+            (&rest keywords)
+            (dolist
+              (keyword keywords)
+              (let
+                ((prefix
+                   (when
+                     (listp keyword)
+                     (cl-second keyword)))
+                  (keyword
+                    (if
+                      (listp keyword)
+                      (cl-first keyword)
+                      keyword)))
+                (add-to-list 'lisp-imenu-generic-expression
+                  (list
+                    (purecopy
+                      (concat
+                        (capitalize keyword)
+                        (if
+                          (string=
+                            (substring-no-properties keyword -1)
+                            "s")
+                          "es" "s")))
+                    (purecopy
+                      (concat "^\\s-*("
+                        (regexp-opt
+                          (list
+                            (if prefix
+                              (concat prefix "-" keyword)
+                              keyword)
+                            (concat prefix "-" keyword))
+                          t)
+                        "\\s-+\\(" lisp-mode-symbol-regexp "\\)"))
+                    2))))))
+         (enhance-imenu-lisp
+           '("bookmarklet-command" "define")
+           '("class" "define")
+           '("command" "define")
+           '("ffi-method" "define")
+           '("ffi-generic" "define")
+           '("function" "define")
+           '("internal-page-command" "define")
+           '("internal-page-command-global" "define")
+           '("mode" "define")
+           '("parenscript" "define")
+           "defpsmacro"))
+       (vc-prepare-patches-separately)
        (diff-add-log-use-relative-names . t)
        (vc-git-annotate-switches . "-w")
        (+cljr--log-spy-with-error . t)
@@ -65,16 +121,16 @@
          (l/matche
            '(1
               (:defn)))
-         (p\.types/def-abstract-type
+         (p.types/def-abstract-type
            '(1
               (:defn)))
-         (p\.types/defprotocol+
+         (p.types/defprotocol+
            '(1
               (:defn)))
-         (p\.types/defrecord+
+         (p.types/defrecord+
            '(2 nil nil
               (:defn)))
-         (p\.types/deftype+
+         (p.types/deftype+
            '(2 nil nil
               (:defn)))
          (p/def-map-type
@@ -89,11 +145,11 @@
          (p/deftype+
            '(2 nil nil
               (:defn)))
-         (tools\.macro/macrolet
+         (tools.macro/macrolet
            '(1
               ((:defn))
               :form)))
-       (eval put 'p\.types/defprotocol+ 'clojure-doc-string-elt 2)
+       (eval put 'p.types/defprotocol+ 'clojure-doc-string-elt 2)
        (eval put 's/defn 'clojure-doc-string-elt 2)
        (eval put 'setting/defsetting 'clojure-doc-string-elt 2)
        (eval put 'defsetting 'clojure-doc-string-elt 2)
@@ -181,12 +237,8 @@
                (re-search-forward "from.*@jest/globals"
                  (point-max)
                  t))
-             (insert "// eslint-disable-next-line no-unused-vars
-import {expect, describe, test, it, jest, afterAll, afterEach, beforeAll, beforeEach} from '@jest/globals' // prettier-ignore
-")
-             (insert "// eslint-disable-next-line no-unused-vars
-import waitForExpect from 'wait-for-expect'
-"))))
+             (insert "// eslint-disable-next-line no-unused-vars\12import {expect, describe, test, it, jest, afterAll, afterEach, beforeAll, beforeEach} from '@jest/globals' // prettier-ignore\12")
+             (insert "// eslint-disable-next-line no-unused-vars\12import waitForExpect from 'wait-for-expect'\12"))))
        (projectile-project-root . "~/.doom.d/")))
  '(warning-suppress-types '((before-save-hook))))
 (custom-set-faces

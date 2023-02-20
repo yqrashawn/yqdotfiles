@@ -47,6 +47,7 @@ in {
           buildxSupport = true;
           composeSupport = true;
         }))
+        nyxt
         docker-compose
         docker-buildx
         mutagen
@@ -275,6 +276,11 @@ in {
         rustup
         rust-analyzer
         (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph rubocop ]))
+
+        sbcl
+        # asdf
+        lispPackages.asdf
+        lispPackages.quicklisp
 
         # ghc
         # guile
