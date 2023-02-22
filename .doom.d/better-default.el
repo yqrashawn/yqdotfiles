@@ -560,3 +560,6 @@ used in the POST request made to the LanguageTool server."
                                         osx-trash-script-file file-name)))))
           (unless (equal retcode 0)
             (error "Failed to trash %S: %S" file-name (buffer-string))))))))
+
+(after! recentf
+  (pushnew! recentf-exclude "^/nix" "/"))

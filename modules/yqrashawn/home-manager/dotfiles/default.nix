@@ -10,11 +10,11 @@
     #   target = ".hammerspoon/Spoons";
     #   recursive = true;
     # };
-    spacehammer = {
-      source = ./.spacehammer;
-      target = ".spacehammer";
-      recursive = true;
-    };
+    # spacehammer = {
+    #   source = ./.spacehammer;
+    #   target = ".spacehammer";
+    #   recursive = true;
+    # };
     asdf = {
       source = ./.asdfrc;
       target = ".asdfrc";

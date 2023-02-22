@@ -720,8 +720,9 @@
 (local orion "com.kagi.kagimacOS")
 (local edge "com.microsoft.edgemac.Beta")
 (local ff "org.mozilla.firefox")
-(local chrm "com.google.Chrome")
-(local chrmc "com.google.Chrome.canary")
+(local chrm "com.google.Chrome")        ; personal
+(local chrmc "com.google.Chrome.canary") ; st
+(local chrmd "com.google.Chrome.dev")    ; sc
 (local safari "com.apple.Safari")
 (local clickup "com.clickup.desktop-app")
 (local figma "com.figma.desktop")
@@ -741,8 +742,16 @@
                   ;; ["https://app.clickup.com" clickup]
                   ["https://www.figma.com/file" figma]
                   ["https://alidocs.dingtalk.com" chrm]
-                  ;; ["https://todoist.com/app" todoist]
-                  ;; ["https://todoist.com/showTask" todoist]
+
+                  ;; scroll
+                  ["https?://.*scroll.*" chrmd]
+                  ["personio" chrmd]
+
+                  ;; status
+                  ["https?://.*status-im.*" chrmc]
+                  ["https?://.*status.im.*" chrmc]
+                  ["peakon.com" chrmc]
+                  ["expensify.com" chrmc]
                   ]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
@@ -758,7 +767,7 @@
                          false
                          "Preview"]]
 
-   :default_handler ffd
+   :default_handler chrm
    ;; :default_handler orion
    }})
 

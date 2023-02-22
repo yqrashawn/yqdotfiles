@@ -437,8 +437,9 @@
            [:comma :same_wind_app :Safari]
            ;; [:comma [:open "/Applications/Firefox Developer Edition.app/"]
            ;; :!Firefoxes]
-           [:l [:togg "Firefox Developer Edition"] :!Firefoxes]
-           [:l :same_wind_app :Firefoxes]
+           ;; [:l [:togg "Firefox Developer Edition"] :!Firefoxes]
+           ;; [:l :same_wind_app :Firefoxes]
+           [:l [:hsl "/Applications/Google Chrome.app"]]
            ;; [:l [:togg "Sidekick"] :!Sidekick]
            ;; [:l :same_wind_app :Sidekick]
            ;; [:l [:togg "Orion"] :!Orion]
@@ -449,8 +450,8 @@
            ;; [:l [:togg :same_wind_app] :VV]
            ;; [:l [:jump "Firefox Developer Edition" "Firefox Developer
            ;; Edition"]]
-           [:n [:togg "Notion"]]
-           ;; [:n [:togg "Google Chrome Canary"]]
+           ;; [:n [:togg "Notion"]]
+           [:n [:hsl "/Applications/Google Chrome Dev.app"]]
            ;; [:return_or_enter [:togg "Brave Browser"]]
            [:return_or_enter [:togg "Simulator"]]
            ;; [:m [:open "/Applications/Mail.app"]]
@@ -473,7 +474,10 @@
            ;; [:h [:open "/Applications/Status.app"] :!Status]
            [:h [:hsl "Status"] :!Status]
            ;; [:r [:togg "Reeder"]]
-           [:r [:togg "Safari"]]
+           ;; [:r [:togg "Safari"]]
+           ;; [:r [:togg "Orion"]]
+           ;; [:r [[:hsl "/Applications/Orion.app"] :!CTSu]]
+           [:r [:hsl "/Applications/Google Chrome Canary.app"]]
            ;; [:r [:opena "Roam Research"]]
            ;; [:period [:open "/Applications/SetApp/Paw.app"]]
            [:hyphen [:togg "Paw"]]
@@ -877,6 +881,7 @@
                  "^com\\.pushplaylabsi\\.sidekick$"]
   :Sidekick     ["^com\\.pushplaylabsi\\.sidekick$"]
   :Chrome       ["^com\\.google\\.Chrome$"]
+  :ChromeDev ["^com\\.google\\.Chrome\\.dev$"]
   :ChromeCanary ["^com\\.google\\.Chrome\\.canary$"]
   :Chromium     ["^org\\.chromium\\.Chromium$"]
   :Orion        ["^com\\.kagi\\.kagimacOS$"]
@@ -903,6 +908,7 @@
                  "^org\\.mozilla\\.firefoxdeveloperedition$"
                  "^com\\.google\\.Chrome$"
                  "^org\\.chromium\\.Chromium$"
+                 "^com\\.google\\.Chrome\\.dev$"
                  "^com\\.google\\.Chrome\\.canary$"
                  "^com\\.apple\\.Safari$"
                  "^com\\.microsoft\\.VSCode(Insiders)?$"
@@ -920,6 +926,7 @@
                  "^org\\.mozilla\\.firefoxdeveloperedition$"
                  "^com\\.google\\.Chrome$"
                  "^org\\.chromium\\.Chromium$"
+                 "^com\\.google\\.Chrome\\.dev$"
                  "^com\\.google\\.Chrome\\.canary$"
                  "^com\\.apple\\.Safari$"
                  "^com\\.microsoft\\.edgemac\\.Beta$"

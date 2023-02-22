@@ -16,6 +16,8 @@
       "karabiner-elements"
       "input-source-pro"
       "google-chrome"
+      "google-chrome-dev"
+      "google-chrome-canary"
       "keybase"
       "raycast"
       "visual-studio-code"
