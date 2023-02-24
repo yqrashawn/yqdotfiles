@@ -744,14 +744,14 @@
                   ["https://alidocs.dingtalk.com" chrm]
 
                   ;; scroll
-                  ["https?://.*scroll.*" chrmd]
-                  ["personio" chrmd]
+                  ;; ["https?://.*scroll.*" chrmd]
+                  ;; ["personio" chrmd]
 
                   ;; status
-                  ["https?://.*status-im.*" chrmc]
-                  ["https?://.*status.im.*" chrmc]
-                  ["peakon.com" chrmc]
-                  ["expensify.com" chrmc]
+                  ;; ["https?://.*status-im.*" chrmc]
+                  ;; ["https?://.*status.im.*" chrmc]
+                  ;; ["peakon.com" chrmc]
+                  ;; ["expensify.com" chrmc]
                   ]
    :url_redir_decoders [["Zoom URLs"
                          "https?://.*zoom%.us/j/(%d+)%?pwd=(%w)"
@@ -767,7 +767,7 @@
                          false
                          "Preview"]]
 
-   :default_handler chrm
+   :default_handler ffd
    ;; :default_handler orion
    }})
 
