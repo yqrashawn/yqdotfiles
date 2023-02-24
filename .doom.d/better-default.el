@@ -562,4 +562,4 @@ used in the POST request made to the LanguageTool server."
             (error "Failed to trash %S: %S" file-name (buffer-string))))))))
 
 (after! recentf
-  (pushnew! recentf-exclude "^/nix" "/"))
+  (pushnew! recentf-exclude "^/nix"))
