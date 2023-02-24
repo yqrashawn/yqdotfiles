@@ -19,7 +19,7 @@ let
     serviceConfig.KeepAlive = true;
   };
 in {
-  imports = [ ./daemons ./user-agents ];
+  imports = [ ./daemons ./user-agents ./network.nix ];
 
   security.pki.certificateFiles =
     [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" "/etc/ssl/cert.pem" ];
