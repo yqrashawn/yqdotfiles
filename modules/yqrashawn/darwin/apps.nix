@@ -10,7 +10,7 @@
       "espanso"
       "xbar"
       "gfxcardstatus"
-      "uhk-agent"
+      # "uhk-agent"
       "roam-research"
       # "kitty"
       "slack"
