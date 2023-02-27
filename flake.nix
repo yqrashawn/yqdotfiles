@@ -332,7 +332,7 @@
 
         pkgs = import inputs.stable {
           inherit system;
-          overlays = [ inputs.devshell.overlay ];
+          overlays = [ inputs.devshell.overlays.default ];
         };
         pyEnv = (pkgs.python3.withPackages
           (ps: with ps; [ black pylint typer colorama shellingham ]));
