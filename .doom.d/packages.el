@@ -300,3 +300,5 @@
 (disable-packages! company)
 
 (package! treesit-auto)
+(package! titlecase)
+(package! denote)
