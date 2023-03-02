@@ -302,3 +302,4 @@
 (package! treesit-auto)
 (package! titlecase)
 (package! denote)
+(package! ht)
