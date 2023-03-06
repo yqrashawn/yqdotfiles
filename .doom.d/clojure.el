@@ -4,6 +4,8 @@
 (add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
 (add-to-list 'magic-mode-alist '("^#![^\n]*/\\(clj\\|clojure\\|bb\\|lumo\\)" . clojure-mode))
 
+(setq! +clojure-load-clj-refactor-with-lsp t)
+
 (add-hook! (clojure-mode clojurescript-mode clojurec-mode)
   (setq-local evil-shift-width 1))
 

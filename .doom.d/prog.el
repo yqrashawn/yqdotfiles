@@ -167,7 +167,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :config
   (eshell-follow-global-mode t))
 
-(add-hook! go-mode '(hl-line-mode which-func-mode))
+(add-hook! go-mode '(hl-line-mode which-func-try-to-enable))
 
 (use-package! eat
   :commands (eat)
@@ -182,4 +182,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (add-hook! 'eat-mode-hook '+eat-setup)
   (pushnew! evil-emacs-state-modes 'eat-mode))
 
-(use-package! treesit-auto :hook (doom-first-file . global-treesit-auto-mode))
+;; (use-package! treesit-auto
+;;   :hook (doom-first-file . global-treesit-auto-mode)
+;;   :init (setq! treesit-auto-install t))

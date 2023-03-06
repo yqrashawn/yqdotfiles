@@ -417,7 +417,7 @@ This function could be in the list `comint-output-filter-functions'."
                                           (remap-xlfd (doom-normalize-font remap-font)))
                                     remap-xlfd
                                   (purecopy font))
-                                (error "Could not decompose %s font" var))))
+                              (error "Could not decompose %s font" var))))
                 (let* ((step      (if fixed-size-p 0 (* increment doom-font-increment)))
                        (orig-size (font-get font :size))
                        (new-size  (if fixed-size-p increment (+ orig-size step))))
@@ -429,10 +429,10 @@ This function could be in the list `comint-output-filter-functions'."
                          (unless (get var 'initial-value)
                            (put var 'initial-value original-font))
                          (font-put dfont :size new-size)
-                         (set var dfont)))))))))
+                          (set var dfont)))))))))
     (error
      (ignore-errors (doom-adjust-font-size nil))
-     (signal (car e) (cdr e)))))
+      (signal (car e) (cdr e)))))
 
 (unless (fboundp 'indent-buffer)
   (defalias 'indent-buffer #'pp-buffer))
