@@ -34,6 +34,11 @@
       url = "github:emacs-mirror/emacs/emacs-29";
       flake = false;
     };
+    emacs-stable-src = {
+      url =
+        "github:emacs-mirror/emacs/fb5dbf6de73fa034338448f1029c55f85d1078b4";
+      flake = false;
+    };
 
     comma = {
       url = "github:nix-community/comma";

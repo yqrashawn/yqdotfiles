@@ -1,5 +1,9 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
+;; https://github.com/doomemacs/doomemacs/issues/7130
+(setq doom-localleader-key ","
+  doom-localleader-alt-key "M-SPC ,")
+
 ;; This file controls what Doom modules are enabled and what order they load
 ;; in. Remember to run 'doom sync' after modifying it!
 
@@ -212,7 +216,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;prodigy           ; FIXME managing external services & code builders
        rgb                 ; creating color strings
        taskrunner          ; taskrunner for all your projects
-       ;;terraform         ; infrastructure as code
+       terraform           ; infrastructure as code
        tmux                ; an API for interacting with tmux
        tree-sitter
        ;;upload            ; map local to remote projects via ssh/ftp

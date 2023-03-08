@@ -522,6 +522,23 @@
         "type": "github"
       }
     },
+    "emacs-stable-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1677009990,
+        "narHash": "sha256-54K4Q/1mRhDVNwOAbHuCi3DLaq979K2PHKzDWc0hnFw=",
+        "owner": "emacs-mirror",
+        "repo": "emacs",
+        "rev": "fb5dbf6de73fa034338448f1029c55f85d1078b4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "emacs-mirror",
+        "repo": "emacs",
+        "rev": "fb5dbf6de73fa034338448f1029c55f85d1078b4",
+        "type": "github"
+      }
+    },
     "emacs29-src": {
       "flake": false,
       "locked": {
@@ -782,6 +799,7 @@
         "darwin-stable": "darwin-stable",
         "devshell": "devshell",
         "emacs-overlay": "emacs-overlay",
+        "emacs-stable-src": "emacs-stable-src",
         "emacs29-src": "emacs29-src",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils_3",

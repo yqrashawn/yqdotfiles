@@ -9,8 +9,8 @@ in {
     (final: prev: {
       emacs29 = prev.emacsGit.overrideAttrs (old: {
         name = "emacs29";
-        version = "29.0-${inputs.emacs29-src.shortRev}";
-        src = inputs.emacs29-src;
+        version = "29.0-${inputs.emacs-stable-src.shortRev}";
+        src = inputs.emacs-stable-src;
       });
     })
     # channels
