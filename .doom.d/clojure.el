@@ -23,6 +23,9 @@
   ;; better-cond
   (pushnew! clojure-align-cond-forms "bc/cond" "b/cond")
 
+  ;; status h/deftest-sub
+  (pushnew! cider-test-defining-forms "deftest-sub")
+
 
   (require 'clojure-mode-extra-font-locking)
   (pushnew! clojure-built-in-vars "defview")
@@ -181,6 +184,7 @@ creates a new one. Don't unnecessarily bother the user."
           (re-search-forward "^#![^\n]*/bb" nil t))
         (funcall-interactively #'corgi/cider-jack-in-babashka (doom-project-root))
       (funcall-interactively orig-fn params)))
+
   (require 'cider-eval-sexp-fu)
 
   (defun +cider-test-execute-cljs ()
@@ -188,14 +192,22 @@ creates a new one. Don't unnecessarily bother the user."
     (interactive)
     (let* ((ns (clojure-find-ns))
            (def (clojure-find-def)) ; it's a list of the form (deftest something)
-           (deftype (car def))
-           (var (cadr def))
-           (form (format "(cljs.test/test-var #'%s/%s)" ns var)))
-      (if (and ns (member deftype cider-test-defining-forms))
-          (progn
-            (call-interactively #'cider-eval-defun-at-point)
-            (cider-interactive-eval form nil nil (cider--nrepl-pr-request-map)))
-        (message "No test at point"))))
+           (deftype (car def)))
+      (cider-interactive-eval
+       (apply #'buffer-substring-no-properties (cider-defun-at-point 'bounds))
+       (lambda (a)
+         ;; (print a)
+         (when (nrepl-dict-get a "value")
+           (let* ((form (format "
+(println \"-----run test------\")
+(cljs.test/test-var %s)
+(println \"---test finished---\")
+"
+                                (nrepl-dict-get a "value"))))
+             ;; (message "---%s---" form)
+             (if (and ns (member deftype cider-test-defining-forms))
+                 (cider-interactive-eval form nil nil (cider--nrepl-pr-request-map))
+               (message "No test at point"))))))))
 
   (defadvice! +cider-test-run-test (orig-fn)
     :around #'cider-test-run-test

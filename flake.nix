@@ -36,7 +36,7 @@
     };
     emacs-stable-src = {
       url =
-        "github:emacs-mirror/emacs/fb5dbf6de73fa034338448f1029c55f85d1078b4";
+        "github:emacs-mirror/emacs/5b34fc07085a4ec636124756d09dcc3be8414eb8";
       flake = false;
     };
 
