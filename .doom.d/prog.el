@@ -104,8 +104,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (use-package! apheleia
   ;; :hook ((nix-mode js2-mode rjsx-mode clojurescript-mode clojurec-mode clojure-mode go-mode) . apheleia-mode)
-  :hook (doom-first-file . apheleia-global-mode)
-  :config
+  :hook (doom-first-file . apheleia-global-mode))
+
+(after! apheleia-formatters
   (pushnew! apheleia-mode-alist
             '(clojure-mode . zprint)
             '(clojurec-mode . zprint)
