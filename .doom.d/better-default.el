@@ -571,6 +571,15 @@ used in the POST request made to the LanguageTool server."
          (-> (auth-source-search :host "api.openai.com"
                                  :user user-mail-address)
              car
-             (plist-get :api_secret))))
+           (plist-get :api_secret))))
+
+(use-package! gptel
+  :defer t
+  :config
+  (setq! gptel-api-key
+         (-> (auth-source-search :host "api.openai.com"
+                                 :user user-mail-address)
+             car
+           (plist-get :api_secret))))
 
 (use-package! jit-spell :hook (prog-mode text-mode))

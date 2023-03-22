@@ -1,9 +1,5 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-;; https://github.com/doomemacs/doomemacs/issues/7130
-(setq doom-localleader-key ","
-  doom-localleader-alt-key "M-SPC ,")
-
 ;; This file controls what Doom modules are enabled and what order they load
 ;; in. Remember to run 'doom sync' after modifying it!
 

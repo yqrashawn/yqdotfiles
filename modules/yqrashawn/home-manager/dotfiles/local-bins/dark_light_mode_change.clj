@@ -71,13 +71,13 @@
   (slurp (:out (shell "pgrep -d x kitty")))
   (shell "launchctl load -w"
          (fs/expand-home
-           "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))
+          "~/Library/LaunchAgents/com.yqrashawn.dark-mode-notify.plist"))
   (shell "launchctl remove com.yqrashawn.dark-mode-notify")
   (shell "osascript"
          "-l" "JavaScript"
          "-e"
-           "Application('System Events').appearancePreferences.darkMode=true")
+         "Application('System Events').appearancePreferences.darkMode=true")
   (shell "osascript"
          "-l" "JavaScript"
          "-e"
-           "Application('System Events').appearancePreferences.darkMode=false"))
+         "Application('System Events').appearancePreferences.darkMode=false"))

@@ -111,6 +111,8 @@
    cider-auto-jump-to-error nil
    ;; cider-print-fn 'fipp
    cider-print-fn 'puget
+   ;; cider-print-fn 'zprint
+   ;; cider-print-options '(("style" ("community" "no-comma")))
    ;; cider-format-code-options '(("indents" (("letsubs" 0))))
    )
 

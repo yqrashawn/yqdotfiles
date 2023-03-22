@@ -306,3 +306,4 @@
 
 (package! chatgpt-arcana :recipe (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el")))
 (package! jit-spell)
+(package! gptel)
