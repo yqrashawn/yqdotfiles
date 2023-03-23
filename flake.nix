@@ -71,6 +71,10 @@
       url = "github:wfxr/forgit";
       flake = false;
     };
+    zsh-autopair = {
+      url = "github:hlissner/zsh-autopair";
+      flake = false;
+    };
     zsh-f-sy-h = {
       url = "github:z-shell/F-Sy-H";
       flake = false;

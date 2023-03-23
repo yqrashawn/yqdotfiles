@@ -1,0 +1,2 @@
+#!/bin/sh
+osascript -e 'display notification "Command finished!" with title "Finished!"'
