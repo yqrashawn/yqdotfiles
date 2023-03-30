@@ -892,16 +892,25 @@ _b_ranch _j_next _k_prev _h_up
   (require 'f)
   (require 's)
   (when IS-MAC
-    (find-file
-      (concat
-        (+latest-modified-dir
-          (concat (+latest-modified-dir "~/Library/Developer/CoreSimulator/Devices/"
-                    (lambda (dirname)
-                      (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
-            "/data/Containers/Data/Application")
-          (lambda (dirname)
-                      (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
-        "/Library/geth.log"))))
+    (let* ((latest-device (+latest-modified-dir "~/Library/Developer/CoreSimulator/Devices/"
+                            (lambda (dirname)
+                              (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+            (latest-appication (+latest-modified-dir
+                                 (concat latest-device "/data/Containers/Data/Application")
+                                 (lambda (dirname)
+                                   (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+            (eth-log (concat
+                       (+latest-modified-dir
+                         (concat
+                           (+latest-modified-dir
+                             (concat latest-appication "/Library/Users/" user-login-name "/Library/Developer/CoreSimulator/Devices/")
+                             (lambda (dirname)
+                               (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
+                           "/data/Containers/Data/Application/")
+                         (lambda (dirname)
+                           (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
+                       "/Library")))
+      (find-file eth-log))))
 
 ;;;###autoload
 (defun +magit-toggle-performance ()

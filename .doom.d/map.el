@@ -64,6 +64,7 @@
       :desc "New Node" "n" #'org-roam-capture
       :desc "Find Node" "f" #'org-roam-node-find
       :desc "Agenda" "a" (lambda (arg) (interactive "P") (org-agenda arg "a")))
+    :desc "turbo log print" "cll" #'turbo-log-print-immediately
     :desc "Local Leader" "m" (general-simulate-key ",")
     :desc "M-x" "SPC" #'execute-extended-command
     :desc "Reveal in finder" "bf" #'reveal-in-osx-finder

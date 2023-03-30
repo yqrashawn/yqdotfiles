@@ -108,7 +108,6 @@
 (use-package! turbo-log
   :defer t
   :config
-  (plist-put turbo-log--ecmascript-configs :include-semicolon nil)
   (setq turbo-log-msg-format-template "\"🚀: %s\"")
   (setq turbo-log-allow-insert-without-tree-sitter-p t))
 
