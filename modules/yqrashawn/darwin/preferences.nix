@@ -242,6 +242,8 @@ in {
 
         rm ~/.ssh/config || true
         ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg
+
+        ln -fs /Applications/Nix\ Apps/* /Applications/
       '';
     };
   };

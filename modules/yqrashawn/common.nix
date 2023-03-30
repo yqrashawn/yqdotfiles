@@ -41,6 +41,11 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        todoist-electron
+        todoist
+        zoom-us
+        slack
+        discord
         zellij
         kitty-themes
         (docker.override (args: {
