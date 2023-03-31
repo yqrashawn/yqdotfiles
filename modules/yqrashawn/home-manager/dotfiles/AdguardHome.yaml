@@ -105,7 +105,7 @@ querylog:
   ignored: []
 statistics:
   enabled: true
-  interval: 1
+  interval: 30
   ignored: []
 filters:
   - enabled: true
@@ -185,7 +185,9 @@ filters:
     name: 1Hosts (Lite)
     id: 1680240774
 whitelist_filters: []
-user_rules: []
+user_rules:
+  - '||adservice.google.com^$important'
+  - ""
 dhcp:
   enabled: false
   interface_name: ""
