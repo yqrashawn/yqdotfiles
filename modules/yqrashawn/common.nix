@@ -41,6 +41,8 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        adguardhome
+        tailscale
         todoist-electron
         todoist
         zoom-us

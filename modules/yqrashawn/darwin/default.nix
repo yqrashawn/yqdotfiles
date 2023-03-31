@@ -5,5 +5,6 @@
     ./brew.nix
     ./preferences.nix
     ./display-manager.nix
+    # ./tailscale.nix
   ];
 }
