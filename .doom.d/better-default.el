@@ -163,7 +163,14 @@
      ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)
      ("^\\*declutter\*" :ignore t)))
 
-(use-package! ix :commands (ix))
+(use-package! ix
+  :commands (ix)
+  :config
+  (setq! ix-user "yq"
+         ix-token (-> (auth-source-search :host "ix.io"
+                                          :user "yq")
+                      car
+                      (plist-get :secret))))
 
 ;; (use-package! fancy-dabbre
 ;;   :hook (doom-first-input . global-fancy-dabbrev-mode)

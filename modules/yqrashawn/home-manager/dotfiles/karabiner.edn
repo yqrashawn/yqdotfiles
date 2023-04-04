@@ -416,7 +416,7 @@
            ;; [:k [:hsl "/Applications/Emacs.app"]]
            [:k [:hsl "/Applications/Nix Apps/Emacs.app"]]
            ;; [:k [:yfocus "Emacs"]]
-           ;; [:u [:togg "Logseq"]]
+           ;; [: [:togg "Logseq"]]
            ;; [:u [:hsl "Roam Research"]]
            [:u [:hsl "Safari Technology Preview"]]
            ;; [:u :!TOS2]
