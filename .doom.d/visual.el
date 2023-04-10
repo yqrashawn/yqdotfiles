@@ -3,8 +3,10 @@
 (setq! text-scale-remap-header-line t
        mac-allow-anti-aliasing t)
 
-(use-package! outline-minor-faces
-  :hook (outline-minor-mode . outline-minor-faces-add-font-lock-keywords))
+(use-package outline-minor-faces
+  :after outline
+  :config (add-hook 'outline-minor-mode-hook
+                    #'outline-minor-faces-mode))
 
 (use-package! backline
   :after outline

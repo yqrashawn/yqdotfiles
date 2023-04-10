@@ -293,7 +293,9 @@
 (package! eat)
 
 ;; (package! magit-libgit)
-(package! emacsql-sqlite-builtin)
+;; (package! emacsql-sqlite-builtin
+;;   :recipe (:host github :repo "magit/emacsql" :files ("*.el"))
+;;   :pin "415dbfd846f46d921a70a351695f0d0e8f75da35")
 ;; (package! sqlite3)
 ;; (package! emacsql-sqlite-module)
 
@@ -307,3 +309,7 @@
 (package! chatgpt-arcana :recipe (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el")))
 (package! jit-spell)
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
+
+(package! closql :pin "0a7226331ff1f96142199915c0ac7940bac4afdd")
+(package! emacsql :pin "415dbfd846f46d921a70a351695f0d0e8f75da35")
+(package! emacsql-sqlite-builtin :pin "415dbfd846f46d921a70a351695f0d0e8f75da35")
