@@ -6,6 +6,7 @@ let
     ];
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [
+    difftastic
     notmuch
     yt-dlp
     streamlink
@@ -235,7 +236,6 @@ in {
         gnumake
         cmake
         dtach
-        difftastic
         # python39Packages.percol # build failed
         # docker-compose_2
         docker-slim

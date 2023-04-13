@@ -187,6 +187,10 @@ filters:
 whitelist_filters: []
 user_rules:
   - '||adservice.google.com^$important'
+  - '@@||js.sentry-cdn.com^$important'
+  - '@@||s1.sentry-cdn.com^$important'
+  - '||sentry.zendesk.com^$important'
+  - '@@||scroll-zkp.sentry.io^$important'
   - ""
 dhcp:
   enabled: false
