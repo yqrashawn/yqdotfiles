@@ -33,7 +33,7 @@ jobs:
           distribution: "zulu"
           java-version: "11.0.7"
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@10.2
+        uses: DeLaGuardo/setup-clojure@10.3
         with:
           cli: 1.10.1.693
 
@@ -64,4 +64,4 @@ jobs:
           path: "./public/build"
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
