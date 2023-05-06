@@ -126,4 +126,4 @@
   :mode
   (("\\.proto" . protobuf-mode)))
 
-(add-hook! '(go-ts-mode-hook typescript-ts-mode) :append #'lsp)
+(add-hook! '(go-ts-mode-hook typescript-ts-mode-hook) :append #'lsp)

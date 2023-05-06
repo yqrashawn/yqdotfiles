@@ -122,3 +122,8 @@ tasks."
     (-> (auth-source-search :host "todoist.com" :user "namy.19@gmail.com")
       car
       (plist-get :api_token))))
+
+
+(use-package! denote :defer t
+  :init
+  (setq! denote-directory (expand-file-name "~/Dropbox/sync/denote")))
