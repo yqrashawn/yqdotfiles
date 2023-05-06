@@ -2,8 +2,8 @@
   imports = [ ./apps-minimal.nix ];
   homebrew = {
     casks = [
-      "logseq"
-      "google-chat"
+      # "logseq"
+      # "google-chat"
       "voov-meeting"
       "cljstyle"
       "docker"
