@@ -174,6 +174,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :commands (eat)
   :init
   (setq! eat-kill-buffer-on-exit t
+    eat-term-terminfo-directory (expand-file-name "~/.emacs.d/.local/straight/repos/eat/terminfo")
     eat-enable-yank-to-terminal t)
   :config
   (defun +eat-deleted-window-after-kill-buffer ()

@@ -44,7 +44,7 @@ in {
       [
         adguardhome
         tailscale
-        todoist-electron
+        # todoist-electron
         todoist
         zoom-us
         slack
