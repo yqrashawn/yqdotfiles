@@ -7,101 +7,123 @@ set update.checkintervalsecs 86400
 set configversion 2.0
 set theme auto
 set followpagepatterns.prev Previous
+set followpagepatterns.next ^(next|newer)\b|»|>>|more
+set editorcmd "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c %f"
+set modeindicator false
+set searchurls.to https://www.thepiratebay.org/search/%s/0/99/0
+set searchurls.g https://www.google.com/search?tbs=li:1&q=%s
+set searchurls.caniuse https://caniuse.com/#search=%s
+set searchurls.google https://www.google.com/search?q=
+set searchurls.googlelucky https://www.google.com/search?btnI=I'm+Feeling+Lucky&q=
+set searchurls.scholar https://scholar.google.com/scholar?q=
+set searchurls.googleuk https://www.google.co.uk/search?q=
+set searchurls.bing https://www.bing.com/search?q=
+set searchurls.duckduckgo https://duckduckgo.com/?q=
+set searchurls.yahoo https://search.yahoo.com/search?p=
+set searchurls.twitter https://twitter.com/search?q=
+set searchurls.wikipedia https://en.wikipedia.org/wiki/Special:Search/
+set searchurls.youtube https://www.youtube.com/results?search_query=
+set searchurls.amazon https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=
+set searchurls.amazonuk https://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=
+set searchurls.startpage https://startpage.com/do/search?language=english&cat=web&query=
+set searchurls.github https://github.com/search?utf8=✓&q=
+set searchurls.searx https://searx.me/?category_general=on&q=
+set searchurls.cnrtl http://www.cnrtl.fr/lexicographie/
+set searchurls.osm https://www.openstreetmap.org/search?query=
+set searchurls.mdn https://developer.mozilla.org/en-US/search?q=
+set searchurls.gentoo_wiki https://wiki.gentoo.org/index.php?title=Special%3ASearch&profile=default&fulltext=Search&search=
+set searchurls.qwant https://www.qwant.com/?q=
+set searchengine g
 
 " Binds
-bind u     scrollpage   -0.5
-bind d     scrollpage   0.5
+bind u scrollpage -0.5
 bind <C-d> stop
-bind x     tabclose
-bind X     undo
+bind x tabclose
+bind X undo
 bind <A-p> pin
-bind <A-m> mute         toggle
-bind <F1>  help
-bind o     fillcmdline  open
-bind O     current_url  open
-bind w     fillcmdline  winopen
-bind W     current_url  winopen
-bind t     fillcmdline  tabopen
-bind ]]    followpage   next
-bind [[    followpage   prev
-bind [c    urlincrement -1
-bind ]c    urlincrement 1
+bind <A-m> mute toggle
+bind <F1> help
+bind O current_url open
+bind w fillcmdline winopen
+bind W current_url winopen
+bind t fillcmdline tabopen
+bind ]] followpage next
+bind [[ followpage prev
+bind [c urlincrement -1
+bind ]c urlincrement 1
 bind <C-x> urlincrement -1
 bind <C-a> urlincrement 1
-bind T   current_url  tabopen
-bind yy  clipboard    yank
-bind ys  clipboard    yankshort
-bind yc  clipboard    yankcanon
-bind ym  clipboard    yankmd
-bind yo  clipboard    yankorg
-bind yt  clipboard    yanktitle
-bind gh  home
-bind gH  home         true
-bind p  clipboard   open
-bind P  clipboard   tabopen
-bind j  scrollline  10
-bind k  scrollline  -10
-bind <C-e> scrollline  10
-bind <C-y> scrollline  -10
-bind h   scrollpx  -50
-bind l   scrollpx  50
-bind G   scrollto  100
-bind gg  scrollto  0
-bind <C-u> scrollpage  -0.5
-bind <C-f> scrollpage  1
-bind <C-b> scrollpage  -1
-bind <C-v> nmode       ignore  1  mode normal
-bind $  scrollto  100  x
-bind ^  scrollto  0    x
-bind H  back
-bind L  forward
+bind T current_url tabopen
+bind yy clipboard yank
+bind ys clipboard yankshort
+bind yc clipboard yankcanon
+bind ym clipboard yankmd
+bind yo clipboard yankorg
+bind yt clipboard yanktitle
+bind gh followpage prev
+bind gH home true
+bind p clipboard open
+bind P clipboard tabopen
+bind j scrollline 10
+bind k scrollline -10
+bind <C-e> scrollline 10
+bind <C-y> scrollline -10
+bind h tabprev
+bind l tabnext
+bind gg scrollto 0
+bind <C-u> scrollpage -0.5
+unbind <C-f>
+bind <C-b> scrollpage -1
+bind <C-v> nmode ignore 1 mode normal
+bind $ scrollto 100 x
+bind ^ scrollto 0 x
+bind H back
 bind <C-o> jumpprev
 bind <C-i> jumpnext
-bind D    composite       tabprev; tabclose #
-bind gx0  tabclosealltoleft
-bind gx$  tabclosealltoright
-bind <<   tabmove         -1
-bind >>   tabmove         +1
-bind U    undo            window
-bind r    reload
-bind R    reloadhard
-bind gi   focusinput      -l
-bind g?   rot13
-bind g!   jumble
-bind g;   changelistjump -1
-bind J    tabprev
-bind K    tabnext
-bind gt   tabnext_gt
-bind gT   tabprev
-bind g^   tabfirst
-bind g0   tabfirst
-bind g$   tablast
-bind ga   tabaudio
-bind gr   reader
-bind gu   urlparent
-bind gU   urlroot
-bind gf   viewsource
-bind :     fillcmdline_notrail
-bind s     fillcmdline  open                  search
-bind S     fillcmdline  tabopen        search
-bind M     gobble                      1               quickmark
-bind B     fillcmdline  taball
-bind b     fillcmdline  tab
-bind ZZ    qall
-bind f                  hint
-bind F                  hint           -b
-bind gF    hint         -qb
-bind ;i    hint         -i
-bind ;b    hint         -b
-bind ;o    hint
-bind ;I    hint         -I
-bind ;k    hint         -k
-bind ;K    hint         -K
-bind ;y    hint         -y
+bind D composite tabprev; tabclose #
+bind gx0 tabclosealltoleft
+bind gx$ tabclosealltoright
+bind << tabmove -1
+bind >> tabmove +1
+bind U undo window
+bind r reload
+bind R reloadhard
+bind gi focusinput -l
+bind g? rot13
+bind g! jumble
+bind g; changelistjump -1
+bind J tabprev
+bind K tabnext
+bind gt tabnext_gt
+bind gT tabprev
+bind g^ tabfirst
+bind g0 tabfirst
+bind g$ tablast
+bind ga tabaudio
+bind gr reader
+bind gu urlparent
+bind gU urlroot
+bind gf viewsource
+bind : fillcmdline_notrail
+bind s fillcmdline open search
+bind M gobble 1 quickmark
+bind B fillcmdline taball
+bind b fillcmdline tab
+bind ZZ qall
+bind f hint
+bind F hint -b
+bind gF hint -qb
+bind ;i hint -i
+bind ;b hint -b
+bind ;o hint
+bind ;I hint -I
+bind ;k hint -k
+bind ;K hint -K
+bind ;y hint -y
 bind ;Y hint -cF img i => tri.excmds.yankimage(tri.urlutils.getAbsoluteURL(i.src))
 bind ;p hint -p
 bind ;h hint -h
-bind v  hint -h
+bind v hint -h
 bind ;P hint -P
 bind ;r hint -r
 bind ;s hint -s
@@ -114,12 +136,11 @@ bind ;v hint -W mpvsafe
 bind ;V hint -V
 bind ;w hint -w
 bind ;t hint -W tabopen
-bind ;O hint -W fillcmdline_notrail open 
-bind ;W hint -W fillcmdline_notrail winopen 
-bind ;T hint -W fillcmdline_notrail tabopen 
+bind ;O hint -W fillcmdline_notrail open
+bind ;W hint -W fillcmdline_notrail winopen
+bind ;T hint -W fillcmdline_notrail tabopen
 bind ;z hint -z
-bind ;m composite hint -Jpipe img src | open    images.google.com/searchbyimage?image_url=
-bind ;M composite hint -Jpipe img src | tabopen images.google.com/searchbyimage?image_url=
+bind ;m composite hint -Jpipe img src | open images.google.com/searchbyimage?image_url=
 bind ;gi hint -qi
 bind ;gI hint -qI
 bind ;gk hint -qk
@@ -128,7 +149,6 @@ bind ;gp hint -qp
 bind ;gP hint -qP
 bind ;gr hint -qr
 bind ;gs hint -qs
-bind ;gS hint -qS
 bind ;ga hint -qa
 bind ;gA hint -qA
 bind ;g; hint -q;
@@ -138,151 +158,176 @@ bind ;gw hint -qw
 bind ;gb hint -qb
 bind ;gF hint -qb
 bind ;gf hint -q
-bind <S-Insert>  mode        ignore
-bind <AC-Escape> mode        ignore
-bind <AC-`>      mode        ignore
-bind <S-Escape>  mode        ignore
-bind <Escape>    composite   mode normal ; hidecmdline
-bind <C-[>       composite   mode normal ; hidecmdline
-bind a           current_url bmark
+bind <S-Insert> mode ignore
+bind <AC-Escape> mode ignore
+bind <AC-`> mode ignore
+bind <S-Escape> mode ignore
+bind <Escape> composite mode normal ; hidecmdline
+bind <C-[> composite mode normal ; hidecmdline
+bind a current_url bmark
 bind A bmark
-bind zi zoom 0.1  true
+bind zi zoom 0.1 true
 bind zo zoom -0.1 true
-bind zm zoom 0.5  true
+bind zm zoom 0.5 true
 bind zr zoom -0.5 true
-bind zM zoom 0.5  true
+bind zM zoom 0.5 true
 bind zR zoom -0.5 true
 bind zz zoom 1
 bind zI zoom 3
 bind zO zoom 0.3
-bind .  repeat
+bind . repeat
+bind gl followpage next
+bind gv js tri.native.run(`mpv '${document.location.href}'`)
+bind d scrollpage 0.5
+bind o fillcmdline open
+bind G scrollto 100
+bind L forward
+bind S fillcmdline tabopen search
+bind ;M composite hint -Jpipe img src | tabopen images.google.com/searchbyimage?image_url=
+bind ;gS hint -qS
 bind <AS-ArrowUp><AS-ArrowUp><AS-ArrowDown><AS-ArrowDown><AS-ArrowLeft><AS-ArrowRight><AS-ArrowLeft><AS-ArrowRight>ba open https://www.youtube.com/watch?v=M3iOROuTuMA
-
+bind gno tabopen https://manuals.plus/kinesis/advantage2-keyboard-manual#axzz7hxVfL2Hj
+bind goo open https://manuals.plus/kinesis/advantage2-keyboard-manual#axzz7hxVfL2Hj
+bind gwo winopen https://manuals.plus/kinesis/advantage2-keyboard-manual#axzz7hxVfL2Hj
+bind gnB tabopen https://my.setapp.com/devices
+bind goB open https://my.setapp.com/devices
+bind gwB winopen https://my.setapp.com/devices
+bind m gobble 1 markadd
+bind ` gobble 1 markjump
+bind <ArrowDown> ex.next_completion
+bind <ArrowUp> ex.prev_completion
 unbindurl app\.clickup\.com k
 unbindurl app\.clickup\.com j
 unbindurl app\.clickup\.com /
 unbindurl app\.clickup\.com n
-
-unbindurl mail.google.com   j
-unbindurl mail.google.com   k
-unbindurl mail.google.com   gi
-unbindurl mail.google.com   x
-
-unbindurl newsblur\.com   s
-unbindurl newsblur\.com   j
-unbindurl newsblur\.com   k
-unbindurl newsblur\.com   n
-unbindurl newsblur\.com   u
-unbindurl newsblur\.com   m
-unbindurl newsblur\.com   o
-unbindurl newsblur\.com   v
-unbindurl newsblur\.com   V
-unbindurl newsblur\.com   x
-unbindurl newsblur\.com   X
-unbindurl newsblur\.com   S
-unbindurl newsblur\.com   c
-unbindurl newsblur\.com   c
-unbindurl newsblur\.com   J
-unbindurl newsblur\.com   K
-unbindurl newsblur\.com   A
-unbindurl newsblur\.com   /
-unbindurl newsblur\.com   r
-unbindurl newsblur\.com   M
-unbindurl newsblur\.com   D
-unbindurl newsblur\.com   ?
+unbindurl mail.google.com j
+unbindurl mail.google.com k
+unbindurl mail.google.com gi
+unbindurl mail.google.com x
+unbindurl (www\.)?newsblur\.com s
+unbindurl (www\.)?newsblur\.com j
+unbindurl (www\.)?newsblur\.com k
+unbindurl (www\.)?newsblur\.com n
+unbindurl (www\.)?newsblur\.com u
+unbindurl (www\.)?newsblur\.com m
+unbindurl (www\.)?newsblur\.com o
+unbindurl (www\.)?newsblur\.com v
+unbindurl (www\.)?newsblur\.com V
+unbindurl (www\.)?newsblur\.com x
+unbindurl (www\.)?newsblur\.com X
+unbindurl (www\.)?newsblur\.com S
+unbindurl (www\.)?newsblur\.com c
+unbindurl (www\.)?newsblur\.com J
+unbindurl (www\.)?newsblur\.com K
+unbindurl (www\.)?newsblur\.com A
+unbindurl (www\.)?newsblur\.com /
+unbindurl (www\.)?newsblur\.com r
+unbindurl (www\.)?newsblur\.com M
+unbindurl (www\.)?newsblur\.com D
+unbindurl (www\.)?newsblur\.com ?
+bindurl (www\.)?newsblur\.com , scrollpage 0.5
+bindurl (www\.)?newsblur\.com . scrollpage -0.5
+bindurl (www\.)?newsblur\.com R reload
+bindurl ^https://web.whatsapp.com f hint -c [tabindex]:not(.two)>div,a
+bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a
+unbindurl newsblur\.com s
+unbindurl newsblur\.com j
+unbindurl newsblur\.com k
+unbindurl newsblur\.com n
+unbindurl newsblur\.com u
+unbindurl newsblur\.com m
+unbindurl newsblur\.com o
+unbindurl newsblur\.com v
+unbindurl newsblur\.com V
+unbindurl newsblur\.com x
+unbindurl newsblur\.com X
+unbindurl newsblur\.com S
+unbindurl newsblur\.com c
+unbindurl newsblur\.com J
+unbindurl newsblur\.com K
+unbindurl newsblur\.com A
+unbindurl newsblur\.com /
+unbindurl newsblur\.com r
+unbindurl newsblur\.com M
+unbindurl newsblur\.com D
+unbindurl newsblur\.com ?
 bindurl newsblur\.com , scrollpage 0.5
 bindurl newsblur\.com . scrollpage -0.5
 bindurl newsblur\.com R reload
-
-bindurl ^https://web.whatsapp.com f hint -c  [tabindex]:not(.two)>div,a
-bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a
-
-unbindurl ownmacbook:13331   j
-unbindurl ownmacbook:13331   k
-unbindurl ownmacbook:13331   y
-unbindurl ownmacbook:13331   a
-unbindurl ownmacbook:13331   o
-unbindurl ownmacbook:13331   .
-unbindurl ownmacbook:13331   #
-unbindurl ownmacbook:13331   x
-
-unbindurl gh.status.im   j
-unbindurl gh.status.im   k
-unbindurl gh.status.im   y
-unbindurl gh.status.im   a
-unbindurl gh.status.im   o
-unbindurl gh.status.im   .
-unbindurl gh.status.im   #
-unbindurl gh.status.im   x
-unbindurl gh.status.im   u
-unbindurl gh.status.im   d
-
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   j
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   k
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   y
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   a
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   o
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   .
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   #
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   x
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   u
-unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331   d
-
-
+unbindurl ownmacbook:13331 j
+unbindurl ownmacbook:13331 k
+unbindurl ownmacbook:13331 y
+unbindurl ownmacbook:13331 a
+unbindurl ownmacbook:13331 o
+unbindurl ownmacbook:13331 .
+unbindurl ownmacbook:13331 #
+unbindurl ownmacbook:13331 x
 unbindurl ^https://todoist.com/app /
 unbindurl ^https://todoist.com/app j
 unbindurl ^https://todoist.com/app k
-
-" Include numbers in tab names, to make 'b' and '<A-<number>>'
-" switching easier.
-guiset tabs numbers
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 j
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 k
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 y
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 a
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 o
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 .
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 #
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 x
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 u
+unbindurl yqrashawn-own-mbp\.donkey-clownfish\.ts\.net:13331 d
+unbindurl gh.status.im j
+unbindurl gh.status.im k
+unbindurl gh.status.im y
+unbindurl gh.status.im a
+unbindurl gh.status.im o
+unbindurl gh.status.im .
+unbindurl gh.status.im #
+unbindurl gh.status.im x
+unbindurl gh.status.im u
+unbindurl gh.status.im d
+bind --mode=insert <C-i> editor
+bind --mode=insert <Escape> composite unfocus | mode normal
+bind --mode=insert <C-[> composite unfocus | mode normal
+bind --mode=insert <AC-Escape> mode normal
+bind --mode=insert <AC-`> mode normal
+bind --mode=insert <S-Escape> mode ignore
+bind --mode=input <C-i> editor
+bind --mode=input <Tab> focusinput -n
+bind --mode=input <S-Tab> focusinput -N
+bind --mode=input 🕷🕷INHERITS🕷🕷 imaps
+bind --mode=ex <ArrowDown> ex.next_completion
+bind --mode=ex <ArrowUp> ex.prev_completion
+bind --mode=ex <Enter> ex.accept_line
+bind --mode=ex <C-Enter> ex.execute_ex_on_completion
+bind --mode=ex <C-j> ex.next_history
+bind --mode=ex <C-k> ex.prev_history
+bind --mode=ex <C-m> ex.accept_line
+bind --mode=ex <Escape> ex.hide_and_clear
+bind --mode=ex <C-g> ex.hide_and_clear
+bind --mode=ex <C-[> ex.hide_and_clear
+bind --mode=ex <S-Del> ex.execute_ex_on_completion_args tabclose
+bind --mode=ex <A-b> text.backward_word
+bind --mode=ex <A-f> text.forward_word
+bind --mode=ex <C-e> text.end_of_line
+bind --mode=ex <A-d> text.kill_word
+bind --mode=ex <S-Backspace> text.backward_kill_word
+bind --mode=ex <C-u> text.backward_kill_line
+bind --mode=ex <C-f> ex.complete
+bind --mode=ex <Tab> ex.prev_history
+bind --mode=ex <S-Tab> ex.next_history
+bind --mode=ex <Space> ex.insert_space_or_completion
+bind --mode=ex <C-Space> ex.insert_space
+bind --mode=ex <C-o>yy ex.execute_ex_on_completion_args clipboard yank
 
 " Subconfig Settings
 seturl www.google.com followpagepatterns.next Next
+seturl www.google.com followpagepatterns.prev Previous
+
+" Autocmds
+autocmd DocStart penpot.app mode ignore
+autocmd DocStart figma.app mode ignore
+autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
+autocmd TriStart .* source_quiet
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
-
-" Use Emacs as my editor. Of course.
-set editorcmd "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c %f"
-
-# alias editor_rm     composite editor | jsb -p tri.native.run(`rm -f '${JS_ARG[0]}'`)
-bind --mode=insert <C-i> editor
-bind --mode=input  <C-i> editor
-
-set modeindicator false
-" Sane hinting mode
-" set hintfiltermode vimperator-reflow
-" set hintnames numeric
-
-
-" Use `l` and `h` to navigate between tabs.
-bind l tabnext
-bind h tabprev
-
-" Follow promising-looking links to visit the likely next and previous pages of content.
-bind gh followpage prev
-bind gl followpage next
-
-" Re-enable Firefox's default C-f binding for search. I prefer using `/` and
-" default to it, but some "helpful" sites rebind that to a custom search widget,
-" so I need a fallback.
-unbind <C-f>
-
-" Open the current page (presumably a video) with mpv, my preferred media player.
-bind gv js tri.native.run(`mpv '${document.location.href}'`)
-
-" Save the current page to Pinboard.
-" bind np js document.location.href = 'https://pinboard.in/add?next=same&url=' + encodeURIComponent(document.location.href) + '&title=' + encodeURIComponent(document.title)
-
-" Transform the current page's URL into a TODO item.
-" bind nt js tri.native.run(`~/.bin/create-url-task '${document.location.href}' '${document.title}'`)
-
-set searchurls.to      https://www.thepiratebay.org/search/%s/0/99/0
-set searchurls.g       https://www.google.com/search?tbs=li:1&q=%s
-set searchurls.caniuse https://caniuse.com/#search=%s
-
-set searchengine g
-
-blacklistadd penpot.app
-blacklistadd figma.app

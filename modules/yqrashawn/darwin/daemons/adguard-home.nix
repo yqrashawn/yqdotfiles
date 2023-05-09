@@ -3,7 +3,7 @@
 {
   launchd.daemons.adguardhome = {
     serviceConfig = {
-      Label = "com.tailscale.adguardhome";
+      Label = "com.adguard.adguardhome";
       EnvironmentVariables = {
         http_proxy = "http://127.0.0.1:6152";
         https_proxy = "http://127.0.0.1:6152";

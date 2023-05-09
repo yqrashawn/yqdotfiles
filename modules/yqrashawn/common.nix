@@ -129,7 +129,8 @@ in {
         trash-cli
         delta
         entr
-        # proxychains-ng # build failed
+        # proxychains # build failed
+        # proxychains-ng # no m1 support
         du-dust
         man
         duf # du

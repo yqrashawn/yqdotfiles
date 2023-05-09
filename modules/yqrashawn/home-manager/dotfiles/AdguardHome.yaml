@@ -6,7 +6,7 @@ users:
 auth_attempts: 5
 block_auth_min: 15
 http_proxy: ""
-language: ""
+language: en
 theme: auto
 debug_pprof: false
 web_session_ttl: 720
@@ -108,7 +108,7 @@ tls:
   strict_sni_check: false
 querylog:
   ignored: []
-  interval: 2160h
+  interval: 168h
   size_memory: 1000
   enabled: true
   file_enabled: true
