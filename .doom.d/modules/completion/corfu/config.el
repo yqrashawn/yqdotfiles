@@ -110,8 +110,9 @@ placed, otherwise they come first.")
   :when (modulep! +orderless)
   :init
   (setq completion-styles '(orderless partial-completion)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+        ;; completion-category-defaults nil
+        ;; completion-category-overrides '((file (styles . (partial-completion))))
+    ))
 
 (use-package! kind-icon
   :after corfu
