@@ -1,4 +1,5 @@
 " General Settings
+sanitise tridactyllocal tridactylsync
 set update.lastchecktime 1645280034150
 set update.nag true
 set update.nagwait 7
@@ -34,6 +35,8 @@ set searchurls.mdn https://developer.mozilla.org/en-US/search?q=
 set searchurls.gentoo_wiki https://wiki.gentoo.org/index.php?title=Special%3ASearch&profile=default&fulltext=Search&search=
 set searchurls.qwant https://www.qwant.com/?q=
 set searchengine g
+set allowautofocus false
+set auconcreatecontainer true
 
 " Binds
 bind u scrollpage -0.5
@@ -196,6 +199,8 @@ bind m gobble 1 markadd
 bind ` gobble 1 markjump
 bind <ArrowDown> ex.next_completion
 bind <ArrowUp> ex.prev_completion
+bind <Tab> ex.prev_history
+bind <S-Tab> ex.next_history
 unbindurl app\.clickup\.com k
 unbindurl app\.clickup\.com j
 unbindurl app\.clickup\.com /
@@ -285,6 +290,7 @@ unbindurl gh.status.im #
 unbindurl gh.status.im x
 unbindurl gh.status.im u
 unbindurl gh.status.im d
+bind <C-\> mouse_mode
 bind --mode=insert <C-i> editor
 bind --mode=insert <Escape> composite unfocus | mode normal
 bind --mode=insert <C-[> composite unfocus | mode normal
@@ -300,10 +306,8 @@ bind --mode=ex <ArrowUp> ex.prev_completion
 bind --mode=ex <Enter> ex.accept_line
 bind --mode=ex <C-Enter> ex.execute_ex_on_completion
 bind --mode=ex <C-j> ex.next_history
-bind --mode=ex <C-k> ex.prev_history
 bind --mode=ex <C-m> ex.accept_line
 bind --mode=ex <Escape> ex.hide_and_clear
-bind --mode=ex <C-g> ex.hide_and_clear
 bind --mode=ex <C-[> ex.hide_and_clear
 bind --mode=ex <S-Del> ex.execute_ex_on_completion_args tabclose
 bind --mode=ex <A-b> text.backward_word
@@ -312,22 +316,43 @@ bind --mode=ex <C-e> text.end_of_line
 bind --mode=ex <A-d> text.kill_word
 bind --mode=ex <S-Backspace> text.backward_kill_word
 bind --mode=ex <C-u> text.backward_kill_line
+bind --mode=ex <C-k> ex.prev_history
 bind --mode=ex <C-f> ex.complete
 bind --mode=ex <Tab> ex.prev_history
 bind --mode=ex <S-Tab> ex.next_history
 bind --mode=ex <Space> ex.insert_space_or_completion
 bind --mode=ex <C-Space> ex.insert_space
 bind --mode=ex <C-o>yy ex.execute_ex_on_completion_args clipboard yank
+bind --mode=ex <S-Delete> ex.execute_ex_on_completion_args tabclose
+bind --mode=ex <C-g> ex.hide_and_clear
 
 " Subconfig Settings
 seturl www.google.com followpagepatterns.next Next
 seturl www.google.com followpagepatterns.prev Previous
+setturl goerlifaucet\.com mouse_mode true
+seturl github\.com allowautofocus true
 
 " Autocmds
 autocmd DocStart penpot.app mode ignore
 autocmd DocStart figma.app mode ignore
+autocmd DocStart penpot\.app mode ignore
+autocmd DocStart figma\.app mode ignore
 autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
 autocmd TriStart .* source_quiet
+autocmd DocLoad .* no_mouse_mode
+
+" Autocontainers
+
+autocontain -u waku status
+autocontain -u status-go status
+autocontain -u status-im status
+autocontain -u status-mobile status
+autocontain -u ^https?://(www\.)?(\w*\.)*(status\.im|expensify\.com|localhost:3449|localhost:4567) status
+
+autocontain -u ^https?://(www\.)?(\w*\.)*(scroll\.io) scroll
+
+autocontain -u ^https?://(www\.)?(\w*\.)*(donkey-clownfish\.ts\.net|ownmacbook|setapp\.com|adguard-dns\.io|roamresearch\.com|newsblur\.com|github\.com/notifications|fextralife\.com|localhost:6155|zmk\.dev|yqrashawn\.com|github\.com/settings/|melpa\.org|openai\.com|ifttt\.com|gov\.cn|raindrop\.io|kinesiscorporation\.github\.io|tarnished\.dev|github\.com/yqrashawn) none
+autocontain -u tridactyl none
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
