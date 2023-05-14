@@ -903,8 +903,9 @@ _b_ranch _j_next _k_prev _h_up
                                  (lambda (dirname)
                                    (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
             (app-data (concat latest-appication "/Library")))
-      (delete-directory app-data))))
+      (delete-directory app-data t t))))
 
+;;;###autoload
 (defun status-go-geth-log ()
   (interactive)
   (require 'f)
@@ -920,6 +921,7 @@ _b_ranch _j_next _k_prev _h_up
             (eth-log (concat latest-appication "/Library/geth.log")))
       (find-file eth-log))))
 
+;;;###autoload
 (defun status-go-geth-logg ()
   (interactive)
   (require 'f)

@@ -3,53 +3,57 @@
 (pushnew! global-hl-line-modes 'dired-mode 'occur-mode 'grep-mode)
 (delq! 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
-  use-short-answers t
-  max-specpdl-size 10000
-  max-lisp-eval-depth 10000
-  save-interprogram-paste-before-kill nil
-  save-silently t
-  echo-keystrokes 1e-6
-  split-window-keep-point t
-  require-final-newline nil
-  mode-require-final-newline nil
-  auto-window-vscroll nil
-  confirm-kill-processes nil
-  browse-url-secondary-browser-function 'eww-browse-url
-  make-backup-files nil
+       use-short-answers t
+       max-specpdl-size 10000
+       max-lisp-eval-depth 10000
+       save-interprogram-paste-before-kill nil
+       save-silently t
+       echo-keystrokes 1e-6
+       split-window-keep-point t
+       require-final-newline nil
+       mode-require-final-newline nil
+       auto-window-vscroll nil
+       confirm-kill-processes nil
+       browse-url-secondary-browser-function 'eww-browse-url
+       make-backup-files nil
+       mac-command-modifier 'super
+       mac-right-command-modifier 'super
+       mac-option-modifier 'meta
+       mac-right-option-modifier 'meta
 
-  ;; scroll
-  hscroll-margin 5
-  hscroll-step 0
-  ;; Emacs spends too much effort recentering the screen if you scroll the
-  ;; cursor more than N lines past window edges (where N is the settings of
-  ;; `scroll-conservatively'). This is especially slow in larger files
-  ;; during large-scale scrolling commands. If kept over 100, the window is
-  ;; never automatically recentered.
-  scroll-conservatively 0
-  scroll-margin 0
-  scroll-preserve-screen-position nil
-  ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
-  ;; for tall lines.
-  auto-window-vscroll nil
-  ;; mouse
-  mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
-  mouse-wheel-scroll-amount-horizontal 2
-  confirm-kill-emacs nil
-  url-proxy-services
-  '(("http" . "127.0.0.1:6152")
-     ("https" . "127.0.0.1:6153"))
-  url-proxy-services nil
-  blink-matching-paren t
-  ;; blink-matching-paren 'jump
-  blink-matching--overlay (let ((ol (make-overlay (point) (point) nil t)))
-                            (overlay-put ol 'face 'custom-invalid)
-                            (delete-overlay ol)
-                            ol)
-  ispell-dictionary "en_US"
-  ispell-personal-dictionary (if (file-exists-p "~/Dropbox/sync/personal_dict")
-                               "~/Dropbox/sync/personal_dict")
-  dired-quick-sort-suppress-setup-warning t
-  insert-directory-program "/run/current-system/sw/bin/ls")
+       ;; scroll
+       hscroll-margin 5
+       hscroll-step 0
+       ;; Emacs spends too much effort recentering the screen if you scroll the
+       ;; cursor more than N lines past window edges (where N is the settings of
+       ;; `scroll-conservatively'). This is especially slow in larger files
+       ;; during large-scale scrolling commands. If kept over 100, the window is
+       ;; never automatically recentered.
+       scroll-conservatively 0
+       scroll-margin 0
+       scroll-preserve-screen-position nil
+       ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
+       ;; for tall lines.
+       auto-window-vscroll nil
+       ;; mouse
+       mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
+       mouse-wheel-scroll-amount-horizontal 2
+       confirm-kill-emacs nil
+       url-proxy-services
+       '(("http" . "127.0.0.1:6152")
+         ("https" . "127.0.0.1:6153"))
+       url-proxy-services nil
+       blink-matching-paren t
+       ;; blink-matching-paren 'jump
+       blink-matching--overlay (let ((ol (make-overlay (point) (point) nil t)))
+                                 (overlay-put ol 'face 'custom-invalid)
+                                 (delete-overlay ol)
+                                 ol)
+       ispell-dictionary "en_US"
+       ispell-personal-dictionary (if (file-exists-p "~/Dropbox/sync/personal_dict")
+                                      "~/Dropbox/sync/personal_dict")
+       dired-quick-sort-suppress-setup-warning t
+       insert-directory-program "/run/current-system/sw/bin/ls")
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
@@ -597,6 +601,12 @@ used in the POST request made to the LanguageTool server."
              car
            (plist-get :api_secret))))
 
-(use-package! gptel :defer t)
+(use-package! gptel
+  :defer t
+  :config
+  (setq gptel-directives '((default . "You are a large language model living in Emacs and a helpful coding assistant. Respond concisely.")
+                           (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+                           (writing . "You are a large language model and a writing assistant. Respond concisely.")
+                           (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 
 (use-package! jit-spell :hook (prog-mode text-mode))

@@ -110,6 +110,7 @@ in {
         # sketchybar
 
         # cli tools
+        noti
         ripgrep
         ripgrep-all
         ugrep

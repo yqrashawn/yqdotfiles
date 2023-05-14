@@ -209,56 +209,56 @@ unbindurl mail.google.com j
 unbindurl mail.google.com k
 unbindurl mail.google.com gi
 unbindurl mail.google.com x
-unbindurl (www\.)?newsblur\.com s
-unbindurl (www\.)?newsblur\.com j
-unbindurl (www\.)?newsblur\.com k
-unbindurl (www\.)?newsblur\.com n
-unbindurl (www\.)?newsblur\.com u
-unbindurl (www\.)?newsblur\.com m
-unbindurl (www\.)?newsblur\.com o
-unbindurl (www\.)?newsblur\.com v
-unbindurl (www\.)?newsblur\.com V
-unbindurl (www\.)?newsblur\.com x
-unbindurl (www\.)?newsblur\.com X
-unbindurl (www\.)?newsblur\.com S
-unbindurl (www\.)?newsblur\.com c
-unbindurl (www\.)?newsblur\.com J
-unbindurl (www\.)?newsblur\.com K
-unbindurl (www\.)?newsblur\.com A
-unbindurl (www\.)?newsblur\.com /
-unbindurl (www\.)?newsblur\.com r
-unbindurl (www\.)?newsblur\.com M
-unbindurl (www\.)?newsblur\.com D
-unbindurl (www\.)?newsblur\.com ?
-bindurl (www\.)?newsblur\.com , scrollpage 0.5
-bindurl (www\.)?newsblur\.com . scrollpage -0.5
-bindurl (www\.)?newsblur\.com R reload
+unbindurl //newsblur\.com s
+unbindurl //newsblur\.com j
+unbindurl //newsblur\.com k
+unbindurl //newsblur\.com n
+unbindurl //newsblur\.com u
+unbindurl //newsblur\.com m
+unbindurl //newsblur\.com o
+unbindurl //newsblur\.com v
+unbindurl //newsblur\.com V
+unbindurl //newsblur\.com x
+unbindurl //newsblur\.com X
+unbindurl //newsblur\.com S
+unbindurl //newsblur\.com c
+unbindurl //newsblur\.com J
+unbindurl //newsblur\.com K
+unbindurl //newsblur\.com A
+unbindurl //newsblur\.com /
+unbindurl //newsblur\.com r
+unbindurl //newsblur\.com M
+unbindurl //newsblur\.com D
+unbindurl //newsblur\.com ?
+bindurl //newsblur\.com , scrollpage 0.5
+bindurl //newsblur\.com . scrollpage -0.5
+bindurl //newsblur\.com R reload
 bindurl ^https://web.whatsapp.com f hint -c [tabindex]:not(.two)>div,a
 bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a
-unbindurl newsblur\.com s
-unbindurl newsblur\.com j
-unbindurl newsblur\.com k
-unbindurl newsblur\.com n
-unbindurl newsblur\.com u
-unbindurl newsblur\.com m
-unbindurl newsblur\.com o
-unbindurl newsblur\.com v
-unbindurl newsblur\.com V
-unbindurl newsblur\.com x
-unbindurl newsblur\.com X
-unbindurl newsblur\.com S
-unbindurl newsblur\.com c
-unbindurl newsblur\.com J
-unbindurl newsblur\.com K
-unbindurl newsblur\.com A
-unbindurl newsblur\.com /
-unbindurl newsblur\.com r
-unbindurl newsblur\.com M
-unbindurl newsblur\.com D
-unbindurl newsblur\.com ?
-bindurl newsblur\.com , scrollpage 0.5
-bindurl newsblur\.com . scrollpage -0.5
-bindurl newsblur\.com R reload
+unbindurl //newsblur\.com s
+unbindurl //newsblur\.com j
+unbindurl //newsblur\.com k
+unbindurl //newsblur\.com n
+unbindurl //newsblur\.com u
+unbindurl //newsblur\.com m
+unbindurl //newsblur\.com o
+unbindurl //newsblur\.com v
+unbindurl //newsblur\.com V
+unbindurl //newsblur\.com x
+unbindurl //newsblur\.com X
+unbindurl //newsblur\.com S
+unbindurl //newsblur\.com c
+unbindurl //newsblur\.com J
+unbindurl //newsblur\.com K
+unbindurl //newsblur\.com A
+unbindurl //newsblur\.com /
+unbindurl //newsblur\.com r
+unbindurl //newsblur\.com M
+unbindurl //newsblur\.com D
+unbindurl //newsblur\.com ?
+bindurl //newsblur\.com , scrollpage 0.5
+bindurl //newsblur\.com . scrollpage -0.5
+bindurl //newsblur\.com R reload
 unbindurl ownmacbook:13331 j
 unbindurl ownmacbook:13331 k
 unbindurl ownmacbook:13331 y
@@ -339,7 +339,7 @@ autocmd DocStart penpot\.app mode ignore
 autocmd DocStart figma\.app mode ignore
 autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
 autocmd TriStart .* source_quiet
-autocmd DocLoad .* no_mouse_mode
+# autocmd DocLoad .* no_mouse_mode
 
 " Autocontainers
 
