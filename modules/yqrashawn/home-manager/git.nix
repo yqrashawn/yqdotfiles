@@ -20,14 +20,14 @@
       };
       add = { interactive = { useBuiltin = false; }; };
       github = { user = "yqrashawn"; };
-      http = {
-        proxy = "http://127.0.0.1:6152";
-        sslVerify = true;
-      };
-      https = {
-        proxy = "http://127.0.0.1:6152";
-        sslVerify = true;
-      };
+      # http = {
+      #   proxy = "http://127.0.0.1:6152";
+      #   sslVerify = true;
+      # };
+      # https = {
+      #   proxy = "http://127.0.0.1:6152";
+      #   sslVerify = true;
+      # };
       include = { path = "~/.gitconfig.local"; };
       alias = {
         fetch = "git fetch --tags";

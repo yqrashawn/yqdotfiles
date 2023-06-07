@@ -6,7 +6,7 @@
       # "google-chat"
       "voov-meeting"
       "cljstyle"
-      "docker"
+      # "docker"
       "espanso"
       "xbar"
       "gfxcardstatus"

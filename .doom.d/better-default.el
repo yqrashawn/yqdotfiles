@@ -39,9 +39,9 @@
        mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
        mouse-wheel-scroll-amount-horizontal 2
        confirm-kill-emacs nil
-       url-proxy-services
-       '(("http" . "127.0.0.1:6152")
-         ("https" . "127.0.0.1:6153"))
+       ;; url-proxy-services
+       ;; '(("http" . "127.0.0.1:6152")
+       ;;   ("https" . "127.0.0.1:6153"))
        url-proxy-services nil
        blink-matching-paren t
        ;; blink-matching-paren 'jump
@@ -573,7 +573,8 @@ used in the POST request made to the LanguageTool server."
             (error "Failed to trash %S: %S" file-name (buffer-string))))))))
 
 (after! recentf
-  (pushnew! recentf-exclude "^/nix"))
+  (pushnew! recentf-exclude "^/nix" ;; #'file-remote-p "^/ssh:"
+    ))
 
 (use-package! chatgpt-arcana
   :defer t

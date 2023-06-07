@@ -42,6 +42,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        qbittorrent
         adguardhome
         tailscale
         # todoist-electron
@@ -51,13 +52,13 @@ in {
         discord
         zellij
         kitty-themes
-        (docker.override (args: {
-          buildxSupport = true;
-          composeSupport = true;
-        }))
+        # (docker.override (args: {
+        #   buildxSupport = true;
+        #   composeSupport = true;
+        # }))
         # nyxt
-        docker-compose
-        docker-buildx
+        # docker-compose
+        # docker-buildx
         mutagen
         mutagen-compose
         docker-machine
