@@ -46,7 +46,7 @@
       # "proxychains-ng"
       "datalevin"
       "dotenv-linter"
-      "cloudflared"
+      # "cloudflared"
       "janet"
       "pngpaste"
     ];

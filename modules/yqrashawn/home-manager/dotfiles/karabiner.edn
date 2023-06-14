@@ -425,8 +425,9 @@
            [:quote [:togg "ClickUp"]]
            ;; [:t [:togg "Todoist"] :BusyCal]
            ;; [:t [:togg "BusyCal"] :!BusyCal]
-           [:t [:togg "BusyCal"] :Todoist]
-           [:t [:togg "Todoist"] :!Todoist]
+           [:t [:togg "BusyCal"]]
+           ;; [:t [:togg "BusyCal"] :Todoist]
+           ;; [:t [:togg "Todoist"] :!Todoist]
            ;; [:p [:togg "Adobe Photoshop 2022"]]
            [:p [:togg "Figma"]]
            ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e

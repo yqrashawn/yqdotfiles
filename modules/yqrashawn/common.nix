@@ -45,6 +45,7 @@ in {
         qbittorrent
         adguardhome
         tailscale
+        cloudflared
         # todoist-electron
         todoist
         zoom-us

@@ -282,7 +282,15 @@
           extraModules = [
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/darwin/apps.nix
-            ./modules/yqrashawn/darwin/apps-minimal.nix
+            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+          ];
+        };
+        mini = mkDarwinConfig {
+          system = "aarch64-darwin";
+          extraModules = [
+            ./profiles/yqrashawn.nix
+            ./modules/yqrashawn/darwin/daemons/tailscale.nix
+            ./modules/yqrashawn/darwin/apps.nix
             { homebrew.brewPrefix = "/opt/homebrew/bin"; }
           ];
         };
