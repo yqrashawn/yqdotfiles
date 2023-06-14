@@ -1,8 +1,3 @@
 { config, lib, pkgs, ... }: {
-  imports = [
-    ./set-path.nix
-    ./limit-max.nix
-    # ./tailscale.nix
-    ./adguard-home.nix
-  ];
+  imports = [ ./set-path.nix ./limit-max.nix ./adguard-home.nix ];
 }

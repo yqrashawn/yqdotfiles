@@ -289,8 +289,26 @@
           system = "aarch64-darwin";
           extraModules = [
             ./profiles/yqrashawn.nix
-            ./modules/yqrashawn/darwin/daemons/tailscale.nix
             ./modules/yqrashawn/darwin/apps.nix
+            ./modules/yqrashawn/mini.nix
+            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+          ];
+        };
+        studio = mkDarwinConfig {
+          system = "aarch64-darwin";
+          extraModules = [
+            ./profiles/yqrashawn.nix
+            ./modules/yqrashawn/darwin/apps.nix
+            ./modules/yqrashawn/studio.nix
+            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+          ];
+        };
+        mbp = mkDarwinConfig {
+          system = "aarch64-darwin";
+          extraModules = [
+            ./profiles/yqrashawn.nix
+            ./modules/yqrashawn/darwin/apps.nix
+            ./modules/yqrashawn/mbp.nix
             { homebrew.brewPrefix = "/opt/homebrew/bin"; }
           ];
         };
