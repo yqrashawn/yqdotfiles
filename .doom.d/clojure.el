@@ -106,6 +106,7 @@
    cider-repl-buffer-size-limit 1048576
    cider-repl-use-content-types t
    cider-repl-pop-to-buffer-on-connect nil
+   cider-repl-display-output-before-window-boundaries t
    ;; cider-preferred-build-tool 'clojure-cli
    cider-default-cljs-repl 'shadow
    cider-auto-jump-to-error nil
