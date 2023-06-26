@@ -19,7 +19,7 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
-      - uses: cachix/install-nix-action@v20
+      - uses: cachix/install-nix-action@v22
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
@@ -46,4 +46,4 @@ jobs:
           MAINTAINER_CANT_MODIFY: true
           PASS_IF_EXISTS: true
           PASS_ON_ERROR: true
-          PULL_REQUEST_TITLE: "Update Flake Inputs"
+          PULL_REQUEST_TITLE: "Update Flake Inputs [CI]"
