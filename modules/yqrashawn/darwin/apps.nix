@@ -27,7 +27,7 @@
       "calibre"
       "adguard-nightly"
       "stats"
-      # "zoom"
+      "zoom"
       # "microsoft-edge-beta"
       # "gpg-suite-no-mail"
       # "ngrok"

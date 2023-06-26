@@ -48,7 +48,7 @@ in {
         cloudflared
         # todoist-electron
         todoist
-        zoom-us
+        # zoom-us
         slack
         discord
         zellij
