@@ -24,6 +24,8 @@ in {
 
   nixpkgs.config = { allowUnfree = true; };
 
+  # programs.nix = { enalbe = true; };
+
   programs.home-manager = {
     enable = true;
     path =

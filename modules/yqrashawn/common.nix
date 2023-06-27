@@ -334,7 +334,7 @@ in {
     };
     # list of acceptable shells in /etc/shells
     shells = with pkgs; [ bash zsh "/bin/bash" "/bin/zsh" ];
-    systemPath = [ "/run/current-system/sw/bin" ];
+    # systemPath = [ "/run/current-system/sw/bin" ];
   };
 
   fonts.fonts = with pkgs; [ jetbrains-mono ];

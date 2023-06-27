@@ -161,9 +161,9 @@ in {
 
       ${functions}
       ${lib.optionalString pkgs.stdenvNoCC.isDarwin ''
-        if [[ -d /opt/homebrew ]]; then
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
+        # if [[ -d /opt/homebrew ]]; then
+        #   eval "$(/opt/homebrew/bin/brew shellenv)"
+        # fi
       ''}
       unset RPS1
       [[ ! -f ~/.local.zsh ]] || source ~/.local.zsh

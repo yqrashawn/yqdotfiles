@@ -1,6 +1,6 @@
 # System-wide .profile for sh(1)
 
-export PATH=/run/current-system/sw/bin:$PATH
+# export PATH=/run/current-system/sw/bin:$PATH
 
 if [ -x /usr/libexec/path_helper ]; then
 	eval `/usr/libexec/path_helper -s`
