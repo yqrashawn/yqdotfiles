@@ -264,7 +264,8 @@
 
 ;; (disable-packages! orderless)
 
-(package! jsonian :recipe (:host github :repo "iwahbe/jsonian"))
+;; crash when open json file
+;; (package! jsonian :recipe (:host github :repo "iwahbe/jsonian"))
 (disable-packages! json-mode)
 (package! magit-delta)
 (package! todoist)
