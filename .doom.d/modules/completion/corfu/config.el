@@ -86,7 +86,7 @@ placed, otherwise they come first.")
         "M-m"      #'corfu-move-to-minibuffer
         (:prefix "C-x"
                  "C-k"     #'cape-dict
-                 "s"       #'cape-ispell
+                 ;; "s"       #'cape-ispell
                  "C-n"     #'cape-keyword
                  "C-f"     #'cape-file))
   (after! evil
@@ -168,7 +168,8 @@ placed, otherwise they come first.")
                                 (add-to-list 'completion-at-point-functions #'cape-tex)))
   (when (modulep! :checkers spell)
     (add-to-list 'completion-at-point-functions #'cape-dict)
-    (add-to-list 'completion-at-point-functions #'cape-ispell))
+    ;; (add-to-list 'completion-at-point-functions #'cape-ispell)
+    )
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-keyword t)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
