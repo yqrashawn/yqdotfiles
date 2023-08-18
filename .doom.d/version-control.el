@@ -38,7 +38,7 @@
                                    ("~/workspace/home/" . 1)
                                    ("~/workspace/office/" . 1))
     magit-branch-prefer-remote-upstream '("master" "main" "dev" "develop" "next")
-    magit-branch-adjust-remote-upstream-alist '(("origin/devlope" . "\\/"))
+    magit-branch-adjust-remote-upstream-alist '(("origin/develop" . ("/" "feat" "fix" "ci" "chore")))
     magit-published-branches '("origin/master" "origin/main" "origin/dev" "origin/develop")
     magit-clone-set-remote.pushDefault t)
   (pushnew! magit-no-confirm 'stage-all-changes)

@@ -53,7 +53,10 @@
           required = true;
         };
       };
-      branch = { autosetuprebase = "always"; };
+      branch = {
+        autoSetupRebase = "always";
+        autoSetupMerge = "always";
+      };
       push = {
         default = "simple";
         followTags = true;
