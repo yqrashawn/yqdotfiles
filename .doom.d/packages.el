@@ -315,3 +315,4 @@
 (package! emacsql :pin "415dbfd846f46d921a70a351695f0d0e8f75da35")
 (package! emacsql-sqlite-builtin :pin "415dbfd846f46d921a70a351695f0d0e8f75da35")
 (package! dts-mode)
+(package! shrface)

@@ -183,11 +183,6 @@
 ;;          fancy-dabbrev-preview-context 'everywhere
 ;;          fancy-dabbrev-expansion-on-preview-only t))
 
-(after! eww
-  (add-hook! 'eww-after-render-hook (ignore-errors (eww-readable))))
-
-
-
 (symbol-name major-mode)
 
 (use-package! thing-edit :defer t)
@@ -611,3 +606,20 @@ used in the POST request made to the LanguageTool server."
                            (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 
 (use-package! jit-spell :hook (prog-mode text-mode))
+
+(use-package shrface
+  :defer t
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (shrface-default-keybindings) ; setup default keybindings
+  (setq shrface-href-versatile t))
+
+(use-package eww
+  :defer t
+  :config
+  (require 'shrface))
+
+(after! eww
+  (add-hook! 'eww-after-render-hook #'shrface-mode)
+  (add-hook! 'eww-after-render-hook (ignore-errors (eww-readable))))
