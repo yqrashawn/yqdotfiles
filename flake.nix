@@ -40,12 +40,10 @@
       url = "github:emacs-mirror/emacs/emacs-29";
       flake = false;
     };
-    emacs-stable-src = {
-      # url = "github:emacs-mirror/emacs/5b34fc07085a4ec636124756d09dcc3be8414eb8";
-      url = "github:emacs-mirror/emacs/emacs-29";
+    emacs-custom-src = {
+      url = "github:emacs-mirror/emacs/emacs-29.1";
       flake = false;
     };
-
     comma = {
       url = "github:nix-community/comma";
       flake = false;
