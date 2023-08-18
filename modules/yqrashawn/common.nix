@@ -102,6 +102,7 @@ in {
         bash
         git
         helix
+        lnav
         mu
         # macvim # use vim
         bitwarden-cli
