@@ -3,7 +3,7 @@
 ;; Corfu completion module
 
 (defvar +corfu-global-capes
-  '(cape-yasnippet
+  '(yasnippet-capf
     :completion
     cape-dict)
   "A list of global capes to be available at all times.
@@ -203,8 +203,10 @@ placed, otherwise they come first.")
 (when (modulep! :editor evil +everywhere)
   (setq evil-collection-corfu-key-themes '(default magic-return)))
 
-(use-package! cape-yasnippet
-  :after cape)
+(use-package! yasnippet-capf
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
 ;; Override :config default mapping by waiting for after corfu is loaded
 (add-hook! 'doom-after-modules-config-hook
