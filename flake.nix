@@ -41,7 +41,7 @@
       flake = false;
     };
     emacs-custom-src = {
-      url = "github:emacs-mirror/emacs/emacs-29.1";
+      url = "github:emacs-mirror/emacs/emacs-29";
       flake = false;
     };
     comma = {

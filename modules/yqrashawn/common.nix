@@ -60,11 +60,11 @@ in {
         # nyxt
         # docker-compose
         # docker-buildx
-        mutagen
-        mutagen-compose
+        # mutagen
+        # mutagen-compose
         docker-machine
         docker-credential-helpers
-        colima
+        # colima
         lapce
         isync-isync
         msmtp
@@ -78,6 +78,8 @@ in {
           withImageMagick = true;
           # withXwidgets = true;
           nativeComp = true;
+          # withNativeCompilation = true;
+          withTreeSitter = true;
           webkitgtk = true;
           # texinfo = true;
           # autoreconfHook = true;
@@ -115,7 +117,7 @@ in {
         # cli tools
         noti
         ripgrep
-        ripgrep-all
+        # ripgrep-all
         ugrep
         woff2
         cmus
@@ -236,7 +238,8 @@ in {
         vmtouch
         # commitizen
         graphviz
-        perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
+        # perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
+        git-autofixup
         git-absorb # https://github.com/tummychow/git-absorb
         gnumake
         cmake

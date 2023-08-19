@@ -7,10 +7,11 @@ in {
     overlays
     inputs.emacs-overlay.overlays.default
     (final: prev: {
-      emacs29 = prev.emacsGit.overrideAttrs (old: {
+      emacs29 = prev.emacs-git.overrideAttrs (old: {
         name = "emacs29";
         version = "29.0-${inputs.emacs-custom-src.shortRev}";
         src = inputs.emacs-custom-src;
+        patches = [ ];
       });
     })
     # channels
