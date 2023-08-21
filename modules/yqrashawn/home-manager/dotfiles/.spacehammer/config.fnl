@@ -141,7 +141,13 @@
                           :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "9"))}
                          {:key :j
                           :title "bottom"
-                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "8"))}]}]})
+                          :action (fn [] (hs.eventtap.keyStroke ["ctrl" "shift" "alt"] "8"))}
+                         {:key :u
+                          :title "unstash"
+                          :action (fn [] (hs.eventtap.keyStroke ["command" "shift" "alt"] "/"))}
+                         {:key :x
+                          :title "unstash all"
+                          :action (fn [] (hs.eventtap.keyStroke ["command" "shift" "alt"] "."))}]}]})
 ;;;; Windows
 (local window-jumps
        [{:mods [:cmd]
