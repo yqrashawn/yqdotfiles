@@ -139,12 +139,6 @@ in {
       printf "\e[?1042l"
     '';
     initExtra = ''
-      +autocomplete:recent-directories() {
-        reply=( ''${(f) "$( zoxide query --list $1 2> /dev/null )"} )
-      }
-      # +autocomplete:recent-directories() {
-      #   reply=(''${(f)"$(zoxide query --list)"})
-      # }
       eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
 
       dark-light-mcfly-history-widget() {
@@ -181,11 +175,6 @@ in {
     '';
     profileExtra = profileExtra;
     plugins = [
-      {
-        name = "zsh-autocomplete";
-        src = inputs.zsh-autocomplete;
-        file = "zsh-autocomplete.plugin.zsh";
-      }
       {
         name = "zsh-fzf-tab";
         src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
