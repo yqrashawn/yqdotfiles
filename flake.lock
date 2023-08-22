@@ -837,6 +837,7 @@
         "tmux-conf": "tmux-conf",
         "zsh-abbrev-alias": "zsh-abbrev-alias",
         "zsh-alias-tips": "zsh-alias-tips",
+        "zsh-autocomplete": "zsh-autocomplete",
         "zsh-autopair": "zsh-autopair",
         "zsh-autoquoter": "zsh-autoquoter",
         "zsh-f-sy-h": "zsh-f-sy-h"
@@ -984,6 +985,22 @@
       "original": {
         "owner": "djui",
         "repo": "alias-tips",
+        "type": "github"
+      }
+    },
+    "zsh-autocomplete": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1692205498,
+        "narHash": "sha256-PTL6MXpGTAKe7I63bHuIBG0Ycv6ujcxE/KfkSRs48nY=",
+        "owner": "marlonrichert",
+        "repo": "zsh-autocomplete",
+        "rev": "453df9ed248534d51d4efc11864ce9d4d5192f6c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "marlonrichert",
+        "repo": "zsh-autocomplete",
         "type": "github"
       }
     },

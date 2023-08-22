@@ -28,7 +28,7 @@ in {
       # "python"
       "command-not-found"
       # "ruby"
-      "completion"
+      # "completion"
       # "autosuggestions"
       # "history-substring-search"
     ];

@@ -99,6 +99,10 @@
       url = "github:ianthehenry/zsh-autoquoter";
       flake = false;
     };
+    zsh-autocomplete = {
+      url = "github:marlonrichert/zsh-autocomplete";
+      flake = false;
+    };
     asdf-java = {
       url = "github:halcyon/asdf-java";
       flake = false;
