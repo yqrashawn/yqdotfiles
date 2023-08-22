@@ -751,7 +751,7 @@ _b_ranch _j_next _k_prev _h_up
 
 ;;;###autoload
 (defun +lispy-special-p ()
-  (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
+  (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode emacs-lisp-mode)))
     (or (lispy-left-p)
         (lispy-right-p)
       (string= (string (following-char)) "(")
@@ -793,7 +793,21 @@ _b_ranch _j_next _k_prev _h_up
   (unless (+lispy-special-p) (lispy-left 1)))
 
 ;;;###autoload
-(defun +cljr-log-spy (arg)
+(defun log/--spy (arg)
+  (interactive "P")
+  (let ((log-spy-str "log/spy"))
+    (save-excursion
+      (evil-emacs-state 1)
+      (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
+      (call-interactively 'lispy-parens)
+      (unless (string= (string (following-char)) " ") (forward-char))
+      (insert (if (string= (string (following-char)) " ") log-spy-str  (concat log-spy-str " ")))
+      (lispy-left 1)
+      (evil-normal-state 1)))
+  (unless (+lispy-special-p) (lispy-left 1)))
+
+;;;###autoload
+(defun +spy (arg)
   (interactive "P")
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
     (let ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
@@ -826,7 +840,9 @@ _b_ranch _j_next _k_prev _h_up
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[clojure.tools.logging :as log]"))
-        (call-interactively '+cljr--log-spy arg))))))
+        (call-interactively '+cljr--log-spy arg)))))
+  (when (and lispy-mode (memq major-mode '(emacs-lisp-mode)))
+    (call-interactively 'log/--spy arg)))
 
 ;;;###autoload
 (defun +clojure-clean-log-ns ()
@@ -1081,3 +1097,26 @@ This is for per workspace each task setup"
       (progn
         (evil-window-vsplit)
         (eat shell-file-name current-prefix-arg)))))
+
+
+;; im-tap from https://isamert.net/2023/08/14/elisp-editing-development-tips.html#im-tap
+;;;###autoload
+(defmacro log/spy (form)
+  "Evaluate FORM and return its result.
+Additionally, print a message to the *Messages* buffer showing
+the form and its result.
+
+This macro is useful for debugging and inspecting the
+intermediate results of Elisp code without changing your code
+structure. Just wrap the form with `im-tap' that you want to see
+it's output without introducing an intermediate let-form."
+  `(let ((result ,form))
+     (message "[im-tap :: %s] → %s" ,(prin1-to-string form) result)
+     result))
+
+;;;###autoload
+(defun log/debug (thing)
+  "Like `im-tap' but uses `pp-display-expression' to display the
+result instead of `message'."
+  (pp-display-expression thing "*im-debug*")
+  thing)
