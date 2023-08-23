@@ -308,7 +308,7 @@
 (package! ht)
 
 (package! chatgpt-arcana :recipe (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el")))
-(package! jit-spell)
+;; (package! jit-spell)
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
 
 ;; (package! closql :pin "0a7226331ff1f96142199915c0ac7940bac4afdd")

@@ -605,7 +605,7 @@ used in the POST request made to the LanguageTool server."
                            (writing . "You are a large language model and a writing assistant. Respond concisely.")
                            (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 
-(use-package! jit-spell :hook (prog-mode text-mode))
+;; (use-package! jit-spell :hook (prog-mode text-mode))
 
 (use-package shrface
   :defer t
