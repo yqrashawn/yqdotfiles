@@ -432,6 +432,18 @@
                            :title "S5"
                            :action (fn [] (hs.execute "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-space.sh 15"))}]}]}])
 
+(local screen-binding
+       [return
+        {:key :v
+         :title "Record"
+         :action (fn [] (hs.execute "open cleanshot://record-screen"))}
+        {:key :t
+         :title "Text"
+         :action (fn [] (hs.execute "open cleanshot://capture-text"))}
+        {:key :s
+         :title "Shot"
+         :action (fn [] (hs.execute "open cleanshot://capture-area"))}])
+
 (local menu-items
        [rectangle
         ;; {:key    :space
@@ -460,6 +472,9 @@
         {:key :y
          :title "Yabai"
          :items desktop-binding}
+        {:key :s
+         :title "Screen"
+         :items screen-binding}
         ;; {:key   :x
         ;;  :title "Emacs"
         ;;  :items emacs-bindings}
