@@ -586,4 +586,9 @@
       :n "'" #'forge-dispatch))
   (:after eat
     (:map eat-mode-map
-      :g "C-c DEL" #'+workspace/close-window-or-workspace)))
+      :g "C-c DEL" #'+workspace/close-window-or-workspace))
+  (:after copilot
+    (:map copilot-completion-map
+      :i "RET" #'copilot-accept-completion
+      :i "TAB" #'copilot-accept-completion-by-line
+      :i "C-l" #'copilot-accept-completion-by-word)))

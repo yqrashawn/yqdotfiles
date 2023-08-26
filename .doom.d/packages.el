@@ -317,3 +317,7 @@
 (package! emacsql-sqlite-builtin)
 (package! dts-mode)
 (package! shrface)
+;; (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
