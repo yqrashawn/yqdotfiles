@@ -262,3 +262,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :hook ((go-mode jsx-mode) . copilot-mode)
   :init
   (setq! copilot-max-char -1))
+
+(use-package! ollama
+  :defer t
+  :init
+  (setq! ollama:model "phind-codellama"))
