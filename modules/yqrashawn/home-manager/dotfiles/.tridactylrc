@@ -46,7 +46,8 @@ bind X undo
 bind <A-p> pin
 bind <A-m> mute toggle
 bind <F1> help
-bind O current_url open
+" bind O current_url open
+unbind O
 bind w fillcmdline winopen
 bind W current_url winopen
 bind t fillcmdline tabopen
