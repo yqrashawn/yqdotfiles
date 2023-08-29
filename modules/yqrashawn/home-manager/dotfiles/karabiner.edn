@@ -122,7 +122,7 @@
   ;;          [:!Tm :!Sreturn_or_enter]
   ;;          [:!Creturn_or_enter :return_or_enter]]}
   {:des   "unstuck emacs"
-   :rules [[:!CTg ["/bin/kill -s USR1 $(pgrep Emacs)" "/bin/kill -s USR2 $(pgrep Emacs)"]]]}
+   :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)" "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
   {:des   "Discord"
    :rules [:Discord
            ;; navigate between unread channels
