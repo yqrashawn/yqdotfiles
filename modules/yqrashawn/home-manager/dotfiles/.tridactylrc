@@ -46,8 +46,7 @@ bind X undo
 bind <A-p> pin
 bind <A-m> mute toggle
 bind <F1> help
-" bind O current_url open
-unbind O
+bind O current_url open
 bind w fillcmdline winopen
 bind W current_url winopen
 bind t fillcmdline tabopen
@@ -166,7 +165,9 @@ bind <S-Insert> mode ignore
 bind <AC-Escape> mode ignore
 bind <AC-`> mode ignore
 bind <S-Escape> mode ignore
-bind <Escape> composite mode normal ; hidecmdline
+" bind <Escape> composite mode normal ; hidecmdline
+unbind --mode=normal <Escape>
+
 bind <C-[> composite mode normal ; hidecmdline
 bind a current_url bmark
 bind A bmark
