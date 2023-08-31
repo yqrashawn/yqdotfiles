@@ -344,16 +344,18 @@ autocmd TriStart .* source_quiet
 
 " Autocontainers
 
-autocontain -u waku status
-autocontain -u status-go status
-autocontain -u status-im status
-autocontain -u status-mobile status
+# autocontain -u waku status
+# autocontain -u status-go status
+# autocontain -u status-im status
+# autocontain -u status-mobile status
 autocontain -u ^https?://(www\.)?(\w*\.)*(status\.im|expensify\.com|localhost:3449|localhost:4567) status
 
 autocontain -u ^https?://(www\.)?(\w*\.)*(scroll\.io) scroll
 
-autocontain -u ^https?://(www\.)?(\w*\.)*(donkey-clownfish\.ts\.net|ownmacbook|setapp\.com|adguard-dns\.io|roamresearch\.com|newsblur\.com|github\.com/notifications|fextralife\.com|localhost:6155|zmk\.dev|yqrashawn\.com|github\.com/settings/|melpa\.org|openai\.com|ifttt\.com|gov\.cn|raindrop\.io|kinesiscorporation\.github\.io|tarnished\.dev|github\.com/yqrashawn) none
+autocontain -u ^https?://(www\.)?(\w*\.)*(donkey-clownfish\.ts\.net|ownmacbook|setapp\.com|adguard-dns\.io|roamresearch\.com|newsblur\.com|github\.com/notifications|fextralife\.com|localhost:6155|zmk\.dev|yqrashawn\.com|github\.com/settings/|melpa\.org|openai\.com|ifttt\.com|gov\.cn|raindrop\.io|kinesiscorporation\.github\.io|tarnished\.dev|github\.com/yqrashawn|\.local) none
 autocontain -u tridactyl none
+
+escapehatch
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
