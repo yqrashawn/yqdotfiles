@@ -444,6 +444,15 @@
          :title "Shot"
          :action (fn [] (hs.execute "open cleanshot://capture-area"))}])
 
+(local text-bindings
+       [return
+        {:key :p
+         :title "Polite"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "6"))}
+        {:key :f
+         :title "Friendly"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "7"))}])
+
 (local menu-items
        [rectangle
         {:key    :space
@@ -469,6 +478,9 @@
         {:key :i
          :title "Insert"
          :items insert-bindings}
+        {:key :t
+         :title "Text"
+         :items text-bindings}
         {:key :y
          :title "Yabai"
          :items desktop-binding}
