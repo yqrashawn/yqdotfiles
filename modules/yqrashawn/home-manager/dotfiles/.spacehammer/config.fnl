@@ -446,9 +446,9 @@
 
 (local menu-items
        [rectangle
-        ;; {:key    :space
-        ;;  :title  "Alfred"
-        ;;  :action (activator "Alfred 4")}
+        {:key    :space
+         :title  "Alfred Universal Action"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control"] "/"))}
         ;; {:key   :w
         ;;  :title "Window"
         ;;  :enter "windows:enter-window-menu"
