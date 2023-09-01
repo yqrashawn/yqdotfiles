@@ -547,10 +547,16 @@ used in the POST request made to the LanguageTool server."
           :geometry window-geometry)))))
 
 
-(setq! consult-tramp-method "ssh"
+(setq! consult-tramp-method "sshx"
        ;; tramp-ssh-controlmaster-options
        ;; "-o ControlMaster=auto -o ControlPath=tramp.%%C -o ControlPersist=600"
        )
+
+(after! tramp
+  (pushnew! tramp-connection-properties
+            (list
+             (regexp-quote "/sshx:studio")
+             "remote-shell" "/etc/profiles/per-user/yqrashawn/bin/zsh")))
 
 (pushnew! vc-directory-exclusion-list "node_modules")
 
