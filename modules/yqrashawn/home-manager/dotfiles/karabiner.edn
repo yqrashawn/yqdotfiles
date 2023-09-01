@@ -475,6 +475,7 @@
            ;; [:h [:open "/Applications/Status.app"] :!Status]
            ;; [:h [:hsl "Status"] :!Status]
            [:h [:hsl "Discord"] :!Discord]
+           [:h [:hsl "Slack"] :Discord]
            ;; [:r [:togg "Reeder"]]
            [:r [:togg "Safari"]]
            ;; [:r [:togg "Orion"]]
