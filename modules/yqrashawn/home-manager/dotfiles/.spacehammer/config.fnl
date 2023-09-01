@@ -451,7 +451,13 @@
          :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "6"))}
         {:key :f
          :title "Friendly"
-         :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "7"))}])
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "7"))}
+        {:key :g
+         :title "Grammer"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "8"))}
+        {:key :C
+         :title "Copy editor"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control" "shift"] "9"))}])
 
 (local menu-items
        [rectangle
