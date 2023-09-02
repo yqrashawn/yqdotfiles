@@ -1071,8 +1071,7 @@ This is for per workspace each task setup"
   (require 'projectile)
   (let ((projectile-current-project-on-switch 'keep)
         (+workspaces-switch-project-function #'magit-status))
-    (call-interactively #'projectile-switch-project)
-    (call-interactively #'+workspace/rename)))
+    (call-interactively #'projectile-switch-project)))
 
 ;;;###autoload
 (defun clerk-show ()

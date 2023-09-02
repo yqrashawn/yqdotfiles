@@ -215,7 +215,15 @@ See `dwim-shell-command-execute-script' for all other params."
       (funcall-interactively orig-fn file))))
 
 (use-package! projectile
-  :commands (projectile-switch-project-by-name))
+  :commands (projectile-switch-project-by-name)
+  :init
+  (setq! +project-name-alises '(("status-mobile" . "stm")
+                                ("status-go" . "stg")))
+  (defun +projectile-project-name (project-root)
+    (let* ((default-name (projectile-default-project-name project-root))
+           (alias (alist-get default-name +project-name-alises nil nil 'string=)))
+      (or alias default-name)))
+  (setq! projectile-project-name-function '+projectile-project-name))
 
 (defadvice! ++workspace/close-window-or-workspace (orig-fn)
   "Don't delete workspace if only visible window is magit-status buffer"
