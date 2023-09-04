@@ -195,11 +195,11 @@ in {
         file = "fast-syntax-highlighting.plugin.zsh";
         src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions";
       }
-      {
-        name = "zsh-nix-shell";
-        src = inputs.zsh-nix-shell;
-        file = "nix-shell.plugin.zsh";
-      }
+      # {
+      #   name = "zsh-nix-shell";
+      #   src = inputs.zsh-nix-shell;
+      #   file = "nix-shell.plugin.zsh";
+      # }
       # {
       #   # https://github.com/starship/starship/issues/1721#issuecomment-780250578
       #   # stop eating lines this is not pacman

@@ -4,14 +4,12 @@
   nixConfig = {
     substituters = [
       "https://rashawn.cachix.org"
-      "https://nix-cache-cn.status.im/"
       "https://nix-cache.status.im"
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
     ];
     trusted-substituters = [
       "https://rashawn.cachix.org"
-      "https://nix-cache-cn.status.im/"
       "https://nix-cache.status.im"
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
