@@ -87,7 +87,6 @@ in {
         }))
         clojure-lsp
         ispell
-        babashka
         neil
         jet
         joker

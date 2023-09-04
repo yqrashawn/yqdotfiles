@@ -1,4 +1,4 @@
-#!/run/current-system/sw/bin/bb
+#!/usr/bin/env bb
 
 (ns lib.yabai.core
   (:require

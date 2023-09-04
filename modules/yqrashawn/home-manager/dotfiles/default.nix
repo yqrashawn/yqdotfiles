@@ -245,6 +245,11 @@
       target = "./.asdf/plugins/zig";
       recursive = true;
     };
+    asdf-babashka = {
+      source = inputs.asdf-babashka;
+      target = "./.asdf/plugins/babashka";
+      recursive = true;
+    };
     asdf-lua = {
       source = inputs.asdf-lua;
       target = "./.asdf/plugins/lua";

@@ -204,6 +204,10 @@
       url = "github:asdf-community/asdf-ninja";
       flake = false;
     };
+    asdf-babashka = {
+      url = "github:pitch-io/asdf-babashka";
+      flake = false;
+    };
   };
 
   outputs =
