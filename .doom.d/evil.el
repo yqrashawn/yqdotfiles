@@ -54,12 +54,16 @@
   (setq! expand-region-contract-fast-key "V"
          expand-region-reset-fast-key "r"))
 
+(use-package! expreg
+  :defer t)
+
 (use-package! evil-iedit-state
   :commands (evil-iedit-state/iedit-mode-from-expand-region evil-iedit-state/iedit-mode)
   :config
   (after! evil-multiedit (setq! evil-multiedit-store-in-search-history t))
   (define-key evil-iedit-state-map "V" nil)
   (define-key evil-iedit-state-map "m" 'iedit-show/hide-unmatched-lines))
+
 (use-package mwim
   :commands (mwim-beginning-of-code-or-line mwim-end-of-code-or-line))
 

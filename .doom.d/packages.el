@@ -326,3 +326,5 @@
   :recipe (:host github :repo "zweifisch/ollama"))
 
 (disable-packages! dap-mode treemacs lsp-treemacs)
+
+(package! expreg)

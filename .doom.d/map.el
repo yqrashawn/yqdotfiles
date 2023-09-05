@@ -240,6 +240,7 @@
     :g "," #'sp-copy-sexp
     :g "y" #'consult-dir
     :g "v" #'er/expand-region
+    ;; :g "v" #'expreg-expand
     :g "c" #'delete-window
     :g "K" #'project-kill-buffers
     :g "a" #'loccur-current

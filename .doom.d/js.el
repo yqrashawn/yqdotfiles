@@ -28,41 +28,42 @@
     :around #'npm-mode--exec-process
     (apply orig-fn (s-replace-all '(("npm" . "yarn")) cmd comint))))
 
-;; (when (boundp '+ligatures-extra-alist)
-;;   (dolist (mode '(rjsx-mode
-;;                   js2-mode
-;;                   typescript-mode
-;;                   web-mode))
-;;     (with-eval-after-load mode
-;;       (delq! (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
-;;       (set-ligatures! mode
-;;                       ;; Functional
-;;                       :def "function"
-;;                       :lambda "() =>"
-;;                       :composition "compose"
-;;                       ;; Types
-;;                       :null "null"
-;;                       :true "true" :false "false"
-;;                       ;; Flow
-;;                       :not "!"
-;;                       :and "&&" :or "||"
-;;                       :for "for"
-;;                       :return "return"
-;;                       ;; Other
-;;                       ;; :yield "import"
-;;                       :alist
-;;                       '(("async " . ?⊳)
-;;                         ("await " . ?⊲)
-;;                         ("throw " . ?Ƭ)
-;;                         ("import " . ?ⅈ)
-;;                         ("export " . ?ⅇ)
-;;                         ("export default" . ?ⅆ)
-;;                         ("const " . ?ℂ)
-;;                         ("Promise" . ?⁋)
-;;                         (".then" . ?⇛)
-;;                         (".catch" . ?⇏)
-;;                         ("if " . ?␦)
-;;                         ("let " . ?ℿ))))))
+(when (boundp '+ligatures-extra-alist)
+  (dolist (mode '(rjsx-mode
+                  js2-mode
+                  typescript-mode
+                  web-mode))
+    (with-eval-after-load mode
+      (delq! (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
+      (set-ligatures! mode
+                      ;; Functional
+                      :def "function"
+                      :lambda "() =>"
+                      :composition "compose"
+                      ;; Types
+                      :null "null"
+                      :true "true" :false "false"
+                      ;; Flow
+                      :not "!"
+                      :and "&&" :or "||"
+                      :for "for"
+                      :return "return"
+                      ;; Other
+                      ;; :yield "import"
+        ;; :alist
+        ;; '(("async " . ?⊳)
+        ;;   ("await " . ?⊲)
+        ;;   ("throw " . ?Ƭ)
+        ;;   ("import " . ?ⅈ)
+        ;;   ("export " . ?ⅇ)
+        ;;   ("export default" . ?ⅆ)
+        ;;   ("const " . ?ℂ)
+        ;;   ("Promise" . ?⁋)
+        ;;   (".then" . ?⇛)
+        ;;   (".catch" . ?⇏)
+        ;;   ("if " . ?␦)
+        ;;   ("let " . ?ℿ))
+        ))))
 
 (after! lsp-mode
   (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook typescript-mode-hook)
