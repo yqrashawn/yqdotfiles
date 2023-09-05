@@ -218,7 +218,8 @@ See `dwim-shell-command-execute-script' for all other params."
   :commands (projectile-switch-project-by-name)
   :init
   (setq! +project-name-alises '(("status-mobile" . "stm")
-                                ("status-go" . "stg")))
+                                ("status-go" . "stg")
+                                ("frontends" . "scf")))
   (defun +projectile-project-name (project-root)
     (let* ((default-name (projectile-default-project-name project-root))
            (alias (alist-get default-name +project-name-alises nil nil 'string=)))
