@@ -856,8 +856,7 @@
         "zsh-alias-tips": "zsh-alias-tips",
         "zsh-autopair": "zsh-autopair",
         "zsh-autoquoter": "zsh-autoquoter",
-        "zsh-f-sy-h": "zsh-f-sy-h",
-        "zsh-nix-shell": "zsh-nix-shell"
+        "zsh-f-sy-h": "zsh-f-sy-h"
       }
     },
     "small": {
@@ -1050,22 +1049,6 @@
       "original": {
         "owner": "z-shell",
         "repo": "F-Sy-H",
-        "type": "github"
-      }
-    },
-    "zsh-nix-shell": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1693571504,
-        "narHash": "sha256-dE86o8LfEfswIIP9r0BJpxWvkoYdu7VQcJOKTLYqtWs=",
-        "owner": "chisui",
-        "repo": "zsh-nix-shell",
-        "rev": "406ce293f5302fdebca56f8c59ec615743260604",
-        "type": "github"
-      },
-      "original": {
-        "owner": "chisui",
-        "repo": "zsh-nix-shell",
         "type": "github"
       }
     }
