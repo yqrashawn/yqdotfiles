@@ -579,7 +579,15 @@
       :n "C-j" #'cider-inspector-next-inspectable-object
       :n "C-k" #'cider-inspector-previous-inspectable-object
       :n "gj" #'cider-inspector-next-page
-      :n "gk" #'cider-inspector-prev-page))
+      :n "gk" #'cider-inspector-prev-page)
+    (:map cider-repl-mode-map
+      (:localleader
+        "sp" (cmd!
+               (+cider-repl-clear-input)
+               (cider-insert-in-repl "(println :connected)" t))
+        "sd" (cmd!
+              (+cider-repl-clear-input)
+               (cider-insert-in-repl "(require 're-frame.db) (deref re-frame.db/app-db)" t)))))
   (:after forge
     (:map forge-pullreq-list-mode-map
       :n "RET" #'forge-visit-topic

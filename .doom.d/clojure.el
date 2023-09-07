@@ -96,6 +96,11 @@
   (delq! #'cider-complete-at-point completion-at-point-functions)
   (setq-local cider-font-lock-dynamically nil)
   (setq-local lsp-completion-enable t))
+
+(defun +cider-repl-clear-input ()
+  (interactive)
+  (when cider-repl-input-start-mark
+    (cider-repl--clear-region cider-repl-input-start-mark (point-max))))
 (add-hook! cider-mode '+clojure-use-cider-over-lsp)
 (add-hook! 'cider-disconnected-hook '+clojure-use-lsp-over-cider)
 (add-hook! 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
