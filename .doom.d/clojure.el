@@ -65,6 +65,25 @@
   :init
   (add-hook! +lispy-modes #'lispy-mode)
   :config
+  (defun +cider-pprint-eval-last-sexp-and-insert ()
+    "Evaluate the last sexp and insert result as comment.
+
+The formatting of the comment is controlled via three options:
+    `cider-comment-prefix'           \";; => \"
+    `cider-comment-continued-prefix' \";;    \"
+    `cider-comment-postfix'          \"\"
+
+so that with customization you can optionally wrap the output
+in the reader macro \"#_( .. )\", or \"(comment ... )\", or any
+other desired formatting.
+
+If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
+    (interactive)
+    (let ((cider-comment-prefix "")
+          (cider-comment-continued-prefix "")
+          (cider-comment-postfix ""))
+      (cider-pprint-form-to-comment 'cider-last-sexp nil)))
+
   ;; make lispy-eval works in babashka repl
   (defadvice! +lispy-eval (orig-fn &rest args)
     :around #'lispy-eval
@@ -72,9 +91,13 @@
         (if (and lispy-mode (lispy-left-p))
             ;; eval on the right side
             (save-excursion
-              (call-interactively 'lispy-different)
-              (call-interactively 'cider-eval-last-sexp))
-          (call-interactively 'cider-eval-last-sexp))
+              (call-interactively #'lispy-different)
+              (if current-prefix-arg
+                  (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
+                (call-interactively #'cider-eval-last-sexp)))
+          (if current-prefix-arg
+              (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
+            (call-interactively #'cider-eval-last-sexp)))
       (apply orig-fn args)))
 
   (defadvice! +lispy-eval-and-insert (func &rest args)
@@ -117,8 +140,13 @@
    cider-auto-jump-to-error nil
    ;; cider-print-fn 'fipp
    cider-print-fn 'puget
+   ;; cider-print-fn 'pprint
+   ;; cider-print-fn 'pr
    ;; cider-print-fn 'zprint
-   ;; cider-print-options '(("style" ("community" "no-comma")))
+   ;; cider-print-options '(("width" 80))
+   cider-print-options '(("map-delimiter" ""))
+   ;; cider-print-options '(("style" ":community"))
+   ;; cider-print-options '(("style" ((keyword "community" ) (keyword "no-comma" ))))
    ;; cider-format-code-options '(("indents" (("letsubs" 0))))
    )
 
