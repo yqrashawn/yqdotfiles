@@ -403,7 +403,7 @@
       :n "ti" #'lispyville-backward-up-list
       :n "ta" (cmd! (lispyville-up-list) (lispy-newline-and-indent))
       :n "tR" #'lispyville-raise-list
-      :n "tr" #'lispy-raise-sexp
+      :n "tr" #'paredit-raise-sexp
       :n "tt" (cmd! (lispyville-backward-up-list) (lispy-parens 1))
       :n "td" #'transpose-sexps
       :n "tw" #'lispy-move-up
