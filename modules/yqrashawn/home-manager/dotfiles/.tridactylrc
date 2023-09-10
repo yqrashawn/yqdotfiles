@@ -35,7 +35,7 @@ set searchurls.mdn https://developer.mozilla.org/en-US/search?q=
 set searchurls.gentoo_wiki https://wiki.gentoo.org/index.php?title=Special%3ASearch&profile=default&fulltext=Search&search=
 set searchurls.qwant https://www.qwant.com/?q=
 set searchengine g
-set allowautofocus false
+set allowautofocus true
 set auconcreatecontainer true
 
 " Binds
