@@ -328,3 +328,4 @@
 (disable-packages! dap-mode treemacs lsp-treemacs)
 
 (package! expreg)
+(package! jarchive)

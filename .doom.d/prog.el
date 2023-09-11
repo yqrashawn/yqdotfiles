@@ -267,3 +267,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :defer t
   :init
   (setq! ollama:model "phind-codellama"))
+
+(use-package! jarchive
+  :hook (doom-after-init . jarchive-setup))
