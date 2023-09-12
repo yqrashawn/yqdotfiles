@@ -3,11 +3,11 @@
     "asdf-bun": {
       "flake": false,
       "locked": {
-        "lastModified": 1673972849,
-        "narHash": "sha256-aDdI+2S5GTdMHulN90osK3cj8W33sSBsgat6Kfexgys=",
+        "lastModified": 1694303972,
+        "narHash": "sha256-9IWca4n9N0aNIAgpk08VYaRWTUmbYAUCkvc0ENfbg2I=",
         "owner": "cometkim",
         "repo": "asdf-bun",
-        "rev": "fd84eddba7ede5efde5b5a476ac936feb1fde81c",
+        "rev": "51d18b39807160af7607ccf2af9aa823bc0fb821",
         "type": "github"
       },
       "original": {
