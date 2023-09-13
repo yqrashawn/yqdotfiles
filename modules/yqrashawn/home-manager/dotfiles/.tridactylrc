@@ -1,3 +1,5 @@
+" privacy.resistFingerprinting.block_mozAddonManager
+" extensions.webextensions.restrictedDomains
 " General Settings
 sanitise tridactyllocal tridactylsync
 set update.lastchecktime 1645280034150
@@ -9,7 +11,6 @@ set configversion 2.0
 set theme auto
 set followpagepatterns.prev Previous
 set followpagepatterns.next ^(next|newer)\b|»|>>|more
-set editorcmd "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c %f"
 set modeindicator false
 set searchurls.to https://www.thepiratebay.org/search/%s/0/99/0
 set searchurls.g https://www.google.com/search?tbs=li:1&q=%s
@@ -37,6 +38,7 @@ set searchurls.qwant https://www.qwant.com/?q=
 set searchengine g
 set allowautofocus true
 set auconcreatecontainer true
+set editorcmd /run/current-system/sw/bin/emacsclient -a \"\" -c -e '(progn (find-file "%f") (forward-line (1- %l)) (forward-char %c))'
 
 " Binds
 bind u scrollpage -0.5
@@ -349,7 +351,7 @@ autocmd TriStart .* source_quiet
 # autocontain -u status-go status
 # autocontain -u status-im status
 # autocontain -u status-mobile status
-autocontain -u ^https?://(www\.)?(\w*\.)*(status\.im|expensify\.com|localhost:3449|localhost:4567) status
+autocontain -u ^https?://(www\.)?(\w*\.)*(status\.im|localhost:3449|localhost:4567) status
 
 autocontain -u ^https?://(www\.)?(\w*\.)*(scroll\.io) scroll
 
