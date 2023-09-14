@@ -63,7 +63,8 @@
       :desc "What To Do" "SPC" #'org-agenda
       :desc "New Node" "n" #'org-roam-capture
       :desc "Find Node" "f" #'org-roam-node-find
-      :desc "Agenda" "a" (lambda (arg) (interactive "P") (org-agenda arg "a")))
+      :desc "Agenda" "a" (lambda (arg) (interactive "P") (org-agenda arg "a"))
+      :desc "Log" "l" #'+forge-log-current-issue)
     ;; :desc "turbo log print" "cll" #'turbo-log-print-immediately
     :desc "Local Leader" "m" (general-simulate-key ",")
     :desc "M-x" "SPC" #'execute-extended-command
@@ -586,7 +587,7 @@
                (+cider-repl-clear-input)
                (cider-insert-in-repl "(println :connected)" t))
         "sd" (cmd!
-              (+cider-repl-clear-input)
+               (+cider-repl-clear-input)
                (cider-insert-in-repl "(require 're-frame.db) (deref re-frame.db/app-db)" t)))))
   (:after forge
     (:map forge-pullreq-list-mode-map

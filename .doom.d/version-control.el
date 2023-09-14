@@ -109,11 +109,6 @@ requiring confirmation."
 (use-package! magit-delta :hook (magit-mode . magit-delta-mode))
 
 (after! forge
-  (defadvice! +forge-topic-setup-buffer (topic)
-    "Refetch topic on open"
-    :after #'forge-topic-setup-buffer
-    (forge-pull-topic topic))
-
   ;; https://github.com/magit/forge/issues/300
   (setq!
     forge-database-connector (if (>= emacs-major-version 29) 'sqlite-builtin 'sqlite)
@@ -192,3 +187,60 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
                             'keymap 'code-review-binary-file-section-map))
         (magit-insert-heading)))
     (magit-wash-sequence #'magit-diff-wash-hunk))))
+
+(setq +forge-current-issue-store (expand-file-name "~/Dropbox/sync/doom/store/forge-current-issue.el"))
+
+(defun +forge-current-issue-get ()
+  (doom-store-get (project-root (project-current t)) +forge-current-issue-store))
+
+(defun +forge-current-issue-set (issue-id)
+  (doom-store-put (project-root (project-current t)) issue-id nil +forge-current-issue-store))
+
+(after! magit
+  (require 'forge))
+
+(after! forge
+  (magit-add-section-hook
+    'magit-status-sections-hook
+    #'+forge-insert-current-issue #'forge-insert-pullreqs)
+
+  (defvar-keymap +forge-current-issue-section-map
+    :doc "Keymap for `stashes' section."
+    "<remap> <magit-visit-thing>" #'forge-visit-issue)
+
+  (defun +forge-insert-current-issue ()
+    (magit-insert-section (current-issue)
+      (if-let ((issue-id (+forge-current-issue-get)))
+          (progn
+            (magit-insert-heading "Current Issue")
+            (forge-insert-topic (forge-get-issue issue-id) nil 10 "#"))
+        (magit-insert-heading "Current Issue: nil"))))
+
+  (defun +forge-current-issue-refresh-buffer ()
+    (+forge-insert-current-issue))
+
+  (defun +forge-set-current-issue (issue)
+    (interactive (list (forge-read-issue "View issue" t)))
+    (with-current-buffer (current-buffer)
+      (+forge-current-issue-set issue)
+      (magit-refresh)))
+
+  (defun +forge-clear-current-issue ()
+    (interactive)
+    (doom-store-rem (project-root (project-current t)) +forge-current-issue-store))
+
+  (defun +forge-log-current-issue (&optional show-issue-buffer)
+    (interactive "P")
+    (if-let ((issue-id (+forge-current-issue-get)))
+        (progn
+          (forge-visit-issue (forge-get-issue issue-id))
+          (let ((issue-buf (current-buffer)))
+            (unless show-issue-buffer (bury-buffer))
+            (with-current-buffer issue-buf
+              (forge-create-post)
+              (unless show-issue-buffer
+                (let ((post-buf (current-buffer)))
+                  (with-current-buffer post-buf
+                    (delete-window))
+                  (select-window (+popup-buffer post-buf '((select . t)))))))))
+      (message "No current issue for this project"))))
