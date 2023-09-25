@@ -776,18 +776,16 @@ _b_ranch _j_next _k_prev _h_up
             (funcall s-matches-regex (f-read dep-file))))))))
 
 ;;;###autoload
-(defun +cljr--log-spy (arg)
-  (interactive "P")
-  (let ((log-spy-str (if (and (boundp '+cljr--log-spy-with-error)
-                           +cljr--log-spy-with-error)
-                       "log/spy :info"
+(defun +cljr--log-spy (prefix-info arg)
+  (let ((log-spy-str (if prefix-info
+                         "log/spy :info"
                        "log/spy")))
     (save-excursion
       (evil-emacs-state 1)
       (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
       (call-interactively 'lispy-parens)
       (unless (string= (string (following-char)) " ") (forward-char))
-      (insert (if (string= (string (following-char)) " ") log-spy-str  (concat log-spy-str " ")))
+      (insert (if (string= (string (following-char)) " ") log-spy-str (concat log-spy-str " ")))
       (lispy-left 1)
       (evil-normal-state 1)))
   (unless (+lispy-special-p) (lispy-left 1)))
@@ -801,7 +799,7 @@ _b_ranch _j_next _k_prev _h_up
       (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
       (call-interactively 'lispy-parens)
       (unless (string= (string (following-char)) " ") (forward-char))
-      (insert (if (string= (string (following-char)) " ") log-spy-str  (concat log-spy-str " ")))
+      (insert (if (string= (string (following-char)) " ") log-spy-str (concat log-spy-str " ")))
       (lispy-left 1)
       (evil-normal-state 1)))
   (unless (+lispy-special-p) (lispy-left 1)))
@@ -810,37 +808,38 @@ _b_ranch _j_next _k_prev _h_up
 (defun +spy (arg)
   (interactive "P")
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
-    (let ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
-          (glogi? (+cljr-project-has-dep? "lambdaisland/glogi"))
-          (timbre? (+cljr-project-has-dep? "timbre"))
-          (pedestal? (+cljr-project-has-dep? "pedestal.log"))
-          (tools-logging? (+cljr-project-has-dep? "tools.logging")))
+    (let* ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
+           (glogi? (+cljr-project-has-dep? "lambdaisland/glogi"))
+           (timbre? (+cljr-project-has-dep? "timbre"))
+           (pedestal? (+cljr-project-has-dep? "pedestal.log"))
+           (tools-logging? (+cljr-project-has-dep? "tools.logging"))
+           (f (apply-partially '+cljr--log-spy (or timbre? glogi? pedestal?))))
       (cond
-       (has-as-log? (call-interactively '+cljr--log-spy arg))
+       (has-as-log? (funcall f arg))
 
        (glogi?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[lambdaisland.glogi :as log]"))
-        (call-interactively '+cljr--log-spy arg))
+        (funcall f arg))
 
        (timbre?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[taoensso.timbre :as log]"))
-        (call-interactively '+cljr--log-spy arg))
+        (funcall f arg))
 
        (pedestal?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[io.pedestal.log :as log]"))
-        (call-interactively '+cljr--log-spy arg))
+        (funcall f arg))
 
        (tools-logging?
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[clojure.tools.logging :as log]"))
-        (call-interactively '+cljr--log-spy arg)))))
+        (funcall f arg)))))
   (when (and lispy-mode (memq major-mode '(emacs-lisp-mode)))
     (call-interactively 'log/--spy arg)))
 
