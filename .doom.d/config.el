@@ -32,10 +32,10 @@
 ;; (setq doom-theme 'doom-one)
 ;; (setq doom-theme 'modus-vivendi)
 (setq doom-theme
-  ;; (if (string-prefix-p "Dark" (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle"))
-  ;;   'modus-vivendi 'modus-operandi)
-  (if (string-prefix-p "Dark" (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle"))
-    'ef-cherie 'ef-day))
+      ;; (if (string-prefix-p "Dark" (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle"))
+      ;;   'modus-vivendi 'modus-operandi)
+      (if (string-prefix-p "Dark" (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle"))
+          'ef-cherie 'ef-day))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!

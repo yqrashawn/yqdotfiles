@@ -88,13 +88,13 @@
                              (directory-files (expand-file-name "~/.vscode/extensions/"))))))
     (when vsintel
       (setq! lsp-clients-typescript-plugins
-       (vector
-        (list
-         :name "@vsintellicode/typescript-intellicode-plugin"
-         :location vsintel)
-        (list
-         :name "@snapshot-tools/typescript-snapshots-plugin"
-         :location vsintel)))))
+             (vector
+              (list
+               :name "@vsintellicode/typescript-intellicode-plugin"
+               :location vsintel)
+              (list
+               :name "@snapshot-tools/typescript-snapshots-plugin"
+               :location vsintel)))))
 
   (defadvice! +lsp--get-buffer-diagnostics (orig-fn)
     :around #'lsp--get-buffer-diagnostics
@@ -107,4 +107,4 @@
             ;; deno
             (not (string-match-p "Relative import path .* not prefixed with .*file:.*" (gethash "message" i))))
          t))
-      (funcall orig-fn))))
+     (funcall orig-fn))))

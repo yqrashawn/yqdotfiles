@@ -45,8 +45,8 @@
 
 (after! evil-snipe
   (evil-define-minor-mode-key '(normal motion) 'evil-snipe-local-mode
-      "s" nil
-      "S" nil)
+    "s" nil
+    "S" nil)
   (setq! evil-snipe-scope 'whole-buffer
          evil-snipe-repeat-scope 'buffer))
 
@@ -107,4 +107,4 @@
   :after evil
   :config
   (add-hook! '(ibuffer-mode-hook dired-mode-hook magit-status-mode-hook magit-log-mode-hook cider-inspector-mode)
-    #'turn-off-evil-matchit-mode))
+             #'turn-off-evil-matchit-mode))

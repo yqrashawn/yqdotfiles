@@ -77,7 +77,7 @@
                                                (format-mode-line "%l")
                                                (+ 1 (count-lines (point-min) (point-max))))))
                       (list
-                        (cons "details" (+elcord-local-time))
+                       (cons "details" (+elcord-local-time))
                        (cons "state" (elcord--mode-text))))))
       (when elcord-display-elapsed
         (push (list "timestamps" (cons "start" elcord--startup-time)) activity))

@@ -31,19 +31,19 @@
 
 (after! elisp-mode
   (advice-add 'eval-region :around
-    (lambda (f beg end &rest r)
-      (corgi/eval-overlay
-        (apply f beg end r)
-        end)))
+              (lambda (f beg end &rest r)
+                (corgi/eval-overlay
+                 (apply f beg end r)
+                 end)))
 
   (advice-add 'eval-last-sexp :filter-return
-    (lambda (r)
-      (corgi/eval-overlay r (point))))
+              (lambda (r)
+                (corgi/eval-overlay r (point))))
 
   (advice-add 'eval-defun :filter-return
-    (lambda (r)
-      (corgi/eval-overlay
-        r
-        (save-excursion
-          (end-of-defun)
-          (point))))))
+              (lambda (r)
+                (corgi/eval-overlay
+                 r
+                 (save-excursion
+                   (end-of-defun)
+                   (point))))))

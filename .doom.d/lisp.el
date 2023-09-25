@@ -4,15 +4,15 @@
 (el-patch-feature lispy)
 (after! lispy
   (setq! lispy-close-quotes-at-end-p nil
-    lispy-eval-display-style 'overlay)
+         lispy-eval-display-style 'overlay)
 
   (defadvice! +lispy-tab (orig-fn)
     "use `clojure-align' for lispy-tab in clojure modes"
     :around #'lispy-tab
     (if (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))
-      (progn (and (functionp #'clojure-align) (call-interactively #'clojure-align))
-        (when (region-active-p)
-          (call-interactively orig-fn)))
+        (progn (and (functionp #'clojure-align) (call-interactively #'clojure-align))
+               (when (region-active-p)
+                 (call-interactively orig-fn)))
       (call-interactively orig-fn)))
 
   (defun +lispy-update-cursor-style ()
@@ -46,47 +46,47 @@
       (save-match-data
         (end-of-line)
         (if (re-search-backward lispy-outline nil t)
-          (max (el-patch-swap (cl-count ?* (match-string 0))
-                 (- (cl-count ?\; (match-string 0)) 2)) 1)
+            (max (el-patch-swap (cl-count ?* (match-string 0))
+                                (- (cl-count ?\; (match-string 0)) 2)) 1)
           0))))
   (el-patch-defun lispy-backtick ()
     "Insert `. use markdown style backtick in clojure modes"
     (interactive)
     (if (region-active-p)
-      (el-patch-swap (lispy--surround-region "`" "`")
-        (if (memq major-mode '(clojure-mode clojurescript-mode))
-          (lispy--surround-region "`" "`")
-          (lispy--surround-region "`" "'")))
+        (el-patch-swap (lispy--surround-region "`" "`")
+                       (if (memq major-mode '(clojure-mode clojurescript-mode))
+                           (lispy--surround-region "`" "`")
+                         (lispy--surround-region "`" "'")))
       (el-patch-swap (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")
-        (if (memq major-mode '(clojure-mode clojurescript-mode))
-          (lispy--space-unless "\\s-\\|\\s(\\|[:?`]\\|\\\\")
-          (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")))
+                     (if (memq major-mode '(clojure-mode clojurescript-mode))
+                         (lispy--space-unless "\\s-\\|\\s(\\|[:?`]\\|\\\\")
+                       (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")))
       (insert "`")))
   (el-patch-defun lispy--oneline (expr &optional ignore-comments)
     "Remove newlines from EXPR.
 When IGNORE-COMMENTS is not nil, don't remove comments.
 Instead keep them, with a newline after each comment."
     (lispy-mapcan-tree
-      (lambda (x y)
-        (cond ((el-patch-swap (equal x '(ly-raw newline))
-                 (or (equal x '(ly-raw newline))
-                   (equal x '(ly-raw clojure-symbol ","))))
-                y)
-          ((lispy--raw-comment-p x)
-            (if (null ignore-comments)
-              (progn
-                (push x lispy--oneline-comments)
-                y)
-              (if (equal (car y) '(ly-raw newline))
-                (cons x y)
-                `(,x (ly-raw newline) ,@y))))
-          ((and (lispy--raw-string-p x)
-             (null ignore-comments))
-            (cons `(ly-raw string ,(replace-regexp-in-string "\n" "\\\\n" (cl-caddr x)))
-              y))
-          (t
-            (cons x y))))
-      expr)))
+     (lambda (x y)
+       (cond ((el-patch-swap (equal x '(ly-raw newline))
+                             (or (equal x '(ly-raw newline))
+                                 (equal x '(ly-raw clojure-symbol ","))))
+              y)
+             ((lispy--raw-comment-p x)
+              (if (null ignore-comments)
+                  (progn
+                    (push x lispy--oneline-comments)
+                    y)
+                (if (equal (car y) '(ly-raw newline))
+                    (cons x y)
+                  `(,x (ly-raw newline) ,@y))))
+             ((and (lispy--raw-string-p x)
+                   (null ignore-comments))
+              (cons `(ly-raw string ,(replace-regexp-in-string "\n" "\\\\n" (cl-caddr x)))
+                    y))
+             (t
+              (cons x y))))
+     expr)))
 
 (after! semantic
   (setq! semanticdb-find-default-throttle '(file local project omniscience recursive)))
@@ -227,7 +227,7 @@ Instead keep them, with a newline after each comment."
     :around #'hs-hide-level
     (interactive "p")
     (if (and (+lispy-modes-p) (eq (char-after) 40))
-      (save-excursion
-        (backward-char)
-        (call-interactively orig-fn arg))
+        (save-excursion
+          (backward-char)
+          (call-interactively orig-fn arg))
       (call-interactively orig-fn arg))))

@@ -7,8 +7,8 @@
   (defun +iflipb-always-ignore-buffers (name)
     (let ((b (get-buffer name)))
       (cond
-        ((s-starts-with? " " name) t)
-        ((memq (buffer-local-value 'major-mode b) '(dired-mode)) t))))
+       ((s-starts-with? " " name) t)
+       ((memq (buffer-local-value 'major-mode b) '(dired-mode)) t))))
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
   (defun +iflipb-ignore-buffers (name)
     (unless (eq (buffer-name (current-buffer)) name)
@@ -27,30 +27,30 @@
          ivy-re-builders-alist '((forge-create-pullreq . ivy--regex-fuzzy)
                                  (counsel-git . ivy--regex-fuzzy)
                                  (t . ivy--regex-plus))))
-                                 ;; (t . orderless-ivy-re-builder)
-                                 
+;; (t . orderless-ivy-re-builder)
+
 
 (after! counsel
   (setq! counsel-grep-base-command "rg -i -M 120 --no-heading --line-number --color never %s %s"))
-         ;; counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls"
-         
+;; counsel-find-file-occur-cmd "ls | grep -i -E '%s' | gxargs -d '\n' ls"
+
 
 ;; (use-package! counsel-tramp :commands (counsel-tramp))
 
 (after! projectile
   (setq! projectile-verbose t
-    projectile-enable-idle-timer t
-    projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
-    projectile-idle-timer-seconds 180)
+         projectile-enable-idle-timer t
+         projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
+         projectile-idle-timer-seconds 180)
   (pushnew! projectile-globally-ignored-directories "node_modules" ".shadow-cljs" ".lsp" ".storybook")
   (pushnew! projectile-project-root-files ".tabnine_root" "yarn.lock" ".yarnrc" ".eslintcache" ".node-version")
   (pushnew! projectile-globally-ignored-file-suffixes ".min.js" ".min.css" ".map")
   (defadvice! +projectile-keep-project-p (orig-fn project)
     :around #'projectile-keep-project-p
     (cond
-      ((file-remote-p project nil t) (file-readable-p project))
-      ;; ((file-remote-p project))
-      ((not (file-remote-p project)) (file-readable-p project))))
+     ((file-remote-p project nil t) (file-readable-p project))
+     ;; ((file-remote-p project))
+     ((not (file-remote-p project)) (file-readable-p project))))
   (defun +projectile-status-mobile-project-p ()
     (require 's)
     (s-ends-with? "status-mobile" (doom-project-root)))
@@ -117,7 +117,7 @@ See `dwim-shell-command-execute-script' for all other params."
     "enable `double-saber-mode' when leave wgrep mode"
     (interactive)
     (with-current-buffer (current-buffer)
-        (double-saber-mode 1)))
+      (double-saber-mode 1)))
 
   (defadvice wgrep-abort-changes (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
     "enable `double-saber-mode' when leave wgrep mode"
@@ -146,7 +146,7 @@ See `dwim-shell-command-execute-script' for all other params."
     (require 's)
     (let ((b (buffer-file-name)))
       (unless (or (s-ends-with? ".git" b)
-                (s-contains? "/.git/" b))
+                  (s-contains? "/.git/" b))
         (zoxide-run t "add" b))))
   (add-hook! 'find-file-hook #'+zoxide-add)
   (defvar consult-dir--source-zoxide
@@ -178,11 +178,11 @@ See `dwim-shell-command-execute-script' for all other params."
        ranger-persistent-sort t)
 
 (setq-default
-  isearch-lazy-count t
-  search-ring-max 200
-  regexp-search-ring-max 200
-  isearch-regexp-lax-whitespace t
-  search-whitespace-regexp ".*?")
+ isearch-lazy-count t
+ search-ring-max 200
+ regexp-search-ring-max 200
+ isearch-regexp-lax-whitespace t
+ search-whitespace-regexp ".*?")
 
 (use-package! isearch-mb
   :hook (doom-first-input . isearch-mb-mode))
@@ -230,8 +230,8 @@ See `dwim-shell-command-execute-script' for all other params."
   "Don't delete workspace if only visible window is magit-status buffer"
   :around #'+workspace/close-window-or-workspace
   (if (and (memq major-mode '(magit-status-mode))
-        (not (cdr (doom-visible-windows))))
-    nil
+           (not (cdr (doom-visible-windows))))
+      nil
     (funcall orig-fn)))
 
 (setq! +workspaces-on-switch-project-behavior t)

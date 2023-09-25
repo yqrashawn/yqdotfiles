@@ -238,8 +238,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
   ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
   (setq codeium-api-enabled
-    (lambda (api)
-      (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
   ;; you can also set a config for a single buffer like this:
   ;; (add-hook 'python-mode-hook
   ;;     (lambda ()
@@ -253,7 +253,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   ;; warning: this is measured by UTF-8 encoded bytes
   (defun my-codeium/document/cursor_offset ()
     (codeium-utf8-byte-length
-      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
   (setq codeium/document/text 'my-codeium/document/text)
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 

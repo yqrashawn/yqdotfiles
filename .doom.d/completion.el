@@ -2,24 +2,24 @@
 
 (when (modulep! :completion company)
   (set-company-backend! +lispy-modes
-    'company-capf
-    'company-files
-    'company-yasnippet
-    'company-keywords
-    'company-dabbrev-code
-    'company-dabbrev)
+                        'company-capf
+                        'company-files
+                        'company-yasnippet
+                        'company-keywords
+                        'company-dabbrev-code
+                        'company-dabbrev)
 
   (set-company-backend! '(prog-mode js2-mode rjsx-mode typescript-mode conf-mode)
-    'company-tabnine
-    'company-capf
-    'company-files
-    'company-yasnippet
-    'company-keywords
-    'company-dabbrev-code
-    'company-dabbrev)
+                        'company-tabnine
+                        'company-capf
+                        'company-files
+                        'company-yasnippet
+                        'company-keywords
+                        'company-dabbrev-code
+                        'company-dabbrev)
 
   (set-company-backend! 'text-mode
-    '(:separate company-dabbrev company-yasnippet company-files company-ispell)))
+                        '(:separate company-dabbrev company-yasnippet company-files company-ispell)))
 
 ;; (use-package! company-flx
 ;;   :defer t
@@ -40,7 +40,7 @@
          company-show-numbers-function 'yq//company-format-numbers)
 
   (setq-hook!
-    '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
+      '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
     company-idle-delay 0)
   (setq-hook! '(js2-mode-hook rjsx-mode-hook js-mode-hook typescript-mode-hook)
     company-idle-delay 0)
@@ -104,10 +104,10 @@
 
 (after! company-box
   (setq! company-box-enable-icon nil
-    company-box-color-icon nil
-    company-box-max-candidates 15
-    company-box-scrollbar nil
-    company-box-doc-delay 1.5)
+         company-box-color-icon nil
+         company-box-max-candidates 15
+         company-box-scrollbar nil
+         company-box-doc-delay 1.5)
   (defadvice! +company-box--set-mode (&rest args)
     "stop company-box add company-pseudo-tooltip-frontend back"
     :after #'company-box--set-mode

@@ -44,31 +44,31 @@ If the universal prefix argument is used then kill also the window."
 
 ;;;###autoload
 (defun bjm/ivy-dired-recent-dirs ()
-    "Present a list of recently used directories and open the selected one in dired"
-    (interactive)
-    (let ((recent-dirs (delete-dups
-                        (mapcar
-                         (lambda (file)
-                           (if (not (string-match
-                                     "/\\(rsh\\|ssh\\|telnet\\|su\\|sudo\\|sshx\\|krlogin\\|ksu\\|rcp\\|scp\\|rsync\\|scpx\\|fcp\\|nc\\|ftp\\|smb\\|adb\\):"
-                                     file))
-                               (if (file-directory-p file)
-                                   file
-                                 (file-name-directory file))
-                             (if (file-name-directory file)
-                                 (file-name-directory file))))
-                         recentf-list))))
-      (let ((dir (ivy-read
-                  "Directory: "
-                  recent-dirs
-                  ;; :re-builder #'ivy--regex
-                  :sort nil
-                  :initial-input nil)))
-        (dired dir))))
+  "Present a list of recently used directories and open the selected one in dired"
+  (interactive)
+  (let ((recent-dirs (delete-dups
+                      (mapcar
+                       (lambda (file)
+                         (if (not (string-match
+                                   "/\\(rsh\\|ssh\\|telnet\\|su\\|sudo\\|sshx\\|krlogin\\|ksu\\|rcp\\|scp\\|rsync\\|scpx\\|fcp\\|nc\\|ftp\\|smb\\|adb\\):"
+                                   file))
+                             (if (file-directory-p file)
+                                 file
+                               (file-name-directory file))
+                           (if (file-name-directory file)
+                               (file-name-directory file))))
+                       recentf-list))))
+    (let ((dir (ivy-read
+                "Directory: "
+                recent-dirs
+                ;; :re-builder #'ivy--regex
+                :sort nil
+                :initial-input nil)))
+      (dired dir))))
 
 ;;;###autoload
 (defun +clj-file-p ()
-    (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
+  (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
 
 ;;;###autoload
 (defun spacemacs/toggle-maximize-buffer ()
@@ -114,17 +114,17 @@ If the universal prefix argument is used then kill also the window."
   (catch 'tag
     (mapcar (lambda (b)
               (unless
-                (or
-                  (minibufferp b)
-                  (string-match "^ " (buffer-name b))
-                  (string-match "\*" (buffer-name b))
-                  (equal b (current-buffer)))
+                  (or
+                   (minibufferp b)
+                   (string-match "^ " (buffer-name b))
+                   (string-match "\*" (buffer-name b))
+                   (equal b (current-buffer)))
                 (if (= n 1)
-                  (progn
-                    (switch-to-buffer b)
-                    (throw 'tag nil))
+                    (progn
+                      (switch-to-buffer b)
+                      (throw 'tag nil))
                   (setq n (- n 1)))))
-      (buffer-list))))
+            (buffer-list))))
 
 ;;;###autoload
 (defun diff-last-two-kills ()
@@ -151,12 +151,12 @@ If the universal prefix argument is used then kill also the window."
 
 ;;;###autoload
 (defun yq/open-junk-file (&optional arg)
-    (interactive "P")
-    (let* ((fname (format-time-string "/tmp/junk/%Y/%m/%d-%H%M%S." (current-time)))
-           (rel-fname (file-name-nondirectory fname))
-           (junk-dir (file-name-directory fname))
-           (default-directory junk-dir))
-      (find-file rel-fname)))
+  (interactive "P")
+  (let* ((fname (format-time-string "/tmp/junk/%Y/%m/%d-%H%M%S." (current-time)))
+         (rel-fname (file-name-nondirectory fname))
+         (junk-dir (file-name-directory fname))
+         (default-directory junk-dir))
+    (find-file rel-fname)))
 
 ;;;###autoload
 (defun +imenu-comments ()
@@ -321,12 +321,12 @@ _g_  gfm      _o_ org        _m_ markdown
   (when (fboundp 'company-tabnine-restart-server)
     (company-tabnine-restart-server)
     (if company-tabnine--disabled
-      (progn
-        ;; (setq company-idle-delay 0)
-        (setq company-tabnine--disabled nil)
-        ;; (when lsp-mode
-        ;;   (call-interactively #'lsp-workspace-shutdown))
-        (message "Turn on company-tabnine"))
+        (progn
+          ;; (setq company-idle-delay 0)
+          (setq company-tabnine--disabled nil)
+          ;; (when lsp-mode
+          ;;   (call-interactively #'lsp-workspace-shutdown))
+          (message "Turn on company-tabnine"))
       (progn
         ;; (setq company-idle-delay 0.2)
         (setq company-tabnine--disabled t)
@@ -392,11 +392,11 @@ result."
 
 ;;;###autoload
 (defun corgi/cider-pprint-eval-last-sexp-insert ()
-    (interactive)
-    (let ((cider-comment-prefix "")
-          (cider-comment-continued-prefix " ")
-          (cider-comment-postfix ""))
-      (cider-pprint-eval-last-sexp-to-comment)))
+  (interactive)
+  (let ((cider-comment-prefix "")
+        (cider-comment-continued-prefix " ")
+        (cider-comment-postfix ""))
+    (cider-pprint-eval-last-sexp-to-comment)))
 
 ;;;###autoload
 (defun corgi/cider-pprint-register (register)
@@ -408,14 +408,14 @@ clojurescript-mode) of the current buffer."
   (interactive (list (register-read-with-preview "Eval register: ")))
   (let ((reg (get-register register)))
     (cond
-      ((string-match-p "^#_cljs" reg)
-        (with-current-buffer (car (cider-repls 'cljs))
-          (cider--pprint-eval-form reg)))
-      ((string-match-p "^#_clj" reg)
-        (with-current-buffer (car (cider-repls 'clj))
-          (cider--pprint-eval-form reg)))
-      (t
-        (cider--pprint-eval-form reg)))))
+     ((string-match-p "^#_cljs" reg)
+      (with-current-buffer (car (cider-repls 'cljs))
+        (cider--pprint-eval-form reg)))
+     ((string-match-p "^#_clj" reg)
+      (with-current-buffer (car (cider-repls 'clj))
+        (cider--pprint-eval-form reg)))
+     (t
+      (cider--pprint-eval-form reg)))))
 
 ;;;###autoload
 (defun corgi/cider-quit-all ()
@@ -544,7 +544,7 @@ project or host."
 (defun yq/vterm-toggle (arg)
   (interactive "P")
   (if (display-graphic-p)
-    (and (modulep! :term vterm) (+vterm/toggle (not arg)))
+      (and (modulep! :term vterm) (+vterm/toggle (not arg)))
     (and (fboundp 'yq/split-window-below-tmux) (yq/split-window-below-tmux (not arg)))))
 
 ;;;###autoload
@@ -677,7 +677,7 @@ _b_ranch _j_next _k_prev _h_up
   (save-excursion
     (goto-char (match-beginning 0))
     (let ((start (re-search-forward "0x[a-fA-F0-9]\\{41\\}" nil t))
-           (finish (re-search-forward "\\(\"\\|'\\)" (line-end-position) t)))
+          (finish (re-search-forward "\\(\"\\|'\\)" (line-end-position) t)))
       (when (and start finish)
         (put-text-property (- start 29) (- finish 1) 'display "..."))))
   nil)
@@ -754,26 +754,26 @@ _b_ranch _j_next _k_prev _h_up
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode emacs-lisp-mode)))
     (or (lispy-left-p)
         (lispy-right-p)
-      (string= (string (following-char)) "(")
-      (string= (string (following-char)) ")"))))
+        (string= (string (following-char)) "(")
+        (string= (string (following-char)) ")"))))
 
 ;;;###autoload
 (defun +cljr-project-has-dep? (dep-regex)
   (when (doom-project-root)
     (let ((s-matches-regex (-partial 's-matches? dep-regex)))
       (or
-        (let ((dep-file (concat (doom-project-root) "deps.edn")))
-          (and (f-exists? dep-file)
-            (funcall s-matches-regex (f-read dep-file))))
-        (let ((dep-file (concat (doom-project-root) "shadow-cljs.edn")))
-          (and (f-exists? dep-file)
-            (funcall s-matches-regex (f-read dep-file))))
-        (let ((dep-file (concat (doom-project-root) "project.clj")))
-          (and (f-exists? dep-file)
-            (funcall s-matches-regex (f-read dep-file))))
-        (let ((dep-file (concat (doom-project-root) "bb.edn")))
-          (and (f-exists? dep-file)
-            (funcall s-matches-regex (f-read dep-file))))))))
+       (let ((dep-file (concat (doom-project-root) "deps.edn")))
+         (and (f-exists? dep-file)
+              (funcall s-matches-regex (f-read dep-file))))
+       (let ((dep-file (concat (doom-project-root) "shadow-cljs.edn")))
+         (and (f-exists? dep-file)
+              (funcall s-matches-regex (f-read dep-file))))
+       (let ((dep-file (concat (doom-project-root) "project.clj")))
+         (and (f-exists? dep-file)
+              (funcall s-matches-regex (f-read dep-file))))
+       (let ((dep-file (concat (doom-project-root) "bb.edn")))
+         (and (f-exists? dep-file)
+              (funcall s-matches-regex (f-read dep-file))))))))
 
 ;;;###autoload
 (defun +cljr--log-spy (prefix-info arg)
@@ -911,13 +911,13 @@ _b_ranch _j_next _k_prev _h_up
   (require 's)
   (when IS-MAC
     (let* ((latest-device (+latest-modified-dir "~/Library/Developer/CoreSimulator/Devices/"
-                            (lambda (dirname)
-                              (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
-            (latest-appication (+latest-modified-dir
-                                 (concat latest-device "/data/Containers/Data/Application")
-                                 (lambda (dirname)
-                                   (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
-            (app-data (concat latest-appication "/Library")))
+                                                (lambda (dirname)
+                                                  (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+           (latest-appication (+latest-modified-dir
+                               (concat latest-device "/data/Containers/Data/Application")
+                               (lambda (dirname)
+                                 (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+           (app-data (concat latest-appication "/Library")))
       (delete-directory app-data t t))))
 
 ;;;###autoload
@@ -927,13 +927,13 @@ _b_ranch _j_next _k_prev _h_up
   (require 's)
   (when IS-MAC
     (let* ((latest-device (+latest-modified-dir "~/Library/Developer/CoreSimulator/Devices/"
-                            (lambda (dirname)
-                              (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
-            (latest-appication (+latest-modified-dir
-                                 (concat latest-device "/data/Containers/Data/Application")
-                                 (lambda (dirname)
-                                   (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
-            (eth-log (concat latest-appication "/Library/geth.log")))
+                                                (lambda (dirname)
+                                                  (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+           (latest-appication (+latest-modified-dir
+                               (concat latest-device "/data/Containers/Data/Application")
+                               (lambda (dirname)
+                                 (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+           (eth-log (concat latest-appication "/Library/geth.log")))
       (find-file eth-log))))
 
 ;;;###autoload
@@ -943,23 +943,23 @@ _b_ranch _j_next _k_prev _h_up
   (require 's)
   (when IS-MAC
     (let* ((latest-device (+latest-modified-dir "~/Library/Developer/CoreSimulator/Devices/"
-                            (lambda (dirname)
-                              (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
-            (latest-appication (+latest-modified-dir
-                                 (concat latest-device "/data/Containers/Data/Application")
-                                 (lambda (dirname)
-                                   (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
-            (eth-log (concat
+                                                (lambda (dirname)
+                                                  (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+           (latest-appication (+latest-modified-dir
+                               (concat latest-device "/data/Containers/Data/Application")
+                               (lambda (dirname)
+                                 (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname))))
+           (eth-log (concat
+                     (+latest-modified-dir
+                      (concat
                        (+latest-modified-dir
-                         (concat
-                           (+latest-modified-dir
-                             (concat latest-appication "/Library/Users/" user-login-name "/Library/Developer/CoreSimulator/Devices/")
-                             (lambda (dirname)
-                               (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
-                           "/data/Containers/Data/Application/")
-                         (lambda (dirname)
-                           (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
-                       "/Library")))
+                        (concat latest-appication "/Library/Users/" user-login-name "/Library/Developer/CoreSimulator/Devices/")
+                        (lambda (dirname)
+                          (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
+                       "/data/Containers/Data/Application/")
+                      (lambda (dirname)
+                        (s-matches? "[A-Z0-9]\\{8\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{4\\}-[A-Z0-9]\\{12\\}$" dirname)))
+                     "/Library")))
       (find-file eth-log))))
 
 ;;;###autoload
@@ -1007,15 +1007,15 @@ _b_ranch _j_next _k_prev _h_up
            (remove-hook! 'magit-refs-sections-hook 'magit-insert-tags)
            (remove-hook! 'server-switch-hook 'magit-commit-diff)
            (setq! magit-git-debug nil)
-      (message "enter magit highperf"))))
+           (message "enter magit highperf"))))
 
 ;;;###autoload
 (defun +remove-clojure-in-apheleia-mode-alist ()
   (setq! apheleia-mode-alist
-        (seq-filter (lambda (a) (not (or (eq (car a) 'clojurescript-mode)
-                                       (eq (car a) 'clojure-mode)
-                                       (eq (car a) 'clojurec-mode))))
-          apheleia-mode-alist)))
+         (seq-filter (lambda (a) (not (or (eq (car a) 'clojurescript-mode)
+                                          (eq (car a) 'clojure-mode)
+                                          (eq (car a) 'clojurec-mode))))
+                     apheleia-mode-alist)))
 
 ;;;###autoload
 (defun +toggle-zprint-as-clojure-formatter ()
@@ -1024,16 +1024,16 @@ _b_ranch _j_next _k_prev _h_up
       (progn
         (+remove-clojure-in-apheleia-mode-alist)
         (pushnew! apheleia-mode-alist
-          '(clojure-mode . cljfmt)
-          '(clojurec-mode . cljfmt)
-          '(clojurescript-mode . cljfmt))
+                  '(clojure-mode . cljfmt)
+                  '(clojurec-mode . cljfmt)
+                  '(clojurescript-mode . cljfmt))
         (message "Using cljfmt"))
     (progn
       (+remove-clojure-in-apheleia-mode-alist)
       (pushnew! apheleia-mode-alist
-        '(clojure-mode . zprint)
-        '(clojurec-mode . zprint)
-        '(clojurescript-mode . zprint))
+                '(clojure-mode . zprint)
+                '(clojurec-mode . zprint)
+                '(clojurescript-mode . zprint))
       (message "Using zprint"))))
 
 ;;;###autoload

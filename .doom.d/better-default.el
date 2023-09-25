@@ -148,24 +148,24 @@
 
 (set-popup-rules!
   '(("^\\*[Hh]elp" :slot 2 :side right :vslot -8 :size 0.35 :select t :quit current)
-     ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
-     ;; ("^\\*eww\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
-     ("^\\*Messages\\*$" :vslot -2 :size 0.5 :autosave t :quit t :ttl nil)
-     ("^\\*Completions" :ignore t)
-     ("^\\*Local variables\\*$" :vslot -1 :slot 1 :size +popup-shrink-to-fit)
-     ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)" :vslot -2 :size 0.3 :autosave t :quit t :ttl nil)
-     ("^\\*\\(?:doom \\|Pp E\\)"          ; transient buffers (no interaction required)
-       :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
-     ("^\\*doom:"                        ; editing buffers (interaction required)
-       :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
-     ("^\\*doom:\\(?:v?term\\|e?shell\\)-popup" ; editing buffers (interaction required)
-       :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil)
-     ("^\\*\\(?:Wo\\)?Man " :vslot -6 :size 0.45 :select t :quit t :ttl 0)
-     ("^\\*Calc" :vslot -7 :side bottom :size 0.4 :select t :quit nil :ttl 0)
-     ("^\\*Customize" :slot 2 :side right :size 0.5 :select t :quit nil)
-     ("^ \\*undo-tree\\*" :slot 2 :side left :size 20 :select t :quit t)
-     ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)
-     ("^\\*declutter\*" :ignore t)))
+    ("^\\*info\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
+    ;; ("^\\*eww\\*$" :slot 2 :vslot 2 :side right :size 0.45 :select t :quit nil)
+    ("^\\*Messages\\*$" :vslot -2 :size 0.5 :autosave t :quit t :ttl nil)
+    ("^\\*Completions" :ignore t)
+    ("^\\*Local variables\\*$" :vslot -1 :slot 1 :size +popup-shrink-to-fit)
+    ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)" :vslot -2 :size 0.3 :autosave t :quit t :ttl nil)
+    ("^\\*\\(?:doom \\|Pp E\\)"    ; transient buffers (no interaction required)
+     :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
+    ("^\\*doom:"                        ; editing buffers (interaction required)
+     :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
+    ("^\\*doom:\\(?:v?term\\|e?shell\\)-popup" ; editing buffers (interaction required)
+     :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil)
+    ("^\\*\\(?:Wo\\)?Man " :vslot -6 :size 0.45 :select t :quit t :ttl 0)
+    ("^\\*Calc" :vslot -7 :side bottom :size 0.4 :select t :quit nil :ttl 0)
+    ("^\\*Customize" :slot 2 :side right :size 0.5 :select t :quit nil)
+    ("^ \\*undo-tree\\*" :slot 2 :side left :size 20 :select t :quit t)
+    ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)
+    ("^\\*declutter\*" :ignore t)))
 
 (use-package! ix
   :commands (ix)
@@ -206,8 +206,8 @@
 (defadvice! +doom/escape (orig-fn &optional interactive)
   :around #'doom/escape
   (unless +doom/escape-just-called
-      (setq +doom/escape-just-called t)
-      (run-at-time 0.4 #'+doom/escape-just-called-cancel))
+    (setq +doom/escape-just-called t)
+    (run-at-time 0.4 #'+doom/escape-just-called-cancel))
   (funcall orig-fn interactive))
 
 (defun +doom/just-escaped-p (&rest _)
@@ -252,7 +252,7 @@ A prefix arg reverses this operation."
 
 (add-hook! 'doom-first-file-hook
   (if (boundp 'pixel-scroll-precision-mode)
-    (pixel-scroll-precision-mode t)))
+      (pixel-scroll-precision-mode t)))
 
 (use-package! keycast
   :commands keycast-mode
@@ -276,10 +276,10 @@ A prefix arg reverses this operation."
 
   (custom-set-faces!
     '(keycast-command :inherit doom-modeline-debug
-                      :height 0.9)
+      :height 0.9)
     '(keycast-key :inherit custom-modified
-                  :height 1.1
-                  :weight bold)))
+      :height 1.1
+      :weight bold)))
 
 (use-package! unmodified-buffer
   :hook (doom-first-file . unmodified-buffer-global-mode))
@@ -287,10 +287,10 @@ A prefix arg reverses this operation."
 ;; TODO remove this once it's remove from core-editor.el
 ;; https://github.com/hlissner/doom-emacs/issues/6127
 (undefadvice! doom--fix-helpful--autoloaded-p (fn &rest args)
-      :around #'helpful--autoloaded-p
-      (letf! (defun help-fns--autoloaded-p (sym _)
-               (funcall help-fns--autoloaded-p sym))
-        (apply fn args)))
+  :around #'helpful--autoloaded-p
+  (letf! (defun help-fns--autoloaded-p (sym _)
+           (funcall help-fns--autoloaded-p sym))
+    (apply fn args)))
 
 ;; (after! dirvish
 ;;   (setq!
@@ -351,15 +351,15 @@ This function could be in the list `comint-output-filter-functions'."
 
 (after! hippie-exp
   (setq! hippie-expand-try-functions-list
-    '(try-complete-file-name-partially
-       try-complete-file-name
-       try-expand-all-abbrevs
-       try-expand-dabbrev-visible
-       try-expand-dabbrev
-       try-expand-dabbrev-all-buffers
-       try-expand-dabbrev-from-kill
-       try-complete-lisp-symbol-partially
-       try-complete-lisp-symbol)))
+         '(try-complete-file-name-partially
+           try-complete-file-name
+           try-expand-all-abbrevs
+           try-expand-dabbrev-visible
+           try-expand-dabbrev
+           try-expand-dabbrev-all-buffers
+           try-expand-dabbrev-from-kill
+           try-complete-lisp-symbol-partially
+           try-complete-lisp-symbol)))
 
 (use-package! detached
   :hook (doom-first-input . detached-init)
@@ -423,7 +423,7 @@ This function could be in the list `comint-output-filter-functions'."
                                           (remap-xlfd (doom-normalize-font remap-font)))
                                     remap-xlfd
                                   (purecopy font))
-                              (error "Could not decompose %s font" var))))
+                                (error "Could not decompose %s font" var))))
                 (let* ((step      (if fixed-size-p 0 (* increment doom-font-increment)))
                        (orig-size (font-get font :size))
                        (new-size  (if fixed-size-p increment (+ orig-size step))))
@@ -435,10 +435,10 @@ This function could be in the list `comint-output-filter-functions'."
                          (unless (get var 'initial-value)
                            (put var 'initial-value original-font))
                          (font-put dfont :size new-size)
-                          (set var dfont)))))))))
+                         (set var dfont)))))))))
     (error
      (ignore-errors (doom-adjust-font-size nil))
-      (signal (car e) (cdr e)))))
+     (signal (car e) (cdr e)))))
 
 (unless (fboundp 'indent-buffer)
   (defalias 'indent-buffer #'pp-buffer))
@@ -458,53 +458,53 @@ This function could be in the list `comint-output-filter-functions'."
 
 Return the arguments as an assoc list of string which will be
 used in the POST request made to the LanguageTool server."
-  (let (arguments)
+    (let (arguments)
 
-    ;; Appends the correction language information
-    (push (list "language" languagetool-correction-language) arguments)
+      ;; Appends the correction language information
+      (push (list "language" languagetool-correction-language) arguments)
 
-    ;; Appends the mother tongue information
-    (when (stringp languagetool-mother-tongue)
-      (push (list "motherTongue" languagetool-mother-tongue) arguments))
+      ;; Appends the mother tongue information
+      (when (stringp languagetool-mother-tongue)
+        (push (list "motherTongue" languagetool-mother-tongue) arguments))
 
-    ;; (unless (stringp +languagetool-token-v2)
-    ;;   (setq +languagetool-token-v2
-    ;;     (-> (auth-source-search :host "api.languagetoolplus.com"
-    ;;           :user languagetool-username)
-    ;;       car
-    ;;       (plist-get :api_token))))
+      ;; (unless (stringp +languagetool-token-v2)
+      ;;   (setq +languagetool-token-v2
+      ;;     (-> (auth-source-search :host "api.languagetoolplus.com"
+      ;;           :user languagetool-username)
+      ;;       car
+      ;;       (plist-get :api_token))))
 
-    ;; Add LanguageTool Preamium features
-    (when (stringp +languagetool-token-v2)
-      ;; (push (list "apiKey" languagetool-api-key) arguments)
-      (push (list "tokenV2" +languagetool-token-v2) arguments))
+      ;; Add LanguageTool Preamium features
+      (when (stringp +languagetool-token-v2)
+        ;; (push (list "apiKey" languagetool-api-key) arguments)
+        (push (list "tokenV2" +languagetool-token-v2) arguments))
 
-    (when (stringp languagetool-username)
-      (push (list "username" languagetool-username) arguments))
-    
-;; Appends LanguageTool suggestion level information
-    (when (stringp languagetool-suggestion-level)
-      (push (list "level" languagetool-suggestion-level) arguments))
+      (when (stringp languagetool-username)
+        (push (list "username" languagetool-username) arguments))
 
-    ;; Appends the disabled rules
-    (let ((rules))
-      ;; Global disabled rules
-      (setq rules (string-join (append languagetool-disabled-rules languagetool-local-disabled-rules) ","))
-      (unless (string= rules "")
-        (push (list "disabledRules" rules) arguments)))
+      ;; Appends LanguageTool suggestion level information
+      (when (stringp languagetool-suggestion-level)
+        (push (list "level" languagetool-suggestion-level) arguments))
 
-    ;; Add the buffer contents
-    (push (list "text" (buffer-substring-no-properties (point-min) (point-max))) arguments))))
+      ;; Appends the disabled rules
+      (let ((rules))
+        ;; Global disabled rules
+        (setq rules (string-join (append languagetool-disabled-rules languagetool-local-disabled-rules) ","))
+        (unless (string= rules "")
+          (push (list "disabledRules" rules) arguments)))
+
+      ;; Add the buffer contents
+      (push (list "text" (buffer-substring-no-properties (point-min) (point-max))) arguments))))
 
 (use-package! languagetool
   :hook ((org-mode markdown-mode rst-mode asciidoc-mode latex-mode LaTeX-mode) . languagetool-server-mode)
   :init
   (setq!
-    languagetool-api-key "foo"
-    languagetool-username user-mail-address
-    languagetool-server-url "https://api.languagetoolplus.com"
-    languagetool-server-port 443
-    languagetool-mother-tongue "zh-CN"))
+   languagetool-api-key "foo"
+   languagetool-username user-mail-address
+   languagetool-server-url "https://api.languagetoolplus.com"
+   languagetool-server-port 443
+   languagetool-mother-tongue "zh-CN"))
 
 (after! emacs-everywhere
   (setq! emacs-everywhere-paste-command
@@ -534,7 +534,7 @@ used in the POST request made to the LanguageTool server."
                app-name)
          :class app-name
          :title window-title
-          :geometry window-geometry)))))
+         :geometry window-geometry)))))
 
 
 (setq! consult-tramp-method "sshx"
@@ -565,7 +565,7 @@ used in the POST request made to the LanguageTool server."
 
 (after! recentf
   (pushnew! recentf-exclude "^/nix" ;; #'file-remote-p "^/ssh:"
-    ))
+            ))
 
 (use-package! chatgpt-arcana
   :disabled t
@@ -574,21 +574,21 @@ used in the POST request made to the LanguageTool server."
   (setq! chatgpt-arcana-api-key +open-ai-api-key)
   :config
   (setq! chatgpt-arcana-system-prompts-alist
-    '((programming . "You are a large language model living inside Emacs, and the perfect programmer. You may only respond with concise code unless explicitly asked.")
-       (writing . "You are a large language model living inside Emacs, and an excellent writing assistant. Respond concisely and carry out instructions.")
-       (chat . "You are a large language model living inside Emacs, and an excellent conversation partner. Respond concisely.")
-       (prompt-generator . "You are a large language model living inside Emacs. I want you to act as a ChatGPT prompt generator, I will send a topic, you have to generate a ChatGPT prompt based on the content of the topic, the prompt should start with \" I want you to act as \", and guess what I might do, and expand the prompt accordingly Describe the content to make it useful and be concise.")
-       (dev-rel-consultant . "I want you to act as a Developer Relations consultant. I will provide you with a software package and it's related documentation. Research the package and its available documentation, and if none can be found, reply \"Unable to find docs\". Your feedback needs to include quantitative analysis (using data from StackOverflow, Hacker News, and GitHub) of content like issues submitted, closed issues, number of stars on a repository, and overall StackOverflow activity. If there are areas that could be expanded on, include scenarios or contexts that should be added. Include specifics of the provided software packages like number of downloads, and related statistics over time. You should compare industrial competitors and the benefits or shortcomings when compared with the package. Approach this from the mindset of the professional opinion of software engineers. Review technical blogs and websites (such as TechCrunch.com or Crunchbase.com) and if data isn't available, reply \"No data available\". My first request is")
-       (general-tool . "I want you to act as a go-to assistant for unit conversion, data format and file type conversions. You will be my guide when I need to know how to convert values from one unit to another or when I have questions about common data formats and file types used in coding. You will provide me with clear and concise explanations, examples and code snippets so that I can easily understand and implement these conversions in my projects. Whether I need to convert inches to centimeters, binary to hexadecimal or CSV to JSON, you will be my reliable source for all my conversion needs. And please be concise.")
-       (fallback . "You are a large language model living inside Emacs. Help the user and be concise.")))
+         '((programming . "You are a large language model living inside Emacs, and the perfect programmer. You may only respond with concise code unless explicitly asked.")
+           (writing . "You are a large language model living inside Emacs, and an excellent writing assistant. Respond concisely and carry out instructions.")
+           (chat . "You are a large language model living inside Emacs, and an excellent conversation partner. Respond concisely.")
+           (prompt-generator . "You are a large language model living inside Emacs. I want you to act as a ChatGPT prompt generator, I will send a topic, you have to generate a ChatGPT prompt based on the content of the topic, the prompt should start with \" I want you to act as \", and guess what I might do, and expand the prompt accordingly Describe the content to make it useful and be concise.")
+           (dev-rel-consultant . "I want you to act as a Developer Relations consultant. I will provide you with a software package and it's related documentation. Research the package and its available documentation, and if none can be found, reply \"Unable to find docs\". Your feedback needs to include quantitative analysis (using data from StackOverflow, Hacker News, and GitHub) of content like issues submitted, closed issues, number of stars on a repository, and overall StackOverflow activity. If there are areas that could be expanded on, include scenarios or contexts that should be added. Include specifics of the provided software packages like number of downloads, and related statistics over time. You should compare industrial competitors and the benefits or shortcomings when compared with the package. Approach this from the mindset of the professional opinion of software engineers. Review technical blogs and websites (such as TechCrunch.com or Crunchbase.com) and if data isn't available, reply \"No data available\". My first request is")
+           (general-tool . "I want you to act as a go-to assistant for unit conversion, data format and file type conversions. You will be my guide when I need to know how to convert values from one unit to another or when I have questions about common data formats and file types used in coding. You will provide me with clear and concise explanations, examples and code snippets so that I can easily understand and implement these conversions in my projects. Whether I need to convert inches to centimeters, binary to hexadecimal or CSV to JSON, you will be my reliable source for all my conversion needs. And please be concise.")
+           (fallback . "You are a large language model living inside Emacs. Help the user and be concise.")))
 
   (setq! chatgpt-arcana-system-prompts-modes-alist
-    '((prog-mode . programming)
-       (emacs-lisp-mode . programming)
-       (org-mode . writing)
-       (markdown-mode . writing)
-       (chatgpt-arcana-chat-mode . chat)
-       (fallback . fallback))))
+         '((prog-mode . programming)
+           (emacs-lisp-mode . programming)
+           (org-mode . writing)
+           (markdown-mode . writing)
+           (chatgpt-arcana-chat-mode . chat)
+           (fallback . fallback))))
 
 (use-package! gptel
   :defer t
@@ -596,9 +596,9 @@ used in the POST request made to the LanguageTool server."
   (setq! gptel-api-key +open-ai-api-key)
   :config
   (setq gptel-directives '((default . "You are a large language model living in Emacs and a helpful coding assistant. Respond concisely.")
-                            (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-                            (writing . "You are a large language model and a writing assistant. Respond concisely.")
-                            (chat . "You are a large language model and a conversation partner. Respond concisely."))))
+                           (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+                           (writing . "You are a large language model and a writing assistant. Respond concisely.")
+                           (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 
 ;; (use-package! jit-spell :hook (prog-mode text-mode))
 

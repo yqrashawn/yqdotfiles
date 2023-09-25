@@ -10,13 +10,13 @@
 
 (after! org
   (setq! org-log-done 'time
-    org-roam-dailies-directory ""
-    org-startup-with-inline-images "inlineimages"
-    org-cycle-emulate-tab nil
-    org-cycle-global-at-bob t
-    org-hide-block-startup t
-    org-agenda-dim-blocked-tasks nil
-    org-agenda-inhibit-startup t)
+         org-roam-dailies-directory ""
+         org-startup-with-inline-images "inlineimages"
+         org-cycle-emulate-tab nil
+         org-cycle-global-at-bob t
+         org-hide-block-startup t
+         org-agenda-dim-blocked-tasks nil
+         org-agenda-inhibit-startup t)
   (pushnew! org-tags-exclude-from-inheritance "project")
   (pushnew! org-agenda-files (concat org-roam-directory org-roam-dailies-directory))
   (defadvice! +org-agenda--quit (&rest _)
@@ -40,28 +40,28 @@
   (pushnew! org-roam-file-exclude-regexp (expand-file-name "~/Dropbox/ORG/logseq/"))
   (setq!
    org-roam-protocol-store-links t
-    ;; org-roam-dailies-capture-templates
-    ;;    `(("d" "Default daily template" entry
-    ;;       "* %<%H:%M:%S> %?"
-    ;;       :if-new (file+head "%<%Y-%m-%d %a>.org"
-    ;;                          ":PROPERTIES:
-    ;; :CREATED: <%<%Y-%m-%d %a %H:%M>>
-    ;; :CATEGORY: Daily
-    ;; :END:
-    ;; #+TITLE: %<%Y-%m-%d %a>
-    ;; ")))
-    ;;    org-roam-capture-ref-templates
-    ;;    '(("r" "ref" plain "%?"
-    ;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-    ;;                          ":PROPERTIES:
-    ;; :CREATED: <%<%Y-%m-%d %a %H:%M>>
-    ;; :CATEGORY: Roam Ref
-    ;; :END:
-    ;; #+FILETAGS: %^g
-    ;; #+TITLE: ${title}\n
-    ;; * Description")
-    ;;        :unnarrowed t))
-    ))
+   ;; org-roam-dailies-capture-templates
+   ;;    `(("d" "Default daily template" entry
+   ;;       "* %<%H:%M:%S> %?"
+   ;;       :if-new (file+head "%<%Y-%m-%d %a>.org"
+   ;;                          ":PROPERTIES:
+   ;; :CREATED: <%<%Y-%m-%d %a %H:%M>>
+   ;; :CATEGORY: Daily
+   ;; :END:
+   ;; #+TITLE: %<%Y-%m-%d %a>
+   ;; ")))
+   ;;    org-roam-capture-ref-templates
+   ;;    '(("r" "ref" plain "%?"
+   ;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+   ;;                          ":PROPERTIES:
+   ;; :CREATED: <%<%Y-%m-%d %a %H:%M>>
+   ;; :CATEGORY: Roam Ref
+   ;; :END:
+   ;; #+FILETAGS: %^g
+   ;; #+TITLE: ${title}\n
+   ;; * Description")
+   ;;        :unnarrowed t))
+   ))
 
 (use-package! orgbox
   :commands (orgbox orgbox-schedule)
@@ -119,11 +119,11 @@ tasks."
 (defadvice! +todoist ()
   :before #'todoist
   (setq! todoist-token
-    (-> (auth-source-search :host "todoist.com" :user "namy.19@gmail.com")
-      car
-      (plist-get :api_token))))
+         (-> (auth-source-search :host "todoist.com" :user "namy.19@gmail.com")
+             car
+             (plist-get :api_token))))
 
 
 (use-package! denote :defer t
-  :init
-  (setq! denote-directory (expand-file-name "~/Dropbox/sync/denote")))
+              :init
+              (setq! denote-directory (expand-file-name "~/Dropbox/sync/denote")))

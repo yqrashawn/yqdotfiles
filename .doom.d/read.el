@@ -1,33 +1,33 @@
 ;;; read.el -*- lexical-binding: t; -*-
 (setq!
-  elfeed-use-curl t
-  ;; necessary for https without a trust certificate
-  elfeed-protocol-newsblur-maxpages 20
-  elfeed-curl-extra-arguments `("--insecure"
-                                "--cookie-jar"
-                                ,(concat doom-cache-dir "newsblur-cookie")
-                                "--cookie"
-                                ,(concat doom-cache-dir "newsblur-cookie")))
+ elfeed-use-curl t
+ ;; necessary for https without a trust certificate
+ elfeed-protocol-newsblur-maxpages 20
+ elfeed-curl-extra-arguments `("--insecure"
+                               "--cookie-jar"
+                               ,(concat doom-cache-dir "newsblur-cookie")
+                               "--cookie"
+                               ,(concat doom-cache-dir "newsblur-cookie")))
 
 
 (after! elfeed
   (elfeed-set-timeout 36000)
   (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
-    elfeed-protocol-newsblur-maxpages 200
-    ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
-    ;; elfeed-search-filter "+unread -releases -crypto -design"
-    elfeed-search-filter "+unread +p1"
-    elfeed-search-trailing-width 60)
+   elfeed-protocol-newsblur-maxpages 200
+   ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
+   ;; elfeed-search-filter "+unread -releases -crypto -design"
+   elfeed-search-filter "+unread +p1"
+   elfeed-search-trailing-width 60)
   (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
   (setq elfeed-protocol-enabled-protocols '(newsblur))
   (defadvice elfeed (after configure-elfeed-feeds activate)
     "Make elfeed-org autotags rules works with elfeed-protocol."
     (setq elfeed-protocol-tags elfeed-feeds)
     (setq elfeed-feeds (list
-                         (list "newsblur+https://yqrashawn@newsblur.com"
-                           :use-authinfo t
-                           :autotags elfeed-protocol-tags))))
+                        (list "newsblur+https://yqrashawn@newsblur.com"
+                              :use-authinfo t
+                              :autotags elfeed-protocol-tags))))
   (elfeed-protocol-enable)
 
   (load-file (expand-file-name "~/Dropbox/sync/elfeed.el")))
@@ -46,7 +46,7 @@
   "M-RET to view entry in eww, 1 M-RET to view entry in default browser"
   :around #'elfeed-search-browse-url
   (let ((browse-url-browser-function 'eww-browse-url)
-         (browse-url-generic-program "open"))
+        (browse-url-generic-program "open"))
     (call-interactively orig-fn)))
 
 (use-package! elfeed-dashboard
@@ -90,10 +90,10 @@ The returned function should be added to `elfeed-new-entry-hook'."
             (date (elfeed-entry-date entry))
             (case-fold-search t))
         (cl-flet ((match (r s)
-                         (or (null r)
-                             (if (listp r)
-                                 (not (string-match-p (cl-second r) s))
-                               (string-match-p r s)))))
+                    (or (null r)
+                        (if (listp r)
+                            (not (string-match-p (cl-second r) s))
+                          (string-match-p r s)))))
           (when (and
                  (match feed-title  (elfeed-feed-title  feed))
                  (match feed-url    (elfeed-feed-url    feed))
