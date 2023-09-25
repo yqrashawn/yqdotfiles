@@ -221,3 +221,9 @@
           (apply f args)
         (let ((company-transformers '(fussy-company-sort-by-completion-score)))
           (apply f args))))))
+
+(after! cape
+  (setq! cape-dict-file (list
+                         (expand-file-name "~/Dropbox/sync/personal_dict")
+                         (expand-file-name "~/Dropbox/sync/gh_username_dict")
+                         "/usr/share/dict/words")))

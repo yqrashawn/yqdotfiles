@@ -4,8 +4,9 @@
 
 (defvar +corfu-global-capes
   '(yasnippet-capf
-    :completion
-    cape-dict)
+     :completion
+     cape-dict
+     cape-file)
   "A list of global capes to be available at all times.
 The key :completion is used to specify where completion candidates should be
 placed, otherwise they come first.")
