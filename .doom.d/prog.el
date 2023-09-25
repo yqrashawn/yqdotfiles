@@ -102,9 +102,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 ;; (use-package! evil-textobj-tree-sitter
 ;;   :after evil)
 
-(use-package! apheleia
-  ;; :hook ((nix-mode js2-mode rjsx-mode clojurescript-mode clojurec-mode clojure-mode go-mode) . apheleia-mode)
-  :hook (doom-first-file . apheleia-global-mode))
+;; (use-package! apheleia
+;;   ;; :hook ((nix-mode js2-mode rjsx-mode clojurescript-mode clojurec-mode clojure-mode go-mode) . apheleia-mode)
+;;   :hook (doom-first-file . apheleia-global-mode))
 
 (after! apheleia
   (pushnew! apheleia-mode-alist
