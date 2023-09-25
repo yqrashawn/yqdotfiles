@@ -163,3 +163,6 @@
          doom-modeline-persp-icon nil))
 
 (remove-hook! '(prog-mode-hook text-mode-hook conf-mode-hook) '(highlight-indent-guides-mode))
+
+;; https://github.com/rainstormstudio/nerd-icons.el#installing-fonts
+(setq! nerd-icons-font-family "PragmataPro Mono Liga")
