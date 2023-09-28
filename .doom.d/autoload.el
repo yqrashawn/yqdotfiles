@@ -1118,3 +1118,17 @@ it's output without introducing an intermediate let-form."
 result instead of `message'."
   (pp-display-expression thing "*im-debug*")
   thing)
+
+(defun ++clojure-keywordp (s)
+  (and
+   (stringp s)
+   (s-starts-with? ":" s)
+   (not (s-contains? " " s))))
+
+;;;###autoload
+(defun +lookup-status-mobile-re-frame-event-handler-defination (_thing)
+  (when (++clojure-keywordp _thing)
+    (project-search (regexp-quote (concat "{:events [" _thing "]}"))))
+  t)
+
+;; (setq-local +lookup-definition-functions '(+lookup-status-mobile-re-frame-event-handler-defination))
