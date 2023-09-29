@@ -155,7 +155,7 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
    )
 
   ;; status h/deftest-sub
-  (pushnew! cider-test-defining-forms "deftest-sub")
+  (setq! +cider-test-defining-forms '("deftest" "defspec" "deftest-sub"))
 
   (defadvice cider-find-var (before add-evil-jump activate)
     (evil-set-jump))
@@ -235,7 +235,6 @@ creates a new one. Don't unnecessarily bother the user."
       (cider-interactive-eval
        (apply #'buffer-substring-no-properties (cider-defun-at-point 'bounds))
        (lambda (a)
-         ;; (print a)
          (when (nrepl-dict-get a "value")
            (let* ((form (format "
 (println \"-----run test------\")
@@ -243,8 +242,7 @@ creates a new one. Don't unnecessarily bother the user."
 (println \"---test finished---\")
 "
                                 (nrepl-dict-get a "value"))))
-             ;; (message "---%s---" form)
-             (if (and ns (member deftype cider-test-defining-forms))
+             (if (and ns (member deftype +cider-test-defining-forms))
                  (cider-interactive-eval form nil nil (cider--nrepl-pr-request-map))
                (message "No test at point"))))))))
 

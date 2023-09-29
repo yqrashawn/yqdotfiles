@@ -141,7 +141,6 @@
 (package! comb)
 (package! wucuo)
 ;; (package! mini-frame)
-;; (package! evil-textobj-tree-sitter)
 (package! jsonnet-mode)
 (package! apheleia :recipe (:type git :host github :repo "raxod502/apheleia"))
 ;; (package! vulpea)
