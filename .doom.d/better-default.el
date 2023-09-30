@@ -154,7 +154,7 @@
     ("^\\*Completions" :ignore t)
     ("^\\*Local variables\\*$" :vslot -1 :slot 1 :size +popup-shrink-to-fit)
     ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)" :vslot -2 :size 0.3 :autosave t :quit t :ttl nil)
-    ("^\\*\\(?:doom \\|Pp E\\)"    ; transient buffers (no interaction required)
+    ("^\\*\\(?:doom \\|Pp E\\)"          ; transient buffers (no interaction required)
      :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
     ("^\\*doom:"                        ; editing buffers (interaction required)
      :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
@@ -165,7 +165,8 @@
     ("^\\*Customize" :slot 2 :side right :size 0.5 :select t :quit nil)
     ("^ \\*undo-tree\\*" :slot 2 :side left :size 20 :select t :quit t)
     ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)
-    ("^\\*declutter\*" :ignore t)))
+    ("^\\*declutter\*" :ignore t)
+    ("^\\*Error\\*" :select nil :quit t :side bottom :size 0.3)))
 
 (use-package! ix
   :commands (ix)

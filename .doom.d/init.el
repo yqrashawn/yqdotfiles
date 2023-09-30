@@ -144,7 +144,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        hydra
        indent-guides     ; highlighted indent columns
        (ligatures +extra +pragmata-pro) ; ligatures and symbols to make your code pretty again
-       ;minimap           ; show a map of the code on the side
+                                        ;minimap           ; show a map of the code on the side
        ;; (modeline +light) ; snazzy, Atom-inspired modeline, plus API
        modeline           ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink cursor line after big motions
@@ -282,7 +282,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        (web +lsp +tree-sitter)               ; the tubes
-       (yaml +lsp)              ; JSON, but readable
+       (yaml +lsp +tree-sitter)              ; JSON, but readable
        (zig +lsp +tree-sitter)               ; C, but simpler
 
        :email
