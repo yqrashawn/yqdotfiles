@@ -1,6 +1,6 @@
 {
-  allowUnsupportedSystem = true;
+  allowUnsupportedSystem = false;
   allowUnfree = true;
-  allowBroken = true;
+  allowBroken = false;
   android_sdk.accept_license = true;
 }

@@ -16,6 +16,7 @@ let
     python3
     black
   ];
+  masters = with pkgs.masters; [ adguardhome ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -43,14 +44,13 @@ in {
     systemPackages = with pkgs;
       [
         qbittorrent
-        adguardhome
         tailscale
         cloudflared
+        slack
+        discord
         # todoist-electron
         todoist
         # zoom-us
-        slack
-        discord
         zellij
         kitty-themes
         # (docker.override (args: {
@@ -69,6 +69,8 @@ in {
         isync-isync
         msmtp
         # gomobile
+        # opts at
+        # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
         (emacs29.override (args: {
           # withMacport = true;
           withNS = true;
@@ -328,7 +330,7 @@ in {
 
         # not available
         # du
-      ] ++ stables ++ darwins ++ own; # ++ old;
+      ] ++ masters ++ stables ++ darwins ++ own; # ++ old;
     etc = {
       home-manager.source = "${inputs.home-manager}";
       nixpkgs.source = "${pkgs.path}";

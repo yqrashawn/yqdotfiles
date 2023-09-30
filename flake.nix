@@ -28,7 +28,7 @@
     darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-21.11-darwin";
     stable.url = "github:nixos/nixpkgs/nixos-21.11";
     own.url = "github:yqrashawn/nixpkgs/master";
-    # nixpkgs-master.url = "github:nixos/nixpkgs/master";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     # nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     # use for overlay and kitty

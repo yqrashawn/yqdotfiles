@@ -1,5 +1,5 @@
 { inputs, config, lib, pkgs, ... }: {
-  nixpkgs = { config = import ./config.nix; };
+  nixpkgs.config = import ./config.nix;
 
   nix = {
     package = pkgs.nix;
