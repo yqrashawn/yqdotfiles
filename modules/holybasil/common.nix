@@ -65,7 +65,6 @@
       starship
       broot # ranger
       direnv
-      exa
       # fasd
       fzf
       zsh-fzf-tab

@@ -298,11 +298,11 @@ A prefix arg reverses this operation."
 ;;    ;; dirvish-keep-alive-on-quit nil
 ;;    ;; dirvish-header-line-format nil
 ;;    dirvish-attributes '(file-size git-msg))
-;;   (dirvish-define-preview exa (file)
-;;     "Use `exa' to generate directory preview."
+;;   (dirvish-define-preview eza (file)
+;;     "Use `eza' to generate directory preview."
 ;;     (when (file-directory-p file)       ; we only interest in directories here
-;;       `(shell . ("exa" "--color=always" "-al" ,file)))) ; use the output of `exa' command as preview
-;;   (pushnew! dirvish-preview-dispatchers 'exa)
+;;       `(shell . ("eza" "--color=always" "-al" ,file)))) ; use the output of `eza' command as preview
+;;   (pushnew! dirvish-preview-dispatchers 'eza)
 
 ;;   (defadvice! ++dired/quit-all ()
 ;;     :before #'+dired/quit-all

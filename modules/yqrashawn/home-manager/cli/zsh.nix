@@ -54,11 +54,11 @@ let
     cd = "z";
     j = "z";
 
-    l = "exa -al";
-    # ls = "exa -a";
-    lsa = "exa -abghl --git --color=automatic";
-    lsd = "exa -l --color=automatic | grep --color=never '^d'";
-    lst = "exa --sort=created --time=created --long --all -r | sed 15q";
+    l = "eza -al";
+    # ls = "eza -a";
+    lsa = "eza -abghl --git --color=automatic";
+    lsd = "eza -l --color=automatic | grep --color=never '^d'";
+    lst = "eza --sort=created --time=created --long --all -r | sed 15q";
     y = "yarn";
     yi = "yarn init";
     ya = "yarn add";

@@ -20,12 +20,12 @@ alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
-alias l='exa -al'
-alias ls="exa -a"
-alias lsa="exa -abghl --git --color=automatic"
-alias lsd="exa -l --color=automatic | grep --color=never '^d'"
-alias lst='exa --sort=created --time=created --long --all -r | sed 15q'
-alias lstt='exa --sort=modified --time=created --long --all -r | sed 15q'
+alias l='eza -al'
+alias ls="eza -a"
+alias lsa="eza -abghl --git --color=automatic"
+alias lsd="eza -l --color=automatic | grep --color=never '^d'"
+alias lst='eza --sort=created --time=created --long --all -r | sed 15q'
+alias lstt='eza --sort=modified --time=created --long --all -r | sed 15q'
 # alias ls="ls -AlF ${colorflag}"
 # alias l="ls -lF ${colorflag}"
 # alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"

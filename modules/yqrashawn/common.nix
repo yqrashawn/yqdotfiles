@@ -77,8 +77,8 @@ in {
           withWebP = true;
           withImageMagick = true;
           # withXwidgets = true;
-          nativeComp = true;
-          # withNativeCompilation = true;
+          # nativeComp = true;
+          withNativeCompilation = true;
           withTreeSitter = true;
           webkitgtk = true;
           # texinfo = true;
@@ -99,9 +99,9 @@ in {
         vim
         cachix
         tmux
-        zsh
-        bash
-        git
+        # zsh
+        # bash
+        # git
         helix
         lnav
         mu
@@ -171,13 +171,12 @@ in {
         terminal-notifier
         enchant # ispell
         w3m
-        starship
+        # starship
         neofetch
         broot # ranger
         direnv
-        exa
         # fasd
-        fzf
+        # fzf
         zsh-fzf-tab
         coreutils-full
         findutils # xargs
@@ -187,7 +186,7 @@ in {
         rbenv
         jless # json viewer
         less
-        zoxide # fasd
+        # zoxide # fasd
         lazygit
         git-branchless
         # watchexec
@@ -202,7 +201,7 @@ in {
         brotli
         automake
         autoconf
-        bat
+        # bat
         bat-extras.batdiff
         bat-extras.batgrep
         bat-extras.batman
@@ -291,7 +290,7 @@ in {
         golangci-lint
         plantuml
         rustup
-        rust-analyzer
+        # rust-analyzer
         (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph rubocop ]))
 
         sbcl
