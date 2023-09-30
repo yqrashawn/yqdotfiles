@@ -43,10 +43,10 @@
     lsp-ui-sideline-show-diagnostics nil)
   ;; (setq cider-clojure-cli-global-options "-T:portal-cli")
 
-  (add-hook!
-   'clojurescript-mode-hook
-   (lambda ()
-     (setq-local +lookup-definition-functions (seq-concatenate 'list '(+lookup-status-mobile-re-frame-event-handler-defination) +lookup-definition-functions)))))
+  ;; (setq-hook! 'clojurescript-mode-hook
+  ;;   +lookup-definition-functions
+  ;;   (seq-concatenate 'list '(+lookup-status-mobile-re-frame-event-handler-defination) +lookup-definition-functions))
+  )
 
 (defun +setup-clojure-mode ()
   "sort namespace, cleanup log namespace on save"

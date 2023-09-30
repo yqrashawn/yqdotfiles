@@ -4,7 +4,7 @@
     package = pkgs.kitty;
     font = {
       name = "PragmataPro Mono Liga Regular";
-      size = 18;
+      size = 20;
     };
     settings = {
       bold_font = "PragmataPro Mono Liga Bold";
