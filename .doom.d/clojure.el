@@ -116,7 +116,10 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
 (defun +clojure-use-cider-over-lsp ()
   "use cider over clojure-lsp for completion when cider is not connected"
   (pushnew! completion-at-point-functions #'cider-complete-at-point)
-  (setq-local cider-font-lock-dynamically '(macro core deprecated function var core))
+  ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
+  ;; fix Regular expression too big
+  ;; https://github.com/clojure-emacs/cider/issues/2866
+  (setq-local cider-font-lock-dynamically '(macro core deprecated))
   (setq-local lsp-completion-enable nil))
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
@@ -136,6 +139,8 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
 (after! cider
   (setq!
    cider-repl-buffer-size-limit 1048576
+   ;; Regular expression too big
+   cider-font-lock-reader-conditionals nil
    cider-repl-use-content-types t
    cider-repl-pop-to-buffer-on-connect nil
    cider-repl-display-output-before-window-boundaries t
