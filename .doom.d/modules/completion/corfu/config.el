@@ -4,9 +4,9 @@
 
 (defvar +corfu-global-capes
   '(yasnippet-capf
-     :completion
-     cape-dict
-     cape-file)
+    :completion
+    cape-dict
+    cape-file)
   "A list of global capes to be available at all times.
 The key :completion is used to specify where completion candidates should be
 placed, otherwise they come first.")
@@ -30,8 +30,8 @@ placed, otherwise they come first.")
       (car host)
       completion-at-point-functions))))
 
-(add-hook 'lsp-mode-hook #'+corfu--load-capes)
-(add-hook 'eglot-mode-hook #'+corfu--load-capes)
+(add-hook 'lsp-after-open-hook #'+corfu--load-capes)
+;; (add-hook 'eglot-mode-hook #'+corfu--load-capes)
 (add-hook 'change-major-mode-hook #'+corfu--load-capes)
 
 (use-package! corfu
@@ -113,7 +113,7 @@ placed, otherwise they come first.")
   (setq completion-styles '(orderless partial-completion)
         ;; completion-category-defaults nil
         ;; completion-category-overrides '((file (styles . (partial-completion))))
-    ))
+        ))
 
 (use-package! kind-icon
   :after corfu
