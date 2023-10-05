@@ -328,3 +328,4 @@
 
 (package! expreg)
 (package! jarchive)
+(package! pinentry)

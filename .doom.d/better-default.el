@@ -619,3 +619,14 @@ used in the POST request made to the LanguageTool server."
 (after! eww
   (add-hook! 'eww-after-render-hook #'shrface-mode)
   (add-hook! 'eww-after-render-hook (ignore-errors (eww-readable))))
+
+;; https://stackoverflow.com/questions/60812866/emacs-gpg-pinentry-el-for-authentication
+(use-package! pinentry
+  :hook doom-after-init
+  :config
+  (setq! epg-pinentry-mode 'loopback)
+  (pinentry-start)
+  (shell-command "gpg-connect-agent reloadagent /bye >/dev/null")
+  (shell-command "gpg-connect-agent updatestartuptty /bye >/dev/null")
+  ;; (shell-command "gpgconf --reload gpg-agent >/dev/null" nil nil)
+  )

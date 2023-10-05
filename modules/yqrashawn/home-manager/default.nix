@@ -63,7 +63,8 @@ in {
     # changes in each release.
     stateVersion = "20.09";
     sessionVariables = {
-      GPG_TTY = "/dev/ttys000";
+      # GPG_TTY = "/dev/ttys000";
+      # GPG_TTY = "/dev/ttys000";
       EDITOR = "emacsclient";
       VISUAL = "emacsclient";
       CLICOLOR = 1;

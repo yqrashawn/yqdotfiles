@@ -96,24 +96,31 @@
       source = ./shadow-cljs.edn;
       target = ".shadow-cljs/config.edn";
     };
+    # gpg-agent-conf = {
+    #   source = pkgs.writeTextFile {
+    #     name = "gpg-agent.conf";
+    #     text = ''
+    #       default-cache-ttl 600
+    #       max-cache-ttl 7200
+    #       allow-emacs-pinentry
+    #       allow-loopback-pinentry
+    #       enable-ssh-support
+    #       pinentry-program ${pkgs.pinentry-emacs}/bin/pinentry-emacs
+    #       # pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
+    #     '';
+    #   };
+    #   target = ".gnupg/gpg-agent.conf";
+    # };
     lein = {
       source = ./.lein;
       target = ".lein";
       recursive = true;
     };
-    # ssh = {
-    #   source = ./ssh.gpg;
-    #   target = ".ssh/config.gpg";
-    # };
     osascript = {
       source = ./osascript;
       target = "osascript";
       recursive = true;
     };
-    # authinfo = {
-    #   source = ./.authinfo.gpg;
-    #   target = ".authinfo.gpg";
-    # };
     tabnine = {
       source = ./TabNine.toml;
       target = "Library/Preferences/TabNine/TabNine.toml";

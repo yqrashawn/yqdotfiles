@@ -211,9 +211,10 @@ in {
         bat-extras.prettybat
         gnutls
         openssl
-        pinentry
-        # pinentry-emacs
-        pinentry_mac
+        # pinentry
+        pinentry-emacs
+        # pinentry-qt
+        # pinentry_mac
         feroxbuster
         ffmpeg
         pandoc
