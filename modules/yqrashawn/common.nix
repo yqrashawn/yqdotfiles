@@ -16,7 +16,7 @@ let
     python3
     black
   ];
-  masters = with pkgs.masters; [ adguardhome ];
+  masters = with pkgs.masters; [ adguardhome clojure-lsp clj-kondo zprint ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -87,7 +87,6 @@ in {
           # autoreconfHook = true;
           withCsrc = true;
         }))
-        clojure-lsp
         ispell
         neil
         jet
@@ -309,7 +308,6 @@ in {
         html-tidy
         perl
         # openjdk
-        zprint
 
         watchman
 

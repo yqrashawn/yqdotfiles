@@ -38,7 +38,7 @@
       # "luarocks"
       "zig"
       # "dum"
-      "clj-kondo"
+      # "clj-kondo"
       "editorconfig"
       "grip"
       # "fennel"
