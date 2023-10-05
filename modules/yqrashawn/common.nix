@@ -124,7 +124,6 @@ in {
         zola
         git-interactive-rebase-tool
         btop
-        htop
         hub
         gh
         # fnm
@@ -140,7 +139,6 @@ in {
         du-dust
         man
         duf # du
-        jq
         yq
         fd
         ctags

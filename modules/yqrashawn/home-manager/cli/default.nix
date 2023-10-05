@@ -9,13 +9,13 @@
     ./mcfly.nix
     ./zoxide.nix
     ./eza.nix
+    ./gpg.nix
   ];
   home.packages = [ pkgs.tree ];
   programs = {
     jq.enable = true;
     htop.enable = true;
-    gpg.enable = true;
-    go.enable = true;
+    # go.enable = true;
     nix-index.enable = true;
   };
 }

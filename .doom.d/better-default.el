@@ -622,10 +622,12 @@ used in the POST request made to the LanguageTool server."
 
 ;; https://stackoverflow.com/questions/60812866/emacs-gpg-pinentry-el-for-authentication
 (use-package! pinentry
-  :hook doom-after-init
+  :hook (doom-after-init . pinentry-start)
+  :init
+  (setq! epg-pinentry-mode 'loopback
+         epg-gpg-home-directory (expand-file-name "~/.gnupg"))
+  ;; (setq! epg-debug t)
   :config
-  (setq! epg-pinentry-mode 'loopback)
-  (pinentry-start)
   (shell-command "gpg-connect-agent reloadagent /bye >/dev/null")
   (shell-command "gpg-connect-agent updatestartuptty /bye >/dev/null")
   ;; (shell-command "gpgconf --reload gpg-agent >/dev/null" nil nil)

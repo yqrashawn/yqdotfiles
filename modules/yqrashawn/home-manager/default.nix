@@ -31,24 +31,6 @@ in {
     path =
       "${config.home.homeDirectory}/.nixpkgs/modules/yqrashawn/home-manager";
   };
-  programs.gpg = { enable = true; };
-  # services.gpg-agent = {
-  #   enable = true;
-  #   defaultCacheTtl = 1800;
-  #   maxCacheTtl = 7200;
-  #   enableSshSupport = true;
-  #   # use auth subkey's keygrip: gpg2 -K --with-keygrip
-  #   sshKeys = [ "B198FB15EC5C13012E940B37E394C5D9A8E535A6" ];
-  #   enableBashIntegration = true;
-  #   enableZshIntegration = true;
-  #   extraConfig = ''
-  #     allow-emacs-pinentry
-  #     allow-loopback-pinentry
-  #     log-file /var/log/gpg-agent.log
-  #     use-standard-socket
-  #   '';
-  # };
-
   home = let
     NODE_GLOBAL =
       "${config.home.homeDirectory}/.config/yarn/global/node_modules";
