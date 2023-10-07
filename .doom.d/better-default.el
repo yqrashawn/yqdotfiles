@@ -167,7 +167,7 @@
     ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)
     ("^\\*declutter\*" :ignore t)
     ("^\\*Error\\*" :select nil :quit t :side bottom :size 0.3)
-    ("^\\*wclock\\*" :select nil :quit t :side bottom :size 0.3)))
+    ("^\\*wclock\\*" :select t :quit t :side bottom :size 0.3)))
 
 (use-package! ix
   :commands (ix)
@@ -633,3 +633,15 @@ used in the POST request made to the LanguageTool server."
   (shell-command "gpg-connect-agent updatestartuptty /bye >/dev/null")
   ;; (shell-command "gpgconf --reload gpg-agent >/dev/null" nil nil)
   )
+
+(after! time
+  (setq! zoneinfo-style-world-list
+         '(("America/Los_Angeles" "LA")
+           ("America/New_York" "New York")
+           ("UTC" "UTC")
+           ("Europe/London" "London")
+           ("Europe/Paris" "Paris")
+           ("Asia/Calcutta" "Bangalore")
+           ("Asia/Ho_Chi_Minh" "Vietnam")
+           ("Asia/Shanghai" "Beijing")
+           ("Asia/Tokyo" "Tokyo"))))

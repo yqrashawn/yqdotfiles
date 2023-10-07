@@ -601,4 +601,8 @@
          (:map copilot-completion-map
           :i "RET" #'copilot-accept-completion
           :i "TAB" #'copilot-accept-completion-by-line
-          :i "C-l" #'copilot-accept-completion-by-word)))
+          :i "C-l" #'copilot-accept-completion-by-word))
+ (:after time
+         (:map world-clock-mode-map
+          :n "q" #'quit-window
+          :n "gr" #'revert-buffer)))
