@@ -166,7 +166,8 @@
     ("^ \\*undo-tree\\*" :slot 2 :side left :size 20 :select t :quit t)
     ("^\\*Apropos" :slot 2 :vslot -8 :size 0.35 :select t)
     ("^\\*declutter\*" :ignore t)
-    ("^\\*Error\\*" :select nil :quit t :side bottom :size 0.3)))
+    ("^\\*Error\\*" :select nil :quit t :side bottom :size 0.3)
+    ("^\\*wclock\\*" :select nil :quit t :side bottom :size 0.3)))
 
 (use-package! ix
   :commands (ix)
