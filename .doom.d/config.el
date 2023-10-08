@@ -21,9 +21,14 @@
 ;; font string. You generally only need these two:
 (setq
  doom-font (font-spec :family "PragmataPro Mono Liga" :size 20 :weight 'medium :slant 'normal)
- doom-variable-pitch-font (font-spec :family "Times Newer Roman" :size 16 :weight 'medium :slant 'normal)
+ ;; doom-variable-pitch-font (font-spec :family "Times Newer Roman")
+ doom-variable-pitch-font (font-spec :family "Lucida Grande")
+ ;; doom-variable-pitch-font (font-spec :family "Times Newer Roman" :size 20 :weight 'medium :slant 'normal)
  ;; doom-variable-pitch-font (font-spec :family "Noto Serif" :size 16 :weight 'medium)
- doom-big-font (font-spec :family "PragmataPro Mono Liga" :size 24 :weight 'medium :slant 'normal)
+ doom-serif-font (font-spec :family "PragmataPro Mono Liga")
+ ;; doom-serif-font (font-spec :family "PragmataPro Mono Liga" :size 20 :weight 'medium :slant 'normal)
+ ;; doom-unicode-font (font-spec :family "PragmataPro Mono Liga")
+ ;; doom-big-font (font-spec :family "PragmataPro Mono Liga" :size 28 :weight 'medium :slant 'normal)
  doom-font-increment 1)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
