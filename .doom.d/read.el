@@ -1,8 +1,9 @@
 ;;; read.el -*- lexical-binding: t; -*-
 (setq!
+ shr-use-xwidgets-for-media t
+ shr-discard-aria-hidden t
+ shr-width 80
  elfeed-use-curl t
- ;; necessary for https without a trust certificate
- elfeed-protocol-newsblur-maxpages 20
  elfeed-curl-extra-arguments `("--insecure"
                                "--cookie-jar"
                                ,(concat doom-cache-dir "newsblur-cookie")
@@ -14,23 +15,32 @@
   (elfeed-set-timeout 36000)
   (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
-   elfeed-protocol-newsblur-maxpages 200
+   ;; necessary for https without a trust certificate
+   elfeed-protocol-newsblur-maxpages 80
    ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
    ;; elfeed-search-filter "+unread -releases -crypto -design"
-   elfeed-search-filter "+unread +p1"
+   elfeed-search-filter "+unread +P1"
    elfeed-search-trailing-width 60)
   (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
   (setq elfeed-protocol-enabled-protocols '(newsblur))
   (defadvice elfeed (after configure-elfeed-feeds activate)
     "Make elfeed-org autotags rules works with elfeed-protocol."
     (setq elfeed-protocol-tags elfeed-feeds)
-    (setq elfeed-feeds (list
-                        (list "newsblur+https://yqrashawn@newsblur.com"
-                              :use-authinfo t
-                              :autotags elfeed-protocol-tags))))
+    (setq elfeed-protocol-feeds (list
+                                 (list "newsblur+https://yqrashawn@newsblur.com"
+                                       :use-authinfo t
+                                       :autotags elfeed-protocol-tags))))
   (elfeed-protocol-enable)
 
-  (load-file (expand-file-name "~/Dropbox/sync/elfeed.el")))
+  ;; (load-file (expand-file-name "~/Dropbox/sync/elfeed.el"))
+  ;; (setq! elfeed-show-mode-hook
+  ;;        '(doom--setq-shr-external-rendering-functions-for-elfeed-show-mode-h
+  ;;          doom--setq-shr-put-image-function-for-elfeed-show-mode-h
+  ;;          elfeed-goodies/show-mode-setup))
+  (remove-hook! 'elfeed-show-mode-hook #'+rss-elfeed-wrap-h)
+  ;; (add-hook! 'elfeed-show-mode-hook (lambda () (text-scale-set 2)))
+  (add-hook! 'elfeed-show-mode-hook #'mixed-pitch-mode)
+  (add-hook! 'elfeed-show-mode-hook #'writeroom-mode))
 
 (defun +elfeed-debug ()
   (interactive)

@@ -561,10 +561,13 @@
           :gn "RET" #'magit-diff-visit-file-other-window))
  (:after elfeed
          (:map elfeed-show-mode-map
+          :n "R" #'writeroom-mode
           :n "gy" #'elfeed-show-yank
           :n "gr" #'elfeed-show-refresh
           :n "s" 'yq-s-map
-          :n "gs" #'elfeed-show-new-live-search))
+          :n "gs" #'elfeed-show-new-live-search
+          :n "C-j" #'+rss/next
+          :n "C-k" #'+rss/previous))
  (:after pprint-to-buffer
          (:map emacs-lisp-mode-map
           :g "C-c C-p" #'pprint-to-buffer-last-sexp))
