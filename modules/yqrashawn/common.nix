@@ -16,7 +16,13 @@ let
     python3
     black
   ];
-  masters = with pkgs.masters; [ adguardhome clojure-lsp clj-kondo zprint ];
+  masters = with pkgs.masters; [
+    adguardhome
+    clojure-lsp
+    clj-kondo
+    zprint
+    neil
+  ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
