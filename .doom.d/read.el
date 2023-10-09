@@ -40,7 +40,8 @@
   (remove-hook! 'elfeed-show-mode-hook #'+rss-elfeed-wrap-h)
   ;; (add-hook! 'elfeed-show-mode-hook (lambda () (text-scale-set 2)))
   (add-hook! 'elfeed-show-mode-hook #'mixed-pitch-mode)
-  (add-hook! 'elfeed-show-mode-hook #'writeroom-mode))
+  (add-hook! 'elfeed-show-mode-hook #'writeroom-mode)
+  (setq! elfeed-show-entry-switch (lambda (buf) (switch-to-buffer buf) (+summarize-current-elfeed-show-buffer))))
 
 (defun +elfeed-debug ()
   (interactive)
