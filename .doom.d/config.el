@@ -89,3 +89,4 @@
 (load! "visual.el")
 (load! "read.el")
 (load! "mail.el")
+(load! "gpt.el")

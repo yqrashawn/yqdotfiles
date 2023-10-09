@@ -232,6 +232,7 @@
  (:map yq-s-map
   :g "s" #'+ss
   :g "S" #'+sS
+  :g "0" #'+gpt-dwim-current-buffer
   :g "P" #'doom/find-file-in-other-project
   :g "p" #'++projectile-switch-project-and-rename-workspace
   :g "u" #'magit-dispatch
@@ -608,4 +609,7 @@
  (:after time
          (:map world-clock-mode-map
           :n "q" #'quit-window
-          :n "gr" #'revert-buffer)))
+          :n "gr" #'revert-buffer))
+ (:after eww
+         (:map eww-mode-map
+          :n "S" #'+summarize-current-eww-buffer)))

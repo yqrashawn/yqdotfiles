@@ -79,7 +79,7 @@ Use HTML <ol> bullet points in your response as much as possible."
                                 ;; "Summarize following article, response with markdown."
                                 feed-title title link nicedate niceauthors txt-content)))
       (+gpt-request gpt-message (lambda (msg)
-                                  (setq kkk msg)
+                                  ;; (setq kkk msg)
                                   (when msg
                                     (with-temp-buffer
                                       (insert (concat "<p>====== Summary ======<p/><article>"
@@ -95,3 +95,60 @@ Use HTML <ol> bullet points in your response as much as possible."
                     "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
 You should separate your response into multiple paragraph if they are too long."))))
+
+;;;###autoload
+(defun +summarize-current-eww-buffer ()
+  (interactive)
+  (require 's)
+  (when (eq major-mode 'eww-mode)
+    (let* ((buf (current-buffer))
+           (title (plist-get eww-data :title))
+           (link (plist-get eww-data :url))
+           (txt-content (with-current-buffer (current-buffer) (buffer-string)))
+           (gpt-message (format "%s
+Artical metadata:
+```txt
+Title: %s
+Link: %s
+```
+
+Artical content:
+```txt
+%s
+```
+"
+
+                                ;; "Kindly provide me with a summary of the following article. The summary should cover the main points of the article and provide me with a clear understanding of the topic discussed. Please ensure that the summary is concise but comprehensive and includes all the essential information from the article. Please response in in multiline markdown format text."
+                                ;; "Provide me key takeaways, tldrs and summary of the following article.
+                                ;; Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
+                                ;; Ensure that your response is concise but comprehensive and includes all the essential information from the article."
+                                "Generate TLDR for the following article.
+Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
+Ensure that your response is concise but comprehensive and includes all the essential information from the article.
+Use HTML <ol> bullet points in your response as much as possible."
+                                ;; "Summarize following article, response with markdown."
+                                title link txt-content)))
+      (+gpt-request gpt-message (lambda (msg)
+                                  ;; (setq kkk msg)
+                                  (when msg
+                                    (with-temp-buffer
+                                      (insert (concat "<article><p>====== Summary ======<p/>"
+                                                      (s-replace-all '(("\n" . "<br/>")) msg)
+                                                      "<p>====== End Of Summary ======</p><article/><br/>"))
+                                      (let ((dom (libxml-parse-html-region (point-min) (point-max))))
+                                        (with-current-buffer buf
+                                          (goto-char (point-min))
+                                          (read-only-mode -1)
+                                          (shr-insert-document dom)
+                                          ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
+                                          (read-only-mode 1))))))
+                    "You are a large language model living in Emacs and a helpful reading assistant.
+Your response should be in HTML format.
+You should separate your response into multiple paragraph if they are too long."))))
+
+;;;###autoload
+(defun +gpt-dwim-current-buffer ()
+  (interactive)
+  (cond
+   ((eq major-mode 'eww-mode) (+summarize-current-eww-buffer))
+   ((eq major-mode 'elfeed-show-mode) (+summarize-current-elfeed-show-buffer))))

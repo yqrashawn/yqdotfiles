@@ -612,14 +612,12 @@ used in the POST request made to the LanguageTool server."
   (shrface-default-keybindings) ; setup default keybindings
   (setq shrface-href-versatile t))
 
-(use-package eww
-  :defer t
-  :config
-  (require 'shrface))
+(use-package eww :defer t)
 
 (after! eww
-  (add-hook! 'eww-after-render-hook #'shrface-mode)
-  (add-hook! 'eww-after-render-hook (ignore-errors (eww-readable))))
+  (add-hook! 'eww-after-render-hook (ignore-errors (eww-readable)))
+  (add-hook! 'eww-after-render-hook 'mixed-pitch-mode)
+  (add-hook! 'eww-after-render-hook 'writeroom-mode))
 
 ;; https://stackoverflow.com/questions/60812866/emacs-gpg-pinentry-el-for-authentication
 (use-package! pinentry
