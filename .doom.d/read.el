@@ -11,6 +11,9 @@
                                ,(concat doom-cache-dir "newsblur-cookie")))
 
 
+(add-hook! 'doom-after-init-hook
+  (lambda () (run-with-idle-timer 180 nil (lambda () (require 'elfeed)))))
+
 (after! elfeed
   (elfeed-set-timeout 36000)
   (run-with-idle-timer 300 t #'elfeed-update)
@@ -41,7 +44,11 @@
   ;; (add-hook! 'elfeed-show-mode-hook (lambda () (text-scale-set 2)))
   (add-hook! 'elfeed-show-mode-hook #'mixed-pitch-mode)
   (add-hook! 'elfeed-show-mode-hook #'writeroom-mode)
-  (setq! elfeed-show-entry-switch (lambda (buf) (switch-to-buffer buf) (+summarize-current-elfeed-show-buffer))))
+  (setq! elfeed-show-entry-switch
+         (lambda (buf)
+           (let ((b (elfeed-goodies/switch-pane buf)))
+             (+summarize-current-elfeed-show-buffer)
+             b))))
 
 (defun +elfeed-debug ()
   (interactive)
