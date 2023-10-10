@@ -23,16 +23,11 @@
    ;; rmh-elfeed-org-files `(,(concat org-directory "elfeed.org"))
    ;; elfeed-search-filter "+unread -releases -crypto -design"
    elfeed-search-filter "+unread +P1"
-   elfeed-search-trailing-width 60)
+   elfeed-search-trailing-width 10)
   (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
-  (setq elfeed-protocol-enabled-protocols '(newsblur))
-  (defadvice elfeed (after configure-elfeed-feeds activate)
-    "Make elfeed-org autotags rules works with elfeed-protocol."
-    (setq elfeed-protocol-tags elfeed-feeds)
-    (setq elfeed-protocol-feeds (list
-                                 (list "newsblur+https://yqrashawn@newsblur.com"
-                                       :use-authinfo t
-                                       :autotags elfeed-protocol-tags))))
+  (setq! elfeed-protocol-enabled-protocols '(newsblur)
+         elfeed-protocol-feeds `(("newsblur+https://yqrashawn@newsblur.com"
+                                  :use-authinfo t)))
   (elfeed-protocol-enable)
 
   ;; (load-file (expand-file-name "~/Dropbox/sync/elfeed.el"))
@@ -48,7 +43,12 @@
          (lambda (buf)
            (let ((b (elfeed-goodies/switch-pane buf)))
              (+summarize-current-elfeed-show-buffer)
-             b))))
+             b)))
+
+  (defun +elfeed-full-update ()
+    (interactive)
+    (let ((elfeed-search-trailing-width 100))
+      (elfeed-update))))
 
 (defun +elfeed-debug ()
   (interactive)
@@ -66,6 +66,9 @@
   (let ((browse-url-browser-function 'eww-browse-url)
         (browse-url-generic-program "open"))
     (call-interactively orig-fn)))
+
+(after! evil
+  (pushnew! evil-emacs-state-modes 'elfeed-dashboard-mode))
 
 (use-package! elfeed-dashboard
   :commands (elfeed-dashboard)

@@ -562,6 +562,7 @@
           :gn "RET" #'magit-diff-visit-file-other-window))
  (:after elfeed
          (:map elfeed-show-mode-map
+          :n "o" #'eww-follow-link
           :n "R" #'writeroom-mode
           :n "gy" #'elfeed-show-yank
           :n "gr" #'elfeed-show-refresh

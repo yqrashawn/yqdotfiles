@@ -81,9 +81,9 @@ Use HTML <ol> bullet points in your response as much as possible."
                                   ;; (setq kkk msg)
                                   (when msg
                                     (with-temp-buffer
-                                      (insert (concat "<p>====== Summary ======<p/><article>"
+                                      (insert (concat "<article><title>Summary</title>"
                                                       (s-replace-all '(("\n" . "<br/>")) msg)
-                                                      "<article/><p>====== End Of Summary ======</p><br/>"))
+                                                      "<p>------</p><article/>"))
                                       (let ((dom (libxml-parse-html-region (point-min) (point-max))))
                                         (with-current-buffer buf
                                           (goto-char (point-min))
@@ -131,9 +131,9 @@ Use HTML <ol> bullet points in your response as much as possible."
                                   ;; (setq kkk msg)
                                   (when msg
                                     (with-temp-buffer
-                                      (insert (concat "<article><p>====== Summary ======<p/>"
+                                      (insert (concat "<article><title>Summary</title>"
                                                       (s-replace-all '(("\n" . "<br/>")) msg)
-                                                      "<p>====== End Of Summary ======</p><article/><br/>"))
+                                                      "<p>------</p><article/>"))
                                       (let ((dom (libxml-parse-html-region (point-min) (point-max))))
                                         (with-current-buffer buf
                                           (goto-char (point-min))
