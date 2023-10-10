@@ -1,5 +1,10 @@
 ;;; gpt.el -*- lexical-binding: t; -*-
 
+;; (use-package! llm
+;;   :defer t
+;;   :init
+;;   (setq! llm-warn-on-nonfree nil))
+
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
 (defun +gpt-request (message cb &optional system-message)
@@ -85,12 +90,13 @@ Use HTML <ol> bullet points in your response as much as possible."
                                                       (s-replace-all '(("\n" . "<br/>")) msg)
                                                       "<p>------</p><article/>"))
                                       (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-                                        (with-current-buffer buf
-                                          (goto-char (point-min))
-                                          (read-only-mode -1)
-                                          (shr-insert-document dom)
-                                          ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
-                                          (read-only-mode 1))))))
+                                        (when (buffer-live-p buf)
+                                          (with-current-buffer buf
+                                            (goto-char (point-min))
+                                            (read-only-mode -1)
+                                            (shr-insert-document dom)
+                                            ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
+                                            (read-only-mode 1)))))))
                     "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
 You should separate your response into multiple paragraph if they are too long."))))
@@ -135,12 +141,13 @@ Use HTML <ol> bullet points in your response as much as possible."
                                                       (s-replace-all '(("\n" . "<br/>")) msg)
                                                       "<p>------</p><article/>"))
                                       (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-                                        (with-current-buffer buf
-                                          (goto-char (point-min))
-                                          (read-only-mode -1)
-                                          (shr-insert-document dom)
-                                          ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
-                                          (read-only-mode 1))))))
+                                        (when (buffer-live-p buf)
+                                          (with-current-buffer buf
+                                            (goto-char (point-min))
+                                            (read-only-mode -1)
+                                            (shr-insert-document dom)
+                                            ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
+                                            (read-only-mode 1)))))))
                     "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
 You should separate your response into multiple paragraph if they are too long."))))
@@ -151,3 +158,13 @@ You should separate your response into multiple paragraph if they are too long."
   (cond
    ((eq major-mode 'eww-mode) (+summarize-current-eww-buffer))
    ((eq major-mode 'elfeed-show-mode) (+summarize-current-elfeed-show-buffer))))
+
+
+
+;; (defun xxx ()
+;;   (require 'llm-openai)
+;;   (require 'llm)
+;;   (let ((open-ai (make-llm-openai :key +open-ai-api-key :chat-model "gpt-3.5-turbo-16k" :embedding-model "text-embedding-ada-002"))))
+;;   (with-current-buffer (get-buffer "*elfeed-entry*")
+;;     (let (((make-llm-chat-prompt :context (buffer-substring))))
+;;       (llm-chat-async open-ai))))

@@ -329,3 +329,9 @@
 (package! expreg)
 (package! jarchive)
 (package! pinentry)
+(package! llm)
+
+
+;; Local Variables:
+;; eval: (apheleia-mode -1)
+;; End:
