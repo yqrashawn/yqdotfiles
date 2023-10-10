@@ -2,7 +2,6 @@
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
-;;;###autoload
 (defun +gpt-request (message cb &optional system-message)
   (require 'request)
   (require 'seq)
