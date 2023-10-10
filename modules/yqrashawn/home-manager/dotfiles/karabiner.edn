@@ -335,12 +335,12 @@
            ;; [:open_bracket [:!Tx :!T9 :open_bracket]]
            ;; [:close_bracket [:!Tx :!T9 :close_bracket]]
            :emacs-s-mode-terminal
-           [:k [:!Tx :!T9 {:key :k :repeat false}]]
-           [:j [:!Tx :!T9 {:key :j :repeat false}]]
-           [:h [:!Tx :!T9 {:key :h :repeat false}]]
-           [:l [:!Tx :!T9 {:key :l :repeat false}]]
-           [:n [:!Tx :!T9 {:key :n :repeat false}]]
-           [:p [:!Tx :!T9 {:key :p :repeat false}]]]}
+           [:k [:!Tx :9 :!S2 {:key :k :repeat false}]]
+           [:j [:!Tx :9 :!S2 {:key :j :repeat false}]]
+           [:h [:!Tx :9 :!S2 {:key :h :repeat false}]]
+           [:l [:!Tx :9 :!S2 {:key :l :repeat false}]]
+           [:n [:!Tx :9 :!S2 {:key :n :repeat false}]]
+           [:p [:!Tx :9 :!S2 {:key :p :repeat false}]]]}
   {:des   "Emacs m/v select company candidates"
    :rules [:emacs-m-mode
            [:a [:!Tx :!S2 :6 :1]]
