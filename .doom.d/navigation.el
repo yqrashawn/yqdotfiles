@@ -1,21 +1,27 @@
 ;;; navigation.el -*- lexical-binding: t; -*-
 
 (use-package! iflipb
-  :disabled t
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
+  ;; restrict buffer list by workspace
+  (setq! iflipb-buffer-list-function #'doom-buffer-list)
+
   (defun +iflipb-always-ignore-buffers (name)
     (let ((b (get-buffer name)))
       (cond
-       ((s-starts-with? " " name) t)
-       ((memq (buffer-local-value 'major-mode b) '(dired-mode)) t))))
+       ((s-starts-with? " " name) nil)
+       ((string-match "^\\*\\(Async-native-compile\\|helpful\\|Native-compile\\)" name) nil)
+       ((string-match "^\\*\\(doom\\|Messages\\|envrc\\|zoxide\\)\\*$" name) nil)
+       (t t))))
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
+
   (defun +iflipb-ignore-buffers (name)
-    (unless (eq (buffer-name (current-buffer)) name)
-      (get-buffer-window name t)))
-  (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers)
-  :config
-  (setq! iflipb-buffer-list-function #'doom-buffer-list))
+    (let ((b (get-buffer name)))
+      (cond
+       ((string-match "^\\(magit-process:\\|Messages\\)" name) nil)
+       ((memq (buffer-local-value 'major-mode b) '(dired-mode)) nil)
+       (t t))))
+  (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers))
 
 (after! vertico
   (setq! vertico-count 10
