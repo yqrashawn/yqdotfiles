@@ -120,7 +120,6 @@
       redis
 
       # langs
-      yarn
       # lua
       # luajit
       stylua
