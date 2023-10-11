@@ -15,6 +15,7 @@
   (lambda () (run-with-idle-timer 180 nil (lambda () (require 'elfeed)))))
 
 (after! elfeed
+  (require 'eww)
   (elfeed-set-timeout 36000)
   (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
@@ -129,3 +130,9 @@ The returned function should be added to `elfeed-new-entry-hook'."
             (when callback
               (funcall callback entry))
             entry))))))
+
+(when (modulep! :app rss)
+  ;; (setq-hook! 'eww-mode-hook
+  ;;   shr-put-image-function #'+rss-put-sliced-image-fn ; produce empty lines
+  ;;   shr-external-rendering-functions '((img . +rss-render-image-tag-without-underline-fn)))
+  )
