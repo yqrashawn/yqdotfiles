@@ -56,6 +56,7 @@ in {
         discord
         # todoist-electron
         todoist
+        awscli2
         # zoom-us
         zellij
         kitty-themes
