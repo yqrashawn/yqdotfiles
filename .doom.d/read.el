@@ -40,11 +40,7 @@
   ;; (add-hook! 'elfeed-show-mode-hook (lambda () (text-scale-set 2)))
   (add-hook! 'elfeed-show-mode-hook #'mixed-pitch-mode)
   (add-hook! 'elfeed-show-mode-hook #'writeroom-mode)
-  (setq! elfeed-show-entry-switch
-         (lambda (buf)
-           (let ((b (elfeed-goodies/switch-pane buf)))
-             (+summarize-current-elfeed-show-buffer)
-             b)))
+  (add-hook! 'elfeed-show-mode-hook #'hl-line-mode)
 
   (defun +elfeed-full-update ()
     (interactive)

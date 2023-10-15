@@ -17,7 +17,8 @@
     :headers `(("Content-Type" . "application/json")
                ("Authorization" . ,(concat "Bearer " +open-ai-api-key)))
     :data (json-encode
-           `(("model" . "gpt-3.5-turbo-16k")
+           `(;; ("model" . "gpt-3.5-turbo-16k")
+             ("model" . "gpt-3.5-turbo")
              ("temperature" . 1.0)
              ("messages" . [(("role" . "system")
                              ("content" . ,(or system-message +gpt-system-message)))
