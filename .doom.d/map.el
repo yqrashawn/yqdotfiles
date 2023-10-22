@@ -249,7 +249,8 @@
   :g "P" #'doom/find-file-in-other-project
   :g "p" #'++projectile-switch-project-and-rename-workspace
   :g "u" #'magit-dispatch
-  :g "j" #'recentf-open-files
+  ;; :g "j" #'recentf-open-files
+  :g "j" #'projectile-recentf
   :g "h" #'save-buffer
   :g "d" #'sp-kill-sexp
   :g "," #'sp-copy-sexp

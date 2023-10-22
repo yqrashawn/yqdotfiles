@@ -41,6 +41,7 @@
   (add-hook! 'elfeed-show-mode-hook #'mixed-pitch-mode)
   (add-hook! 'elfeed-show-mode-hook #'writeroom-mode)
   (add-hook! 'elfeed-show-mode-hook #'hl-line-mode)
+  (add-hook! 'elfeed-update-hooks (lambda (&optional _url) (message "elfeed: update finished")))
 
   (defun +elfeed-full-update ()
     (interactive)

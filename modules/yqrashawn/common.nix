@@ -294,7 +294,6 @@ in {
         gomodifytags
         gotests
         solc
-        golangci-lint
         plantuml
         rustup
         # rust-analyzer
