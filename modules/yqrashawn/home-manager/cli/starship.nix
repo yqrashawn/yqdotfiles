@@ -118,6 +118,7 @@
         deleted = "deleted✘";
       };
       time.disabled = false;
+      battery.disabled = true;
       custom = {
         babashka = {
           files = [ "bb.edn" ];
