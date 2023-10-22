@@ -242,3 +242,6 @@ See `dwim-shell-command-execute-script' for all other params."
     (funcall orig-fn)))
 
 (setq! +workspaces-on-switch-project-behavior t)
+
+(after! fd-dired
+  (setq! fd-dired-ls-option '("| xargs -0 ls -ld --quoting-style=literal | uniq" . "-ld")))
