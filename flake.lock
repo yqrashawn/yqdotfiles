@@ -3,11 +3,11 @@
     "asdf-bun": {
       "flake": false,
       "locked": {
-        "lastModified": 1694303972,
-        "narHash": "sha256-9IWca4n9N0aNIAgpk08VYaRWTUmbYAUCkvc0ENfbg2I=",
+        "lastModified": 1696933224,
+        "narHash": "sha256-yODrICYzvlIXuLXMbfiYCDhOXeIulTcEWLkIBGyoQVc=",
         "owner": "cometkim",
         "repo": "asdf-bun",
-        "rev": "51d18b39807160af7607ccf2af9aa823bc0fb821",
+        "rev": "a79462c94ade867d364e03b2505df2bddd2ac897",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
     "asdf-deno": {
       "flake": false,
       "locked": {
-        "lastModified": 1646232004,
-        "narHash": "sha256-nNDTcB3t9jzYYL1I7lr3z02Zrgu12o2QAsvU/g5V2Bo=",
+        "lastModified": 1693925997,
+        "narHash": "sha256-s32lUSI9gFfYcJlJ9Py8iP/IVH1p8nzH/3xyKYrvo7M=",
         "owner": "asdf-community",
         "repo": "asdf-deno",
-        "rev": "87442feea2bedfd4eb8d93d6b76061c5f01de3c6",
+        "rev": "0e14a50700e477195af464f38bc4181dea8a9e5d",
         "type": "github"
       },
       "original": {
@@ -227,11 +227,11 @@
     "asdf-nodejs": {
       "flake": false,
       "locked": {
-        "lastModified": 1655344076,
-        "narHash": "sha256-b9dwvMkItdviZYRDojWL8aUC/IePLaUAgY2Ioz6AKRA=",
+        "lastModified": 1696426510,
+        "narHash": "sha256-v9WwCMEh83392tFaP4v/CcUdXUCH7k25ThkR5IZJVu8=",
         "owner": "asdf-vm",
         "repo": "asdf-nodejs",
-        "rev": "05f99c37d0de29e8ca2b9e90bb36910f56be34d0",
+        "rev": "9c4e0f27d760a33fb56c653c632b96d51ac3f8cf",
         "type": "github"
       },
       "original": {
@@ -259,11 +259,11 @@
     "asdf-pnpm": {
       "flake": false,
       "locked": {
-        "lastModified": 1681742469,
-        "narHash": "sha256-Jxc1Q3UZIoVLmHfWuVfR495wi+Skuzw5PvF84bkOO0E=",
+        "lastModified": 1694817573,
+        "narHash": "sha256-YiqH1ByfCENhxRutK1d564YJTlrlWd1vzrl/5nxivvg=",
         "owner": "jonathanmorley",
         "repo": "asdf-pnpm",
-        "rev": "ea033dbf5e1505513215561de1fcb68b6070b18a",
+        "rev": "305baffc83c93444ebf9c86322a9ed8d57b58594",
         "type": "github"
       },
       "original": {
@@ -307,11 +307,11 @@
     "asdf-ruby": {
       "flake": false,
       "locked": {
-        "lastModified": 1656593354,
-        "narHash": "sha256-RP+C4y2iv3Hg38Z7EOSDSoniJbNa/uIaxL3VZmvOzWQ=",
+        "lastModified": 1697546919,
+        "narHash": "sha256-K7IoDj3KrfIcBCuzeLdK3NIRqf3pnrGy3OJ156aJEUc=",
         "owner": "asdf-vm",
         "repo": "asdf-ruby",
-        "rev": "424792aeeec98d3e335b187c5641e5eeba3fd6d5",
+        "rev": "7102ce8b7693459de59ee239829034784df835da",
         "type": "github"
       },
       "original": {
