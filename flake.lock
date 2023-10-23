@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "asdf-babashka": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1686211818,
+        "narHash": "sha256-P2sPha75ui18TWdFVQne9USZpcrkL+9quOmAlQCexBA=",
+        "owner": "pitch-io",
+        "repo": "asdf-babashka",
+        "rev": "b6bda6f5a6efaea195dcdbcd43051d64b7c1cfb7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pitch-io",
+        "repo": "asdf-babashka",
+        "type": "github"
+      }
+    },
     "asdf-bun": {
       "flake": false,
       "locked": {
@@ -698,6 +714,7 @@
     },
     "root": {
       "inputs": {
+        "asdf-babashka": "asdf-babashka",
         "asdf-bun": "asdf-bun",
         "asdf-chezscheme": "asdf-chezscheme",
         "asdf-clojure": "asdf-clojure",

@@ -83,6 +83,10 @@
       url = "github:halcyon/asdf-java";
       flake = false;
     };
+    asdf-babashka = {
+      url = "github:pitch-io/asdf-babashka";
+      flake = false;
+    };
     asdf-clojure = {
       url = "github:halcyon/asdf-clojure";
       flake = false;

@@ -23,7 +23,6 @@
   # environment setup
   environment = {
     systemPackages = with pkgs; [
-      babashka
       obb
 
       # tools

@@ -76,6 +76,11 @@
       target = "./.asdf/plugins/java";
       recursive = true;
     };
+    asdf-babashka = {
+      source = inputs.asdf-babashka;
+      target = "./.asdf/plugins/babashka";
+      recursive = true;
+    };
     asdf-clojure = {
       source = inputs.asdf-clojure;
       target = "./.asdf/plugins/clojure";
