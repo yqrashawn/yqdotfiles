@@ -1132,3 +1132,16 @@ result instead of `message'."
   t)
 
 ;; (setq-local +lookup-definition-functions '(+lookup-status-mobile-re-frame-event-handler-defination))
+
+;;;###autoload
+(defun +stm-reload ()
+  (interactive)
+  (require 'seq)
+  (require 'cider)
+  (let ((buf (seq-find
+              (lambda (b) (eq (buffer-local-value 'major-mode b) 'clojurescript-mode))
+              (projectile-project-buffers (expand-file-name "~/workspace/office/status-mobile")))))
+    (when buf
+      (with-current-buffer buf
+        (when (and (cider-connected-p) (cider-current-repl 'cljs))
+          (cider-interactive-eval "(status-im2.setup.hot-reload/reload)" nil nil (cider--nrepl-pr-request-map)))))))
