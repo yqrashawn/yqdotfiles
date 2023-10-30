@@ -255,7 +255,16 @@ creates a new one. Don't unnecessarily bother the user."
     :around #'cider-test-run-test
     (if (eq major-mode 'clojurescript-mode)
         (call-interactively '+cider-test-execute-cljs)
-      (call-interactively orig-fn))))
+      (call-interactively orig-fn)))
+
+  (defadvice! +cider--display-interactive-eval-result (orig-fn value value-type &optional point overlay-face)
+    :around #'cider--display-interactive-eval-result
+    (let ((point (cond
+                  ((numberp point) point)
+                  ((numberp value-type) value-type)
+                  (t nil)))
+          (value-type (if (symbolp value-type) value-type 'value)))
+      (funcall orig-fn value value-type point overlay-face))))
 
 ;; use ns rather than file name for clj buffer name
 (use-package! clj-ns-name
