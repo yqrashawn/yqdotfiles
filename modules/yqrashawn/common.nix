@@ -51,7 +51,7 @@ in {
       [
         qbittorrent
         tailscale
-        cloudflared
+        # cloudflared
         slack
         discord
         # todoist-electron
@@ -95,7 +95,6 @@ in {
           withCsrc = true;
         }))
         ispell
-        neil
         jet
         joker
         leiningen
@@ -127,7 +126,6 @@ in {
         # ripgrep-all
         ugrep
         woff2
-        cmus
         zola
         git-interactive-rebase-tool
         btop
