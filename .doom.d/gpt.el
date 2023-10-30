@@ -7,7 +7,7 @@
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
-(defun +gpt-request (message cb &optional system-message)
+(defun +gpt-request (message cb &optional system-message use-16k-model)
   (require 'request)
   (require 'seq)
   (request "https://api.openai.com/v1/chat/completions"
@@ -18,7 +18,10 @@
                ("Authorization" . ,(concat "Bearer " +open-ai-api-key)))
     :data (json-encode
            `(;; ("model" . "gpt-3.5-turbo-16k")
-             ("model" . "gpt-3.5-turbo")
+             ;; ("model" . "gpt-3.5-turbo")
+             ,(if (eq use-16k-model 1)
+                  '("model" . "gpt-3.5-turbo-16k")
+                '("model" . "gpt-3.5-turbo"))
              ("temperature" . 1.0)
              ("messages" . [(("role" . "system")
                              ("content" . ,(or system-message +gpt-system-message)))
@@ -41,11 +44,12 @@
                                                             (assoc-default 'message)))))))
 
 ;;;###autoload
-(defun +summarize-current-elfeed-show-buffer ()
-  (interactive)
+(defun +summarize-current-elfeed-show-buffer (arg)
+  (interactive "P")
   (require 's)
   (when (eq major-mode 'elfeed-show-mode)
     (let* ((buf (current-buffer))
+           (use-16k-model (eq arg 1))
            (title (elfeed-entry-title elfeed-show-entry))
            (link (elfeed-entry-link elfeed-show-entry))
            (date (seconds-to-time (elfeed-entry-date elfeed-show-entry)))
@@ -100,14 +104,16 @@ Use HTML <ol> bullet points in your response as much as possible."
                                             (read-only-mode 1)))))))
                     "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
-You should separate your response into multiple paragraph if they are too long."))))
+You should separate your response into multiple paragraph if they are too long."
+                    use-16k-model))))
 
 ;;;###autoload
-(defun +summarize-current-eww-buffer ()
+(defun +summarize-current-eww-buffer (arg)
   (interactive)
   (require 's)
   (when (eq major-mode 'eww-mode)
     (let* ((buf (current-buffer))
+           (use-16k-model (eq arg 1))
            (title (plist-get eww-data :title))
            (link (plist-get eww-data :url))
            (txt-content (with-current-buffer (current-buffer) (buffer-string)))
@@ -151,14 +157,15 @@ Use HTML <ol> bullet points in your response as much as possible."
                                             (read-only-mode 1)))))))
                     "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
-You should separate your response into multiple paragraph if they are too long."))))
+You should separate your response into multiple paragraph if they are too long."
+                    use-16k-model))))
 
 ;;;###autoload
-(defun +gpt-dwim-current-buffer ()
-  (interactive)
+(defun +gpt-dwim-current-buffer (arg)
+  (interactive "P")
   (cond
-   ((eq major-mode 'eww-mode) (+summarize-current-eww-buffer))
-   ((eq major-mode 'elfeed-show-mode) (+summarize-current-elfeed-show-buffer))))
+   ((eq major-mode 'eww-mode) (call-interactively '+summarize-current-eww-buffer arg))
+   ((eq major-mode 'elfeed-show-mode) (call-interactively '+summarize-current-elfeed-show-buffer arg))))
 
 
 
