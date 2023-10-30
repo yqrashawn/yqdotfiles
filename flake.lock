@@ -435,11 +435,11 @@
     "clojure-deps-edn": {
       "flake": false,
       "locked": {
-        "lastModified": 1697580767,
-        "narHash": "sha256-+xykg7b1ZeDcXUeVf7/VQy5M3bBv+kUImgRf3b+Ab40=",
+        "lastModified": 1698406995,
+        "narHash": "sha256-0YQRfO7M1sDMqNe31qxzxMzS7UrVOhQukqLpKYVVDT4=",
         "owner": "practicalli",
         "repo": "clojure-deps-edn",
-        "rev": "ca64d8b33fcc8a34919528144c37a677bc768301",
+        "rev": "97bcdcebd0a12c35fde9e1949799fa2fb0ee5309",
         "type": "github"
       },
       "original": {
