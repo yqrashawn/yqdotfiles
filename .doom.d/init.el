@@ -214,7 +214,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        taskrunner          ; taskrunner for all your projects
        ;; terraform           ; infrastructure as code
        tmux                ; an API for interacting with tmux
-       tree-sitter
+       ;; tree-sitter
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
