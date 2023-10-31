@@ -17,9 +17,7 @@
     :headers `(("Content-Type" . "application/json")
                ("Authorization" . ,(concat "Bearer " +open-ai-api-key)))
     :data (json-encode
-           `(;; ("model" . "gpt-3.5-turbo-16k")
-             ;; ("model" . "gpt-3.5-turbo")
-             ,(if (eq use-16k-model 1)
+           `(,(if (eq use-16k-model 1)
                   '("model" . "gpt-3.5-turbo-16k")
                 '("model" . "gpt-3.5-turbo"))
              ("temperature" . 1.0)
@@ -107,9 +105,11 @@ Your response should be in HTML format.
 You should separate your response into multiple paragraph if they are too long."
                     use-16k-model))))
 
+;; TODO: split into multiple conversation if token exceeds limit
+
 ;;;###autoload
 (defun +summarize-current-eww-buffer (arg)
-  (interactive)
+  (interactive "P")
   (require 's)
   (when (eq major-mode 'eww-mode)
     (let* ((buf (current-buffer))
