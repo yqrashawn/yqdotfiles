@@ -190,13 +190,13 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
           (magit-insert-heading)))
       (magit-wash-sequence #'magit-diff-wash-hunk))))
 
-(setq +forge-current-issue-store (expand-file-name "~/Dropbox/sync/doom/store/forge-current-issue.el"))
+(setq +forge-current-topic-store (expand-file-name "~/Dropbox/sync/doom/store/forge-current-topic.el"))
 
-(defun +forge-current-issue-get ()
-  (doom-store-get (project-root (project-current t)) +forge-current-issue-store))
+(defun +forge-current-topic-get ()
+  (doom-store-get (project-root (project-current t)) +forge-current-topic-store))
 
-(defun +forge-current-issue-set (issue-id)
-  (doom-store-put (project-root (project-current t)) issue-id nil +forge-current-issue-store))
+(defun +forge-current-topic-set (topic-id)
+  (doom-store-put (project-root (project-current t)) topic-id nil +forge-current-topic-store))
 
 (after! magit
   (require 'forge))
@@ -204,45 +204,52 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
 (after! forge
   (magit-add-section-hook
    'magit-status-sections-hook
-   #'+forge-insert-current-issue #'forge-insert-pullreqs)
+   #'+forge-insert-current-topic #'forge-insert-pullreqs)
 
-  (defvar-keymap +forge-current-issue-section-map
+  (defvar-keymap +forge-current-topic-section-map
     :doc "Keymap for `stashes' section."
-    "<remap> <magit-visit-thing>" #'forge-visit-issue)
+    "<remap> <magit-visit-thing>" #'forge-visit-topic)
 
-  (defun +forge-insert-current-issue ()
-    (magit-insert-section (current-issue)
-      (if-let ((issue-id (+forge-current-issue-get)))
-          (progn
-            (magit-insert-heading "Current Issue")
-            (forge-insert-topic (forge-get-issue issue-id) nil 10 "#"))
-        (magit-insert-heading "Current Issue: nil"))))
+  (defun +forge-insert-current-topic ()
+    (magit-insert-section (current-topic)
+      (when-let ((topic-id (+forge-current-topic-get)))
+        (when (forge-get-topic topic-id)
+          (magit-insert-heading "Current Topic")
+          (forge-insert-topic (forge-get-topic topic-id) nil 10 "#"))
+        ;; (magit-insert-heading "Current Topic: nil")
+        )))
 
-  (defun +forge-current-issue-refresh-buffer ()
-    (+forge-insert-current-issue))
+  (defun +forge-current-topic-refresh-buffer ()
+    (+forge-insert-current-topic))
 
   (defun +forge-set-current-issue (issue)
     (interactive (list (forge-read-issue "View issue" t)))
     (with-current-buffer (current-buffer)
-      (+forge-current-issue-set issue)
+      (+forge-current-topic-set issue)
       (magit-refresh)))
 
-  (defun +forge-clear-current-issue ()
-    (interactive)
-    (doom-store-rem (project-root (project-current t)) +forge-current-issue-store))
+  (defun +forge-set-current-pr (pr)
+    (interactive (list (forge-read-pullreq "View PR" t)))
+    (with-current-buffer (current-buffer)
+      (+forge-current-topic-set pr)
+      (magit-refresh)))
 
-  (defun +forge-log-current-issue (&optional show-issue-buffer)
+  (defun +forge-clear-current-topic ()
+    (interactive)
+    (doom-store-rem (project-root (project-current t)) +forge-current-topic-store))
+
+  (defun +forge-log-current-topic (&optional show-topic-buffer)
     (interactive "P")
-    (if-let ((issue-id (+forge-current-issue-get)))
+    (if-let ((topic-id (+forge-current-topic-get)))
         (progn
-          (forge-visit-issue (forge-get-issue issue-id))
-          (let ((issue-buf (current-buffer)))
-            (unless show-issue-buffer (bury-buffer))
-            (with-current-buffer issue-buf
+          (forge-visit-topic (forge-get-topic topic-id))
+          (let ((topic-buf (current-buffer)))
+            (unless show-topic-buffer (bury-buffer))
+            (with-current-buffer topic-buf
               (forge-create-post)
-              (unless show-issue-buffer
+              (unless show-topic-buffer
                 (let ((post-buf (current-buffer)))
                   (with-current-buffer post-buf
                     (delete-window))
                   (select-window (+popup-buffer post-buf '((select . t)))))))))
-      (message "No current issue for this project"))))
+      (message "No current topic for this project"))))
