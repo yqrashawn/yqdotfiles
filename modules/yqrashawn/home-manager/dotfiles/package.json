@@ -8,6 +8,9 @@
     "prettier-plugin-solidity": ">=1.0.0-beta19",
     "shadow-cljs": ">=0",
     "tree-sitter-cli": ">=0",
-    "nbb": ">=0"
+    "nbb": ">=0",
+    "graphql-language-service-cli": ">=0",
+    "graphql": ">=0",
+    "create-next-app": ">=0"
   }
 }
