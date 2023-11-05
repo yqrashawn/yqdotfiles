@@ -10,6 +10,7 @@
     ./zoxide.nix
     ./eza.nix
     ./gpg.nix
+    ./tealdeer.nix
   ];
   home.packages = [ pkgs.tree ];
   programs = {
