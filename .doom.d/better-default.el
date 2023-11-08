@@ -597,7 +597,8 @@ used in the POST request made to the LanguageTool server."
 (use-package! gptel
   :defer t
   :init
-  (setq! gptel-api-key +open-ai-api-key)
+  (setq! gptel-api-key +open-ai-api-key
+         gptel-model "gpt-3.5-turbo-1106")
   :config
   (setq gptel-directives '((default . "You are a large language model living in Emacs and a helpful coding assistant. Respond concisely.")
                            (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")

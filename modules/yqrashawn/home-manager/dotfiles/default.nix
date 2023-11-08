@@ -257,6 +257,11 @@
       target = "./.asdf/plugins/babashka";
       recursive = true;
     };
+    asdf-flyctl = {
+      source = inputs.asdf-flyctl;
+      target = "./.asdf/plugins/flyctl";
+      recursive = true;
+    };
     asdf-lua = {
       source = inputs.asdf-lua;
       target = "./.asdf/plugins/lua";

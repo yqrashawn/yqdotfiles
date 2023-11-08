@@ -18,8 +18,8 @@
                ("Authorization" . ,(concat "Bearer " +open-ai-api-key)))
     :data (json-encode
            `(,(if (eq use-16k-model 1)
-                  '("model" . "gpt-3.5-turbo-16k")
-                '("model" . "gpt-3.5-turbo"))
+                  '("model" . "gpt-4-1106-preview")
+                '("model" . "gpt-3.5-turbo-1106"))
              ("temperature" . 1.0)
              ("messages" . [(("role" . "system")
                              ("content" . ,(or system-message +gpt-system-message)))

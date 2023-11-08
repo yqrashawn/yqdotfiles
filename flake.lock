@@ -112,6 +112,22 @@
         "type": "github"
       }
     },
+    "asdf-flyctl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1677268276,
+        "narHash": "sha256-zMTj9n2fW6Ts19ZSK155TJTr4SI9nVxRpxXYOFXoRes=",
+        "owner": "chessmango",
+        "repo": "asdf-flyctl",
+        "rev": "d164efb7588eb0b6550cec7be43f641c253e28f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "chessmango",
+        "repo": "asdf-flyctl",
+        "type": "github"
+      }
+    },
     "asdf-golang": {
       "flake": false,
       "locked": {
@@ -813,6 +829,7 @@
         "asdf-crystal": "asdf-crystal",
         "asdf-deno": "asdf-deno",
         "asdf-elixir": "asdf-elixir",
+        "asdf-flyctl": "asdf-flyctl",
         "asdf-golang": "asdf-golang",
         "asdf-hashicorp": "asdf-hashicorp",
         "asdf-haskell": "asdf-haskell",

@@ -208,6 +208,10 @@
       url = "github:pitch-io/asdf-babashka";
       flake = false;
     };
+    asdf-flyctl = {
+      url = "github:chessmango/asdf-flyctl";
+      flake = false;
+    };
   };
 
   outputs =
