@@ -20,7 +20,7 @@
            `(,(if (eq use-16k-model 1)
                   '("model" . "gpt-4-1106-preview")
                 '("model" . "gpt-3.5-turbo-1106"))
-             ("temperature" . 1.0)
+             ("temperature" . 0.8)
              ("messages" . [(("role" . "system")
                              ("content" . ,(or system-message +gpt-system-message)))
                             (("role" . "user")
