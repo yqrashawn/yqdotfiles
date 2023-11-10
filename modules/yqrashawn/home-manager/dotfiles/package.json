@@ -11,6 +11,8 @@
     "nbb": ">=0",
     "graphql-language-service-cli": ">=0",
     "graphql": ">=0",
-    "create-next-app": ">=0"
+    "create-next-app": ">=0",
+    "create-turbo": ">=0",
+    "vercel": ">=0"
   }
 }
