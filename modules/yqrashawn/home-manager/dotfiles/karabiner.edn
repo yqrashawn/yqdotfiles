@@ -424,8 +424,10 @@
            ;; [:k [:opena "WezTerm.app"]]
 
            [:quote [:togg "ClickUp"]]
-           [:t [:togg "Todoist"] :BusyCal]
-           [:t [:togg "BusyCal"] :!BusyCal]
+           ;; [:t [:togg "Todoist"] :BusyCal]
+           ;; [:t [:togg "BusyCal"] :!BusyCal]
+           [:t [:togg "Todoist"] :!Todoist]
+           [:t [:togg "BusyCal"] :Todoist]
            ;; [:t [:togg "BusyCal"]]
            ;; [:t [:togg "BusyCal"] :Todoist]
            ;; [:t [:togg "Todoist"] :!Todoist]
