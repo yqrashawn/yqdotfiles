@@ -125,10 +125,10 @@
       source = ./TabNine.toml;
       target = "Library/Preferences/TabNine/TabNine.toml";
     };
-    gitignoreglobal = {
-      source = ./gitignore_global;
-      target = ".gitignore_global";
-    };
+    # gitignoreglobal = {
+    #   source = ./gitignore_global;
+    #   target = ".gitignore_global";
+    # };
     husky = {
       source = ./.huskyrc;
       target = ".huskyrc";

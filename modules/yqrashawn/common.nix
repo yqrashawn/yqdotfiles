@@ -8,7 +8,6 @@ let
   stables = with pkgs.stable; [
     difftastic
     notmuch
-    yt-dlp
     streamlink
     # mpv
     mpv-unwrapped
@@ -49,6 +48,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        yt-dlp
         qbittorrent
         tailscale
         # cloudflared
