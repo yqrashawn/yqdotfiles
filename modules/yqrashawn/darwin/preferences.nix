@@ -240,6 +240,9 @@ in {
         rm -rf ~/.spacehammer || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.spacehammer ~/.spacehammer
 
+        rm -rf ~/.gitignore_global || true
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/gitignore_global ~/.gitignore_global
+
         rm ~/.ssh/config || true
         ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg || true
 
