@@ -40,3 +40,4 @@ Thumbs.db
 flycheck_*
 *.swp
 .clj-kondo/cache
+/.ai-chats/
