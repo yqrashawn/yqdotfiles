@@ -52,8 +52,8 @@ in {
         qbittorrent
         tailscale
         # cloudflared
-        slack
-        discord
+        # slack
+        # discord
         # todoist-electron
         todoist
         awscli2
