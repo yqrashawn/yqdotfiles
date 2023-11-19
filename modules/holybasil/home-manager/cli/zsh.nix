@@ -63,7 +63,7 @@ let
     yi = "yarn init";
     ya = "yarn add";
     yad = "yarn add --dev";
-    yga = "yarn global install";
+    yga = "yarn global add";
     yu = "yarn upgrade";
     yui = "yarn upgrade-interactive";
     yv = "yarn version";

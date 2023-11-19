@@ -1,18 +1,25 @@
 {
   "dependencies": {
+    "bash-language-server": ">=0",
+    "create-next-app": ">=0",
     "create-react-app": ">=0",
+    "create-turbo": ">=0",
     "create-vite": ">=0",
+    "dockerfile-language-server-nodejs": ">=0",
     "expo-cli": ">=0",
+    "graphql": ">=0",
+    "graphql-language-service-cli": ">=0",
     "marked": ">=0",
     "nbb": ">=0",
-    "prettier-plugin-solidity": ">=1.0.0-beta19",
+    "prettier-plugin-solidity": ">=0",
     "shadow-cljs": ">=0",
+    "surge": ">=0",
+    "textlint": ">=0",
+    "textlint-rule-write-good": ">=0",
     "tree-sitter-cli": ">=0",
-    "nbb": ">=0",
-    "graphql-language-service-cli": ">=0",
-    "graphql": ">=0",
-    "create-next-app": ">=0",
-    "create-turbo": ">=0",
-    "vercel": ">=0"
+    "typescript-language-server": ">=0",
+    "vercel": ">=0",
+    "vscode-langservers-extracted": ">=0",
+    "yaml-language-server": ">=0"
   }
 }

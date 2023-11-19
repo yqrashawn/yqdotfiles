@@ -222,6 +222,13 @@ in {
         rm -rf ~/.doom.d || true
         ln -s ~/.nixpkgs/.doom.d ~/.doom.d
 
+        rm -rf ~/.config/yarn/global/package.json || true
+        rm -rf ~/.local/share/yarn/global/package.json || true
+        mkdir -p ~/.config/yarn/global
+        mkdir -p ~/.local/share/yarn/global
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/package.json ~/.config/yarn/global/package.json
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/package.json ~/.local/share/yarn/global/package.json
+
         rm -rf ~/.config/karabiner.edn || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
 

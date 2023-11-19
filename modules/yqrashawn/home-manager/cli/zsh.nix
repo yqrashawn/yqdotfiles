@@ -64,7 +64,7 @@ let
     ya = "yarn add";
     yad = "yarn add --dev";
     ysrc = "yarn start --reset-cache";
-    yga = "yarn global install";
+    yga = "yarn global add";
     yu = "yarn upgrade";
     yui = "yarn upgrade-interactive";
     yv = "yarn version";

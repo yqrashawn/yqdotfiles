@@ -15,13 +15,7 @@ let
     python3
     black
   ];
-  masters = with pkgs.masters; [
-    adguardhome
-    clojure-lsp
-    clj-kondo
-    zprint
-    neil
-  ];
+  masters = with pkgs.masters; [ adguardhome ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -48,6 +42,10 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        zprint
+        clojure-lsp
+        clj-kondo
+        neil
         yt-dlp
         qbittorrent
         tailscale
@@ -259,7 +257,6 @@ in {
         nodePackages.stylelint
         # nodePackages.expo-cli
         nodePackages.eslint
-        nodePackages.diagnostic-languageserver
         nodePackages.typescript
         nodePackages.eslint_d
         nodePackages.markdownlint-cli2
@@ -272,15 +269,6 @@ in {
         # nodePackages.web-ext
         nodePackages.textlint
         nodePackages.textlint-rule-write-good
-        nodePackages.typescript-language-server
-        nodePackages.vscode-css-languageserver-bin
-        nodePackages.vscode-html-languageserver-bin
-        nodePackages.vscode-css-languageserver-bin
-        nodePackages.vscode-langservers-extracted
-        nodePackages.vscode-json-languageserver
-        nodePackages.dockerfile-language-server-nodejs
-        nodePackages.bash-language-server
-        nodePackages.yaml-language-server
         # php
         stylua
         # zls

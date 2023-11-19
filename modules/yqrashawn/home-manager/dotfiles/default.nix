@@ -354,10 +354,6 @@
     };
     "broot/conf.hjson" = { source = ./broot.hjson; };
     ".lsp/config.edn" = { source = ./lsp.edn; };
-    # htop = {
-    #   source = ./htoprc;
-    #   target = "htop/htoprc";
-    # };
     alacritty = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./alacritty;
       recursive = true;
@@ -368,9 +364,9 @@
       recursive = true;
     };
     "mpv/mpv.conf" = { source = ./mpv.conf; };
-    yarn-global = {
-      source = ./package.json;
-      target = "./yarn/global/package.json";
-    };
+    # yarn-global = {
+    #   source = ./package.json;
+    #   target = "./yarn/global/package.json";
+    # };
   };
 }
