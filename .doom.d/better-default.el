@@ -648,3 +648,12 @@ used in the POST request made to the LanguageTool server."
            ("Asia/Ho_Chi_Minh" "Vietnam")
            ("Asia/Shanghai" "Beijing")
            ("Asia/Tokyo" "Tokyo"))))
+
+(use-package! org-ai
+  :commands (org-ai-mode org-ai-global-mode)
+  :hook (org-mode . org-ai-mode)
+  :init
+  (setq! org-ai-default-chat-model "gpt-4-1106-preview"
+         org-ai-default-inject-sys-prompt-for-all-messages nil
+         org-ai-openai-api-token +open-ai-api-key
+         org-ai-default-chat-system-prompt "You are a helpful assistant inside Emacs. Respond concisely."))

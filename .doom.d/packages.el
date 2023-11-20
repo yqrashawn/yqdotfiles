@@ -330,6 +330,7 @@
 (package! jarchive)
 (package! pinentry)
 (package! llm)
+(package! org-ai)
 
 
 ;; Local Variables:
