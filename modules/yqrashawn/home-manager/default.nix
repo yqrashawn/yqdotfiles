@@ -33,7 +33,7 @@ in {
   };
   home = let
     NODE_GLOBAL =
-      "${config.home.homeDirectory}/.config/yarn/global/node_modules";
+      "${config.home.homeDirectory}/.local/share/yarn/global/node_modules";
   in {
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage
