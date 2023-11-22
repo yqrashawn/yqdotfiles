@@ -1,11 +1,32 @@
 ;;; gpt.el -*- lexical-binding: t; -*-
 
-;; (use-package! llm
-;;   :defer t
-;;   :init
-;;   (setq! llm-warn-on-nonfree nil))
+(use-package! llm
+  :defer t
+  :init
+  (setq! llm-warn-on-nonfree nil))
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+
+(defun +llm-gpt-request (message cb &optional system-message use-16k-model)
+  (require 'llm)
+  (require 'llm-openai)
+  (let* ((model (if (eq use-16k-model 1)
+                    "gpt-4-1106-preview"
+                  "gpt-3.5-turbo-1106"))
+         (provider (make-llm-openai
+                    :key +open-ai-api-key
+                    :chat-model model))
+         (first-message (make-llm-chat-prompt-interaction
+                         :role 'user
+                         :content message))
+         (prompt (make-llm-chat-prompt
+                  :context (or system-message +gpt-system-message)
+                  :temperature 0.8
+                  :interactions (list first-message))))
+    (llm-chat-async provider
+                    prompt
+                    cb
+                    (lambda (_err-sym err-msg) (message "OpenAI Error: %S" err-msg)))))
 
 (defun +gpt-request (message cb &optional system-message use-16k-model)
   (require 'request)
@@ -85,25 +106,28 @@ Ensure that your response is concise but comprehensive and includes all the esse
 Use HTML <ol> bullet points in your response as much as possible."
                                 ;; "Summarize following article, response with markdown."
                                 feed-title title link nicedate niceauthors txt-content)))
-      (+gpt-request gpt-message (lambda (msg)
-                                  ;; (setq kkk msg)
-                                  (when msg
-                                    (with-temp-buffer
-                                      (insert (concat "<article><title>Summary</title>"
-                                                      (s-replace-all '(("\n" . "<br/>")) msg)
-                                                      "<p>------</p><article/>"))
-                                      (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-                                        (when (buffer-live-p buf)
-                                          (with-current-buffer buf
-                                            (goto-char (point-min))
-                                            (read-only-mode -1)
-                                            (shr-insert-document dom)
-                                            ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
-                                            (read-only-mode 1)))))))
-                    "You are a large language model living in Emacs and a helpful reading assistant.
+      (+llm-gpt-request gpt-message (lambda (msg)
+                                      ;; (setq kkk msg)
+                                      (when msg
+                                        (with-temp-buffer
+                                          (insert (concat "<article><title>Summary</title>"
+                                                          (thread-last msg
+                                                                       (s-replace-all '(("\n" . "<br/>")))
+                                                                       (s-chop-prefix "```html")
+                                                                       (s-chop-suffix "```"))
+                                                          "<p>------</p><article/>"))
+                                          (let ((dom (libxml-parse-html-region (point-min) (point-max))))
+                                            (when (buffer-live-p buf)
+                                              (with-current-buffer buf
+                                                (goto-char (point-min))
+                                                (read-only-mode -1)
+                                                (shr-insert-document dom)
+                                                ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
+                                                (read-only-mode 1)))))))
+                        "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
 You should separate your response into multiple paragraph if they are too long."
-                    use-16k-model))))
+                        use-16k-model))))
 
 ;; TODO: split into multiple conversation if token exceeds limit
 
@@ -140,25 +164,28 @@ Ensure that your response is concise but comprehensive and includes all the esse
 Use HTML <ol> bullet points in your response as much as possible."
                                 ;; "Summarize following article, response with markdown."
                                 title link txt-content)))
-      (+gpt-request gpt-message (lambda (msg)
-                                  ;; (setq kkk msg)
-                                  (when msg
-                                    (with-temp-buffer
-                                      (insert (concat "<article><title>Summary</title>"
-                                                      (s-replace-all '(("\n" . "<br/>")) msg)
-                                                      "<p>------</p><article/>"))
-                                      (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-                                        (when (buffer-live-p buf)
-                                          (with-current-buffer buf
-                                            (goto-char (point-min))
-                                            (read-only-mode -1)
-                                            (shr-insert-document dom)
-                                            ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
-                                            (read-only-mode 1)))))))
-                    "You are a large language model living in Emacs and a helpful reading assistant.
+      (+llm-gpt-request gpt-message (lambda (msg)
+                                      ;; (setq kkk msg)
+                                      (when msg
+                                        (with-temp-buffer
+                                          (insert (concat "<article><title>Summary</title>"
+                                                          (thread-last msg
+                                                                       (s-replace-all '(("\n" . "<br/>")))
+                                                                       (s-chop-prefix "```html")
+                                                                       (s-chop-suffix "```"))
+                                                          "<p>------</p><article/>"))
+                                          (let ((dom (libxml-parse-html-region (point-min) (point-max))))
+                                            (when (buffer-live-p buf)
+                                              (with-current-buffer buf
+                                                (goto-char (point-min))
+                                                (read-only-mode -1)
+                                                (shr-insert-document dom)
+                                                ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
+                                                (read-only-mode 1)))))))
+                        "You are a large language model living in Emacs and a helpful reading assistant.
 Your response should be in HTML format.
 You should separate your response into multiple paragraph if they are too long."
-                    use-16k-model))))
+                        use-16k-model))))
 
 ;;;###autoload
 (defun +gpt-dwim-current-buffer (arg)

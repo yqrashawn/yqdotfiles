@@ -329,7 +329,7 @@
 (package! expreg)
 (package! jarchive)
 (package! pinentry)
-(package! llm)
+(package! llm :recipe (:host github :repo "ahyatt/llm"))
 (package! org-ai)
 
 
