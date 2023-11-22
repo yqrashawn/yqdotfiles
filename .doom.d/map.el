@@ -93,7 +93,7 @@
   :desc "Line numbers" "tl" #'+doom/toggle-line-numbers
   :desc "Imenu sidebar" "cb" #'side-hustle-toggle
   :desc "Git timemachine" "gt" #'git-timemachine
-  ;; :desc "RSS" "on" #'=elfeed-dashboard
+  :desc "Todoist" "o SPC" #'todoist
   :desc "RSS" "on" #'=rss
   (:prefix-map ("e" . "Edit")
    :desc "String" "s" #'string-edit-at-point
@@ -154,7 +154,10 @@
            :n "ds" #'orgbox-schedule))
   (:after clojure-mode
           (:map clojure-mode-map
-           :n "," 'yq-cljr-map)))
+           :n "," 'yq-cljr-map))
+  (:after todoist
+          (:map todoist-mode-map
+           :g "," #'todoist-task-menu)))
  (:map help-map
        "K" #'describe-keymap)
  (:map ctl-x-map

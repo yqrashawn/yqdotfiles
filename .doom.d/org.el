@@ -116,13 +116,12 @@ tasks."
           (t
            (call-interactively 'org-insert-link)))))
 
-(defadvice! +todoist ()
-  :before #'todoist
-  (setq! todoist-token
-         (-> (auth-source-search :host "todoist.com" :user "namy.19@gmail.com")
-             car
-             (plist-get :api_token))))
-
+(use-package! todoist
+  :commands (todoist)
+  :init
+  (setq! todoist-token +todoist-token
+         todoist-use-scheduled-instead-of-deadline t
+         todoist-backing-buffer (concat doom-cache-dir "todoist.org")))
 
 (use-package! denote :defer t
               :init
