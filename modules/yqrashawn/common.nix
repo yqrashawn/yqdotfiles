@@ -72,6 +72,7 @@ in {
         # colima
         lapce
         isync-isync
+        # isync
         msmtp
         # gomobile
         # opts at

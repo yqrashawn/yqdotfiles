@@ -2,7 +2,7 @@
   "dependencies": {
     "bash-language-server": ">=0",
     "create-next-app": ">=0",
-    "create-react-app": ">=0",
+    "create-react-app": "^5.0.1",
     "create-turbo": ">=0",
     "create-vite": ">=0",
     "dockerfile-language-server-nodejs": ">=0",

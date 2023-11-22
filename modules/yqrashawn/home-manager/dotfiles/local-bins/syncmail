@@ -10,9 +10,12 @@
 
 (defonce c (chan))
 
+(def notmuch "/run/current-system/sw/bin/notmuch")
+(def mbsync "/run/current-system/sw/bin/mbsync")
+
 (sh "/run/current-system/sw/bin/bash" (str (System/getenv "HOME") "/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync"))
-(sh "/run/current-system/sw/bin/mbsync" "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))
-(sh "/run/current-system/sw/bin/notmuch" "new")
+(sh mbsync "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))
+(sh notmuch "new")
 
 (defn notify [title subtitle message]
   (sh
@@ -27,11 +30,11 @@
    "-subtitle" subtitle))
 
 (defn new-unread? []
-  (if (pos? (-> (sh "/run/current-system/sw/bin/notmuch" "count" (str "tag:inbox and tag:unread and date:5m.."))
+  (if (pos? (-> (sh notmuch "count" (str "tag:inbox and tag:unread and date:5m.."))
                 :out
                 s/trim-newline
                 Integer/parseInt))
-    (let [new (-> (sh "/run/current-system/sw/bin/notmuch" "search" "--format" "sexp" "tag:inbox and tag:unread and date:5m..")
+    (let [new (-> (sh notmuch "search" "--format" "sexp" "tag:inbox and tag:unread and date:5m..")
                   :out
                   edn/read-string)
           new (map #(apply hash-map %) new)]
@@ -40,7 +43,7 @@
       (put! c :end))
     (put! c :end)))
 
-(let [unread-count (-> (sh "/run/current-system/sw/bin/notmuch" "count" "tag:inbox and tag:unread")
+(let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
                        :out
                        s/trim-newline
                        Integer/parseInt)]

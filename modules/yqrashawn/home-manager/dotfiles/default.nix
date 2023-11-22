@@ -133,10 +133,6 @@
       source = ./.huskyrc;
       target = ".huskyrc";
     };
-    mbsync = {
-      source = ./.mbsyncrc;
-      target = ".mbsyncrc";
-    };
     msmtprc = {
       source = ./.msmtprc;
       target = ".msmtprc";

@@ -253,6 +253,9 @@ in {
         rm ~/.ssh/config || true
         ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg || true
 
+        rm ~/.mbsyncrc || true
+        ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.mbsyncrc ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.mbsyncrc.gpg || true
+
         ln -fs /Applications/Nix\ Apps/* /Applications/
       '';
     };
