@@ -579,6 +579,7 @@
           :gn "RET" #'magit-diff-visit-file-other-window))
  (:after elfeed
          (:map elfeed-show-mode-map
+          :n "&" (cmd! () (elfeed-show-visit 1))
           :n "R" #'writeroom-mode
           :n "o" (cmd! () (let ((current-prefix-arg 1)) (call-interactively #'shr-browse-url)))
           :n "gy" #'elfeed-show-yank
