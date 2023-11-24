@@ -3,7 +3,15 @@
 (use-package! llm
   :defer t
   :init
-  (setq! llm-warn-on-nonfree nil))
+  (setq! llm-warn-on-nonfree nil)
+  :config
+  (require 's)
+  (defadvice! +llm-request-async (orig-fn url &rest args)
+    :around #'llm-request-async
+    (let ((new-url (if (s-starts-with? "https://api.openai.com" url)
+                       (s-replace "https://api.openai.com" "https://openrouter.ai/api" url)
+                     url)))
+      (apply orig-fn (pushnew new-url args)))))
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
@@ -13,9 +21,12 @@
   (let* ((model (if (eq use-16k-model 1)
                     "gpt-4-1106-preview"
                   "gpt-3.5-turbo-1106"))
+         ;; (provider (make-llm-openai
+         ;;            :key +open-ai-api-key
+         ;;            :chat-model model))
          (provider (make-llm-openai
-                    :key +open-ai-api-key
-                    :chat-model model))
+                    :key +openrouter-api-key
+                    :chat-model "openrouter/auto"))
          (first-message (make-llm-chat-prompt-interaction
                          :role 'user
                          :content message))
