@@ -88,6 +88,20 @@
   (fn activate []
     (windows.activate-app app-name)))
 
+(fn delay [seconds f]
+  (let [timer (hs.timer.delayed.new seconds f)]
+    (: timer :start)))
+
+(fn browser-summarize []
+  (hs.eventtap.keyStroke ["cmd" "ctrl"] ".")
+  (delay .2 (fn [] (hs.eventtap.keyStrokes "Summarize")
+              (hs.eventtap.keyStroke [] "return")
+              (hs.eventtap.keyStroke ["cmd"] "return"))))
+
+(fn browser-summarize-more-detail []
+  (hs.eventtap.keyStrokes "Give me more details with examples using bullet points, make sure all points included.")
+  (delay .1 (fn [] (hs.eventtap.keyStroke ["cmd"] "return"))))
+
 
 ;;;; General
 
@@ -541,6 +555,12 @@
                   {:key :b
                    :title "Newsblur"
                    :action browser-newsblur}
+                  {:key :s
+                   :title "Summary"
+                   :action browser-summarize}
+                  {:key :m
+                   :title "More Detail"
+                   :action browser-summarize-more-detail}
                   {:key :r
                    :title "Raindrop"
                    :action (fn [] (hs.eventtap.keyStroke ["alt" "shift"] "s"))}
