@@ -94,13 +94,27 @@
 
 (fn browser-summarize []
   (hs.eventtap.keyStroke ["cmd" "ctrl"] ".")
-  (delay .2 (fn [] (hs.eventtap.keyStrokes "Summarize")
-              (hs.eventtap.keyStroke [] "return")
-              (hs.eventtap.keyStroke ["cmd"] "return"))))
+  (delay 0.2 (fn []
+               (hs.eventtap.keyStrokes "Summarize")
+               (hs.eventtap.keyStroke [] "return")
+               (hs.eventtap.keyStroke ["cmd"] "return"))))
 
 (fn browser-summarize-more-detail []
   (hs.eventtap.keyStrokes "Give me more details with examples using bullet points, make sure all points included.")
   (delay .1 (fn [] (hs.eventtap.keyStroke ["cmd"] "return"))))
+
+(fn test-password []
+  (delay 0.001 (fn []
+               (hs.eventtap.keyStroke ["shift"] "a")
+               (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "b")
+                            (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "c")
+                                         (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "d")
+                                                      (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "1")
+                                                                   (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "2")
+                                                                                (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "3")
+                                                                                             (delay 0.001 (fn [] (hs.eventtap.keyStroke [] "4")
+                                                                                                          (delay 0.001 (fn [] (hs.eventtap.keyStroke [] ";")
+                                                                                                                       (delay 0.001 (fn [] (hs.eventtap.keyStroke [] ";"))))))))))))))))))))))
 
 
 ;;;; General
@@ -539,6 +553,20 @@
         ])
 
 ;;;; App Specific Config
+(local simulator-items
+       [{:key :.
+         :title "App Local"
+         :items [{:key :p
+                  :title "Test Password"
+                  :action test-password}]}])
+
+(local status-desktop-items
+       [{:key :.
+         :title "App Local"
+         :items [{:key :p
+                  :title "Test Password"
+                  :action test-password}]}])
+
 (local browser-keys
        [{:mods [:cmd :shift]
          :key :l
@@ -549,7 +577,7 @@
         menu-items
         [{:key :c
           :title "Capture"
-          :items [;; {:key :r
+          :items [ ;; {:key :r
                   ;;  :title "Org Roam"
                   ;;  :action browser-org-roam-capture}
                   {:key :b
@@ -745,6 +773,16 @@
                ;;  :repeat true}
                ]})
 
+(local ios-simulator-config
+       {:key "Simulator"
+        :keys []
+        :items (concat menu-items simulator-items)})
+
+(local status-desktop-config
+       {:key "im.Status.NimStatusClient"
+        :keys []
+        :items (concat menu-items status-desktop-items)})
+
 (local apps
        [brave-config
         chrome-config
@@ -756,7 +794,9 @@
         hammerspoon-config
         safari-config
         clickup-config
-        slack-config])
+        slack-config
+        ios-simulator-config
+        status-desktop-config])
 
 (local config
        {:title "Main Menu"

@@ -19,13 +19,19 @@ killall vmtouch &> /dev/null
 #   '~/.config/karabiner'
 # )
 
+if [[ -f "/run/current-system/sw/bin/emacsclient" ]]; then
+    EMACS_PATH=$(which emacs)
+    echo "${EMACS_PATH}"
+    EMACS_OPT=$(nix-store -q "${EMACS_PATH}")
+    echo "${EMACS_OPT}"
+fi
+
 echo 'touching pages...'
 vmtouch -ldf -i .git -i .md \
         ~/.emacs.d \
+        ~/.doom.d \
         /Applications/Emacs.app \
-        /usr/local/bin/emacs \
-        /usr/local/bin/emacsclient \
-        ~/.zprezto
+        $EMACS_OPT
         # ~/workspace/office \
         # ~/workspace/third/metamask-extension \
         # ~/org-mode/lisp \
