@@ -32,6 +32,14 @@
       # "gpg-suite-no-mail"
       # "ngrok"
       # "syncthing"
+      # "steam"
+      # "android-studio"
+      # "docker"
+      # "flipper"
+      # "microsoft-edge"
+      # "playcover-community"
+      # "spectacle"
+      # "wechat"
     ];
     masApps = { };
   };

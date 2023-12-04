@@ -1,14 +1,21 @@
 { inputs, config, pkgs, ... }: {
   homebrew = {
     enable = true;
+    onActivation = {
+      upgrade = false;
+      # cleanup = "uninstall";
+      autoUpdate = false;
+    };
     # https://daiderd.com/nix-darwin/manual/index.html#opt-homebrew.global
     global = {
       lockfiles = true;
-      autoUpdate = true;
+      autoUpdate = false;
       brewfile = true;
     };
 
     taps = [
+      "koekeishiya/formulae"
+      "yqrashawn/goku"
       "homebrew/bundle"
       "homebrew/cask"
       "homebrew/cask-fonts"
@@ -23,11 +30,13 @@
       "borkdude/brew"
       "huahaiy/brew"
       "homebrew/cask-drivers"
+      "incidentist/nyxt"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
+      "yqrashawn/goku/goku"
       "alerter"
       "openssl@3" # conflux-rust
       "libgccjit"
@@ -49,6 +58,7 @@
       # "cloudflared"
       "janet"
       "pngpaste"
+
     ];
     casks = [
       "hammerspoon"

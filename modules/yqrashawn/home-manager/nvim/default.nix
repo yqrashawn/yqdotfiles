@@ -69,7 +69,6 @@
       vim-fugitive
 
       # vim addon utilities
-      direnv-vim
       ranger-vim
       neogit
     ];

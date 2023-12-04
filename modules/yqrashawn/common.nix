@@ -176,10 +176,8 @@ in {
         # starship
         neofetch
         broot # ranger
-        direnv
         # fasd
         # fzf
-        zsh-fzf-tab
         coreutils-full
         findutils # xargs
         gnused
