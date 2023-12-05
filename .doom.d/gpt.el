@@ -11,7 +11,7 @@
     (let ((new-url (if (s-starts-with? "https://api.openai.com" url)
                        (s-replace "https://api.openai.com" "https://openrouter.ai/api" url)
                      url)))
-      (apply orig-fn (pushnew! new-url args)))))
+      (apply orig-fn (cl-pushnew new-url args)))))
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
