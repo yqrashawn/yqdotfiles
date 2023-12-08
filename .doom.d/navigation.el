@@ -225,6 +225,7 @@ See `dwim-shell-command-execute-script' for all other params."
   :init
   (setq! +project-name-alises '(("status-mobile" . "stm")
                                 ("status-go" . "stg")
+                                ("status-desktop" . "std")
                                 ("frontends" . "scf")
                                 ("new-token-list" . "ntl")))
   (defun +projectile-project-name (project-root)

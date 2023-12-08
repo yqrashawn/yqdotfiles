@@ -331,6 +331,7 @@
 (package! pinentry)
 (package! llm :recipe (:host github :repo "ahyatt/llm"))
 (package! org-ai)
+(unpin! nim-mode)
 
 
 ;; Local Variables:

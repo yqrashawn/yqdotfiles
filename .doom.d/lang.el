@@ -51,6 +51,10 @@
      (t
       (setq company-backends (pushnew! company-backends 'company-capf 'company-tabnine))))))
 
+(when (modulep! :lang nim)
+  (after! nim-mode
+    (add-hook! 'nim-mode-hook #'lsp)))
+
 (after! lsp-mode
   (setq! lsp-completion-provider :none)
   (setq-hook! '(go-mode-hook) lsp-headerline-breadcrumb-enable t)

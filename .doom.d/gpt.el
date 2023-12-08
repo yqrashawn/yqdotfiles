@@ -199,11 +199,67 @@ You should separate your response into multiple paragraph if they are too long."
                         use-16k-model))))
 
 ;;;###autoload
+;; (defun +summarize-current-notmuch-buffer (arg)
+;;   (interactive "P")
+;;   (require 's)
+;;   (when (eq major-mode 'notmuch-show-mode)
+;;     (let* ((buf (current-buffer))
+;;            (use-16k-model (eq arg 1))
+;;            (title (notmuch-show-get-subject))
+;;            (txt-content (with-current-buffer (current-buffer) (buffer-string)))
+;;            (gpt-message (format "%s
+;; Email Metadata:
+;; ```txt
+;; Title: %s
+;; ```
+
+;; Email Content:
+;; ```txt
+;; %s
+;; ```
+;; "
+
+;;                                 ;; "Kindly provide me with a summary of the following article. The summary should cover the main points of the article and provide me with a clear understanding of the topic discussed. Please ensure that the summary is concise but comprehensive and includes all the essential information from the article. Please response in in multiline markdown format text."
+;;                                 ;; "Provide me key takeaways, tldrs and summary of the following article.
+;;                                 ;; Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
+;;                                 ;; Ensure that your response is concise but comprehensive and includes all the essential information from the article."
+;;                                 "Generate TLDR for the following email.
+;; Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
+;; Ensure that your response is concise but comprehensive and includes all the essential information from the article.
+;; Use HTML <ol> bullet points in your response as much as possible."
+;;                                 ;; "Summarize following article, response with markdown."
+;;                                 title txt-content)))
+;;       (+llm-gpt-request gpt-message (lambda (msg)
+;;                                       ;; (setq kkk msg)
+;;                                       (when msg
+;;                                         (with-temp-buffer
+;;                                           (insert (concat "<article><title>Summary</title>"
+;;                                                           (thread-last msg
+;;                                                                        (s-replace-all '(("\n" . "<br/>")))
+;;                                                                        (s-chop-prefix "```html")
+;;                                                                        (s-chop-suffix "```"))
+;;                                                           "<p>------</p><article/>"))
+;;                                           (let ((dom (libxml-parse-html-region (point-min) (point-max))))
+;;                                             (when (buffer-live-p buf)
+;;                                               (with-current-buffer buf
+;;                                                 (goto-char (point-min))
+;;                                                 (read-only-mode -1)
+;;                                                 (shr-insert-document dom)
+;;                                                 ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
+;;                                                 (read-only-mode 1)))))))
+;;                         "You are a large language model living in Emacs and a helpful reading assistant.
+;; Your response should be in HTML format.
+;; You should separate your response into multiple paragraph if they are too long."
+;;                         use-16k-model))))
+
+;;;###autoload
 (defun +gpt-dwim-current-buffer (arg)
   (interactive "P")
   (cond
    ((eq major-mode 'eww-mode) (call-interactively '+summarize-current-eww-buffer arg))
-   ((eq major-mode 'elfeed-show-mode) (call-interactively '+summarize-current-elfeed-show-buffer arg))))
+   ((eq major-mode 'elfeed-show-mode) (call-interactively '+summarize-current-elfeed-show-buffer arg))
+   ;; ((eq major-mode 'notmuch-show-mode) (call-interactively '+summarize-current-notmuch-buffer arg))
+   ))
 
 
 
