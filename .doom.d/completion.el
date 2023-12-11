@@ -147,28 +147,32 @@
 ;;   (unless (require 'fuz-core nil t)
 ;;     (fuz-build-and-load-dymod)))
 
-;; (use-package! flx-rs
-;;   :after orderless
-;;   :config
-;;   (flx-rs-load-dyn)
-;;   (advice-add 'flx-score :override #'flx-rs-score))
-
-(use-package! fzf-native
+(use-package! flx-rs
   :after orderless
   :config
-  (fzf-native-load-dyn))
+  (flx-rs-load-dyn)
+  (setq! fussy-score-fn #'fussy-flx-rs-score)
+  ;; (advice-add 'flx-score :override #'flx-rs-score)
+  )
+
+;; (use-package! fzf-native
+;;   :after orderless
+;;   :config
+;;   (fzf-native-load-dyn))
 
 (use-package! fussy
   ;; :ensure t
   ;; :after fuz-bin
   ;; :after fuz
   ;; :after flx-rs
-  :after fzf-native
+  :after flx-rs
   :config
   (setq! fussy-filter-fn 'fussy-filter-default
+         fussy-ignore-case t
          fussy-use-cache t
          fussy-default-regex-fn #'fussy-pattern-flex-2
-         fussy-score-fn 'fussy-fzf-native-score)
+         ;; fussy-score-fn 'fussy-fzf-native-score
+         )
 
   (after! corfu
     (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)

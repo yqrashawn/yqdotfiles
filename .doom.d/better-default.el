@@ -3,6 +3,7 @@
 (pushnew! global-hl-line-modes 'dired-mode 'occur-mode 'grep-mode)
 (delq! 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
+       garbage-collection-messages t
        use-short-answers t
        max-specpdl-size 10000
        max-lisp-eval-depth 10000
@@ -16,7 +17,7 @@
        confirm-kill-processes nil
        browse-url-generic-program "open"
        browse-url-browser-function #'eww-browse-url
-       browse-url-secondary-browser-function #' browse-url-default-browser
+       browse-url-secondary-browser-function #'browse-url-default-browser
        make-backup-files nil
        mac-command-modifier 'super
        mac-right-command-modifier 'super
