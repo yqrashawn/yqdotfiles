@@ -42,6 +42,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        imagemagick
         zprint
         clojure-lsp
         clj-kondo
