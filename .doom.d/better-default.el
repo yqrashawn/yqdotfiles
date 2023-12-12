@@ -659,3 +659,14 @@ used in the POST request made to the LanguageTool server."
          org-ai-default-inject-sys-prompt-for-all-messages nil
          org-ai-openai-api-token +open-ai-api-key
          org-ai-default-chat-system-prompt "You are a helpful assistant inside Emacs. Respond concisely."))
+
+(after! frame
+  (add-function
+   :after after-focus-change-function
+   (lambda ()
+     (unless (frame-focus-state)
+       (run-with-timer 3.0 nil
+                       (lambda ()
+                         (unless (frame-focus-state)
+                           (let (garbage-collection-messages)
+                             (garbage-collect)))))))))
