@@ -3,6 +3,7 @@
 (pushnew! global-hl-line-modes 'dired-mode 'occur-mode 'grep-mode)
 (delq! 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
+       gc-cons-percentage 0.2
        garbage-collection-messages t
        use-short-answers t
        max-specpdl-size 10000
