@@ -71,7 +71,6 @@ in {
         docker-machine
         docker-credential-helpers
         # colima
-        lapce
         isync-isync
         # isync
         msmtp
@@ -247,7 +246,7 @@ in {
         # python39Packages.percol # build failed
         # docker-compose_2
         docker-slim
-        urlview
+        # urlview
         tmux-mem-cpu-load
 
         redis

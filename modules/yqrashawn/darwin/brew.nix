@@ -36,7 +36,7 @@
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
-      "yqrashawn/goku/goku"
+      # "yqrashawn/goku/goku"
       "alerter"
       "openssl@3" # conflux-rust
       "libgccjit"
