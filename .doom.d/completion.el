@@ -147,31 +147,32 @@
 ;;   (unless (require 'fuz-core nil t)
 ;;     (fuz-build-and-load-dymod)))
 
-(use-package! flx-rs
-  :after orderless
-  :config
-  (flx-rs-load-dyn)
-  (setq! fussy-score-fn #'fussy-flx-rs-score)
-  ;; (advice-add 'flx-score :override #'flx-rs-score)
-  )
-
-;; (use-package! fzf-native
+;; (use-package! flx-rs
 ;;   :after orderless
 ;;   :config
-;;   (fzf-native-load-dyn))
+;;   (flx-rs-load-dyn)
+;;   (setq! fussy-score-fn #'fussy-flx-rs-score)
+;;   ;; (advice-add 'flx-score :override #'flx-rs-score)
+;;   )
+
+(use-package! fzf-native
+  :after orderless
+  :config
+  (fzf-native-load-dyn)
+  (setq! fussy-score-fn #'fussy-fzf-native-score))
 
 (use-package! fussy
   ;; :ensure t
   ;; :after fuz-bin
   ;; :after fuz
   ;; :after flx-rs
-  :after flx-rs
+  :after fzf-native
   :config
-  (setq! fussy-filter-fn 'fussy-filter-default
+  (setq! fussy-filter-fn #'fussy-filter-default
+         ;; fussy-filter-fn #'fussy-filter-flex
          fussy-ignore-case t
          fussy-use-cache t
          fussy-default-regex-fn #'fussy-pattern-flex-2
-         ;; fussy-score-fn 'fussy-fzf-native-score
          )
 
   (after! corfu
@@ -193,7 +194,7 @@
   ;;       (call-interactively f))))
 
   (pushnew! completion-styles 'fussy)
-  ;; (setq completion-styles '(fussy))
+  ;; (setq! completion-styles '(fussy))
   ;; (delq! 'orderless +vertico-company-completion-styles)
   (pushnew! +vertico-company-completion-styles 'fussy)
   ;; (add-to-list '+vertico-company-completion-styles 'fussy t)
@@ -225,6 +226,14 @@
           (apply f args)
         (let ((company-transformers '(fussy-company-sort-by-completion-score)))
           (apply f args))))))
+
+;; (use-package! hotfuzz
+;;   :after orderless
+;;   :config
+;;   (pushnew! completion-styles 'hotfuzz)
+;;   (require 'hotfuzz-module)
+;;   ;; (setq! completion-styles '(hotfuzz))
+;;   )
 
 (after! cape
   (setq! cape-dict-file (list

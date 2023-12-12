@@ -260,7 +260,7 @@
 ;;   :recipe (:host github :repo "rustify-emacs/fuz.el"))
 (package! flx-rs :recipe (:host github :repo "jcs-elpa/flx-rs" :files (:defaults "bin")))
 (package! fussy :recipe (:host github :repo "jojojames/fussy"))
-;; (package! hotfuzz)
+(package! hotfuzz)
 
 ;; (disable-packages! orderless)
 
