@@ -155,77 +155,83 @@
 ;;   ;; (advice-add 'flx-score :override #'flx-rs-score)
 ;;   )
 
-(use-package! fzf-native
+;; (use-package! fzf-native
+;;   :after orderless
+;;   :config
+;;   (fzf-native-load-dyn)
+;;   (setq! fussy-score-fn #'fussy-fzf-native-score))
+
+;; (use-package! fussy
+;;   ;; :ensure t
+;;   ;; :after fuz-bin
+;;   ;; :after fuz
+;;   ;; :after flx-rs
+;;   :after fzf-native
+;;   :config
+;;   (setq! fussy-filter-fn #'fussy-filter-default
+;;          ;; fussy-filter-fn #'fussy-filter-flex
+;;          fussy-ignore-case t
+;;          fussy-use-cache t
+;;          fussy-default-regex-fn #'fussy-pattern-flex-2
+;;          )
+
+;;   (after! corfu
+;;     (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
+;;     (add-hook 'corfu-mode-hook
+;;               (lambda ()
+;;                 (setq-local fussy-max-candidate-limit 5000
+;;                             fussy-default-regex-fn 'fussy-pattern-first-letter
+;;                             fussy-prefer-prefix nil))))
+
+;;   ;; (after! consult
+;;   ;;   (defadvice! +consult-recent-file (f)
+;;   ;;     :around #'consult-recent-file
+;;   ;;     (let ((completion-styles '(orderless fussy)))
+;;   ;;       (call-interactively f)))
+;;   ;;   (defadvice! +consult-buffer (f)
+;;   ;;     :around #'consult-buffer
+;;   ;;     (let ((completion-styles '(orderless fussy)))
+;;   ;;       (call-interactively f))))
+
+;;   (pushnew! completion-styles 'fussy)
+;;   ;; (setq! completion-styles '(fussy))
+;;   ;; (delq! 'orderless +vertico-company-completion-styles)
+;;   (pushnew! +vertico-company-completion-styles 'fussy)
+;;   ;; (add-to-list '+vertico-company-completion-styles 'fussy t)
+;;   (setq!
+;;    ;; For example, project-find-file uses 'project-files which uses
+;;    ;; substring completion by default. Set to nil to make sure it's using
+;;    ;; flx.
+;;    completion-category-defaults nil
+;;    completion-category-overrides nil)
+
+;;   (after! company
+;;     (defadvice! j-company-capf (f &rest args)
+;;       :around #'company-capf
+;;       "Manage `completion-styles'."
+;;       (if (length= company-prefix 0)
+;;           ;; Don't use `company' for 0 length prefixes.
+;;           (let ((completion-styles (remq 'fussy completion-styles)))
+;;             (apply f args))
+;;         (let ((fussy-max-candidate-limit 5000)
+;;               (fussy-default-regex-fn 'fussy-pattern-first-letter)
+;;               (fussy-prefer-prefix nil))
+;;           (apply f args))))
+
+;;     (defadvice! j-company-transformers (f &rest args)
+;;       :around #'company--transform-candidates
+;;       "Manage `company-transformers'."
+;;       (if (length= company-prefix 0)
+;;           ;; Don't use `company' for 0 length prefixes.
+;;           (apply f args)
+;;         (let ((company-transformers '(fussy-company-sort-by-completion-score)))
+;;           (apply f args))))))
+
+(use-package! hotfuzz
   :after orderless
   :config
-  (fzf-native-load-dyn)
-  (setq! fussy-score-fn #'fussy-fzf-native-score))
-
-(use-package! fussy
-  ;; :ensure t
-  ;; :after fuz-bin
-  ;; :after fuz
-  ;; :after flx-rs
-  :after fzf-native
-  :config
-  (setq! fussy-filter-fn #'fussy-filter-default
-         ;; fussy-filter-fn #'fussy-filter-flex
-         fussy-ignore-case t
-         fussy-use-cache t
-         fussy-default-regex-fn #'fussy-pattern-flex-2
-         )
-
-  (after! corfu
-    (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
-    (add-hook 'corfu-mode-hook
-              (lambda ()
-                (setq-local fussy-max-candidate-limit 5000
-                            fussy-default-regex-fn 'fussy-pattern-first-letter
-                            fussy-prefer-prefix nil))))
-
-  ;; (after! consult
-  ;;   (defadvice! +consult-recent-file (f)
-  ;;     :around #'consult-recent-file
-  ;;     (let ((completion-styles '(orderless fussy)))
-  ;;       (call-interactively f)))
-  ;;   (defadvice! +consult-buffer (f)
-  ;;     :around #'consult-buffer
-  ;;     (let ((completion-styles '(orderless fussy)))
-  ;;       (call-interactively f))))
-
-  (pushnew! completion-styles 'fussy)
-  ;; (setq! completion-styles '(fussy))
-  ;; (delq! 'orderless +vertico-company-completion-styles)
-  (pushnew! +vertico-company-completion-styles 'fussy)
-  ;; (add-to-list '+vertico-company-completion-styles 'fussy t)
-  (setq!
-   ;; For example, project-find-file uses 'project-files which uses
-   ;; substring completion by default. Set to nil to make sure it's using
-   ;; flx.
-   completion-category-defaults nil
-   completion-category-overrides nil)
-
-  (after! company
-    (defadvice! j-company-capf (f &rest args)
-      :around #'company-capf
-      "Manage `completion-styles'."
-      (if (length= company-prefix 0)
-          ;; Don't use `company' for 0 length prefixes.
-          (let ((completion-styles (remq 'fussy completion-styles)))
-            (apply f args))
-        (let ((fussy-max-candidate-limit 5000)
-              (fussy-default-regex-fn 'fussy-pattern-first-letter)
-              (fussy-prefer-prefix nil))
-          (apply f args))))
-
-    (defadvice! j-company-transformers (f &rest args)
-      :around #'company--transform-candidates
-      "Manage `company-transformers'."
-      (if (length= company-prefix 0)
-          ;; Don't use `company' for 0 length prefixes.
-          (apply f args)
-        (let ((company-transformers '(fussy-company-sort-by-completion-score)))
-          (apply f args))))))
+  ;; (require 'hotfuzz-module)
+  (pushnew! completion-styles 'hotfuzz))
 
 ;; (use-package! hotfuzz
 ;;   :after orderless
