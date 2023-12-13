@@ -11,6 +11,7 @@
     ./eza.nix
     ./gpg.nix
     ./tealdeer.nix
+    ./helix.nix
   ];
   home.packages = [ pkgs.tree ];
   programs = {

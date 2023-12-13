@@ -105,10 +105,6 @@ in {
         vim
         cachix
         tmux
-        # zsh
-        # bash
-        # git
-        helix
         lnav
         mu
         # macvim # use vim
