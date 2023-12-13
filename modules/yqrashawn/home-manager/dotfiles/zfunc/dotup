@@ -4,5 +4,6 @@ dotup () {
   pushd .
   cd ~/.nixpkgs/
   nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch $@
+  ~/.emacs.d/bin/doom sync || true
   popd
 }

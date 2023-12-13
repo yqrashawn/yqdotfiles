@@ -23,7 +23,7 @@
   :defer t
   :commands (rjsx-delete-creates-full-tag rjsx-electric-gt rjsx-electric-lt rjsx-rename-tag-at-point))
 
-(add-hook! (rjsx-mode js2-mode tsx-ts-mode js-ts-mode) 'glasses-mode)
+;; (add-hook! (rjsx-mode js2-mode tsx-ts-mode js-ts-mode) 'glasses-mode)
 
 (after! npm-mode
   (defadvice! +npm-mode--exec-process (orig-fn cmd &optional comint)
@@ -78,9 +78,7 @@
   (setq! lsp-clients-typescript-log-verbosity "off"
          lsp-clients-typescript-server-args '("--stdio"
                                               "--log-level"
-                                              "1"
-                                              "--tsserver-log-verbosity"
-                                              "off")
+                                              "1")
          lsp-clients-deno-enable-unstable t)
   (let ((vsintel (car (seq-filter
                        (lambda (s) (string-match-p "visualstudioexptteam\.vscodeintellicode-" s))

@@ -90,6 +90,9 @@
            (t (funcall orig-fn checker)))
         (funcall orig-fn checker)))))
 
+;; (after! lsp-graphql
+;;   (setf (lsp--client-priority (gethash 'graphql-lsp lsp-clients)) -3))
+
 (after! consult-lsp
   (defun +consult-lsp--diagnostics--transformer (file diag)
     (unless (and
