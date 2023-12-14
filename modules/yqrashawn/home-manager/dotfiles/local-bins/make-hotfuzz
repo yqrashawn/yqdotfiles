@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+EMACS_BIN=$(which emacs)
+NIX_STORE_EMACS=$(nix-store --query "$EMACS_BIN")
+EMACS_VERSION=$(emacs --batch --eval '(print emacs-version)' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+STRAIGHT_PATH=~/.emacs.d/.local/straight
+DOOM_PATH=~/.doom.d
+
+if [ -z "$EMACS_BIN" ] || [ ! -d "$STRAIGHT_PATH/repos/hotfuzz" ] || [ ! -d "$DOOM_PATH" ]; then
+  echo "Skipping the script as one or more conditions are not met."
+  exit 0
+fi
+
+pushd . > /dev/null
+
+mkdir -p $STRAIGHT_PATH/repos/hotfuzz/build
+cd $STRAIGHT_PATH/repos/hotfuzz/build || exit
+
+EMACS_ROOT=$NIX_STORE_EMACS cmake -DCMAKE_C_FLAGS='-O3 -march=native' .. \
+  && cmake --build .
+
+cd ../../../
+ln -s ./repos/hotfuzz/hotfuzz-module.so ./build-"$EMACS_VERSION"/hotfuzz/hotfuzz-module.so
+
+echo
+echo DONE
+
+popd > /dev/null || exit
