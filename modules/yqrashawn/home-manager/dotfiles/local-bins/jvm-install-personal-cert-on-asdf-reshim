@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+JVM_INSTALL=$(asdf where java "$1")
+KEYTOOL=$JVM_INSTALL/bin/keytool
+
+if [ -f "$KEYTOOL" ]; then
+  $KEYTOOL -import -noprompt \
+    -alias custom-cert-$(date +%Y%m%d%H%M%S) \
+    -keystore "$(asdf where java)/lib/security/cacerts" \
+    -storepass changeit \
+    -file $HOME/Dropbox/sync/PERSONAL.crt || true
+  echo $KEYTOOL
+fi
