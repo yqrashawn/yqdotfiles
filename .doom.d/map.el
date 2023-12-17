@@ -14,6 +14,7 @@
 (define-prefix-command 'ctl-x-at-8-map)
 (define-prefix-command 'ctl-x-at-6-map)
 (define-prefix-command '+thing-edit-map)
+(define-prefix-command 'visual-t-map)
 
 (global-set-key (kbd "<mouse-4>") (kbd "<wheel-up>"))
 (global-set-key (kbd "<mouse-5>") (kbd "<wheel-down>"))
@@ -275,6 +276,11 @@
   :g "b" #'switch-to-buffer
   :g "RET" #'hydra-change-mode/body
   :g "R" #'rg)
+ (:map visual-t-map
+  :g "t" #'gptel-menu
+  :g "j" (cmd!
+          ;; (insert-before-and-after-region "```" "```")
+          (gptel--suffix-send `("p" ,(concat "nGPT-" (buffer-name (current-buffer)) ".md")))))
  (:map yq-cljr-map
   :desc "Add import to ns" "ai" #'lsp-clojure-add-import-to-namespace
   :desc "Add missing libspec" "am" #'lsp-clojure-add-missing-libspec
@@ -332,7 +338,8 @@
          [remap org-insert-link] 'ar/org-insert-link-dwim)
  (:after evil-snipe
          (:map evil-snipe-override-mode-map
-          :nm "s" nil)
+          :nm "s" nil
+          :v "t" 'visual-t-map)
          (:map evil-snipe-local-mode-map
           :nm "s" nil)
          [remap evil-find-char] #'evil-snipe-f)

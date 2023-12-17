@@ -270,3 +270,17 @@ You should separate your response into multiple paragraph if they are too long."
 ;;   (with-current-buffer (get-buffer "*elfeed-entry*")
 ;;     (let (((make-llm-chat-prompt :context (buffer-substring))))
 ;;       (llm-chat-async open-ai))))
+
+(defun insert-before-and-after-region (before-text after-text)
+  "Inserts text before and after the selected region."
+  (interactive "sText to insert before: \nsText to insert after: ")
+  (let ((start (region-beginning))
+        (end (region-end)))
+    (save-excursion
+      (goto-char end)
+      (insert after-text)
+      (goto-char end)
+      ;; (forward-char 3)
+      ;; (set-mark (point))
+      (goto-char start)
+      (insert before-text))))
