@@ -30,9 +30,9 @@ placed, otherwise they come first.")
       (car host)
       completion-at-point-functions))))
 
-(add-hook 'lsp-after-open-hook #'+corfu--load-capes)
+;; (add-hook 'lsp-after-open-hook #'+corfu--load-capes)
 ;; (add-hook 'eglot-mode-hook #'+corfu--load-capes)
-(add-hook 'change-major-mode-hook #'+corfu--load-capes)
+;; (add-hook 'change-major-mode-hook #'+corfu--load-capes)
 
 (use-package! corfu
   :custom
