@@ -121,6 +121,7 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   ;; https://github.com/clojure-emacs/cider/issues/2866
   (setq-local cider-font-lock-dynamically '(macro core deprecated))
   (setq-local lsp-completion-enable nil))
+
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
   (delq! #'cider-complete-at-point completion-at-point-functions)
@@ -133,8 +134,25 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
     (cider-repl--clear-region cider-repl-input-start-mark (point-max))))
 (add-hook! cider-mode '+clojure-use-cider-over-lsp)
 (add-hook! 'cider-disconnected-hook '+clojure-use-lsp-over-cider)
-(add-hook! 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-(add-hook! 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+
+(defun +cider-enable-fuzzy-completion ()
+  (interactive)
+  (when (< emacs-major-version 27)
+    (user-error "`+cider-enable-fuzzy-completion' requires Emacs 27 or later"))
+  (let ((found-styles (when-let ((cider (assq 'cider completion-category-overrides)))
+                        (assq 'styles cider)))
+        (found-cycle (when-let ((cider (assq 'cider completion-category-overrides)))
+                       (assq 'cycle cider))))
+    (setq completion-category-overrides (seq-remove (lambda (x)
+                                                      (equal 'cider (car x)))
+                                                    completion-category-overrides))
+    (unless (member (car completion-styles) found-styles)
+      (setq found-styles (append found-styles (list (car completion-styles)))))
+    (add-to-list 'completion-category-overrides (apply #'list 'cider found-styles (when found-cycle
+                                                                                    (list found-cycle))))))
+
+(add-hook! 'cider-repl-mode-hook '+cider-enable-fuzzy-completion)
+(add-hook! 'cider-mode-hook '+cider-enable-fuzzy-completion)
 
 (after! cider
   (setq!

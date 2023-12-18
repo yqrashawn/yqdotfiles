@@ -15,7 +15,7 @@ let
     python3
     black
   ];
-  masters = with pkgs.masters; [ adguardhome ];
+  masters = with pkgs.masters; [ adguardhome clojure-lsp clj-kondo ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -44,19 +44,13 @@ in {
       [
         imagemagick
         zprint
-        clojure-lsp
-        clj-kondo
         neil
         yt-dlp
         qbittorrent
         tailscale
         # cloudflared
-        # slack
-        # discord
-        # todoist-electron
         todoist
         awscli2
-        # zoom-us
         zellij
         kitty-themes
         # (docker.override (args: {
@@ -68,13 +62,12 @@ in {
         # docker-buildx
         # mutagen
         # mutagen-compose
+        # colima
         docker-machine
         docker-credential-helpers
-        # colima
         isync-isync
         # isync
         msmtp
-        # gomobile
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
         (emacs29.override (args: {

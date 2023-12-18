@@ -53,7 +53,13 @@
 
 (when (modulep! :lang nim)
   (after! nim-mode
-    (add-hook! 'nim-mode-hook #'lsp)))
+    (add-hook! 'nim-mode-hook #'lsp))
+  (after! nim-suggest
+    (defadvice! +nimsuggest--call-sync (orig-fn method callback)
+      "nim-log in nimsuggest--call-sync takes to much cpu and mem"
+      :around #'nimsuggest--call-sync
+      (cl-letf (((symbol-function 'nim-log) (lambda (&rest _args))))
+        (funcall orig-fn method callback)))))
 
 (after! lsp-mode
   (setq! lsp-completion-provider :none)

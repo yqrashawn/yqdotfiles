@@ -3,6 +3,7 @@
 let
   paths = [
     "$HOME/common-lisp/lem"
+    "/Applications/Firefox Developer Edition.app/Contents/MacOS"
     "$HOME/.qlot/bin"
     "$HOME/.web3j"
     "$HOME/.config/.foundry/bin"

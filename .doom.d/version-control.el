@@ -202,13 +202,13 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
   (require 'forge))
 
 (after! forge
-  (magit-add-section-hook
-   'magit-status-sections-hook
-   #'+forge-insert-current-topic #'forge-insert-pullreqs)
+  ;; (magit-add-section-hook
+  ;;  'magit-status-sections-hook
+  ;;  #'+forge-insert-current-topic #'forge-insert-pullreqs)
 
-  (defvar-keymap +forge-current-topic-section-map
-    :doc "Keymap for `stashes' section."
-    "<remap> <magit-visit-thing>" #'forge-visit-topic)
+  ;; (defvar-keymap +forge-current-topic-section-map
+  ;;   :doc "Keymap for `stashes' section."
+  ;;   "<remap> <magit-visit-thing>" #'forge-visit-topic)
 
   (defun +forge-insert-current-topic ()
     (magit-insert-section (current-topic)
