@@ -46,7 +46,12 @@
   (defun +elfeed-full-update ()
     (interactive)
     (let ((elfeed-search-trailing-width 100))
-      (elfeed-update))))
+      (elfeed-update)))
+
+  (defadvice! +elfeed-db-save (orig-fn)
+    :around #'elfeed-db-save
+    (let ((gc-cons-threshold most-positive-fixnum))
+      (funcall orig-fn))))
 
 (defun +elfeed-debug ()
   (interactive)

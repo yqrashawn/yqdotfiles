@@ -70,7 +70,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (let (which-func-functions)
       (letf (((symbol-function 'add-log-current-defun)
               (lambda () nil)))
-        (which-function))))
+            (which-function))))
 
   ;; `add-log-current-defun' returns a not so meaningful result in some
   ;; major modes when the default `add-log-current-defun-function'
@@ -138,9 +138,22 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (+clojure-setup-formatter)))
 
 (use-package! smerge-mode
-  :defer t
-  :config
-  (add-hook! 'smerge-mode-hook (flycheck-mode -1)))
+  :defer t)
+
+(after! flycheck
+  (setq! flycheck-global-modes
+         '(not
+           smerge-mode
+           elfeed-search-mode
+           outline-mode
+           diff-mode
+           shell-mode
+           eshell-mode
+           vterm-mode
+           notmuch-search-mode))
+  (when global-flycheck-mode
+    (global-flycheck-mode -1))
+  (add-hook! 'prog-mode-hook (cmd! (flycheck-mode 1))))
 
 (defun ar/ediff-dir-content-size ()
   "Diff all subdirectories (sizes only) in two directories."

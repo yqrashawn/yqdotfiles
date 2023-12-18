@@ -20,7 +20,7 @@ EMACS_ROOT=$NIX_STORE_EMACS cmake -DCMAKE_C_FLAGS='-O3 -march=native' .. \
   && cmake --build .
 
 cd ../../../
-ln -s ./repos/hotfuzz/hotfuzz-module.so ./build-"$EMACS_VERSION"/hotfuzz/hotfuzz-module.so
+cp ./repos/hotfuzz/hotfuzz-module.so ./build-"$EMACS_VERSION"/hotfuzz/ > /dev/null 2>&1
 
 echo
 echo DONE

@@ -230,16 +230,8 @@
 (use-package! hotfuzz
   :after orderless
   :config
-  ;; (require 'hotfuzz-module)
+  (require 'hotfuzz-module nil t)
   (pushnew! completion-styles 'hotfuzz))
-
-;; (use-package! hotfuzz
-;;   :after orderless
-;;   :config
-;;   (pushnew! completion-styles 'hotfuzz)
-;;   (require 'hotfuzz-module)
-;;   ;; (setq! completion-styles '(hotfuzz))
-;;   )
 
 (after! cape
   (setq! cape-dict-file (list
