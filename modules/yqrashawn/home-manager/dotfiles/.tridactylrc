@@ -1,12 +1,10 @@
-" privacy.resistFingerprinting.block_mozAddonManager
-" extensions.webextensions.restrictedDomains
 " General Settings
-sanitise tridactyllocal tridactylsync
+" sanitise tridactyllocal tridactylsync
 set update.lastchecktime 1645280034150
 set update.nag true
-set update.nagwait 7
+set update.nagwait 1
 set update.lastnaggedversion 1.14.0
-set update.checkintervalsecs 86400
+set update.checkintervalsecs 10800
 set configversion 2.0
 set theme auto
 set followpagepatterns.prev Previous
@@ -39,6 +37,10 @@ set searchengine g
 set allowautofocus true
 set auconcreatecontainer true
 set editorcmd /run/current-system/sw/bin/emacsclient -a \"\" -c -e '(progn (find-file "%f") (forward-line (1- %l)) (forward-char %c))'
+
+" Aliases
+alias quit_things js tri.quitThings()
+alias _global_init_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/init-globals.js
 
 " Binds
 bind u scrollpage -0.5
@@ -167,9 +169,7 @@ bind <S-Insert> mode ignore
 bind <AC-Escape> mode ignore
 bind <AC-`> mode ignore
 bind <S-Escape> mode ignore
-" bind <Escape> composite mode normal ; hidecmdline
-unbind --mode=normal <Escape>
-
+unbind <Escape>
 bind <C-[> composite mode normal ; hidecmdline
 bind a current_url bmark
 bind A bmark
@@ -206,6 +206,7 @@ bind <ArrowDown> ex.next_completion
 bind <ArrowUp> ex.prev_completion
 bind <Tab> ex.prev_history
 bind <S-Tab> ex.next_history
+bind <C-\> mouse_mode
 unbindurl app\.clickup\.com k
 unbindurl app\.clickup\.com j
 unbindurl app\.clickup\.com /
@@ -240,30 +241,6 @@ bindurl //newsblur\.com . scrollpage -0.5
 bindurl //newsblur\.com R reload
 bindurl ^https://web.whatsapp.com f hint -c [tabindex]:not(.two)>div,a
 bindurl ^https://web.whatsapp.com F hint -bc [tabindex]:not(.two)>div,a
-unbindurl //newsblur\.com s
-unbindurl //newsblur\.com j
-unbindurl //newsblur\.com k
-unbindurl //newsblur\.com n
-unbindurl //newsblur\.com u
-unbindurl //newsblur\.com m
-unbindurl //newsblur\.com o
-unbindurl //newsblur\.com v
-unbindurl //newsblur\.com V
-unbindurl //newsblur\.com x
-unbindurl //newsblur\.com X
-unbindurl //newsblur\.com S
-unbindurl //newsblur\.com c
-unbindurl //newsblur\.com J
-unbindurl //newsblur\.com K
-unbindurl //newsblur\.com A
-unbindurl //newsblur\.com /
-unbindurl //newsblur\.com r
-unbindurl //newsblur\.com M
-unbindurl //newsblur\.com D
-unbindurl //newsblur\.com ?
-bindurl //newsblur\.com , scrollpage 0.5
-bindurl //newsblur\.com . scrollpage -0.5
-bindurl //newsblur\.com R reload
 unbindurl ownmacbook:13331 j
 unbindurl ownmacbook:13331 k
 unbindurl ownmacbook:13331 y
@@ -295,9 +272,8 @@ unbindurl gh.status.im #
 unbindurl gh.status.im x
 unbindurl gh.status.im u
 unbindurl gh.status.im d
-bind <C-\> mouse_mode
 bind --mode=insert <C-i> editor
-bind --mode=insert <Escape> composite unfocus | mode normal
+bind --mode=insert <Escape> composite unfocus | quit_things | mode normal
 bind --mode=insert <C-[> composite unfocus | mode normal
 bind --mode=insert <AC-Escape> mode normal
 bind --mode=insert <AC-`> mode normal
@@ -314,7 +290,7 @@ bind --mode=ex <C-j> ex.next_history
 bind --mode=ex <C-m> ex.accept_line
 bind --mode=ex <Escape> ex.hide_and_clear
 bind --mode=ex <C-[> ex.hide_and_clear
-bind --mode=ex <S-Del> ex.execute_ex_on_completion_args tabclose
+bind --mode=ex <S-Delete> ex.execute_ex_on_completion_args tabclose
 bind --mode=ex <A-b> text.backward_word
 bind --mode=ex <A-f> text.forward_word
 bind --mode=ex <C-e> text.end_of_line
@@ -328,13 +304,11 @@ bind --mode=ex <S-Tab> ex.next_history
 bind --mode=ex <Space> ex.insert_space_or_completion
 bind --mode=ex <C-Space> ex.insert_space
 bind --mode=ex <C-o>yy ex.execute_ex_on_completion_args clipboard yank
-bind --mode=ex <S-Delete> ex.execute_ex_on_completion_args tabclose
 bind --mode=ex <C-g> ex.hide_and_clear
 
 " Subconfig Settings
 seturl www.google.com followpagepatterns.next Next
 seturl www.google.com followpagepatterns.prev Previous
-setturl goerlifaucet\.com mouse_mode true
 seturl github\.com allowautofocus true
 
 " Autocmds
@@ -344,20 +318,13 @@ autocmd DocStart penpot\.app mode ignore
 autocmd DocStart figma\.app mode ignore
 autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
 autocmd TriStart .* source_quiet
-# autocmd DocLoad .* no_mouse_mode
+autocmd DocLoad .* _global_init_
 
 " Autocontainers
-
-# autocontain -u waku status
-# autocontain -u status-go status
-# autocontain -u status-im status
-# autocontain -u status-mobile status
-autocontain -u ^https?://(www\.)?(\w*\.)*(status\.im|localhost:3449|localhost:4567) status
-
-autocontain -u ^https?://(www\.)?(\w*\.)*(scroll\.io) scroll
-
-autocontain -u ^https?://(www\.)?(\w*\.)*(donkey-clownfish\.ts\.net|ownmacbook|setapp\.com|adguard-dns\.io|roamresearch\.com|newsblur\.com|github\.com/notifications|fextralife\.com|localhost:6155|zmk\.dev|yqrashawn\.com|github\.com/settings/|melpa\.org|openai\.com|ifttt\.com|gov\.cn|raindrop\.io|kinesiscorporation\.github\.io|tarnished\.dev|github\.com/yqrashawn|\.local) none
-autocontain -u tridactyl none
+autocontain ^https?://(www\.)?(\w*\.)*(status\.im|localhost:3449|localhost:4567) status
+autocontain ^https?://(www\.)?(\w*\.)*(scroll\.io) scroll
+autocontain ^https?://(www\.)?(\w*\.)*(donkey-clownfish\.ts\.net|ownmacbook|setapp\.com|adguard-dns\.io|roamresearch\.com|newsblur\.com|github\.com/notifications|fextralife\.com|localhost:6155|zmk\.dev|yqrashawn\.com|github\.com/settings/|melpa\.org|openai\.com|ifttt\.com|gov\.cn|raindrop\.io|kinesiscorporation\.github\.io|tarnished\.dev|github\.com/yqrashawn|\.local) none
+autocontain tridactyl none
 
 escapehatch
 
