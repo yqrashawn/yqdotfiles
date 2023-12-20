@@ -1157,3 +1157,17 @@ result instead of `message'."
       (detached-shell-command "make run-re-frisk" t))
     (when (s-blank-p (shell-command-to-string "lsof -i :8081"))
       (detached-shell-command "make run-metro" t))))
+
+;;;###autoload
+(defun +status-start-session-lint-fix ()
+  (interactive)
+  (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
+        (async-shell-command-display-buffer nil))
+    (detached-shell-command "make lint-fix" t)))
+
+;;;###autoload
+(defun +status-start-session-lint ()
+  (interactive)
+  (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
+        (async-shell-command-display-buffer nil))
+    (detached-shell-command "make lint" t)))
