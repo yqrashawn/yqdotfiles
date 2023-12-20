@@ -8,9 +8,30 @@
     [cheshire.core :as json]
     [clojure.java.shell :refer [sh]]
     [clojure.string :as s]
-    [taoensso.timbre :refer [warn]]))
+    [taoensso.timbre :as log]))
 
 (defonce project-dir (fs/cwd))
+
+(def tmpdir
+  (try
+    (-> (->> "~/.emacs.d/.local/env"
+             fs/expand-home
+             fs/file
+             slurp
+             read-string
+             (filter #(and (string? %) (s/starts-with? % "TMPDIR=")))
+             first)
+        (s/split #"=")
+        last)
+    (catch Exception _e
+      (System/getenv "TMPDIR"))))
+
+(log/info "tmpdir for emacsclient:" tmpdir)
+(def ec-env {:TMPDIR tmpdir})
+
+(def ec (if-let [ec (fs/which "emacsclient")]
+          (.toString ec)
+          "/run/current-system/sw/bin/emacsclient"))
 
 (defn- shadow-edn
   []
@@ -25,34 +46,39 @@
   (let [command "npx shadow-cljs"
         command
           (str
-            command
-            " -d cider/cider-nrepl:"
-              (->
-                (sh
-                  "emacsclient"
-                  "--eval"
-                  "(progn (require 'cider) cider-injected-middleware-version)")
-                :out
-                s/trim-newline
-                read-string)
-            " -d nrepl/nrepl:"
-              (-> (sh "emacsclient"
-                      "--eval"
-                      "(progn (require 'cider) cider-injected-nrepl-version)")
-                  :out
-                  s/trim-newline
-                  read-string)
-            ;; " -d refactor-nrepl/refactor-nrepl:"
-            ;; (-> (sh "emacsclient" "--eval"
-            ;; "cljr-injected-middleware-version")
-            ;;     :out
-            ;;     s/trim-newline
-            ;;     read-string)
-          )
+           command
+           " -d cider/cider-nrepl:"
+           (->
+            (sh
+             ec
+             "--eval"
+             "(progn (require 'cider) cider-injected-middleware-version)"
+             :env ec-env)
+            :out
+            s/trim-newline
+            read-string)
+           " -d nrepl/nrepl:"
+           (-> (sh ec
+                   "--eval"
+                   "(progn (require 'cider) cider-injected-nrepl-version)"
+                   :env ec-env)
+               :out
+               s/trim-newline
+               read-string)
+           ;; " -d refactor-nrepl/refactor-nrepl:"
+           ;; (-> (sh ec
+           ;;         "--eval"
+           ;;         "cljr-injected-middleware-version"
+           ;;         :env ec-env)
+           ;;     :out
+           ;;     s/trim-newline
+           ;;     read-string)
+           )
         jack-in-deps
-          (-> (sh "emacsclient"
-                  "--eval"
-                  "(progn (require 'cider) cider-jack-in-dependencies)")
+        (-> (sh ec
+                "--eval"
+                "(progn (require 'cider) cider-jack-in-dependencies)"
+                :env ec-env)
               :out
               s/trim-newline
               read-string)

@@ -1145,3 +1145,15 @@ result instead of `message'."
       (with-current-buffer buf
         (when (and (cider-connected-p) (cider-current-repl 'cljs))
           (cider-interactive-eval "(status-im2.setup.hot-reload/reload)" nil nil (cider--nrepl-pr-request-map)))))))
+
+;;;###autoload
+(defun +status-start-sessions ()
+  (interactive)
+  (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
+        (async-shell-command-display-buffer nil))
+    (when (s-blank-p (shell-command-to-string "lsof -i :3449"))
+      (detached-shell-command "make run-clojure" t))
+    (when (s-blank-p (shell-command-to-string "lsof -i :4567"))
+      (detached-shell-command "make run-re-frisk" t))
+    (when (s-blank-p (shell-command-to-string "lsof -i :8081"))
+      (detached-shell-command "make run-metro" t))))

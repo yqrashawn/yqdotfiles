@@ -60,6 +60,12 @@
  [remap eval-last-sexp] #'pp-eval-last-sexp
  [eval-expression] #'pp-eval-expression
  (:leader
+  (:prefix-map ("d" . "Detached")
+   :desc "View" "l" #'detached-view-session
+   :desc "Rerun" "R" #'detached-rerun-session
+   :desc "List" "d" #'detached-list-sessions
+   :desc "Kill" "K" #'detached-session-kill
+   :desc "Compile" "c" #'detached-compile-session)
   (:prefix-map ("1" . "DO")
    :desc "Daily Capture" "c" #'org-roam-dailies-capture-today
    :desc "Daily Note" "1" #'org-roam-dailies-goto-today
@@ -638,4 +644,18 @@
           :n "gr" #'revert-buffer))
  (:after eww
          (:map eww-mode-map
-          :n "S" #'+summarize-current-eww-buffer)))
+          :n "S" #'+summarize-current-eww-buffer))
+ (:after detached
+         (:map detached-list-mode-map
+          :n "m" #'detached-list-mark-session
+          :n "u" #'detached-list-unmark-session
+          :n "K" #'detached-list-kill-session
+          :n "d" #'detached-list-delete-session
+          :n "gr" #'detached-list-revert
+          :n "y" #'detached-copy-session-command
+          :n "Y" #'detached-copy-session-output
+          :n "R" #'detached-list-rerun-session
+          :n "C" #'detached-compile-session
+          :n "RET" #'detached-list-open-session
+          :n "a" #'detached-edit-session-annotation
+          :n "q" #'detached-list-quit)))

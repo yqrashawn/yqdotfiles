@@ -94,7 +94,15 @@
           (cond
            ((derived-mode-p 'go-mode) 'golangci-lint)
            (t (funcall orig-fn checker)))
-        (funcall orig-fn checker)))))
+        (funcall orig-fn checker))))
+
+  ;; (defadvice! +lsp-f-same? (_orig-fn file-a file-b)
+  ;;   :around #'lsp-f-same?
+  ;;   (if (string= file-a file-b)
+  ;;       t
+  ;;     ;; (funcall orig-fn file-a file-b)
+  ;;     nil))
+  )
 
 ;; (after! lsp-graphql
 ;;   (setf (lsp--client-priority (gethash 'graphql-lsp lsp-clients)) -3))

@@ -59,10 +59,10 @@
      ((not (file-remote-p project)) (file-readable-p project))))
   (defun +projectile-status-mobile-project-p ()
     (require 's)
-    (s-ends-with? "status-mobile" (doom-project-root)))
+    (s-ends-with? "status-mobile/" (doom-project-root)))
   (projectile-register-project-type 'status-mobile '+projectile-status-mobile-project-p
                                     :project-file "shadow-cljs.edn"
-                                    :compile "make shell TARGET=clojure"
+                                    :compile "make run-clojure"
                                     :src-dir "src"
                                     :test "make test"
                                     :test-suffix "_test.cljs"))

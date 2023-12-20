@@ -369,8 +369,36 @@ This function could be in the list `comint-output-filter-functions'."
 
 (use-package! detached
   :hook (doom-first-input . detached-init)
+  :init
+  (defun +detached-state-transition-notifications-message (session)
+    (when (executable-find "alerter")
+      (let ((status (detached-session-status session))
+            (host (detached-session-host-name session)))
+        (async-shell-command (format! "alerter -message %s -timeout 30 -group dtach -sender org.gnu.Emacs -sound default -title %s"
+                                      (detached-session-command session)
+                                      (pcase status
+                                        ('success (format "Detached finished [%s]" host))
+                                        ('failure (format "Detached failed [%s]" host))))))))
+  (setq! async-shell-command-display-buffer nil
+         detached-show-session-context t
+         detached-command-format '(:width 50 :padding 4 :function detached-command-str)
+         detached-metadata-annotators-alist '((branch . detached--metadata-git-branch))
+         detached-list-config
+         `((:name "Command" :function detached-list--command-str :length 30)
+           (:name "Status" :function detached-list--status-str :length 10)
+           (:name "Host" :function detached--host-str :length 10 :face detached-host-face)
+           (:name "Directory" :function detached--working-dir-str :length 30 :face detached-working-dir-face)
+           (:name "Metadata" :function detached--metadata-str :length 30 :face detached-metadata-face)
+           (:name "Duration" :function detached--duration-str :length 10 :face detached-duration-face)
+           (:name "Created" :function detached--creation-str :length 20 :face detached-creation-face))
+         detached-notification-function #'+detached-state-transition-notifications-message)
+  (set-popup-rule! "^\\*detached-session-output\\*" :side 'right :size 0.4 :vslot 97 :quit t)
+  (set-popup-rule! "^\\*detached-list\\*" :side 'right :size 0.6 :vslot 98 :quit t)
+  (set-popup-rule! "^\\*Detached Shell Command\\*.*" :ttl #'bury-buffer)
   :config
-  (setq! detached-show-output-on-attach t))
+  (defadvice! +detached-kill-session (orig-fn session &optional _delete)
+    :around #'detached-kill-session
+    (funcall orig-fn session t)))
 
 (use-package! gc-buffers :hook (doom-first-buffer . gc-buffers-mode))
 

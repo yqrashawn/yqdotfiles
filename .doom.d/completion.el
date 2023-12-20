@@ -145,7 +145,7 @@
          fussy-ignore-case t
          fussy-use-cache t
          fussy-default-regex-fn #'fussy-pattern-flex-2)
-  (pushnew! completion-styles 'fussy)
+  ;; (pushnew! completion-styles 'fussy)
 
   (after! corfu
     (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
@@ -153,7 +153,12 @@
               (lambda ()
                 (setq-local fussy-max-candidate-limit 5000
                             fussy-default-regex-fn 'fussy-pattern-first-letter
-                            fussy-prefer-prefix nil)))))
+                            fussy-prefer-prefix nil))))
+
+  (defadvice! +read-extended-command (orig-fn &optional prompt)
+    :around #'read-extended-command
+    (let ((completion-styles '(fussy orderless basic)))
+      (funcall orig-fn prompt))))
 
 (use-package! hotfuzz
   :after orderless
@@ -161,7 +166,7 @@
   (setq! completion-ignore-case t)
   :config
   (require 'hotfuzz-module nil t)
-  ;; (pushnew! completion-styles 'hotfuzz)
+  (pushnew! completion-styles 'hotfuzz)
   ;; (setq! fussy-score-fn 'fussy-hotfuzz-score)
   )
 
