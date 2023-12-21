@@ -374,11 +374,19 @@ This function could be in the list `comint-output-filter-functions'."
     (when (executable-find "alerter")
       (let ((status (detached-session-status session))
             (host (detached-session-host-name session)))
-        (async-shell-command (format! "alerter -message %s -timeout 30 -group dtach -sender org.gnu.Emacs -sound default -title %s"
-                                      (detached-session-command session)
-                                      (pcase status
-                                        ('success (format "Detached finished [%s]" host))
-                                        ('failure (format "Detached failed [%s]" host))))))))
+        (call-process-shell-command
+         (format! "alerter -message \"%s\" -timeout 30 -group dtach -sender org.gnu.Emacs -sound default -title \"%s\"&"
+                  (detached-session-command session)
+                  (pcase status
+                    ('success (format "Detached finished [%s]" host))
+                    ('failure (format "Detached failed [%s]" host))))
+
+
+         nil nil))))
+  (defadvice! +detached-rerun-session (session &optional _arg)
+    :after #'detached-rerun-session
+    (detached-kill-session session t))
+
   (setq! async-shell-command-display-buffer nil
          detached-show-session-context t
          detached-command-format '(:width 50 :padding 4 :function detached-command-str)

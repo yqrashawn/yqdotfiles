@@ -22,3 +22,4 @@ tri.userIdle = (id, ms, fn) => {
 
   return () => clearTimeout(timeoutId)
 }
+tri.sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))

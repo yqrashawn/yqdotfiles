@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "esbuild": "^0.19.10"
+  },
+  "scripts": {
+    "build": "esbuild --bundle --format=iife --outfile=out.js index.js"
+  },
+  "dependencies": {
+    "@thi.ng/cache": "^2.1.85",
+    "@thi.ng/compare": "^2.2.10",
+    "@thi.ng/compose": "^2.1.53",
+    "@thi.ng/csp": "^2.1.85",
+    "@thi.ng/iterators": "^6.1.85",
+    "@thi.ng/rstream": "^8.2.17",
+    "@thi.ng/rstream-csp": "^3.1.89",
+    "@thi.ng/seq": "^0.4.51",
+    "@thi.ng/transducers": "^8.8.18"
+  }
+}
