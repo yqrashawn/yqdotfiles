@@ -6,6 +6,8 @@
   (setq! llm-warn-on-nonfree nil)
   :config
   (require 's)
+  (require 'seq)
+  (require 'dash)
   (defadvice! +llm-request-async (orig-fn url &rest args)
     :around #'llm-request-async
     (let ((new-url (if (s-starts-with? "https://api.openai.com" url)
@@ -284,3 +286,50 @@ You should separate your response into multiple paragraph if they are too long."
       ;; (set-mark (point))
       (goto-char start)
       (insert before-text))))
+
+(defun +llm-ollama-request (message cb &optional system-message model embedding-model)
+  (require 'llm)
+  (require 'llm-ollama)
+  (let* ((model (or model "mistral"))
+         (embedding-model (or embedding-model "llama2"))
+         (provider (make-llm-ollama
+                    :scheme "https"
+                    :host "mbpo.donkey-clownfish.ts.net"
+                    :chat-model model
+                    :embedding-model embedding-model))
+         (first-message (make-llm-chat-prompt-interaction
+                         :role 'user
+                         :content message))
+         (prompt (make-llm-chat-prompt
+                  :context (or system-message +gpt-system-message)
+                  :temperature 0.8
+                  :interactions (list first-message))))
+    (llm-chat-async provider
+                    prompt
+                    cb
+                    (lambda (_err-sym err-msg) (message "Ollama Error: %S" err-msg)))))
+
+;; (setq aaaaa nil)
+;; (+llm-ollama-request "what do you know about emacs?"
+;;                      (cmd! (x)
+;;                            (print "----------------------")
+;;                            (print x)
+;;                            (setq aaaaa x))
+;;                      nil "mistral" "mistral")
+
+;; (defun llm-ollama--get-final-response (response)
+;;   "Return the final post-streaming json output from RESPONSE."
+;;   (log/spy response)
+;;   (with-temp-buffer
+;;     (insert response)
+;;     ;; Find the last json object in the buffer.
+;;     (goto-char (point-max))
+;;     (search-backward "{" nil t)
+;;     (json-read)))
+
+
+
+;; (cl-defmethod llm-embedding ((provider llm-ollama) string)
+;;   (llm-ollama--embedding-extract-response
+;;    (llm-request-sync (format "https://mbpo.donkey-clownfish.tx.net:%d/api/embeddings" (or (llm-ollama-port provider) 11434))
+;;                      :data (llm-ollama--embedding-request provider string))))
