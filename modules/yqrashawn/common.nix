@@ -42,6 +42,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        rtx
         imagemagick
         zprint
         neil

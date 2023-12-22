@@ -7,30 +7,20 @@ let
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
     [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
-    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    . $HOME/.asdf/plugins/java/set-java-home.zsh
-    #asdf global java graalvm-22.1.0+java17
-    #asdf global clojure 1.10.3.1087
-    #asdf global nim 1.6.6
-    #asdf global ruby 3.1.2
-    #asdf global python 3.10.5
-    #asdf global nodejs 16.15.1
-    #asdf global golang 1.18.6
-    #asdf global yarn 1.22.19
-    #asdf global pnpm 7.9.0
-    #asdf global deno 1.24.3
-    #asdf global lua 5.4.4
-    #asdf global bun 0.1.10
+    # . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+    # . $HOME/.asdf/plugins/java/set-java-home.zsh
 
-    if ! typeset -f _asdf > /dev/null; then
-      fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
-    fi
+    # if ! typeset -f _asdf > /dev/null; then
+    #   fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
+    # fi
+    eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   bashProfileExtra = ''
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
-    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    export JAVA_HOME=$(asdf where java)
+    # . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+    # export JAVA_HOME=$(asdf where java)
+    eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
