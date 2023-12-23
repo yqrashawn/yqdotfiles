@@ -321,11 +321,11 @@
 (package! shrface)
 ;; (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 
-(package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+;; (package! copilot
+;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
-(package! ollama
-  :recipe (:host github :repo "zweifisch/ollama"))
+;; (package! ollama
+;;   :recipe (:host github :repo "zweifisch/ollama"))
 
 (disable-packages! dap-mode treemacs lsp-treemacs)
 
@@ -335,6 +335,7 @@
 (package! llm :recipe (:host github :repo "ahyatt/llm"))
 (package! org-ai)
 (unpin! nim-mode)
+(package! whisper :recipe (:host github :repo "natrys/whisper.el"))
 
 
 ;; Local Variables:

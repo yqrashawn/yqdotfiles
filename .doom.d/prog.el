@@ -272,15 +272,15 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 
 ;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook ((go-mode jsx-mode) . copilot-mode)
-  :init
-  (setq! copilot-max-char -1))
+;; (use-package! copilot
+;;   :hook ((go-mode jsx-mode) . copilot-mode)
+;;   :init
+;;   (setq! copilot-max-char -1))
 
-(use-package! ollama
-  :defer t
-  :init
-  (setq! ollama:model "phind-codellama"))
+;; (use-package! ollama
+;;   :defer t
+;;   :init
+;;   (setq! ollama:model "phind-codellama"))
 
 (use-package! jarchive
   :hook (doom-after-init . jarchive-setup))
