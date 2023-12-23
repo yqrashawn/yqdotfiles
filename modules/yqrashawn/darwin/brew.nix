@@ -44,7 +44,6 @@
       "curl"
       "php"
       "fcitx-remote-for-osx"
-      # "luarocks"
       "zig"
       # "dum"
       # "clj-kondo"

@@ -45,6 +45,8 @@
  :g "s-m" #'+popup/toggle
  :g "s-u" #'revert-buffer
  :g "s-i" #'side-notes-toggle-notes
+ ;; :g "s-j" #'+whisper-run
+ :g "s-j" #'+chat-with-ai
  :g "C-M-s-7" '+windmove-map
  :g "C-M-s-j" #'iflipb-next-buffer
  :g "C-M-s-k" #'iflipb-previous-buffer

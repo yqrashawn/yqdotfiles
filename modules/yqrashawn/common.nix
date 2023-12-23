@@ -9,8 +9,6 @@ let
     difftastic
     notmuch
     streamlink
-    # mpv
-    mpv-unwrapped
     you-get
     python3
     black
@@ -42,6 +40,8 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        # mpv
+        mpv-unwrapped
         rtx
         imagemagick
         zprint

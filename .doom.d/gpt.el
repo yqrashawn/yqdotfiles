@@ -7,7 +7,8 @@
   :config
   (require 's)
   (require 'seq)
-  (require 'dash))
+  (require 'dash)
+  (require 'subr-x))
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
@@ -200,3 +201,8 @@ You should separate your response into multiple paragraph if they are too long."
    ((eq major-mode 'elfeed-show-mode) (call-interactively '+summarize-current-elfeed-show-buffer arg))
    ;; ((eq major-mode 'notmuch-show-mode) (call-interactively '+summarize-current-notmuch-buffer arg))
    ))
+
+
+(defun +llm-openai-shell-command ()
+  (interactive)
+  (call-interactively '+whisper-run))

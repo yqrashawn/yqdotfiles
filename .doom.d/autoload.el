@@ -1171,3 +1171,47 @@ result instead of `message'."
   (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
         (async-shell-command-display-buffer nil))
     (detached-shell-command "make lint" t)))
+
+;;;###autoload
+(defun +whisper-insert ()
+  (interactive)
+  (whisper-run)
+  (if (y-or-n-p "Trans?")
+      (progn
+        (whisper-run)
+        (when (and (boundp #'gptel-mode) gptel-mode)
+          (if (y-or-n-p "Query?")
+              (progn (goto-char (point-max))
+                     (gptel-send))
+            (goto-char (point-max)))))
+    (when (process-live-p whisper--recording-process)
+      (kill-process whisper--recording-process))))
+
+;;;###autoload
+(defun +whisper-run ()
+  (interactive)
+  (cond
+   ((eq current-prefix-arg 1)
+    (+whisper-zh-lang-model))
+   ((not current-prefix-arg)
+    (+whisper-default-lang-model)))
+  (call-interactively '+whisper-insert))
+
+;;;###autoload
+(defun +chat-with-ai ()
+  (interactive)
+  (cond
+   ((and current-prefix-arg (and (boundp #'gptel-mode) gptel-mode))
+    (progn
+      (call-interactively #'gptel)
+      (when-let ((buf (get-buffer gptel-default-session)))
+        (with-current-buffer buf
+          (call-interactively #'+whisper-run)))))
+   ((and (boundp #'gptel-mode) gptel-mode)
+    (call-interactively #'+whisper-run))
+   (t
+    (progn
+      (call-interactively #'gptel)
+      (when-let ((buf (get-buffer gptel-default-session)))
+        (with-current-buffer buf
+          (call-interactively #'+whisper-run)))))))

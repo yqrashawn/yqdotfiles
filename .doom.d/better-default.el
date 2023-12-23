@@ -632,14 +632,39 @@ used in the POST request made to the LanguageTool server."
            (chatgpt-arcana-chat-mode . chat)
            (fallback . fallback))))
 
+(defun +gptel-save-buffer ()
+  (interactive)
+  (when-let ((buf (get-buffer gptel-default-session)))
+    (with-current-buffer buf
+      (if buffer-file-name
+          (save-buffer)
+        (write-file
+         (format
+          (expand-file-name
+           "~/Dropbox/sync/gptel/gptel-%s.org")
+          (format-time-string
+           "%Y%m%d-%H%M%S-%3N")))))))
+
+(defun +gptel-kill-default-buffer ()
+  (interactive)
+  (when-let ((buf (get-buffer gptel-default-session)))
+    (kill-buffer buf)))
+
 (use-package! gptel
-  :defer t
+  :commands (gptel)
   :init
   (setq! gptel-api-key +open-ai-api-key
+         gptel-default-mode 'org-mode
          ;; gptel-model "gpt-3.5-turbo-1106"
          gptel-model "gpt-4-1106-preview"
          gptel-temperature 0.8)
+  (defadvice! +gptel-cleanup-default-buffer (&rest args)
+    :before #'gptel
+    (+gptel-kill-default-buffer))
+  (set-popup-rule! "^\\*ChatGPT\\*$" :side 'right :size 0.4 :vslot 100 :quit t)
   :config
+  (setq! gptel-post-response-hook nil)
+  (add-hook! 'gptel-post-response-hook '+gptel-save-buffer)
   (setq gptel-directives '((default . "You are a large language model living in Emacs and a helpful coding assistant. Respond concisely.")
                            (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
                            (writing . "You are a large language model and a writing assistant. Respond concisely.")
@@ -771,9 +796,31 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 (use-package! whisper
   :commands (whisper-run whisper-file)
+  :init
+  (defun +whisper-default-lang-model ()
+    (setq! whisper-model "medium.en"
+           whisper-language "en"))
+  (defun +whisper-zh-lang-model ()
+    (setq! whisper-model "large-v3"
+           whisper-language "zh"))
   :config
+  (require 'cl-extra)
+  (require 'subr-x)
+  (add-hook! 'whisper-post-process-hook
+    (lambda ()
+      (thread-first (buffer-string)
+                    (string-trim "\"" "\"")
+                    (string-trim))))
+  (setq! whisper-use-threads
+         (thread-first "sysctl -n hw.ncpu"
+                       (shell-command-to-string)
+                       (string-trim)
+                       (cl-parse-integer)
+                       (- 2)))
+  (defadvice! +whisper--ffmpeg-input-device (&optional arg)
+    :before #'whisper-run
+    (unless whisper--ffmpeg-input-device
+      (call-interactively 'rk/select-default-audio-device)))
   (setq! whisper-install-directory (expand-file-name "~/.cache/"))
-  (setq! whisper-model "medium.en"
-         whisper-language "en")
-  (setq! whisper-model "large"
-         whisper-language "zh"))
+  (+whisper-zh-lang-model)
+  (+whisper-default-lang-model))
