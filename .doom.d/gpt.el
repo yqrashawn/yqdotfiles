@@ -7,13 +7,7 @@
   :config
   (require 's)
   (require 'seq)
-  (require 'dash)
-  (defadvice! +llm-request-async (orig-fn url &rest args)
-    :around #'llm-request-async
-    (let ((new-url (if (s-starts-with? "https://api.openai.com" url)
-                       (s-replace "https://api.openai.com" "https://openrouter.ai/api" url)
-                     url)))
-      (apply orig-fn (cl-pushnew new-url args)))))
+  (require 'dash))
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
@@ -23,10 +17,8 @@
   (let* ((model (if (eq use-16k-model 1)
                     "gpt-4-1106-preview"
                   "gpt-3.5-turbo-1106"))
-         ;; (provider (make-llm-openai
-         ;;            :key +open-ai-api-key
-         ;;            :chat-model model))
-         (provider (make-llm-openai
+         (provider (make-llm-openai-compatible
+                    :url "https://openrouter.ai/api/v1/"
                     :key +openrouter-api-key
                     :chat-model "openrouter/auto"))
          (first-message (make-llm-chat-prompt-interaction
@@ -201,60 +193,6 @@ You should separate your response into multiple paragraph if they are too long."
                         use-16k-model))))
 
 ;;;###autoload
-;; (defun +summarize-current-notmuch-buffer (arg)
-;;   (interactive "P")
-;;   (require 's)
-;;   (when (eq major-mode 'notmuch-show-mode)
-;;     (let* ((buf (current-buffer))
-;;            (use-16k-model (eq arg 1))
-;;            (title (notmuch-show-get-subject))
-;;            (txt-content (with-current-buffer (current-buffer) (buffer-string)))
-;;            (gpt-message (format "%s
-;; Email Metadata:
-;; ```txt
-;; Title: %s
-;; ```
-
-;; Email Content:
-;; ```txt
-;; %s
-;; ```
-;; "
-
-;;                                 ;; "Kindly provide me with a summary of the following article. The summary should cover the main points of the article and provide me with a clear understanding of the topic discussed. Please ensure that the summary is concise but comprehensive and includes all the essential information from the article. Please response in in multiline markdown format text."
-;;                                 ;; "Provide me key takeaways, tldrs and summary of the following article.
-;;                                 ;; Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
-;;                                 ;; Ensure that your response is concise but comprehensive and includes all the essential information from the article."
-;;                                 "Generate TLDR for the following email.
-;; Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
-;; Ensure that your response is concise but comprehensive and includes all the essential information from the article.
-;; Use HTML <ol> bullet points in your response as much as possible."
-;;                                 ;; "Summarize following article, response with markdown."
-;;                                 title txt-content)))
-;;       (+llm-gpt-request gpt-message (lambda (msg)
-;;                                       ;; (setq kkk msg)
-;;                                       (when msg
-;;                                         (with-temp-buffer
-;;                                           (insert (concat "<article><title>Summary</title>"
-;;                                                           (thread-last msg
-;;                                                                        (s-replace-all '(("\n" . "<br/>")))
-;;                                                                        (s-chop-prefix "```html")
-;;                                                                        (s-chop-suffix "```"))
-;;                                                           "<p>------</p><article/>"))
-;;                                           (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-;;                                             (when (buffer-live-p buf)
-;;                                               (with-current-buffer buf
-;;                                                 (goto-char (point-min))
-;;                                                 (read-only-mode -1)
-;;                                                 (shr-insert-document dom)
-;;                                                 ;; (insert (concat "====== Summary ======\n" msg "\n====== End Of Summary ======\n"))
-;;                                                 (read-only-mode 1)))))))
-;;                         "You are a large language model living in Emacs and a helpful reading assistant.
-;; Your response should be in HTML format.
-;; You should separate your response into multiple paragraph if they are too long."
-;;                         use-16k-model))))
-
-;;;###autoload
 (defun +gpt-dwim-current-buffer (arg)
   (interactive "P")
   (cond
@@ -262,74 +200,3 @@ You should separate your response into multiple paragraph if they are too long."
    ((eq major-mode 'elfeed-show-mode) (call-interactively '+summarize-current-elfeed-show-buffer arg))
    ;; ((eq major-mode 'notmuch-show-mode) (call-interactively '+summarize-current-notmuch-buffer arg))
    ))
-
-
-
-;; (defun xxx ()
-;;   (require 'llm-openai)
-;;   (require 'llm)
-;;   (let ((open-ai (make-llm-openai :key +open-ai-api-key :chat-model "gpt-3.5-turbo-16k" :embedding-model "text-embedding-ada-002"))))
-;;   (with-current-buffer (get-buffer "*elfeed-entry*")
-;;     (let (((make-llm-chat-prompt :context (buffer-substring))))
-;;       (llm-chat-async open-ai))))
-
-(defun insert-before-and-after-region (before-text after-text)
-  "Inserts text before and after the selected region."
-  (interactive "sText to insert before: \nsText to insert after: ")
-  (let ((start (region-beginning))
-        (end (region-end)))
-    (save-excursion
-      (goto-char end)
-      (insert after-text)
-      (goto-char end)
-      ;; (forward-char 3)
-      ;; (set-mark (point))
-      (goto-char start)
-      (insert before-text))))
-
-(defun +llm-ollama-request (message cb &optional system-message model embedding-model)
-  (require 'llm)
-  (require 'llm-ollama)
-  (let* ((model (or model "mistral"))
-         (embedding-model (or embedding-model "llama2"))
-         (provider (make-llm-ollama
-                    :scheme "https"
-                    :host "mbpo.donkey-clownfish.ts.net"
-                    :chat-model model
-                    :embedding-model embedding-model))
-         (first-message (make-llm-chat-prompt-interaction
-                         :role 'user
-                         :content message))
-         (prompt (make-llm-chat-prompt
-                  :context (or system-message +gpt-system-message)
-                  :temperature 0.8
-                  :interactions (list first-message))))
-    (llm-chat-async provider
-                    prompt
-                    cb
-                    (lambda (_err-sym err-msg) (message "Ollama Error: %S" err-msg)))))
-
-;; (setq aaaaa nil)
-;; (+llm-ollama-request "what do you know about emacs?"
-;;                      (cmd! (x)
-;;                            (print "----------------------")
-;;                            (print x)
-;;                            (setq aaaaa x))
-;;                      nil "mistral" "mistral")
-
-;; (defun llm-ollama--get-final-response (response)
-;;   "Return the final post-streaming json output from RESPONSE."
-;;   (log/spy response)
-;;   (with-temp-buffer
-;;     (insert response)
-;;     ;; Find the last json object in the buffer.
-;;     (goto-char (point-max))
-;;     (search-backward "{" nil t)
-;;     (json-read)))
-
-
-
-;; (cl-defmethod llm-embedding ((provider llm-ollama) string)
-;;   (llm-ollama--embedding-extract-response
-;;    (llm-request-sync (format "https://mbpo.donkey-clownfish.tx.net:%d/api/embeddings" (or (llm-ollama-port provider) 11434))
-;;                      :data (llm-ollama--embedding-request provider string))))
