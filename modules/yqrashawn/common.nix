@@ -42,7 +42,7 @@ in {
       [
         # mpv
         mpv-unwrapped
-        rtx
+        # rtx
         imagemagick
         zprint
         neil

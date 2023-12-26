@@ -7,19 +7,19 @@ let
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
     [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
-    # . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    # . $HOME/.asdf/plugins/java/set-java-home.zsh
+    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+    . $HOME/.asdf/plugins/java/set-java-home.zsh
 
-    # if ! typeset -f _asdf > /dev/null; then
-    #   fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
-    # fi
+    if ! typeset -f _asdf > /dev/null; then
+      fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
+    fi
     # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   bashProfileExtra = ''
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
-    # . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    # export JAVA_HOME=$(asdf where java)
+    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+    export JAVA_HOME=$(asdf where java)
     # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   functions = builtins.readFile ./functions.sh;
@@ -83,7 +83,7 @@ in {
   programs.bash.shellAliases = aliases;
   programs.bash.initExtra = ''
     ${functions}
-    eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
+    # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   programs.bash.profileExtra = bashProfileExtra;
   programs.zsh = let
@@ -131,7 +131,7 @@ in {
     '';
     initExtra = ''
       eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
-      eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
+      # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
 
       dark-light-mcfly-history-widget() {
         unset MCFLY_LIGHT
