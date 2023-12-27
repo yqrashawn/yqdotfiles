@@ -232,6 +232,7 @@ creates a new one. Don't unnecessarily bother the user."
                                  (not (process-live-p (get-buffer-process b))))))
                         (buffer-list)))
     nil)
+  (set-popup-rule! "^\\*cider-error\\*" :select nil :side 'right :size 0.4)
 
   ;; (set-popup-rules!
   ;;   '(("^\\*cider-repl" :side right :size 0.5 :quit +doom/just-escaped-p :ttl nil)))
