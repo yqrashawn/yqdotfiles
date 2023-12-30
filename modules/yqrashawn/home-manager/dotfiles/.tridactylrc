@@ -41,9 +41,9 @@ set editorcmd /run/current-system/sw/bin/emacsclient -a \"\" -c -e '(progn (find
 " Aliases
 alias quit_things js tri.quitThings()
 alias _global_init_built_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/globals/out.js
-alias _global_init_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/init-globals.js
-alias _auto_tab_switch_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/auto-switch-tab.js
-alias _cleanup_history_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/cleanup-history.js
+alias _global_init_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/init_globals.js
+alias _auto_tab_switch_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/auto_switch_tab.js
+alias _cleanup_history_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/cleanup_history.js
 
 " Binds
 bind u scrollpage -0.5
@@ -328,8 +328,10 @@ autocmd DocLoad ^https://discord\.com _cleanup_history_
 autocmd DocLoad ^https://app\.slack\.com _cleanup_history_
 autocmd DocLoad ^https://discord\.com js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/discord.js
 autocmd DocLoad ^https://app\.slack\.com js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/slack.js
-autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/pull\/\d+ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/github-topic.js
-autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/issues\/\d+ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/github-topic.js
+autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/pull\/\d+ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/github_topic.js
+autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/issues\/\d+ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/github_topic.js
+autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices$ exclaim_quiet open "https://my.setapp.com/devices?hostname=$(hostname)"
+autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices\?hostname js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/setapp_devices.js
 
 " Autocontainers
 autocontain ^https?://(www\.)?(\w*\.)*(status\.im|localhost:3449|localhost:4567) status

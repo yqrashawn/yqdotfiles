@@ -29,7 +29,12 @@ in {
 
   # environment setup
   environment = {
-    pathsToLink = [ "/share/zsh" "/share/hunspell" "/share/aspell" ];
+    pathsToLink = [
+      "/share/zsh"
+      "/share/hunspell"
+      "/share/aspell"
+      # "/share/postgresql"
+    ];
     loginShell = pkgs.zsh;
     # backupFileExtension = "backup";
     etc = {

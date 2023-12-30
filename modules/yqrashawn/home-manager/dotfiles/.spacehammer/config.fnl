@@ -95,7 +95,7 @@
 (fn browser-summarize []
   (hs.eventtap.keyStroke ["cmd" "ctrl"] ".")
   (delay 0.2 (fn []
-               (hs.eventtap.keyStrokes "Summarize")
+               (hs.eventtap.keyStrokes "Help me read")
                (hs.eventtap.keyStroke [] "return")
                (hs.eventtap.keyStroke ["cmd"] "return"))))
 

@@ -40,6 +40,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        # postgresql
         # mpv
         mpv-unwrapped
         # rtx
@@ -49,7 +50,7 @@ in {
         yt-dlp
         qbittorrent
         tailscale
-        # cloudflared
+        cloudflared
         todoist
         awscli2
         zellij
