@@ -712,14 +712,14 @@ used in the POST request made to the LanguageTool server."
            ("Asia/Shanghai" "Beijing")
            ("Asia/Tokyo" "Tokyo"))))
 
-(use-package! org-ai
-  :commands (org-ai-mode org-ai-global-mode)
-  :hook (org-mode . org-ai-mode)
-  :init
-  (setq! org-ai-default-chat-model "gpt-4-1106-preview"
-         org-ai-default-inject-sys-prompt-for-all-messages nil
-         org-ai-openai-api-token +open-ai-api-key
-         org-ai-default-chat-system-prompt "You are a helpful assistant inside Emacs. Respond concisely."))
+;; (use-package! org-ai
+;;   :commands (org-ai-mode org-ai-global-mode)
+;;   :hook (org-mode . org-ai-mode)
+;;   :init
+;;   (setq! org-ai-default-chat-model "gpt-4-1106-preview"
+;;          org-ai-default-inject-sys-prompt-for-all-messages nil
+;;          org-ai-openai-api-token +open-ai-api-key
+;;          org-ai-default-chat-system-prompt "You are a helpful assistant inside Emacs. Respond concisely."))
 
 (after! frame
   (add-function
@@ -824,3 +824,11 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   (setq! whisper-install-directory (expand-file-name "~/.cache/"))
   (+whisper-zh-lang-model)
   (+whisper-default-lang-model))
+
+(use-package! chatgpt-shell
+  :commands (chatgpt-shell-prompt-compose chatgpt-shell-prompt)
+  :init
+  (setq! chatgpt-shell-openai-key +open-ai-api-key
+         chatgpt-shell-model-temperature 0.6)
+  :config
+  (pushnew! chatgpt-shell-language-mapping '(("javascript". "jsx"))))

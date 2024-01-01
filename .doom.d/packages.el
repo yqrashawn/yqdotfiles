@@ -312,6 +312,7 @@
 ;; (package! chatgpt-arcana :recipe (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el")))
 ;; (package! jit-spell)
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
+(package! chatgpt-shell)
 
 ;; (package! closql :pin "0a7226331ff1f96142199915c0ac7940bac4afdd")
 ;; (package! emacsql :pin "415dbfd846f46d921a70a351695f0d0e8f75da35")
@@ -333,7 +334,7 @@
 (package! jarchive)
 (package! pinentry)
 (package! llm :recipe (:host github :repo "ahyatt/llm"))
-(package! org-ai)
+;; (package! org-ai)
 (unpin! nim-mode)
 (package! whisper :recipe (:host github :repo "natrys/whisper.el"))
 
