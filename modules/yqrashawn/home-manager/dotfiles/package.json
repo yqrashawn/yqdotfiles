@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "bash-language-server": ">=0",
+    "create-cloudflare": ">=0",
     "create-next-app": ">=0",
     "create-react-app": "^5.0.1",
     "create-turbo": ">=0",
@@ -20,6 +21,7 @@
     "typescript-language-server": ">=0",
     "vercel": ">=0",
     "vscode-langservers-extracted": ">=0",
+    "wrangler": ">=0",
     "yaml-language-server": ">=0"
   }
 }

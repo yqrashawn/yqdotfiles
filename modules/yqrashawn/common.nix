@@ -72,7 +72,7 @@ in {
         msmtp
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
-        (emacs29.override (args: {
+        (emacs29-overlay.override (args: {
           # withMacport = true;
           withNS = true;
           # macportVersion = "master";
