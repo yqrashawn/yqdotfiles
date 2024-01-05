@@ -402,11 +402,12 @@ This function could be in the list `comint-output-filter-functions'."
          detached-notification-function #'+detached-state-transition-notifications-message)
   (set-popup-rule! "^\\*detached-session-output\\*" :side 'right :size 0.4 :vslot 97 :quit t)
   (set-popup-rule! "^\\*detached-list\\*" :side 'right :size 0.6 :vslot 98 :quit t)
-  (set-popup-rule! "^\\*Detached Shell Command\\*.*" :ttl #'bury-buffer)
-  :config
-  (defadvice! +detached-kill-session (orig-fn session &optional _delete)
-    :around #'detached-kill-session
-    (funcall orig-fn session t)))
+  (set-popup-rule! "^\\*Detached Shell Command\\*.*" :side 'right :size 0.35 :vslot 98 :quit t)
+  ;; :config
+  ;; (undefadvice! +detached-kill-session (orig-fn session &optional _delete)
+  ;;   :around #'detached-kill-session
+  ;;   (funcall orig-fn session t))
+  )
 
 (use-package! gc-buffers :hook (doom-first-buffer . gc-buffers-mode))
 

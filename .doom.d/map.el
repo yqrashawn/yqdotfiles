@@ -62,6 +62,9 @@
  [remap xterm-paste] #'yank
  [remap eval-last-sexp] #'pp-eval-last-sexp
  [eval-expression] #'pp-eval-expression
+ [remap async-shell-command] #'detached-shell-command
+ [remap compile] #'detached-compile
+ [remap recompile] #'detached-compile-recompile
  (:leader
   (:prefix-map ("d" . "Detached")
    :desc "View" "l" #'detached-view-session
@@ -99,7 +102,7 @@
   :desc "Search other directory" "sf" #'+default/search-other-cwd
   :desc "Locate file" "sD" #'locate
   :desc "Toggle debug on error" "tD" #'toggle-debug-on-error
-  :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
+  ;; :desc "Toggle Tabnine" "tt" #'yq/toggle-company-tabnine
   :desc "Line numbers" "tl" #'+doom/toggle-line-numbers
   :desc "Imenu sidebar" "cb" #'side-hustle-toggle
   :desc "Git timemachine" "gt" #'git-timemachine
@@ -607,10 +610,6 @@
  (:after pprint-to-buffer
          (:map emacs-lisp-mode-map
           :g "C-c C-p" #'pprint-to-buffer-last-sexp))
- (:after detach
-         [remap async-shell-command] #'detached-shell-command
-         [remap compile] detached-compile
-         [remap recompile] detached-compile-recompile)
  (:after ibuffer
          (:map ibuffer-mode-map
           :n "gX" #'ibuffer-do-kill-lines))

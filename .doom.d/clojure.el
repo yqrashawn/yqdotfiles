@@ -270,11 +270,29 @@ creates a new one. Don't unnecessarily bother the user."
                  (cider-interactive-eval form nil nil (cider--nrepl-pr-request-map))
                (message "No test at point"))))))))
 
+  (defun +cider-test-ns-execute-cljs ()
+    "able to run `deftest' in cljs file, not support showing test result"
+    (interactive)
+    (cider-interactive-eval "(cljs.test/run-tests)"))
+
   (defadvice! +cider-test-run-test (orig-fn)
     :around #'cider-test-run-test
     (if (eq major-mode 'clojurescript-mode)
         (call-interactively '+cider-test-execute-cljs)
       (call-interactively orig-fn)))
+
+  (defadvice! +cider-test-run-ns-tests (orig-fn suppress-inference &optional silent prompt-for-filters)
+    :around #'cider-test-run-ns-tests
+    (interactive "P")
+    (if (eq major-mode 'clojurescript-mode)
+        (cider-interactive-eval "(cljs.test/run-tests)")
+      (call-interactively orig-fn suppress-inference silent prompt-for-filters)))
+
+  (defadvice! +cider-test-run-project-tests (orig-fn prompt-for-filters)
+    :around #'cider-test-run-project-tests
+    (if (eq major-mode 'clojurescript-mode)
+        (cider-interactive-eval "(cljs.test/run-all-tests)")
+      (call-interactively orig-fn prompt-for-filters)))
 
   (defadvice! +cider--display-interactive-eval-result (orig-fn value value-type &optional point overlay-face)
     :around #'cider--display-interactive-eval-result
