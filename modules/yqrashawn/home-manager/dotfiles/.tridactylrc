@@ -56,6 +56,8 @@ bind <F1> help
 bind O current_url open
 bind w fillcmdline winopen
 bind W current_url winopen
+unbind W
+bind W js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/parse_page.js
 bind t fillcmdline tabopen
 bind ]] followpage next
 bind [[ followpage prev
@@ -321,8 +323,8 @@ autocmd DocStart penpot\.app mode ignore
 autocmd DocStart figma\.app mode ignore
 autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
 autocmd TriStart .* source_quiet
-autocmd DocLoad .* _global_init_built_
-autocmd DocLoad .* _global_init_
+autocmd DocStart .* _global_init_built_
+autocmd DocStart .* _global_init_
 autocmd DocLoad macmini\.donkey-clownfish\.ts\.net:6155/login\.html\?tridactylrctab=\d _auto_tab_switch_
 autocmd DocLoad ^https://discord\.com _cleanup_history_
 autocmd DocLoad ^https://app\.slack\.com _cleanup_history_

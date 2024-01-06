@@ -6,6 +6,7 @@
     "build": "esbuild --bundle --format=iife --outfile=out.js index.js"
   },
   "dependencies": {
+    "@mozilla/readability": "^0.5.0",
     "@thi.ng/cache": "^2.1.85",
     "@thi.ng/compare": "^2.2.10",
     "@thi.ng/compose": "^2.1.53",

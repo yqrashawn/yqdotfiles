@@ -7,6 +7,7 @@ import * as rstream from "@thi.ng/rstream"
 import * as rstreamCsp from "@thi.ng/rstream-csp"
 import * as seq from "@thi.ng/seq"
 import * as transducers from "@thi.ng/transducers"
+import * as readability from "@mozilla/readability"
 
 function setupThi(global) {
   // console.log("global", global)
@@ -21,6 +22,7 @@ function setupThi(global) {
   global._thi.rstreamCsp = rstreamCsp
   global._thi.seq = seq
   global._thi.transducers = transducers
+  global._readability = readability.default
 }
 
 try {
