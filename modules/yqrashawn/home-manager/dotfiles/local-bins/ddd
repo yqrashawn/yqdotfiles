@@ -9,3 +9,5 @@ elif [ "$1" = "sync" ] && [ -z "$2" ]; then
 else
   doom "$@"
 fi
+
+sh ~/Dropbox/sync/scripts/cp-surge-conf.sh || true
