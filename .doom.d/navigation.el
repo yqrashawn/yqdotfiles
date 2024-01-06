@@ -4,23 +4,30 @@
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :init
   ;; restrict buffer list by workspace
-  (setq! iflipb-buffer-list-function #'doom-buffer-list)
+  (setq! iflipb-buffer-list-function #'doom-project-buffer-list)
 
   (defun +iflipb-always-ignore-buffers (name)
-    (let ((b (get-buffer name)))
-      (cond
-       ((s-starts-with? " " name) nil)
-       ((string-match "^\\*\\(Async-native-compile\\|helpful\\|Native-compile\\)" name) nil)
-       ((string-match "^\\*\\(doom\\|Messages\\|envrc\\|zoxide\\)\\*$" name) nil)
-       (t t))))
+    "return `t' if should be excluded"
+    ;; (log/spy '+iflipb-always-ignore-buffers)
+    (let* ((_b (get-buffer name))
+           (rst (cond
+                 ((s-starts-with? " " name) t)
+                 ((string-match "^\\*\\(Async-native-compile\\|helpful\\|Native-compile\\)" name) t)
+                 ((string-match "^\\*\\(doom\\|Messages\\|envrc\\|zoxide\\)\\*$" name) t)
+                 (t nil))))
+      rst))
   (setq! iflipb-always-ignore-buffers '+iflipb-always-ignore-buffers)
 
   (defun +iflipb-ignore-buffers (name)
-    (let ((b (get-buffer name)))
-      (cond
-       ((string-match "^\\(magit-process:\\|Messages\\)" name) nil)
-       ((memq (buffer-local-value 'major-mode b) '(dired-mode)) nil)
-       (t t))))
+    "return `t' if should be excluded"
+    ;; (log/spy '+iflipb-ignore-buffers)
+    (let* ((b (get-buffer name))
+           (rst (cond
+                 ((eq b (current-buffer)) t)
+                 ((string-match "^\\(magit-process:\\|Messages\\)" name) t)
+                 ((memq (buffer-local-value 'major-mode b) '(dired-mode)) t)
+                 (t nil))))
+      rst))
   (setq! iflipb-ignore-buffers '+iflipb-ignore-buffers))
 
 (after! vertico

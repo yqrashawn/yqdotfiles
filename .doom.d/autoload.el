@@ -1109,7 +1109,7 @@ intermediate results of Elisp code without changing your code
 structure. Just wrap the form with `im-tap' that you want to see
 it's output without introducing an intermediate let-form."
   `(let ((result ,form))
-     (message "[im-tap :: %s] → %s" ,(prin1-to-string form) result)
+     (message "[spy :: %s] → %s" ,(prin1-to-string form) result)
      result))
 
 ;;;###autoload
