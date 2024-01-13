@@ -92,6 +92,7 @@ in {
         jet
         joker
         leiningen
+        golangci-lint
         # obb
         # nbb
 
