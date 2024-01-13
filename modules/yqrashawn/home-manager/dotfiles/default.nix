@@ -307,6 +307,10 @@
     #   source = ./karabiner.edn;
     #   target = "karabiner.edn";
     # };
+    atuin = {
+      source = ./atuin.toml;
+      target = "atuin/config.toml";
+    };
     kitty-light = {
       source =
         "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";

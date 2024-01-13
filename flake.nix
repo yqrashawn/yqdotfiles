@@ -40,6 +40,10 @@
       url = "github:emacs-mirror/emacs/emacs-29";
       flake = false;
     };
+    atuin = {
+      url = "github:atuinsh/atuin";
+      flake = true;
+    };
     comma = {
       url = "github:nix-community/comma";
       flake = false;

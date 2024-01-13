@@ -40,6 +40,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        atuin
         # postgresql
         # mpv
         mpv-unwrapped

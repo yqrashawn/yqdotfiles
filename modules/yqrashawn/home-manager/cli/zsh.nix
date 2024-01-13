@@ -130,20 +130,23 @@ in {
       printf "\e[?1042l"
     '';
     initExtra = ''
-      eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
       # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
+      eval "$(${pkgs.atuin}/bin/atuin init zsh)"
 
-      dark-light-mcfly-history-widget() {
-        unset MCFLY_LIGHT
-        if [[ "$(defaults read -g AppleInterfaceStyle 2&>/dev/null)" != "Dark" ]]; then
-            export MCFLY_LIGHT=TRUE
-        fi
-        mcfly-history-widget
-      }
+      ### mcfly
+      # eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
+      # dark-light-mcfly-history-widget() {
+      #   unset MCFLY_LIGHT
+      #   if [[ "$(defaults read -g AppleInterfaceStyle 2&>/dev/null)" != "Dark" ]]; then
+      #       export MCFLY_LIGHT=TRUE
+      #   fi
+      #   mcfly-history-widget
+      # }
 
-      zle -N dark-light-mcfly-history-widget
-      bindkey '^R' dark-light-mcfly-history-widget
+      # zle -N dark-light-mcfly-history-widget
+      # bindkey '^R' dark-light-mcfly-history-widget
 
+      ### TRAMP
       # Stop TRAMP (in Emacs) from hanging or term/shell from echoing back commands
       #if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then
       #  unsetopt zle prompt_cr prompt_subst
