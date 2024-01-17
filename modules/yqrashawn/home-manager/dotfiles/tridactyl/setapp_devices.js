@@ -16,11 +16,15 @@ function _disconncedOtherHost() {
 
   if (hostnameQ === "studio") {
     if (firstMacDevice.innerText.match(/studio/i)) return
-    else disconnecdButton.click()
+    else {
+      disconnecdButton.click()
+      return true
+    }
   } else {
-    if (firstMacDevice.innerText.match(/studio/i))
+    if (firstMacDevice.innerText.match(/studio/i)) {
       return disconnecdButton.click()
-    else return
+      return true
+    } else return
   }
 }
 
@@ -31,11 +35,13 @@ function _confirmDisconnect() {
     .click()
 }
 
-setTimeout(() => {
+const interval = setInterval(() => {
   try {
-    _disconncedOtherHost()
-    setTimeout(_confirmDisconnect, 500)
+    if (_disconncedOtherHost()) {
+      setTimeout(_confirmDisconnect, 500)
+      clearInterval(interval)
+    }
   } catch (err) {
     console.error(err)
   }
-}, 3000)
+}, 1000)

@@ -133,6 +133,8 @@
 
 (use-package! fuz
   :after orderless
+  :init
+  (set-popup-rule! "^\\*fuz compilation\\*" :select nil :side 'bottom :size 0.2 :quit t)
   :config
   (unless (require 'fuz-core nil t)
     (fuz-build-and-load-dymod))
