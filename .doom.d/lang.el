@@ -96,12 +96,10 @@
            (t (funcall orig-fn checker)))
         (funcall orig-fn checker))))
 
-  ;; (defadvice! +lsp-f-same? (_orig-fn file-a file-b)
+  ;; (defadvice! +lsp-f-same? (orig-fn file-a file-b)
   ;;   :around #'lsp-f-same?
-  ;;   (if (string= file-a file-b)
-  ;;       t
-  ;;     ;; (funcall orig-fn file-a file-b)
-  ;;     nil))
+  ;;   (cl-flet ((f-exists? '+f-exists?))
+  ;;     (funcall orig-fn file-a file-b)))
   )
 
 ;; (after! lsp-graphql

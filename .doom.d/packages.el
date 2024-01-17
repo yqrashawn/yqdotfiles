@@ -337,6 +337,7 @@
 ;; (package! org-ai)
 (unpin! nim-mode)
 (package! whisper :recipe (:host github :repo "natrys/whisper.el"))
+(package! memoize)
 
 
 ;; Local Variables:

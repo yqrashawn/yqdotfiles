@@ -833,3 +833,10 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
          chatgpt-shell-model-temperature 0.6)
   :config
   (pushnew! chatgpt-shell-language-mapping '(("javascript". "jsx"))))
+
+(use-package! memoize
+  :defer t
+  :after f
+  ;; :config
+  ;; (fset '+f-exists? (memoize (lambda (filename) (file-exists-p filename)) "30 minutes"))
+  )
