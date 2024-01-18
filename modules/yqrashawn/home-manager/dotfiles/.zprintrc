@@ -1,3 +1,7 @@
 ;; -*- mode: clojure -*-
 ;; vi: ft=clojure
-{:cwd-zprintrc? true, :search-config? true}
+{:cwd-zprintrc? true, :search-config? true
+ :width 80
+ :style [:community :no-comma]
+ :style-map
+ {:no-comma {:map {:comma? false}}}}

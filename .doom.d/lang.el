@@ -190,3 +190,13 @@
                                          (python "https://github.com/tree-sitter/tree-sitter-python")
                                          (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
                                          (yaml "https://github.com/ikatyang/tree-sitter-yaml"))))
+
+(after! js-json-mode
+  (set-formatter! 'prettier-json
+    (alist-get 'prettier-json apheleia-formatters)
+    :modes '(js-json-mode json-mode json-ts-mode)))
+
+(after! sql-mode
+  (set-formatter! 'pg-fluff
+    '("sqlfluff" "fix" "--nocolor" "--dialect" "postgres" "--force" "-")
+    :modes '(sql-mode)))

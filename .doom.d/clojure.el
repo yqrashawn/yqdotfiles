@@ -332,3 +332,12 @@ creates a new one. Don't unnecessarily bother the user."
     (defun +make-cljr-add-use-snippet-interactive ()
       (setq-local cljr--add-use-snippet "[${1:$$(yas-choose-value (ignore-errors (cider-sync-request:ns-list)))} :refer ${2:[$3]}]"))
     (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive)))
+
+(after! clojure-mode
+  (set-formatter! 'cljstyle '("cljstyle" "pipe")
+    :modes '(clojure-mode clojurescript-mode clojurec-mode))
+  (set-formatter! 'zprint '("zprint" "{:search-config? true}")
+    :modes '(clojure-mode clojurescript-mode clojurec-mode))
+  ;; (set-formatter! 'cljfmt '+clojure-lsp-format-buffer
+  ;;   :modes '(clojure-mode clojurescript-mode clojurec-mode))
+  )

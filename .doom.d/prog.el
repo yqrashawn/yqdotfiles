@@ -102,43 +102,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 ;; (use-package! evil-textobj-tree-sitter
 ;;   :after evil)
 
-;; (use-package! apheleia
-;;   ;; :hook ((nix-mode js2-mode rjsx-mode clojurescript-mode clojurec-mode clojure-mode go-mode) . apheleia-mode)
-;;   :hook (doom-first-file . apheleia-global-mode))
-
-(after! apheleia
-  (pushnew! apheleia-mode-alist
-            '(clojure-mode . zprint)
-            '(clojurec-mode . zprint)
-            '(clojurescript-mode . zprint)
-            '(sql-mode . pg-fluff)
-            '(js-json-mode . prettier-json))
-  (defun +cider-format-buffer (&rest args)
-    (interactive)
-    (require 'cider)
-    (cider-format-buffer))
-  (defun +clojure-lsp-format-buffer (&rest args)
-    (interactive)
-    (if lsp-mode
-        (lsp-format-buffer)))
-  (pushnew! apheleia-formatters '(cljstyle . ("cljstyle" "pipe")))
-  (pushnew! apheleia-formatters '(cljfmt . +clojure-lsp-format-buffer))
-  (pushnew! apheleia-formatters '(zprint . ("zprint" "{:search-config? true}")))
-  (pushnew! apheleia-formatters '(pg-fluff . ("sqlfluff" "fix" "--nocolor" "--dialect" "postgres" "--force" "-")))
-
-  (defun +clojure-setup-formatter ()
-    (interactive)
-    (let ((using-zprint (seq-some (lambda (a) (eq (cdr a) 'zprint)) apheleia-mode-alist))
-          (use-zprint (and (boundp '+clojure-use-zprint-formatter) +clojure-use-zprint-formatter)))
-      (unless (eq using-zprint use-zprint)
-        (+toggle-zprint-as-clojure-formatter))))
-
-  (defadvice! +apheleia--format-after-save ()
-    :before #'apheleia--format-after-save
-    (+clojure-setup-formatter)))
-
-(use-package! smerge-mode
-  :defer t)
+(use-package! smerge-mode :defer t)
 
 (after! flycheck
   (setq! flycheck-global-modes

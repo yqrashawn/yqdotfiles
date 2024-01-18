@@ -1010,33 +1010,6 @@ _b_ranch _j_next _k_prev _h_up
            (message "enter magit highperf"))))
 
 ;;;###autoload
-(defun +remove-clojure-in-apheleia-mode-alist ()
-  (setq! apheleia-mode-alist
-         (seq-filter (lambda (a) (not (or (eq (car a) 'clojurescript-mode)
-                                          (eq (car a) 'clojure-mode)
-                                          (eq (car a) 'clojurec-mode))))
-                     apheleia-mode-alist)))
-
-;;;###autoload
-(defun +toggle-zprint-as-clojure-formatter ()
-  (interactive)
-  (if (seq-some (lambda (a) (eq (cdr a) 'zprint)) apheleia-mode-alist)
-      (progn
-        (+remove-clojure-in-apheleia-mode-alist)
-        (pushnew! apheleia-mode-alist
-                  '(clojure-mode . cljfmt)
-                  '(clojurec-mode . cljfmt)
-                  '(clojurescript-mode . cljfmt))
-        (message "Using cljfmt"))
-    (progn
-      (+remove-clojure-in-apheleia-mode-alist)
-      (pushnew! apheleia-mode-alist
-                '(clojure-mode . zprint)
-                '(clojurec-mode . zprint)
-                '(clojurescript-mode . zprint))
-      (message "Using zprint"))))
-
-;;;###autoload
 (defun +doom/toggle-line-numbers ()
   "Toggle line numbers.
 
@@ -1096,7 +1069,6 @@ This is for per workspace each task setup"
         (evil-window-vsplit)
         (eat shell-file-name current-prefix-arg)))))
 
-
 ;; im-tap from https://isamert.net/2023/08/14/elisp-editing-development-tips.html#im-tap
 ;;;###autoload
 (defmacro log/spy (form)
@@ -1144,7 +1116,7 @@ result instead of `message'."
     (when buf
       (with-current-buffer buf
         (when (and (cider-connected-p) (cider-current-repl 'cljs))
-          (cider-interactive-eval "(status-im2.setup.hot-reload/reload)" nil nil (cider--nrepl-pr-request-map)))))))
+          (cider-interactive-eval "(status-im.setup.hot-reload/reload)" nil nil (cider--nrepl-pr-request-map)))))))
 
 ;;;###autoload
 (defun +status-start-sessions ()
