@@ -143,10 +143,14 @@
 (use-package! fussy
   :after fuz
   :config
-  (setq! fussy-filter-fn #'fussy-filter-default
-         fussy-ignore-case t
-         fussy-use-cache t
-         fussy-default-regex-fn #'fussy-pattern-flex-2)
+  (setq!
+   fussy-filter-fn #'fussy-filter-default
+   fussy-ignore-case t
+   fussy-use-cache t
+   fussy-default-regex-fn #'fussy-pattern-flex-2
+   ;; completion-category-defaults nil
+   completion-category-overrides '((cider (styles fussy))
+                                   (lsp-capf (styles fussy))))
   ;; (pushnew! completion-styles 'fussy)
 
   (after! corfu

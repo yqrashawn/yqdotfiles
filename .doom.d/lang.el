@@ -200,3 +200,13 @@
   (set-formatter! 'pg-fluff
     '("sqlfluff" "fix" "--nocolor" "--dialect" "postgres" "--force" "-")
     :modes '(sql-mode)))
+
+(after! lsp-mode
+  (cl-defun +apheleia-lsp-format-buffer
+      (&key buffer scratch callback &allow-other-keys)
+    "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
+    (let* ((workspaces (with-current-buffer buffer (lsp-workspaces))))
+      (with-current-buffer scratch
+        (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
+          (with-lsp-workspaces workspaces (lsp-format-buffer)))
+        (funcall callback)))))

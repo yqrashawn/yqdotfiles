@@ -115,18 +115,22 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
 ;;; cider
 (defun +clojure-use-cider-over-lsp ()
   "use cider over clojure-lsp for completion when cider is not connected"
+  (delq! #'cider-complete-at-point completion-at-point-functions)
+  (delq! #'lsp-completion-at-point completion-at-point-functions)
+  (pushnew! completion-at-point-functions #'lsp-completion-at-point)
   (pushnew! completion-at-point-functions #'cider-complete-at-point)
   ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
   ;; fix Regular expression too big
   ;; https://github.com/clojure-emacs/cider/issues/2866
-  (setq-local cider-font-lock-dynamically '(macro core deprecated))
-  (setq-local lsp-completion-enable nil))
+  (setq-local cider-font-lock-dynamically '(macro core deprecated)))
 
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
   (delq! #'cider-complete-at-point completion-at-point-functions)
-  (setq-local cider-font-lock-dynamically nil)
-  (setq-local lsp-completion-enable t))
+  (delq! #'lsp-completion-at-point completion-at-point-functions)
+  (pushnew! completion-at-point-functions #'cider-complete-at-point)
+  (pushnew! completion-at-point-functions #'lsp-completion-at-point)
+  (setq-local cider-font-lock-dynamically nil))
 
 (defun +cider-repl-clear-input ()
   (interactive)
@@ -146,8 +150,9 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
     (setq completion-category-overrides (seq-remove (lambda (x)
                                                       (equal 'cider (car x)))
                                                     completion-category-overrides))
-    (unless (member (car completion-styles) found-styles)
-      (setq found-styles (append found-styles (list (car completion-styles)))))
+    ;; (unless (member (car completion-styles) found-styles)
+    ;;   (setq found-styles (append found-styles (list (car completion-styles)))))
+    (setq found-styles '(styles fussy))
     (add-to-list 'completion-category-overrides (apply #'list 'cider found-styles (when found-cycle
                                                                                     (list found-cycle))))))
 
@@ -333,11 +338,11 @@ creates a new one. Don't unnecessarily bother the user."
       (setq-local cljr--add-use-snippet "[${1:$$(yas-choose-value (ignore-errors (cider-sync-request:ns-list)))} :refer ${2:[$3]}]"))
     (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive)))
 
-(after! clojure-mode
-  (set-formatter! 'cljstyle '("cljstyle" "pipe")
-    :modes '(clojure-mode clojurescript-mode clojurec-mode))
-  (set-formatter! 'zprint '("zprint" "{:search-config? true}")
-    :modes '(clojure-mode clojurescript-mode clojurec-mode))
-  ;; (set-formatter! 'cljfmt '+clojure-lsp-format-buffer
-  ;;   :modes '(clojure-mode clojurescript-mode clojurec-mode))
-  )
+(after! lispy
+  (after! clojure-mode
+    (set-formatter! 'cljstyle '("cljstyle" "pipe")
+      :modes lispy-clojure-modes)
+    (set-formatter! 'zprint '("zprint" "{:search-config? true}")
+      :modes lispy-clojure-modes)
+    (set-formatter! 'cljfmt '+apheleia-lsp-format-buffer
+      :modes lispy-clojure-modes)))
