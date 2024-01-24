@@ -115,21 +115,26 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
 ;;; cider
 (defun +clojure-use-cider-over-lsp ()
   "use cider over clojure-lsp for completion when cider is not connected"
-  (delq! #'cider-complete-at-point completion-at-point-functions)
-  (delq! #'lsp-completion-at-point completion-at-point-functions)
-  (pushnew! completion-at-point-functions #'lsp-completion-at-point)
-  (pushnew! completion-at-point-functions #'cider-complete-at-point)
-  ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
+  (remove-hook! 'completion-at-point-functions :local
+    'cider-complete-at-point 'lsp-completion-at-point)
+  (add-hook! 'completion-at-point-functions :local :depth 100
+             #'cider-complete-at-point)
+  (add-hook! 'completion-at-point-functions :local :depth 90
+             #'lsp-completion-at-point)
+
   ;; fix Regular expression too big
   ;; https://github.com/clojure-emacs/cider/issues/2866
+  ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
   (setq-local cider-font-lock-dynamically '(macro core deprecated)))
 
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
-  (delq! #'cider-complete-at-point completion-at-point-functions)
-  (delq! #'lsp-completion-at-point completion-at-point-functions)
-  (pushnew! completion-at-point-functions #'cider-complete-at-point)
-  (pushnew! completion-at-point-functions #'lsp-completion-at-point)
+  (remove-hook! 'completion-at-point-functions :local
+    'cider-complete-at-point 'lsp-completion-at-point)
+  (add-hook! 'completion-at-point-functions :local :depth 90
+             #'cider-complete-at-point)
+  (add-hook! 'completion-at-point-functions :local :depth 100
+             #'lsp-completion-at-point)
   (setq-local cider-font-lock-dynamically nil))
 
 (defun +cider-repl-clear-input ()
