@@ -176,3 +176,8 @@
                          (expand-file-name "~/Dropbox/sync/personal_dict")
                          (expand-file-name "~/Dropbox/sync/gh_username_dict")
                          "/usr/share/dict/words")))
+
+(after! yasnippet-capf
+  (add-hook! 'yas-minor-mode-hook :append
+    (defun +corfu-remove-t-in-completion-at-point-functions ()
+      (remove-hook! 'completion-at-point-functions :local 't))))
