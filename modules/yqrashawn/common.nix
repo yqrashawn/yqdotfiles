@@ -66,7 +66,6 @@ in {
         # mutagen
         # mutagen-compose
         # colima
-        docker-machine
         docker-credential-helpers
         isync-isync
         # isync

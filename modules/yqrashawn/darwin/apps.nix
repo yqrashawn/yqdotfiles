@@ -36,7 +36,7 @@
       # "syncthing"
       "steam"
       # "android-studio"
-      "docker"
+      # "docker"
       # "flipper"
       # "microsoft-edge"
       # "playcover-community"

@@ -16,8 +16,8 @@
   (require 'llm)
   (require 'llm-openai)
   (let* ((model (if (eq use-16k-model 1)
-                    "gpt-4-1106-preview"
-                  "gpt-3.5-turbo-1106"))
+                    "gpt-4-turbo-preview"
+                  "gpt-3.5-turbo"))
          (provider (make-llm-openai-compatible
                     :url "https://openrouter.ai/api/v1/"
                     :key +openrouter-api-key
@@ -45,8 +45,8 @@
                ("Authorization" . ,(concat "Bearer " +open-ai-api-key)))
     :data (json-encode
            `(,(if (eq use-16k-model 1)
-                  '("model" . "gpt-4-1106-preview")
-                '("model" . "gpt-3.5-turbo-1106"))
+                  '("model" . "gpt-4-turbo-preview")
+                '("model" . "gpt-3.5-turbo"))
              ("temperature" . 0.8)
              ("messages" . [(("role" . "system")
                              ("content" . ,(or system-message +gpt-system-message)))
@@ -147,7 +147,7 @@ You should separate your response into multiple paragraph if they are too long."
            (title (plist-get eww-data :title))
            (link (plist-get eww-data :url))
            (txt-content (with-current-buffer (current-buffer) (buffer-string)))
-           (gpt-message (format "%s
+           (gpt-message (format "
 Artical metadata:
 ```txt
 Title: %s
@@ -158,18 +158,19 @@ Artical content:
 ```txt
 %s
 ```
+
+%s
 "
 
                                 ;; "Kindly provide me with a summary of the following article. The summary should cover the main points of the article and provide me with a clear understanding of the topic discussed. Please ensure that the summary is concise but comprehensive and includes all the essential information from the article. Please response in in multiline markdown format text."
                                 ;; "Provide me key takeaways, tldrs and summary of the following article.
                                 ;; Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
                                 ;; Ensure that your response is concise but comprehensive and includes all the essential information from the article."
-                                "Generate TLDR for the following article.
-Your response should cover the main points of the article and provide me with a clear understanding of the topic discussed.
-Ensure that your response is concise but comprehensive and includes all the essential information from the article.
-Use HTML <ol> bullet points in your response as much as possible."
+
                                 ;; "Summarize following article, response with markdown."
-                                title link txt-content)))
+                                title link txt-content
+                                "Create a concise TLDR summary of the provided article, capturing all key points to give a clear overview of the subject matter. Make sure the summary is both succinct and complete, encapsulating the most critical details. Format the TLDR using an ordered HTML list (<ol>) for better clarity and organization."
+                                )))
       (+llm-gpt-request gpt-message (lambda (msg)
                                       ;; (setq kkk msg)
                                       (when msg

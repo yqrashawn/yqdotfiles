@@ -9,11 +9,9 @@
 
     taps = [
       "homebrew/bundle"
-      "homebrew/cask"
       "homebrew/cask-fonts"
       "homebrew/cask-drivers"
       "homebrew/cask-versions"
-      "homebrew/core"
       "homebrew/services"
       "homebrew/command-not-found"
       "koekeishiya/formulae"

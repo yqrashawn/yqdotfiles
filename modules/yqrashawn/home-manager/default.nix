@@ -56,7 +56,7 @@ in {
       # NODE_PATH = "${NODE_GLOBAL}/lib";
       # HOMEBREW_NO_AUTO_UPDATE = 1;
     };
-    sessionPath = [ "${NODE_GLOBAL}/bin" ];
+    # sessionPath = [ "${NODE_GLOBAL}/bin" ];
 
     # define package definitions for current user environment
     packages = with pkgs; [ ];
