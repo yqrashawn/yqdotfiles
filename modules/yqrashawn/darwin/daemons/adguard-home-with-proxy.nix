@@ -15,7 +15,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "/bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
+        "sudo launchctl unload -w /System/Library/LaunchDaemons/bootps.plist; sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist; /bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
       ];
       RunAtLoad = true;
       KeepAlive = true;

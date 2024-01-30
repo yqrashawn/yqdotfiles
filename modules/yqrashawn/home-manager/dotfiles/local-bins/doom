@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-~/.emacs.d/bin/doom $@
+doom="$HOME/.emacs.d/bin/doom"
+
+if [ -f "$doom" ]; then
+  $doom "$@"
+fi

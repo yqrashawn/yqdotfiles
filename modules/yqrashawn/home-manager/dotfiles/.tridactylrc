@@ -212,14 +212,17 @@ bind <ArrowUp> ex.prev_completion
 bind <Tab> ex.prev_history
 bind <S-Tab> ex.next_history
 bind <C-\> mouse_mode
+
 unbindurl app\.clickup\.com k
 unbindurl app\.clickup\.com j
 unbindurl app\.clickup\.com /
 unbindurl app\.clickup\.com n
+
 unbindurl mail.google.com j
 unbindurl mail.google.com k
 unbindurl mail.google.com gi
 unbindurl mail.google.com x
+
 unbindurl //newsblur\.com s
 unbindurl //newsblur\.com j
 unbindurl //newsblur\.com k
@@ -241,6 +244,31 @@ unbindurl //newsblur\.com r
 unbindurl //newsblur\.com M
 unbindurl //newsblur\.com D
 unbindurl //newsblur\.com ?
+
+unbindurl //read\.readwise\.io\/ j
+unbindurl //read\.readwise\.io\/ k
+unbindurl //read\.readwise\.io\/ l
+unbindurl //read\.readwise\.io\/ e
+unbindurl //read\.readwise\.io\/ E
+unbindurl //read\.readwise\.io\/ m
+unbindurl //read\.readwise\.io\/ [
+unbindurl //read\.readwise\.io\/ ]
+unbindurl //read\.readwise\.io\/ M
+unbindurl //read\.readwise\.io\/ R
+unbindurl //read\.readwise\.io\/ C
+unbindurl //read\.readwise\.io\/ N
+unbindurl //read\.readwise\.io\/ b
+unbindurl //read\.readwise\.io\/ B
+unbindurl //read\.readwise\.io\/ t
+unbindurl //read\.readwise\.io\/ o
+unbindurl //read\.readwise\.io\/ d
+unbindurl //read\.readwise\.io\/ /
+unbindurl //read\.readwise\.io\/ G
+unbindurl //read\.readwise\.io\/ <ArrowDown>
+unbindurl //read\.readwise\.io\/ <ArrowUp>
+unbindurl //read\.readwise\.io\/ h
+unbindurl //read\.readwise\.io\/ z
+
 bindurl //newsblur\.com , scrollpage 0.5
 bindurl //newsblur\.com . scrollpage -0.5
 bindurl //newsblur\.com R reload

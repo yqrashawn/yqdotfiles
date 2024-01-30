@@ -330,6 +330,8 @@ A prefix arg reverses this operation."
 (after! dired
   (setq! dired-listing-switches "-l --all --human-readable --time-style=long-iso --no-group --sort=time -v --group-directories-first"))
 
+(add-hook! dired-mode #'dired-async-mode)
+
 (after! comint
   (defun +comint-send-invisible-with-sudo-pwd (&rest args)
     (let ((pwd (++password!))
@@ -840,3 +842,11 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   ;; :config
   ;; (fset '+f-exists? (memoize (lambda (filename) (file-exists-p filename)) "30 minutes"))
   )
+
+;; (use-package! kagi
+;;   :commands (kagi-fastgpt-shell)
+;;   :init
+;;   (setq! kagi-api-token +kagi-api-token
+;;          kagi-summarizer-engine "cecil"
+;;          kagi-summarize-default-language "EN"
+;;          kagi-summarize-cache t))

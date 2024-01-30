@@ -6,6 +6,7 @@ let
     "/Applications/Firefox Developer Edition.app/Contents/MacOS"
     "$HOME/.qlot/bin"
     "$HOME/.web3j"
+    "$HOME/.local/share/pnpm"
     "$HOME/.config/.foundry/bin"
     "$HOME/.foundry/bin"
     "/Applications/Emacs.app/Contents/MacOS/bin"

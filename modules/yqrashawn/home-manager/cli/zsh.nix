@@ -14,12 +14,14 @@ let
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
     # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
+    export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
   '';
   bashProfileExtra = ''
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     export JAVA_HOME=$(asdf where java)
+    export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
     # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   functions = builtins.readFile ./functions.sh;

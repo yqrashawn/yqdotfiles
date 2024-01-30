@@ -322,9 +322,6 @@
 (package! shrface)
 ;; (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 
-;; (package! copilot
-;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
-
 ;; (package! ollama
 ;;   :recipe (:host github :repo "zweifisch/ollama"))
 
@@ -338,7 +335,9 @@
 (unpin! nim-mode)
 (package! whisper :recipe (:host github :repo "natrys/whisper.el"))
 (package! memoize)
-
+;; (package! kagi)
+(package! copilot
+  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
