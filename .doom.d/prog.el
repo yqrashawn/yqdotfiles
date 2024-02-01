@@ -179,3 +179,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (use-package! jarchive
   :hook (doom-after-init . jarchive-setup))
+
+(after! prog-mode
+  (global-corfu-mode 1))

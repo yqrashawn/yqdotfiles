@@ -165,10 +165,16 @@ in {
       ''}
       unset RPS1
       [[ ! -f ~/.local.zsh ]] || source ~/.local.zsh
-      [ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
+      # if [[ $TERM = dumb  ]]; then
+      #   unsetopt zle
+      #   PS1='$ '
+      # fi
     '';
     envExtra = ''
-      [ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
+      # if [[ $TERM == dumb  ]]; then
+      #   unsetopt zle
+      #   PS1='$ '
+      # fi
     '';
     profileExtra = profileExtra;
     plugins = [
