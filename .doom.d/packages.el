@@ -159,7 +159,8 @@
   fd-dired
   ;; code-review
   clj-refactor
-  clojure-mode)
+  clojure-mode
+  flycheck-golangci-lint)
 
 (package! elcord)
 (package! parinfer-rust-mode)
