@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sudo launchctl unload /System/Library/LaunchDaemons/com.apple.screensharing.plist && \
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
