@@ -181,3 +181,6 @@
   (add-hook! 'yas-minor-mode-hook :append
     (defun +corfu-remove-t-in-completion-at-point-functions ()
       (remove-hook! 'completion-at-point-functions :local 't))))
+
+(after! vertico
+  (require 'marginalia))
