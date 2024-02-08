@@ -18,7 +18,7 @@
   :mode (("\\.cjs\\'" . rjsx-mode)
          ("\\.mjs\\'" . rjsx-mode)
          ("\\.js\\'" . rjsx-mode)
-         ("\\.tsx\\'" . rjsx-mode)
+         ;; ("\\.tsx\\'" . tsx-ts-mode)
          ("components\\/.*\\.js\\'" . rjsx-mode))
   :defer t
   :commands (rjsx-delete-creates-full-tag rjsx-electric-gt rjsx-electric-lt rjsx-rename-tag-at-point))

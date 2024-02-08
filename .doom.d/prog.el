@@ -70,7 +70,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (let (which-func-functions)
       (letf (((symbol-function 'add-log-current-defun)
               (lambda () nil)))
-            (which-function))))
+        (which-function))))
 
   ;; `add-log-current-defun' returns a not so meaningful result in some
   ;; major modes when the default `add-log-current-defun-function'
@@ -161,10 +161,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (add-hook! 'kill-buffer-hook :local '+eat-deleted-window-after-kill-buffer))
   (add-hook! 'eat-mode-hook '+eat-setup)
   (pushnew! evil-emacs-state-modes 'eat-mode))
-
-;; (use-package! treesit-auto
-;;   :hook (doom-first-file . global-treesit-auto-mode)
-;;   :init (setq! treesit-auto-install t))
 
 ;; accept completion from copilot and fallback to company
 ;; (use-package! copilot
