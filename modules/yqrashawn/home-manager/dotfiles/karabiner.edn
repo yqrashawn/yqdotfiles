@@ -112,7 +112,7 @@
              [:##i :page_up] [:##k :page_down]]}
 
   #_{:des   "Keybase return"
-     :rules [ ;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
+     :rules [;; [[{:pkey :button5} {:pkey :button2}] {:pkey :button1}]
              :Keybase
              [:return_or_enter :!Sreturn_or_enter]
              [:!Creturn_or_enter :return_or_enter]]}
@@ -181,7 +181,7 @@
            [{:pkey :button1} ["mmts" 0] ["mmts" 1]]
            [{:pkey :button2} ["mmts" 0] ["mmts" 1]]]}
   {:des   "mouse left hand mode"
-   :rules [ ;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1]
+   :rules [;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 1]
            ;; ["mouse_left_hand" 0]]
            ;; [[{:pkey :button3} {:pkey :button4}] ["mouse_left_hand" 0]
            ;; ["mouse_left_hand" 1]]
@@ -563,7 +563,7 @@
   ;;  :rules [[:right_option :left_option nil {:alone ["osascript
   ;;  ~/Dropbox/sync/Automator/switch-to-second-previous-app.scpt"]}]]}
   {:des   "some simultaneous keys"
-   :rules [ ;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"]
+   :rules [;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"]
            ;; ["in-alfred" 1]]]
            [[:h :l] :!TSO6]
            [[:h :k] :!TOSf17]
@@ -684,7 +684,7 @@
            [:s :!CSd]]}
   {:des "yabai mode"
    :rules
-   [ ;; move windows
+   [;; move windows
     :yabai-warp-mode
     [:h [:yabai "window --warp west"]]
     [:j [:yabai "window --warp south"]]
@@ -953,7 +953,9 @@
   :Games        ["^unity\\." "^com\\.Klei\\." "^unity\\.Klei\\."
                  "^org\\.Terraria"
                  "\\.rimworld$"
-                 "Zomboid$"]
+                 "Zomboid$"
+                 :paths
+                 "Library/Application Support/com\\.isaacmarovitz\\.Whisky/Libraries/Wine/bin/wine64-preloader$"]
   :REBL         ["^net\\.java\\.openjdk\\.cmd$"]
   :Surge        ["^com\\.nssurge\\.surge-mac"]
   :SurgeDash    ["^com\\.nssurge\\.surge-dashboard"]

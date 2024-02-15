@@ -341,7 +341,11 @@ creates a new one. Don't unnecessarily bother the user."
     ;; https://ag91.github.io/blog/2022/06/09/make-adding-a-clojure-require-more-interactive-with-cider-and-cljr/
     (defun +make-cljr-add-use-snippet-interactive ()
       (setq-local cljr--add-use-snippet "[${1:$$(yas-choose-value (ignore-errors (cider-sync-request:ns-list)))} :refer ${2:[$3]}]"))
-    (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive)))
+    (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive))
+
+  (require 'a)
+  (pushnew! cljr-magic-require-namespaces '("string" . "clojure.string"))
+  (setq! cljr-magic-require-namespaces (a-dissoc cljr-magic-require-namespaces "str")))
 
 (after! lispy
   (after! clojure-mode
