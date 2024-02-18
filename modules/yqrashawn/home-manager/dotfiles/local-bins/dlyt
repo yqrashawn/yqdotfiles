@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+firefox_profile=$(find "$HOME/Library/Application Support/Firefox/Profiles" -maxdepth 1 -type d -name "*dev-edition-default" -print -quit)
+# echo $firefox_profile
+
+yt-dlp \
+  --no-playlist \
+  --sponsorblock-remove all \
+  --recode-video webm \
+  --cookies-from-browser firefox:"$firefox_profile" \
+  "$@"
