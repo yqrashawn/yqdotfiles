@@ -12,7 +12,6 @@
     "graphql-language-service-cli": ">=0",
     "marked": ">=0",
     "nbb": ">=0",
-    "prettier-plugin-solidity": ">=0",
     "shadow-cljs": ">=0",
     "surge": ">=0",
     "textlint": ">=0",
