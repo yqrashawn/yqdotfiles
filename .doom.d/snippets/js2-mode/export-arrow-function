@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: export-arrow-function
-# key: eaf
+# key: earf
 # --
 export const $1 = ($2) => {
   $3

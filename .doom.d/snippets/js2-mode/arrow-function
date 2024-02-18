@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: define-arrow-function
-# key: af
+# key: arf
 # --
 ($1) => {
   $3
