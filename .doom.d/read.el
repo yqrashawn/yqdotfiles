@@ -10,13 +10,13 @@
                                "--cookie"
                                ,(concat doom-cache-dir "newsblur-cookie")))
 
-
 (add-hook! 'doom-after-init-hook
-  (lambda () (run-with-idle-timer 180 nil (lambda () (require 'elfeed)))))
+  (lambda () (run-with-idle-timer 10 nil (lambda () (require 'elfeed)))))
 
 (after! elfeed
   (require 'eww)
   (elfeed-set-timeout 36000)
+  (elfeed-update)
   (run-with-idle-timer 300 t #'elfeed-update)
   (setq!
    ;; necessary for https without a trust certificate
