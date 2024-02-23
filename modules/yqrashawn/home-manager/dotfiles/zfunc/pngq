@@ -1,6 +1,6 @@
 
 pngq () {
-  pngquant --force --speed 1 --output $@ $@
+  pngquant --force --speed 1 --output "$@" "$@"
 }
 
 pngq "$@"
