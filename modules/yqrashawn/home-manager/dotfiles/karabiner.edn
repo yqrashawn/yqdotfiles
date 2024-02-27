@@ -858,7 +858,8 @@
                       :adv2np             [{:vendor_id 10730 :product_id 258}]
                       :adv2p              [{:vendor_id 10730 :product_id 259}]
                       :adv2               [{:vendor_id 10730}]
-                      :adv360             [{:vendor_id 7504}]}
+                      :adv360             [{:vendor_id 7504 :product_id 24926}
+                                           {:vendor_id 10730 :product_id 866}]}
  :applications
  {:emacs-mode-disable-app
   ["^org\\.gnu\\.Emacs$" "^org\\.xquartz\\.X11$" "^org\\.gnu\\.AquamacsEmacs$"

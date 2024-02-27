@@ -108,3 +108,8 @@
             (not (string-match-p "Relative import path .* not prefixed with .*file:.*" (gethash "message" i))))
          t))
      (funcall orig-fn))))
+
+(use-package! typescript-ts-mode
+  :mode (("\\.cts\\'" . typescript-ts-mode)
+         ("\\.tsx\\'" . typescript-ts-mode)
+         ("\\.ts\\'" . typescript-ts-mode)))
