@@ -859,7 +859,10 @@
                       :adv2p              [{:vendor_id 10730 :product_id 259}]
                       :adv2               [{:vendor_id 10730}]
                       :adv360             [{:vendor_id 7504 :product_id 24926}
-                                           {:vendor_id 10730 :product_id 866}]}
+                                           {:vendor_id 10730 :product_id 866}]
+                      :mxergo             [{:vendor_id 1133 :product_id 50475}
+                                           ;; bluetooth
+                                           {:vendor_id 1133 :product_id 45085}]}
  :applications
  {:emacs-mode-disable-app
   ["^org\\.gnu\\.Emacs$" "^org\\.xquartz\\.X11$" "^org\\.gnu\\.AquamacsEmacs$"
