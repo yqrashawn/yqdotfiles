@@ -217,7 +217,7 @@
           (with-lsp-workspaces workspaces (lsp-format-buffer)))
         (funcall callback)))))
 
-(after! go-mode
-  (defadvice! ++go--spawn (_orig cmd)
-    :around #'+go--spawn
-    (detached-shell-command cmd)))
+;; (after! go-mode
+;;   (defadvice! ++go--spawn (_orig cmd)
+;;     :around #'+go--spawn
+;;     (detached-shell-command cmd)))
