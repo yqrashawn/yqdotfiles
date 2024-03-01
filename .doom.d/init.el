@@ -316,3 +316,13 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 ;; https://tony-zorman.com/posts/2022-10-22-emacs-potpourri.html
 (setq frame-inhibit-implied-resize nil)
 ;; (require 'bind-key)
+
+
+;; aot native compile
+;; https://github.com/doomemacs/doomemacs/issues/6811
+(setq native-comp-deferred-compilation nil)
+(setq native-compile-jit-compilation nil)
+(after! (doom-packages straight)
+  (setq straight--native-comp-available t))
+
+;; (native-compile-async (expand-file-name "~/.emacs.d/.local/straight/repos/") 'recursively)
