@@ -150,11 +150,6 @@ in {
     profileExtra = profileExtra;
     plugins = [
       {
-        name = "zsh-fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-        file = "fzf-tab.plugin.zsh";
-      }
-      {
         name = "zsh-autoquoter";
         src = inputs.zsh-autoquoter;
         file = "zsh-autoquoter.zsh";

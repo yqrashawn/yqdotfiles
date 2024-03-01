@@ -40,6 +40,8 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        zsh-autopair
+        # zsh-fzf-tab # broken
         atuin
         # postgresql
         # mpv
@@ -72,7 +74,7 @@ in {
         msmtp
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
-        (emacs29-overlay.override (args: {
+        (emacs30-overlay.override (args: {
           # withMacport = true;
           withNS = true;
           # macportVersion = "master";

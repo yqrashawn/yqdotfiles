@@ -37,7 +37,7 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-custom-src = {
-      url = "github:emacs-mirror/emacs/emacs-29";
+      url = "github:emacs-mirror/emacs/master";
       flake = false;
     };
     atuin = {
@@ -73,10 +73,6 @@
 
     forgit = {
       url = "github:wfxr/forgit";
-      flake = false;
-    };
-    zsh-autopair = {
-      url = "github:hlissner/zsh-autopair";
       flake = false;
     };
     zsh-f-sy-h = {

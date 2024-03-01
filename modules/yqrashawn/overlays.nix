@@ -7,9 +7,9 @@ in {
     overlays
     inputs.emacs-overlay.overlays.default
     (final: prev: {
-      emacs29-overlay = prev.emacs-git.overrideAttrs (old: {
-        name = "emacs29";
-        version = "29.0-${inputs.emacs-custom-src.shortRev}";
+      emacs30-overlay = prev.emacs-git.overrideAttrs (old: {
+        name = "emacs30";
+        version = "30.0-${inputs.emacs-custom-src.shortRev}";
         src = inputs.emacs-custom-src;
         patches = [ ];
       });

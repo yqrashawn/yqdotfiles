@@ -58,7 +58,8 @@
                                       "~/Dropbox/sync/personal_dict")
        dired-quick-sort-suppress-setup-warning t
        insert-directory-program "/run/current-system/sw/bin/ls"
-       comint-buffer-maximum-size 30000)
+       comint-buffer-maximum-size 30000
+       package-native-compile t)
 
 (after! recentf
   (setq! recentf-keep '(recentf-keep-default-predicate tramp-tramp-file-p)
