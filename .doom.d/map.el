@@ -661,4 +661,44 @@
           :n "C" #'detached-compile-session
           :n "RET" #'detached-list-open-session
           :n "a" #'detached-edit-session-annotation
-          :n "q" #'detached-list-quit)))
+          :n "q" #'detached-list-quit))
+ (:after js
+         (:map js-ts-mode-map
+          :n "M-h" #'combobulate-mark-node-dwim)
+         (:localleader
+          (:map js-ts-mode-map
+           :n ",h" #'combobulate-navigate-logical-previous
+           :n ",l" #'combobulate-navigate-logical-next
+           :n ",c" #'combobulate-clone-node-dwim)))
+ (:after combobulate
+         (:map combobulate-key-map
+          :g "C-M-a" nil
+          :g "C-M-d" nil
+          :g "C-M-e" nil
+          :g "C-M-h" nil
+          :g "C-M-n" nil
+          :g "C-M-p" nil
+          :g "C-M-t" nil
+          :g "C-M-u" nil
+          :g "M-<up>" nil
+          :g "M-<down>" nil
+          :g "M-<left>" nil
+          :g "M-<right>" nil
+          :g "M-N" nil
+          :g "M-P" nil
+          :g "M-a" nil
+          :g "M-e" nil
+          :g "M-h" nil
+          :g "M-k" nil
+          :g "M-(" nil
+          :n "<up>" #'combobulate-navigate-previous
+          :n "<down>" #'combobulate-navigate-next
+          :n "<left>" #'combobulate-navigate-up
+          :n "<right>" #'combobulate-navigate-down))
+ ;; (:after combobulate-mode
+ ;;         (:map prog-mode-map
+ ;;          :n "<up>" #'combobulate-navigate-previous
+ ;;          :n "<down>" #'combobulate-navigate-next
+ ;;          :n "<left>" #'combobulate-navigate-up
+ ;;          :n "<right>" #'combobulate-navigate-down))
+ )

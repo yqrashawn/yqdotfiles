@@ -341,6 +341,8 @@
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 ;; (package! devdocs)
 
+(package! combobulate)
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:
