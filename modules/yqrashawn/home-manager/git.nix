@@ -17,6 +17,7 @@
         editor = "emacsclient";
         excludesfile = "~/.gitignore_global";
         precomposeUnicode = true;
+        ignorecase = false;
       };
       add = { interactive = { useBuiltin = false; }; };
       github = { user = "yqrashawn"; };
