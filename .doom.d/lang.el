@@ -238,3 +238,16 @@
   ;; :config
   ;; (assq-delete-all 'combobulate-mode minor-mode-map-alist)
   )
+
+;; (use-package! lsp-bridge
+;;   :hook (doom-first-file . global-lsp-bridge-mode)
+;;   :config
+;;   (setq! lsp-bridge-python-command "python")
+;;   (setq! lsp-bridge-enable-log nil)
+;;   (global-corfu-mode -1)
+;;   ;; (setq! lsp-bridge-enable-log t)
+;;   )
+
+;; (after! acm
+;;   (setq! acm-enable-tabnine nil)
+;;   (setq! acm-enable-tabnine t))

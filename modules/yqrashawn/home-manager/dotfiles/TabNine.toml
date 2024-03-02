@@ -4,7 +4,7 @@ args = []
 synchronous_triggers = ["/", ".", "(", ":"]
 synchronous_timeout_ms = 400
 always_prefer = true
-install = [["brew", "install", "brew install clojure-lsp/brew/clojure-lsp-native"]]
+# install = [["brew", "install", "brew install clojure-lsp/brew/clojure-lsp-native"]]
 
 [language.javascript]
 command = "typescript-language-server"
@@ -12,7 +12,7 @@ args = ["--stdio"]
 # synchronous_triggers = ["/", "."]
 # synchronous_timeout_ms = 400
 # always_prefer = true
-install = [["yarn", "global", "add", "typescript-language-server", "typescript"]]
+install = [["pnpm", "i", "-g", "typescript-language-server", "typescript"]]
 
 [language.typescript]
 command = "typescript-language-server"
@@ -20,56 +20,56 @@ synchronous_triggers = ["/", "."]
 args = ["--stdio"]
 synchronous_timeout_ms = 400
 always_prefer = true
-install = [["yarn", "global", "add", "typescript-language-server", "typescript"]]
+install = [["pnpm", "i", "-g", "typescript-language-server", "typescript"]]
 
 [language.dockerfile]
 command = "docker-langserver"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
 always_prefer = true
-install = [["yarn", "global", "add", "dockerfile-language-server-nodejs"]]
+install = [["pnpm", "i", "-g", "dockerfile-language-server-nodejs"]]
 
 [language.vue]
 command = "vls"
 always_prefer = true
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "vue-language-server"]]
+install = [["pnpm", "i", "-g", "vue-language-server"]]
 
 [language.html]
 command = "html-languageserver"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "vscode-html-languageserver-bin"]]
+install = [["pnpm", "i", "-g", "vscode-html-languageserver-bin"]]
 
 [language.css]
 command = "css-languageserver"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
+install = [["pnpm", "i", "-g", "vscode-css-languageserver-bin"]]
 
 [language.sass]
 command = "css-languageserver"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
+install = [["pnpm", "i", "-g", "vscode-css-languageserver-bin"]]
 
 [language.less]
 command = "css-languageserver"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "vscode-css-languageserver-bin"]]
+install = [["pnpm", "i", "-g", "vscode-css-languageserver-bin"]]
 
 [language.bash]
 command = "bash-language-server"
 args = ["start"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "bash-language-server"]]
+install = [["pnpm", "i", "-g", "bash-language-server"]]
 
 [language.json]
 command = "json-language-server"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "vscode-json-languageserver"]]
+install = [["pnpm", "i", "-g", "vscode-json-languageserver"]]
 
 [language.python]
 command = "pyls"
@@ -80,7 +80,7 @@ install = [["pip", "install", "'python-language-server[all]'"]]
 command = "ocaml-language-server"
 args = ["--stdio"]
 synchronous_timeout_ms = 400
-install = [["yarn", "global", "add", "ocaml-language-server"]]
+install = [["pnpm", "i", "-g", "ocaml-language-server"]]
 
 [language.cpp]
 command = "cquery"
@@ -95,7 +95,7 @@ synchronous_timeout_ms = 400
 synchronous_timeout_ms = 400
 command = "gopls"
 args = ["serve"]
-install = [["go", "get", "-u", "golang.org/x/tools/gopls"]]
+install = [["go", "install", "golang.org/x/tools/gopls@latest"]]
 
 [language.dart]
 command = "dart_language_server"
@@ -111,7 +111,7 @@ install = [["gem", "install", "solargraph"]]
 [language.rust]
 command = "rls"
 synchronous_timeout_ms = 400
-install = [
-  ["rustup", "update"],
-  ["rustup", "component", "add", "rls", "rust-analysis", "rust-src"],
-]
+# install = [
+#   ["rustup", "update"],
+#   ["rustup", "component", "add", "rls", "rust-analysis", "rust-src"],
+# ]
