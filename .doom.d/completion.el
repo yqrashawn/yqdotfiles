@@ -184,3 +184,26 @@
 
 (after! vertico
   (require 'marginalia))
+
+;; (use-package! tabnine
+;;   :hook
+;;   ((doom-first-file . global-tabnine-mode)
+;;    (kill-emacs . tabnine-kill-process))
+;;   :init
+;;   (add-hook! 'completion-at-point-functions :depth 100 #'tabnine-completion-at-point)
+;;   (setq-local completion-at-point-functions '(tabnine-completion-at-point))
+;;   ;; (add-hook! 'completion-at-point-functions :local :depth 100 #'tabnine-completion-at-point)
+;;   :config
+;;   (global-tabnine-mode -1)
+;;   ;; (require 'tabnine)
+;;   (tabnine-start-process)
+;;   ;; :bind
+;;   ;; (:map  tabnine-completion-map
+;;   ;;        ("<tab>" . tabnine-accept-completion)
+;;   ;;        ("TAB" . tabnine-accept-completion)
+;;   ;;        ("M-f" . tabnine-accept-completion-by-word)
+;;   ;;        ("M-<return>" . tabnine-accept-completion-by-line)
+;;   ;;        ("C-g" . tabnine-clear-overlay)
+;;   ;;        ("M-[" . tabnine-previous-completion)
+;;   ;;        ("M-]" . tabnine-next-completion))
+;;   )

@@ -353,6 +353,8 @@
 ;;   (package! markdown-mode)
 ;;   (package! yasnippet))
 
+;; (package! tabnine)
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:
