@@ -37,7 +37,7 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-custom-src = {
-      url = "github:emacs-mirror/emacs/master";
+      url = "github:emacs-mirror/emacs/emacs-29";
       flake = false;
     };
     atuin = {
