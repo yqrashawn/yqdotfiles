@@ -202,4 +202,13 @@
 (use-package! pabbrev
   :hook (doom-first-file . global-pabbrev-mode)
   :config
-  (add-to-list 'hippie-expand-try-functions-list #'pabbrev-expand-maybe))
+  (add-to-list 'hippie-expand-try-functions-list #'pabbrev-expand-maybe)
+
+  (defadvice! +pabbrev-pre-command-hook (orig-fn)
+    :around #'pabbrev-pre-command-hook
+    (unless (eq this-command '+complete-at-point)
+      (funcall orig-fn)))
+  (defadvice! +pabbrev-post-command-hook (orig-fn)
+    :around #'pabbrev-post-command-hook
+    (unless (eq this-command '+complete-at-point)
+      (funcall orig-fn))))

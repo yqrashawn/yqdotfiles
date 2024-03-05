@@ -360,12 +360,19 @@ _g_  gfm      _o_ org        _m_ markdown
   (interactive)
   (if (eq major-mode 'vterm-mode)
       (vterm--self-insert)
-    (if (and (modulep! :editor evil)
-             (modulep! :completion corfu)
-             corfu-mode
-             (eq (preceding-char) ?,))
-        (progn (delete-char -1 nil)
-               (call-interactively #'completion-at-point))
+    (if (eq (preceding-char) ?,)
+        (cond ((and
+                (boundp 'pabbrev-marker)
+                pabbrev-marker)
+               (progn (delete-char -1 nil)
+                      (call-interactively #'pabbrev-expand-maybe)
+                      (pabbrev-delete-last-suggestion)))
+              ((and (modulep! :editor evil)
+                    (modulep! :completion corfu)
+                    corfu-mode
+                    (eq (preceding-char) ?,))
+               (progn (delete-char -1 nil)
+                      (call-interactively #'completion-at-point))))
       (call-interactively #'self-insert-command))))
 
 ;;;###autoload
