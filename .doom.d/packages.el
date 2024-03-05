@@ -357,6 +357,7 @@
 (package! tabnine)
 (package! pabbrev)
 (package! yaml-pro)
+(package! imake)
 
 ;; spaced repetition
 ;; (package! gnosis)

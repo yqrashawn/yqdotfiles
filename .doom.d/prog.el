@@ -68,8 +68,8 @@
 
 It is a fallback for when which-func-functions and `add-log-current-defun' return nil."
     (let (which-func-functions)
-      (letf (((symbol-function 'add-log-current-defun)
-              (lambda () nil)))
+      (cl-letf (((symbol-function 'add-log-current-defun)
+                 (lambda () nil)))
         (which-function))))
 
   ;; `add-log-current-defun' returns a not so meaningful result in some
@@ -178,3 +178,5 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (after! prog-mode
   (global-corfu-mode 1))
+
+(use-package! imake :defer t)
