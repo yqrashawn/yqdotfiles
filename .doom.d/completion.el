@@ -198,3 +198,8 @@
       (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 0 t)))
   :config
   (tabnine-start-process))
+
+(use-package! pabbrev
+  :hook (doom-first-file . global-pabbrev-mode)
+  :config
+  (add-to-list 'hippie-expand-try-functions-list #'pabbrev-expand-maybe))

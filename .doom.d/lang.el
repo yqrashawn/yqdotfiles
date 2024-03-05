@@ -218,10 +218,15 @@
           (with-lsp-workspaces workspaces (lsp-format-buffer)))
         (funcall callback)))))
 
-;; (after! go-mode
-;;   (defadvice! ++go--spawn (_orig cmd)
-;;     :around #'+go--spawn
-;;     (detached-shell-command cmd)))
+(add-hook! go-mode
+  (defun +go-mode-idle-highlight ()
+    (idle-highlight-mode 1)))
+
+(after! go-mode
+  (add-hook! 'go-mode-hook)
+  (defadvice! ++go--spawn (_orig cmd)
+    :around #'+go--spawn
+    (detached-shell-command cmd)))
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode)))
@@ -234,12 +239,16 @@
           html-ts-mode
           css-ts-mode
           yaml-ts-mode
+          yaml-pro-ts-mode
           typescript-ts-mode
           json-ts-mode
           tsx-ts-mode) . combobulate-mode)
   ;; :config
   ;; (assq-delete-all 'combobulate-mode minor-mode-map-alist)
   )
+
+(use-package! yaml-pro
+  :mode (("\\.yaml$" . yaml-pro-ts-mode)))
 
 ;; (use-package! lsp-bridge
 ;;   :hook (doom-first-file . global-lsp-bridge-mode)

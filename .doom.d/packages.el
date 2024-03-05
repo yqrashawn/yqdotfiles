@@ -150,6 +150,7 @@
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin!
+  outline-minor-faces
   evil
   doom-snippets
   cider
@@ -354,6 +355,11 @@
 ;;   (package! yasnippet))
 
 (package! tabnine)
+(package! pabbrev)
+(package! yaml-pro)
+
+;; spaced repetition
+;; (package! gnosis)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
