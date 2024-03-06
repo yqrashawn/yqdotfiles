@@ -34,3 +34,9 @@
                       fennel-mode
                       dune-mode
                       lfe-mode))
+
+(defun +xcrun-devices ()
+  (apply #'a-merge (a-vals (a-get (json-parse-string (shell-command-to-string "xcrun simctl list devices -j")) "devices"))))
+
+(defun +xcrun-device (device-name)
+  (seq-find (lambda (v) (string= device-name (log/spy (a-get v "name")))) (+xcrun-devices)))

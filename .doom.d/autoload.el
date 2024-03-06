@@ -1207,3 +1207,27 @@ result instead of `message'."
       (when-let ((buf (get-buffer gptel-default-session)))
         (with-current-buffer buf
           (call-interactively #'+whisper-run)))))))
+
+(defvar +xcrun-devices-history nil)
+
+;;;###autoload
+(defun +stm-install-ios-build (devices)
+  (interactive
+   (let ((devices (seq-reduce
+                   (lambda (acc v)
+                     (a-assoc-1 acc (a-get v "name") v))
+                   (+xcrun-devices)
+                   (a-hash-table))))
+     (list (completing-read-multiple "Devices: " devices nil nil nil '+xcrun-devices-history))))
+  (let ((device-ids (seq-reduce (lambda (acc v)
+                                  (if (seq-contains-p devices (a-get v "name"))
+                                      (cons (a-get v "udid") acc)
+                                    acc))
+                                (+xcrun-devices)
+                                nil))
+        (app-path (if (boundp '+xcrun-install-app-path)
+                      +xcrun-install-app-path
+                    "build/Build/Products/Debug-iphonesimulator/StatusIm.app")))
+    (seq-doseq (id device-ids)
+      (async-shell-command
+       (format "/usr/bin/open -a Simulator --args -CurrentDeviceUDID %s && /usr/bin/xcrun simctl install %s %s%s" id id (projectile-project-root) app-path)))))
