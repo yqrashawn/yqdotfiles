@@ -391,6 +391,25 @@ This function could be in the list `comint-output-filter-functions'."
     :after #'detached-rerun-session
     (detached-kill-session session t))
 
+  (defadvice! +detached-create-session (fn command)
+    :around #'detached-create-session
+    (let ((sessions (detached-get-sessions)))
+      (if-let ((dup-session (seq-find
+                             (lambda (session)
+                               (and
+                                (string= command (detached-session-command session))
+                                (string= default-directory
+                                         (expand-file-name (detached-session-working-directory session)))))
+                             (detached-get-sessions))))
+          (let ((buffer (get-buffer-create "*detached-list*")))
+            (with-current-buffer buffer
+              (detached-list-sessions)
+              (bury-buffer)
+              (when (detached-session-active-p dup-session)
+                (detached-session-kill dup-session))
+              (run-with-timer 2 nil #'detached-start-session dup-session)))
+        (funcall fn command))))
+
   (setq! async-shell-command-display-buffer nil
          detached-show-session-context t
          detached-command-format '(:width 50 :padding 4 :function detached-command-str)
