@@ -387,28 +387,10 @@ This function could be in the list `comint-output-filter-functions'."
 
 
          nil nil))))
+
   (defadvice! +detached-rerun-session (session &optional _arg)
     :after #'detached-rerun-session
     (detached-kill-session session t))
-
-  (defadvice! +detached-create-session (fn command)
-    :around #'detached-create-session
-    (let ((sessions (detached-get-sessions)))
-      (if-let ((dup-session (seq-find
-                             (lambda (session)
-                               (and
-                                (string= command (detached-session-command session))
-                                (string= default-directory
-                                         (expand-file-name (detached-session-working-directory session)))))
-                             (detached-get-sessions))))
-          (let ((buffer (get-buffer-create "*detached-list*")))
-            (with-current-buffer buffer
-              (detached-list-sessions)
-              (bury-buffer)
-              (when (detached-session-active-p dup-session)
-                (detached-session-kill dup-session))
-              (run-with-timer 2 nil #'detached-start-session dup-session)))
-        (funcall fn command))))
 
   (setq! async-shell-command-display-buffer nil
          detached-show-session-context t
@@ -426,11 +408,25 @@ This function could be in the list `comint-output-filter-functions'."
   (set-popup-rule! "^\\*detached-session-output\\*" :side 'right :size 0.4 :vslot 97 :quit t)
   (set-popup-rule! "^\\*detached-list\\*" :side 'right :size 0.6 :vslot 98 :quit t)
   (set-popup-rule! "^\\*Detached Shell Command\\*.*" :side 'right :size 0.35 :vslot 98 :quit t)
-  ;; :config
-  ;; (undefadvice! +detached-kill-session (orig-fn session &optional _delete)
-  ;;   :around #'detached-kill-session
-  ;;   (funcall orig-fn session t))
-  )
+  :config
+  (defadvice! +detached-create-session (fn command)
+    :around #'detached-create-session
+    (let ((sessions (detached-get-sessions)))
+      (if-let ((dup-session (seq-find
+                             (lambda (session)
+                               (and
+                                (string= command (detached-session-command session))
+                                (string= default-directory
+                                         (expand-file-name (detached-session-working-directory session)))))
+                             (detached-get-sessions))))
+          (let ((buffer (get-buffer-create "*detached-list*")))
+            (with-current-buffer buffer
+              (detached-list-sessions)
+              (bury-buffer)
+              (when (detached-session-active-p dup-session)
+                (detached-session-kill dup-session))
+              (run-with-timer 2 nil #'detached-start-session dup-session)))
+        (funcall fn command)))))
 
 (use-package! gc-buffers :hook (doom-first-buffer . gc-buffers-mode))
 

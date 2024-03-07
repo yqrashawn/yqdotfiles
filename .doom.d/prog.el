@@ -180,3 +180,4 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (global-corfu-mode 1))
 
 (use-package! imake :defer t)
+(set-file-template! "\.orun$" :trigger "__orun" :mode 'emacs-lisp-mode :project t)

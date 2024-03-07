@@ -1,0 +1,7 @@
+("sysdo update"
+ (:name "test" :cmd "test"))
+
+;; Local Variables:
+;; major-mode: emacs-lisp-mode
+;; no-byte-compile: t
+;; End:

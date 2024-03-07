@@ -5,7 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((apheleia-formatter . zprint)
+   '((major-mode . emacs-lisp-mode)
+     (apheleia-formatter . zprint)
      (cider-clojure-cli-aliases . ":jvm-base")
      (eval add-hook 'before-save-hook
       (lambda nil

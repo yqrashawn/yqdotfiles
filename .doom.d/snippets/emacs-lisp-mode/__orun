@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: __orun
+# key: __orun
+# --
+("$1")
+
+;; Local Variables:
+;; major-mode: emacs-lisp-mode
+;; no-byte-compile: t
+;; End:
