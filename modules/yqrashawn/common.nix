@@ -41,7 +41,6 @@ in {
     systemPackages = with pkgs;
       [
         zsh-autopair
-        # zsh-fzf-tab # broken
         atuin
         # postgresql
         # mpv
