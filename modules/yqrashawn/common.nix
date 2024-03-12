@@ -40,8 +40,8 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
-        zsh-autopair
         atuin
+        # ntfy
         # postgresql
         # mpv
         mpv-unwrapped

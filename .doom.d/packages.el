@@ -355,7 +355,8 @@
 ;;   (package! yasnippet))
 
 (package! tabnine)
-(package! pabbrev)
+;; (package! pabbrev)
+(package! pabbrev :recipe (:host github :repo "amno1/pabbrev"))
 (package! yaml-pro)
 (package! imake)
 
