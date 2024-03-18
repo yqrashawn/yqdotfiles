@@ -1227,7 +1227,7 @@ result instead of `message'."
                                 nil))
         (app-path (if (boundp '+xcrun-install-app-path)
                       +xcrun-install-app-path
-                    "build/Build/Products/Debug-iphonesimulator/StatusIm.app")))
+                    (concat (projectile-project-root) "build/Build/Products/Debug-iphonesimulator/StatusIm.app"))))
     (seq-doseq (id device-ids)
       (async-shell-command
-       (format "/usr/bin/open -a Simulator --args -CurrentDeviceUDID %s && /usr/bin/xcrun simctl install %s %s%s" id id (projectile-project-root) app-path)))))
+       (format "/usr/bin/open -a Simulator --args -CurrentDeviceUDID %s && /usr/bin/xcrun simctl install %s %s" id id app-path)))))
