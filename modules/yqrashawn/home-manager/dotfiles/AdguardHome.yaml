@@ -1,4 +1,7 @@
 http:
+  pprof:
+    port: 6060
+    enabled: false
   address: 0.0.0.0:6155
   session_ttl: 720h
 users:
@@ -9,21 +12,14 @@ block_auth_min: 15
 http_proxy: ""
 language: en
 theme: auto
-debug_pprof: false
 dns:
   bind_hosts:
     - 0.0.0.0
   port: 5354
   anonymize_client_ip: false
-  protection_enabled: true
-  blocking_mode: default
-  blocking_ipv4: ""
-  blocking_ipv6: ""
-  blocked_response_ttl: 10
-  protection_disabled_until: null
-  parental_block_host: family-block.dns.adguard.com
-  safebrowsing_block_host: standard-block.dns.adguard.com
   ratelimit: 20
+  ratelimit_subnet_len_ipv4: 24
+  ratelimit_subnet_len_ipv6: 56
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
@@ -31,14 +27,14 @@ dns:
     - https://dns.adguard-dns.com/dns-query
     - https://dns10.quad9.net/dns-query
     - https://1.1.1.1/dns-query
-  # upstream_dns_file: /Users/yqrashawn/Dropbox/sync/adguardhome.list.conf
+  upstream_dns_file: ""
   bootstrap_dns:
     - 9.9.9.10
     - 149.112.112.10
     - 2620:fe::10
     - 2620:fe::fe:10
-  all_servers: false
-  fastest_addr: true
+  fallback_dns: []
+  upstream_mode: fastest_addr
   fastest_timeout: 1s
   allowed_clients: []
   disallowed_clients: []
@@ -65,27 +61,6 @@ dns:
   ipset: []
   ipset_file: ""
   bootstrap_prefer_ipv6: false
-  filtering_enabled: true
-  filters_update_interval: 24
-  parental_enabled: false
-  safebrowsing_enabled: false
-  safebrowsing_cache_size: 1048576
-  safesearch_cache_size: 1048576
-  parental_cache_size: 1048576
-  cache_time: 30
-  safe_search:
-    enabled: false
-    bing: true
-    duckduckgo: true
-    google: true
-    pixabay: true
-    yandex: true
-    youtube: true
-  rewrites: []
-  blocked_services:
-    schedule:
-      time_zone: Local
-    ids: []
   upstream_timeout: 10s
   private_networks: []
   use_private_ptr_resolvers: true
@@ -95,6 +70,7 @@ dns:
   dns64_prefixes: []
   serve_http3: false
   use_http3_upstreams: false
+  serve_plain_dns: true
 tls:
   enabled: false
   server_name: ""
@@ -225,6 +201,36 @@ dhcp:
     lease_duration: 86400
     ra_slaac_only: false
     ra_allow_slaac: false
+filtering:
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_services:
+    schedule:
+      time_zone: Local
+    ids: []
+  protection_disabled_until: null
+  safe_search:
+    enabled: false
+    bing: true
+    duckduckgo: true
+    google: true
+    pixabay: true
+    yandex: true
+    youtube: true
+  blocking_mode: default
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  rewrites: []
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  filters_update_interval: 24
+  blocked_response_ttl: 10
+  filtering_enabled: true
+  parental_enabled: false
+  safebrowsing_enabled: false
+  protection_enabled: true
 clients:
   runtime_sources:
     whois: true
@@ -245,4 +251,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 24
+schema_version: 28

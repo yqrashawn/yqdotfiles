@@ -122,9 +122,6 @@
 
 
 (package! olivetti)
-;; (package! orderless)
-;; (package! corfu)
-;; (package! cape)
 (package! ix)
 (package! orgbox)
 ;; (package! fancy-dabbrev)
@@ -248,7 +245,7 @@
 ;; (package! plz :recipe (:host github :repo "alphapapa/plz.el")) ;; http library
 ;; (package! ement :recipe (:host github :repo "alphapapa/ement.el")) ;; matrix client
 ;; (package! esup)
-(package! vundo :recipe (:host github :repo "casouri/vundo"))
+;; (package! vundo :recipe (:host github :repo "casouri/vundo"))
 ;; (package! zoom) ;; balance window
 (package! evil-matchit)
 ;; (package! evil-owl)

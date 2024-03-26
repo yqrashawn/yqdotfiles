@@ -204,11 +204,13 @@
   :init
   (require 'cape)
   (setq! pabbrev-use-built-in-completion nil)
+
+  ;; (setq-local completion-at-point-functions (list))
   (add-hook! 'pabbrev-mode-hook
     (defun +corfu-add-pabbrev-capf-h ()
+      (add-hook 'completion-at-point-functions #'pabbrev-capf 0 t)
       (add-hook 'completion-at-point-functions
                 (cape-capf-super
-                 #'pabbrev-capf
                  #'cape-abbrev
                  #'cape-keyword
                  #'tabnine-completion-at-point)
@@ -224,3 +226,16 @@
     :around #'pabbrev-post-command-hook
     (unless (eq this-command '+complete-at-point)
       (funcall orig-fn))))
+
+;; (defun force-debug (func &rest args)
+;;   (condition-case e
+;;       (apply func args)
+;;     ((debug error) (signal (car e) (cdr e)))))
+
+;; (defun ++debug-corfu-post-command ()
+;;   (setq debug-on-error t)
+
+;;   (advice-add #'corfu--post-command :around #'force-debug))
+
+(after! corfu
+  (setq! corfu-preselect 'directory))
