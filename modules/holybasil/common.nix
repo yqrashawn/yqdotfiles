@@ -103,7 +103,7 @@
       nix
       nixfmt
       nixpkgs-fmt
-      rnix-lsp
+      nil
       pandoc
       openssh
       neofetch

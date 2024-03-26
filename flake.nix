@@ -93,6 +93,10 @@
       url = "github:gpakosz/.tmux";
       flake = false;
     };
+    zsh-autopair = {
+      url = "github:hlissner/zsh-autopair";
+      flake = false;
+    };
     zsh-autoquoter = {
       url = "github:ianthehenry/zsh-autoquoter";
       flake = false;
@@ -386,7 +390,7 @@
         '';
       in {
         devShell = pkgs.devshell.mkShell {
-          packages = with pkgs; [ nixfmt pyEnv rnix-lsp stylua treefmt ];
+          packages = with pkgs; [ nixfmt pyEnv stylua treefmt ];
           commands = [{
             name = "sysdo";
             package = sysdo;

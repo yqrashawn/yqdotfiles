@@ -68,7 +68,7 @@
   (setq-hook! '(go-mode-hook) lsp-headerline-breadcrumb-enable t)
   (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
   (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+   (make-lsp-client :new-connection (lsp-stdio-connection '("nil"))
                     :major-modes '(nix-mode)
                     :server-id 'nix))
   (when (modulep! :completion company)

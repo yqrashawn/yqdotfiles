@@ -206,14 +206,14 @@ in {
         pinentry-emacs
         # pinentry-qt
         # pinentry_mac
-        feroxbuster
+        # feroxbuster # content discovery
         ffmpeg
         pandoc
         # goku
         nix
         nixfmt
         nixpkgs-fmt
-        rnix-lsp
+        nil
         openssh
         neofetch
         parallel

@@ -8,7 +8,7 @@
       extraPackages = with pkgs; [
         rubyPackages.solargraph
         nodePackages.pyright
-        rnix-lsp
+        nil
         fzf
       ];
       plugins = with pkgs.vimPlugins; [

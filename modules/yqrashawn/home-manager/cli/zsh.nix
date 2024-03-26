@@ -98,8 +98,8 @@ in {
     enable = true;
     autocd = true;
     enableCompletion = true;
+    autosuggestion = { enable = true; };
     # enableSyntaxHighlighting = true;
-    enableAutosuggestions = true;
     shellGlobalAliases = {
       UUID = "$(uuidgen | tr -d \\n)";
       G = "| grep";

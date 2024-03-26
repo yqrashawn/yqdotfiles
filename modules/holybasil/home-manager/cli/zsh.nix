@@ -102,7 +102,7 @@ in {
     autocd = true;
     enableCompletion = true;
     # enableSyntaxHighlighting = true;
-    enableAutosuggestions = true;
+    autosuggestion = { enable = true; };
     shellGlobalAliases = {
       UUID = "$(uuidgen | tr -d \\n)";
       G = "| grep";
