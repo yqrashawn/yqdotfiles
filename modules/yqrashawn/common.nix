@@ -40,6 +40,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        k6
         atuin
         # ntfy
         # postgresql
