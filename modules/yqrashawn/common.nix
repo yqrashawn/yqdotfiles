@@ -40,6 +40,8 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        (curl.override (args: { brotliSupport = true; }))
+        # curl
         k6
         atuin
         # ntfy
