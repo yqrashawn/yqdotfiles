@@ -701,4 +701,6 @@
  ;;          :n "<down>" #'combobulate-navigate-next
  ;;          :n "<left>" #'combobulate-navigate-up
  ;;          :n "<right>" #'combobulate-navigate-down))
- )
+ (:after calc
+         (:map calc-mode-map
+          :g "C-o" #'casual-main-menu)))
