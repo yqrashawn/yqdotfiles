@@ -16,7 +16,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "cd /Users/${config.user.name}/workspace/home/miniser && exec -a miniser-local-jar ${pkgs.direnv}/bin/direnv exec ./ java --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -jar target/miniser-standalone.jar"
+        "cd /Users/${config.user.name}/workspace/home/miniser && PROD=true exec -a miniser-local-jar ${pkgs.direnv}/bin/direnv exec ./ java --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -jar target/miniser-standalone.jar"
       ];
       RunAtLoad = true;
       KeepAlive = true;
