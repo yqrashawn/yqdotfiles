@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Check if Surge is running
+if pgrep -x "Surge" > /dev/null; then
+    echo "Surge is running."
+
+    # Check if surge-dhcpd is NOT running
+    if ! pgrep -x "surge-dhcpd" > /dev/null; then
+        echo "surge-dhcpd is not running."
+
+        # Kill Surge process
+        pkill -x "Surge"
+        echo "Killed Surge."
+
+        # Kill com.nssurge.surge-mac.helper process
+        pkill -x "com.nssurge.surge-mac.helper"
+        echo "Killed com.nssurge.surge-mac.helper."
+    else
+        echo "surge-dhcpd is running. No action taken."
+    fi
+else
+    echo "Surge is not running. No action taken."
+fi
+
+open -a "Surge"
