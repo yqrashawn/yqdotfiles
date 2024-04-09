@@ -19,7 +19,7 @@
       "firefox"
       "firefox-developer-edition"
       "safari-technology-preview"
-      "todoist"
+      # "todoist"
       # "skim"
       "telegram"
       "discord"
