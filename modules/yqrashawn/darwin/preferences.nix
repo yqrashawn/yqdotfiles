@@ -260,6 +260,9 @@ in {
         ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.mbsyncrc ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.mbsyncrc.gpg || true
 
         ln -fs /Applications/Nix\ Apps/* /Applications/
+
+        [ -d "~/Dropbox/sync/ntf" ] && [ ! -d "/opt/homebrew/ntf" ] && ln -s ~/Dropbox/sync/ntf /opt/homebrew/ntf
+        [ -d "~/Dropbox/sync/.ntf.yml" ] && [ ! -d "~/.ntf.yml" ] && ln -s ~/Dropbox/sync/ntf /opt/homebrew/ntf
       '';
     };
   };
