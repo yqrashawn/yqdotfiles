@@ -360,8 +360,8 @@ autocmd DocLoad ^https://discord\.com js -s ~/.nixpkgs/modules/yqrashawn/home-ma
 autocmd DocLoad ^https://app\.slack\.com js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/slack.js
 autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/pull\/\d+ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/github_topic.js
 autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/issues\/\d+ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/github_topic.js
-autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices$ exclaim_quiet open "https://my.setapp.com/devices?hostname=$(hostname)"
-autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices\?hostname js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/setapp_devices.js
+" autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices$ exclaim_quiet open "https://my.setapp.com/devices?hostname=$(hostname)"
+" autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices\?hostname js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/setapp_devices.js
 
 " Autocontainers
 autocontain ^https?://(www\.)?(\w*\.)*(status\.im|localhost:3449|localhost:4567) status
