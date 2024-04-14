@@ -28,7 +28,8 @@ in {
   programs.fzf = {
     enable = useFzf;
     enableBashIntegration = useFzf;
-    enableZshIntegration = useFzf;
+    # enableZshIntegration = useFzf;
+    enableZshIntegration = false;
     enableFishIntegration = useFzf;
   } // fuzz;
 }
