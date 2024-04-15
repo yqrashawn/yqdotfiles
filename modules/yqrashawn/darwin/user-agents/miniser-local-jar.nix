@@ -16,10 +16,18 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "cd /Users/${config.user.name}/workspace/home/miniser && PROD=true exec -a miniser-local-jar ${pkgs.direnv}/bin/direnv exec ./ java --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -jar target/miniser-standalone.jar"
+        ''
+          mkdir -p ~/miniser
+          cd ~/miniser
+          /bin/cp ~/workspace/home/miniser/.env.local ~/miniser/
+          PORT=61942 PROD=true HOSTNAME=$(hostname) exec -a miniser-local-jar ${pkgs.direnv}/bin/direnv exec ./ java --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -jar /Users/${config.user.name}/Library/CloudStorage/Dropbox/sync/miniser/miniser-standalone.jar
+        ''
       ];
       RunAtLoad = true;
       KeepAlive = true;
+      WatchPaths = [
+        "/Users/${config.user.name}/Library/CloudStorage/Dropbox/sync/miniser/miniser-standalone.jar"
+      ];
       StandardErrorPath = "/tmp/miniser-stderr.log";
       StandardOutPath = "/tmp/miniser-stdout.log";
     };
