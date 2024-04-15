@@ -261,8 +261,8 @@ in {
 
         ln -fs /Applications/Nix\ Apps/* /Applications/
 
-        [ -d "~/Dropbox/sync/ntf" ] && [ ! -d "/opt/homebrew/ntf" ] && ln -s ~/Dropbox/sync/ntf /opt/homebrew/ntf
-        [ -d "~/Dropbox/sync/.ntf.yml" ] && [ ! -d "~/.ntf.yml" ] && ln -s ~/Dropbox/sync/ntf /opt/homebrew/ntf
+        [ -d "~/Dropbox/sync/ntf" ] && [ ! -d "/opt/homebrew/bin/ntf" ] && ln -s ~/Dropbox/sync/ntf /opt/homebrew/bin/ntf
+        [ -d "~/Dropbox/sync/.ntf.yml" ] && [ ! -d "~/.ntf.yml" ] && ln -s ~/Dropbox/sync/ntf /opt/homebrew/bin/ntf
       '';
     };
   };
