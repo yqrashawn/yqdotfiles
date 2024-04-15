@@ -208,6 +208,7 @@ user_rules:
   - '@@||mhskso.sbs^$important'
   - '@@||vlrzgf.sbs^$important'
   - '@@||tracking.tldrnewsletter.com^$important'
+  - '@@||alsc-buy2.ele.me^$important'
   - ""
 dhcp:
   enabled: false
