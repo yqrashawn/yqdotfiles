@@ -2,8 +2,10 @@
   homebrew = {
     casks = [
       # "bartender"
-      "neteasemusic"
       # "spectacle"
+      # "keybase"
+      # "emacs-mac"
+      "neteasemusic"
       "setapp"
       "notion"
       "hammerspoon"
@@ -17,9 +19,7 @@
       "karabiner-elements"
       "google-chrome"
       "bettertouchtool"
-      # "keybase"
       "input-source-pro"
-      # "emacs-mac"
       "raycast"
       "visual-studio-code"
     ];

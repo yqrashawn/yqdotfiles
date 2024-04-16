@@ -260,7 +260,6 @@ in {
         nodePackages.serve
         nodePackages.surge
         nodePackages.neovim
-        nodePackages.live-server
         # nodePackages.web-ext
         nodePackages.textlint
         nodePackages.textlint-rule-write-good

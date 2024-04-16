@@ -18,7 +18,7 @@
       "yqrashawn/goku"
       "homebrew/bundle"
       "homebrew/cask-fonts"
-      "homebrew/cask-drivers"
+      # "homebrew/cask-drivers"
       "homebrew/cask-versions"
       "homebrew/services"
       "homebrew/command-not-found"
@@ -27,34 +27,33 @@
       "teamookla/speedtest"
       "borkdude/brew"
       "huahaiy/brew"
-      "homebrew/cask-drivers"
       "incidentist/nyxt"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
-      # "yqrashawn/goku/goku"
-      "alerter"
-      "openssl@3" # conflux-rust
-      "libgccjit"
+      # "openssl@3" # conflux-rust
+      # "libgccjit"
       # "docker-completion"
-      "curl"
-      "php"
-      "fcitx-remote-for-osx"
-      "zig"
+      # "curl"
+      # "php"
+      # "zig"
       # "dum"
       # "clj-kondo"
-      "editorconfig"
-      "grip"
+      # "editorconfig"
       # "fennel"
-      "percol"
       # "proxychains-ng"
-      "datalevin"
-      "dotenv-linter"
       # "cloudflared"
-      "janet"
-      "pngpaste"
+      # "janet"
+      # "dotenv-linter"
+      # "pngpaste"
+      # "grip"
+      # "alerter"
+      "yqrashawn/goku/goku"
+      "percol"
+      "datalevin"
+      "fcitx-remote-for-osx"
 
     ];
     casks = [
