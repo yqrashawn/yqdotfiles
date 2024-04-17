@@ -50,7 +50,7 @@
       # "pngpaste"
       # "grip"
       # "alerter"
-      "yqrashawn/goku/goku"
+      # "yqrashawn/goku/goku"
       "percol"
       "datalevin"
       "fcitx-remote-for-osx"
