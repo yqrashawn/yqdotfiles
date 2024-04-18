@@ -353,7 +353,7 @@ autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
 autocmd TriStart .* source_quiet
 autocmd DocStart .* _global_init_built_
 autocmd DocStart .* _global_init_
-autocmd DocLoad macmini\.donkey-clownfish\.ts\.net:6155/login\.html\?tridactylrctab=\d _auto_tab_switch_
+" autocmd DocLoad macmini\.donkey-clownfish\.ts\.net:6155/login\.html\?tridactylrctab=\d _auto_tab_switch_
 autocmd DocLoad ^https://discord\.com _cleanup_history_
 autocmd DocLoad ^https://app\.slack\.com _cleanup_history_
 autocmd DocLoad ^https://discord\.com js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/discord.js

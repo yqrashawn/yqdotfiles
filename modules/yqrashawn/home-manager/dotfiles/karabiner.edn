@@ -31,12 +31,15 @@
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
   :open   "open \"%s\""
   :opena  "open -a \"%s\""
+  :curl "/run/current-system/sw/bin/curl -s \"%s\""
   :hs
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '(\"%s\")'"
   :hsl
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
   :show
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
+  :show-in-firefox
+  "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Firefox Developer Edition\")'; curl -s '%s'"
   :togg
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
   :yfocus "sh ~/.config/yabai/focus-window %s"
@@ -424,12 +427,13 @@
            ;; [:k [:opena "kitty"]]
            ;; [:k [:opena "WezTerm.app"]]
 
-           [:quote [:togg "ClickUp"]]
+           ;; [:quote [:togg "ClickUp"]]
            ;; [:t [:togg "Todoist"] :BusyCal]
            ;; [:t [:togg "BusyCal"] :!BusyCal]
            ;; [:t [:togg "Todoist"] :!Todoist]
            ;; [:t [:togg "Notion Calendar"] :Todoist]
-           [:t [:togg "Notion Calendar"]]
+           [:quote [:togg "Notion Calendar"]]
+           [:t [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.todoist.com/&create-when-missing=1&pin=1&idx=6"]]
            ;; [:t [:togg "BusyCal"] :Todoist]
            ;; [:t [:togg "BusyCal"]]
            ;; [:t [:togg "Todoist"] :!Todoist]
@@ -456,7 +460,8 @@
            ;; [:l [:togg :same_wind_app] :VV]
            ;; [:l [:jump "Firefox Developer Edition" "Firefox Developer
            ;; Edition"]]
-           [:n [:togg "Notion"]]
+           ;; [:n [:togg "Notion"]]
+           [:n [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://www.notion.so/&create-when-missing=1&pin=1&idx=3"]]
            ;; [:n [:hsl "/Applications/Google Chrome Dev.app"]]
            ;; [:return_or_enter [:togg "Brave Browser"]]
            [:return_or_enter [:togg "Simulator"]]
@@ -481,8 +486,12 @@
            ;; [:h [:hsl "Status"] :!Status]
            ;; [:h [:hsl "Discord"] :!Discord]
            ;; [:h [:hsl "Slack"] :Discord]
-           [:h [:open "http://macmini.donkey-clownfish.ts.net:6155/login.html?tridactylrctab=1"]]
-           [:9 [:open "http://macmini.donkey-clownfish.ts.net:6155/login.html?tridactylrctab=2"]]
+           ;; [:h [:open "http://macmini.donkey-clownfish.ts.net:6155/login.html?tridactylrctab=1"]]
+           ;; [:9 [:open "http://macmini.donkey-clownfish.ts.net:6155/login.html?tridactylrctab=2"]]
+           ;; [:h [:curl "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&idx=1"]]
+           ;; [:9 [:curl "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.slack.com/&create-when-missing=1&pin=1&idx=2"]]
+           [:h [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&pin=1&idx=1"]]
+           [:9 [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.slack.com/&create-when-missing=1&pin=1&idx=2"]]
            ;; [:r [:togg "Reeder"]]
            [:r [:togg "Safari"]]
            ;; [:r [:togg "Orion"]]

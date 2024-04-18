@@ -267,7 +267,7 @@ in {
         fi
         if [ -e ~/Dropbox/sync/.ntf.yml ] && [ ! -e ~/.ntf.yml ]; then
             echo 'link ~/.ntf.yml'
-            ln -s ~/Dropbox/sync/ntf ~/.ntf.yml
+            ln -s ~/Dropbox/sync/.ntf.yml ~/.ntf.yml
         fi
       '';
     };
