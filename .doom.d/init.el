@@ -327,4 +327,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (after! (doom-packages straight)
   (setq straight--native-comp-available t))
 
+(setq doom-upgrade-url "git@github.com:doomemacs/doomemacs")
+
 ;; (native-compile-async (expand-file-name "~/.emacs.d/.local/straight/repos/") 'recursively)
