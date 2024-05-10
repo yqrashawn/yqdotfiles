@@ -43,6 +43,7 @@ in {
         (curl.override (args: { brotliSupport = true; }))
         # curl
         k6
+        xcodes
         atuin
         # ntfy
         # postgresql

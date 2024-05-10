@@ -42,7 +42,7 @@ let
     p2 = "percol";
     cleanup = "find . -type f -name '*.DS_Store' -ls -delete";
     reload = "exec $SHELL -l";
-    rreload = "rm -rf ~/.cache/prezto/zcompdump || true && exec $SHELL -l";
+    rreload = "trash ~/.cache/prezto/zcompdump || true && exec $SHELL -l";
     cd = "z";
     j = "z";
 

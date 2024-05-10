@@ -108,9 +108,12 @@
   :desc "Git timemachine" "gt" #'git-timemachine
   :desc "Todoist" "o SPC" #'todoist
   :desc "RSS" "on" #'=rss
-  (:prefix-map ("e" . "Edit")
+  (:prefix-map ("e" . "Edit/Env")
    :desc "String" "s" #'string-edit-at-point
-   :desc "Indirect" "I" #'edit-indirect-region)
+   :desc "Indirect" "I" #'edit-indirect-region
+   :desc "Reload" "r" #'envrc-reload
+   :desc "Allow" "A" #'envrc-allow
+   :desc "Reload All" "R" #'envrc-reload-all)
   (:prefix-map ("k" . "Kill")
    :desc "Browse at remote" "k" #'browse-at-remote
    (:prefix-map ("g" . "git link")
