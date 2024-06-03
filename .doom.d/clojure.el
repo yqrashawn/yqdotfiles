@@ -115,6 +115,10 @@
         (lsp-show-xrefs (lsp--locations-to-xref-items loc) nil nil)
         'deferred))))
 
+(set-lookup-handlers! '(cider-mode cider-repl-mode)
+  :definition #'+clojure-cider-lookup-definition
+  :documentation #'cider-doc)
+
 (add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.bb\\'" . clojure-mode))
 (add-to-list 'magic-mode-alist '("^#![^\n]*/\\(clj\\|clojure\\|bb\\|lumo\\)" . clojure-mode))

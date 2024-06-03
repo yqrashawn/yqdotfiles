@@ -109,7 +109,8 @@ in {
         lnav
         mu
         # macvim # use vim
-        bitwarden-cli
+        # bitwarden-cli # failed
+        rbw
         # firefox
         # firefox-devedition-bin
         sqlite
@@ -279,10 +280,10 @@ in {
         # rust-analyzer
         (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph rubocop ]))
 
-        sbcl
+        # sbcl
         # asdf
-        lispPackages.asdf
-        lispPackages.quicklisp
+        # lispPackages.asdf
+        # lispPackages.quicklisp
 
         # ghc
         # guile

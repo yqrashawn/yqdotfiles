@@ -65,6 +65,7 @@
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages)
   (setq! lsp-completion-provider :none)
+  (setq! lsp-disabled-clients '(golangci-lint)) ;; broken
   (setq-hook! '(go-mode-hook) lsp-headerline-breadcrumb-enable t)
   (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
   (lsp-register-client
@@ -262,3 +263,7 @@
 ;; (after! acm
 ;;   (setq! acm-enable-tabnine nil)
 ;;   (setq! acm-enable-tabnine t))
+
+;; (after! lsp-golangci-lint
+;;   (setq! lsp-golangci-lint-enable-all t
+;;     lsp-golangci-lint-disable '("lll")))
