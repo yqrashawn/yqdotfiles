@@ -98,6 +98,7 @@ in {
         joker
         leiningen
         golangci-lint
+        golangci-lint-langserver
         # obb
         # nbb
 

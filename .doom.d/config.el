@@ -83,6 +83,7 @@
 (load! "js.el")
 
 (load! "lang.el")
+(load! "golang.el")
 (load! "clisp.el")
 (load! "org.el")
 (load! "write.el")

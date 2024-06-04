@@ -65,8 +65,6 @@
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages)
   (setq! lsp-completion-provider :none)
-  (setq! lsp-disabled-clients '(golangci-lint)) ;; broken
-  (setq-hook! '(go-mode-hook) lsp-headerline-breadcrumb-enable t)
   (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection '("nil"))
@@ -89,15 +87,6 @@
    lsp-completion-show-kind nil
    lsp-completion-sort-initial-results nil)
   (pushnew! lsp-file-watch-ignored-directories "[/\\\\]coverage'" "[/\\\\]lcov-report'" "[/\\\\]\\.log\\'" "[/\\\\]\\.clj-kondo" "[/\\\\]\\storybook-static" "[/\\\\]\\.storybook" "[/\\\\]releases" "[/\\\\]\\.yarn" "[/\\\\]\\.vscode" "[/\\\\]build'" "[/\\\\]\\.shadow-cljs" "[/\\\\]cljs-runtime" "[/\\\\]dist" "[/\\\\]__snapshots__'" "[/\\\\]sp_")
-  (after! flycheck
-    (defadvice! +flycheck-get-next-checker-for-buffer (orig-fn checker)
-      "support multiple flycheck checkers with lsp checker"
-      :around #'flycheck-get-next-checker-for-buffer
-      (if (eq checker 'lsp)
-          (cond
-           ((derived-mode-p 'go-mode) 'golangci-lint)
-           (t (funcall orig-fn checker)))
-        (funcall orig-fn checker))))
 
   ;; (defadvice! +lsp-f-same? (orig-fn file-a file-b)
   ;;   :around #'lsp-f-same?
@@ -218,16 +207,6 @@
         (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
           (with-lsp-workspaces workspaces (lsp-format-buffer)))
         (funcall callback)))))
-
-(add-hook! go-mode
-  (defun +go-mode-idle-highlight ()
-    (idle-highlight-mode 1)))
-
-(after! go-mode
-  (add-hook! 'go-mode-hook)
-  (defadvice! ++go--spawn (_orig cmd)
-    :around #'+go--spawn
-    (detached-shell-command cmd)))
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode)))

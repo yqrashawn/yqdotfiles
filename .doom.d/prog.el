@@ -146,8 +146,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :config
   (eshell-follow-global-mode t))
 
-(add-hook! go-mode '(hl-line-mode which-func-try-to-enable))
-
 (use-package! eat
   :commands (eat)
   :init
