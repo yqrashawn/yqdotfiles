@@ -269,6 +269,10 @@ in {
             echo 'link ~/.ntf.yml'
             ln -s ~/Dropbox/sync/.ntf.yml ~/.ntf.yml
         fi
+        if [ -e ~/Dropbox/sync/personal_dictionaries/en_US.dic ] && [ ! -e ~/.config/enchant/en_US.dic ]; then
+            echo 'link enchant/hunspell dictionaries'
+            ln -s ~/Dropbox/sync/personal_dictionaries ~/.config/enchant
+        fi
       '';
     };
   };

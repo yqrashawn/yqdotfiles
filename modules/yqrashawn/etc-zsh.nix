@@ -17,7 +17,8 @@ let
     "$HOME/.cargo/bin"
     "$HOME/.yarn/bin"
     "$HOME/.config/yarn/global/node_modules/.bin"
-    "/usr/local/opt/curl/bin"
+    "/run/current-system/sw/bin"
+    # "/usr/local/opt/curl/bin"
     "/opt/homebrew/bin"
   ];
 in {

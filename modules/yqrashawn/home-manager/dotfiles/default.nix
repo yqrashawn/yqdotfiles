@@ -343,10 +343,14 @@
       source = ./sketchybar;
       recursive = true;
     };
-    "enchant" = {
-      source = ./enchant;
-      recursive = true;
-    };
+    # "enchant" = {
+    #   source = ./enchant;
+    #   recursive = true;
+    # };
+    # "enchant/hunspell" = {
+    #   source = ./enchant;
+    #   recursive = true;
+    # };
     "clj-kondo/config.edn" = { source = ./clj-kondo.edn; };
     ".zsh.d" = {
       source = ./.zsh.d;

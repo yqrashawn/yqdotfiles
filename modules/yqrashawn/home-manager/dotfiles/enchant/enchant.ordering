@@ -1,0 +1,11 @@
+*:hunspell,nuspell,aspell
+en_AU:hunspell,nuspell,aspell
+en_GB:hunspell,nuspell,aspell
+en_CA:hunspell,nuspell,aspell
+en_US:hunspell,nuspell,aspell
+fi:voikko,hunspell,nuspell,aspell
+fi_FI:voikko,hunspell,nuspell,aspell
+he:hspell,hunspell,nuspell
+he_IL:hspell,hunspell,nuspell
+tr:zemberek,nuspell
+tr_TR:zemberek,nuspell

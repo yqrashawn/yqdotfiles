@@ -77,22 +77,29 @@ in {
         msmtp
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
-        (emacs30-overlay.override (args: {
-          # withMacport = true;
-          withNS = true;
-          # macportVersion = "master";
-          withSQLite3 = true;
-          withWebP = true;
-          withImageMagick = true;
-          # withXwidgets = true;
-          # nativeComp = true;
-          withNativeCompilation = true;
-          withTreeSitter = true;
-          webkitgtk = true;
-          # texinfo = true;
-          # autoreconfHook = true;
-          withCsrc = true;
-        }))
+        (emacsWithPackagesFromUsePackage {
+          package = (emacs30-overlay.override (args: {
+            # withMacport = true;
+            withNS = true;
+            # macportVersion = "master";
+            withSQLite3 = true;
+            withWebP = true;
+            withImageMagick = true;
+            # withXwidgets = true;
+            # nativeComp = true;
+            withNativeCompilation = true;
+            withTreeSitter = true;
+            webkitgtk = true;
+            # texinfo = true;
+            # autoreconfHook = true;
+            withCsrc = true;
+          }));
+
+          config = "./empty.el";
+          defaultInitFile = false;
+          extraEmacsPackages = epkgs: [ epkgs.jinx ];
+        })
+
         ispell
         jet
         joker
@@ -170,7 +177,7 @@ in {
         dotenv-linter # failed
         reattach-to-user-namespace
         terminal-notifier
-        enchant # ispell
+        enchant2
         w3m
         # starship
         neofetch

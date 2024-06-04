@@ -357,6 +357,7 @@
 (package! yaml-pro)
 (package! imake)
 (package! casual)
+;; (package! jinx) ;; installed via nix
 
 ;; spaced repetition
 ;; (package! gnosis)

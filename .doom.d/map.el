@@ -57,6 +57,7 @@
  :g "C-e" #'mwim-end-of-code-or-line
  ;; :g "C-'" #'yq/vterm-toggle
  :g "C-'" #'+eat
+ :n "z=" #'jinx-correct-word
  [remap split-window-below] #'evil-window-split
  [remap split-window-right] #'evil-window-vsplit
  [remap xterm-paste] #'yank
