@@ -167,7 +167,22 @@
   (setq! completion-ignore-case t)
   :config
   (require 'hotfuzz-module nil t)
-  (pushnew! completion-styles 'hotfuzz)
+  (setq! completion-styles '(orderless hotfuzz basic))
+  ;; (pushnew! completion-styles 'hotfuzz)
+
+  ;; (setq! completion-styles '(hotfuzz orderless basic))
+  ;; (setq! completion-styles '(orderless basic))
+  ;; (setq! completion-styles '(basic))
+
+  ;; (require 'orderless)
+  ;; (defadvice! +hotfuzz-all-completions (orig-fn string table pred point)
+  ;;   :around #'hotfuzz-all-completions
+  ;;   (if (eq (length string) 0)
+  ;;       (funcall #'orderless-all-completions string table pred point)
+  ;;     (funcall orig-fn string table pred point)))
+
+  ;; (setq! completion-styles '(hotfuzz))
+  ;; (setq! completion-styles '(orderless))
   ;; (setq! fussy-score-fn 'fussy-hotfuzz-score)
   )
 
