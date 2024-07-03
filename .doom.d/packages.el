@@ -356,7 +356,7 @@
 (package! pabbrev :recipe (:host github :repo "amno1/pabbrev"))
 (package! yaml-pro)
 (package! imake)
-(package! casual)
+;; (package! casual)
 ;; (package! jinx) ;; installed via nix
 
 ;; spaced repetition
