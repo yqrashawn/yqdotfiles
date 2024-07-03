@@ -8,6 +8,7 @@ in {
       global = { load_dotenv = true; };
       whitelist = {
         prefix = [ "${home}/workspace/office" "${home}/workspace/home" ];
+        exact = [ "${home}/miniser" ];
       };
     };
     enableBashIntegration = true;
