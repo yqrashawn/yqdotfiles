@@ -62,7 +62,6 @@ in {
     systemPackages = with pkgs; [ nix-doc sops ];
   };
 
-  fonts.fontDir.enable = true;
   nix.nixPath = [ "darwin=/etc/${config.environment.etc.darwin.target}" ];
   nix.extraOptions = ''
     extra-platforms = x86_64-darwin aarch64-darwin

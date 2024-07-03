@@ -7,7 +7,7 @@
     {
       extraPackages = with pkgs; [
         rubyPackages.solargraph
-        nodePackages.pyright
+        # nodePackages.pyright
         nil
         fzf
       ];
