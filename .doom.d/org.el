@@ -137,7 +137,9 @@ tasks."
     (let ((daily-note-file (+denote-daily-note-file-name)))
       (if (f-exists? daily-note-file)
           (find-file daily-note-file)
-        (denote "Daily Note" '("dailynote") nil nil (format-time-string "%Y%m%dT000000" (current-time)) nil "dailynote"))
+        (progn
+          (denote "Daily Note" '("dailynote") nil nil (format-time-string "%Y%m%dT000000" (current-time)) nil "dailynote")
+          (save-buffer)))
       daily-note-file))
 
   (defun +side-notes-toggle-daily-note ()
@@ -146,6 +148,5 @@ tasks."
       (unless (f-exists? daily-note-file)
         (+denote-daily-note)
         (bury-buffer))
-      (unless (string= daily-note-file side-notes-file)
-        (setq! side-notes-file (+denote-daily-note)))
+      (setq! side-notes-file daily-note-file)
       (call-interactively #'side-notes-toggle-notes))))

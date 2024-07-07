@@ -106,7 +106,10 @@
 
 (use-package side-notes
   :defer t
-  :init (setq! side-notes-file "notes.side.org"))
+  :init
+  (setq! side-notes-file "notes.side.org"
+         side-notes-display-alist '((side . right)
+                                    (window-width . 1000))))
 
 (use-package explain-pause-mode :defer t)
 
