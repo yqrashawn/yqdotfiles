@@ -123,6 +123,29 @@ tasks."
          todoist-use-scheduled-instead-of-deadline t
          todoist-backing-buffer (concat doom-cache-dir "todoist.org")))
 
-(use-package! denote :defer t
-              :init
-              (setq! denote-directory (expand-file-name "~/Dropbox/sync/denote")))
+(use-package! denote
+  :defer t
+  :init
+  (setq! denote-directory (expand-file-name "~/Dropbox/sync/denote")
+         denote-file-type 'markdown-yaml)
+
+  (defun +denote-daily-note-file-name ()
+    (concat denote-directory "/" (format-time-string "%Y%m%dT000000" (current-time)) "==dailynote--daily-note__dailynote.md"))
+
+  (defun +denote-daily-note ()
+    (interactive)
+    (let ((daily-note-file (+denote-daily-note-file-name)))
+      (if (f-exists? daily-note-file)
+          (find-file daily-note-file)
+        (denote "Daily Note" '("dailynote") nil nil (format-time-string "%Y%m%dT000000" (current-time)) nil "dailynote"))
+      daily-note-file))
+
+  (defun +side-notes-toggle-daily-note ()
+    (interactive)
+    (let ((daily-note-file (+denote-daily-note-file-name)))
+      (unless (f-exists? daily-note-file)
+        (+denote-daily-note)
+        (bury-buffer))
+      (unless (string= daily-note-file side-notes-file)
+        (setq! side-notes-file (+denote-daily-note)))
+      (call-interactively #'side-notes-toggle-notes))))

@@ -44,7 +44,7 @@
  :g "s-k" #'bury-buffer
  :g "s-m" #'+popup/toggle
  :g "s-u" #'revert-buffer
- :g "s-i" #'side-notes-toggle-notes
+ :g "s-i" #'+side-notes-toggle-daily-note
  ;; :g "s-j" #'+whisper-run
  ;; :g "s-j" #'+chat-with-ai
  :g "s-j" #'chatgpt-shell-prompt-compose

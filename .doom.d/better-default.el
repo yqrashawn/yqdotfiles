@@ -104,7 +104,9 @@
 ;; TODO: check autoinsert and doom templates
 ;; maybe use yasnippet with it
 
-(use-package side-notes :defer t :init (setq! side-notes-file "notes.side.org"))
+(use-package side-notes
+  :defer t
+  :init (setq! side-notes-file "notes.side.org"))
 
 (use-package explain-pause-mode :defer t)
 
