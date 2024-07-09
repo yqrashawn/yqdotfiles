@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# The command for RAM Disk creation was found in the next repo:
+# https://git.herrbischoff.com/awesome-macos-command-line/about/
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  # Linux
+  username=$(whoami)
+  echo "This script creates temporary file space in RAM of your Linux,
+mounted to the '/media/${username}/ramdisk folder'. If the
+'/media/${username}' is not writable for your user, you'll get
+'Permission denied' error and need to run the script with 'sudo'.
+RAM disk can be useful in case you need to do some heavy file operations
+and need the most of file-system performance.
+Please note that you're limited by amount of your free memory.
+Also, you need to know that after this virtual disk is ejected or system
+rebooted, all data is lost, so don't forget to save it before that."
+  echo
+  read -p "Please type the size of desired RAM Disk in the next format:
+<number>      The size is given in bytes, and rounded up to entire pages.
+
+<number>k     The size may have a k, m, or g suffix for Ki, Mi, Gi
+<number>m     (binary kilo (kibi), binary mega (mebi), and binary giga
+<number>g     (gibi)).
+
+<number>%     The size may also have a % suffix to limit this instance
+              to a percentage of physical RAM." -r
+  mkdir -p /media/${username}/ramdisk
+  mount -t tmpfs -o size=${REPLY} tmpfs /media/${username}/ramdisk
+
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  # MacOS
+  echo "This script creates temporary file space in RAM of your Mac.
+It could be useful in case you need to do some heavy file operations
+and need the most of file-system performance.
+Please note that you're limited by amount of your free memory.
+Also, you need to know that after this virtual disk is ejected, all
+data is lost, so don't forget to save it before that."
+  echo
+  read -p "Please type the number of MiB of desired RAM Disk size : " -r
+  (( disk_size=REPLY*2048 ))
+  # shellcheck disable=SC2046
+  diskutil erasevolume HFS+ "RAM Disk" $(hdiutil attach -nomount ram://${disk_size}) || exit 1
+  echo
+  echo "RAM Disk is successfully created and mounted.
+When you're done, make sure to save results of your work on persistent
+storage and eject RAM Disk in Finder."
+else
+  echo "Unknown OS: $OSTYPE. Platform is not supported."
+  exit 1
+fi
+
