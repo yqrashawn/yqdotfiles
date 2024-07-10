@@ -13,7 +13,8 @@
   (defun +notmuch-get-sync-command ()
     "custom notmuch sync command"
     ;; "cd ~/mail/namy.19@gmail.com && gmi sync && notmuch new"
-    "bash ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync && mbsync -a && notmuch new")
+    ;; "bash ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync && mbsync -a && notmuch new"
+    "syncmail")
   (setq!
    mm-text-html-renderer 'w3m-standalone
    sendmail-program (executable-find "msmtp")
