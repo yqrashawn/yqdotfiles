@@ -40,6 +40,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        emacs-lsp-booster
         (curl.override (args: { brotliSupport = true; }))
         # curl
         k6

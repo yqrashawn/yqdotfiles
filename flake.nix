@@ -214,6 +214,7 @@
       url = "github:chessmango/asdf-flyctl";
       flake = false;
     };
+    emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
   };
 
   outputs =
