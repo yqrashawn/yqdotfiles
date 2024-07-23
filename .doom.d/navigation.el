@@ -51,7 +51,8 @@
 ;; (use-package! counsel-tramp :commands (counsel-tramp))
 
 (after! projectile
-  (setq! projectile-verbose t
+  (setq! projectile-verbose nil
+         projectile-sort-order 'recentf
          projectile-enable-idle-timer t
          projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
          projectile-idle-timer-seconds 180)

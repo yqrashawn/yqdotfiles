@@ -86,7 +86,11 @@ Instead keep them, with a newline after each comment."
                     y))
              (t
               (cons x y))))
-     expr)))
+     expr))
+
+  (add-hook! 'lispy-mode-hook
+    (defun +lispy-alter-clojure-complete-at-point-functions ()
+      (remove-hook! 'completion-at-point-functions :local 'lispy-clojure-complete-at-point))))
 
 (after! semantic
   (setq! semanticdb-find-default-throttle '(file local project omniscience recursive)))

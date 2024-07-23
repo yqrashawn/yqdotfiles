@@ -224,12 +224,9 @@
   (add-hook! 'pabbrev-mode-hook
     (defun +corfu-add-pabbrev-capf-h ()
       (add-hook 'completion-at-point-functions #'pabbrev-capf 1 t)
-      (add-hook 'completion-at-point-functions
-                (cape-capf-super
-                 #'cape-abbrev
-                 #'cape-keyword
-                 #'tabnine-completion-at-point)
-                1 t)))
+      (add-hook 'completion-at-point-functions #'cape-abbrev 1 t)
+      (add-hook 'completion-at-point-functions #'cape-keyword 1 t)
+      (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 1 t)))
   :config
   (add-to-list 'hippie-expand-try-functions-list #'pabbrev-expand-maybe)
 

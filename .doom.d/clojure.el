@@ -167,12 +167,6 @@
   ;;   (seq-concatenate 'list '(+lookup-status-mobile-re-frame-event-handler-defination) +lookup-definition-functions))
   )
 
-(defun +setup-clojure-mode ()
-  "sort namespace, cleanup log namespace on save"
-  (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns))
-
-(add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
-
 ;;; lispy
 (defun +in-babashka-p ()
   (and (memq major-mode '(clojure-mode))
@@ -232,36 +226,46 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
       (apply func args))))
 
 ;;; cider
-(defun +clojure-use-cider-over-lsp ()
-  "use cider over clojure-lsp for completion when cider is not connected"
-  (remove-hook! 'completion-at-point-functions :local
-    'cider-complete-at-point 'lsp-completion-at-point)
-  (add-hook! 'completion-at-point-functions :local :depth 100
-             #'cider-complete-at-point)
-  (add-hook! 'completion-at-point-functions :local :depth 90
-             #'lsp-completion-at-point)
+(defun +cider-repl-clear-input ()
+  (interactive)
+  (when cider-repl-input-start-mark
+    (cider-repl--clear-region cider-repl-input-start-mark (point-max))))
 
-  ;; fix Regular expression too big
-  ;; https://github.com/clojure-emacs/cider/issues/2866
-  ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
-  (setq-local cider-font-lock-dynamically '(macro core deprecated)))
+(add-hook! cider-mode
+  (defun +clojure-use-cider-over-lsp ()
+    "use cider over clojure-lsp for completion when cider is not connected"
+    (remove-hook! 'completion-at-point-functions :local
+      'cider-complete-at-point 'lsp-completion-at-point)
+    (add-hook! 'completion-at-point-functions :local :depth -100
+               #'cider-complete-at-point)
+    (add-hook! 'completion-at-point-functions :local :depth -99
+               #'lsp-completion-at-point)
+
+    ;; fix Regular expression too big
+    ;; https://github.com/clojure-emacs/cider/issues/2866
+    ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
+    (setq-local cider-font-lock-dynamically '(macro core deprecated))))
 
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
   (remove-hook! 'completion-at-point-functions :local
     'cider-complete-at-point 'lsp-completion-at-point)
-  (add-hook! 'completion-at-point-functions :local :depth 90
-             #'cider-complete-at-point)
-  (add-hook! 'completion-at-point-functions :local :depth 100
+  (add-hook! 'completion-at-point-functions :local :depth -100
              #'lsp-completion-at-point)
+  (add-hook! 'completion-at-point-functions :local :depth -99
+             #'cider-complete-at-point)
   (setq-local cider-font-lock-dynamically nil))
 
-(defun +cider-repl-clear-input ()
-  (interactive)
-  (when cider-repl-input-start-mark
-    (cider-repl--clear-region cider-repl-input-start-mark (point-max))))
-(add-hook! cider-mode '+clojure-use-cider-over-lsp)
 (add-hook! 'cider-disconnected-hook '+clojure-use-lsp-over-cider)
+
+(defun +setup-clojure-mode ()
+  "sort namespace, cleanup log namespace on save"
+  (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns)
+  (if (bound-and-true-p lsp-mode)
+      (+clojure-use-lsp-over-cider)
+    (+clojure-use-cider-over-lsp)))
+
+(add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
 
 (defun +cider-enable-fuzzy-completion ()
   (interactive)
