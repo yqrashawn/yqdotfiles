@@ -26,14 +26,14 @@ dns:
     - 1.1.1.1
     - 94.140.14.140
     - 9.9.9.9
-    - 223.5.5.5
   upstream_dns_file: ""
   bootstrap_dns:
     - 9.9.9.10
     - 149.112.112.10
     - 2620:fe::10
     - 2620:fe::fe:10
-  fallback_dns: []
+  fallback_dns:
+    - 223.5.5.5
   upstream_mode: fastest_addr
   fastest_timeout: 1s
   allowed_clients: []
@@ -65,7 +65,7 @@ dns:
   private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams:
-    - 192.168.50.1
+    - 192.168.50.2
   use_dns64: false
   dns64_prefixes: []
   serve_http3: false
@@ -189,6 +189,7 @@ user_rules:
   - '@@||alsc-buy2.ele.me^$important'
   - '@@||lqj.andsusan.top^$important'
   - '@@||waimai-guide.ele.me^$important'
+  - '||wpad.0.50.168.192.in-addr.arpa^$important'
   - ""
 dhcp:
   enabled: false

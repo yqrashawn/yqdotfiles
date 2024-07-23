@@ -1,5 +1,8 @@
-{ inputs, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 let
+  home = "${
+      if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"
+    }/${config.user.name}";
   overlays = final: prev:
     import ../../overlays/default.nix { inherit final prev pkgs; };
 in {
@@ -12,7 +15,30 @@ in {
         name = "emacs30";
         version = "30.0-${inputs.emacs-custom-src.shortRev}";
         src = inputs.emacs-custom-src;
-        patches = [ ];
+        patches = # old.patches ++
+          [
+            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/system-appearance.patch"
+            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/round-undecorated-frame.patch"
+            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/poll.patch"
+            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/fix-window-role.patch"
+          ];
+        buildInputs = old.buildInputs
+          ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
+        configureFlags = old.configureFlags ++ [ "--with-xwidgets" ];
+        # withMacport = true;
+        withNS = true;
+        # macportVersion = "master";
+        withSQLite3 = true;
+        withWebP = true;
+        withImageMagick = true;
+        # withXwidgets = true;
+        # nativeComp = true;
+        withNativeCompilation = true;
+        withTreeSitter = true;
+        webkitgtk = true;
+        # texinfo = true;
+        # autoreconfHook = true;
+        withCsrc = true;
       });
     })
     # channels

@@ -78,27 +78,17 @@ in {
         msmtp
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
+        # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/make-emacs.nix
         (emacsWithPackagesFromUsePackage {
-          package = (emacs30-overlay.override (args: {
-            # withMacport = true;
-            withNS = true;
-            # macportVersion = "master";
-            withSQLite3 = true;
-            withWebP = true;
-            withImageMagick = true;
-            # withXwidgets = true;
-            # nativeComp = true;
-            withNativeCompilation = true;
-            withTreeSitter = true;
-            webkitgtk = true;
-            # texinfo = true;
-            # autoreconfHook = true;
-            withCsrc = true;
-          }));
+          package = emacs30-overlay;
 
           config = "./empty.el";
           defaultInitFile = false;
-          extraEmacsPackages = epkgs: [ epkgs.jinx ];
+          extraEmacsPackages = epkgs:
+            [
+              epkgs.jinx
+              # emacsPackages.hotfuzz
+            ];
         })
 
         ispell

@@ -78,6 +78,7 @@ let
     brewsr = "brew services restart";
     brewsx = "brew services stop";
     e = "~/local/bin/em";
+    man = "nocorrect /etc/profiles/per-user/yqrashawn/bin/man";
   };
 in {
   imports = [ ./prezto.nix ];

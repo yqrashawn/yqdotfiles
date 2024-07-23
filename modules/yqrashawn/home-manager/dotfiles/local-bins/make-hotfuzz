@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 EMACS_BIN=$(which emacs)
-NIX_STORE_EMACS=$(nix-store --query "$EMACS_BIN")
+NIX_STORE_EMACS=$(nix-store --query --references "$EMACS_BIN" | grep -E 'emacs30$')
 EMACS_VERSION=$(emacs --batch --eval '(print emacs-version)' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 STRAIGHT_PATH=~/.emacs.d/.local/straight
 DOOM_PATH=~/.doom.d
