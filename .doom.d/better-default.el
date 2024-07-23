@@ -634,29 +634,6 @@ used in the POST request made to the LanguageTool server."
   (pushnew! recentf-exclude "^/nix" ;; #'file-remote-p "^/ssh:"
             ))
 
-(use-package! chatgpt-arcana
-  :disabled t
-  :defer t
-  :init
-  (setq! chatgpt-arcana-api-key +open-ai-api-key)
-  :config
-  (setq! chatgpt-arcana-system-prompts-alist
-         '((programming . "You are a large language model living inside Emacs, and the perfect programmer. You may only respond with concise code unless explicitly asked.")
-           (writing . "You are a large language model living inside Emacs, and an excellent writing assistant. Respond concisely and carry out instructions.")
-           (chat . "You are a large language model living inside Emacs, and an excellent conversation partner. Respond concisely.")
-           (prompt-generator . "You are a large language model living inside Emacs. I want you to act as a ChatGPT prompt generator, I will send a topic, you have to generate a ChatGPT prompt based on the content of the topic, the prompt should start with \" I want you to act as \", and guess what I might do, and expand the prompt accordingly Describe the content to make it useful and be concise.")
-           (dev-rel-consultant . "I want you to act as a Developer Relations consultant. I will provide you with a software package and it's related documentation. Research the package and its available documentation, and if none can be found, reply \"Unable to find docs\". Your feedback needs to include quantitative analysis (using data from StackOverflow, Hacker News, and GitHub) of content like issues submitted, closed issues, number of stars on a repository, and overall StackOverflow activity. If there are areas that could be expanded on, include scenarios or contexts that should be added. Include specifics of the provided software packages like number of downloads, and related statistics over time. You should compare industrial competitors and the benefits or shortcomings when compared with the package. Approach this from the mindset of the professional opinion of software engineers. Review technical blogs and websites (such as TechCrunch.com or Crunchbase.com) and if data isn't available, reply \"No data available\". My first request is")
-           (general-tool . "I want you to act as a go-to assistant for unit conversion, data format and file type conversions. You will be my guide when I need to know how to convert values from one unit to another or when I have questions about common data formats and file types used in coding. You will provide me with clear and concise explanations, examples and code snippets so that I can easily understand and implement these conversions in my projects. Whether I need to convert inches to centimeters, binary to hexadecimal or CSV to JSON, you will be my reliable source for all my conversion needs. And please be concise.")
-           (fallback . "You are a large language model living inside Emacs. Help the user and be concise.")))
-
-  (setq! chatgpt-arcana-system-prompts-modes-alist
-         '((prog-mode . programming)
-           (emacs-lisp-mode . programming)
-           (org-mode . writing)
-           (markdown-mode . writing)
-           (chatgpt-arcana-chat-mode . chat)
-           (fallback . fallback))))
-
 (defun +gptel-save-buffer ()
   (interactive)
   (when-let ((buf (get-buffer gptel-default-session)))
@@ -679,9 +656,9 @@ used in the POST request made to the LanguageTool server."
   :commands (gptel)
   :init
   (setq! gptel-api-key +open-ai-api-key
-         gptel-default-mode 'org-mode
+         gptel-default-mode 'markdown-mode
          ;; gptel-model "gpt-3.5-turbo-1106"
-         gptel-model "gpt-4-1106-preview"
+         gptel-model "gpt-4o"
          gptel-temperature 0.8)
   (defadvice! +gptel-cleanup-default-buffer (&rest args)
     :before #'gptel
@@ -694,8 +671,6 @@ used in the POST request made to the LanguageTool server."
                            (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
                            (writing . "You are a large language model and a writing assistant. Respond concisely.")
                            (chat . "You are a large language model and a conversation partner. Respond concisely."))))
-
-;; (use-package! jit-spell :hook (prog-mode text-mode))
 
 (use-package shrface
   :defer t
