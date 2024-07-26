@@ -24,8 +24,11 @@ in {
     ./user-agents # ./network.nix
   ];
 
-  security.pki.certificateFiles =
-    [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" "/etc/ssl/cert.pem" ];
+  security.pki.certificateFiles = [
+    "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+    "/etc/ssl/cert.pem"
+    # "${config.user.home}/Dropbox/sync/cert.pem"
+  ];
 
   # environment setup
   environment = {
