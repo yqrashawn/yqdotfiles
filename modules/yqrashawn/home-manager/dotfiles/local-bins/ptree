@@ -1,0 +1,270 @@
+#!/usr/bin/env bb
+
+(ns ptree
+  (:require [babashka.fs :as fs]
+            [clojure.string :as string]
+            [clojure.java.io :as io]
+            [clojure.java.shell :as shell]))
+
+(defn ext->md-code-type [ext]
+  (case ext
+    ;; Clojure
+    ("edn" "bb" "clj" "cljc" "cljs") "clojure"
+
+    ;; Markdown
+    ("markdown" "md" "mdx") "markdown"
+
+    ;; Python
+    ("py" "pyw" "pyc" "pyo" "pyd") "python"
+
+    ;; JavaScript
+    ("js" "mjs" "cjs" "jsx") "javascript"
+
+    ;; TypeScript
+    ("ts" "tsx") "typescript"
+
+    ;; HTML
+    ("html" "htm" "xhtml") "html"
+
+    ;; CSS
+    ("css" "scss" "sass" "less") "css"
+
+    ;; Java
+    ("java" "class" "jar") "java"
+
+    ;; Ruby
+    ("rb" "rbw" "rake" "gemspec") "ruby"
+
+    ;; PHP
+    ("php" "phtml" "php3" "php4" "php5" "phps") "php"
+
+    ;; Go
+    ("go" "mod") "go"
+
+    ;; Rust
+    ("rs" "rlib") "rust"
+
+    ;; Swift
+    ("swift" "swiftmodule") "swift"
+
+    ;; Kotlin
+    ("kt" "kts") "kotlin"
+
+    ;; Scala
+    ("scala" "sc") "scala"
+
+    ;; Shell
+    ("sh" "zsh" "fish") "shell"
+
+    ;; JSON
+    ("json" "jsonc" "geojson") "json"
+
+    ;; YAML
+    ("yaml" "yml") "yaml"
+
+    ;; TOML
+    ("toml") "toml"
+
+    ;; XML
+    ("xml" "xsd" "xsl" "xslt" "svg") "xml"
+
+    ;; SQL
+    ("sql" "mysql" "psql" "tsql") "sql"
+
+    ;; R
+    ("r" "rdata" "rds" "rda") "r"
+
+    ;; Perl
+    ("pl" "pm" "t" "pod") "perl"
+
+    ;; Lua
+    ("lua" "luau") "lua"
+
+    ;; Haskell
+    ("hs" "lhs") "haskell"
+
+    ;; Elixir
+    ("ex" "exs" "eex" "leex") "elixir"
+
+    ;; Erlang
+    ("erl" "hrl" "xrl" "yrl") "erlang"
+
+    ;; C
+    ("c" "h") "c"
+
+    ;; C++
+    ("cpp" "hpp" "cc" "cxx" "hxx" "hh" "ipp") "cpp"
+
+    ;; C#
+    ("cs" "csx") "csharp"
+
+    ;; F#
+    ("fs" "fsi" "fsx" "fsscript") "fsharp"
+
+    ;; Dart
+    ("dart") "dart"
+
+    ;; Groovy
+    ("groovy" "gvy" "gy" "gsh") "groovy"
+
+    ;; Julia
+    ("jl") "julia"
+
+    ;; Objective-C
+    ("m" "mm") "objc"
+
+    ;; Matlab/Octave
+    ;; ("mat" "m" "mlx") "matlab"
+    ("mat" "mlx") "matlab"
+
+    ;; PowerShell
+    ("ps1" "psd1" "psm1") "powershell"
+
+    ;; VB.NET
+    ("vb" "vbs") "vbnet"
+
+    ;; Assembly
+    ("asm" "s") "assembly"
+
+    ;; Fortran
+    ("f" "for" "f90" "f95" "f03") "fortran"
+
+    ;; LaTeX
+    ("tex" "sty" "cls") "latex"
+
+    ;; Dockerfile
+    ("dockerfile") "dockerfile"
+
+    ;; GraphQL
+    ("graphql" "gql") "graphql"
+
+    ;; Lisp
+    ("lisp" "lsp" "l" "cl" "fasl") "lisp"
+
+    ;; Prolog
+    ;; ("pl" "pro" "p") "prolog"
+    ("pro" "p") "prolog"
+
+    ;; Nim
+    ("nim" "nims") "nim"
+
+    ;; Pascal
+    ("pas" "pp" "inc") "pascal"
+
+    ;; Ada
+    ("ada" "adb" "ads") "ada"
+
+    ;; D
+    ("d" "di") "d"
+
+    ;; Elm
+    ("elm") "elm"
+
+    ;; OCaml
+    ("ml" "mli" "mll" "mly") "ocaml"
+
+    ;; Racket
+    ("rkt" "rktl" "rktd") "racket"
+
+    ;; Smalltalk
+    ;; ("st" "cs") "smalltalk"
+    ("st") "smalltalk"
+
+    ;; Tcl
+    ("tcl" "tk") "tcl"
+
+    ;; Verilog
+    ("v" "vh" "sv") "verilog"
+
+    ;; VHDL
+    ("vhd" "vhdl") "vhdl"
+
+    ;; WebAssembly
+    ("wat" "wasm") "wasm"
+
+    ;; Zig
+    ("zig") "zig"
+
+    ;; Crystal
+    ("cr") "crystal"
+
+    ;; CoffeeScript
+    ("coffee" "litcoffee") "coffeescript"
+
+    ;; Cuda
+    ("cu" "cuh") "cuda"
+
+    ;; Apex
+    ;; ("cls" "trigger") "apex"
+    ("trigger") "apex"
+
+    ;; Bash
+    ("bash") "bash"
+
+    ;; INI
+    ("ini" "cfg" "conf") "ini"
+
+    ;; Makefile
+    ("makefile" "mk" "mak") "makefile"
+
+    ;; Regex
+    ("regex" "regexp") "regex"
+
+    ;; Default case
+    "text"))
+
+(defn path->md-code-type [filepath]
+  (let [ext (last (string/split filepath #"\."))
+        code-type (ext->md-code-type ext)]
+    ext))
+
+(defn get-all-files []
+  (->> (shell/sh "git" "ls-files")
+       :out
+       string/split-lines))
+
+(defn format-code-block [code-type code]
+  (format "```%s\n%s\n```" code-type code))
+
+(defn format-file [filepath]
+  (let [code-type (path->md-code-type filepath)
+        code (slurp filepath)
+        code-block (format-code-block code-type code)]
+    (format "\nfile path: <project-root>/%s\nfile-content:\n%s\n" filepath code-block)))
+
+(comment
+  (shell/sh "git" "ls-files"))
+
+(defn parse-cli-args []
+  (loop [args   *command-line-args*
+         parsed {:output "result.md"}]
+    (let [arg1      (first args)
+          arg2      (second args)
+          rest-args (->> args rest rest)]
+      (if arg1
+        (cond (and arg1 arg2 (or (= arg1 "-o")
+                                 (= arg1 "--output")))
+              (recur rest-args (assoc parsed :output arg2))
+
+              (and arg1 arg2 (or (= arg1 "-i")
+                                 (= arg1 "--ignore")))
+              (recur rest-args (assoc parsed :ignore (re-pattern arg2)))
+
+              :else (recur rest-args parsed))
+        parsed))))
+
+(def default-ignored [#"LICENSE"
+                      #"\.(webp|jpg|jpeg|png|gif|bin|jar|map|min\..*|class|gitkeep|uf2)$"])
+
+(defn -main []
+  (let [{:keys [output ignore]} (parse-cli-args)
+        files                   (get-all-files)]
+    (with-open [writer (io/writer output)]
+      (doseq [f files]
+        (let [ignored? (some #(re-find % f) default-ignored)
+              ignored? (or ignored? (when ignore (re-find ignore f)))]
+          (when-not ignored?
+            (println f)
+            (.write writer (format-file f))))))))
+
+(-main)
