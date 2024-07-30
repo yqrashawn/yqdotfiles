@@ -14,10 +14,16 @@ fi
 pushd . > /dev/null
 
 mkdir -p $STRAIGHT_PATH/repos/hotfuzz/build
+rm -rf $STRAIGHT_PATH/repos/hotfuzz/build/* || true
 cd $STRAIGHT_PATH/repos/hotfuzz/build || exit
 
-EMACS_ROOT=$NIX_STORE_EMACS cmake -DCMAKE_C_FLAGS='-O3 -march=native' .. \
-  && cmake --build .
+# nix cmake not using global macos sdk
+which cmake
+
+EMACS_ROOT=$NIX_STORE_EMACS \
+  cmake -DCMAKE_C_FLAGS='-O3 -march=native -D_SC_NPROCESSORS_ONLN=58' \
+  .. && \
+  cmake --build . 
 
 cd ../../../
 cp ./repos/hotfuzz/hotfuzz-module.so ./build-"$EMACS_VERSION"/hotfuzz/ > /dev/null 2>&1
