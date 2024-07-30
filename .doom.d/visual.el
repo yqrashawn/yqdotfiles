@@ -15,7 +15,7 @@
 
 
 (after! prog-mode
-  (delq! 'highlight-indent-guides-mode prog-mode-hook))
+  (remove-hook! '(prog-mode-hook text-mode-hook conf-mode-hook) 'highlight-indent-guides-mode))
 
 ;; (use-package! mini-frame
 ;;   :hook (doom-first-input . mini-frame-mode)
@@ -161,8 +161,6 @@
 (after! doom-modeline
   (setq! doom-modeline-persp-name t
          doom-modeline-persp-icon nil))
-
-(remove-hook! '(prog-mode-hook text-mode-hook conf-mode-hook) '(highlight-indent-guides-mode))
 
 ;; https://github.com/rainstormstudio/nerd-icons.el#installing-fonts
 (setq! nerd-icons-font-family "PragmataPro Mono Liga")
