@@ -150,8 +150,12 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :commands (eat)
   :init
   (setq! eat-kill-buffer-on-exit t
+         eat-very-visible-cursor-type '(t nil nil)
          eat-term-terminfo-directory (expand-file-name "~/.emacs.d/.local/straight/repos/eat/terminfo")
-         eat-enable-yank-to-terminal t)
+         eat-enable-yank-to-terminal t
+         eat-enable-blinking-text nil
+         process-adaptive-read-buffering nil
+         read-process-output-max (* 4 1024 1024))
   :config
   (defun +eat-deleted-window-after-kill-buffer ()
     (if (featurep 'evil) (evil-window-delete) (delete-window)))

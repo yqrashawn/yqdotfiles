@@ -31,7 +31,7 @@
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
   :open   "open \"%s\""
   :opena  "open -a \"%s\""
-  :curl "/run/current-system/sw/bin/curl -s \"%s\""
+  :curl   "/run/current-system/sw/bin/curl -s \"%s\""
   :hs
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '(\"%s\")'"
   :hsl
@@ -125,7 +125,10 @@
   ;;          [:!Tm :!Sreturn_or_enter]
   ;;          [:!Creturn_or_enter :return_or_enter]]}
   {:des   "unstuck emacs"
-   :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)" "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
+   :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)"
+                   "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
+  {:des   "dictation"
+   :rules [[:f21 :!CTO3 :adv2]]}
   {:des   "Discord"
    :rules [:Discord
            ;; navigate between unread channels

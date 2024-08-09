@@ -218,7 +218,8 @@
   :hook (doom-first-file . global-pabbrev-mode)
   :init
   (require 'cape)
-  (setq! pabbrev-use-built-in-completion nil)
+  (setq! pabbrev-use-built-in-completion nil
+         pabbrev-idle-timer-verbose nil)
 
   ;; (setq-local completion-at-point-functions (list))
   (add-hook! 'pabbrev-mode-hook

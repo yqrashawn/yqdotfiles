@@ -1,20 +1,22 @@
 { config, lib, pkgs, inputs, ... }:
 
 let
-  profileExtra = ''
-    fpath=($HOME/.zfunc $fpath)
-    autoload -Uz $fpath[1]/*
-    ${lib.optionalString pkgs.stdenvNoCC.isLinux
-    "[[ -e /etc/profile ]] && source /etc/profile"}
-    [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
+  envExtra = ''
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     . $HOME/.asdf/plugins/java/set-java-home.zsh
 
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
-    # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
     export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
+  '';
+  profileExtra = ''
+    fpath=($HOME/.zfunc $fpath)
+    autoload -Uz $fpath[1]/*
+    ${lib.optionalString pkgs.stdenvNoCC.isLinux
+    "[[ -e /etc/profile ]] && source /etc/profile"}
+    [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
+    # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   bashProfileExtra = ''
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
@@ -166,17 +168,8 @@ in {
       ''}
       unset RPS1
       [[ ! -f ~/.local.zsh ]] || source ~/.local.zsh
-      # if [[ $TERM = dumb  ]]; then
-      #   unsetopt zle
-      #   PS1='$ '
-      # fi
     '';
-    envExtra = ''
-      # if [[ $TERM == dumb  ]]; then
-      #   unsetopt zle
-      #   PS1='$ '
-      # fi
-    '';
+    envExtra = envExtra;
     profileExtra = profileExtra;
     plugins = [
       {
