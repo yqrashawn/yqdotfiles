@@ -246,6 +246,10 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
     ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
     (setq-local cider-font-lock-dynamically '(macro core deprecated))))
 
+(add-hook! cider-inspector-mode
+  (defun +disable-evil-matchit-mode ()
+    (evil-matchit-mode -1)))
+
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
   (remove-hook! 'completion-at-point-functions :local

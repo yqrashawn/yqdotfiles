@@ -111,11 +111,7 @@ requiring confirmation."
 (use-package! magit-delta :hook (magit-mode . magit-delta-mode))
 
 (after! forge
-  ;; https://github.com/magit/forge/issues/300
-  (setq!
-   forge-database-connector (if (>= emacs-major-version 29) 'sqlite-builtin 'sqlite)
-   forge-topic-list-limit '(20 . 5)
-   forge-pull-notifications t)
+  (setq! forge-pull-notifications t)
 
   ;; https://emacs-pe.github.io/2015/06/30/magit-github-pr/
   (defun marsam/add-pull-request-refs (&optional remote local-ns)
