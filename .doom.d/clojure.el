@@ -416,7 +416,9 @@ creates a new one. Don't unnecessarily bother the user."
     :around #'cider-test-run-test
     (if (eq major-mode 'clojurescript-mode)
         (call-interactively '+cider-test-execute-cljs)
-      (call-interactively orig-fn)))
+      (when (cider--extract-test-var-at-point)
+        (call-interactively #'cider-eval-defun-at-point)
+        (call-interactively orig-fn))))
 
   (defadvice! +cider-test-run-ns-tests (orig-fn suppress-inference &optional silent prompt-for-filters)
     :around #'cider-test-run-ns-tests
@@ -472,7 +474,11 @@ creates a new one. Don't unnecessarily bother the user."
 
   (require 'a)
   (pushnew! cljr-magic-require-namespaces '("string" . "clojure.string"))
-  (setq! cljr-magic-require-namespaces (a-dissoc cljr-magic-require-namespaces "str")))
+  (setq!
+   cljr-magic-require-namespaces (a-dissoc cljr-magic-require-namespaces "str")
+   cljr-clojure-test-declaration "[clojure.test :as t :refer [deftest testing is]]"
+   cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t :refer [deftest testing is]]
+:cljs [cljs.test :as t :include-macros])"))
 
 (after! lispy
   (after! clojure-mode
