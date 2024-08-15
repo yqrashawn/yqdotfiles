@@ -245,6 +245,8 @@ unbindurl //newsblur\.com M
 unbindurl //newsblur\.com D
 unbindurl //newsblur\.com ?
 
+unbindurl https?://read\.readwise\.io/ x
+unbindurl https?://read\.readwise\.io/ X
 unbindurl https?://read\.readwise\.io/ j
 unbindurl https?://read\.readwise\.io/ k
 unbindurl https?://read\.readwise\.io/ l

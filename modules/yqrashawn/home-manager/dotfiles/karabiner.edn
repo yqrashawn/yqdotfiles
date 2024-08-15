@@ -129,6 +129,8 @@
                    "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
   {:des   "dictation"
    :rules [[:f21 :!CTO3 :adv2]]}
+  {:des   "voila"
+   :rules [[:f20 :!CTcomma :adv2]]}
   {:des   "Discord"
    :rules [:Discord
            ;; navigate between unread channels
