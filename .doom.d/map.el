@@ -631,6 +631,9 @@
          (:map ibuffer-mode-map
           :n "gX" #'ibuffer-do-kill-lines))
  (:after cider
+         (:localleader
+          (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
+                "r SPC" #'+cider-project-reload-exec))
          (:map cider-inspector-mode-map
           :n "C-j" #'cider-inspector-next-inspectable-object
           :n "C-k" #'cider-inspector-previous-inspectable-object

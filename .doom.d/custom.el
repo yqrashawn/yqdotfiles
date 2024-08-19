@@ -5,7 +5,9 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((cider-clojure-cli-aliases . ":dev:test")
+   '((+cider-project-reload-exec-cmd-clj . "(user/x)")
+     (+cider-project-reload-exec-cmd-cljs . "(user/x)")
+     (cider-clojure-cli-aliases . ":dev:test")
      (cider-clojure-cli-aliases . ":dev")
      (cider-clojure-cli-aliases . ":jvm-base:twindw")
      (major-mode . emacs-lisp-mode)
