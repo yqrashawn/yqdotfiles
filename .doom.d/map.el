@@ -429,6 +429,7 @@
    (:after corfu
            (:map corfu-map
             :gi "RET" nil
+            :gi "DEL" nil
             :gi [return] nil
             :gi "C-l" #'corfu-insert
             ;; :gi "ESC" #'keyboard-escape-quit
