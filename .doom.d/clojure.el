@@ -226,6 +226,7 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
       (apply func args))))
 
 ;;; cider
+;; (set-popup-rule! "^\\*cider-test-report\\*" :select nil :side 'right :size 0.5 :ignore t)
 (defun +cider-repl-clear-input ()
   (interactive)
   (when cider-repl-input-start-mark
@@ -425,7 +426,7 @@ creates a new one. Don't unnecessarily bother the user."
     (interactive "P")
     (if (eq major-mode 'clojurescript-mode)
         (cider-interactive-eval "(cljs.test/run-tests)")
-      (call-interactively orig-fn suppress-inference silent prompt-for-filters)))
+      (call-interactively orig-fn)))
 
   (defadvice! +cider-test-run-project-tests (orig-fn prompt-for-filters)
     :around #'cider-test-run-project-tests

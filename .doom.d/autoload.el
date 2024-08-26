@@ -1247,3 +1247,9 @@ result instead of `message'."
          (cider-connected-p)
          (cider-current-repl 'cljs))
     (cider-interactive-eval +cider-project-reload-exec-cmd-cljs nil nil (cider--nrepl-pr-request-map))))
+
+;;;###autoload
+(defun +cider-inspect-tap ()
+  "View taps queue."
+  (interactive)
+  (cider-inspect-expr "(view!)" "queue"))
