@@ -474,9 +474,23 @@ creates a new one. Don't unnecessarily bother the user."
     (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive))
 
   (require 'a)
-  (pushnew! cljr-magic-require-namespaces '("string" . "clojure.string"))
   (setq!
-   cljr-magic-require-namespaces (a-dissoc cljr-magic-require-namespaces "str")
+   cljr-magic-require-namespaces
+   '(("edn"  . "clojure.edn")
+     ("io"     "clojure.java.io" :only ("clj"))
+     ("pp"     "cljs.pprint" :only ("cljs"))
+     ("math" . "clojure.math")
+     ("set"  . "clojure.set")
+     ("string"  . "clojure.string")
+     ("a" . "cljure.core.async")
+     ("response" . "ring.util.response")
+     ("enc" . "taoensso.encore")
+     ("ig" . "integrant.core")
+     ("d" . "datalevin.core")
+     ("r" . "radix")
+     ("rf" . "re-frame.core")
+     ("walk" . "clojure.walk")
+     ("zip"  . "clojure.zip"))
    cljr-clojure-test-declaration "[clojure.test :as t :refer [deftest testing is]]"
    cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t :refer [deftest testing is]]
 :cljs [cljs.test :as t :include-macros])"))
