@@ -796,10 +796,11 @@ _b_ranch _j_next _k_prev _h_up
               (funcall s-matches-regex (f-read dep-file))))))))
 
 ;;;###autoload
-(defun +cljr--log-spy (prefix-info arg)
-  (let ((log-spy-str (if prefix-info
-                         "log/spy :info"
-                       "log/spy")))
+(defun +cljr--log-spy (prefix-info log! arg)
+  (let* ((log-spy-str (if log! "log/spy!" "log/spy"))
+         (log-spy-str (if prefix-info
+                          (concat log-spy-str " :info")
+                        log-spy-str)))
     (save-excursion
       (evil-emacs-state 1)
       (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
@@ -829,11 +830,12 @@ _b_ranch _j_next _k_prev _h_up
   (interactive "P")
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
     (let* ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
+           (telemere? (+cljr-project-has-dep? "com.taoensso/telemere"))
            (glogi? (+cljr-project-has-dep? "lambdaisland/glogi"))
            (timbre? (+cljr-project-has-dep? "timbre"))
            (pedestal? (+cljr-project-has-dep? "pedestal.log"))
            (tools-logging? (+cljr-project-has-dep? "tools.logging"))
-           (f (apply-partially '+cljr--log-spy (or timbre? (not glogi?) pedestal?))))
+           (f (apply-partially '+cljr--log-spy (or timbre? (not telemere?) (not glogi?) pedestal?) (and telemere? (not glogi?)))))
       (cond
        (has-as-log? (funcall f arg))
 
@@ -841,6 +843,11 @@ _b_ranch _j_next _k_prev _h_up
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[lambdaisland.glogi :as log]"))
+        (funcall f arg))
+       (telemere?
+        (save-excursion
+          (cljr--insert-in-ns ":require")
+          (insert "[taoensso.telemere :as log]"))
         (funcall f arg))
 
        (timbre?
@@ -872,6 +879,8 @@ _b_ranch _j_next _k_prev _h_up
       (when (and
              (ignore-errors (save-excursion (re-search-backward ":as log\\]")))
              (not (ignore-errors (save-excursion (re-search-backward "(log/")))))
+        (and (ignore-errors (re-search-backward "\\[taoensso.telemere :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (goto-char (point-max))
         (and (ignore-errors (re-search-backward "\\[lambdaisland.glogi :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
         (goto-char (point-max))
         (and (ignore-errors (re-search-backward "\\[taoensso.timbre :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
