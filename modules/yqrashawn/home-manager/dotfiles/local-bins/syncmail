@@ -2,13 +2,13 @@
 
 (ns syncmail
   (:require
-   [clojure.core.async :refer [chan go-loop <! put! <!! take!]]
+   [clojure.core.async :as a]
    ;; [babashka.process :as p :refer [process]]
    [clojure.edn :as edn]
    [clojure.java.shell :refer [sh]]
    [clojure.string :as s]))
 
-(defonce c (chan))
+(defonce c (a/chan))
 
 (def notmuch "/run/current-system/sw/bin/notmuch")
 (def mbsync "/run/current-system/sw/bin/mbsync")
@@ -18,16 +18,17 @@
 (sh notmuch "new")
 
 (defn notify [title subtitle message]
-  (sh
-   "/opt/homebrew/bin/alerter"
-   "-message" message
-   "-timeout" "30"
-   "-group" "NOTMUCH"
-   "-sender" "org.gnu.Emacs"
-   "-contentImage" (str (System/getenv "HOME") "/.config/sketchybar/plugins/email.png")
-   "-sound" "default"
-   "-title" title
-   "-subtitle" subtitle))
+  (try (sh
+        "/opt/homebrew/bin/alerter"
+        "-message" message
+        "-timeout" "30"
+        "-group" "NOTMUCH"
+        "-sender" "org.gnu.Emacs"
+        "-contentImage" (str (System/getenv "HOME") "/.config/sketchybar/plugins/email.png")
+        "-sound" "default"
+        "-title" title
+        "-subtitle" subtitle)
+       (catch Exception _e)))
 
 (defn new-unread? []
   (if (pos? (-> (sh notmuch "count" (str "tag:inbox and tag:unread and date:5m.."))
@@ -39,9 +40,9 @@
                   edn/read-string)
           new (map #(apply hash-map %) new)]
       (doseq [{:keys [authors subject]} new]
-        (put! c [(str "New email from " authors) (str "📧" subject) "New email from Notmuch"]))
-      (put! c :end))
-    (put! c :end)))
+        (a/put! c [(str "New email from " authors) (str "📧" subject) "New email from Notmuch"]))
+      (a/put! c :end))
+    (a/put! c :end)))
 
 (let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
                        :out
@@ -50,8 +51,8 @@
   (println unread-count)
   (new-unread?))
 
-(<!! (go-loop []
-       (let [msg (<! c)]
-         (when (vector? msg)
-           (apply notify msg)
-           (recur)))))
+(a/<!! (a/go-loop []
+         (let [msg (a/<! c)]
+           (when (vector? msg)
+             (apply notify msg)
+             (recur)))))

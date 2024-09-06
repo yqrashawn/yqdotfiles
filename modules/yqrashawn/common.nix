@@ -324,5 +324,5 @@ in {
     # systemPath = [ "/run/current-system/sw/bin" ];
   };
 
-  fonts.packages = with pkgs; [ jetbrains-mono ];
+  fonts.packages = with pkgs; [ jetbrains-mono nerdfonts ];
 }

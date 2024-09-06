@@ -261,6 +261,10 @@ in {
 
         ln -fs /Applications/Nix\ Apps/* /Applications/
 
+        if [ -e ~/Dropbox/sync/oauth2token ] && [ ! -e ~/.local/share/oauth2token ]; then
+            echo 'link oauth2token, pip install oauth2token'
+            ln -s ~/Dropbox/sync/oauth2token ~/.local/share/oauth2token
+        fi
         if [ -e ~/Dropbox/sync/ntf ] && [ ! -e /opt/homebrew/bin/ntf ]; then
             echo 'link /opt/homebrew/bin/ntf'
             ln -s ~/Dropbox/sync/ntf /opt/homebrew/bin/ntf
@@ -268,6 +272,14 @@ in {
         if [ -e ~/Dropbox/sync/.ntf.yml ] && [ ! -e ~/.ntf.yml ]; then
             echo 'link ~/.ntf.yml'
             ln -s ~/Dropbox/sync/.ntf.yml ~/.ntf.yml
+        fi
+        if [ -e ~/Dropbox/sync/.notmuch-config ] && [ ! -e ~/.notmuch-config ]; then
+            echo 'link .notmuch-config'
+            ln -s ~/Dropbox/sync/.notmuch-config ~/.notmuch-config
+        fi
+        if [ -e ~/Dropbox/sync/.msmtprc ] && [ ! -e ~/.msmtprc ]; then
+            echo 'link .msmtprc'
+            ln -s ~/Dropbox/sync/.msmtprc ~/.msmtprc
         fi
         if [ -e ~/Dropbox/sync/personal_dictionaries/en_US.dic ] && [ ! -e ~/.config/enchant/en_US.dic ]; then
             echo 'link enchant/hunspell dictionaries'

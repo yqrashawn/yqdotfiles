@@ -80,10 +80,6 @@
       source = ./.nvmrc;
       target = ".nvmrc";
     };
-    notmuch-config = {
-      source = ./.notmuch-config;
-      target = ".notmuch-config";
-    };
     gmailieer1 = {
       source = ./gmailieer.main.json;
       target = "mail/namy.19@gmail.com/.gmailieer.json";
@@ -132,10 +128,6 @@
     husky = {
       source = ./.huskyrc;
       target = ".huskyrc";
-    };
-    msmtprc = {
-      source = ./.msmtprc;
-      target = ".msmtprc";
     };
     mailcap = {
       source = ./.mailcap;
