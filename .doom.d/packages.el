@@ -146,6 +146,7 @@
 (package! deadgrep)
 (package! declutter :recipe (:type git :host github :repo "sanel/declutter"))
 (package! turbo-log :recipe (:type git :host github :repo "Artawower/turbo-log"))
+(package! lispy :recipe (:type git :host github :repo "enzuru/lispy"))
 
 ;; (package! urgrep :recipe (:host github :repo "jimporter/urgrep"))
 (unpin!
@@ -154,6 +155,7 @@
   doom-snippets
   cider
   lispy
+  lispyville
   ;; mu4e
   link-hint
   fd-dired
@@ -346,6 +348,8 @@
 (package! pabbrev :recipe (:host github :repo "amno1/pabbrev"))
 (package! yaml-pro)
 (package! imake)
+(package! parseedn)
+(package! cloel :recipe (:host github :repo "manateelazycat/cloel"))
 ;; (package! casual)
 ;; (package! jinx) ;; installed via nix
 

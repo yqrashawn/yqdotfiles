@@ -835,7 +835,14 @@ _b_ranch _j_next _k_prev _h_up
            (timbre? (+cljr-project-has-dep? "timbre"))
            (pedestal? (+cljr-project-has-dep? "pedestal.log"))
            (tools-logging? (+cljr-project-has-dep? "tools.logging"))
-           (f (apply-partially '+cljr--log-spy (or timbre? (not telemere?) (not glogi?) pedestal?) (and telemere? (not glogi?)))))
+           (f (apply-partially '+cljr--log-spy
+                               (cond
+                                (glogi? nil)
+                                (telemere? nil)
+                                (timbre? t)
+                                (pedestal? t)
+                                nil)
+                               (and telemere? (not glogi?)))))
       (cond
        (has-as-log? (funcall f arg))
 
