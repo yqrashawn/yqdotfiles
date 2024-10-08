@@ -33,6 +33,8 @@ dns:
     - 2620:fe::10
     - 2620:fe::fe:10
   fallback_dns:
+    - 210.5.56.145
+    - 119.29.29.29
     - 223.5.5.5
   upstream_mode: fastest_addr
   fastest_timeout: 1s
@@ -247,6 +249,7 @@ clients:
     hosts: true
   persistent: []
 log:
+  enabled: true
   file: ""
   max_backups: 0
   max_size: 100

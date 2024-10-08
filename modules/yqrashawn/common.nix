@@ -12,6 +12,7 @@ let
     you-get
     python3
     black
+    mpv-unwrapped
   ];
   masters = with pkgs.masters; [ adguardhome clojure-lsp clj-kondo ];
 in {
@@ -48,8 +49,6 @@ in {
         atuin
         # ntfy
         # postgresql
-        # mpv
-        mpv-unwrapped
         # rtx
         imagemagick
         zprint
@@ -185,7 +184,7 @@ in {
         less
         # zoxide # fasd
         lazygit
-        git-branchless
+        # git-branchless
         # watchexec
         wget
         # curl
