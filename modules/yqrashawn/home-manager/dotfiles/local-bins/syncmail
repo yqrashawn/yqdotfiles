@@ -13,10 +13,6 @@
 (def notmuch "/run/current-system/sw/bin/notmuch")
 (def mbsync "/run/current-system/sw/bin/mbsync")
 
-(sh "/run/current-system/sw/bin/bash" (str (System/getenv "HOME") "/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync"))
-(sh mbsync "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))
-(sh notmuch "new")
-
 (defn notify [title subtitle message]
   (try (sh
         "/opt/homebrew/bin/alerter"
@@ -44,6 +40,13 @@
       (a/put! c :end))
     (a/put! c :end)))
 
+(sh "/run/current-system/sw/bin/bash" (str (System/getenv "HOME") "/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync"))
+
+(try
+  (sh mbsync "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))
+  (catch Exception _e))
+
+(sh notmuch "new")
 (let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
                        :out
                        s/trim-newline
@@ -51,8 +54,9 @@
   (println unread-count)
   (new-unread?))
 
-(a/<!! (a/go-loop []
-         (let [msg (a/<! c)]
-           (when (vector? msg)
-             (apply notify msg)
-             (recur)))))
+(a/<!!
+ (a/go-loop []
+   (let [msg (a/<! c)]
+     (when (vector? msg)
+       (apply notify msg)
+       (recur)))))
