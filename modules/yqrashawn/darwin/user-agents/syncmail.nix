@@ -2,8 +2,11 @@
   launchd.user.agents.syncmail = {
     serviceConfig = {
       # Disabled = true;
-      Program = "${pkgs.babashka}/bin/bb";
-      ProgramArguments = [ "-f" "${config.user.home}/local/bin/syncmail" ];
+      Program = "${config.user.home}/.asdf/shims/bb";
+      ProgramArguments = [
+        "--file"
+        "${config.user.home}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/syncmail"
+      ];
       StandardErrorPath = "/tmp/syncmail.error.log";
       StandardOutPath = "/tmp/syncmail.out.log";
       RunAtLoad = true;
