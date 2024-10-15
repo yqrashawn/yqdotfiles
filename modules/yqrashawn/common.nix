@@ -10,7 +10,7 @@ let
     notmuch
     streamlink
     you-get
-    python3
+    # python3
     black
     mpv-unwrapped
   ];

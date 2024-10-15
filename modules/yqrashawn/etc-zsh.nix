@@ -17,6 +17,7 @@ let
     "$HOME/.cargo/bin"
     "$HOME/.yarn/bin"
     "$HOME/.config/yarn/global/node_modules/.bin"
+    "$HOME/.asdf/shims"
     "/run/current-system/sw/bin"
     # "/usr/local/opt/curl/bin"
     "/opt/homebrew/bin"
