@@ -26,7 +26,7 @@ dns:
     - 1.1.1.1
     - 94.140.14.140
     - 9.9.9.9
-  upstream_dns_file: ""
+  upstream_dns_file: "/Users/yqrashawn/adguardhome.list.conf"
   bootstrap_dns:
     - 9.9.9.10
     - 149.112.112.10
