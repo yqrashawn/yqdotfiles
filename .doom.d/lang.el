@@ -268,3 +268,5 @@
 ;; (after! lsp-golangci-lint
 ;;   (setq! lsp-golangci-lint-enable-all t
 ;;     lsp-golangci-lint-disable '("lll")))
+
+(add-hook! 'nix-mode-hook 'lsp)

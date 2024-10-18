@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sudo launchctl bootout system "$@"
+sudo launchctl bootstrap system "$@"

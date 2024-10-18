@@ -26,7 +26,7 @@ dns:
     - 1.1.1.1
     - 94.140.14.140
     - 9.9.9.9
-  upstream_dns_file: ""
+  upstream_dns_file: /Users/yqrashawn/Dropbox/sync/adguardhome.list.conf
   bootstrap_dns:
     - 9.9.9.10
     - 149.112.112.10
@@ -67,7 +67,7 @@ dns:
   private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams:
-    - 192.168.50.2
+    - 192.168.50.1
   use_dns64: false
   dns64_prefixes: []
   serve_http3: false

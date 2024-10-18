@@ -151,7 +151,7 @@ in {
         # nix-linter # build failed
         httpstat
         curlie
-        act
+        # act
         # glances # htop
         xh # httpie
         shfmt

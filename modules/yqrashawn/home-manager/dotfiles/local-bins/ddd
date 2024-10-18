@@ -10,6 +10,5 @@ else
   doom "$@"
 fi
 
-sh ~/Dropbox/sync/scripts/cp-surge-conf.sh || true
-
 sh ~/Dropbox/sync/scripts/make-adguard-upstream-dns-conf.sh || true
+sh ~/Dropbox/sync/scripts/cp-surge-conf.sh || true
