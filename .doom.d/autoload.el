@@ -727,15 +727,11 @@ _b_ranch _j_next _k_prev _h_up
 
 ;;;###autoload
 (defun +ss ()
-  (interactive)
-  (when 'symex-editing-mode
-    (call-interactively #'symex-replace)))
+  (interactive))
 
 ;;;###autoload
 (defun +sS ()
-  (interactive)
-  (when 'symex-editing-mode
-    (call-interactively #'symex-change-delimiter)))
+  (interactive))
 
 ;;;###autoload
 (defun +lispy-modes-p ()
@@ -1269,3 +1265,15 @@ result instead of `message'."
   "View taps queue."
   (interactive)
   (cider-inspect-expr "(view!)" "queue"))
+
+;;;###autoload
+(defun +terminal-here ()
+  (interactive)
+  (call-process-shell-command
+   (format! "tmux new-window -n \"%s\" -c %s"
+            (or buffer-file-name default-directory)
+            (if buffer-file-name
+                (file-name-directory buffer-file-name)
+              default-directory))
+   nil 0)
+  (call-process-shell-command "open -a kitty.app" nil 0))

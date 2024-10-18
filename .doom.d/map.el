@@ -265,6 +265,7 @@
  (:map yq-s-map
   :g "s" #'+ss
   :g "S" #'+sS
+  :g "T" #'+terminal-here
   :g "0" #'+gpt-dwim-current-buffer
   :g "P" #'doom/find-file-in-other-project
   :g "p" #'++projectile-switch-project-and-rename-workspace
@@ -437,15 +438,12 @@
             :gi "C-m" nil
             :gi "C-n" nil
             :gi "C-p" nil)
-           ;; (:map corfu-mode-map
-           ;;  :gi "RET" nil
-           ;;  :gi "C-l" #'corfu-insert
-           ;;  ;; :gi "ESC" #'keyboard-escape-quit
-           ;;  :gi "C-d" nil
-           ;;  :gi "C-m" nil
-           ;;  :gi "C-n" nil
-           ;;  :gi "C-p" nil)
-           ))
+           (:map corfu-mode-map
+            ;; :i "C-n" #'+corfu/dabbrev-or-next
+            ;; :i "C-p" #'+corfu/dabbrev-or-last
+            :i "C-n" nil
+            :i "C-p" nil
+            )))
  (:after lispy
          (:map lispy-mode-map
           :g "C-a" #'mwim-beginning-of-code-or-line
