@@ -25,6 +25,8 @@
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH %s"
   :yabai
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai -m %s"
+  :aero
+  "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH aerospace %s"
   :km
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
   :kb-maestro
@@ -699,68 +701,121 @@
            [:l :!COright_arrow]
            [:v :!Cd]
            [:s :!CSd]]}
-  {:des "yabai mode"
+  ;; {:des "yabai mode"
+  ;;  :rules
+  ;;  [;; move windows
+  ;;   :yabai-warp-mode
+  ;;   [:h [:yabai "window --warp west"]]
+  ;;   [:j [:yabai "window --warp south"]]
+  ;;   [:k [:yabai "window --warp north"]]
+  ;;   [:l [:yabai "window --warp east"]]
+  ;;   [:n [:yabai "window --warp next"]]
+  ;;   [:p [:yabai "window --warp prev"]]
+  ;;   ;; scale windows
+  ;;   :yabai-scale-mode
+  ;;   [:h "~/.config/yabai/resize left"]
+  ;;   [:j "~/.config/yabai/resize down"]
+  ;;   [:k "~/.config/yabai/resize up"]
+  ;;   [:l "~/.config/yabai/resize right"]
+  ;;   :yabai-config-mode
+  ;;   [:spacebar [:yabai "window --toggle float"]]
+  ;;   :tab-mode
+  ;;   [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
+  ;;   [:!Thyphen
+  ;;    "~/.config/yabai/rules && ~/.config/yabai/set-layout-based-on-display"]
+  ;;   [:7
+  ;;    "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH brew services stop yabai"]
+  ;;   [:8
+  ;;    "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH brew services start yabai"]
+  ;;   ;; focus mode
+  ;;   [:h
+  ;;    [:sh
+  ;;     "/opt/homebrew/bin/yabai -m window --focus west || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display west | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
+  ;;   [:j
+  ;;    [:sh
+  ;;     "/opt/homebrew/bin/yabai -m window --focus south || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display south | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.y, .frame.x) | first | .id')"]]
+  ;;   [:k
+  ;;    [:sh
+  ;;     "/opt/homebrew/bin/yabai -m window --focus north || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display north | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
+  ;;   [:l
+  ;;    [:sh
+  ;;     "/opt/homebrew/bin/yabai -m window --focus east || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display east | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
+  ;;   ;; [:spacebar "yabai -m window --focus prev"]
+  ;;   [:n [:yabai "space --focus next"]]
+  ;;   [:p [:yabai "space --focus prev"]]
+  ;;   ;; yabai workspace
+  ;;   ;; [:1 [:yabai "space --focus 1"]]
+  ;;   ;; [:2 [:yabai "space --focus 2"]]
+  ;;   ;; [:3 [:yabai "space --focus 3"]]
+  ;;   ;; [:4 [:yabai "space --focus 4"]]
+  ;;   ;; [:a [:yabai "window --toggle float"]]
+  ;;   ;; [:b [:yabai "window --toggle border"]]
+  ;;   [:return_or_enter [:yabai "window --toggle zoom-parent"]]
+  ;;   [:!Sb [:yabai "config layout bsp"]]
+  ;;   [:!Ss [:yabai "config layout stack"]]
+  ;;   [:!Sf [:yabai "config layout float"]]
+  ;;   [:m [:yabai "window --toggle zoom-fullscreen"]]
+  ;;   [:x [:yabai "window --close"]]
+  ;;   [:delete_or_backspace [:yabai "window --close"]]
+  ;;   [:open_bracket
+  ;;    [:sh
+  ;;     "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh prev"]]
+  ;;   [:close_bracket
+  ;;    [:sh
+  ;;     "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh next"]]]}
+  {:des "aero mode"
    :rules
    [;; move windows
     :yabai-warp-mode
-    [:h [:yabai "window --warp west"]]
-    [:j [:yabai "window --warp south"]]
-    [:k [:yabai "window --warp north"]]
-    [:l [:yabai "window --warp east"]]
-    [:n [:yabai "window --warp next"]]
-    [:p [:yabai "window --warp prev"]]
+    [:h [:aero "move left"]]
+    [:j [:aero "move down"]]
+    [:k [:aero "move up"]]
+    [:l [:aero "move right"]]
+    [:1 [:aero "move-node-to-workspace 1"]]
+    [:2 [:aero "move-node-to-workspace 2"]]
+    [:3 [:aero "move-node-to-workspace 3"]]
+    [:4 [:aero "move-node-to-workspace 4"]]
+    [:5 [:aero "move-node-to-workspace 5"]]
+    [:spacebar [:aero "reload-config"]]
+    ;; [:return_or_enter [:aero "mode resize"]]
     ;; scale windows
     :yabai-scale-mode
-    [:h "~/.config/yabai/resize left"]
-    [:j "~/.config/yabai/resize down"]
-    [:k "~/.config/yabai/resize up"]
-    [:l "~/.config/yabai/resize right"]
+    [:h "resize width -50"]
+    [:j "resize height +50"]
+    [:k "resize height -50"]
+    [:l "resize width +50"]
     :yabai-config-mode
-    [:spacebar [:yabai "window --toggle float"]]
+    [:spacebar [:aero "window --toggle float"]]
+
     :tab-mode
-    [:hyphen "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
-    [:!Thyphen
-     "~/.config/yabai/rules && ~/.config/yabai/set-layout-based-on-display"]
-    [:7
-     "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH brew services stop yabai"]
-    [:8
-     "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH brew services start yabai"]
-    ;; focus mode
-    [:h
-     [:sh
-      "/opt/homebrew/bin/yabai -m window --focus west || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display west | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
-    [:j
-     [:sh
-      "/opt/homebrew/bin/yabai -m window --focus south || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display south | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.y, .frame.x) | first | .id')"]]
-    [:k
-     [:sh
-      "/opt/homebrew/bin/yabai -m window --focus north || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display north | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
-    [:l
-     [:sh
-      "/opt/homebrew/bin/yabai -m window --focus east || /opt/homebrew/bin/yabai -m window --focus $(/opt/homebrew/bin/yabai -m query --windows --display east | /run/current-system/sw/bin/jq 'map(select(.\"is-visible\" == true and .\"is-sticky\" == false)) | sort_by(.frame.x, .frame.y) | first | .id')"]]
-    ;; [:spacebar "yabai -m window --focus prev"]
-    [:n [:yabai "space --focus next"]]
-    [:p [:yabai "space --focus prev"]]
-    ;; yabai workspace
-    ;; [:1 [:yabai "space --focus 1"]]
-    ;; [:2 [:yabai "space --focus 2"]]
-    ;; [:3 [:yabai "space --focus 3"]]
-    ;; [:4 [:yabai "space --focus 4"]]
-    ;; [:a [:yabai "window --toggle float"]]
-    ;; [:b [:yabai "window --toggle border"]]
-    [:return_or_enter [:yabai "window --toggle zoom-parent"]]
-    [:!Sb [:yabai "config layout bsp"]]
-    [:!Ss [:yabai "config layout stack"]]
-    [:!Sf [:yabai "config layout float"]]
-    [:m [:yabai "window --toggle zoom-fullscreen"]]
-    [:x [:yabai "window --close"]]
-    [:delete_or_backspace [:yabai "window --close"]]
+    [:h [:aero "focus --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors left"]]
+    [:j [:aero "focus --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors down"]]
+    [:k [:aero "focus --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors up"]]
+    [:l [:aero "focus --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors right"]]
+    [:s [:aero "join-with down"]]
+    [:v [:aero "join-width right"]]
+    [:m [:aero "fullscreen"]]
+    [:1 [:aero "workspace 1"]]
+    [:2 [:aero "workspace 2"]]
+    [:3 [:aero "workspace 3"]]
+    [:4 [:aero "workspace 4"]]
+    [:5 [:aero "workspace 5"]]
+    [:0 [:aero "layout h_accordion v_accordion"]]
+    [:hyphen [:aero "layout tiles horizontal vertical"]]
+    [:backslash [:aero "layout floating tiling"]]
+
+    [:return_or_enter [:aero "window --toggle zoom-parent"]]
+    [:!Sb [:aero "config layout bsp"]]
+    [:!Ss [:aero "config layout stack"]]
+    [:!Sf [:aero "config layout float"]]
+    [:x [:aero "window --close"]]
+    [:delete_or_backspace [:aero "window --close"]]
     [:open_bracket
      [:sh
-      "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh prev"]]
+      "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/aero/move-to-display.sh prev"]]
     [:close_bracket
      [:sh
-      "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai/move-to-display.sh next"]]]}
+      "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/aero/move-to-display.sh next"]]]}
   {:des   "comma mode"
    :rules [:comma-mode
            [:a :open_bracket]

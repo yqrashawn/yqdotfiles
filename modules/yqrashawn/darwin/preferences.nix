@@ -285,6 +285,10 @@ in {
             echo 'link enchant/hunspell dictionaries'
             ln -s ~/Dropbox/sync/personal_dictionaries ~/.config/enchant
         fi
+        if [ ! -e ~/.config/aerospace/aerospace.toml ]; then
+            echo 'link aerospace.toml'
+            ln -s ~/.nixpkgs/modules/yqrashawn//home-manager/dotfiles/aerospace.toml ~/.config/aerospace/
+        fi
       '';
     };
   };

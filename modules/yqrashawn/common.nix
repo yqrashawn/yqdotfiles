@@ -7,7 +7,6 @@ let
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [
     difftastic
-    notmuch
     streamlink
     you-get
     # python3
@@ -41,6 +40,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        notmuch
         emacs-lsp-booster
         (curl.override (args: { brotliSupport = true; }))
         # curl
@@ -57,7 +57,6 @@ in {
         qbittorrent
         tailscale
         cloudflared
-        todoist
         awscli2
         zellij
         kitty-themes
@@ -100,7 +99,6 @@ in {
         # nbb
 
         # tools
-        # notmuch
         vim
         cachix
         tmux
@@ -189,7 +187,7 @@ in {
         wget
         # curl
         rsync
-        treefmt
+        # treefmt
         # grip # markdown preview, failed to build
         multimarkdown
         languagetool
