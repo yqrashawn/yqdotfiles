@@ -2,6 +2,7 @@
 
 set -e
 
+notmuch=/run/current-system/sw/bin/notmuch
 echo -n Filtering new messages
 notmuch tag -new +inbox "folder:/Inbox/"
 notmuch tag -new "tag:deleted"

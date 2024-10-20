@@ -86,7 +86,7 @@
     };
     gmailieer2 = {
       source = ./gmailieer.2.json;
-      target = "mail/yqrashawn@gamil.com/.gmailieer.json";
+      target = "mail/yqrashawn@gmail.com/.gmailieer.json";
     };
     shadow-cljs = {
       source = ./shadow-cljs.edn;

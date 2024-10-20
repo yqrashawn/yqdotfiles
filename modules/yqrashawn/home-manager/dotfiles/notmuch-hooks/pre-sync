@@ -1,5 +1,7 @@
 #!/bin/bash
 
+notmuch=/run/current-system/sw/bin/notmuch
+
 echo "Moving messages according to notmuch tags"
 
 # Make sure we have updated paths

@@ -287,6 +287,7 @@ in {
         fi
         if [ ! -e ~/.config/aerospace/aerospace.toml ]; then
             echo 'link aerospace.toml'
+            mkdir -p ~/.config/aerospace/
             ln -s ~/.nixpkgs/modules/yqrashawn//home-manager/dotfiles/aerospace.toml ~/.config/aerospace/
         fi
       '';

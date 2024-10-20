@@ -71,8 +71,8 @@ in {
         # mutagen-compose
         # colima
         docker-credential-helpers
-        isync-isync
-        # isync
+        # isync-isync
+        (isync.override { withCyrusSaslXoauth2 = true; })
         msmtp
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
