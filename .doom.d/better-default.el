@@ -656,21 +656,49 @@ used in the POST request made to the LanguageTool server."
   :commands (gptel)
   :init
   (setq! gptel-api-key +open-ai-api-key
-         gptel-default-mode 'markdown-mode
-         ;; gptel-model "gpt-3.5-turbo-1106"
-         gptel-model "gpt-4o"
-         gptel-temperature 0.8)
+         gptel-default-mode 'org-mode
+         gptel-temperature 0.8
+         gptel-model 'gpt-4o-mini)
   (defadvice! +gptel-cleanup-default-buffer (&rest args)
     :before #'gptel
     (+gptel-kill-default-buffer))
   (set-popup-rule! "^\\*ChatGPT\\*$" :side 'right :size 0.4 :vslot 100 :quit t)
   :config
-  (setq! gptel-post-response-hook nil)
-  (add-hook! 'gptel-post-response-hook '+gptel-save-buffer)
-  (setq gptel-directives '((default . "You are a large language model living in Emacs and a helpful coding assistant. Respond concisely.")
-                           (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-                           (writing . "You are a large language model and a writing assistant. Respond concisely.")
-                           (chat . "You are a large language model and a conversation partner. Respond concisely."))))
+  (setq! gptel--openai
+         (gptel-make-openai "ChatGPT"
+           :key +open-ai-api-key
+           :stream t
+           :host +open-ai-host
+           :models
+           '((gpt-4o-mini
+              :capabilities (media tool json url)
+              :description "Affordable and intelligent small model for fast, lightweight tasks"
+              :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+             (gpt-4o
+              :capabilities (media tool json url)
+              :description "High-intelligence flagship model for complex, multi-step tasks"
+              :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")))))
+  (gptel-make-anthropic "Claude"
+    :stream t
+    :host +anthropic-host
+    :key +anthropic-api-key)
+  (gptel-make-openai "OpenRouter"
+    :stream t
+    :host "openrouter.ai"
+    :key +openrouter-api-key
+    :endpoint "/api/v1/chat/completions"
+    :models
+    '(anthropic/claude-3.5-sonnet:beta
+      openai/gpt-4o-mini
+      mistralai/mixtral-8x7b-instruct
+      openrouter/auto))
+  (setq! gptel-post-response-functions nil)
+  (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
+  (setq gptel-directives
+        '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+          (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+          (writing . "You are a large language model and a writing assistant. Respond concisely.")
+          (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 
 (use-package shrface
   :defer t

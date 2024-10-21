@@ -307,6 +307,7 @@
 (package! ht)
 
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
+(package! elysium :recipe (:host github :repo "lanceberge/elysium"))
 (package! chatgpt-shell)
 
 (package! dts-mode)
