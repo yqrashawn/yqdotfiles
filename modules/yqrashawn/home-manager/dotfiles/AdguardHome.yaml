@@ -17,10 +17,11 @@ dns:
     - 0.0.0.0
   port: 5354
   anonymize_client_ip: false
-  ratelimit: 20
+  ratelimit: 0
   ratelimit_subnet_len_ipv4: 24
   ratelimit_subnet_len_ipv6: 56
-  ratelimit_whitelist: []
+  ratelimit_whitelist:
+    - 127.0.0.1
   refuse_any: true
   upstream_dns:
     - 1.1.1.1
@@ -48,8 +49,8 @@ dns:
     - 127.0.0.0/8
     - ::1/128
   cache_size: 2000000000
-  cache_ttl_min: 120
-  cache_ttl_max: 172800
+  cache_ttl_min: 600
+  cache_ttl_max: 31556952
   cache_optimistic: true
   bogus_nxdomain: []
   aaaa_disabled: false
@@ -138,7 +139,7 @@ filters:
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_4.txt
     name: Dan Pollock's List
     id: 1680240764
-  - enabled: true
+  - enabled: false
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_34.txt
     name: HaGeZi Personal Black & White
     id: 1680240765
@@ -178,6 +179,26 @@ filters:
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_24.txt
     name: 1Hosts (Lite)
     id: 1680240774
+  - enabled: false
+    url: https://raw.hellogithub.com/hosts
+    name: GitHub520
+    id: 1729387806
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_49.txt
+    name: HaGeZi's Ultimate Blocklist
+    id: 1729387807
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_46.txt
+    name: HaGeZi's Anti-Piracy Blocklist
+    id: 1729387808
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_47.txt
+    name: HaGeZi's Gambling Blocklist
+    id: 1729387809
+  - enabled: true
+    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/dyndns.txt
+    name: HaGeZi's Dynamic DNS
+    id: 1729387810
 whitelist_filters: []
 user_rules:
   - '||adservice.google.com^$important'
@@ -234,7 +255,7 @@ filtering:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  filters_update_interval: 24
+  filters_update_interval: 1
   blocked_response_ttl: 10
   filtering_enabled: true
   parental_enabled: false
