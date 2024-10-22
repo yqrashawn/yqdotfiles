@@ -5,7 +5,13 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((+cider-project-reload-exec-cmd-clj . "(user/x)")
+   '((eval progn
+      (make-variable-buffer-local 'cider-jack-in-nrepl-middlewares)
+      (add-to-list 'cider-jack-in-nrepl-middlewares "cider.nrepl/cider-middleware")
+      (add-to-list 'cider-jack-in-nrepl-middlewares "portal.nrepl/wrap-portal")
+      (add-to-list 'cider-jack-in-nrepl-middlewares "shadow.cljs.devtools.server.nrepl/middleware"))
+     (cider-repl-display-help-banner)
+     (+cider-project-reload-exec-cmd-clj . "(user/x)")
      (+cider-project-reload-exec-cmd-cljs . "(user/x)")
      (cider-clojure-cli-aliases . ":dev:test")
      (cider-clojure-cli-aliases . ":dev")

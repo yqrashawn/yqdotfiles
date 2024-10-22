@@ -83,7 +83,7 @@ run = 'move-node-to-workspace 1'
 if.app-id = 'com.apple.mail'
 run = 'move-node-to-workspace 1'
 [[on-window-detected]]
-if.app-name-regex-substring = '^(dash|istat|voila|system settings)'
+if.app-name-regex-substring = '^(dash|istat|voila|system settings|screen sharing)'
 run = 'layout floating'
 # [[on-window-detected]]
 # check-further-callbacks = true
