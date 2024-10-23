@@ -58,7 +58,7 @@ in {
         tailscale
         cloudflared
         awscli2
-        zellij
+        # zellij
         kitty-themes
         # (docker.override (args: {
         #   buildxSupport = true;

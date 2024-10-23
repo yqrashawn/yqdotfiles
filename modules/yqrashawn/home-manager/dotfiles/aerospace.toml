@@ -56,10 +56,12 @@ if.app-id = 'com.apple.Safari'
 run = 'move-node-to-workspace T'
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefoxdeveloperedition'
-run = 'move-node-to-workspace B'
+# run = [ 'layout h_accordion', 'move-node-to-workspace B' ]
+run = [ 'move-node-to-workspace B' ]
 [[on-window-detected]]
 if.app-id = 'org.gnu.Emacs'
-run = 'move-node-to-workspace C'
+# run = [ 'layout h_accordion', 'move-node-to-workspace C' ]
+run = [ 'move-node-to-workspace C' ]
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
 run = 'move-node-to-workspace M'
@@ -72,7 +74,6 @@ run = 'move-node-to-workspace M'
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'
 run = 'move-node-to-workspace M'
-
 [[on-window-detected]]
 if.app-id = 'com.apple.Home'
 run = 'move-node-to-workspace 1'
