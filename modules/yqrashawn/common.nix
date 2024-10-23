@@ -13,7 +13,14 @@ let
     black
     mpv-unwrapped
   ];
-  masters = with pkgs.masters; [ adguardhome clojure-lsp clj-kondo ];
+  masters = with pkgs.masters; [
+    adguardhome
+    clojure-lsp
+    clj-kondo
+    zprint
+    neil
+    jet
+  ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -51,8 +58,6 @@ in {
         # postgresql
         # rtx
         imagemagick
-        zprint
-        neil
         yt-dlp
         qbittorrent
         tailscale
@@ -90,7 +95,6 @@ in {
         })
 
         ispell
-        jet
         joker
         leiningen
         golangci-lint
@@ -214,7 +218,7 @@ in {
         nix
         nixfmt
         nixpkgs-fmt
-        nil
+        nil # lang server for nix
         openssh
         neofetch
         parallel
@@ -225,7 +229,6 @@ in {
         nix-doc
         gawk
         flyctl
-        jet
         sd
         asdf-vm
         vmtouch
@@ -267,9 +270,9 @@ in {
         # gopls
         golint
         sqls
-        gore
-        gomodifytags
-        gotests
+        # gore # go repl
+        # gomodifytags
+        # gotests
         solc
         plantuml
         rustup

@@ -472,11 +472,11 @@
     "clojure-deps-edn": {
       "flake": false,
       "locked": {
-        "lastModified": 1726275861,
-        "narHash": "sha256-rWRqEluoQXt8ask0hhfzWUUKW+BL2aFwlqxDfw6x+E4=",
+        "lastModified": 1729623156,
+        "narHash": "sha256-Pa8XpyLuOnxnqeu9VsRftA9zqAY2XgXWhdsjIuTT72E=",
         "owner": "practicalli",
         "repo": "clojure-deps-edn",
-        "rev": "03c91cfd0638d880c32e6be09937e69ea8559cd2",
+        "rev": "c1635ece6a60755ac09cfeef97770081b749fae8",
         "type": "github"
       },
       "original": {
@@ -787,11 +787,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1727435940,
-        "narHash": "sha256-6feRJa+MR7FmJrA6TrctJT9kfFlYTvRfeL5vOPgyk9w=",
+        "lastModified": 1729681892,
+        "narHash": "sha256-kgG+FnO32DQiZExOK/W5oD8RHhhQUuvZFBAuna4yazs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "041058080c4cb0c962146ac964f7663db2e4119a",
+        "rev": "82f44122d98fa3c06e3ab82a6754d914b99c5975",
         "type": "github"
       },
       "original": {
