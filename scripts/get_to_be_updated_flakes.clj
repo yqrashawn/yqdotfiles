@@ -30,10 +30,13 @@
   (->> all-inputs
        (filter #(not (flakes-skip-auto-updates %)))
        (map name)
-       (string/join " --update-input ")
-       (str " --update-input ")
-       ;; (str "nix flake lock --commit-lock-file")
-       (str "nix flake lock")))
+       (string/join " ")
+       (str
+        (if (System/getenv "CI")
+          "nix flake update --commit-lock-file "
+          "nix flake update "))))
 
-(println all-inputs)
+(println (->> all-inputs
+              (mapv str)
+              (string/join "\n")))
 (p/shell cmd)
