@@ -26,17 +26,14 @@
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-
-    darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
-    stable.url = "github:nixos/nixpkgs/nixos-21.11";
+    darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
+    stable.url = "github:nixos/nixpkgs/nixos-23.11";
     own.url = "github:yqrashawn/nixpkgs/master";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    # nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # use for overlay and kitty
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.follows = "nixpkgs-unstable";
     small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
-
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-custom-src = {
       url = "github:emacs-mirror/emacs/emacs-29";
@@ -62,27 +59,16 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     clojure-deps-edn = {
       url = "github:practicalli/clojure-deps-edn";
       flake = false;
     };
-
     spacehammer = {
       url = "github:agzam/spacehammer";
       flake = false;
     };
-
     forgit = {
       url = "github:wfxr/forgit";
-      flake = false;
-    };
-    zsh-f-sy-h = {
-      url = "github:z-shell/F-Sy-H";
-      flake = false;
-    };
-    zsh-abbrev-alias = {
-      url = "github:momo-lab/zsh-abbrev-alias";
       flake = false;
     };
     zsh-alias-tips = {
@@ -91,10 +77,6 @@
     };
     tmux-conf = {
       url = "github:gpakosz/.tmux";
-      flake = false;
-    };
-    zsh-autopair = {
-      url = "github:hlissner/zsh-autopair";
       flake = false;
     };
     zsh-autoquoter = {

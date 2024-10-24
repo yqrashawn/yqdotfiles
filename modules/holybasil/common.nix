@@ -128,7 +128,7 @@
       # go
       # plantuml
       rustup
-      rust-analyzer
+      # rust-analyzer
       (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph ]))
       perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
       git-absorb # https://github.com/tummychow/git-absorb

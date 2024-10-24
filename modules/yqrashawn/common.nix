@@ -1,9 +1,6 @@
 { inputs, config, pkgs, ... }:
 let
-  # old = with pkgs.old; [ ];
-  own = with pkgs.own;
-    [ # lieer
-    ];
+  own = with pkgs.own; [ ];
   darwins = with pkgs.darwins; [ ];
   stables = with pkgs.stable; [
     difftastic
@@ -20,6 +17,11 @@ let
     zprint
     neil
     jet
+    zsh-fzf-tab
+    zsh-forgit
+    zsh-abbr
+    zsh-f-sy-h
+    zsh-autopair
   ];
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
@@ -268,7 +270,7 @@ in {
         stylua
         # zls
         # gopls
-        golint
+        # golint
         sqls
         # gore # go repl
         # gomodifytags
@@ -313,7 +315,7 @@ in {
 
         # not available
         # du
-      ] ++ masters ++ stables ++ darwins ++ own; # ++ old;
+      ] ++ masters ++ stables ++ darwins ++ own;
     etc = {
       home-manager.source = "${inputs.home-manager}";
       nixpkgs.source = "${pkgs.path}";

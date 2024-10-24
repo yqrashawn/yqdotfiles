@@ -172,48 +172,25 @@ in {
     envExtra = envExtra;
     profileExtra = profileExtra;
     plugins = [
-      {
-        name = "zsh-fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-        file = "fzf-tab.plugin.zsh";
-      }
+      # {
+      #   name = "zsh-fzf-tab";
+      #   src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+      #   file = "fzf-tab.plugin.zsh";
+      # }
       {
         name = "zsh-autoquoter";
         src = inputs.zsh-autoquoter;
         file = "zsh-autoquoter.zsh";
       }
       {
-        name = "zsh-autopair";
-        src = inputs.zsh-autopair;
-        file = "autopair.zsh";
-      }
-      {
         name = "fast-syntax-highlighting";
         file = "fast-syntax-highlighting.plugin.zsh";
         src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions";
       }
-      # {
-      #   # https://github.com/starship/starship/issues/1721#issuecomment-780250578
-      #   # stop eating lines this is not pacman
-      #   # rewrite C-r
-      #   name = "zsh-vi-mode";
-      #   file = "zsh-vi-mode.plugin.zsh";
-      #   src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode/";
-      # }
       {
         name = "alias-tips";
         src = inputs.zsh-alias-tips;
       }
-      {
-        name = "forgit";
-        src = inputs.forgit;
-        file = "forgit.plugin.zsh";
-      }
-      # {
-      #   name = "zsh-abbrev-alias";
-      #   src = inputs.zsh-abbrev-alias;
-      #   file = "abbrev-alias.plugin.zsh";
-      # }
     ];
     oh-my-zsh = {
       enable = false;

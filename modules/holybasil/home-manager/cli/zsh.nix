@@ -171,11 +171,6 @@ in {
         name = "alias-tips";
         src = inputs.zsh-alias-tips;
       }
-      # {
-      #   name = "zsh-abbrev-alias";
-      #   src = inputs.zsh-abbrev-alias;
-      #   file = "abbrev-alias.plugin.zsh";
-      # }
     ];
     oh-my-zsh = {
       enable = false;
