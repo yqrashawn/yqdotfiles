@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-echo "nodejs version is $(node --version)" 
-yarn --cwd ~/local/bin $1

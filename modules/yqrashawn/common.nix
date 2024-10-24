@@ -7,6 +7,7 @@ let
     you-get
     black
     mpv-unwrapped
+    groff
   ];
   stables = with pkgs.stable; [ ];
   masters = with pkgs.masters; [
@@ -114,7 +115,6 @@ in {
         # firefox
         # firefox-devedition-bin
         sqlite
-        # yabai
         # sketchybar
 
         # cli tools

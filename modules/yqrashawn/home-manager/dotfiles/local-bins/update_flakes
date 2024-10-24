@@ -1,4 +1,6 @@
-(ns get-to-be-updated-flakes
+#!/usr/bin/env bb
+
+(ns update-flakes
   (:require
    [babashka.fs :as fs]
    [babashka.process :as p]
@@ -37,6 +39,6 @@
           "nix flake update "))))
 
 (println (->> all-inputs
-              (mapv str)
+              (mapv name)
               (string/join "\n")))
-(p/shell cmd)
+(p/shell {:dir dir} cmd)

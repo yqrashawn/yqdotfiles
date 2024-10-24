@@ -28,6 +28,7 @@
       "borkdude/brew"
       "huahaiy/brew"
       "incidentist/nyxt"
+      "nikitabobko/tap"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
@@ -50,11 +51,11 @@
       # "pngpaste"
       # "grip"
       # "alerter"
-      # "yqrashawn/goku/goku"
+      "yqrashawn/goku/goku"
       "percol"
       "datalevin"
+      "nikitabobko/tap/aerospace"
       "fcitx-remote-for-osx"
-
     ];
     casks = [
       "hammerspoon"

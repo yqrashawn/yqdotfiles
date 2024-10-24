@@ -424,7 +424,7 @@
            [:j [:op "/Applications/kitty.app"]]
            ;; [:k :same_wind_app :Emacs]
            ;; [:k [:hsl "/Applications/Emacs.app"]]
-           [:k [:op "/Applications/Nix Apps/Emacs.app"]]
+           [:k [:op "/Applications/Emacs.app"]]
            ;; [:k [:yfocus "Emacs"]]
            ;; [: [:togg "Logseq"]]
            ;; [:u [:hsl "Roam Research"]]
