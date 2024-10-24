@@ -28,17 +28,24 @@
       :inputs
       keys))
 
-(def cmd
+(def filtered-inputs
   (->> all-inputs
        (filter #(not (flakes-skip-auto-updates %)))
-       (map name)
+       (map name)))
+
+(def cmd
+  (->> filtered-inputs
        (string/join " ")
        (str
         (if (System/getenv "CI")
           "nix flake update --commit-lock-file "
           "nix flake update "))))
 
-(println (->> all-inputs
-              (mapv name)
+(println "Upgrade following inputs:")
+(println (->> filtered-inputs
+              (map #(str "  " %))
               (string/join "\n")))
+
+(println (str "dir: " dir))
+(println (str "run: " cmd))
 (p/shell {:dir dir} cmd)
