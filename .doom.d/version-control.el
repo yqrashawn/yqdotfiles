@@ -136,10 +136,10 @@ requiring confirmation."
   (defadvice! +forge-pull (&optional repo until) :after #'forge-pull
     (+marsam/add-pull-request-refs))
 
-  (defadvice! +forge-browse (orig-fn obj)
+  (defadvice! +forge-browse (orig-fn)
     :around #'forge-browse
     (let ((browse-url-browser-function #'browse-url-default-browser))
-      (funcall orig-fn obj))))
+      (funcall orig-fn))))
 
 (after! code-review
   (setq! code-review-lgtm-message "Thanks for your contribution. LGTM! :thumbsup:")
