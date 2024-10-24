@@ -2,6 +2,7 @@
   programs.kitty = {
     enable = true;
     package = pkgs.kitty;
+    # package = pkgs.masters.kitty;
     font = {
       name = "PragmataPro Mono Liga Regular";
       size = 20;

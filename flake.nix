@@ -26,8 +26,8 @@
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
-    stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
+    stable.url = "github:nixos/nixpkgs/nixos-23.05";
     own.url = "github:yqrashawn/nixpkgs/master";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";

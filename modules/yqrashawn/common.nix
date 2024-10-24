@@ -1,15 +1,14 @@
 { inputs, config, pkgs, ... }:
 let
   own = with pkgs.own; [ ];
-  darwins = with pkgs.darwins; [ ];
-  stables = with pkgs.stable; [
+  darwins = with pkgs.darwins; [
     difftastic
     streamlink
     you-get
-    # python3
     black
     mpv-unwrapped
   ];
+  stables = with pkgs.stable; [ ];
   masters = with pkgs.masters; [
     adguardhome
     clojure-lsp
@@ -19,7 +18,6 @@ let
     jet
     zsh-fzf-tab
     zsh-forgit
-    zsh-abbr
     zsh-f-sy-h
     zsh-autopair
   ];
@@ -254,7 +252,7 @@ in {
         nodePackages.js-beautify
         nodePackages.stylelint
         # nodePackages.expo-cli
-        nodePackages.eslint
+        # nodePackages.eslint
         nodePackages.typescript
         nodePackages.eslint_d
         nodePackages.markdownlint-cli2

@@ -33,7 +33,6 @@
         coc-smartf
         coc-snippets
         coc-solargraph
-        coc-tslint
         coc-tsserver
         coc-vetur
         coc-vimlsp

@@ -3,7 +3,7 @@ dotup () {
   sudo echo "OK"
   pushd .
   cd ~/.nixpkgs/
-  nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch $@
+  nix --extra-experimental-features "nix-command flakes" develop --impure --accept-flake-config --command sysdo switch $@
   ~/local/bin/ddd || true
   popd
 }
