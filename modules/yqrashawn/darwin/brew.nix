@@ -54,7 +54,6 @@
       "yqrashawn/goku/goku"
       "percol"
       "datalevin"
-      "nikitabobko/tap/aerospace"
       "fcitx-remote-for-osx"
     ];
     casks = [

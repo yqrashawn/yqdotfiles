@@ -22,6 +22,7 @@
       "input-source-pro"
       "raycast"
       "visual-studio-code"
+      "nikitabobko/tap/aerospace"
     ];
   };
 }
