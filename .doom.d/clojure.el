@@ -415,6 +415,7 @@ creates a new one. Don't unnecessarily bother the user."
 
   (defadvice! +cider-test-run-test (orig-fn)
     :around #'cider-test-run-test
+    (interactive)
     (if (eq major-mode 'clojurescript-mode)
         (call-interactively '+cider-test-execute-cljs)
       (when (cider--extract-test-var-at-point)

@@ -47,7 +47,9 @@
  :g "s-i" #'+side-notes-toggle-daily-note
  ;; :g "s-j" #'+whisper-run
  ;; :g "s-j" #'+chat-with-ai
- :g "s-j" #'chatgpt-shell-prompt-compose
+ ;; :g "s-j" #'chatgpt-shell-prompt-compose
+ :g "s-j" #'gptel-menu
+ :g "s-J" #'gptel
  :g "C-M-s-7" '+windmove-map
  :g "C-M-s-j" #'iflipb-next-buffer
  :g "C-M-s-k" #'iflipb-previous-buffer
@@ -633,6 +635,8 @@
          (:localleader
           (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
                 "r SPC" #'+cider-project-reload-exec))
+         (:map cider-mode-map
+          :g "C-c C-k" nil)
          (:map cider-inspector-mode-map
           :n "C-j" #'cider-inspector-next-inspectable-object
           :n "C-k" #'cider-inspector-previous-inspectable-object
@@ -721,4 +725,13 @@
  ;;          :n "<right>" #'combobulate-navigate-down))
  (:after calc
          (:map calc-mode-map
-          :g "C-o" #'casual-main-menu)))
+          :g "C-o" #'casual-main-menu))
+ (:after gptel
+         (:map gptel-context-buffer-mode-map
+          :n "d" #'evil-scroll-down
+          :n "u" #'evil-scroll-up
+          :n "x" #'gptel-context-flag-deletion
+          :n "DEL" #'gptel-context-flag-deletion
+          :n "C-j" #'gptel-context-next
+          :n "q" #'quit-window
+          :n "C-k" #'gptel-context-previous)))

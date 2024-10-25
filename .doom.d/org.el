@@ -31,7 +31,32 @@
     :select t
     :modeline t
     :autosave 'ignore)
-  (add-hook! 'org-mode-hook 'org-modern-mode))
+  (add-hook! 'org-mode-hook 'org-modern-mode)
+  (defadvice! +org-self-insert-command (x)
+    "In org-mode, insert ~ when press `, vice visa
+insert ~/ normally"
+    :after #'org-self-insert-command
+    ;; ` 96
+    ;; ~ 126
+    ;; / 47
+    (cond
+     ((and
+       (eq (char-before) 47)
+       (eq (char-before (- (point) 1)) 96))
+      (progn
+        (delete-char -2)
+        (insert "~/")))
+     ((eq (char-before) 96)
+      (progn
+        (delete-char -1)
+        (delete-char 1)
+        (insert 126)
+        (insert 126)
+        (backward-char 1)))
+     ((eq (char-before) 126)
+      (progn
+        (delete-char -1)
+        (insert 96))))))
 
 (setq +org-roam-open-buffer-on-find-file nil)
 

@@ -634,9 +634,9 @@ used in the POST request made to the LanguageTool server."
   (pushnew! recentf-exclude "^/nix" ;; #'file-remote-p "^/ssh:"
             ))
 
-(defun +gptel-save-buffer ()
+(defun +gptel-save-buffer (&rest args)
   (interactive)
-  (when-let ((buf (get-buffer gptel-default-session)))
+  (when-let ((buf (current-buffer)))
     (with-current-buffer buf
       (if buffer-file-name
           (save-buffer)
@@ -658,10 +658,11 @@ used in the POST request made to the LanguageTool server."
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
          gptel-temperature 0.8
-         gptel-model 'gpt-4o-mini)
-  (defadvice! +gptel-cleanup-default-buffer (&rest args)
-    :before #'gptel
-    (+gptel-kill-default-buffer))
+         ;; gptel-model 'gpt-4o-mini
+         gptel-model 'anthropic/claude-3.5-sonnet:beta)
+  ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
+  ;;   :before #'gptel
+  ;;   (+gptel-kill-default-buffer))
   (set-popup-rule! "^\\*ChatGPT\\*$" :side 'right :size 0.4 :vslot 100 :quit t)
   :config
   (setq! gptel--openai
@@ -678,21 +679,24 @@ used in the POST request made to the LanguageTool server."
               :capabilities (media tool json url)
               :description "High-intelligence flagship model for complex, multi-step tasks"
               :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")))))
-  (gptel-make-anthropic "Claude"
-    :stream t
-    :host +anthropic-host
-    :key +anthropic-api-key)
-  (gptel-make-openai "OpenRouter"
-    :stream t
-    :host "openrouter.ai"
-    :key +openrouter-api-key
-    :endpoint "/api/v1/chat/completions"
-    :models
-    '(anthropic/claude-3.5-sonnet:beta
-      openai/gpt-4o-mini
-      mistralai/mixtral-8x7b-instruct
-      openrouter/auto))
-  (setq! gptel-post-response-functions nil)
+  (setq! gptel--claude
+         (gptel-make-anthropic "Claude"
+           :stream t
+           :host +anthropic-host
+           :key +anthropic-api-key))
+  (setq! gptel--openrouter
+         (gptel-make-openai "OpenRouter"
+           :stream t
+           :host "openrouter.ai"
+           :key +openrouter-api-key
+           :endpoint "/api/v1/chat/completions"
+           :models
+           '(anthropic/claude-3.5-sonnet:beta
+             openai/gpt-4o-mini
+             mistralai/mixtral-8x7b-instruct
+             openrouter/auto)))
+  (setq! gptel-post-response-functions nil
+         gptel-backend gptel--openrouter)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (setq gptel-directives
         '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
