@@ -314,6 +314,11 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
    ;; cider-print-options '(("style" ((keyword "community" ) (keyword "no-comma" ))))
    ;; cider-format-code-options '(("indents" (("letsubs" 0))))
    )
+  (pushnew! cider-jack-in-dependencies '("io.github.tonsky/clj-reload" "RELEASE"))
+  (defadvice! +cider-ns-refresh (orig-fn &optional mode)
+    :around #'cider-ns-refresh
+    (cider-interactive-eval
+     "(do (require '[clj-reload.core :as reload]) (reload/reload))"))
 
   ;; status h/deftest-sub
   (setq! +cider-test-defining-forms '("deftest" "defspec" "deftest-sub"))
