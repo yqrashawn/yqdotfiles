@@ -1,0 +1,94 @@
+{:lint-as {garden.def/defcssfn                     clojure.core/defn
+           garden.def/defkeyframes                 clojure.core/def
+           garden.def/defrule                      clojure.core/def
+           garden.def/defstyles                    clojure.core/def
+           garden.def/defstylesheet                clojure.core/def
+           nubank.workspaces.core/defcard          clojure.core/def
+           mount.core/defstate                     clojure.core/def
+           reagent.core/with-let                   clojure.core/let
+           spade.core/defclass                     clojure.core/defn
+           spade.core/defattrs                     clojure.core/defn
+           compojure.core/defroutes                clojure.core/def
+           clojure.core.cache/defcache             clojure.core/deftype
+           ;; clojure.test.check.clojure-test/defspec clojure.core/def
+           clojure.test.check.clojure-test/defspec clojure.test/deftest
+           clojure.test.check.properties/for-all   clojure.core/let
+           cljs.cache/defcache                     clojure.core/deftype
+           clojure.java.jdbc/with-db-transaction   clojure.core/let}
+ :linters {:aliased-namespace-symbol {:level :warning}
+           :unresolved-symbol        {:exclude [goog.DEBUG
+                                                (mount.core/defstate)
+                                                (cljs.core.match/match)]}
+           :unresolved-var           {:exclude [deftest is are]}
+           :unused-namespace         {:exclude [cljs.repl]}
+           :unused-referred-var      {:exclude {cljs.repl [Error->map
+                                                           apropos
+                                                           dir
+                                                           doc
+                                                           error->str
+                                                           ex-str
+                                                           ex-triage
+                                                           find-doc
+                                                           print-doc
+                                                           pst
+                                                           source]}}
+           :consistent-alias
+           {:aliases
+            {buddy.core.hash                    buddy-hash
+             cheshire.generate                  json.generate
+             clojure.tools.logging              log
+             clj-http.client                    http
+             clj-ldap.client                    ldap
+             clj-time.coerce                    time.coerce
+             clj-time.format                    time.format
+             clojure.core.async                 a
+             clojure.core.match                 clojure.core.match ; Prefer :refer [match]
+             clojure.data                       data
+             clojure.math.combinatorics         math.combo
+             clojure.pprint                     pprint
+             clojure.spec.alpha                 s
+             clojure.string                     string
+             clojure.test                       t
+             clojure.tools.build.api            b
+             clojure.tools.namespace.dependency ns.deps
+             clojure.tools.namespace.find       ns.find
+             clojure.tools.namespace.parse      ns.parse
+             colorize.core                      colorize
+             datalevin.core                     d
+             environ.core                       env
+             hf.depstar.api                     depstar
+             hiccup.core                        hiccup
+             hiccup.util                        hiccup.util
+             honey.sql                          sql
+             honey.sql.helpers                  sql.helpers
+             java-time.api                      t
+             macaw.core                         macaw
+             malli.core                         mc
+             malli.error                        me
+             malli.experimental                 mx
+             malli.generator                    mg
+             malli.provider                     mp
+             malli.transform                    mtx
+             malli.util                         mut
+             medley.core                        m
+             monger.collection                  mcoll
+             ring.mock.request                  ring.mock
+             ring.util.codec                    codec
+             ring.util.response                 response
+             ring.adapter.jetty9.servlet        servlet
+             saml20-clj.core                    saml
+             taoensso.encore                    enc
+             tick.core                          t
+             toucan.db                          db
+             toucan.models                      models}}}
+ :hooks
+ {:analyze-call
+  {}
+  ;; {cljs.test/deftest         hooks.clojure.test/deftest
+  ;;  cljs.test/is              hooks.clojure.test/is
+  ;;  cljs.test/use-fixtures    hooks.clojure.test/use-fixtures
+  ;;  clojure.core/ns           hooks.clojure.core/lint-ns
+  ;;  clojure.test/deftest      hooks.clojure.test/deftest
+  ;;  clojure.test/is           hooks.clojure.test/is
+  ;;  clojure.test/use-fixtures hooks.clojure.test/use-fixtures}
+  }}
