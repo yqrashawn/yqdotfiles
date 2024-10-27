@@ -34,22 +34,6 @@
     #   brew "yabai", restart_service: "changed"
     # '';
     brews = [
-      # "openssl@3" # conflux-rust
-      # "libgccjit"
-      # "docker-completion"
-      # "curl"
-      # "php"
-      # "zig"
-      # "dum"
-      # "clj-kondo"
-      # "editorconfig"
-      # "fennel"
-      # "proxychains-ng"
-      # "cloudflared"
-      # "janet"
-      # "dotenv-linter"
-      # "pngpaste"
-      # "grip"
       # "alerter"
       "yqrashawn/goku/goku"
       "percol"

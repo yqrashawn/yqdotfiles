@@ -335,7 +335,6 @@
     #   source = ./enchant;
     #   recursive = true;
     # };
-    "clj-kondo/config.edn" = { source = ./clj-kondo.edn; };
     ".zsh.d" = {
       source = ./.zsh.d;
       recursive = true;

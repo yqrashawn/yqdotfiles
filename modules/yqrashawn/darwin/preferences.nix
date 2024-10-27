@@ -290,6 +290,12 @@ in {
             mkdir -p ~/.config/aerospace/
             ln -s ~/.nixpkgs/modules/yqrashawn//home-manager/dotfiles/aerospace.toml ~/.config/aerospace/
         fi
+        if [ ! -e ~/.config/clj-kondo/config.edn ]; then
+            echo 'link clj-kondo/config.edn'
+            mkdir -p ~/.config/clj-kondo
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/clj-kondo.edn ~/.config/clj-kondo/config.edn
+        fi
+
       '';
     };
   };
