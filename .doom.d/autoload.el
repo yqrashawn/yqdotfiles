@@ -835,7 +835,7 @@ _b_ranch _j_next _k_prev _h_up
                                (cond
                                 (glogi? nil)
                                 (telemere? nil)
-                                (timbre? t)
+                                (timbre? nil)
                                 (pedestal? t)
                                 nil)
                                (and telemere? (not glogi?)))))
