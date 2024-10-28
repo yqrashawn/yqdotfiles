@@ -504,6 +504,19 @@ specific project."
                                                 cljr-suppress-middleware-warnings t)
                                     (rename-buffer "*babashka-repl*"))))))))
 
+
+(defun +cider-jack-in-babashka (&optional project-dir)
+  "Start a utility CIDER REPL backed by Babashka, not related to a
+specific project."
+  (interactive)
+  (require 'cider)
+  (let ((project-dir (or project-dir (doom-project-root) user-emacs-directory)))
+    (cider-jack-in-clj
+     (thread-first
+       '()
+       (plist-put :project-type 'babashka)
+       (plist-put :project-dir project-dir)))))
+
 (defun corgi/cider-modeline-info ()
   (when (derived-mode-p 'clojure-mode)
     (let ((source-project-name (projectile-project-name)))
