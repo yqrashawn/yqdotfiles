@@ -164,6 +164,15 @@
   clojure-mode
   flycheck-golangci-lint)
 
+(package! corgi-clojure
+  :recipe
+  (:host github :repo "corgi-emacs/corgi-packages"
+   :files ("corgi-clojure/*.el")))
+(package! corgi-emacs-lisp
+  :recipe
+  (:host github :repo "corgi-emacs/corgi-packages"
+   :files ("corgi-emacs-lisp/*.el")))
+
 (package! elcord)
 (package! parinfer-rust-mode)
 (package! idle-highlight-mode)
