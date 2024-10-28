@@ -83,12 +83,11 @@
              toucan.models                      models}}}
  :hooks
  {:analyze-call
-  {}
-  ;; {cljs.test/deftest         hooks.clojure.test/deftest
-  ;;  cljs.test/is              hooks.clojure.test/is
-  ;;  cljs.test/use-fixtures    hooks.clojure.test/use-fixtures
-  ;;  clojure.core/ns           hooks.clojure.core/lint-ns
-  ;;  clojure.test/deftest      hooks.clojure.test/deftest
-  ;;  clojure.test/is           hooks.clojure.test/is
-  ;;  clojure.test/use-fixtures hooks.clojure.test/use-fixtures}
-  }}
+  {;; cljs.test/deftest         hooks.clojure.test/deftest
+   ;; cljs.test/is              hooks.clojure.test/is
+   ;; cljs.test/use-fixtures    hooks.clojure.test/use-fixtures
+   clojure.core/ns           hooks.clojure.core/lint-ns
+   clojure.test/deftest      hooks.clojure.test/deftest
+   ;; clojure.test/is           hooks.clojure.test/is
+   ;; clojure.test/use-fixtures hooks.clojure.test/use-fixtures
+   }}}
