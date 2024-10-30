@@ -113,3 +113,18 @@
   :mode (("\\.cts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . typescript-ts-mode)
          ("\\.ts\\'" . typescript-ts-mode)))
+
+(def-project-mode! ++javascript-npm-mode
+  :modes '(html-mode
+           css-mode
+           web-mode
+           markdown-mode
+           js-mode                      ; includes js2-mode and rjsx-mode
+           json-mode
+           typescript-mode
+           typescript-ts-mode
+           typescript-tsx-mode
+           tsx-ts-mode
+           solidity-mode)
+  :when (locate-dominating-file default-directory "package.json")
+  :add-hooks '(+javascript-add-npm-path-h npm-mode))
