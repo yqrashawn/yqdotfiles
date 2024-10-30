@@ -249,6 +249,7 @@ in {
         redis
         # langs
         tree-sitter
+        rustywind
         nodePackages.js-beautify
         nodePackages.stylelint
         # nodePackages.expo-cli

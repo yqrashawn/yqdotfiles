@@ -360,6 +360,7 @@
 (package! imake)
 (package! parseedn)
 (package! cloel :recipe (:host github :repo "manateelazycat/cloel"))
+(package! lsp-tailwindcss)
 ;; (package! casual)
 ;; (package! jinx) ;; installed via nix
 

@@ -53,11 +53,15 @@ let
     lsa = "eza -abghl --git --color=automatic";
     lsd = "eza -l --color=automatic | grep --color=never '^d'";
     lst = "eza --sort=created --time=created --long --all -r | sed 15q";
+    p = "pnpm";
+    pi = "pnpm i";
+    pga = "pnpm i -g";
+    px = "pnpx";
     y = "yarn";
     yi = "yarn init";
     ya = "yarn add";
     yad = "yarn add --dev";
-    ysrc = "yarn start --reset-cache";
+    ystnc = "yarn start --reset-cache";
     yga = "yarn global add";
     yu = "yarn upgrade";
     yui = "yarn upgrade-interactive";

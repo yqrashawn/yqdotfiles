@@ -128,3 +128,20 @@
            solidity-mode)
   :when (locate-dominating-file default-directory "package.json")
   :add-hooks '(+javascript-add-npm-path-h npm-mode))
+
+(use-package! lsp-tailwindcss
+  :init
+  (setq lsp-tailwindcss-add-on-mode t)
+  :config
+  (dolist (tw-major-mode
+           '(css-mode
+             css-ts-mode
+             typescript-mode
+             typescript-ts-mode
+             tsx-ts-mode
+             rjsx-mode
+             js2-mode
+             js-ts-mode
+             clojure-mode
+             clojurescript-mode))
+    (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))

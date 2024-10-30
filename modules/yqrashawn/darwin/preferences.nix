@@ -222,12 +222,16 @@ in {
         rm -rf ~/.doom.d || true
         ln -s ~/.nixpkgs/.doom.d ~/.doom.d
 
-        rm -rf ~/.config/yarn/global/package.json || true
-        rm -rf ~/.local/share/yarn/global/package.json || true
-        mkdir -p ~/.config/yarn/global
-        mkdir -p ~/.local/share/yarn/global
-        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/package.json ~/.config/yarn/global/package.json
-        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/package.json ~/.local/share/yarn/global/package.json
+        if [ ! -e ~/.local/share/yarn/global/package.json ]; then
+            mkdir -p ~/.local/share/yarn/global
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yarn-package.json ~/.local/share/yarn/global/package.json
+        fi
+
+        if [ ! -e ~/.local/share/pnpm/global/5/package.json ]; then
+            mkdir -p ~/.local/share/pnpm/global/5
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/pnpm-package.json ~/.local/share/pnpm/global/5/package.json
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/pnpm-lock.yaml ~/.local/share/pnpm/global/5/pnpm-lock.yaml
+        fi
 
         rm -rf ~/.config/karabiner.edn || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
@@ -295,7 +299,10 @@ in {
             mkdir -p ~/.config
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/clj-kondo ~/.config/clj-kondo
         fi
-
+        if [ ! -e ~/.tool-versions ]; then
+            echo 'link ~/.tool-versions'
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.tool-versions ~/.tool-versions
+        fi
       '';
     };
   };
