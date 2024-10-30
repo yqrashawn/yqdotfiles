@@ -294,6 +294,7 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
 
 (after! cider
   (setq!
+   cider-auto-select-test-report-buffer nil
    cider-repl-buffer-size-limit 1048576
    ;; Regular expression too big
    cider-font-lock-reader-conditionals nil
