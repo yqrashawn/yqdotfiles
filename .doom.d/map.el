@@ -660,9 +660,13 @@
           :g "C-c DEL" #'+workspace/close-window-or-workspace))
  (:after copilot
          (:map copilot-completion-map
-          :i "RET" #'copilot-accept-completion
-          :i "TAB" #'copilot-accept-completion-by-line
-          :i "C-l" #'copilot-accept-completion-by-word))
+          ;; :i "RET" #'copilot-accept-completion
+          ;; :i "TAB" #'copilot-accept-completion-by-line
+          ;; :i "C-l" #'copilot-accept-completion-by-word
+          :g "RET" #'copilot-accept-completion
+          :g "TAB" #'copilot-accept-completion-by-line
+          ;; :g "C-l" #'copilot-accept-completion-by-word
+          ))
  (:after time
          (:map world-clock-mode-map
           :n "q" #'quit-window
