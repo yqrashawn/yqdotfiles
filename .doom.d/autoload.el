@@ -624,28 +624,36 @@ _b_ranch _j_next _k_prev _h_up
          (log-spy-str (if prefix-info
                           (concat log-spy-str " :info")
                         log-spy-str)))
-    (save-excursion
-      (evil-emacs-state 1)
-      (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
-      (call-interactively 'lispy-parens)
-      (unless (string= (string (following-char)) " ") (forward-char))
-      (insert (if (string= (string (following-char)) " ") log-spy-str (concat log-spy-str " ")))
-      (lispy-left 1)
-      (evil-normal-state 1)))
-  (unless (+lispy-special-p) (lispy-left 1)))
+    (if (string= (symbol-at-point) log-spy-str)
+        (progn
+          (sp-kill-sexp)
+          (paredit-splice-sexp))
+      (progn (save-excursion
+               (evil-emacs-state 1)
+               (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
+               (call-interactively 'lispy-parens)
+               (unless (string= (string (following-char)) " ") (forward-char))
+               (insert (if (string= (string (following-char)) " ") log-spy-str (concat log-spy-str " ")))
+               (lispy-left 1)
+               (evil-normal-state 1))
+             (unless (+lispy-special-p) (lispy-left 1))))))
 
 ;;;###autoload
 (defun log/--spy (arg)
   (interactive "P")
   (let ((log-spy-str "log/spy"))
-    (save-excursion
-      (evil-emacs-state 1)
-      (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
-      (call-interactively 'lispy-parens)
-      (unless (string= (string (following-char)) " ") (forward-char))
-      (insert (if (string= (string (following-char)) " ") log-spy-str (concat log-spy-str " ")))
-      (lispy-left 1)
-      (evil-normal-state 1)))
+    (if (eq (symbol-at-point) 'log/spy)
+        (progn
+          (sp-kill-sexp)
+          (paredit-splice-sexp))
+      (save-excursion
+        (evil-emacs-state 1)
+        (if (+lispy-special-p) (lispy-mark) (lispy-mark-symbol))
+        (call-interactively 'lispy-parens)
+        (unless (string= (string (following-char)) " ") (forward-char))
+        (insert (if (string= (string (following-char)) " ") log-spy-str (concat log-spy-str " ")))
+        (lispy-left 1)
+        (evil-normal-state 1))))
   (unless (+lispy-special-p) (lispy-left 1)))
 
 ;;;###autoload
