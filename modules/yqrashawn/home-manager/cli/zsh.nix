@@ -10,13 +10,13 @@ let
     fi
     export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
   '';
-  profileExtra = ''
+  zshProfileExtra = ''
     fpath=($HOME/.zfunc $fpath)
     autoload -Uz $fpath[1]/*
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
     "[[ -e /etc/profile ]] && source /etc/profile"}
     [[ ! -f ~/Dropbox/sync/sync.zsh ]] || source ~/Dropbox/sync/sync.zsh
-    # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
+    # eval "$(${pkgs.masters.mise}/bin/mise activate zsh)"
   '';
   bashProfileExtra = ''
     ${lib.optionalString pkgs.stdenvNoCC.isLinux
@@ -24,7 +24,7 @@ let
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     export JAVA_HOME=$(asdf where java)
     export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
-    # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
+    # eval "$(${pkgs.masters.mise}/bin/mise activate bash)"
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
@@ -92,7 +92,6 @@ in {
   programs.bash.shellAliases = aliases;
   programs.bash.initExtra = ''
     ${functions}
-    # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
   '';
   programs.bash.profileExtra = bashProfileExtra;
   programs.zsh = let
@@ -139,21 +138,7 @@ in {
       printf "\e[?1042l"
     '';
     initExtra = ''
-      # eval "$(${pkgs.rtx}/bin/rtx activate zsh)"
       eval "$(${pkgs.atuin}/bin/atuin init zsh)"
-
-      ### mcfly
-      # eval "$(${pkgs.mcfly}/bin/mcfly init zsh)"
-      # dark-light-mcfly-history-widget() {
-      #   unset MCFLY_LIGHT
-      #   if [[ "$(defaults read -g AppleInterfaceStyle 2&>/dev/null)" != "Dark" ]]; then
-      #       export MCFLY_LIGHT=TRUE
-      #   fi
-      #   mcfly-history-widget
-      # }
-
-      # zle -N dark-light-mcfly-history-widget
-      # bindkey '^R' dark-light-mcfly-history-widget
 
       ### TRAMP
       # Stop TRAMP (in Emacs) from hanging or term/shell from echoing back commands
@@ -174,7 +159,7 @@ in {
       [[ ! -f ~/.local.zsh ]] || source ~/.local.zsh
     '';
     envExtra = envExtra;
-    profileExtra = profileExtra;
+    profileExtra = zshProfileExtra;
     plugins = [
       # {
       #   name = "zsh-fzf-tab";
