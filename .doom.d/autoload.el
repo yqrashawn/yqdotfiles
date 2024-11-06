@@ -360,20 +360,22 @@ _g_  gfm      _o_ org        _m_ markdown
   (interactive)
   (if (eq major-mode 'vterm-mode)
       (vterm--self-insert)
-    (if (eq (preceding-char) ?,)
-        (cond ((and
-                (boundp 'pabbrev-marker)
-                pabbrev-marker)
-               (progn (delete-char -1 nil)
-                      (call-interactively #'pabbrev-expand-maybe)
-                      (pabbrev-delete-last-suggestion)))
-              ((and (modulep! :editor evil)
-                    (modulep! :completion corfu)
-                    corfu-mode
-                    (eq (preceding-char) ?,))
-               (progn (delete-char -1 nil)
-                      (call-interactively #'completion-at-point))))
-      (call-interactively #'self-insert-command))))
+    (cond
+     ((and (eq (preceding-char) ?,) (boundp 'pabbrev-marker) pabbrev-marker)
+      (progn (delete-char -1 nil)
+             (call-interactively #'pabbrev-expand-maybe)
+             (pabbrev-delete-last-suggestion)))
+
+     ((and (eq (preceding-char) ?,) (modulep! :editor evil) (modulep! :completion corfu) corfu-mode)
+      (progn (delete-char -1 nil)
+             (call-interactively #'completion-at-point)))
+
+     ((and (eq (preceding-char) ?.) (bound-and-true-p copilot-mode) (not (copilot--overlay-visible)))
+      (progn
+        (delete-char -1 nil)
+        (call-interactively #'copilot-complete)))
+
+     (t (call-interactively #'self-insert-command)))))
 
 ;;;###autoload
 (defun +yas-expand-when-inserting-dot (&optional args)
