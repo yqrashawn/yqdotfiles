@@ -134,6 +134,7 @@
 ;;; clojure-mode
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t
+         clojure-max-backtracking 10
          clojure-verify-major-mode nil
          clojure-align-reader-conditionals t
          clojure-defun-indents '(fn-traced))
