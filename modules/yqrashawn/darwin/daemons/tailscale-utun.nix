@@ -7,7 +7,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "/bin/wait4path ${pkgs.tailscale} &amp;&amp; ${pkgs.tailscale}/bin/tailscaled -tun utun -statedir /Users/${config.user.name}/tailscale"
+        "/bin/wait4path ${pkgs.tailscale} &amp;&amp; ${pkgs.tailscale}/bin/tailscaled --tun=utun27 --statedir=/Users/${config.user.name}/tailscale"
       ];
       RunAtLoad = true;
       KeepAlive = true;

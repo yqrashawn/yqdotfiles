@@ -27,7 +27,7 @@ in {
   # environment setup
   environment = {
     pathsToLink = [ "/share/zsh" ];
-    loginShell = pkgs.zsh;
+    # loginShell = pkgs.zsh;
     # backupFileExtension = "backup";
     etc = {
       darwin.source = "${inputs.darwin}";

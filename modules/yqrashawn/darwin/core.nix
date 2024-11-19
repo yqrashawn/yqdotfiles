@@ -38,7 +38,7 @@ in {
       "/share/aspell"
       # "/share/postgresql"
     ];
-    loginShell = pkgs.zsh;
+    # loginShell = pkgs.zsh;
     # backupFileExtension = "backup";
     etc = {
       darwin.source = "${inputs.darwin}";

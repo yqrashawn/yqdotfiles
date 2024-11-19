@@ -169,7 +169,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :hook ((go-mode rjsx-mode js2-mode typescript-mode tsx-ts-mode) . copilot-mode)
   :init
   (setq! copilot-max-char -1
-         copilot-version "1.41.0"
+         ;; copilot-version "1.41.0"
          copilot-indent-offset-warning-disable t)
   :config
   (pushnew! copilot-indentation-alist
