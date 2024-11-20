@@ -15,7 +15,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "/bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
+        "/bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --no-check-update --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
       ];
       RunAtLoad = true;
       KeepAlive = true;

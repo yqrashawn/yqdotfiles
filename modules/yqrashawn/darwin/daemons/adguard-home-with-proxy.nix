@@ -15,7 +15,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "sudo launchctl unload -w /System/Library/LaunchDaemons/bootps.plist; /bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
+        "sudo launchctl unload -w /System/Library/LaunchDaemons/bootps.plist; /bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --no-check-update --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
       ];
       WatchPaths = [
         "/Users/${config.user.name}/Library/CloudStorage/Dropbox/sync/adguardhome.list.conf"
