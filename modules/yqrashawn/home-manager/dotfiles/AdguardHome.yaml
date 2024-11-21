@@ -54,7 +54,7 @@ dns:
   cache_optimistic: true
   bogus_nxdomain: []
   aaaa_disabled: false
-  enable_dnssec: false
+  enable_dnssec: true
   edns_client_subnet:
     custom_ip: ""
     enabled: false
@@ -179,7 +179,7 @@ filters:
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_24.txt
     name: 1Hosts (Lite)
     id: 1680240774
-  - enabled: true
+  - enabled: false
     url: https://raw.hellogithub.com/hosts
     name: GitHub520
     id: 1729387806
@@ -213,6 +213,7 @@ user_rules:
   - '@@||lqj.andsusan.top^$important'
   - '@@||waimai-guide.ele.me^$important'
   - '||wpad.0.50.168.192.in-addr.arpa^$important'
+  - '@@||static.element.bid^$important'
   - ""
 dhcp:
   enabled: false
