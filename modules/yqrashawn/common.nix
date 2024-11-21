@@ -12,7 +12,6 @@ let
   stables = with pkgs.stable; [ ];
   masters = with pkgs.masters; [
     # mise
-    adguardhome
     clojure-lsp
     clj-kondo
     zprint
