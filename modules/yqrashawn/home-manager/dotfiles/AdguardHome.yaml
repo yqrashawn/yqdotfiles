@@ -187,7 +187,7 @@ filters:
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_49.txt
     name: HaGeZi's Ultimate Blocklist
     id: 1729387807
-  - enabled: true
+  - enabled: false
     url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_46.txt
     name: HaGeZi's Anti-Piracy Blocklist
     id: 1729387808
@@ -214,6 +214,8 @@ user_rules:
   - '@@||waimai-guide.ele.me^$important'
   - '||wpad.0.50.168.192.in-addr.arpa^$important'
   - '@@||static.element.bid^$important'
+  - '@@||posthog.com^$important'
+  - '@@||us.i.posthog.com^$important'
   - ""
 dhcp:
   enabled: false
