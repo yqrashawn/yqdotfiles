@@ -140,13 +140,16 @@
    :desc "Find library" "l" #'find-library
    :desc "Edit .doom.d config" "d" (cmd! (let ((default-directory (expand-file-name "~/.doom.d/")))
                                            (call-interactively #'find-file)))
-   :desc "Search in ~/.emacs.d" "s" (cmd! (find-file-existing "~/.ssh/config.gpg") (call-interactively #'+default/search-buffer))
    :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
                                             (call-interactively #'+default/search-project)))
    :desc "Edit goku edn config" "k" (cmd!
                                      ;; (let ((projectile-switch-project-action (cmd!)))
                                      ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
                                      (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
+   :desc "Edit Surge config" "s" (cmd!
+                                  (if (f-exists-p "/Volumes/Surge Profiles/xxxsmart.conf")
+                                      (find-file-existing "/Volumes/Surge Profiles/xxxsmart.conf")
+                                    (find-file-existing "~/Dropbox/application/Surge/xxxsmart.conf")))
    :desc "Edit nix config" "n" (cmd!
                                 ;; (projectile-switch-project-by-name "~/.nixpkgs/")
                                 (let ((default-directory (expand-file-name "~/.nixpkgs/")))
