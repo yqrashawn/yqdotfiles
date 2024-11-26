@@ -126,6 +126,7 @@
   ;;          [:return_or_enter :!Sreturn_or_enter]
   ;;          [:!Tm :!Sreturn_or_enter]
   ;;          [:!Creturn_or_enter :return_or_enter]]}
+  {:des "chatgpt" :rules [[:f23 :!SO8]]}
   {:des   "unstuck emacs"
    :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)"
                    "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
