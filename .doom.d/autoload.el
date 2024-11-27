@@ -1107,7 +1107,7 @@ result instead of `message'."
 (defun +terminal-here ()
   (interactive)
   (call-process-shell-command
-   (format! "tmux new-window -n \"%s\" -c %s"
+   (format! "tmux new-window -n '%s' -c '%s'"
             (or buffer-file-name default-directory)
             (if buffer-file-name
                 (file-name-directory buffer-file-name)
