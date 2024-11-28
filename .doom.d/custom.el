@@ -5,7 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-    '((cider-jack-in-default quote babashka)
+    '((cider-shadow-watched-builds . ":app")
+       (cider-jack-in-default quote babashka)
        (eval progn
          (make-variable-buffer-local 'cider-jack-in-nrepl-middlewares)
          (add-to-list 'cider-jack-in-nrepl-middlewares "cider.nrepl/cider-middleware")
