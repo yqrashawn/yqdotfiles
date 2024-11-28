@@ -127,8 +127,10 @@
   ;;          [:!Tm :!Sreturn_or_enter]
   ;;          [:!Creturn_or_enter :return_or_enter]]}
   {:des "chatgpt"
-   :rules [;; [:f23 :!SO8]
-           [:f23 :!CT8]]}
+   :rules [[:f23 :!SO8]
+           ;; [:f23 :!CT8]
+           ;; [:f23 :f18]
+           ]}
   {:des   "unstuck emacs"
    :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)"
                    "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
@@ -587,7 +589,8 @@
   {:des   "some simultaneous keys"
    :rules [;; [[:h :l] [[:alf "helpSearch" "com.tedwise.menubarsearch"]
            ;; ["in-alfred" 1]]]
-           [[:h :l] :!TSO6]
+           ;; [[:h :l] :!TSO6]
+           [[:h :l] :!TC8]
            [[:h :k] :!TOSf17]
            ;; [[:h :l] :f17]
            [[:j :l] [:f19 ["in-alfred" 1]]]

@@ -304,12 +304,42 @@
 ;;;; Apps Menu
 (local app-bindings
        [return
-        {:key :k
-         :title "Keybase"
-         :action (activator "Keybase")}
+        {:key :v
+         :title "VSCode"
+         :action (activator "Visual Studio Code")}
+        {:key :c
+         :title "Chrome"
+         :action (activator "Google Chrome")}
+        {:key :r
+         :title "Safari"
+         :action (activator "Safari")}
+        {:key :s
+         :title "Spotify"
+         :action (activator "Spotify")}
+        {:key :n
+         :title "Notion"
+         :action (activator "Notion")}
+        {:key :t
+         :title "Telegram"
+         :action (activator "Telegram")}
         {:key :m
          :title music-app
          :action (activator music-app)}])
+
+(local j-bindings
+       [return
+        {:key :m
+         :title "Help"
+         :action (fn [] (hs.eventtap.keyStroke ["control" "shift" "option"] "6"))}
+        {:key :j
+         :title "Perplexity Dictation"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control"] "7"))}
+        {:key :s
+         :title "Perplexity Screenshot"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control"] "6"))}
+        {:key :=
+         :title "Perplexity"
+         :action (fn [] (hs.eventtap.keyStroke ["command" "control"] "8"))}])
 
 (local media-bindings
        [return
@@ -503,9 +533,12 @@
         {:key :a
          :title "Apps"
          :items app-bindings}
+        ;; {:key :j
+        ;;  :title "Jump"
+        ;;  :action "windows:jump"}
         {:key :j
-         :title "Jump"
-         :action "windows:jump"}
+         :title :J
+         :items j-bindings}
         {:key :m
          :title "Media"
          :items media-bindings}
@@ -515,9 +548,9 @@
         {:key :t
          :title "Text"
          :items text-bindings}
-        {:key :y
-         :title "Yabai"
-         :items desktop-binding}
+        ;; {:key :y
+        ;;  :title "Yabai"
+        ;;  :items desktop-binding}
         {:key :s
          :title "Screen"
          :items screen-binding}
