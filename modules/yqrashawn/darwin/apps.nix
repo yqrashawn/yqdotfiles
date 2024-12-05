@@ -32,7 +32,7 @@
       # "fleet"
       # "cursor"
       "microsoft-edge-beta"
-      "macwhisper"
+      # "macwhisper"
       # "gpg-suite-no-mail"
       # "syncthing"
       # "steam"
