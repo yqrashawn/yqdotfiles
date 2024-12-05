@@ -9,6 +9,7 @@ in {
   nixpkgs.overlays = [
     overlays
     inputs.emacs-lsp-booster.overlays.default
+    inputs.clojure-lsp.overlays.default
     inputs.emacs-overlay.overlays.default
     (final: prev: {
       emacs30-overlay = prev.emacs-git.overrideAttrs (old: {

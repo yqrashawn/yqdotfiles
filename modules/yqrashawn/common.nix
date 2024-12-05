@@ -11,9 +11,8 @@ let
   ];
   stables = with pkgs.stable; [ ];
   masters = with pkgs.masters; [
-    # mise
-    clojure-lsp
     clj-kondo
+    # mise
     zprint
     neil
     jet
@@ -48,6 +47,7 @@ in {
   environment = {
     systemPackages = with pkgs;
       [
+        clojure-lsp
         notmuch
         emacs-lsp-booster
         (curl.override (args: { brotliSupport = true; }))

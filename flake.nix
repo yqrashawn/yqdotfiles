@@ -32,6 +32,7 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs.follows = "nixpkgs-unstable";
+    clojure-lsp.url = "github:clojure-lsp/clojure-lsp";
     small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
