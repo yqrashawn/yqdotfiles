@@ -4,19 +4,6 @@
         :injections [(require 'fipp.clojure)]}
  :hashp {:dependencies [[hashp "LATEST"]]
          :injections [(require 'hashp.core)]}
- ;; :nrebl {:repl-options {:nrepl-middleware [nrebl.middleware/wrap-nrebl]}
- ;;         :dependencies [[rickmoynihan/nrebl.middleware "0.3.1"]
- ;;                        [org.clojure/core.async "1.3.610"]
- ;;                        [org.openjfx/javafx-fxml "15.0.1"]
- ;;                        [org.openjfx/javafx-controls "15.0.1"]
- ;;                        [org.openjfx/javafx-graphics "15.0.1"]
- ;;                        [org.openjfx/javafx-media "15.0.1"]
- ;;                        [org.openjfx/javafx-swing "15.0.1"]
- ;;                        [org.openjfx/javafx-base "15.0.1"]
- ;;                        [org.openjfx/javafx-web "15.0.1"]
- ;;                        [cljfmt "0.7.0"]]
- ;;         :resource-paths ["/Users/yqrashawn/REBL-0.9.220/REBL-0.9.220.jar"] ;; set this to where your REBL jar is installed
- ;;         :injections [(require 'nrebl.middleware) (require '[cognitect.rebl :as rebl])]}
  :reveal {:dependencies [[vlaaad/reveal "LATEST"]]
           :repl-options {:nrepl-middleware [vlaaad.reveal.nrepl/middleware]}}
  :repl {:pedantic? :ranges

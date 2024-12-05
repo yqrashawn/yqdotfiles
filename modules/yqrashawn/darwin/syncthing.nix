@@ -3,8 +3,7 @@
 with lib;
 
 let cfg = config.services.syncthing;
-in
-{
+in {
   options = {
     services.syncthing = {
       enable = mkOption {
@@ -16,7 +15,7 @@ in
       homeDir = mkOption {
         type = types.nullOr types.path;
         default = "~";
-        example = "/Users/yqrashawn";
+        example = "/Users/${config.user.name}";
         description = ''
           the base location for the syncthing folder
         '';

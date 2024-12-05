@@ -18,7 +18,7 @@ let
     "$HOME/.yarn/bin"
     "$HOME/.config/yarn/global/node_modules/.bin"
     "$HOME/.asdf/shims"
-    "/etc/profiles/per-user/yqrashawn/bin"
+    "/etc/profiles/per-user/${config.user.name}/bin"
     "/run/current-system/sw/bin"
     # "/usr/local/opt/curl/bin"
     "/opt/homebrew/bin"

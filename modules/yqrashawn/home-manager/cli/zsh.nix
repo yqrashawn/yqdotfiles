@@ -8,7 +8,7 @@ let
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
-    export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
+    export PNPM_HOME="/Users/$HOME/.local/share/pnpm"
   '';
   zshProfileExtra = ''
     fpath=($HOME/.zfunc $fpath)
@@ -23,7 +23,7 @@ let
     "[[ -e /etc/profile ]] && source /etc/profile"}
     . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
     export JAVA_HOME=$(asdf where java)
-    export PNPM_HOME="/Users/yqrashawn/.local/share/pnpm"
+    export PNPM_HOME="$HOME/.local/share/pnpm"
     # eval "$(${pkgs.masters.mise}/bin/mise activate bash)"
   '';
   functions = builtins.readFile ./functions.sh;
@@ -84,7 +84,8 @@ let
     brewsr = "brew services restart";
     brewsx = "brew services stop";
     e = "~/local/bin/em";
-    man = "nocorrect /etc/profiles/per-user/yqrashawn/bin/man";
+    # man = "nocorrect /etc/profiles/per-user/${config.user.name}/bin/man";
+    # man = "nocorrect ${pkgs.man}/bin/man";
   };
 in {
   imports = [ ./prezto.nix ];

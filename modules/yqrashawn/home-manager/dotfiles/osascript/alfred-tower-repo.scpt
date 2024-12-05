@@ -1,1 +1,0 @@
-osascript -e 'tell application "Alfred 3" to run trigger "towerRepo" in workflow "net.cjlucas.alfred.tower" with argument ""'

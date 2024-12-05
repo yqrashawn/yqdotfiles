@@ -113,7 +113,7 @@ in {
       # Displays login window as a name and password field instead of a list of users
       SHOWFULLNAME = false;
 
-      autoLoginUser = "yqrashawn";
+      autoLoginUser = config.user.name;
 
       # disable guest account
       GuestEnabled = false;
@@ -178,7 +178,8 @@ in {
       dashboard-in-overlay = false;
       enable-spring-load-actions-on-all-items = true;
       expose-animation-duration = 1.0e-2;
-      expose-group-by-app = false;
+      expose-group-apps = false;
+      # expose-group-by-app = false;
       # app launch animation
       launchanim = false;
       mineffect = null;
@@ -219,6 +220,8 @@ in {
   system.activationScripts = {
     extraUserActivation = {
       text = ''
+        cuser="$(id -un)"
+
         rm -rf ~/.doom.d || true
         ln -s ~/.nixpkgs/.doom.d ~/.doom.d
 
@@ -234,7 +237,12 @@ in {
         fi
 
         rm -rf ~/.config/karabiner.edn || true
-        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
+
+        if [ "$cuser" = "holybasil" ]; then
+          ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/hkarabiner.edn ~/.config/karabiner.edn
+        else
+          ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
+        fi
 
         rm -rf ~/.config/yabai || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai ~/.config/yabai
@@ -248,8 +256,10 @@ in {
         # rm -rf ~/.tridactyl || true
         # ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl ~/.tridactyl
 
-        rm -rf ~/.authinfo.gpg || true
-        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.authinfo.gpg ~/.authinfo.gpg
+        if [ "$cuser" = "yqrashawn" ]; then
+          rm -rf ~/.authinfo.gpg || true
+          ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.authinfo.gpg ~/.authinfo.gpg
+        fi
 
         rm -rf ~/.spacehammer || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.spacehammer ~/.spacehammer
@@ -257,11 +267,13 @@ in {
         rm -rf ~/.gitignore_global || true
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/gitignore_global ~/.gitignore_global
 
-        rm ~/.ssh/config || true
-        ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg || true
+        if [ "$cuser" = "yqrashawn" ]; then
+          rm ~/.ssh/config || true
+          ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg || true
 
-        rm ~/.mbsyncrc || true
-        ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.mbsyncrc ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.mbsyncrc.gpg || true
+          rm ~/.mbsyncrc || true
+          ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.mbsyncrc ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.mbsyncrc.gpg || true
+        fi
 
         ln -fs /Applications/Nix\ Apps/* /Applications/
 

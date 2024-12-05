@@ -1,4 +1,0 @@
-#upload file to transfer.sh
-ul (){
-    curl --upload-file ./$1 https://transfer.sh/$1 | pbcopy
-}

@@ -22,7 +22,7 @@
     lfs.enable = true;
     package = pkgs.git;
     userEmail = "namy.19@gmail.com";
-    userName = "yqrashawn";
+    userName = config.user.name;
     extraConfig = {
       http.sslVerify = true;
       http.sslCAInfo = "/etc/ssl/certs/ca-certificates.crt";

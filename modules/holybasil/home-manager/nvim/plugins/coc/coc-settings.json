@@ -1,9 +1,0 @@
-{
-  "languageserver": {
-    "nix": {
-      "command": "nil",
-      "filetypes": ["nix"]
-    }
-  },
-  "python.formatting.blackPath": "black"
-}

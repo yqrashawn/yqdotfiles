@@ -1,1 +1,0 @@
-find . -name .DS_Store -exec git rm --ignore-unmatch --cached {} +

@@ -222,16 +222,6 @@
           modules = baseModules ++ extraModules;
           specialArgs = { inherit inputs nixpkgs stable; };
         };
-      mkhDarwinConfig = { system, nixpkgs ? inputs.nixpkgs
-        , stable ? inputs.stable, baseModules ? [
-          home-manager.darwinModules.home-manager
-          ./modules/holybasil/darwin
-        ], extraModules ? [ ] }:
-        darwinSystem {
-          inherit system;
-          modules = baseModules ++ extraModules;
-          specialArgs = { inherit inputs nixpkgs stable; };
-        };
 
       # generate a home-manager configuration usable on any unix system
       # with overlays and any extraModules applied
@@ -303,11 +293,12 @@
             { homebrew.brewPrefix = "/opt/homebrew/bin"; }
           ];
         };
-        holybasil = mkhDarwinConfig {
+        holybasil = mkDarwinConfig {
           system = "aarch64-darwin";
           extraModules = [
             ./profiles/holybasil.nix
-            ./modules/holybasil/darwin/apps-minimal.nix
+            ./modules/yqrashawn/darwin/happs.nix
+            ./modules/yqrashawn/hmbp.nix
             { homebrew.brewPrefix = "/opt/homebrew/bin"; }
           ];
         };

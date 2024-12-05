@@ -11,7 +11,7 @@
       "USB 10/100/1000 LAN"
       # "LG Monitor Controls"
     ];
-    # search = [ "yqrashawn" ];
+    # search = [ config.user.name ];
     dns = [
       # "2408:8207:2532:2340:52eb:f6ff:fe34:b910"
       "192.18.0.2"

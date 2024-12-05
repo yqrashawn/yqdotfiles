@@ -1,5 +1,0 @@
-opng () {
-  pngq $@
-  pngopti $@
-}
-opng "$@"
