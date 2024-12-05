@@ -624,16 +624,16 @@
     "emacs-custom-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1719168862,
-        "narHash": "sha256-v8rfz3k9OMyqoj7fLNLulYLOkg0fTKe3Pd0Wm8Ridfk=",
+        "lastModified": 1733394111,
+        "narHash": "sha256-ByLhfefV0zdNmOmIvkcgk8KxuVjZ9x8hoWzn03QDEJQ=",
         "owner": "emacs-mirror",
         "repo": "emacs",
-        "rev": "75ca15f2a3146b17fde5e2a50ad9102c6108ba7f",
+        "rev": "3cf177442ccd08f7b92b3e08c41899ba34699355",
         "type": "github"
       },
       "original": {
         "owner": "emacs-mirror",
-        "ref": "emacs-29",
+        "ref": "emacs-30",
         "repo": "emacs",
         "type": "github"
       }

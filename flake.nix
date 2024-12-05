@@ -37,7 +37,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-custom-src = {
-      url = "github:emacs-mirror/emacs/emacs-29";
+      url = "github:emacs-mirror/emacs/emacs-30";
       flake = false;
     };
     atuin = {
