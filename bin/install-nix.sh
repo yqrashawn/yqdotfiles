@@ -1,23 +1,25 @@
 #! /usr/bin/env bash
 
-URL="https://nixos.org/nix/install"
+curl -L https://nixos.org/nix/install | sh
 
-# install using workaround for darwin systems
-if [[ $(uname -s) = "Darwin" ]]; then
-    FLAG="--darwin-use-unencrypted-nix-store-volume"
-fi
+# URL="https://nixos.org/nix/install"
 
-[[ -n "$1" ]] && URL="$1"
+# # install using workaround for darwin systems
+# if [[ $(uname -s) = "Darwin" ]]; then
+#     FLAG="--darwin-use-unencrypted-nix-store-volume"
+# fi
 
-if command -v nix >/dev/null; then
-    echo "nix is already installed on this system."
-else
-    bash <(curl -L "$URL") --daemon $FLAG
-fi
+# [[ -n "$1" ]] && URL="$1"
 
-NIX_CONF_PATH="$HOME/.config/nix"
-mkdir -p "$NIX_CONF_PATH"
+# if command -v nix >/dev/null; then
+#     echo "nix is already installed on this system."
+# else
+#     bash <(curl -L "$URL") --daemon $FLAG
+# fi
 
-if [[ ! -f $NIX_CONF_PATH/nix.conf ]] || ! grep "experimental-features" <"$NIX_CONF_PATH"; then
-    echo "experimental-features = nix-command flakes" | tee -a "$NIX_CONF_PATH"/nix.conf
-fi
+# NIX_CONF_PATH="$HOME/.config/nix"
+# mkdir -p "$NIX_CONF_PATH"
+
+# if [[ ! -f $NIX_CONF_PATH/nix.conf ]] || ! grep "experimental-features" <"$NIX_CONF_PATH"; then
+#     echo "experimental-features = nix-command flakes" | tee -a "$NIX_CONF_PATH"/nix.conf
+# fi
