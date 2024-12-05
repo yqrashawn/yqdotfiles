@@ -17,9 +17,9 @@
       "koekeishiya/formulae"
       "yqrashawn/goku"
       "homebrew/bundle"
-      "homebrew/cask-fonts"
+      # "homebrew/cask-fonts"
       # "homebrew/cask-drivers"
-      "homebrew/cask-versions"
+      # "homebrew/cask-versions"
       "homebrew/services"
       "homebrew/command-not-found"
       "railwaycat/emacsmacport"
@@ -37,7 +37,7 @@
       # "alerter"
       "yqrashawn/goku/goku"
       "percol"
-      "datalevin"
+      # "datalevin"
       "fcitx-remote-for-osx"
     ];
     casks = [
