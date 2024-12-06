@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: {
   homebrew = {
     casks = [
+      "iterm2"
       "alfred"
       # "bartender"
       # "spectacle"
