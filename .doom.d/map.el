@@ -286,7 +286,8 @@
   :g "c" #'delete-window
   :g "K" #'project-kill-buffers
   :g "a" #'loccur-current
-  :g "/" #'evil-avy-goto-char-2
+  ;; :g "/" #'evil-avy-goto-char-2
+  :g "/" #'+vertico/consult-fd-or-find
   :g "n" #'evil-avy-goto-char-timer
   :g "k" #'bury-buffer
   ;; :g "m" #'+ivy/projectile-find-file
