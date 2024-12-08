@@ -250,6 +250,11 @@
       target = "./.asdf/plugins/flyctl";
       recursive = true;
     };
+    asdf-uv = {
+      source = inputs.asdf-uv;
+      target = "./.asdf/plugins/uv";
+      recursive = true;
+    };
     asdf-lua = {
       source = inputs.asdf-lua;
       target = "./.asdf/plugins/lua";

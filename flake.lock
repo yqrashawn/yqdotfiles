@@ -400,6 +400,22 @@
         "type": "github"
       }
     },
+    "asdf-uv": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1731402887,
+        "narHash": "sha256-AER44Cci/5oZT7aLLagpBlrkc+PRkA4BZmhbGqrfwPA=",
+        "owner": "b1-luettje",
+        "repo": "asdf-uv",
+        "rev": "8155fc5bb78dcf1a215b9fc5742657aae73c92c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "b1-luettje",
+        "repo": "asdf-uv",
+        "type": "github"
+      }
+    },
     "asdf-v": {
       "flake": false,
       "locked": {
@@ -1135,6 +1151,7 @@
         "asdf-sbcl": "asdf-sbcl",
         "asdf-scala": "asdf-scala",
         "asdf-solidity": "asdf-solidity",
+        "asdf-uv": "asdf-uv",
         "asdf-v": "asdf-v",
         "asdf-yarn": "asdf-yarn",
         "asdf-zig": "asdf-zig",
