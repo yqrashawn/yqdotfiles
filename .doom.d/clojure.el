@@ -509,8 +509,9 @@ creates a new one. Don't unnecessarily bother the user."
       :modes lispy-clojure-modes)
     (set-formatter! 'zprint '("zprint" "{:search-config? true}")
       :modes lispy-clojure-modes)
-    (set-formatter! 'cljfmt '+apheleia-lsp-format-buffer
-      :modes lispy-clojure-modes)))
+    ;; (set-formatter! 'cljfmt '+apheleia-lsp-format-buffer
+    ;;   :modes lispy-clojure-modes)
+    ))
 
 (setq-default +cider-project-reload-exec-cmd-clj nil
               +cider-project-reload-exec-cmd-cljs nil)

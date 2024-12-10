@@ -229,15 +229,15 @@
       orig-result)))
 (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 
-(after! lsp-mode
-  (cl-defun +apheleia-lsp-format-buffer
-      (&key buffer scratch callback &allow-other-keys)
-    "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
-    (let* ((workspaces (with-current-buffer buffer (lsp-workspaces))))
-      (with-current-buffer scratch
-        (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
-          (with-lsp-workspaces workspaces (lsp-format-buffer)))
-        (funcall callback)))))
+;; (after! lsp-mode
+;;   (cl-defun +apheleia-lsp-format-buffer
+;;       (&key buffer scratch callback &allow-other-keys)
+;;     "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
+;;     (let* ((workspaces (with-current-buffer buffer (lsp-workspaces))))
+;;       (with-current-buffer scratch
+;;         (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
+;;           (with-lsp-workspaces workspaces (lsp-format-buffer)))
+;;         (funcall callback)))))
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode)))
