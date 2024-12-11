@@ -15,7 +15,8 @@
                                {:key  :8
                                 :modi [:left_shift]
                                 :lazy true}]}
- :modifiers {:ro :right_option}
+ :modifiers {:ro :right_option
+             :ros [:right_option :left_shift]}
  :templates
  {:launch
   "osascript -e 'tell application \"Alfred 5\" to run trigger \"launch%s\" in workflow \"yqrashawn.workflow.launcher\" with argument \"\"'"
@@ -34,13 +35,15 @@
   :open   "open \"%s\""
   :opena  "open -a \"%s\""
   :curl   "/run/current-system/sw/bin/curl -s \"%s\""
-  :hs
-  "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '(\"%s\")'"
+  ;; :hsl
+  ;; "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
   :hsl
-  "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
+  "/opt/homebrew/bin/hs -A -n -q -t 0.01 -c 'hs.application.launchOrFocus(\"%s\")'"
   :show
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
   :show-in-firefox
+  "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Firefox\")'; curl -s '%s'"
+  :show-in-firefox-dev
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Firefox Developer Edition\")'; curl -s '%s'"
   :togg
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
@@ -229,34 +232,34 @@
              [:##m :right_control nil {:alone :m}]]}
   {:des   "resize window, remap Rectangle"
    :rules [:k2-mode
-           [:return_or_enter :!TSOreturn_or_enter] ;; almost maximize
-           [:spacebar :!TSOspacebar]               ;; maximize
-           [:t :!TSOt]                             ;; center maximize
-           [:r :!TOSr]                             ;; restore
-           [:y :!TOSy]                             ;; upper left
-           [:n :!TOSn]                             ;; lower left
-           [:o :!TOSo]                             ;; upper right
-           [:period :!TOSperiod]                   ;; lower right
+           [:return_or_enter :!TSOreturn_or_enter] ; almost maximize
+           [:spacebar :!TSOspacebar]               ; maximize
+           [:t :!TSOt]                             ; center maximize
+           [:r :!TOSr]                             ; restore
+           [:y :!TOSy]                             ; upper left
+           [:n :!TOSn]                             ; lower left
+           [:o :!TOSo]                             ; upper right
+           [:period :!TOSperiod]                   ; lower right
 
-           [:h :!TOSleft_arrow]  ;; left half
-           [:l :!TOSright_arrow] ;; right half
-           [:k :!TOSup_arrow]    ;; top half
-           [:j :!TOSdown_arrow]  ;; bottom half
+           [:h :!TOSleft_arrow]  ; left half
+           [:l :!TOSright_arrow] ; right half
+           [:k :!TOSup_arrow]    ; top half
+           [:j :!TOSdown_arrow]  ; bottom half
 
-           [:1 :!TOS1]                   ;; register 1
-           [:3 :!TOS3]                   ;; register 3
-           [:4 :!TOS4]                   ;; register 4
-           [:5 :!TOS5]                   ;; register 5
-           [:6 :!TOS6]                   ;; register 6
-           [:7 :!TOS7]                   ;; register 7
-           [:8 :!TOS8]                   ;; register 8
-           [:9 :!TOS9]                   ;; register 9
-           [:0 :!TOS0]                   ;; register 0
-           [:hyphen :!TOShyphen]         ;; shrink
-           [:equal_sign :!TOSequal_sign] ;; enlarge
+           [:1 :!TOS1]                   ; register 1
+           [:3 :!TOS3]                   ; register 3
+           [:4 :!TOS4]                   ; register 4
+           [:5 :!TOS5]                   ; register 5
+           [:6 :!TOS6]                   ; register 6
+           [:7 :!TOS7]                   ; register 7
+           [:8 :!TOS8]                   ; register 8
+           [:9 :!TOS9]                   ; register 9
+           [:0 :!TOS0]                   ; register 0
+           [:hyphen :!TOShyphen]         ; shrink
+           [:equal_sign :!TOSequal_sign] ; enlarge
 
-           [:open_bracket :!TOSopen_bracket]   ;; prev display
-           [:close_bracket :!TOSclose_bracket] ;; next display
+           [:open_bracket :!TOSopen_bracket]   ; prev display
+           [:close_bracket :!TOSclose_bracket] ; next display
            ]}
   ;; {:des   "spacebar ctrl"
   ;;  :rules [[[:spacebar :f] [:spacebar :f]]
@@ -419,120 +422,36 @@
            [:##close_bracket :!SOdown_arrow]]}
   {:des   "launcher mode"
    :rules [:launch-mode
-           ;; [:j :same_wind_app :Terminals]
-           ;; [:j [:open "/Applications/Alacritty.app"]]
-
-           ;; [:j [:f16 :!Sa :l :a :c :r :i :t :t :y :return_or_enter]]
-
-           ;; [:j [:togg "Alacritty"]]
-           ;; [:j [:hsl "/Applications/kitty.app"]]
            [:j [:op "/Applications/kitty.app"]]
            ;; [:k :same_wind_app :Emacs]
            [:k [:hsl "/Applications/Emacs.app"]]
-           ;; [:k [:op "/Applications/Emacs.app"]]
-           ;; [:k [:yfocus "Emacs"]]
-           ;; [: [:togg "Logseq"]]
-           ;; [:u [:hsl "Roam Research"]]
-           ;; [:u [:hsl "Safari Technology Preview"]]
            [:u [:!CTcomma]]
-           ;; [:u :!TOS2]
-           ;; [:k [:opena "kitty"]]
-           ;; [:k [:opena "WezTerm.app"]]
 
-           ;; [:quote [:togg "ClickUp"]]
-           ;; [:t [:togg "Todoist"] :BusyCal]
-           ;; [:t [:togg "BusyCal"] :!BusyCal]
-           ;; [:t [:togg "Todoist"] :!Todoist]
-           ;; [:t [:togg "Notion Calendar"] :Todoist]
-           [:quote [:togg "Notion Calendar"]]
-           [:t [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.todoist.com/&create-when-missing=1&pin=1&idx=6"]]
-           ;; [:t [:togg "BusyCal"] :Todoist]
-           ;; [:t [:togg "BusyCal"]]
-           ;; [:t [:togg "Todoist"] :!Todoist]
-           ;; [:p [:togg "Adobe Photoshop 2022"]]
+           [:quote [:hsl "Perplexity"]]
+           [:t [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.todoist.com/&create-when-missing=1&pin=1&idx=6"]]
+           [:n [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://www.notion.so/&create-when-missing=1&pin=1&idx=3"]]
+           [:9 [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&pin=1&idx=1"]]
+           [:h [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.slack.com/&create-when-missing=1&pin=1&idx=2"]]
            [:p [:togg "Figma"]]
-           ;; [:l [:f16 :!Sg :o :o :g :l :e :spacebar :!Sc :h :r :o :m :e
-           ;; :return_or_enter] :!Chromes]
-           ;; [:comma [:togg "Google Chrome"] :!Chromes]
-           ;; [:comma :same_wind_app :Chromes]
            [:comma [:op "/Applications/Safari.app"] :!Safari]
            [:comma :same_wind_app :Safari]
-           ;; [:comma [:open "/Applications/Firefox Developer Edition.app/"]
-           ;; :!Firefoxes]
-           [:l [:togg "Firefox Developer Edition"] :!Firefoxes]
+           [:l [:hsl "Firefox Developer Edition"] :!Firefoxes]
            [:l :same_wind_app :Firefoxes]
-           ;; [:l [:hsl "/Applications/Google Chrome.app"]]
-           ;; [:l [:togg "Sidekick"] :!Sidekick]
-           ;; [:l :same_wind_app :Sidekick]
-           ;; [:l [:togg "Orion"] :!Orion]
-           ;; [:l [:togg :same_wind_app] :Orion]
-           ;; [:l [:togg "Microsoft Edge Beta"] :!Edge]
-           ;; [:l [:togg :same_wind_app] :Edge]
-           ;; [:l [:togg "Vivaldi"] :!VV]
-           ;; [:l [:togg :same_wind_app] :VV]
-           ;; [:l [:jump "Firefox Developer Edition" "Firefox Developer
-           ;; Edition"]]
-           ;; [:n [:togg "Notion"]]
-           [:n [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://www.notion.so/&create-when-missing=1&pin=1&idx=3"]]
-           ;; [:n [:hsl "/Applications/Google Chrome Dev.app"]]
-           ;; [:return_or_enter [:togg "Brave Browser"]]
-           ;; [:return_or_enter [:togg "Simulator"]]
            [:return_or_enter [:togg "/Applications/ChatGPT.app"]]
-           ;; [:m [:open "/Applications/Mail.app"]]
-           ;; [:m [:open "/Applications/Setapp/Newton.app"]]
-           [:m [:togg "Mail"]]
-           ;; [:m [:togg "Mimestream"]]
-           ;; [:m [:togg "Canary Mail"]]
-           ;; [:v [:open "/Applications/WeChat.app"]]
-           ;; [:v [:launch "WeChat"]]
+           [:m [:hsl "Mail"]]
            [:v [:togg "WeChat"]]
            [:q [:togg "Karabiner-Elements"]]
            [:f [:togg "Finder"]]
-           [:y :!!x]
+           [:y :!!x]                    ; Dash
            [:6 :!!z]
-           ;; [:9 [:open "/Applications/PDF Expert.app"]]
-           ;; [:h [:togg "DingTalk"]]
-
-           ;; [:h [:togg "Discord"] :Slack]
-           ;; [:h [:togg "Slack"] :Status]
-           ;; [:h [:open "/Applications/Status.app"] :!Status]
-           ;; [:h [:hsl "Status"] :!Status]
-           ;; [:h [:hsl "Discord"] :!Discord]
-           ;; [:h [:hsl "Slack"] :Discord]
-           ;; [:h [:open "http://macmini.donkey-clownfish.ts.net:6155/login.html?tridactylrctab=1"]]
-           ;; [:9 [:open "http://macmini.donkey-clownfish.ts.net:6155/login.html?tridactylrctab=2"]]
-           ;; [:h [:curl "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&idx=1"]]
-           ;; [:9 [:curl "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.slack.com/&create-when-missing=1&pin=1&idx=2"]]
-           [:h [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&pin=1&idx=1"]]
-           [:9 [:show-in-firefox "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.slack.com/&create-when-missing=1&pin=1&idx=2"]]
-           ;; [:r [:togg "Reeder"]]
-           [:r [:togg "Safari"]]
-           ;; [:r [:togg "Orion"]]
-           ;; [:r [[:hsl "/Applications/Orion.app"] :!CTSu]]
-           ;; [:r [:hsl "/Applications/Google Chrome Canary.app"]]
-           ;; [:r [:opena "Roam Research"]]
-           ;; [:period [:open "/Applications/SetApp/Paw.app"]]
-           [:hyphen [:togg "Paw"]]
-           ;; [:equal_sign [:open "/Applications/Textual.app"]]
-           [:equal_sign [:togg "Textual"]]
+           ;; [:r [:hsl "Orion"]]
+           ;; [:hyphen [:togg "RapidApi"]]
+           ;; [:equal_sign [:togg "Textual"]]
            [:period [:togg "Surge Dashboard"] :Surge]
            [:period [:togg "Surge"]]
-           ;; [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
-           [:8 [:togg "Karabiner-EventViewer"]]
-           ;; [:9 [:togg "Proxyman"]]
-           ;; [:b [:open "/Applications/Bee.app"]]
-           ;; [:c [:open "/Applications/Visual Studio Code.app"]]
+           [:8 [:hsl "Karabiner-EventViewer"]]
            [:c [:togg "Visual Studio Code"]]
-           [:e [:w :e]]
-           [:hyphen
-            [{:key :m :modi :ro} {:key :a :modi :ro} {:key :i :modi :ro}
-             {:key :n :modi :ro} {:key :r :modi :ro} {:key :e :modi :ro}
-             {:key :b :modi :ro} {:key :l :modi :ro}]]
-           [:d
-            [{:key :c :modi :ro} {:key :h :modi :ro} {:key :r :modi :ro}
-             {:key :o :modi :ro} {:key :m :modi :ro} {:key :i :modi :ro}
-             {:key :u :modi :ro} {:key :m :modi :ro} {:key :n :modi :ro}
-             {:key :d :modi :ro} {:key :b :modi :ro} :return_or_enter]]]}
+           [:e [:w :e]]]}
   {:des   "caps_lock"
    :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
   {:des   "return_or_enter to control when pressed with other keys"
@@ -669,27 +588,27 @@
            [:p [:spacebar :tab :open_bracket]]
            [:n [:spacebar :tab :close_bracket]]
            :tmux-windresize-mode
-           [:h [:!Tq :!Sh]] ;; resize window
-           [:j [:!Tq :!Sj]] ;; resize window
-           [:k [:!Tq :!Sk]] ;; resize window
-           [:l [:!Tq :!Sl]] ;; resize window
+           [:h [:!Tq :!Sh]] ; resize window
+           [:j [:!Tq :!Sj]] ; resize window
+           [:k [:!Tq :!Sk]] ; resize window
+           [:l [:!Tq :!Sl]] ; resize window
            :tmux-windmove-mode
-           [:spacebar [:!Tq :spacebar]] ;; https://github.com/fcsonline/tmux-thumbs
-           [:return_or_enter [:!Tq :c]] ;; new session
+           [:spacebar [:!Tq :spacebar]] ; https://github.com/fcsonline/tmux-thumbs
+           [:return_or_enter [:!Tq :c]] ; new session
            [:semicolon [:!Tq :!Ssemicolon]]
            ;; [:comma [:!Tq :comma]] ;; rename tmux pane
-           [:m [:!Tq :z]]                       ;; size window
-           [:f [:!Tq :slash]]                   ;; find and switch window
-           [:w [:!Tq :w]]                       ;; list and switch window/pane
-           [:b [:!Tq :x]]                       ;; kill pane
-           [:open_bracket [:!Tq :open_bracket]] ;; esc
-           [:slash [:!Tq :slash]]               ;; tmux copycat
-           [:h [:!Tq :h]]                       ;; focuse window
-           [:j [:!Tq :j]]                       ;; focuse window
-           [:k [:!Tq :k]]                       ;; focuse window
-           [:l [:!Tq :l]]                       ;; focuse window
-           [:v [:!Tq :!Shyphen]]                ;; v split
-           [:s [:!Tq :hyphen]]                  ;; s split
+           [:m [:!Tq :z]]                       ; size window
+           [:f [:!Tq :slash]]                   ; find and switch window
+           [:w [:!Tq :w]]                       ; list and switch window/pane
+           [:b [:!Tq :x]]                       ; kill pane
+           [:open_bracket [:!Tq :open_bracket]] ; esc
+           [:slash [:!Tq :slash]]               ; tmux copycat
+           [:h [:!Tq :h]]                       ; focuse window
+           [:j [:!Tq :j]]                       ; focuse window
+           [:k [:!Tq :k]]                       ; focuse window
+           [:l [:!Tq :l]]                       ; focuse window
+           [:v [:!Tq :!Shyphen]]                ; v split
+           [:s [:!Tq :hyphen]]                  ; s split
            [:n [:!Tq :!Tl]]
            [:p [:!Tq :!Th]]
            [:comma [:!Tq :!Th]]
@@ -1001,7 +920,5 @@
              :language      "zh-Hans"}
   :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
-
-
 
 

@@ -316,11 +316,11 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
    ;; cider-print-options '(("style" ((keyword "community" ) (keyword "no-comma" ))))
    ;; cider-format-code-options '(("indents" (("letsubs" 0))))
    )
-  (pushnew! cider-jack-in-dependencies '("io.github.tonsky/clj-reload" "RELEASE"))
-  (defadvice! +cider-ns-refresh (orig-fn &optional mode)
-    :around #'cider-ns-refresh
-    (cider-interactive-eval
-     "(do (require '[clj-reload.core :as reload]) (reload/reload))"))
+  ;; (pushnew! cider-jack-in-dependencies '("io.github.tonsky/clj-reload" "RELEASE"))
+  ;; (defadvice! +cider-ns-refresh (orig-fn &optional mode)
+  ;;   :around #'cider-ns-refresh
+  ;;   (cider-interactive-eval
+  ;;    "(do (require '[clj-reload.core :as reload]) (reload/reload))"))
 
   ;; status h/deftest-sub
   (setq! +cider-test-defining-forms '("deftest" "defspec" "deftest-sub"))
@@ -503,15 +503,14 @@ creates a new one. Don't unnecessarily bother the user."
    cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t :refer [deftest testing is]]
 :cljs [cljs.test :as t :include-macros])"))
 
-(after! lispy
-  (after! clojure-mode
-    (set-formatter! 'cljstyle '("cljstyle" "pipe")
-      :modes lispy-clojure-modes)
-    (set-formatter! 'zprint '("zprint" "{:search-config? true}")
-      :modes lispy-clojure-modes)
-    ;; (set-formatter! 'cljfmt '+apheleia-lsp-format-buffer
-    ;;   :modes lispy-clojure-modes)
-    ))
+;; (after! lispy
+;;   (after! clojure-mode
+;;     (set-formatter! 'cljstyle '("cljstyle" "pipe")
+;;       :modes lispy-clojure-modes)
+;;     (set-formatter! 'zprint '("zprint" "{:search-config? true :cwd-zprintrc? true}")
+;;       :modes lispy-clojure-modes)
+;;     (set-formatter! 'cljfmt '+apheleia-lsp-format-buffer
+;;       :modes lispy-clojure-modes)))
 
 (setq-default +cider-project-reload-exec-cmd-clj nil
               +cider-project-reload-exec-cmd-cljs nil)
