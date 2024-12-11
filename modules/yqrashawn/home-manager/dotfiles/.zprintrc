@@ -1,7 +1,19 @@
 ;; -*- mode: clojure -*-
 ;; vi: ft=clojure
-{:cwd-zprintrc? true, :search-config? true
- :width 80
- :style [:community :no-comma]
+{:cwd-zprintrc?  true
+ :search-config? true
+ :width          80
+ :remove         {:fn-force-nl #{:noarg1-body}}
+ :style
+ [:community
+  :no-comma
+  :respect-nl
+  :custom-justify
+  :multi-lhs-hang]
  :style-map
- {:no-comma {:map {:comma? false}}}}
+ {:no-comma {:map {:comma? false}}
+  :custom-justify
+  {:doc     "Justify everything using pre-1.1.2 approach"
+   :binding {:justify? true :justify {:max-variance 1000}}
+   :map     {:justify? true :justify {:max-variance 1000}}
+   :pair    {:justify? true :justify {:max-variance 1000}}}}}

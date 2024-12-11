@@ -315,6 +315,10 @@ in {
             echo 'link ~/.tool-versions'
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.tool-versions ~/.tool-versions
         fi
+        if [ ! -e ~/.zprintrc ]; then
+            echo 'link ~/.zprintrc'
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.zprintrc ~/.zprintrc
+        fi
       '';
     };
   };

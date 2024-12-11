@@ -507,8 +507,8 @@ creates a new one. Don't unnecessarily bother the user."
   (after! clojure-mode
     (set-formatter! 'cljstyle '("cljstyle" "pipe")
       :modes lispy-clojure-modes)
-    (set-formatter! 'zprint '("zprint" "{:search-config? true}")
-      :modes lispy-clojure-modes)
+    ;; (set-formatter! 'zprint '("zprint" "{:search-config? true :cwd-zprintrc? true}")
+    ;;   :modes lispy-clojure-modes)
     ;; (set-formatter! 'cljfmt '+apheleia-lsp-format-buffer
     ;;   :modes lispy-clojure-modes)
     ))

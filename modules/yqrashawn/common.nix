@@ -112,8 +112,6 @@ in {
         # macvim # use vim
         # bitwarden-cli # failed
         rbw
-        # firefox
-        # firefox-devedition-bin
         sqlite
         # sketchybar
 
