@@ -306,7 +306,7 @@
 (disable-packages! langtool)
 (package! consult-git-log-grep)
 
-(package! eat)
+;; (package! eat)
 
 (disable-packages! company)
 
@@ -353,7 +353,7 @@
 ;;   (package! markdown-mode)
 ;;   (package! yasnippet))
 
-(package! tabnine)
+;; (package! tabnine)
 ;; (package! pabbrev)
 (package! pabbrev :recipe (:host github :repo "amno1/pabbrev"))
 (package! yaml-pro)

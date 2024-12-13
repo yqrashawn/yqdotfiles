@@ -147,6 +147,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (eshell-follow-global-mode t))
 
 (use-package! eat
+  :disabled
   :commands (eat)
   :init
   (setq! eat-kill-buffer-on-exit t
