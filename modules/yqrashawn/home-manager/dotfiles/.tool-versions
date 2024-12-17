@@ -11,5 +11,5 @@ golang 1.20.12
 bun 1.0.20
 deno 1.39.1
 lua 5.4.4
-babashka 1.12.194
+babashka 1.12.195
 zig 0.11.0
