@@ -49,7 +49,8 @@
       (setq company-backends (pushnew! company-backends ;; 'company-tabnine
                                        'company-capf)))
      (t
-      (setq company-backends (pushnew! company-backends 'company-capf 'company-tabnine))))))
+      (setq company-backends (pushnew! company-backends 'company-capf ;; 'company-tabnine
+                                       ))))))
 
 (when (modulep! :lang nim)
   (after! nim-mode

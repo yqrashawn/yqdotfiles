@@ -203,17 +203,17 @@
 (defun +tabnine-setup ()
   (require 'tabnine))
 
-(use-package! tabnine
-  :disabled
-  :hook
-  ((doom-first-file . +tabnine-setup)
-   (kill-emacs . tabnine-kill-process))
-  ;; :init
-  ;; (add-hook! 'prog-mode-hook
-  ;;   (defun +corfu-add-tabnine-capf-h ()
-  ;;     (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 0 t)))
-  :config
-  (tabnine-start-process))
+;; (use-package! tabnine
+;;   :disabled
+;;   :hook
+;;   ((doom-first-file . +tabnine-setup)
+;;    (kill-emacs . tabnine-kill-process))
+;;   ;; :init
+;;   ;; (add-hook! 'prog-mode-hook
+;;   ;;   (defun +corfu-add-tabnine-capf-h ()
+;;   ;;     (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 0 t)))
+;;   :config
+;;   (tabnine-start-process))
 
 (use-package! pabbrev
   :hook (doom-first-file . global-pabbrev-mode)
