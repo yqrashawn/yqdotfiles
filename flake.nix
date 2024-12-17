@@ -52,6 +52,10 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    zed = {
+      url = "github:zed-industries/zed";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";

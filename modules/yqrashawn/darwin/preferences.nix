@@ -319,6 +319,10 @@ in {
             echo 'link ~/.zprintrc'
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.zprintrc ~/.zprintrc
         fi
+        if [ ! -e ~/.config/zed ]; then
+            echo 'link ~/.config/zed'
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/zed ~/.config/zed
+        fi
       '';
     };
   };

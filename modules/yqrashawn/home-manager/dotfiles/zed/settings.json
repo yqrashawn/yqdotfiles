@@ -1,0 +1,36 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "assistant": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-3-5-sonnet"
+    },
+    "version": "2"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "auto_update": true,
+  "vim_mode": true,
+  "theme": { "mode": "system", "dark": "One Dark", "light": "One Light" },
+  "load_direnv": "direct",
+  "auto_install_extensions": {
+    "html": true,
+    "clojure": true,
+    "toml": true,
+    "xml": true,
+    "log": true
+  },
+  "ui_font_family": "PragmataPro Mono Liga",
+  "buffer_font_family": "PragmataPro Mono Liga",
+  "buffer_font_size": 15,
+  "project_panel": { "folder_icons": false, "indent_size": 10 }
+}

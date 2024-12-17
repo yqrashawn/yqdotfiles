@@ -1,0 +1,16 @@
+[
+  {
+    "context": "vim_mode == normal",
+    "bindings": {
+      "space k g g": "editor::CopyPermalinkToLine",
+      "space f e shift-k": "zed::OpenKeymap",
+      "space space": "command_palette::Toggle",
+      "s h": "workspace::Save",
+      "s m": "file_finder::Toggle",
+      "s c": "pane::CloseActiveItem",
+      "ctrl-e": "editor::MoveToEndOfLine",
+      "ctrl-a": "editor::MoveToBeginningOfLine",
+      "s f": "pane::DeploySearch"
+    }
+  }
+]

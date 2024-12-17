@@ -49,6 +49,7 @@ in {
       [
         clojure-lsp
         notmuch
+        # zed-editor
         emacs-lsp-booster
         (curl.override (args: { brotliSupport = true; }))
         # curl
@@ -214,6 +215,7 @@ in {
         pandoc
         # goku
         nix
+        nixd
         nixfmt
         nixpkgs-fmt
         nil # lang server for nix

@@ -16,3 +16,5 @@ __pycache__/
 /.clerk/
 /public/
 /.nrepl-port
+/modules/yqrashawn/home-manager/dotfiles/zed/embeddings/
+/modules/yqrashawn/home-manager/dotfiles/zed/prompts/

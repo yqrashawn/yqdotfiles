@@ -8,6 +8,7 @@ let
 in {
   nixpkgs.overlays = [
     overlays
+    inputs.zed.overlays.default
     inputs.emacs-lsp-booster.overlays.default
     inputs.clojure-lsp.overlays.default
     inputs.emacs-overlay.overlays.default
