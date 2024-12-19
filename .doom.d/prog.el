@@ -177,6 +177,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
             '(tsx-ts-mode typescript-ts-mode-indent-offset)
             '(typescript-ts-mode typescript-ts-mode-indent-offset)))
 
+(use-package! copilot-chat
+  :defer t
+  :init
+  (setq! copilot-chat-model "claude-3.5-sonnet"))
+
 ;; (use-package! ollama
 ;;   :defer t
 ;;   :init
