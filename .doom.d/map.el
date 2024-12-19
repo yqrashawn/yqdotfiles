@@ -45,11 +45,12 @@
  :g "s-m" #'+popup/toggle
  :g "s-u" #'revert-buffer
  :g "s-i" #'+side-notes-toggle-daily-note
+ :g "s-j" #'+copilot-chat-display
  ;; :g "s-j" #'+whisper-run
  ;; :g "s-j" #'+chat-with-ai
  ;; :g "s-j" #'chatgpt-shell-prompt-compose
- :g "s-j" #'gptel-menu
- :g "s-J" #'gptel
+ ;; :g "s-j" #'gptel-menu
+ ;; :g "s-J" #'gptel
  :g "C-M-s-7" '+windmove-map
  :g "C-M-s-j" #'iflipb-next-buffer
  :g "C-M-s-k" #'iflipb-previous-buffer
@@ -743,4 +744,10 @@
           :n "DEL" #'gptel-context-flag-deletion
           :n "C-j" #'gptel-context-next
           :n "q" #'quit-window
-          :n "C-k" #'gptel-context-previous)))
+          :n "C-k" #'gptel-context-previous))
+ (:after copilot-chat
+         (:map copilot-chat-list-mode-map
+          :n "m" #'copilot-chat-list-add-or-remove-buffer
+          :n "x" #'copilot-chat-list-add-or-remove-buffer
+          :n "u" #'copilot-chat-list-refresh
+          :n "X" #'copilot-chat-list-clear-buffers)))

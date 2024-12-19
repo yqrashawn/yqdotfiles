@@ -177,6 +177,23 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
             '(tsx-ts-mode typescript-ts-mode-indent-offset)
             '(typescript-ts-mode typescript-ts-mode-indent-offset)))
 
+(use-package! copilot-chat
+  :defer t
+  :init
+  (setq! copilot-chat-model "claude-3.5-sonnet"
+         copilot-chat-frontend 'org)
+  (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
+    (defun +turn-off-languagetool-for-copilot-chat-buffers ()
+      (languagetool-server-mode -1)))
+  (set-popup-rules!
+    '(("^\\*Copilot-chat-prompt\\*$" :vslot -2 :size 0.15 :select t :quit t)
+      ("^\\*Copilot-chat-list\\*$" :slot 10 :side bottom :size 0.1 :select nil :quit t)
+      ("^\\*Copilot-chat\\*$" :slot 2 :side right :size 0.45 :select nil :quit t)))
+  :config
+  (defadvice! +copilot-chat-prompt-send ()
+    :after #'copilot-chat-prompt-send
+    (select-window (get-buffer-window copilot-chat--prompt-buffer))))
+
 ;; (use-package! ollama
 ;;   :defer t
 ;;   :init
