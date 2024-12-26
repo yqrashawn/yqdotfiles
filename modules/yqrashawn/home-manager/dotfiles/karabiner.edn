@@ -39,6 +39,8 @@
   ;; "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
   :hsl
   "/opt/homebrew/bin/hs -A -n -q -t 0.01 -c 'hs.application.launchOrFocus(\"%s\")'"
+  :kitten "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
+  :kitten-focus-window "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty focus-window --match %s"
   :show
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
   :show-in-firefox
@@ -433,7 +435,8 @@
            [:##close_bracket :!SOdown_arrow]]}
   {:des   "launcher mode"
    :rules [:launch-mode
-           [:j [:op "/Applications/kitty.app"]]
+           ;; [:j [:op "/Applications/kitty.app"]]
+           [:j [:sh "open -a kitty --args -o allow_remote_control=yes --single-instance"]]
            ;; [:j [:op "/Applications/Rio.app"]]
            ;; [:k :same_wind_app :Emacs]
            [:k [:hsl "/Applications/Emacs.app"]]
@@ -605,6 +608,15 @@
            [:p :!CSopen_bracket]
            [:n :!CSclose_bracket]
            [:s :!Creturn_or_enter]
+           [:v [:kitten "launch --location=vsplit"]]
+           ;; [:h [:kitten-focus-window "neighbor:left"]]
+           ;; [:j [:kitten-focus-window "neighbor:bottom"]]
+           ;; [:k [:kitten-focus-window "neighbor:top"]]
+           ;; [:l [:kitten-focus-window "neighbor:right"]]
+           [:h :!CSleft_arrow]
+           [:j :!CSdown_arrow]
+           [:k :!CSup_arrow]
+           [:l :!CSright_arrow]
            :tmux-windresize-mode
            [:h [:!Tq :!Sh]]             ; resize window
            [:j [:!Tq :!Sj]]             ; resize window

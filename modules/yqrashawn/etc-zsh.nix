@@ -4,6 +4,7 @@ let
   paths = [
     "$HOME/Library/CloudStorage/Dropbox/sync/scripts"
     "$HOME/common-lisp/lem"
+    "/Applications/kitty.app/Contents/MacOS"
     "/Applications/Firefox Developer Edition.app/Contents/MacOS"
     "$HOME/.qlot/bin"
     "$HOME/.web3j"

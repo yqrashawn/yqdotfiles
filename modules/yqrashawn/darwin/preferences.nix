@@ -323,6 +323,12 @@ in {
             echo 'link ~/.config/zed'
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/zed ~/.config/zed
         fi
+        if [ ! -e ~/.config/kitty/kitty.conf ]; then
+            echo 'link ~/.config/kitty/kitty.conf'
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/kitty.conf ~/.config/kitty/kitty.conf
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/kitty-map.conf ~/.config/kitty/kitty-map.conf
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/macos-launch-services-cmdline ~/.config/kitty/macos-launch-services-cmdline
+        fi
       '';
     };
   };
