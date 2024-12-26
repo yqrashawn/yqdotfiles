@@ -1,13 +1,15 @@
 { config, pkgs, ... }: {
   programs.kitty = {
     enable = true;
-    package = pkgs.kitty;
-    # package = pkgs.masters.kitty;
+    # package = pkgs.kitty;
+    package = pkgs.stable.kitty;
     font = {
       name = "PragmataPro Mono Liga Regular";
       size = 20;
     };
     settings = {
+      input_delay = 0;
+      repaint_delay = 10;
       bold_font = "PragmataPro Mono Liga Bold";
       italic_font = "PragmataPro Mono Liga Italic";
       bold_italic_font = "PragmataPro Mono Liga Bold Italic";

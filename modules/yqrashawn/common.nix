@@ -64,7 +64,7 @@ in {
         qbittorrent
         tailscale
         cloudflared
-        awscli2
+        # awscli2
         # zellij
         kitty-themes
         # (docker.override (args: {
@@ -261,7 +261,7 @@ in {
         nodePackages.nodemon
         nodePackages.serve
         nodePackages.surge
-        nodePackages.neovim
+        # nodePackages.neovim
         # nodePackages.web-ext
         nodePackages.textlint
         nodePackages.textlint-rule-write-good
@@ -325,5 +325,13 @@ in {
     # systemPath = [ "/run/current-system/sw/bin" ];
   };
 
-  fonts.packages = with pkgs; [ jetbrains-mono nerdfonts ];
+  fonts.packages = with pkgs; [
+    jetbrains-mono
+    nerdfonts
+    # nerd-fonts.jetbrains-mono
+    # nerd-fonts.inconsolata
+    # nerd-fonts.hack
+    # nerd-fonts.fira-mono
+    # nerd-fonts.iosevka
+  ];
 }

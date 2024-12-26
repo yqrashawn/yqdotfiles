@@ -16,7 +16,7 @@
       "slack"
       "bitwarden"
       # "clickup"
-      "firefox"
+      # "firefox"
       "languagetool"
       "firefox@developer-edition"
       # "safari-technology-preview"

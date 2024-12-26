@@ -83,6 +83,8 @@
   :comma-mode            {:key   :comma
                           :condi [:!emacs-s-mode :!tmux-windmove-mode]}
   :tmux-windmove-mode    {:key :q :condi [:Terminals :!comma-mode :!period-mode]}
+  :kitty-windmove-mode   {:key :q :condi [:kitty :!comma-mode :!period-mode]}
+  :kitty-windresize-mode {:key :c :condi :kitty-windmove-mode}
   :warp-windmove-mode    {:key :q :condi [:Warp :!comma-mode :!period-mode]}
   :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
   :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
@@ -432,6 +434,7 @@
   {:des   "launcher mode"
    :rules [:launch-mode
            [:j [:op "/Applications/kitty.app"]]
+           ;; [:j [:op "/Applications/Rio.app"]]
            ;; [:k :same_wind_app :Emacs]
            [:k [:hsl "/Applications/Emacs.app"]]
            [:u [:!CTcomma]]
@@ -597,11 +600,16 @@
            ;; prev/next workspace
            [:p [:spacebar :tab :open_bracket]]
            [:n [:spacebar :tab :close_bracket]]
+           :kitty-windmove-mode
+           [:return_or_enter :!Ct]
+           [:p :!CSopen_bracket]
+           [:n :!CSclose_bracket]
+           [:s :!Creturn_or_enter]
            :tmux-windresize-mode
-           [:h [:!Tq :!Sh]] ; resize window
-           [:j [:!Tq :!Sj]] ; resize window
-           [:k [:!Tq :!Sk]] ; resize window
-           [:l [:!Tq :!Sl]] ; resize window
+           [:h [:!Tq :!Sh]]             ; resize window
+           [:j [:!Tq :!Sj]]             ; resize window
+           [:k [:!Tq :!Sk]]             ; resize window
+           [:l [:!Tq :!Sl]]             ; resize window
            :tmux-windmove-mode
            [:spacebar [:!Tq :spacebar]] ; https://github.com/fcsonline/tmux-thumbs
            [:return_or_enter [:!Tq :c]] ; new session
@@ -812,7 +820,8 @@
                                            ;; bluetooth
                                            {:vendor_id 1133 :product_id 45085}]}
  :applications
- {:emacs-mode-disable-app
+ {:kitty        ["^net\\.kovidgoyal\\.kitty$"]
+  :emacs-mode-disable-app
   ["^org\\.gnu\\.Emacs$" "^org\\.xquartz\\.X11$" "^org\\.gnu\\.AquamacsEmacs$"
    "^dev\\.zed\\.Zed$"
    "^org\\.gnu\\.Aquamacs$" "^org\\.pqrs\\.unknownapp.conkeror$"
@@ -832,14 +841,16 @@
    "^org\\.virtualbox\\.app\\.VirtualBoxVM$" "^com\\.vmware\\.proxyApp\\."
    "^com\\.parallels\\.winapp\\." "^org\\.x\\.X11$" "^com\\.apple\\.x11$"
    "^org\\.macosforge\\.xquartz\\.X11$" "^org\\.macports\\.X11$"
-   "^com\\.sublimetext\\." "^com\\.microsoft\\.VSCode(Insiders)?$"]
+   "^com\\.sublimetext\\." "^com\\.microsoft\\.VSCode(Insiders)?$"
+   "^com\\.raphaelamorim\\.rio$"]
   :VSCode       ["^com\\.microsoft\\.VSCode(Insiders)?$"]
   :zed          ["^dev\\.zed\\.Zed$"]
   :Emacs-and-Terminals
   ["^org\\.gnu\\.Emacs$" "^org\\.gnu\\.AquamacsEmacs$" "^org\\.gnu\\.Aquamacs$"
    "^com\\.apple\\.Terminal$" "^com\\.googlecode\\.iterm2$"
    "^co\\.zeit\\.hyperterm$" "^co\\.zeit\\.hyper$" "^io\\.alacritty$"
-   "^com\\.github\\.wez\\.wezterm$" "^net\\.kovidgoyal\\.kitty$"]
+   "^com\\.github\\.wez\\.wezterm$" "^net\\.kovidgoyal\\.kitty$"
+   "^com\\.raphaelamorim\\.rio$"]
   :Emacs        ["^org\\.gnu\\.Emacs$" "^org\\.gnu\\.AquamacsEmacs$"
                  "^org\\.gnu\\.Aquamacs$"]
   :lem          [:paths "common-lisp/lem/lem$"]
@@ -867,6 +878,7 @@
                  "^io\\.alacritty$"
                  "^com\\.github\\.wez\\.wezterm$"
                  "^net\\.kovidgoyal\\.kitty$"
+                 "^com\\.raphaelamorim\\.rio$"
                  ;; "^dev\\.warp\\.Warp.*"
                  ]
   :vim-mode-disabled-application
