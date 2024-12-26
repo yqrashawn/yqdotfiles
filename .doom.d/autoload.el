@@ -1106,12 +1106,22 @@ result instead of `message'."
 ;;;###autoload
 (defun +terminal-here ()
   (interactive)
+  ;; (call-process-shell-command
+  ;;  (format! "tmux new-window -n '%s' -c '%s'"
+  ;;           (or buffer-file-name default-directory)
+  ;;           (if buffer-file-name
+  ;;               (file-name-directory buffer-file-name)
+  ;;             default-directory))
+  ;;   nil 0)
+
   (call-process-shell-command
-   (format! "tmux new-window -n '%s' -c '%s'"
-            (or buffer-file-name default-directory)
-            (if buffer-file-name
-                (file-name-directory buffer-file-name)
-              default-directory))
+   (format!
+    "%s @ --to unix:/tmp/tkitty launch --type tab --tab-title '%s' --cwd '%s'"
+    (executable-find "kitten")
+    (or buffer-file-name default-directory)
+    (if buffer-file-name
+        (file-name-directory buffer-file-name)
+      default-directory))
    nil 0)
   (call-process-shell-command "open -a kitty.app" nil 0))
 

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Call emacsclient as a pager.
+# First, read in the content of stdin into a temporary file
+
+t=$(mktemp /tmp/emacsclient.XXXXXX) || exit 1
+
+# echo "Reading into emacs..."
+
+# Remove terminal escape sequences (color and move, as well as some funky starship stuff)
+cat - |
+  sed 's/\x1b\[[0-9;:]*[mGKH]//g' |
+  sed 's/\x1b\][0-9;:]*[AC]\x1b\\//g' |
+  sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' \
+    >>"$t"
+
+~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/ee "$t"
+rm -f "$t"
