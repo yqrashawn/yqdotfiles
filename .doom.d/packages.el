@@ -368,6 +368,8 @@
 ;; spaced repetition
 ;; (package! gnosis)
 
+(package! devdocs)
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:

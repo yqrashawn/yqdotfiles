@@ -882,3 +882,13 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 (use-package jinx
   :hook (doom-first-file . global-jinx-mode))
+
+(defun +kitten (cmd &optional no-focus)
+  (call-process-shell-command
+   (format!
+    "%s @ --to unix:/tmp/tkitty %s"
+    (executable-find "kitten")
+    cmd)
+   nil 0)
+  (unless no-focus
+    (call-process-shell-command "open -a kitty.app" nil 0)))

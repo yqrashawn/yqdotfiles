@@ -1114,16 +1114,13 @@ result instead of `message'."
   ;;             default-directory))
   ;;   nil 0)
 
-  (call-process-shell-command
+  (+kitten
    (format!
-    "%s @ --to unix:/tmp/tkitty launch --type tab --tab-title '%s' --cwd '%s'"
-    (executable-find "kitten")
+    "launch --type tab --tab-title '%s' --cwd '%s'"
     (or buffer-file-name default-directory)
     (if buffer-file-name
         (file-name-directory buffer-file-name)
-      default-directory))
-   nil 0)
-  (call-process-shell-command "open -a kitty.app" nil 0))
+      default-directory))))
 
 ;;;###autoload
 (defun +copilot-chat-display ()
