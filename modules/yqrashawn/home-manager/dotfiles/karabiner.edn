@@ -606,8 +606,8 @@
            [:n [:spacebar :tab :close_bracket]]
            :kitty-windmove-mode
            [:return_or_enter :!Ct]
-           [:m :!CSm]
-           [:equal_sign [:kitten "load-config"]]
+           [:m [:!CS8 :m]]
+           [:hyphen [:kitten "load-config"]]
            [:open_bracket [:kitten "launch --stdin-source=@screen_scrollback --type=overlay ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/epager"]]
            [:close_bracket [:kitten "launch --stdin-source=@last_cmd_output --type=overlay ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/epager"]]
            [:p :!CSopen_bracket]
@@ -618,10 +618,11 @@
            ;; [:j [:kitten-focus-window "neighbor:bottom"]]
            ;; [:k [:kitten-focus-window "neighbor:top"]]
            ;; [:l [:kitten-focus-window "neighbor:right"]]
-           [:h :!CSleft_arrow]
-           [:j :!CSdown_arrow]
-           [:k :!CSup_arrow]
-           [:l :!CSright_arrow]
+           [:h [:!CS8 :left_arrow]]
+           [:j [:!CS8 :down_arrow]]
+           [:k [:!CS8 :up_arrow]]
+           [:l [:!CS8 :right_arrow]]
+           [:!Tq :!CS8]
            :tmux-windresize-mode
            [:h [:!Tq :!Sh]]             ; resize window
            [:j [:!Tq :!Sj]]             ; resize window
