@@ -61,3 +61,10 @@
           (unless prepend (goto-char (point-max)))
           (when newline (unless (bolp) (newline)))
           (insert content))))))
+
+(defun +current-buffer-from-client ()
+  (window-buffer (selected-window)))
+
+(defun +workspace-project-root ()
+  (with-current-buffer (+current-buffer-from-client)
+    (projectile-project-root)))

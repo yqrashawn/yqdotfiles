@@ -19,7 +19,7 @@
     "tree-sitter-cli": "^0.24.3",
     "turbo": "^2.2.3",
     "typescript-language-server": "^4.3.3",
-    "vercel": "^37.13.0",
+    "vercel": "^39.2.2",
     "vscode-langservers-extracted": "^4.10.0",
     "wrangler": "^3.83.0",
     "yaml-language-server": "^1.15.0"
