@@ -447,16 +447,16 @@
            [:n [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://www.notion.so/&create-when-missing=1&pin=1&idx=3"]]
            [:9 [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&pin=1&idx=1"]]
            [:h [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.slack.com/&create-when-missing=1&pin=1&idx=2"]]
-           [:p [:togg "Figma"]]
+           [:p [:op "/Applications/Figma.app"]]
            [:comma [:op "/Applications/Safari.app"] :!Safari]
            [:comma :same_wind_app :Safari]
-           [:l [:hsl "Firefox Developer Edition"] :!Firefoxes]
+           [:l [:op "/Applications/Firefox Developer Edition.app"] :!Firefoxes]
            [:l :same_wind_app :Firefoxes]
            [:return_or_enter [:togg "/Applications/ChatGPT.app"]]
-           [:m [:hsl "Mail"]]
-           [:v [:togg "WeChat"]]
-           [:q [:togg "Karabiner-Elements"]]
-           [:f [:togg "Finder"]]
+           [:m [:op "/System/Applications/Mail.app"]]
+           [:v [:op "/Applications/WeChat.app"]]
+           [:q [:op "/Applications/Karabiner-Elements.app"]]
+           [:f [:op "/System/Library/CoreServices/Finder.app"]]
            [:y :!!x]                    ; Dash
            [:6 :!!z]
            ;; [:r [:hsl "Orion"]]
@@ -868,9 +868,11 @@
    "^com\\.apple\\.Terminal$" "^com\\.googlecode\\.iterm2$"
    "^co\\.zeit\\.hyperterm$" "^co\\.zeit\\.hyper$" "^io\\.alacritty$"
    "^com\\.github\\.wez\\.wezterm$" "^net\\.kovidgoyal\\.kitty$"
-   "^com\\.raphaelamorim\\.rio$"]
+   "^com\\.raphaelamorim\\.rio$" "^com\\.mitchellh\\.ghostty$"]
   :Emacs        ["^org\\.gnu\\.Emacs$" "^org\\.gnu\\.AquamacsEmacs$"
-                 "^org\\.gnu\\.Aquamacs$"]
+                 "^org\\.gnu\\.Aquamacs$"
+                 ;; "^com\\.mitchellh\\.ghostty$"
+                 ]
   :lem          [:paths "common-lisp/lem/lem$"]
   :Safari       ["^com\\.apple\\.Safari$"]
   :Chromes      ["^org\\.chromium\\.Chromium$"
@@ -897,6 +899,7 @@
                  "^com\\.github\\.wez\\.wezterm$"
                  "^net\\.kovidgoyal\\.kitty$"
                  "^com\\.raphaelamorim\\.rio$"
+                 "^com\\.mitchellh\\.ghostty$"
                  ;; "^dev\\.warp\\.Warp.*"
                  ]
   :vim-mode-disabled-application

@@ -8,7 +8,7 @@ let
     if ! typeset -f _asdf > /dev/null; then
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
-    export PNPM_HOME="/Users/$HOME/.local/share/pnpm"
+    export PNPM_HOME="/$HOME/.local/share/pnpm"
   '';
   zshProfileExtra = ''
     fpath=($HOME/.zfunc $fpath)

@@ -37,8 +37,8 @@ automatically-unhide-macos-hidden-apps = false
 
 ## workspaces
 [workspace-to-monitor-force-assignment]
-B = '^LG'
-C = '^Studio'
+C = '^LG'
+B = '^Studio'
 T = '^DELL'
 M = '^DELL'
 1 = '^DELL'
@@ -61,6 +61,12 @@ run = 'move-node-to-workspace T'
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefoxdeveloperedition'
 # run = [ 'layout h_accordion', 'move-node-to-workspace B' ]
+run = [ 'move-node-to-workspace B' ]
+[[on-window-detected]]
+if.app-id = 'ai.perplexity.mac'
+run = [ 'move-node-to-workspace B' ]
+[[on-window-detected]]
+if.app-id = 'com.openai.chat'
 run = [ 'move-node-to-workspace B' ]
 
 ### coding workspace

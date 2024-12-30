@@ -1148,3 +1148,29 @@ It can be used to review the magit diff for my change, or other people's"
     (mark-whole-buffer)
     (copilot-chat-custom-prompt-selection)
     (deactivate-mark)))
+
+;;;###autoload
+(defun ++emacs (elisp-string)
+  "Pretty print and evaluate ELISP-STRING after user confirmation.
+Returns evaluation result if confirmed, otherwise returns rejection message."
+  (let* ((help-window-name "*Eval Preview*")
+         (formatted-code (with-temp-buffer
+                           (insert elisp-string)
+                           (emacs-lisp-mode)
+                           (indent-region (point-min) (point-max))
+                           (buffer-string)))
+         (result
+          (progn
+            (with-help-window help-window-name
+              (princ "About to evaluate:\n\n")
+              (princ formatted-code))
+            (if (yes-or-no-p "Evaluate this code? ")
+                (format "Evaluate result from Emacs:
+\"\"\"
+%S
+\"\"\""
+                        (eval (read elisp-string)))
+              "user rejected your request"))))
+    (when-let ((window (get-buffer-window help-window-name)))
+      (quit-window t window))
+    result))

@@ -14,7 +14,6 @@
        split-window-keep-point t
        require-final-newline nil
        mode-require-final-newline nil
-       auto-window-vscroll nil
        confirm-kill-processes nil
        browse-url-generic-program "open"
        browse-url-browser-function #'eww-browse-url
