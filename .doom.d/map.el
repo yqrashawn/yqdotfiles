@@ -750,4 +750,17 @@
           :n "m" #'copilot-chat-list-add-or-remove-buffer
           :n "x" #'copilot-chat-list-add-or-remove-buffer
           :n "u" #'copilot-chat-list-refresh
-          :n "X" #'copilot-chat-list-clear-buffers)))
+          :n "X" #'copilot-chat-list-clear-buffers))
+ (:after verb
+         (:map verb-command-map
+          :g "s" #'verb-send-request-on-point-other-window
+          :g "r" #'verb-send-request-on-point-other-window-stay
+          :g "RET" #'verb-send-request-on-point-no-window
+          :g "f" #'verb-send-request-on-point
+          :g "k" #'verb-kill-all-response-buffers
+          :g "e" #'verb-export-request-on-point
+          :g "v" #'verb-set-var
+          :g "x" #'verb-show-vars))
+ (:after org
+         (:map org-mode-map
+          :g "C-c r" verb-command-map)))

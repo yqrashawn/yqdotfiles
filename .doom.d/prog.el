@@ -207,3 +207,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (use-package! imake :defer t)
 (set-file-template! "\.orun$" :trigger "__orun" :mode 'emacs-lisp-mode :project t)
+
+(use-package! verb
+  :defer t
+  :init
+  (set-popup-rule! "^\\*HTTP Response.*" :side 'right :size 0.4 :vslot 97 :quit t))

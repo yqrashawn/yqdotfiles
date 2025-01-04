@@ -1,10 +1,20 @@
 dotup () {
   echo "Please enter root password"
   sudo echo "OK"
-  pushd .
+
+  current_dir=$(pwd)
+
+  if [ "$current_dir" != "$HOME/.nixpkgs" ]; then
+    pushd . > /dev/null
+    cd ~/.nixpkgs
+  fi
+
   cd ~/.nixpkgs/
   # ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/update_flakes
   nix --extra-experimental-features "nix-command flakes" develop --impure --accept-flake-config --command sysdo switch $@
   ~/local/bin/ddd || true
-  popd
+
+  if [ "$current_dir" != "$HOME/.nixpkgs" ]; then
+    popd > /dev/null
+  fi
 }

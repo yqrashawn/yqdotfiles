@@ -5,12 +5,19 @@ dotupforce () {
   then
     # echo "Please enter root password"
     # sudo echo "OK"
-    pushd .
+    current_dir=$(pwd)
+
+    if [ "$current_dir" != "$HOME/.nixpkgs" ]; then
+      pushd . > /dev/null
+      cd ~/.nixpkgs
+    fi
     cd ~/.nixpkgs/
     git fetch --all
     git reset --hard origin/master
     reload
     nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch $@
-    popd
+    if [ "$current_dir" != "$HOME/.nixpkgs" ]; then
+      popd > /dev/null
+    fi
   fi
 }

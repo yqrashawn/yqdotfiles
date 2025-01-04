@@ -369,6 +369,7 @@
 ;; (package! gnosis)
 
 (package! devdocs)
+(package! verb)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
