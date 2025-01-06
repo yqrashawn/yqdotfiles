@@ -222,6 +222,7 @@
     (run-at-time 0.4 #'+doom/escape-just-called-cancel))
   (funcall orig-fn interactive))
 
+;; double C-g
 (defun +doom/just-escaped-p (&rest _)
   (when +doom/escape-just-called
     (+doom/escape-just-called-cancel)

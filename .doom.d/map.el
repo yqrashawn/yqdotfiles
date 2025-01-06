@@ -644,6 +644,8 @@
          (:map cider-mode-map
           :g "C-c C-k" nil)
          (:map cider-inspector-mode-map
+          :n "s" 'yq-s-map
+          :n "X" #'cider-inspector-set-page-size
           :n "C-j" #'cider-inspector-next-inspectable-object
           :n "C-k" #'cider-inspector-previous-inspectable-object
           :n "gj" #'cider-inspector-next-page

@@ -378,9 +378,8 @@ creates a new one. Don't unnecessarily bother the user."
                         (buffer-list)))
     nil)
   (set-popup-rule! "^\\*cider-error\\*" :select nil :side 'right :size 0.4)
-
-  ;; (set-popup-rules!
-  ;;   '(("^\\*cider-repl" :side right :size 0.5 :quit +doom/just-escaped-p :ttl nil)))
+  (set-popup-rule! "^\\*cider-repl" :side 'bottom :size 0.2 :quit t :modeline t :ttl nil)
+  (set-popup-rule! "^\\*cider-inspect\\*" :side 'bottom :size 0.2 :quit t :modeline nil :ttl nil)
 
   (defadvice! +cider-jack-in-clj (orig-fn params)
     "Support babashka for cider-jack-in-clj"
