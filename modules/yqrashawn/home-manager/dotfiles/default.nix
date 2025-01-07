@@ -186,11 +186,11 @@
       target = "./.asdf/plugins/bun";
       recursive = true;
     };
-    # asdf-yarn = {
-    #   source = inputs.asdf-yarn;
-    #   target = "./.asdf/plugins/yarn";
-    #   recursive = true;
-    # };
+    asdf-yarn = {
+      source = inputs.asdf-yarn;
+      target = "./.asdf/plugins/yarn";
+      recursive = true;
+    };
     asdf-pnpm = {
       source = inputs.asdf-pnpm;
       target = "./.asdf/plugins/pnpm";
