@@ -26,17 +26,19 @@
                      :refer-all                {:level   :warning
                                                 :exclude [clojure.test]}
                      :unused-namespace         {:exclude [cljs.repl (comment)]}
-                     :unused-referred-var      {:exclude {cljs.repl [Error->map
-                                                                     apropos
-                                                                     dir
-                                                                     doc
-                                                                     error->str
-                                                                     ex-str
-                                                                     ex-triage
-                                                                     find-doc
-                                                                     print-doc
-                                                                     pst
-                                                                     source]}}
+                     :unused-referred-var      {:exclude
+                                                {cljs.repl      [Error->map
+                                                                 apropos
+                                                                 dir
+                                                                 doc
+                                                                 error->str
+                                                                 ex-str
+                                                                 ex-triage
+                                                                 find-doc
+                                                                 print-doc
+                                                                 pst
+                                                                 source]
+                                                 taoensso.truss [have have! have? have!?]}}
                      :consistent-alias
                      {:aliases
                       {buddy.core.hash                    buddy-hash
