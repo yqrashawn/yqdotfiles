@@ -305,6 +305,9 @@ A prefix arg reverses this operation."
            (funcall help-fns--autoloaded-p sym))
     (apply fn args)))
 
+(after! dirvish
+  (setq! dirvish-preview-dispatchers '()))
+
 ;; (after! dirvish
 ;;   (setq!
 ;;    ;; dirvish-keep-alive-on-quit nil
@@ -892,3 +895,58 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
    nil 0)
   (unless no-focus
     (call-process-shell-command "open -a kitty.app" nil 0)))
+
+(setq! +buffer-terminator-buffer-file-name-kill-list
+       '("^/private/tmp/emacsclient\."))
+
+(setq! +buffer-terminator-buffer-name-kill-list
+       '("^\*Dirvish-preview"
+         "^\*Embark Export:"))
+
+(defun +buffer-visible-in-persp-p (buffer persp-name)
+  "Check if BUFFER is visible in any window of the perspective PERSP."
+  (save-window-excursion
+    (+workspace-switch persp-name)
+    (get-buffer-window buffer)))
+
+(defun +buffer-terminator-pred ()
+  (let* ((bname (buffer-name))
+         (bfile (buffer-file-name)))
+    (cond
+     ((memq major-mode '(dired-mode)) :kill)
+     ((and
+       bfile
+       (seq-some
+        (lambda (re) (string-match-p re bfile))
+        +buffer-terminator-buffer-file-name-kill-list))
+      :kill)
+     ((seq-some
+       (lambda (re) (string-match-p re bname))
+       +buffer-terminator-buffer-name-kill-list)
+      :kill)
+     (t nil))))
+
+(use-package! buffer-terminator
+  :hook (doom-first-file . buffer-terminator-mode)
+  :config
+  (setq!
+   buffer-terminator-rules-alist
+   '((call-function . +buffer-terminator-pred)
+     ;; Retain special buffers (DO NOT REMOVE).
+     ;; DO NOT REMOVE (keep-buffer-property . special) unless you know of what
+     ;; you are doing.
+     (keep-buffer-property . special)
+
+     ;; Keep process buffers.
+     ;; (Process buffers are buffers where an active process is running.)
+     (keep-buffer-property . process)
+
+     ;; Keep visible buffers (DO NOT REMOVE)
+     ;; (Buffers currently displayed in a window.)
+     (keep-buffer-property . visible)
+
+     ;; Kill inactive buffers.
+     ;; (This can be customized with `buffer-terminator-inactivity-timeout'
+     ;; and `buffer-terminator-interval'.)
+     ;; (kill-buffer-property . inactive)
+     (return . :keep))))

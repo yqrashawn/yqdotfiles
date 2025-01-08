@@ -44,6 +44,8 @@ M = '^DELL'
 1 = '^DELL'
 2 = '^DELL'
 3 = '^DELL'
+4 = '^DELL'
+5 = '^DELL'
 
 ### termial workspace
 [[on-window-detected]]
@@ -103,6 +105,18 @@ run = 'move-node-to-workspace 1'
 [[on-window-detected]]
 if.app-name-regex-substring = '^(dash|istat|voila|system settings|screen sharing)'
 run = 'layout floating'
+[[on-window-detected]]
+if.app-name-regex-substring = '^()'
+run = 'move-node-to-workspace 1'
+[[on-window-detected]]
+if.app-name-regex-substring = '^(messages|karabiner-eventViewer)'
+run = 'move-node-to-workspace 2'
+[[on-window-detected]]
+if.app-id = 'io.filen.desktop'
+run = 'move-node-to-workspace 5'
+[[on-window-detected]]
+if.app-name-regex-substring = '^(filen)'
+run = 'move-node-to-workspace 5'
 # [[on-window-detected]]
 # check-further-callbacks = true
 # run = 'move-node-to-workspace 1'

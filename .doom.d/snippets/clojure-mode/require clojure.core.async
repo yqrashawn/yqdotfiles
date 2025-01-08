@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: require clojure.core.async
+# key: rasync
+# --
+[clojure.core.async :as a]

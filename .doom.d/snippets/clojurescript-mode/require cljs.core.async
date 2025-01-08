@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: require cljs.core.async
+# key: rasync
+# --
+[cljs.core.async :as a]

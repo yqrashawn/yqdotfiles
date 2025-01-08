@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: require taoensso.truss
+# key: rhave
+# --
+[taoensso.truss :refer [have have!]]

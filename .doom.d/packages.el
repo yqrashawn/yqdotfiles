@@ -370,6 +370,7 @@
 
 (package! devdocs)
 (package! verb)
+(package! buffer-terminator)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
