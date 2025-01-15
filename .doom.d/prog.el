@@ -167,7 +167,14 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 ;; accept completion from copilot and fallback to company
 (use-package! copilot
-  :hook ((go-mode rjsx-mode js2-mode typescript-mode tsx-ts-mode) . copilot-mode)
+  :hook ((go-mode
+          rjsx-mode
+          js2-mode
+          typescript-mode
+          tsx-ts-mode
+          clojure-mode
+          clojurescript-mode
+          clojurec-mode) . copilot-mode)
   :init
   (setq! copilot-max-char -1
          ;; copilot-version "1.41.0"

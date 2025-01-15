@@ -63,6 +63,7 @@
         (funcall orig-fn method callback)))))
 
 (after! lsp-mode
+  (setq! lsp-copilot-enabled nil)
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages)
   (setq! lsp-completion-provider :none)

@@ -670,8 +670,8 @@
          (:map copilot-completion-map
           ;; :i "RET" #'copilot-accept-completion
           ;; :i "TAB" #'copilot-accept-completion-by-line
-          ;; :i "C-l" #'copilot-accept-completion-by-word
-          :g "RET" #'copilot-accept-completion
+          :g "RET" #'copilot-accept-completion-by-word
+          :g "C-RET" #'copilot-accept-completion
           :g "TAB" #'copilot-accept-completion-by-line
           ;; :g "C-l" #'copilot-accept-completion-by-word
           ))
