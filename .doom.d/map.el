@@ -670,11 +670,15 @@
          (:map copilot-completion-map
           ;; :i "RET" #'copilot-accept-completion
           ;; :i "TAB" #'copilot-accept-completion-by-line
-          :g "RET" #'copilot-accept-completion-by-word
-          :g "C-RET" #'copilot-accept-completion
-          :g "TAB" #'copilot-accept-completion-by-line
+          ;; :g "RET" #'copilot-accept-completion-by-word
+          :g "RET" #'copilot-accept-completion
+          ;; :g "C-RET" #'copilot-accept-completion
+          :g "TAB" #'copilot-accept-completion-by-word
           ;; :g "C-l" #'copilot-accept-completion-by-word
           ))
+ (:after lsp
+         (:map lsp-inline-completion-active-map
+          :g "C-RET" #'lsp-inline-completion-accept))
  (:after time
          (:map world-clock-mode-map
           :n "q" #'quit-window
