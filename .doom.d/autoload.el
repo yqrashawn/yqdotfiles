@@ -357,14 +357,15 @@ _g_  gfm      _o_ org        _m_ markdown
 
 ;;;###autoload
 (defun +complete-at-point (&optional args)
+  "use ,, to trigger +complete-at-point, use ,. to complete with copilot"
   (interactive)
   (if (eq major-mode 'vterm-mode)
       (vterm--self-insert)
     (cond
-     ((and (eq (preceding-char) ?,) (boundp 'pabbrev-marker) pabbrev-marker)
-      (progn (delete-char -1 nil)
-             (call-interactively #'pabbrev-expand-maybe)
-             (pabbrev-delete-last-suggestion)))
+     ;; ((and (eq (preceding-char) ?,) (boundp 'pabbrev-marker) pabbrev-marker)
+     ;;  (progn (delete-char -1 nil)
+     ;;         (call-interactively #'pabbrev-expand-maybe)
+     ;;         (pabbrev-delete-last-suggestion)))
 
      ((and (eq (preceding-char) ?,) (modulep! :editor evil) (modulep! :completion corfu) corfu-mode)
       (progn (delete-char -1 nil)

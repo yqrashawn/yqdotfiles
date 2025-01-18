@@ -62,8 +62,8 @@
       (cl-letf (((symbol-function 'nim-log) (lambda (&rest _args))))
         (funcall orig-fn method callback)))))
 
+(setq! lsp-copilot-enabled nil)
 (after! lsp-mode
-  ;; (setq! lsp-copilot-enabled nil)
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages)
   (setq! lsp-completion-provider :none)
@@ -76,9 +76,11 @@
     (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t))
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (setq!
+   lsp-copilot-enabled nil
    ;; lsp-imenu-sort-methods '(position)
    ;; lsp-eldoc-enable-hover nil
    ;; lsp-disabled-clients '(javascript-typescript-langserver)
+   lsp-disabled-clients '(copilot-ls graphql-lsp)
    lsp-enable-file-watchers nil
    lsp-file-watch-threshold 200
    lsp-bash-highlight-parsing-errors t
