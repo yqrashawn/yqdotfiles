@@ -8,7 +8,7 @@ python 3.12.2
 ruby 3.2.2
 ruby 3.2.2
 golang 1.20.12
-bun 1.1.42
+bun 1.1.45
 deno 1.39.1
 lua 5.4.4
 babashka 1.12.195
