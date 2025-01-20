@@ -40,6 +40,7 @@
   :hsl
   "/opt/homebrew/bin/hs -A -n -q -t 0.01 -c 'hs.application.launchOrFocus(\"%s\")'"
   :kitten              "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
+  :kitten-splits-layout              "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty goto-layout --match=state:active splits && /Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
   :kitten-focus-window "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty focus-window --match %s"
   :show
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
@@ -616,8 +617,8 @@
              [:kitten "launch --stdin-source=@last_cmd_output --type=overlay ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/epager"]]]
            [:p :!CSopen_bracket]
            [:n :!CSclose_bracket]
-           [:s :!Creturn_or_enter]
-           [:v [:kitten "launch --location=vsplit"]]
+           [:s [:kitten-splits-layout "launch --location=hsplit --cwd=current"]]
+           [:v [:kitten-splits-layout "launch --location=vsplit --cwd=current"]]
            ;; [:h [:kitten-focus-window "neighbor:left"]]
            ;; [:j [:kitten-focus-window "neighbor:bottom"]]
            ;; [:k [:kitten-focus-window "neighbor:top"]]
