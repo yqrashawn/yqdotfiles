@@ -622,8 +622,11 @@ _b_ranch _j_next _k_prev _h_up
               (funcall s-matches-regex (f-read dep-file))))))))
 
 ;;;###autoload
-(defun +cljr--log-spy (prefix-info log! arg)
-  (let* ((log-spy-str (if log! "log/spy!" "log/spy"))
+(defun +cljr--log-spy (prefix-info log-type arg)
+  (let* ((log-spy-str (cond
+                       ((eq log-type :js-console) "js/console.log")
+                       ((eq log-type :log!) "log/spy!")
+                       (t "log/spy")))
          (log-spy-str (if prefix-info
                           (concat log-spy-str " :info")
                         log-spy-str)))
@@ -663,20 +666,19 @@ _b_ranch _j_next _k_prev _h_up
 (defun +spy (arg)
   (interactive "P")
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
-    (let* ((has-as-log? (ignore-errors (save-excursion (re-search-backward ":as log\\]"))))
+    (let* ((squint? (seq-find (-partial 'string= "squint.edn") (projectile-dir-files (doom-project-root))))
+           (has-as-log? (or squint? (ignore-errors (save-excursion (re-search-backward ":as log\\]")))))
            (telemere? (+cljr-project-has-dep? "com.taoensso/telemere"))
            (glogi? (+cljr-project-has-dep? "lambdaisland/glogi"))
            (timbre? (+cljr-project-has-dep? "timbre"))
            (pedestal? (+cljr-project-has-dep? "pedestal.log"))
            (tools-logging? (+cljr-project-has-dep? "tools.logging"))
            (f (apply-partially '+cljr--log-spy
+                               pedestal?
                                (cond
-                                (glogi? nil)
-                                (telemere? nil)
-                                (timbre? nil)
-                                (pedestal? t)
-                                nil)
-                               (and telemere? (not glogi?)))))
+                                (squint? :js-console)
+                                ((and telemere? (not glogi?)) :log!)
+                                (t :log)))))
       (cond
        (has-as-log? (funcall f arg))
 
