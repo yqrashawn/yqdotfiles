@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: squint jsx props
+# key: pp
+# --
+
+{:& {:$0 }}

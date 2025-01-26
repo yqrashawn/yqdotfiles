@@ -135,26 +135,43 @@
     (define-key! evil-motion-state-map "TAB" nil))
   (defun +outline-minor-mode-setup-regexp ()
     (unless (or (eq major-mode 'org-mode) (derived-mode-p 'org-mode))
-      (if (or (and (boundp 'lispy-mode) lispy-mode) (and (boundp 'lispyville-mode) lispyville-mode))
+      (if (or (and (boundp 'lispy-mode) lispy-mode)
+              (and (boundp 'lispyville-mode) lispyville-mode))
           (setq-local outline-regexp +emacs-lisp-outline-regexp)
         (progn
-          (setq-local +outline-regexp-start (+outline-chomp (or comment-start "#")))
-          (setq-local +outline-regexp-body (concat "\\(\\(" +outline-regexp-start "\\)" "+\\|" "\s?\\(#\\|;\\|\*\\)+" "\\)"))
+          (setq-local
+           +outline-regexp-start (+outline-chomp (or comment-start "#"))
+           +outline-regexp-body
+           (concat "\\(\\(" +outline-regexp-start "\\)" "+\\|" "\s?\\(#\\|;\\|\*\\)+" "\\)"))
           (make-local-variable 'outline-regexp)
-          (setq outline-regexp (concat "[ \t]*" +outline-regexp-start +outline-regexp-body (+outline-chomp comment-end) " [^ \t\n]"))))))
-  (add-hook! outline-minor-mode '+outline-minor-mode-setup-regexp '+outline-minor-mode-disable-evil-tab))
+          (setq outline-regexp
+                (concat
+                 "[ \t]*" +outline-regexp-start +outline-regexp-body
+                 (+outline-chomp comment-end)
+                 " [^ \t\n]"))))))
+  (add-hook! outline-minor-mode
+             '+outline-minor-mode-setup-regexp
+             '+outline-minor-mode-disable-evil-tab))
 
 (defadvice! +doom/switch-to-scratch-buffer (orig-fn &optional arg project-p)
   :around #'doom/switch-to-scratch-buffer
   (apply orig-fn (not arg) project-p))
 
 
+;;; +word-wrap
+(setq! +word-wrap-fill-style 'soft
+       ;; for line number
+       ;; https://codeberg.org/joostkremers/visual-fill-column/issues/4#issuecomment-416571
+       visual-fill-column-width 90
+       fill-column 80)
+(pushnew! +word-wrap-disabled-modes 'minibuffer-mode)
+
 (+global-word-wrap-mode +1)
 
-(defadvice! ++word-wrap--enable-global-mode (orig-fn)
-  :around #'+word-wrap--enable-global-mode
-  (unless (derived-mode-p 'prog-mode)
-    (funcall orig-fn)))
+;; (defadvice! ++word-wrap--enable-global-mode (orig-fn)
+;;   :around #'+word-wrap--enable-global-mode
+;;   (unless (derived-mode-p 'prog-mode)
+;;     (funcall orig-fn)))
 
 (set-popup-rules!
   '(("^\\*[Hh]elp" :slot 2 :side right :vslot -8 :size 0.35 :select t :quit current)
@@ -164,7 +181,7 @@
     ("^\\*Completions" :ignore t)
     ("^\\*Local variables\\*$" :vslot -1 :slot 1 :size +popup-shrink-to-fit)
     ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)" :vslot -2 :size 0.3 :autosave t :quit t :ttl nil)
-    ("^\\*\\(?:doom \\|Pp E\\)"          ; transient buffers (no interaction required)
+    ("^\\*\\(?:doom \\|Pp E\\)"    ; transient buffers (no interaction required)
      :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
     ("^\\*doom:"                        ; editing buffers (interaction required)
      :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
@@ -950,3 +967,6 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
      ;; and `buffer-terminator-interval'.)
      ;; (kill-buffer-property . inactive)
      (return . :keep))))
+
+;; quote “
+;; quote ”

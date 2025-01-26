@@ -648,10 +648,12 @@
          (:map cider-inspector-mode-map
           :n "s" 'yq-s-map
           :n "X" #'cider-inspector-set-page-size
-          :n "C-j" #'cider-inspector-next-inspectable-object
-          :n "C-k" #'cider-inspector-previous-inspectable-object
           :n "gj" #'cider-inspector-next-page
-          :n "gk" #'cider-inspector-prev-page)
+          :n "gk" #'cider-inspector-prev-page
+          :g "C-j" #'cider-inspector-next-inspectable-object
+          :g "C-k" #'cider-inspector-previous-inspectable-object
+          :n "C-j" #'cider-inspector-next-inspectable-object
+          :n "C-k" #'cider-inspector-previous-inspectable-object)
          (:map cider-repl-mode-map
                (:localleader
                 "sp" (cmd!

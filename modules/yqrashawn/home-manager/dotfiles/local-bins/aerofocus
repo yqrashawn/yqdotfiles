@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+# Check if an application name is provided as an argument
+if [ -z "$1" ]; then
+  echo "Usage: $0 <Application Name>"
+  exit 1
+fi
+
+# Assign the first argument to a variable
+app_name="$1"
+
+# Input data
+data=$(aerospace list-windows --all --json)
+current_window_id=$(aerospace list-windows --focused --json | jq 'first | .["window-id"]')
+
+# Extract the window ID for the specified application
+# window_id=$(echo "$data" | awk -F '|' -v app="$app_name" '$2 ~ app {gsub(/ /, "", $1); print $1}')
+
+# # Check if a window ID was found
+# if [ -n "$window_id" ]; then
+#   echo $window_id
+#   # aerospace focus --window-id "$window_id"
+# else
+#   exit 1
+# fi
+
+window_id=$(echo "$data" | jq --arg app "Emacs" --arg current_window_id $current_window_id '
+   map(select(.["app-name"] == $app and .["window-title"] != "" and .["window-id"] != $current_window_id)) | last | .["window-id"]
+')
+
+
+if [ "$window_id" -gt 0 ]; then
+  aerospace focus --window-id "$window_id"
+else
+  exit 0
+fi

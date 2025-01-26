@@ -26,22 +26,24 @@
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH %s"
   :yabai
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH yabai -m %s"
+  :ae
+  "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/aerofocus %s"
   :aero
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH aerospace %s"
   :km
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
   :kb-maestro
   "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
-  :open                "open \"%s\""
-  :opena               "open -a \"%s\""
-  :curl                "/run/current-system/sw/bin/curl -s \"%s\""
+  :open                 "open \"%s\""
+  :opena                "open -a \"%s\""
+  :curl                 "/run/current-system/sw/bin/curl -s \"%s\""
   ;; :hsl
   ;; "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"%s\")'"
   :hsl
   "/opt/homebrew/bin/hs -A -n -q -t 0.01 -c 'hs.application.launchOrFocus(\"%s\")'"
-  :kitten              "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
-  :kitten-splits-layout              "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty goto-layout --match=state:active splits && /Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
-  :kitten-focus-window "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty focus-window --match %s"
+  :kitten               "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
+  :kitten-splits-layout "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty goto-layout --match=state:active splits && /Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty %s"
+  :kitten-focus-window  "/Applications/kitty.app/Contents/MacOS/kitten @ --to unix:/tmp/tkitty focus-window --match %s"
   :show
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'\n"
   :show-in-firefox
@@ -50,7 +52,7 @@
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c 'hs.application.launchOrFocus(\"Firefox Developer Edition\")'; bash ~/Dropbox/sync/scripts/switch-tab '%s'"
   :togg
   "PATH=/run/current-system/sw/bin:/opt/homebrew/bin:/usr/local/bin:$PATH hs -A -n -q -t 0.1 -c '\nlocal appName = \"%s\";\nlocal x = hs.application.find(appName);\nif x and x:isFrontmost() then\n  x:hide();\nelse\n  hs.application.launchOrFocus(appName);\nend'"
-  :yfocus              "sh ~/.config/yabai/focus-window %s"
+  :yfocus               "sh ~/.config/yabai/focus-window %s"
   :toggle
   "osascript -e 'set appName to \"%s\"\nset startIt to false\ntell application \"System Events\"\n  if not (exists process appName) then\n    set startIt to true\n  else if frontmost of process appName then\n    set visible of process appName to false\n  else\n    set frontmost of process appName to true\n  end if\nend tell\nif startIt then\n  tell application appName to activate\nend if'"
   :type
@@ -81,16 +83,16 @@
   :emacs-bufmove-mode    {:key :f :condi :emacs-windmove-mode}
   :period-mode           {:key     :period
                           :afterup {:set ["period-comma-mode" 0]}
-                          :condi   [:!emacs-s-mode :!tmux-windmove-mode
+                          :condi   [:!emacs-s-mode :!tmux-windmove-mode :!kitty-windmove-mode
                                     :!k2-mode]}
   :comma-mode            {:key   :comma
-                          :condi [:!emacs-s-mode :!tmux-windmove-mode]}
+                          :condi [:!emacs-s-mode :!tmux-windmove-mode :!kitty-windmove-mode]}
   :tmux-windmove-mode    {:key :q :condi [:Terminals :!comma-mode :!period-mode]}
   :kitty-windmove-mode   {:key :q :condi [:kitty :!comma-mode :!period-mode]}
   :kitty-windresize-mode {:key :c :condi :kitty-windmove-mode}
   :warp-windmove-mode    {:key :q :condi [:Warp :!comma-mode :!period-mode]}
   :tmux-windresize-mode  {:key :c :condi :tmux-windmove-mode}
-  :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode]}}
+  :k2-mode               {:key :2 :condi [:!tab-mode :!tmux-windmove-mode :!kitty-windmove-mode]}}
  :simlayers
  {:test-mode             {:key :9}
   :contexts-f-mode       {:key :f :condi :!Games}
@@ -135,11 +137,20 @@
   ;;          [:return_or_enter :!Sreturn_or_enter]
   ;;          [:!Tm :!Sreturn_or_enter]
   ;;          [:!Creturn_or_enter :return_or_enter]]}
+  {:des   :wine-games
+   :rules [:Games
+           [:left_control :spacebar :adv360]
+           [:escape :spacebar :adv360]
+           [:delete_or_backspace :left_control :adv360]
+           [:left_command :left_control :adv360]
+           [:f22 :escape :adv360]
+           [:grave_accent_and_tilde :escape :uhk]]}
   {:des   "chatgpt"
-   :rules [[:f23 :!OS8]
+   :rules [;; [:f23 :!OS8]
            ;; [:f23 :!CT8]
            ;; [:f23 :f18]
-           ]}
+           [:f23 [:hsl "/Applications/ChatGPT.app"] :!Games]
+           [:f23 :left_control :Games]]}
   {:des   "unstuck emacs"
    :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)"
                    "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
@@ -440,10 +451,11 @@
            ;; [:j [:sh "open -a kitty --args -o allow_remote_control=yes --single-instance"]]
            ;; [:j [:op "/Applications/Rio.app"]]
            ;; [:k :same_wind_app :Emacs]
-           [:k [:hsl "/Applications/Emacs.app"]]
+           ;; [:k [:hsl "/Applications/Emacs.app"]]
+           [:k [:op "/Applications/Emacs.app"]]
            [:u [:!CTcomma]]
 
-           [:quote [:hsl "Perplexity"]]
+           [:quote [:op "/Applications/Perplexity"]]
            [:t [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.todoist.com/&create-when-missing=1&pin=1&idx=6"]]
            [:n [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://www.notion.so/&create-when-missing=1&pin=1&idx=3"]]
            [:9 [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://discord.com/&create-when-missing=1&pin=1&idx=1"]]
@@ -453,19 +465,20 @@
            [:comma :same_wind_app :Safari]
            [:l [:op "/Applications/Firefox Developer Edition.app"] :!Firefoxes]
            [:l :same_wind_app :Firefoxes]
-           [:return_or_enter [:togg "/Applications/ChatGPT.app"]]
+           [:return_or_enter [:op "/System/Applications/iPhone Mirroring.app"]]
+           ;; [:return_or_enter :!OS8]
            [:m [:op "/System/Applications/Mail.app"]]
            [:v [:op "/Applications/WeChat.app"]]
            [:q [:op "/Applications/Karabiner-Elements.app"]]
            [:f [:op "/System/Library/CoreServices/Finder.app"]]
            [:y :!!x]                    ; Dash
            [:6 :!!z]
-           ;; [:r [:hsl "Orion"]]
+           ;; [:r [:op "/Applications/Orion"]]
            ;; [:hyphen [:togg "RapidApi"]]
            ;; [:equal_sign [:togg "Textual"]]
            [:period [:togg "Surge Dashboard"] :Surge]
            [:period [:togg "Surge"]]
-           [:8 [:hsl "Karabiner-EventViewer"]]
+           [:8 [:op "/Applications/Karabiner-EventViewer"]]
            ;; [:c [:togg "Visual Studio Code"]]
            [:c [:togg "Zed"]]
            [:e [:w :e]]]}
@@ -608,6 +621,7 @@
            :kitty-windmove-mode
            [:return_or_enter :!Ct]
            [:m [:!CS8 :m]]
+           [:comma [:!CS8 :comma]]
            [:hyphen [:kitten "load-config"]]
            [:open_bracket
             [[:hsl "/Applications/Emacs.app"]

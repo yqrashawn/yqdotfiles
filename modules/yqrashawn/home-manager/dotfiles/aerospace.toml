@@ -27,8 +27,8 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
-# on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focused-monitor-changed = []
+on-focused-monitor-changed = ['move-mouse window-lazy-center']
+# on-focused-monitor-changed = []
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
@@ -74,7 +74,10 @@ if.app-id = 'ai.perplexity.mac'
 run = [ 'move-node-to-workspace B' ]
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'
-run = [ 'move-node-to-workspace B' ]
+run = [ 'layout floating', 'move-node-to-workspace B' ]
+[[on-window-detected]]
+if.app-id = 'ai.perplexity.mac'
+run = [ 'layout floating', 'move-node-to-workspace B' ]
 
 ### coding workspace
 [[on-window-detected]]

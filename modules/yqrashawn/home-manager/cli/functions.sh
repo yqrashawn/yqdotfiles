@@ -65,4 +65,11 @@ _dopy_completion() {
     return 0
 }
 
-complete -o default -F _dopy_completion sysdo
+# Check if the script is running in Zsh
+if [ -n "$ZSH_VERSION" ]; then
+    # Use compdef for Zsh
+    compdef _dopy_completion sysdo
+elif [ -n "$BASH_VERSION" ]; then
+    # Use complete for Bash
+    complete -o default -F _dopy_completion sysdo
+fi
