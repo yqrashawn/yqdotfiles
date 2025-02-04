@@ -1,120 +1,5 @@
 ;;; lang/clojure.el -*- lexical-binding: t; -*-
 
-(defvar pkg-status-mobile--references nil
-  "Store references, for debugging purposes.")
-
-(defvar pkg-status-mobile--debug-p nil
-  "When non-nil, enable debugging.")
-
-(defun pkg-status-mobile/re-frame-find-file-from-ref (reference keyword-to-find curr-point-marker)
-  (let* ((path (replace-regexp-in-string "file://" "" (map-elt reference :uri)))
-         (line-number (map-nested-elt reference [:range :start :line]))
-         (line-column (map-nested-elt reference [:range :start :character]))
-         (open-file-at-reg-call (lambda ()
-                                  (find-file path)
-                                  (goto-char (point-min))
-                                  (forward-line line-number)
-                                  (forward-char line-column)
-                                  (recenter-top-bottom)
-                                  (evil-set-jump)
-                                  (xref-push-marker-stack curr-point-marker)
-                                  (throw 'found 'deferred))))
-    (with-temp-buffer
-      (insert-file-contents path)
-      (clojure-mode)
-      (goto-char (point-min))
-      (forward-line line-number)
-      (forward-char line-column)
-      (when (beginning-of-defun)
-        (paredit-forward-down)
-        (let ((thing (thing-at-point 'symbol 'no-properties)))
-          (cond
-           ((string-equal "rf/defn" thing)
-            ;; Cursor will be at the end of the (optional) docstring closing
-            ;; double quotes or at the end of a line like {:events XYZ}, or the
-            ;; body of the event handler, in which case no match will be found.
-            (paredit-forward 3)
-            (backward-char)
-            (if (clojure--in-string-p) ; at docstring
-                (progn
-                  (forward-line)
-                  (beginning-of-line)
-                  (when (search-forward (concat "{:events [" keyword-to-find "]") (line-end-position) t)
-                    (funcall open-file-at-reg-call)))
-              (beginning-of-line)
-              (when (search-forward (concat "{:events [" keyword-to-find "]") (line-end-position) t)
-                (funcall open-file-at-reg-call))))
-
-           ((or (string-match-p "rf/reg-.*" thing)
-                (string-match-p "re-frame/reg-.*" thing)
-                (string-match-p "reg-root-key-sub" thing))
-            (paredit-forward 2)
-            (when (string-equal keyword-to-find (thing-at-point 'symbol 'no-properties))
-              (funcall open-file-at-reg-call)))))))))
-
-(defun pkg-status-mobile/re-frame-find-references-raw ()
-  (let ((exclude-declaration nil))
-    (lsp-request "textDocument/references"
-                 (append (lsp--text-document-position-params)
-                         (list :context
-                               `(:includeDeclaration ,(lsp-json-bool (not (or exclude-declaration lsp-references-exclude-definition)))))))))
-
-(defun pkg-status-mobile/re-frame-find-registration ()
-  (interactive)
-  (let ((keyword-to-find (thing-at-point 'symbol 'no-properties))
-        (references (pkg-status-mobile/re-frame-find-references-raw))
-        (curr-point-marker (point-marker)))
-    (when pkg-status-mobile--debug-p
-      (setq pkg-status-mobile--references references))
-    (catch 'found
-      (seq-doseq (ref references)
-        (pkg-status-mobile/re-frame-find-file-from-ref ref keyword-to-find curr-point-marker)))))
-
-(defadvice! ++lsp-lookup-definition-handler (_orig-fn)
-  "Find definition of the symbol at point using LSP."
-  :around #'+lsp-lookup-definition-handler
-  (interactive)
-  (when-let (loc (lsp-request "textDocument/definition"
-                              (lsp--text-document-position-params)))
-    (if (and
-         (require 'clojure-mode nil t)
-         (eq major-mode 'clojurescript-mode)
-         (string= (lsp:location-uri loc) (concat "file://" (buffer-file-name (current-buffer)))))
-        (let* ((current-bounds (bounds-of-thing-at-point 'symbol))
-               (start (car current-bounds))
-               (end (cdr current-bounds))
-               (start-line (line-number-at-pos start))
-               (end-line (line-number-at-pos end))
-               (start-column (save-excursion (goto-char start) (current-column)))
-               (end-column (save-excursion (goto-char end) (current-column))))
-
-          (when (and (-> loc
-                         lsp:location-range
-                         lsp:range-start
-                         lsp:position-line
-                         (+ 1)
-                         (eq start-line))
-                     (-> loc
-                         lsp:location-range
-                         lsp:range-start
-                         lsp:position-character
-                         (eq start-column))
-                     (-> loc
-                         lsp:location-range
-                         lsp:range-end
-                         lsp:position-line
-                         (+ 1)
-                         (eq end-line))
-                     (-> loc
-                         lsp:location-range
-                         lsp:range-end
-                         lsp:position-character
-                         (eq end-column)))
-            (log/spy (call-interactively #'pkg-status-mobile/re-frame-find-registration))))
-      (progn
-        (lsp-show-xrefs (lsp--locations-to-xref-items loc) nil nil)
-        'deferred))))
-
 (set-lookup-handlers! '(cider-mode cider-repl-mode)
   :definition #'+clojure-cider-lookup-definition
   :documentation #'cider-doc)
@@ -160,13 +45,7 @@
   (+re-add-clojure-mode-extra-font-locking)
   (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     lsp-ui-sideline-show-code-actions nil
-    lsp-ui-sideline-show-diagnostics nil)
-  ;; (setq cider-clojure-cli-global-options "-T:portal-cli")
-
-  ;; (setq-hook! 'clojurescript-mode-hook
-  ;;   +lookup-definition-functions
-  ;;   (seq-concatenate 'list '(+lookup-status-mobile-re-frame-event-handler-defination) +lookup-definition-functions))
-  )
+    lsp-ui-sideline-show-diagnostics nil))
 
 ;;; lispy
 (defun +in-babashka-p ()

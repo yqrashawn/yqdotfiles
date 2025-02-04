@@ -22,84 +22,43 @@
 (use-package! crontab-mode :defer t)
 (use-package! jsonnet-mode :mode "\.jsonnet\'")
 
-(defun +disable-lsp-watcher-in-some-project ()
-  (setq-local lsp-enable-file-watchers nil)
-  ;; (when (string= (directory-file-name (doom-project-root)) (directory-file-name (getenv "HOME")))
-  ;;   (setq-local lsp-enable-file-watchers nil))
-  )
-
-;; (setq! +lsp-company-backends
-;;          (if (modulep! :editor snippets)
-;;              '(:separate company-tabnine-capf company-files company-yasnippet)
-;;            '(:separate company-tabnine-capf company-files)))
-(setq! +lsp-company-backends nil)
-
-;; (advice-add #'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
-(setq-default lsp-enable-file-watchers nil)
 (setq! lsp-use-plists t)
-
-(defun ++lsp-init-company-backends-h ()
-  (when lsp-completion-mode
-    (make-local-variable 'company-backends)
-    (setq company-backends (remq nil company-backends))
-    (setq company-backends (remq 'company-tabnine company-backends))
-    (setq company-backends (remq 'company-capf company-backends))
-    (cond
-     ((memq major-mode +lispy-modes)
-      (setq company-backends (pushnew! company-backends ;; 'company-tabnine
-                                       'company-capf)))
-     (t
-      (setq company-backends (pushnew! company-backends 'company-capf ;; 'company-tabnine
-                                       ))))))
-
-(when (modulep! :lang nim)
-  (after! nim-mode
-    (add-hook! 'nim-mode-hook #'lsp))
-  (after! nim-suggest
-    (defadvice! +nimsuggest--call-sync (orig-fn method callback)
-      "nim-log in nimsuggest--call-sync takes to much cpu and mem"
-      :around #'nimsuggest--call-sync
-      (cl-letf (((symbol-function 'nim-log) (lambda (&rest _args))))
-        (funcall orig-fn method callback)))))
 
 (setq! lsp-copilot-enabled nil)
 (after! lsp-mode
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages)
-  (setq! lsp-completion-provider :none)
-  (pushnew! lsp-language-id-configuration '((nix-mode . "nix")))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("nil"))
-                    :major-modes '(nix-mode)
-                    :server-id 'nix))
-  (when (modulep! :completion company)
-    (add-hook! 'lsp-completion-mode-hook :append '++lsp-init-company-backends-h t))
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (setq!
+   lsp-diagnostic-clean-after-change nil
+   lsp-completion-provider :none
+   lsp-log-io t
    lsp-copilot-enabled nil
-   ;; lsp-imenu-sort-methods '(position)
-   ;; lsp-eldoc-enable-hover nil
-   ;; lsp-disabled-clients '(javascript-typescript-langserver)
+   lsp-diagnostics-provider :flycheck
    lsp-disabled-clients '(copilot-ls graphql-lsp)
-   lsp-enable-file-watchers nil
-   lsp-file-watch-threshold 200
    lsp-bash-highlight-parsing-errors t
-   lsp-eslint-package-manager "yarn"
+   lsp-eslint-package-manager "npm"
    lsp-eslint-run "onSave"
    lsp-eslint-auto-fix-on-save t
-   lsp-completion-show-detail nil
-   lsp-completion-show-kind nil
+   lsp-semantic-tokens-enable nil
+   lsp-completion-show-detail t
+   lsp-completion-show-kind t
    lsp-completion-sort-initial-results nil)
-  (pushnew! lsp-file-watch-ignored-directories "[/\\\\]coverage'" "[/\\\\]lcov-report'" "[/\\\\]\\.log\\'" "[/\\\\]\\.clj-kondo" "[/\\\\]\\storybook-static" "[/\\\\]\\.storybook" "[/\\\\]releases" "[/\\\\]\\.yarn" "[/\\\\]\\.vscode" "[/\\\\]build'" "[/\\\\]\\.shadow-cljs" "[/\\\\]cljs-runtime" "[/\\\\]dist" "[/\\\\]__snapshots__'" "[/\\\\]sp_")
-
-  ;; (defadvice! +lsp-f-same? (orig-fn file-a file-b)
-  ;;   :around #'lsp-f-same?
-  ;;   (cl-flet ((f-exists? '+f-exists?))
-  ;;     (funcall orig-fn file-a file-b)))
-  )
-
-;; (after! lsp-graphql
-;;   (setf (lsp--client-priority (gethash 'graphql-lsp lsp-clients)) -3))
+  (pushnew! lsp-file-watch-ignored-directories
+            "[/\\\\]coverage'"
+            "[/\\\\]lcov-report'"
+            "[/\\\\]\\.next\\'"
+            "[/\\\\]\\.wrangler\\'"
+            "[/\\\\]\\.log\\'"
+            "[/\\\\]\\.logs\\'"
+            "[/\\\\]\\storybook-static"
+            "[/\\\\]\\.storybook"
+            "[/\\\\]releases"
+            "[/\\\\]build'"
+            "[/\\\\]cljs-runtime"
+            "[/\\\\]dist"
+            "[/\\\\]__snapshots__'"
+            "[/\\\\]sp_"))
 
 (after! consult-lsp
   (defun +consult-lsp--diagnostics--transformer (file diag)
@@ -141,7 +100,11 @@
   :mode
   (("\\.proto" . protobuf-mode)))
 
-(add-hook! '(go-ts-mode-hook typescript-ts-mode-hook tsx-ts-mode-hook) :append #'lsp)
+(add-hook! '(go-ts-mode-hook
+             typescript-ts-mode-hook
+             tsx-ts-mode-hook
+             nix-mode-hook)
+           :append #'lsp)
 
 (use-package! treesit-auto
   :hook (doom-first-file . global-treesit-auto-mode)
@@ -237,15 +200,16 @@
 
 ;;   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
 
-;; (after! lsp-mode
-;;   (cl-defun +apheleia-lsp-format-buffer
-;;       (&key buffer scratch callback &allow-other-keys)
-;;     "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
-;;     (let* ((workspaces (with-current-buffer buffer (lsp-workspaces))))
-;;       (with-current-buffer scratch
-;;         (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
-;;           (with-lsp-workspaces workspaces (lsp-format-buffer)))
-;;         (funcall callback)))))
+;; use lsp as formatter
+(after! lsp-mode
+  (cl-defun +apheleia-lsp-format-buffer
+      (&key buffer scratch callback &allow-other-keys)
+    "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
+    (let* ((workspaces (with-current-buffer buffer (lsp-workspaces))))
+      (with-current-buffer scratch
+        (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
+          (with-lsp-workspaces workspaces (lsp-format-buffer)))
+        (funcall callback)))))
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode)))
@@ -315,13 +279,3 @@
 
 (use-package! yaml-pro
   :mode (("\\.yaml$" . yaml-pro-ts-mode)))
-
-;; (after! acm
-;;   (setq! acm-enable-tabnine nil)
-;;   (setq! acm-enable-tabnine t))
-
-;; (after! lsp-golangci-lint
-;;   (setq! lsp-golangci-lint-enable-all t
-;;     lsp-golangci-lint-disable '("lll")))
-
-(add-hook! 'nix-mode-hook 'lsp)

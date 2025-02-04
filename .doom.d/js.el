@@ -71,10 +71,8 @@
 
 (after! lsp-mode
   (setq-hook! '(rjsx-mode-hook js2-mode-hook js-mode-hook typescript-mode-hook)
-    ;; company-tabnine--disabled nil
-    +format-with-lsp nil
-    ;; lsp-completion-enable nil
-    )
+    +format-with-lsp nil)
+
   (setq! lsp-clients-typescript-log-verbosity "off"
          lsp-clients-typescript-server-args '("--stdio"
                                               "--log-level"
@@ -96,18 +94,19 @@
                :name "@snapshot-tools/typescript-snapshots-plugin"
                :location vsintel)))))
 
-  (defadvice! +lsp--get-buffer-diagnostics (orig-fn)
-    :around #'lsp--get-buffer-diagnostics
-    (seq-filter
-     (lambda (i)
-       (if (hash-table-p i)
-           (and
-            ;; ts-ls
-            (not (string-match-p "Could not find a declaration file for module .* implicitly has an .*any.* type" (gethash "message" i)))
-            ;; deno
-            (not (string-match-p "Relative import path .* not prefixed with .*file:.*" (gethash "message" i))))
-         t))
-     (funcall orig-fn))))
+  ;; (defadvice! +lsp--get-buffer-diagnostics (orig-fn)
+  ;;   :around #'lsp--get-buffer-diagnostics
+  ;;   (seq-filter
+  ;;    (lambda (i)
+  ;;      (if (hash-table-p i)
+  ;;          (and
+  ;;           ;; ts-ls
+  ;;           (not (string-match-p "Could not find a declaration file for module .* implicitly has an .*any.* type" (gethash "message" i)))
+  ;;           ;; deno
+  ;;           (not (string-match-p "Relative import path .* not prefixed with .*file:.*" (gethash "message" i))))
+  ;;        t))
+  ;;    (funcall orig-fn)))
+  )
 
 (use-package! typescript-ts-mode
   :mode (("\\.cts\\'" . typescript-ts-mode)

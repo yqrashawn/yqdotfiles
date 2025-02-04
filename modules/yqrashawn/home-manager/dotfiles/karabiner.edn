@@ -149,8 +149,11 @@
    :rules [;; [:f23 :!OS8]
            ;; [:f23 :!CT8]
            ;; [:f23 :f18]
-           [:f23 [:hsl "/Applications/ChatGPT.app"] :!Games]
-           [:f23 :left_control :Games]]}
+           ;; [:f23 [:hsl "/Applications/ChatGPT.app"] :!Games]
+           [:f23 [:op "/Applications/ChatGPT.app"] :!Games]
+           [:f23 :left_control :Games]
+           [:##right_option :right_option :adv2
+            {:alone [:op "/Applications/ChatGPT.app"]}]]}
   {:des   "unstuck emacs"
    :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)"
                    "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
@@ -452,7 +455,8 @@
            ;; [:j [:op "/Applications/Rio.app"]]
            ;; [:k :same_wind_app :Emacs]
            ;; [:k [:hsl "/Applications/Emacs.app"]]
-           [:k [:op "/Applications/Emacs.app"]]
+           [:k [:open "/Applications/Emacs.app"]]
+           ;; [:k [:op "/Applications/Emacs.app"]]
            [:u [:!CTcomma]]
 
            [:quote [:op "/Applications/Perplexity"]]
@@ -684,7 +688,7 @@
            [:s :!CSd]]}
   {:des "aero mode"
    :rules
-   [ ;; move windows
+   [;; move windows
     :yabai-warp-mode
     [:h [:aero "move left"]]
     [:j [:aero "move down"]]
@@ -806,15 +810,6 @@
            [:##s ["mouse_keys_mode_v4_scroll" 1] nil
             {:afterup ["mouse_keys_mode_v4_scroll" 0]}]
            [:##f {:mkey {:speed 0.5}}]]}
-  {:des   "REBL key bindings"
-   :rules [:REBL
-           [:l :!Cright_arrow]
-           [:h :!Cleft_arrow]
-           [:!Sa :!CSleft_arrow]
-           [:b :!Tb]
-           [:v :!Tv]
-           [:k :!Tup_arrow]
-           [:j :!Tdown_arrow]]}
   {:des   "Emacs key bindings [control+keys] (rev 10)"
    :rules [[:!T#Sy :!Cv :!Emacs]
            :!emacs-mode-disable-app

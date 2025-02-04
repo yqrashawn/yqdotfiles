@@ -975,53 +975,6 @@ result instead of `message'."
    (not (s-contains? " " s))))
 
 ;;;###autoload
-(defun +lookup-status-mobile-re-frame-event-handler-defination (_thing)
-  (when (++clojure-keywordp _thing)
-    (project-search (regexp-quote (concat "{:events [" _thing "]}"))))
-  t)
-
-;; (setq-local +lookup-definition-functions '(+lookup-status-mobile-re-frame-event-handler-defination))
-
-;;;###autoload
-(defun +stm-reload ()
-  (interactive)
-  (require 'seq)
-  (require 'cider)
-  (let ((buf (seq-find
-              (lambda (b) (eq (buffer-local-value 'major-mode b) 'clojurescript-mode))
-              (projectile-project-buffers (expand-file-name "~/workspace/office/status-mobile")))))
-    (when buf
-      (with-current-buffer buf
-        (when (and (cider-connected-p) (cider-current-repl 'cljs))
-          (cider-interactive-eval "(status-im.setup.hot-reload/reload)" nil nil (cider--nrepl-pr-request-map)))))))
-
-;;;###autoload
-(defun +status-start-sessions ()
-  (interactive)
-  (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
-        (async-shell-command-display-buffer nil))
-    (when (s-blank-p (shell-command-to-string "lsof -i :3449"))
-      (detached-shell-command "make run-clojure" t))
-    (when (s-blank-p (shell-command-to-string "lsof -i :4567"))
-      (detached-shell-command "make run-re-frisk" t))
-    (when (s-blank-p (shell-command-to-string "lsof -i :8081"))
-      (detached-shell-command "make run-metro" t))))
-
-;;;###autoload
-(defun +status-start-session-lint-fix ()
-  (interactive)
-  (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
-        (async-shell-command-display-buffer nil))
-    (detached-shell-command "make lint-fix" t)))
-
-;;;###autoload
-(defun +status-start-session-lint ()
-  (interactive)
-  (let ((default-directory (expand-file-name "~/workspace/office/status-mobile"))
-        (async-shell-command-display-buffer nil))
-    (detached-shell-command "make lint" t)))
-
-;;;###autoload
 (defun +whisper-insert ()
   (interactive)
   (whisper-run)

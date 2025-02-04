@@ -64,16 +64,7 @@
     (cond
      ((file-remote-p project nil t) (file-readable-p project))
      ;; ((file-remote-p project))
-     ((not (file-remote-p project)) (file-readable-p project))))
-  (defun +projectile-status-mobile-project-p (&optional arg)
-    (require 's)
-    (s-ends-with? "status-mobile/" (doom-project-root)))
-  (projectile-register-project-type 'status-mobile '+projectile-status-mobile-project-p
-                                    :project-file "shadow-cljs.edn"
-                                    :compile "make run-clojure"
-                                    :src-dir "src"
-                                    :test "make test"
-                                    :test-suffix "_test.cljs"))
+     ((not (file-remote-p project)) (file-readable-p project)))))
 
 (after! dired
   (setq! dired-recursive-deletes 'always
