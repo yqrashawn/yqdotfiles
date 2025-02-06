@@ -1,0 +1,4 @@
+{:add-missing      {:add-to-rcf :always}
+ :java             {:download-jdk-source? true}
+ :semantic-tokens? true
+ :source-aliases   #{:dev :test :cljs}}

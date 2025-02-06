@@ -351,6 +351,10 @@
       target = "./clojure";
       recursive = true;
     };
+    clojure-lsp = {
+      source = ./clojure_lsp.edn;
+      target = "./clojure-lsp/config.edn";
+    };
     "mpv/mpv.conf" = { source = ./mpv.conf; };
     # yarn-global = {
     #   source = ./package.json;

@@ -40,10 +40,11 @@
    lsp-eslint-package-manager "npm"
    lsp-eslint-run "onSave"
    lsp-eslint-auto-fix-on-save t
-   lsp-semantic-tokens-enable nil
+   lsp-semantic-tokens-enable t
    lsp-completion-show-detail t
    lsp-completion-show-kind t
    lsp-completion-sort-initial-results nil)
+  (pushnew! lsp-signature-auto-activate :after-completion)
   (pushnew! lsp-file-watch-ignored-directories
             "[/\\\\]coverage'"
             "[/\\\\]lcov-report'"
@@ -112,48 +113,49 @@
   (setq!
    treesit-auto-langs '(tsx javascript typescript json yaml html)
    treesit-auto-install t
-   treesit-language-source-alist '(;; (bash "https://github.com/tree-sitter/tree-sitter-bash")
-                                   ;; (c "https://github.com/tree-sitter/tree-sitter-c")
-                                   ;; (clojure "https://github.com/sogaiu/tree-sitter-clojure")
-                                   ;; (cmake "https://github.com/uyha/tree-sitter-cmake")
-                                   ;; (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-                                   ;; (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-                                   ;; (css "https://github.com/tree-sitter/tree-sitter-css")
-                                   ;; (c-sharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-                                   ;; (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-                                   ;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-                                   ;; (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
-                                   ;; (fennel "https://github.com/TravonteD/tree-sitter-fennel")
-                                   ;; (fish "https://github.com/ram02z/tree-sitter-fish")
-                                   ;; (git-rebase "https://github.com/the-mikedavis/tree-sitter-git-rebase")
-                                   ;; (gitignore "https://github.com/shunsambongi/tree-sitter-gitignore")
-                                   ;; (git-commit "https://github.com/gbprod/tree-sitter-gitcommit")
-                                   ;; (gitattributes "https://github.com/ObserverOfTime/tree-sitter-gitattributes")
-                                   ;; (go "https://github.com/tree-sitter/tree-sitter-go")
-                                   ;; (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-                                   ;; (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
-                                   ;; (julia "https://github.com/tree-sitter/tree-sitter-julia")
-                                   ;; (make "https://github.com/alemuller/tree-sitter-make")
-                                   ;; (lua "https://github.com/MunifTanjim/tree-sitter-lua")
-                                   ;; (nix "https://github.com/nix-community/tree-sitter-nix")
-                                   ;; (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml")
-                                   ;; (perl "https://github.com/tree-sitter-perl/tree-sitter-perl")
-                                   ;; (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
-                                   ;; (rust "https://github.com/tree-sitter/tree-sitter-rust")
-                                   ;; (solidity "https://github.com/JoranHonig/tree-sitter-solidity")
-                                   ;; (sql "https://github.com/DerekStride/tree-sitter-sql")
-                                   ;; (scheme "https://github.com/6cdh/tree-sitter-scheme")
-                                   ;; (toml "https://github.com/ikatyang/tree-sitter-toml")
-                                   ;; (zig "https://github.com/maxxnino/tree-sitter-zig")
-                                   ;; (xml . ("https://github.com/ObserverOfTime/tree-sitter-xml" "master" "tree-sitter-xml/src"))
-                                   ;; (python "https://github.com/tree-sitter/tree-sitter-python")
-                                   (hlsl "https://github.com/theHamsta/tree-sitter-hlsl")
-                                   (json "https://github.com/tree-sitter/tree-sitter-json")
-                                   (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-                                   (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-                                   (html "https://github.com/tree-sitter/tree-sitter-html")
-                                   (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-                                   (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))))
+   treesit-language-source-alist
+   '(;; (bash "https://github.com/tree-sitter/tree-sitter-bash")
+     ;; (c "https://github.com/tree-sitter/tree-sitter-c")
+     ;; (clojure "https://github.com/sogaiu/tree-sitter-clojure")
+     ;; (cmake "https://github.com/uyha/tree-sitter-cmake")
+     ;; (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+     ;; (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+     ;; (css "https://github.com/tree-sitter/tree-sitter-css")
+     ;; (c-sharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+     ;; (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+     ;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     ;; (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+     ;; (fennel "https://github.com/TravonteD/tree-sitter-fennel")
+     ;; (fish "https://github.com/ram02z/tree-sitter-fish")
+     ;; (git-rebase "https://github.com/the-mikedavis/tree-sitter-git-rebase")
+     ;; (gitignore "https://github.com/shunsambongi/tree-sitter-gitignore")
+     ;; (git-commit "https://github.com/gbprod/tree-sitter-gitcommit")
+     ;; (gitattributes "https://github.com/ObserverOfTime/tree-sitter-gitattributes")
+     ;; (go "https://github.com/tree-sitter/tree-sitter-go")
+     ;; (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+     ;; (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
+     ;; (julia "https://github.com/tree-sitter/tree-sitter-julia")
+     ;; (make "https://github.com/alemuller/tree-sitter-make")
+     ;; (lua "https://github.com/MunifTanjim/tree-sitter-lua")
+     ;; (nix "https://github.com/nix-community/tree-sitter-nix")
+     ;; (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml")
+     ;; (perl "https://github.com/tree-sitter-perl/tree-sitter-perl")
+     ;; (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+     ;; (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     ;; (solidity "https://github.com/JoranHonig/tree-sitter-solidity")
+     ;; (sql "https://github.com/DerekStride/tree-sitter-sql")
+     ;; (scheme "https://github.com/6cdh/tree-sitter-scheme")
+     ;; (toml "https://github.com/ikatyang/tree-sitter-toml")
+     ;; (zig "https://github.com/maxxnino/tree-sitter-zig")
+     ;; (xml . ("https://github.com/ObserverOfTime/tree-sitter-xml" "master" "tree-sitter-xml/src"))
+     ;; (python "https://github.com/tree-sitter/tree-sitter-python")
+     (hlsl "https://github.com/theHamsta/tree-sitter-hlsl")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))))
 
 (after! js-json-mode
   (set-formatter! 'prettier-json
@@ -166,39 +168,39 @@
     :modes '(sql-mode)))
 
 ;;; lsp booster
-;; (progn
-;;   (defun lsp-booster--advice-json-parse (old-fn &rest args)
-;;     "Try to parse bytecode instead of json."
-;;     (or
-;;      (when (equal (following-char) ?#)
-;;        (let ((bytecode (read (current-buffer))))
-;;          (when (byte-code-function-p bytecode)
-;;            (funcall bytecode))))
-;;      (apply old-fn args)))
+(progn
+  (defun lsp-booster--advice-json-parse (old-fn &rest args)
+    "Try to parse bytecode instead of json."
+    (or
+     (when (equal (following-char) ?#)
+       (let ((bytecode (read (current-buffer))))
+         (when (byte-code-function-p bytecode)
+           (funcall bytecode))))
+     (apply old-fn args)))
 
-;;   (advice-add (if (progn (require 'json)
-;;                          (fboundp 'json-parse-buffer))
-;;                   'json-parse-buffer
-;;                 'json-read)
-;;               :around
-;;               #'lsp-booster--advice-json-parse)
+  (advice-add (if (progn (require 'json)
+                         (fboundp 'json-parse-buffer))
+                  'json-parse-buffer
+                'json-read)
+              :around
+              #'lsp-booster--advice-json-parse)
 
-;;   (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-;;     "Prepend emacs-lsp-booster command to lsp CMD."
-;;     (let ((orig-result (funcall old-fn cmd test?)))
-;;       (if (and (not test?) ;; for check lsp-server-present?
-;;                (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-;;                lsp-use-plists
-;;                (not (functionp 'json-rpc-connection)) ;; native json-rpc
-;;                (executable-find "emacs-lsp-booster"))
-;;           (progn
-;;             (when-let ((command-from-exec-path (executable-find (car orig-result)))) ;; resolve command from exec-path (in case not found in $PATH)
-;;               (setcar orig-result command-from-exec-path))
-;;             (message "Using emacs-lsp-booster for %s!" orig-result)
-;;             (cons "emacs-lsp-booster" orig-result))
-;;         orig-result)))
+  (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+    "Prepend emacs-lsp-booster command to lsp CMD."
+    (let ((orig-result (funcall old-fn cmd test?)))
+      (if (and (not test?) ;; for check lsp-server-present?
+               (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+               lsp-use-plists
+               (not (functionp 'json-rpc-connection)) ;; native json-rpc
+               (executable-find "emacs-lsp-booster"))
+          (progn
+            (when-let ((command-from-exec-path (executable-find (car orig-result)))) ;; resolve command from exec-path (in case not found in $PATH)
+              (setcar orig-result command-from-exec-path))
+            (message "Using emacs-lsp-booster for %s!" orig-result)
+            (cons "emacs-lsp-booster" orig-result))
+        orig-result)))
 
-;;   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
 
 ;; use lsp as formatter
 (after! lsp-mode

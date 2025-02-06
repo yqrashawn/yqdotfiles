@@ -12,7 +12,6 @@
                       clojure-mode
                       clojurec-mode
                       clojurescript-mode
-                      clojurex-mode
                       common-lisp-mode
                       emacs-lisp-mode
                       eshell-mode
@@ -39,6 +38,14 @@
                       fennel-mode
                       dune-mode
                       lfe-mode))
+
+(setq! +clojure-modes '(clojure-mode
+                        clojurec-mode
+                        clojurescript-mode))
+
+(setq! +clojure-modes-hooks '(clojure-mode-hook
+                              clojurec-mode-hook
+                              clojurescript-mode-hook))
 
 (defun +xcrun-devices ()
   (apply #'vconcat (a-vals (a-get (json-parse-string (shell-command-to-string "xcrun simctl list devices -j")) "devices"))))

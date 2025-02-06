@@ -10,12 +10,6 @@
 
 (setq! +clojure-load-clj-refactor-with-lsp t)
 
-(add-hook! (clojure-mode clojurescript-mode clojurec-mode)
-  (setq-local evil-shift-width 1))
-
-(setq-hook! '(cider-mode-hook) company-idle-delay 0.3)
-(setq-hook! '(clojure-mode-hook) lsp-lens-enable nil)
-
 ;;; clojure-mode
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t
@@ -23,6 +17,12 @@
          clojure-verify-major-mode nil
          clojure-align-reader-conditionals t
          clojure-defun-indents '(fn-traced))
+
+  (setq-hook! +clojure-modes-hooks
+    evil-shift-width 1
+    lsp-lens-enable nil
+    lsp-ui-sideline-show-code-actions nil
+    lsp-ui-sideline-show-diagnostics nil)
   ;; letsubs in status-mobile defview
   (pushnew! clojure-align-binding-forms "letsubs")
   ;; better-cond
@@ -42,10 +42,7 @@
                                         (regexp-opt clojure-built-in-dynamic-vars t)
                                         "\\>")
                                0 font-lock-builtin-face))))
-  (+re-add-clojure-mode-extra-font-locking)
-  (setq-hook! '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
-    lsp-ui-sideline-show-code-actions nil
-    lsp-ui-sideline-show-diagnostics nil))
+  (+re-add-clojure-mode-extra-font-locking))
 
 ;;; lispy
 (defun +in-babashka-p ()
@@ -54,7 +51,18 @@
        (cider--babashka-version)))
 
 (defun +in-clj-p ()
-  (memq major-mode '(clojure-mode clojurec-mode clojurescript-mode)))
+  (memq major-mode +clojure-modes))
+
+(defun +cider-repl-dir ()
+  (when (and (bound-and-true-p cider-mode) (cider-connected-p))
+    (with-current-buffer (cider-current-repl)
+      (expand-file-name default-directory))))
+
+(defun +project-cider-repl-connected ()
+  (let ((repl-dir (+cider-repl-dir)))
+    (if (string= (doom-project-root repl-dir) (doom-project-root))
+        t
+      nil)))
 
 (use-package! lispy
   :defer t
@@ -112,24 +120,24 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   (when cider-repl-input-start-mark
     (cider-repl--clear-region cider-repl-input-start-mark (point-max))))
 
-(add-hook! cider-mode
-  (defun +clojure-use-cider-over-lsp ()
-    "use cider over clojure-lsp for completion when cider is not connected"
+(add-hook! cider-inspector-mode
+  (defun +disable-evil-matchit-mode ()
+    (evil-matchit-mode -1)))
+
+(defun +clojure-use-cider-over-lsp ()
+  "use cider over clojure-lsp for completion when cider is not connected"
+  (when (+project-cider-repl-connected)
     (remove-hook! 'completion-at-point-functions :local
       'cider-complete-at-point 'lsp-completion-at-point)
     (add-hook! 'completion-at-point-functions :local :depth -100
                #'cider-complete-at-point)
     (add-hook! 'completion-at-point-functions :local :depth -99
-               #'lsp-completion-at-point)
+               #'lsp-completion-at-point))
 
-    ;; fix Regular expression too big
-    ;; https://github.com/clojure-emacs/cider/issues/2866
-    ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
-    (setq-local cider-font-lock-dynamically '(macro core deprecated))))
-
-(add-hook! cider-inspector-mode
-  (defun +disable-evil-matchit-mode ()
-    (evil-matchit-mode -1)))
+  ;; fix Regular expression too big
+  ;; https://github.com/clojure-emacs/cider/issues/2866
+  ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
+  (setq-local cider-font-lock-dynamically '(macro core deprecated)))
 
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
@@ -141,16 +149,22 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
              #'cider-complete-at-point)
   (setq-local cider-font-lock-dynamically nil))
 
-(add-hook! 'cider-disconnected-hook '+clojure-use-lsp-over-cider)
-
 (defun +setup-clojure-mode ()
   "sort namespace, cleanup log namespace on save"
-  (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns)
-  (if (bound-and-true-p lsp-mode)
-      (+clojure-use-lsp-over-cider)
-    (+clojure-use-cider-over-lsp)))
+  (when (+in-clj-p)
+    (add-hook! 'before-save-hook :local '+clojure-clean-log-ns 'clojure-sort-ns)
+    (if (+project-cider-repl-connected)
+        (+clojure-use-cider-over-lsp)
+      (+clojure-use-lsp-over-cider))))
 
-(add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook) '+setup-clojure-mode)
+(let ((+setup-clojure-mode-hooks
+       (append
+        +clojure-modes-hooks
+        '(cider-disconnected-hook
+          cider-connected-hook
+          cider-mode-hook
+          lsp-completion-mode-hook))))
+  (add-hook! +setup-clojure-mode-hooks '+setup-clojure-mode))
 
 (defun +cider-enable-fuzzy-completion ()
   (interactive)
@@ -169,8 +183,8 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
     (add-to-list 'completion-category-overrides (apply #'list 'cider found-styles (when found-cycle
                                                                                     (list found-cycle))))))
 
-(add-hook! 'cider-repl-mode-hook '+cider-enable-fuzzy-completion)
-(add-hook! 'cider-mode-hook '+cider-enable-fuzzy-completion)
+(add-hook! '(cider-mode-hook cider-repl-mode-hook)
+           '+cider-enable-fuzzy-completion)
 
 (after! cider
   (setq!
