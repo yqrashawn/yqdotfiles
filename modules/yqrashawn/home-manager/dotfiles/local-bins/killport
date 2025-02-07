@@ -1,0 +1,22 @@
+#!/bin/bash
+# killport.sh: kill the process listening on a specific port.
+# Usage: killport 3000
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 PORT_NUMBER"
+  exit 1
+fi
+
+PORT=$1
+
+# Get the process IDs (PIDs) that are listening on the port.
+# The '-t' flag ensures only the numeric PID is returned.
+PIDS=$(lsof -t -i:"$PORT")
+
+if [ -z "$PIDS" ]; then
+  echo "No process is listening on port $PORT"
+  exit 0
+fi
+
+echo "Killing process(es) on port $PORT: $PIDS"
+kill -9 $PIDS

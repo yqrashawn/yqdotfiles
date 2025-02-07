@@ -18,7 +18,8 @@
          clojure-align-reader-conditionals t
          clojure-defun-indents '(fn-traced))
 
-  (setq-hook! +clojure-modes-hooks
+  (setq-hook!
+      '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     evil-shift-width 1
     lsp-lens-enable nil
     lsp-ui-sideline-show-code-actions nil
@@ -60,7 +61,7 @@
 
 (defun +project-cider-repl-connected ()
   (let ((repl-dir (+cider-repl-dir)))
-    (if (string= (doom-project-root repl-dir) (doom-project-root))
+    (if (and repl-dir (string= (doom-project-root repl-dir) (doom-project-root)))
         t
       nil)))
 
@@ -137,7 +138,8 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   ;; fix Regular expression too big
   ;; https://github.com/clojure-emacs/cider/issues/2866
   ;; (setq-local cider-font-lock-dynamically '(macro core deprecated function var))
-  (setq-local cider-font-lock-dynamically '(macro core deprecated)))
+  (setq-local cider-font-lock-dynamically '(macro core deprecated)
+              corfu-auto-delay 0.24))
 
 (defun +clojure-use-lsp-over-cider ()
   "use clojure-lsp over cider for completion when cider is not connected"
@@ -147,7 +149,8 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
              #'lsp-completion-at-point)
   (add-hook! 'completion-at-point-functions :local :depth -99
              #'cider-complete-at-point)
-  (setq-local cider-font-lock-dynamically nil))
+  (setq-local cider-font-lock-dynamically nil
+              corfu-auto-delay 0.5))
 
 (defun +setup-clojure-mode ()
   "sort namespace, cleanup log namespace on save"
@@ -164,7 +167,8 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
           cider-connected-hook
           cider-mode-hook
           lsp-completion-mode-hook))))
-  (add-hook! +setup-clojure-mode-hooks '+setup-clojure-mode))
+  (dolist (h +setup-clojure-mode-hooks)
+    (add-hook h '+setup-clojure-mode)))
 
 (defun +cider-enable-fuzzy-completion ()
   (interactive)

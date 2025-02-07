@@ -63,8 +63,8 @@ bind ]] followpage next
 bind [[ followpage prev
 bind [c urlincrement -1
 bind ]c urlincrement 1
-bind <C-x> urlincrement -1
-bind <C-a> urlincrement 1
+" bind <C-x> urlincrement -1
+" bind <C-a> urlincrement 1
 bind T current_url tabopen
 bind yy clipboard yank
 bind ys clipboard yankshort

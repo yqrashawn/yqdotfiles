@@ -7,7 +7,9 @@ in {
     config = {
       global = { load_dotenv = true; };
       whitelist = {
-        prefix = [ "${home}/workspace/office" "${home}/workspace/home" ];
+        prefix = [ "${home}/workspace/office"
+                   "${home}/workspace/home"
+                   "/opt/homebrew/var/buildkite-agent/builds" ];
         exact = [ "${home}/miniser" ];
       };
     };

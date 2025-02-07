@@ -40,7 +40,7 @@
    lsp-eslint-package-manager "npm"
    lsp-eslint-run "onSave"
    lsp-eslint-auto-fix-on-save t
-   lsp-semantic-tokens-enable t
+   lsp-semantic-tokens-enable nil
    lsp-completion-show-detail t
    lsp-completion-show-kind t
    lsp-completion-sort-initial-results nil)
@@ -71,6 +71,7 @@
 
 (after! lsp-ui
   (setq!
+   lsp-ui-sideline-enable nil
    lsp-ui-doc-show-with-cursor nil
    lsp-ui-imenu-auto-refresh t
    lsp-ui-doc-header t

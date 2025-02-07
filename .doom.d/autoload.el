@@ -733,7 +733,9 @@ _b_ranch _j_next _k_prev _h_up
         (goto-char (point-max))
         (and (ignore-errors (re-search-backward "\\[taoensso.timbre :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
         (goto-char (point-max))
-        (and (ignore-errors (re-search-backward "\\[io.pedestal.log :as log\\]")) (call-interactively #'lispyville-delete-whole-line))))))
+        (and (ignore-errors (re-search-backward "\\[io.pedestal.log :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (goto-char (point-max))
+        (and (ignore-errors (re-search-backward "\\[\"@/spy\" :as log\\]")) (call-interactively #'lispyville-delete-whole-line))))))
 
 ;; https://xenodium.com/png-to-icns-emacs-dwim-style/
 ;;;###autoload
