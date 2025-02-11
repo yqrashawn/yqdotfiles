@@ -642,7 +642,11 @@
  (:after cider
          (:localleader
           (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
-                "r SPC" #'+cider-project-reload-exec))
+                (:prefix ("r" . "repl")
+                         "SPC" #'+cider-project-reload-exec
+                         "S" #'cider-repl-set-ns
+                         "n" #'cider-ns-reload
+                         "N" #'cider-ns-reload-all)))
          (:map cider-mode-map
           :g "C-c C-k" nil)
          (:map cider-inspector-mode-map

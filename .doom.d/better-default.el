@@ -16,8 +16,9 @@
        mode-require-final-newline nil
        confirm-kill-processes nil
        browse-url-generic-program "open"
-       browse-url-browser-function #'eww-browse-url
-       browse-url-secondary-browser-function #'browse-url-default-browser
+       ;; browse-url-browser-function #'eww-browse-url
+       ;; browse-url-secondary-browser-function #'browse-url-default-browser
+       browse-url-secondary-browser-function #'eww-browse-url
        make-backup-files nil
        mac-command-modifier 'super
        mac-right-command-modifier 'super

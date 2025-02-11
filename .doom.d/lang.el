@@ -43,7 +43,8 @@
    lsp-semantic-tokens-enable nil
    lsp-completion-show-detail t
    lsp-completion-show-kind t
-   lsp-completion-sort-initial-results nil)
+   lsp-completion-sort-initial-results nil
+   lsp-enable-file-watchers nil)
   (pushnew! lsp-signature-auto-activate :after-completion)
   (pushnew! lsp-file-watch-ignored-directories
             "[/\\\\]coverage'"

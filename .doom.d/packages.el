@@ -371,6 +371,7 @@
 (package! devdocs)
 (package! verb)
 (package! buffer-terminator)
+(package! ejc-sql)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
