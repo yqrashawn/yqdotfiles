@@ -1,5 +1,6 @@
 ;;; map.el -*- lexical-binding: t; -*-
 
+
 (define-prefix-command '+windmove-map)
 (define-prefix-command '+cmd-prefix-map)
 (define-prefix-command '+ctl-prefix-map)
@@ -45,7 +46,7 @@
  :g "s-m" #'+popup/toggle
  :g "s-u" #'revert-buffer
  :g "s-i" #'+side-notes-toggle-daily-note
- :g "s-j" #'+copilot-chat-display
+ :g "s-j" #'copilot-chat-display
  ;; :g "s-j" #'+whisper-run
  ;; :g "s-j" #'+chat-with-ai
  ;; :g "s-j" #'chatgpt-shell-prompt-compose

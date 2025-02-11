@@ -585,7 +585,7 @@ used in the POST request made to the LanguageTool server."
       (push (list "text" (buffer-substring-no-properties (point-min) (point-max))) arguments))))
 
 (use-package! languagetool
-  :hook ((org-mode markdown-mode rst-mode asciidoc-mode latex-mode LaTeX-mode) . languagetool-server-mode)
+  ;; :hook ((org-mode markdown-mode rst-mode asciidoc-mode latex-mode LaTeX-mode) . languagetool-server-mode)
   :init
   (setq!
    languagetool-api-key "foo"
@@ -931,6 +931,9 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   (let* ((bname (buffer-name))
          (bfile (buffer-file-name)))
     (cond
+     ((memq major-mode
+            '(copilot-chat-prompt-mode
+              copilot-chat-mode)) :keep)
      ((memq major-mode '(dired-mode)) :kill)
      ((and
        bfile

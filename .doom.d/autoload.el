@@ -1088,23 +1088,6 @@ result instead of `message'."
       default-directory))))
 
 ;;;###autoload
-(defun +copilot-chat-display ()
-  "Display copilot chat buffers."
-  (interactive)
-  (require 'copilot-chat)
-  (unless (copilot-chat--ready-p)
-    (copilot-chat-reset))
-  (let* ((buffers (copilot-chat--prepare-buffers))
-         (chat-buffer (car buffers))
-         (prompt-buffer (cadr buffers))
-         (list-buffer (get-buffer-create copilot-chat-list-buffer)))
-    (with-current-buffer list-buffer
-      (copilot-chat-list-mode))
-    (display-buffer chat-buffer)
-    (display-buffer list-buffer)
-    (display-buffer prompt-buffer)))
-
-;;;###autoload
 (defun +copilot-chat-custom-prompt-whole-buffer ()
   "Mark whole buffer, ask Copilot to review it, then unmark.
 It can be used to review the magit diff for my change, or other people's"
