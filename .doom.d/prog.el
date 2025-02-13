@@ -193,7 +193,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
        (concat
         "These are diff of changes I made within 30 minutes\n\n"
         (shell-command-to-string
-         "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/master"))))
+         (format!
+          "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
+          (magit-get-current-branch))))))
     b))
 
 (defun +project-files-buffers (file-list)
@@ -209,8 +211,11 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
 (defun +magit-wip-buffer-changed-within-n-min (n)
   (thread-last
     (shell-command-to-string
-     (format! "git reflog --since=\"%d minutes ago\" --name-only --pretty=format: refs/wip/wtree/refs/heads/master | grep -v '^$' | sort -u"
-              n))
+
+     (format!
+      "git reflog --since=\"%d minutes ago\" --name-only --pretty=format: refs/wip/wtree/refs/heads/%s | grep -v '^$' | sort -u"
+      n
+      (magit-get-current-branch)))
     s-lines
     (seq-filter (lambda (s) (not (string-empty-p s))))
     +project-files-buffers))
