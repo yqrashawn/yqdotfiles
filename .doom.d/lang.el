@@ -30,9 +30,8 @@
   (delete 'lsp-terraform lsp-client-packages)
   ;; (delq! 'lsp-ui-mode lsp-mode-hook)
   (setq!
-   lsp-diagnostic-clean-after-change nil
    lsp-completion-provider :none
-   lsp-log-io t
+   lsp-log-io nil
    lsp-copilot-enabled nil
    lsp-diagnostics-provider :flycheck
    lsp-disabled-clients '(copilot-ls graphql-lsp)
@@ -41,10 +40,16 @@
    lsp-eslint-run "onSave"
    lsp-eslint-auto-fix-on-save t
    lsp-semantic-tokens-enable nil
-   lsp-completion-show-detail t
-   lsp-completion-show-kind t
+   lsp-completion-show-detail nil
+   lsp-completion-show-kind nil
+   lsp-completion-filter-on-incomplete nil
    lsp-completion-sort-initial-results nil
-   lsp-enable-file-watchers nil)
+   lsp-keep-workspace-alive nil
+   lsp-enable-folding nil
+   lsp-enable-on-type-formatting nil
+   lsp-enable-file-watchers nil
+   lsp-before-save-edits t
+   lsp-lens-enable nil)
   (pushnew! lsp-signature-auto-activate :after-completion)
   (pushnew! lsp-file-watch-ignored-directories
             "[/\\\\]coverage'"

@@ -236,20 +236,23 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
        :side bottom
        :height 0.2
        :select nil
+       :ttl nil
        :quit t)
       ("^\\*Copilot-chat-prompt\\*$"
-       :slot 3
+       :slot 90
        :side right
-       :width 0.4
+       :width 0.38
        :height 0.15
-       :select t
+       :select 'current
+       :ttl nil
        :quit t)
       ("^\\*Copilot-chat\\*$"
-       :slot 2
+       :slot 89
        :side right
-       :width 0.4
+       :width 0.38
        :height 0.8
        :select nil
+       :ttl nil
        :quit t)))
   (defadvice! +copilot-chat-display (orig-fn)
     :around #'copilot-chat-display
@@ -257,11 +260,21 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
     (unless (copilot-chat--ready-p)
       (copilot-chat-reset))
     (copilot-chat-list-clear-buffers)
-    (let* ((buffers (copilot-chat--prepare-buffers))
+    (let* ((dd default-directory)
+           (buffers (copilot-chat--prepare-buffers))
            (region-str (and (region-active-p) (buffer-substring-no-properties (region-beginning) (region-end))))
            (chat-buffer (car buffers))
            (prompt-buffer (cadr buffers))
            (list-buffer (get-buffer-create copilot-chat-list-buffer)))
+      (with-current-buffer prompt-buffer
+        ;; this does not work
+        (add-hook!
+         'quit-window-hook
+         (cmd! ()
+               (quit-window nil (get-buffer-window copilot-chat--buffer))
+               (quit-window nil (get-buffer-window copilot-chat-list-buffer)))
+         :local)
+        (setq-local default-directory dd))
       (when region-str
         (with-current-buffer prompt-buffer
           (insert region-str)
