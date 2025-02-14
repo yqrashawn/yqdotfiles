@@ -29,13 +29,6 @@
       include = { path = "~/.gitconfig.local"; };
       alias = {
         fetch = "git fetch --tags";
-        branches = "!legit branches";
-        publish = "!legit publish";
-        unpublish = "!legit unpublish";
-        sync = "!legit sync";
-        switch = "!legit switch";
-        resync = "!legit resync";
-        undo = "!legit undo";
         # ---- git-submodule-update-checker
         submodule-updates = ''
           "!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f"'';
