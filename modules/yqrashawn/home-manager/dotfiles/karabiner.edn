@@ -449,7 +449,8 @@
            [:##open_bracket :!SOup_arrow]
            [:##close_bracket :!SOdown_arrow]]}
   {:des   "launcher mode"
-   :rules [:launch-mode
+   :rules [[:f21 [:f16 :hyphen :!Sn :y :x :t :return_or_enter]]
+           :launch-mode
            [:j [:op "/Applications/kitty.app"]]
            ;; [:j [:sh "open -a kitty --args -o allow_remote_control=yes --single-instance"]]
            ;; [:j [:op "/Applications/Rio.app"]]
@@ -458,7 +459,6 @@
            [:k [:open "/Applications/Emacs.app"]]
            ;; [:k [:op "/Applications/Emacs.app"]]
            [:u [:!CTcomma]]
-
            [:quote [:op "/Applications/Perplexity"]]
            [:t [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://app.todoist.com/&create-when-missing=1&pin=1&idx=6"]]
            [:n [:show-in-firefox-dev "http://localhost:61942/api/local-server/pext/switch-tab?url=https://www.notion.so/&create-when-missing=1&pin=1&idx=3"]]
@@ -816,7 +816,7 @@
            [:!Ob :!Oleft_arrow]
            [:!Of :!Oright_arrow]
            [:!Ow :!Cc]
-           [:!T#Od :delete_forward :!Firefoxes]
+           [:!T#Od :delete_forward [:!Firefoxes :!nyxt]]
            [:!T#Oh :delete_or_backspace]
            [:!T#SOw :!Odelete_or_backspace]
            ;; [:!T#Oi :tab]
@@ -954,6 +954,8 @@
                  "^com\\.brave\\.Browser$"
                  "^com\\.pushplaylabs\\.sidekick$"]
   :wechat       ["^com\\.tencent\\.xinWeChat$"]
+  :nyxt         [:paths
+                 "/common-lisp/nyxt/_build/cl-electron/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron"]
   :Games        ["^unity\\." "^com\\.Klei\\." "^unity\\.Klei\\."
                  "^org\\.Terraria"
                  "\\.rimworld$"

@@ -329,6 +329,10 @@ in {
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/kitty-map.conf ~/.config/kitty/kitty-map.conf
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/macos-launch-services-cmdline ~/.config/kitty/macos-launch-services-cmdline
         fi
+        if [ ! -e ~/.config/nyxt/config.lisp ]; then
+            echo 'link ~/.config/nyxt/config.lisp'
+            ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/nyxt.lisp ~/.config/nyxt/config.lisp
+        fi
       '';
     };
   };

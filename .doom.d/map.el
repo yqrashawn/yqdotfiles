@@ -761,6 +761,10 @@
           :n "q" #'quit-window
           :n "C-k" #'gptel-context-previous))
  (:after copilot-chat
+         (:map copilot-chat-prompt-mode-map
+          :g "C-3" (cmd! ()
+                         (copilot-chat-reset)
+                         (copilot-chat-display)))
          (:map copilot-chat-list-mode-map
           :n "m" #'copilot-chat-list-add-or-remove-buffer
           :n "x" #'copilot-chat-list-add-or-remove-buffer
