@@ -482,10 +482,10 @@
           :n "}" (cmd! (lispyville-insert-at-end-of-list 1) (insert ""))
           :ni "M-RET" #'lispyville-wrap-round
           :i "C-r" #'lispy-right
-          :i "C-i" #'lispy-parens-down)
-         :v "(" #'lispyville-wrap-round
-         :v "{" #'lispyville-wrap-braces
-         :v "[" #'lispyville-wrap-brackets)
+          :i "C-i" #'lispy-parens-down
+          :v "(" #'lispyville-wrap-round
+          :v "{" #'lispyville-wrap-braces
+          :v "[" #'lispyville-wrap-brackets))
  ;; (:after symex
  ;;   (:map symex-editing-mode-map
  ;;     :o "j" #'symex-go-forward
@@ -782,4 +782,9 @@
           :g "x" #'verb-show-vars))
  (:after org
          (:map org-mode-map
-          :g "C-c r" verb-command-map)))
+          :g "C-c r" verb-command-map))
+ (:after leetcode
+         (:map leetcode-solution-mode-map
+          :g "C-4" #'leetcode-try
+          :g "C-5" #'leetcode-restore-layout
+          :g "C-7" #'leetcode-submit)))

@@ -65,13 +65,13 @@ in {
     systemPackages = with pkgs; [ nix-doc sops ];
   };
 
+  nix.enable = true;
   nix.nixPath = [ "darwin=/etc/${config.environment.etc.darwin.target}" ];
   nix.extraOptions = ''
     extra-platforms = x86_64-darwin aarch64-darwin
   '';
 
   # auto manage nixbld users with nix darwin
-  nix.configureBuildUsers = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
@@ -81,7 +81,6 @@ in {
   programs.man.enable = true;
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   services.lorri.enable = true;
   # services.yabai = {
   #   enable = true;

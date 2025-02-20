@@ -338,8 +338,15 @@
 (package! memoize)
 ;; (package! kagi)
 (package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
-(package! copilot-chat :recipe (:host github :repo "chep/copilot-chat.el" :files ("*.el")))
+  :recipe (:host github
+           :repo "copilot-emacs/copilot.el"
+           :files ("*.el" "dist")))
+(package! copilot-chat
+  :pin "efc6af7acc6c92165a71942ec30dafe73ac8ff1a"
+  :recipe
+  (:host github
+   :repo "chep/copilot-chat.el"
+   :files ("*.el")))
 ;; (package! devdocs)
 
 (package! combobulate)
@@ -372,6 +379,9 @@
 (package! verb)
 (package! buffer-terminator)
 (package! ejc-sql)
+(package! leetcode)
+(package! minuet :recipe (:host github :repo "milanglacier/minuet-ai.el"))
+(package! polymode)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

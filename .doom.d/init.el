@@ -127,12 +127,12 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       (corfu +orderless +icons +dabbrev +dict)
+       (corfu +orderless +icons +dabbrev)
        ;; (company +childframe) ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy +fuzzy)     ; a search engine for love and life
-       vertico             ; the search engine of the future
+       (vertico +childframe)             ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -156,7 +156,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;unicode           ; extended unicode support for various languages
        (vc-gutter +pretty); vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
-       window-select     ; visually switch windows
+       ;; window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
 
@@ -198,7 +198,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;biblio            ; Writes a PhD for you (citation needed)
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        direnv
-       docker
+       (docker +lsp)
        editorconfig        ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
@@ -213,13 +213,13 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;; rgb                 ; creating color strings
        ;; taskrunner          ; taskrunner for all your projects
        ;; terraform           ; infrastructure as code
-       tmux                ; an API for interacting with tmux
-       ;; tree-sitter
+       ;; tmux                ; an API for interacting with tmux
+       tree-sitter
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
        (:if IS-MAC macos)  ; improve compatibility with macOS
-       tty                 ; improve the terminal Emacs experience
+       (tty +osc)                 ; improve the terminal Emacs experience
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -257,10 +257,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;latex             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
-       (lua +fennel +lsp)  ; one-based indices? one-based indices
+       (lua +fennel +lsp +tree-sitter)  ; one-based indices? one-based indices
        (markdown +grip)    ; writing docs for people to ignore
-       nim                 ; python + lisp at the speed of c
-       (nix +tree-sitter)  ; I hereby declare "nix geht mehr!"
+       ;; nim                 ; python + lisp at the speed of c
+       (nix +lsp +tree-sitter)  ; I hereby declare "nix geht mehr!"
        ;;(ocaml +tree-sitter)             ; an objective camel
        (org +dragndrop +journal +pandoc +pretty +roam2) ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
@@ -268,7 +268,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        ;;purescript        ; javascript, but functional
        (python +pyenv +tree-sitter +lsp)              ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
-       ;;racket            ; a DSL for DSLs
+       (racket +lsp +xp +hash-lang) ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
        (rest +jq)          ; Emacs as a REST client
        ;;rst               ; ReST in peace
@@ -300,7 +300,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
        :config
        ;;literate
-       (default +bindings +smartparens))
+       (default +bindings +smartparens +gnupg))
 
 ;; https://discourse.doomemacs.org/t/using-lsp-use-plists-with-doom/2832
 (setenv "LSP_USE_PLISTS" "true")

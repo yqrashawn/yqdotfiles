@@ -874,6 +874,7 @@
                   ;; ["https://app.clickup.com" clickup]
                   ["https://www.figma.com/file" figma]
                   ["https://alidocs.dingtalk.com" chrm]
+                  ["https://leetcode.com" chrm]
 
                   ;; scroll
                   ;; ["https?://.*scroll.*" chrmd]

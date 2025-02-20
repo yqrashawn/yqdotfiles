@@ -178,7 +178,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :init
   (setq! copilot-max-char -1
          copilot-idle-delay 10
-         ;; copilot-version "1.41.0"
          copilot-indent-offset-warning-disable t)
   :config
   (pushnew! copilot-indentation-alist
@@ -323,3 +322,35 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
   :defer t
   :init
   (set-popup-rule! "^\\*HTTP Response.*" :side 'right :size 0.4 :vslot 97 :quit t))
+
+(use-package! leetcode
+  :defer t
+  :init
+  (setq! leetcode-prefer-language "javascript"
+         leetcode-save-solutions t))
+
+(defvar minuet-openai-compatible-options
+  `(:end-point ,(concat +openrouter-url "/chat/completions")
+    :api-key ,(cl-constantly +openrouter-api-key)
+    ;; :model "qwen/qwen-2.5-coder-32b-instruct"
+    :model "google/gemini-2.0-flash-001"
+    :system
+    (:template minuet-default-system-template
+     :prompt minuet-default-prompt
+     :guidelines minuet-default-guidelines
+     :n-completions-template minuet-default-n-completion-template)
+    :fewshots minuet-default-fewshots
+    :chat-input
+    (:template minuet-default-chat-input-template
+     :language-and-tab minuet--default-chat-input-language-and-tab-function
+     :context-before-cursor minuet--default-chat-input-before-cursor-function
+     :context-after-cursor minuet--default-chat-input-after-cursor-function)
+    :optional nil)
+  "Config options for Minuet OpenAI compatible provider.")
+
+(use-package! minuet
+  :defer t
+  :init
+  (setq! minuet-context-window 512)
+  :config
+  (setq! minuet-provider 'openai-compatible))

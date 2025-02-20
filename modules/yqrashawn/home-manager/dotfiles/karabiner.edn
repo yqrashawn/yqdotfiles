@@ -132,11 +132,6 @@
              :Keybase
              [:return_or_enter :!Sreturn_or_enter]
              [:!Creturn_or_enter :return_or_enter]]}
-  ;; {:des   "Discord return"
-  ;;  :rules [:Discord
-  ;;          [:return_or_enter :!Sreturn_or_enter]
-  ;;          [:!Tm :!Sreturn_or_enter]
-  ;;          [:!Creturn_or_enter :return_or_enter]]}
   {:des   :wine-games
    :rules [:Games
            [:left_control :spacebar :adv360]
@@ -261,10 +256,10 @@
            [:o :!TOSo]                             ; upper right
            [:period :!TOSperiod]                   ; lower right
 
-           [:h :!TOSleft_arrow]  ; left half
-           [:l :!TOSright_arrow] ; right half
-           [:k :!TOSup_arrow]    ; top half
-           [:j :!TOSdown_arrow]  ; bottom half
+           [:h :!TOSleft_arrow]         ; left half
+           [:l :!TOSright_arrow]        ; right half
+           [:k :!TOSup_arrow]           ; top half
+           [:j :!TOSdown_arrow]         ; bottom half
 
            [:1 :!TOS1]                   ; register 1
            [:3 :!TOS3]                   ; register 3
