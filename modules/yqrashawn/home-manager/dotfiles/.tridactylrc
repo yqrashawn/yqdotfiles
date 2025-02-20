@@ -1,14 +1,14 @@
 " General Settings
 " sanitise tridactyllocal tridactylsync
-set update.lastchecktime 1645280034150
-set update.nag true
 set update.nagwait 1
 set update.lastnaggedversion 1.14.0
 set update.checkintervalsecs 10800
 set configversion 2.0
 set theme auto
-set followpagepatterns.prev Previous
-set followpagepatterns.next ^(next|newer)\b|»|>>|more
+# set hintfiltermode vimperator
+set hintfiltermode simple
+# set hintchars 5432167890
+set hintchars hjklasdfgyuiopqwertnmzxcvb
 set modeindicator false
 set searchurls.to https://www.thepiratebay.org/search/%s/0/99/0
 set searchurls.g https://www.google.com/search?tbs=li:1&q=%s
@@ -35,6 +35,9 @@ set searchurls.gentoo_wiki https://wiki.gentoo.org/index.php?title=Special%3ASea
 set searchurls.qwant https://www.qwant.com/?q=
 set searchengine g
 set allowautofocus true
+set escapehatchsidebarhack true
+set visualexitauto true
+set visualenterauto false
 set auconcreatecontainer true
 set editorcmd /run/current-system/sw/bin/emacsclient -a \"\" -c -e '(progn (find-file "%f") (forward-line (1- %l)) (forward-char %c))'
 
@@ -47,54 +50,21 @@ alias _cleanup_history_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles
 
 " Binds
 bind u scrollpage -0.5
-bind <C-d> stop
+bind <C-g> stop
 bind x tabclose
 bind X undo
-bind <A-p> pin
-bind <A-m> mute toggle
-bind <F1> help
-bind O current_url open
-bind w fillcmdline winopen
-bind W current_url winopen
-unbind W
 bind W js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/parse_page.js
 bind t fillcmdline tabopen
-bind ]] followpage next
-bind [[ followpage prev
-bind [c urlincrement -1
-bind ]c urlincrement 1
-" bind <C-x> urlincrement -1
-" bind <C-a> urlincrement 1
+bind --mode=visual t composite js document.getSelection().toString() | fillcmdline tabopen
 unbind <C-x>
 unbind <C-a>
-bind T current_url tabopen
-bind yy clipboard yank
-bind ys clipboard yankshort
-bind yc clipboard yankcanon
-bind ym clipboard yankmd
-bind yo clipboard yankorg
-bind yt clipboard yanktitle
-bind gh followpage prev
-bind gH home true
-bind p clipboard open
-bind P clipboard tabopen
-bind j scrollline 10
-bind k scrollline -10
-bind <C-e> scrollline 10
-bind <C-y> scrollline -10
 bind h tabprev
 bind l tabnext
-bind gg scrollto 0
-bind <C-u> scrollpage -0.5
 unbind <C-f>
-bind <C-b> scrollpage -1
+unbind <C-b>
 bind <C-v> nmode ignore 1 mode normal
 bind $ scrollto 100 x
 bind ^ scrollto 0 x
-bind H back
-bind <C-o> jumpprev
-bind <C-i> jumpnext
-bind D composite tabprev; tabclose #
 bind gx0 tabclosealltoleft
 bind gx$ tabclosealltoright
 bind << tabmove -1
@@ -103,117 +73,39 @@ bind U undo window
 bind r reload
 bind R reloadhard
 bind gi focusinput -l
-bind g? rot13
-bind g! jumble
 bind g; changelistjump -1
-bind J tabprev
-bind K tabnext
-bind gt tabnext_gt
-bind gT tabprev
-bind g^ tabfirst
-bind g0 tabfirst
-bind g$ tablast
-bind ga tabaudio
+bind J tabnext
+bind K tabprev
 bind gr reader
-bind gu urlparent
-bind gU urlroot
-bind gf viewsource
-bind : fillcmdline_notrail
-bind s fillcmdline open search
-bind M gobble 1 quickmark
-bind B fillcmdline taball
-bind b fillcmdline tab
-bind ZZ qall
-bind f hint
-bind F hint -b
 bind gF hint -qb
-bind ;i hint -i
-bind ;b hint -b
-bind ;o hint
-bind ;I hint -I
-bind ;k hint -k
-bind ;K hint -K
-bind ;y hint -y
-bind ;Y hint -cF img i => tri.excmds.yankimage(tri.urlutils.getAbsoluteURL(i.src))
-bind ;p hint -p
-bind ;h hint -h
-bind v hint -h
-bind ;P hint -P
-bind ;r hint -r
-bind ;s hint -s
-bind ;S hint -S
-bind ;a hint -a
-bind ;A hint -A
-bind ;; hint -; *
-bind ;# hint -#
-bind ;v hint -W mpvsafe
-bind ;V hint -V
-bind ;w hint -w
-bind ;t hint -W tabopen
-bind ;O hint -W fillcmdline_notrail open
-bind ;W hint -W fillcmdline_notrail winopen
-bind ;T hint -W fillcmdline_notrail tabopen
-bind ;z hint -z
-bind ;m composite hint -Jpipe img src | open images.google.com/searchbyimage?image_url=
-bind ;gi hint -qi
-bind ;gI hint -qI
-bind ;gk hint -qk
-bind ;gy hint -qy
-bind ;gp hint -qp
-bind ;gP hint -qP
-bind ;gr hint -qr
-bind ;gs hint -qs
-bind ;ga hint -qa
-bind ;gA hint -qA
-bind ;g; hint -q;
-bind ;g# hint -q#
-bind ;gv hint -qW mpvsafe
-bind ;gw hint -qw
-bind ;gb hint -qb
-bind ;gF hint -qb
-bind ;gf hint -q
-bind <S-Insert> mode ignore
-bind <AC-Escape> mode ignore
-bind <AC-`> mode ignore
-bind <S-Escape> mode ignore
-unbind <Escape>
-bind <C-[> composite mode normal ; hidecmdline
-bind a current_url bmark
-bind A bmark
+unbind a
+unbind A
+# bind a current_url bmark
+# bind A bmark
 bind C tabduplicate
-bind zi zoom 0.1 true
-bind zo zoom -0.1 true
-bind zm zoom 0.5 true
-bind zr zoom -0.5 true
-bind zM zoom 0.5 true
-bind zR zoom -0.5 true
-bind zz zoom 1
-bind zI zoom 3
-bind zO zoom 0.3
-bind . repeat
-bind gl followpage next
+bind zI zoom 1.3
+bind zO zoom 0.6
 bind gv js tri.native.run(`mpv '${document.location.href}'`)
 bind d scrollpage 0.5
-bind o fillcmdline open
-bind G scrollto 100
-bind L forward
-bind S fillcmdline tabopen search
-bind ;M composite hint -Jpipe img src | tabopen images.google.com/searchbyimage?image_url=
 bind ;gS hint -qS
 bind <AS-ArrowUp><AS-ArrowUp><AS-ArrowDown><AS-ArrowDown><AS-ArrowLeft><AS-ArrowRight><AS-ArrowLeft><AS-ArrowRight>ba open https://www.youtube.com/watch?v=M3iOROuTuMA
-bind gno tabopen https://manuals.plus/kinesis/advantage2-keyboard-manual#axzz7hxVfL2Hj
-bind goo open https://manuals.plus/kinesis/advantage2-keyboard-manual#axzz7hxVfL2Hj
-bind gwo winopen https://manuals.plus/kinesis/advantage2-keyboard-manual#axzz7hxVfL2Hj
-bind gnB tabopen https://my.setapp.com/devices
-bind goB open https://my.setapp.com/devices
-bind gwB winopen https://my.setapp.com/devices
-bind m gobble 1 markadd
-bind ` gobble 1 markjump
-bind <ArrowDown> ex.next_completion
-bind <ArrowUp> ex.prev_completion
-bind <Tab> ex.prev_history
-bind <S-Tab> ex.next_history
 bind <C-\> mouse_mode
+bind --mode=insert <Escape> composite unfocus ; quit_things ; mode normal ; hidecmdline
+bind --mode=input <C-j> focusinput -n
+bind --mode=input <C-k> focusinput -N
+unbind --mode=ex <C-f>
+bind --mode=ex <ArrowDown> ex.next_completion
+bind --mode=ex <ArrowUp> ex.prev_completion
+
+bind --mode=ex <C-j> ex.next_completion
+bind --mode=ex <C-k> ex.prev_completion
+bind --mode=ex <C-l> ex.accept_line
+
+bind --mode=ex <C-g> ex.hide_and_clear
+bind --mode=ex <Tab> ex.complete
+bind --mode=ex <C-p> ex.prev_history
+bind --mode=ex <C-n> ex.next_history
+bind --mode=ex <C-g> ex.hide_and_clear
 
 unbindurl app\.clickup\.com k
 unbindurl app\.clickup\.com j
@@ -311,39 +203,6 @@ unbindurl gh.status.im #
 unbindurl gh.status.im x
 unbindurl gh.status.im u
 unbindurl gh.status.im d
-bind --mode=insert <C-i> editor
-bind --mode=insert <Escape> composite unfocus | quit_things | mode normal
-bind --mode=insert <C-[> composite unfocus | mode normal
-bind --mode=insert <AC-Escape> mode normal
-bind --mode=insert <AC-`> mode normal
-bind --mode=insert <S-Escape> mode ignore
-bind --mode=input <C-i> editor
-bind --mode=input <Tab> focusinput -n
-bind --mode=input <S-Tab> focusinput -N
-bind --mode=input 🕷🕷INHERITS🕷🕷 imaps
-bind --mode=ex <ArrowDown> ex.next_completion
-bind --mode=ex <ArrowUp> ex.prev_completion
-bind --mode=ex <Enter> ex.accept_line
-bind --mode=ex <C-Enter> ex.execute_ex_on_completion
-bind --mode=ex <C-j> ex.next_history
-bind --mode=ex <C-m> ex.accept_line
-bind --mode=ex <Escape> ex.hide_and_clear
-bind --mode=ex <C-[> ex.hide_and_clear
-bind --mode=ex <S-Delete> ex.execute_ex_on_completion_args tabclose
-bind --mode=ex <A-b> text.backward_word
-bind --mode=ex <A-f> text.forward_word
-bind --mode=ex <C-e> text.end_of_line
-bind --mode=ex <A-d> text.kill_word
-bind --mode=ex <S-Backspace> text.backward_kill_word
-bind --mode=ex <C-u> text.backward_kill_line
-bind --mode=ex <C-k> ex.prev_history
-bind --mode=ex <C-f> ex.complete
-bind --mode=ex <Tab> ex.prev_history
-bind --mode=ex <S-Tab> ex.next_history
-bind --mode=ex <Space> ex.insert_space_or_completion
-bind --mode=ex <C-Space> ex.insert_space
-bind --mode=ex <C-o>yy ex.execute_ex_on_completion_args clipboard yank
-bind --mode=ex <C-g> ex.hide_and_clear
 
 " Subconfig Settings
 seturl www.google.com followpagepatterns.next Next

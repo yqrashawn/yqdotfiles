@@ -1,8 +1,10 @@
 tri.quitVoila = () =>
   document.querySelector('a[title="Esc"].Voila__IconButton')?.click()
+
 tri.quitThings = () => {
   tri.quitVoila()
 }
+
 tri.userIdle = (id, ms, fn) => {
   const realId = `${id}_idle_timer_defined`
   if (tri[realId]) return () => {}
@@ -22,4 +24,5 @@ tri.userIdle = (id, ms, fn) => {
 
   return () => clearTimeout(timeoutId)
 }
+
 tri.sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
