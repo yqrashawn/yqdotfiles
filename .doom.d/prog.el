@@ -178,7 +178,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :init
   (setq! copilot-max-char -1
          copilot-idle-delay 10
-         copilot-indent-offset-warning-disable t)
+         copilot-indent-offset-warning-disable t
+         copilot-server-executable (executable-find "copilot-language-server"))
   :config
   (pushnew! copilot-indentation-alist
             '(tsx-ts-mode typescript-ts-mode-indent-offset)
@@ -223,8 +224,8 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
   :defer t
   :init
   (setq!
-   ;; copilot-chat-model "claude-3.5-sonnet"
-   copilot-chat-model "o3-mini"
+   copilot-chat-model "claude-3.7-sonnet"
+   ;; copilot-chat-model "o3-mini"
    copilot-chat-frontend 'org)
   (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
     (defun +turn-off-languagetool-for-copilot-chat-buffers ()
