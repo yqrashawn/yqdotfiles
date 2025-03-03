@@ -549,6 +549,7 @@
   {:des "alfred mode"
    :rules
    [[:l :!COi :browsers-alfred-mode]
+    [:period [:!CTcomma] :browsers-alfred-mode]
     [:p :!OSa :browsers-alfred-mode]
     [:quote :!OSt :browsers-alfred-mode]
     [:0 [:!Cl [:type "chrome://extensions/"]] :browsers-alfred-mode]

@@ -223,8 +223,8 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
   :defer t
   :init
   (setq!
-   ;; copilot-chat-model "claude-3.5-sonnet"
-   copilot-chat-model "o3-mini"
+   copilot-chat-model "claude-3.7-sonnet"
+   ;; copilot-chat-model "o3-mini"
    copilot-chat-frontend 'org)
   (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
     (defun +turn-off-languagetool-for-copilot-chat-buffers ()

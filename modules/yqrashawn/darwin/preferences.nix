@@ -331,6 +331,7 @@ in {
         fi
         if [ ! -e ~/.config/nyxt/config.lisp ]; then
             echo 'link ~/.config/nyxt/config.lisp'
+            mkdir -p ~/.config/nyxt
             ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/nyxt.lisp ~/.config/nyxt/config.lisp
         fi
       '';

@@ -14,6 +14,8 @@ let
     "/Applications/Emacs.app/Contents/MacOS/bin"
     "$HOME/.emacs.d/bin"
     "$HOME/local/bin/funcs"
+    # for usc https://github.com/software-mansion/universal-sierra-compiler
+    "$HOME/.local/bin"
     "$HOME/local/bin"
     "$HOME/.cargo/bin"
     "$HOME/.yarn/bin"
