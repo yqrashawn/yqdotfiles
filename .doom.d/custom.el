@@ -6,7 +6,10 @@
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
     '((+cider-project-reload-exec-cmd-clj . "(user/x)")
+       (cider-clojure-cli-aliases . ":dev")
+       (cider-preferred-build-tool . clojure-cli)
        (cider-shadow-watched-builds . ":app")
+       (lsp-sqls-workspace-config-path . "root")
        (elisp-lint-indent-specs (if-let* . 2) (when-let* . 1) (let* . defun)
          (nrepl-dbind-response . 2) (cider-save-marker . 1)
          (cider-propertize-region . 1) (cider-map-repls . 1)
