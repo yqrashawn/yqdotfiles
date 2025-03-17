@@ -179,7 +179,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (setq! copilot-max-char -1
          copilot-idle-delay 10
          copilot-indent-offset-warning-disable t
-         copilot-server-executable (executable-find "copilot-language-server"))
+         ;; copilot-server-executable (executable-find "copilot-language-server")
+         )
   :config
   (pushnew! copilot-indentation-alist
             '(tsx-ts-mode typescript-ts-mode-indent-offset)
