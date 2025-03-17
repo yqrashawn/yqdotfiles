@@ -677,7 +677,10 @@ _b_ranch _j_next _k_prev _h_up
                                pedestal?
                                (cond
                                 (squint? :squint)
-                                ((and telemere? (not glogi?)) :log!)
+                                ((and telemere?
+                                      (or (not glogi?)
+                                          (eq major-mode 'clojure-mode)))
+                                 :log!)
                                 (t :log)))))
       (cond
        (has-as-log? (funcall f arg))
@@ -687,7 +690,11 @@ _b_ranch _j_next _k_prev _h_up
           (cljr--insert-in-ns ":require")
           (insert "[\"@/spy\":as log]"))
         (funcall f arg))
-       (glogi?
+       ((and glogi?
+             (or (eq major-mode 'clojurescript-mode)
+                 (and (eq major-mode 'clojure-mode)
+                      (not telemere?)
+                      (not timbre?))))
         (save-excursion
           (cljr--insert-in-ns ":require")
           (insert "[lambdaisland.glogi :as log]"))

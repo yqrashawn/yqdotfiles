@@ -128,22 +128,6 @@
         "type": "github"
       }
     },
-    "asdf-foundry": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1739362547,
-        "narHash": "sha256-6nnuoe6lcOe70zf2HUh60s9bP3U8txxHkh42+M7/lhw=",
-        "owner": "foundry-rs",
-        "repo": "asdf-starknet-foundry",
-        "rev": "85b26423ea446a64e5ddf5e1934f7f658ba72044",
-        "type": "github"
-      },
-      "original": {
-        "owner": "foundry-rs",
-        "repo": "asdf-starknet-foundry",
-        "type": "github"
-      }
-    },
     "asdf-golang": {
       "flake": false,
       "locked": {
@@ -1177,7 +1161,6 @@
         "asdf-deno": "asdf-deno",
         "asdf-elixir": "asdf-elixir",
         "asdf-flyctl": "asdf-flyctl",
-        "asdf-foundry": "asdf-foundry",
         "asdf-golang": "asdf-golang",
         "asdf-hashicorp": "asdf-hashicorp",
         "asdf-haskell": "asdf-haskell",
