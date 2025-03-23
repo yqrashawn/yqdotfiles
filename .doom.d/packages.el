@@ -306,7 +306,7 @@
 (disable-packages! langtool)
 (package! consult-git-log-grep)
 
-;; (package! eat)
+(package! eat)
 
 (disable-packages! company)
 
@@ -382,6 +382,7 @@
 (package! leetcode)
 (package! minuet :recipe (:host github :repo "milanglacier/minuet-ai.el"))
 (package! polymode)
+(package! claude-code :recipe (:host github :repo "stevemolitor/claude-code.el"))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

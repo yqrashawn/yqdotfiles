@@ -14,4 +14,4 @@ lua 5.4.4
 babashka 1.12.195
 zig 0.11.0
 yarn 1.22.22
-pnpm 9.15.4
+pnpm 10.6.5
