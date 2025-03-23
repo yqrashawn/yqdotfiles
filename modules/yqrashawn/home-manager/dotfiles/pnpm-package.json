@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@anthropic-ai/claude-code": "^0.2.50",
+    "@anthropic-ai/claude-code": "^0.2.53",
     "bash-language-server": "^5.4.2",
     "copilot-node-server": "^1.41.0",
     "create-cloudflare": "^2.30.1",
@@ -24,5 +24,10 @@
     "vscode-langservers-extracted": "^4.10.0",
     "wrangler": "^3.83.0",
     "yaml-language-server": "^1.15.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@anthropic-ai/claude-code"
+    ]
   }
 }

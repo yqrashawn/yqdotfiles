@@ -22,7 +22,7 @@
   (defadvice! +org-agenda--quit (&rest _)
     :before #'org-agenda--quit
     (org-save-all-org-buffers))
-  (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
+  ;; (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
   (set-popup-rule!
     "^\\*Capture\\*$\\|CAPTURE-.*$"
     :actions '(display-buffer-at-bottom)

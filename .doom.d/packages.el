@@ -342,7 +342,6 @@
            :repo "copilot-emacs/copilot.el"
            :files ("*.el" "dist")))
 (package! copilot-chat
-  :pin "efc6af7acc6c92165a71942ec30dafe73ac8ff1a"
   :recipe
   (:host github
    :repo "chep/copilot-chat.el"

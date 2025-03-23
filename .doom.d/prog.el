@@ -192,7 +192,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
       (erase-buffer)
       (insert
        (concat
-        "These are diff of changes I made within 30 minutes\n\n"
+        (format "These are diffs of changes I made within %d minutes\n\n" n)
         (shell-command-to-string
          (format!
           "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
@@ -201,7 +201,8 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (defun +project-files-buffers (file-list)
   "Return a list of buffers for FILE-LIST, where FILE-LIST is a list of relative file paths.
-Each file is opened (if not already) with `find-file-noselect` relative to the current project root."
+Each file is opened (if not already) with `find-file-noselect` relative to
+ the current project root."
   (let ((project-root (doom-project-root))
         buffers)
     (setq buffers (mapcar (lambda (file)
@@ -210,101 +211,72 @@ Each file is opened (if not already) with `find-file-noselect` relative to the c
     buffers))
 
 (defun +magit-wip-buffer-changed-within-n-min (n)
-  (thread-last
-    (shell-command-to-string
+  (when (magit-git-repo-p (doom-project-root))
+    (thread-last
+      (shell-command-to-string
 
-     (format!
-      "git reflog --since=\"%d minutes ago\" --name-only --pretty=format: refs/wip/wtree/refs/heads/%s | grep -v '^$' | sort -u"
-      n
-      (magit-get-current-branch)))
-    s-lines
-    (seq-filter (lambda (s) (not (string-empty-p s))))
-    +project-files-buffers))
+       (format!
+        "git reflog --since=\"%d minutes ago\" --name-only --pretty=format: refs/wip/wtree/refs/heads/%s | grep -v '^$' | sort -u"
+        n
+        (magit-get-current-branch)))
+      s-lines
+      (seq-filter (lambda (s) (not (string-empty-p s))))
+      +project-files-buffers)))
 
 (use-package! copilot-chat
   :defer t
   :init
   (setq!
-   copilot-chat-model "claude-3.7-sonnet"
+   copilot-chat-model "claude-3.7-sonnet-thought"
    ;; copilot-chat-model "o3-mini"
    copilot-chat-frontend 'org)
   (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
     (defun +turn-off-languagetool-for-copilot-chat-buffers ()
       (languagetool-server-mode -1)))
   (set-popup-rules!
-    '(("^\\*Copilot-chat-list\\*$"
+    '(;; ("^\\*Copilot Chat "
+      ;;  :slot 89
+      ;;  :side right
+      ;;  :width 0.38
+      ;;  :select t
+      ;;  :ttl nil
+      ;;  :quit t)
+      ("^\\*Copilot-chat-list\\*$"
        :slot 10
        :side bottom
        :height 0.2
        :select nil
        :ttl nil
-       :quit t)
-      ("^\\*Copilot-chat-prompt\\*$"
-       :slot 90
-       :side right
-       :width 0.38
-       :height 0.15
-       :select 'current
-       :ttl nil
-       :quit t)
-      ("^\\*Copilot-chat\\*$"
-       :slot 89
-       :side right
-       :width 0.38
-       :height 0.8
-       :select nil
-       :ttl nil
        :quit t)))
   (defadvice! +copilot-chat-display (orig-fn)
     :around #'copilot-chat-display
-    (require 'copilot-chat)
-    (unless (copilot-chat--ready-p)
-      (copilot-chat-reset))
     (copilot-chat-list-clear-buffers)
-    (let* ((dd default-directory)
-           (buffers (copilot-chat--prepare-buffers))
-           (region-str (and (region-active-p) (buffer-substring-no-properties (region-beginning) (region-end))))
-           (chat-buffer (car buffers))
-           (prompt-buffer (cadr buffers))
-           (list-buffer (get-buffer-create copilot-chat-list-buffer)))
-      (with-current-buffer prompt-buffer
-        ;; this does not work
-        (add-hook!
-         'quit-window-hook
-         (cmd! ()
-               (quit-window nil (get-buffer-window copilot-chat--buffer))
-               (quit-window nil (get-buffer-window copilot-chat-list-buffer)))
-         :local)
-        (setq-local default-directory dd))
-      (when region-str
-        (with-current-buffer prompt-buffer
-          (insert region-str)
-          (insert "\n")
-          (goto-char (point-max))))
-      (copilot-chat-add-current-buffer)
-      (with-current-buffer list-buffer
-        (copilot-chat-list-mode))
-      (display-buffer chat-buffer)
-      ;; (display-buffer list-buffer)
-      (display-buffer prompt-buffer)))
-  (defvar +copilot-chat-project-default-buffers '())
+    (let* ((region-str (and (region-active-p)
+                            (buffer-substring-no-properties
+                             (region-beginning)
+                             (region-end)))))
+      (funcall orig-fn)
+      ;; (when region-str
+      ;;   (with-current-buffer (copilot-chat--get-buffer)
+      ;;     (goto-char (point-max))
+      ;;     (insert region-str)
+      ;;     (insert "\n")
+      ;;     (goto-char (point-max))))
+      (copilot-chat-add-current-buffer)))
+  (defvar +copilot-chat-project-default-files '())
   :config
   (require 'magit)
-  (defadvice! +copilot-chat--create-req (&rest args)
-    :before #'copilot-chat--create-req
+  (defadvice! +copilot-chat-prompt-send (&rest args)
+    :before #'copilot-chat-prompt-send
     (with-current-buffer (+magit-wip-diff-n-min-buffer 5)
       (copilot-chat-add-current-buffer))
     (copilot-chat-add-buffers-in-current-window)
-    (dolist (b +copilot-chat-project-default-buffers)
+    (dolist (b +copilot-chat-project-default-files)
       (with-current-buffer b
         (copilot-chat-add-current-buffer)))
     (dolist (b (+magit-wip-buffer-changed-within-n-min 5))
       (with-current-buffer b
-        (copilot-chat-add-current-buffer))))
-
-  (defadvice! +copilot-chat-prompt-send ()
-    :after #'copilot-chat-prompt-send
-    (select-window (get-buffer-window copilot-chat--prompt-buffer))))
+        (copilot-chat-add-current-buffer)))))
 
 ;; (use-package! ollama
 ;;   :defer t

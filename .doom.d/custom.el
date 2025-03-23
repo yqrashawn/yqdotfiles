@@ -5,7 +5,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((+cider-project-reload-exec-cmd-clj . "(user/x)")
+    '((eval progn (pp-buffer) (indent-buffer))
+       (+cider-project-reload-exec-cmd-clj . "(user/x)")
        (cider-clojure-cli-aliases . ":dev")
        (cider-preferred-build-tool . clojure-cli)
        (cider-shadow-watched-builds . ":app")
