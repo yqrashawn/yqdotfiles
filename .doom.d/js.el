@@ -36,7 +36,7 @@
                   typescript-mode
                   web-mode))
     (with-eval-after-load mode
-      (delq! (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
+      (cl-callf2 delq (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
       (set-ligatures! mode
         ;; Functional
         :def "function"

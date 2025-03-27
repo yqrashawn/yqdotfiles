@@ -889,7 +889,7 @@ _b_ranch _j_next _k_prev _h_up
             magit-section-visibility-indicator nil
             magit-revision-use-hash-sections nil
             magit-diff-expansion-threshold 0.01)
-           (delq! 'Git vc-handled-backends)
+           (cl-callf2 delq 'Git vc-handled-backends)
            (remove-hook! 'magit-refs-sections-hook 'magit-insert-tags)
            (remove-hook! 'server-switch-hook 'magit-commit-diff)
            (setq! magit-git-debug nil)

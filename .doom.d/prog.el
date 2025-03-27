@@ -187,17 +187,19 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
             '(typescript-ts-mode typescript-ts-mode-indent-offset)))
 
 (defun +magit-wip-diff-n-min-buffer (n)
-  (let ((b (get-buffer-create (format! "*changes-with-%d-minutes*" n))))
-    (with-current-buffer b
-      (erase-buffer)
-      (insert
-       (concat
-        (format "These are diffs of changes I made within %d minutes\n\n" n)
-        (shell-command-to-string
-         (format!
-          "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
-          (magit-get-current-branch))))))
-    b))
+  (let ((buf-name (format! " *changes-with-%d-minutes*" n)))
+    (when (get-buffer buf-name) (kill-buffer buf-name))
+    (let ((b (get-buffer-create buf-name t)))
+      (with-current-buffer b
+        (erase-buffer)
+        (insert
+         (concat
+          (format "These are diffs of changes I made within %d minutes\n\n" n)
+          (shell-command-to-string
+           (format!
+            "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
+            (magit-get-current-branch))))))
+      b)))
 
 (defun +project-files-buffers (file-list)
   "Return a list of buffers for FILE-LIST, where FILE-LIST is a list of relative file paths.
@@ -233,50 +235,58 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
     (defun +turn-off-languagetool-for-copilot-chat-buffers ()
       (languagetool-server-mode -1)))
-  (set-popup-rules!
-    '(;; ("^\\*Copilot Chat "
-      ;;  :slot 89
-      ;;  :side right
-      ;;  :width 0.38
-      ;;  :select t
-      ;;  :ttl nil
-      ;;  :quit t)
-      ("^\\*Copilot-chat-list\\*$"
-       :slot 10
-       :side bottom
-       :height 0.2
-       :select nil
-       :ttl nil
-       :quit t)))
-  (defadvice! +copilot-chat-display (orig-fn)
-    :around #'copilot-chat-display
-    (copilot-chat-list-clear-buffers)
-    (let* ((region-str (and (region-active-p)
-                            (buffer-substring-no-properties
-                             (region-beginning)
-                             (region-end)))))
-      (funcall orig-fn)
-      ;; (when region-str
-      ;;   (with-current-buffer (copilot-chat--get-buffer)
-      ;;     (goto-char (point-max))
-      ;;     (insert region-str)
-      ;;     (insert "\n")
-      ;;     (goto-char (point-max))))
-      (copilot-chat-add-current-buffer)))
+  ;; (set-popup-rules!
+  ;;   '(;; ("^\\*Copilot Chat "
+  ;;     ;;  :slot 89
+  ;;     ;;  :side right
+  ;;     ;;  :width 0.38
+  ;;     ;;  :select t
+  ;;     ;;  :ttl nil
+  ;;     ;;  :quit t)
+  ;;     ("^\\*Copilot-chat-list\\*$"
+  ;;      :slot 10
+  ;;      :side bottom
+  ;;      :height 0.2
+  ;;      :select nil
+  ;;      :ttl nil
+  ;;      :quit t)))
   (defvar +copilot-chat-project-default-files '())
   :config
+  (defadvice! +copilot-chat--auth ()
+    :before #'copilot-chat--auth
+    ;; it's possible that the token is available but do not provide copilot chat
+    (unless (alist-get 'expires_at
+                       (copilot-chat-connection-token copilot-chat--connection))
+      (copilot-chat-clear-auth-cache)))
+
+  (defadvice! +copilot-chat--display (instance)
+    :after #'copilot-chat--display
+    (with-current-buffer (copilot-chat--get-buffer (copilot-chat--current-instance))
+      (with-current-buffer (pm-get-buffer-of-mode 'copilot-chat-org-prompt-mode)
+        (setq-local +word-wrap-extra-indent 2))))
+
+  (pushnew! doom-unreal-buffer-functions
+            (lambda (buf) (with-current-buffer buf copilot-chat-org-poly-mode)))
+  (pushnew! doom-unreal-buffer-functions
+            (lambda (buf) (with-current-buffer buf copilot-chat-prompt-mode)))
+
   (require 'magit)
-  (defadvice! +copilot-chat-prompt-send (&rest args)
+  (defadvice! +copilot-chat-prompt-send ()
     :before #'copilot-chat-prompt-send
-    (with-current-buffer (+magit-wip-diff-n-min-buffer 5)
-      (copilot-chat-add-current-buffer))
-    (copilot-chat-add-buffers-in-current-window)
-    (dolist (b +copilot-chat-project-default-files)
-      (with-current-buffer b
-        (copilot-chat-add-current-buffer)))
-    (dolist (b (+magit-wip-buffer-changed-within-n-min 5))
-      (with-current-buffer b
-        (copilot-chat-add-current-buffer)))))
+    (let ((i (copilot-chat--current-instance)))
+
+      (copilot-chat--add-buffer i (+magit-wip-diff-n-min-buffer 5))
+
+      (dolist (b (mapcar 'window-buffer (window-list)))
+        (copilot-chat--add-buffer i b))
+
+      (dolist (b +copilot-chat-project-default-files)
+        (with-current-buffer b
+          (copilot-chat--add-buffer i b)))
+
+      (dolist (b (+magit-wip-buffer-changed-within-n-min 5))
+        (with-current-buffer b
+          (copilot-chat--add-buffer i b))))))
 
 ;; (use-package! ollama
 ;;   :defer t

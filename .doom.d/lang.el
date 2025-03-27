@@ -28,7 +28,7 @@
 (after! lsp-mode
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages)
-  ;; (delq! 'lsp-ui-mode lsp-mode-hook)
+  ;; (cl-callf2 delq 'lsp-ui-mode lsp-mode-hook)
   (setq!
    lsp-completion-provider :none
    lsp-log-io nil

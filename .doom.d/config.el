@@ -70,6 +70,7 @@
 (load! "not-secret.el" (expand-file-name "~/Dropbox/sync/") t)
 (load! "helper.el")
 (load! "map.el")
+(load! "models.el")
 (load! "better-default.el")
 (load! "evil.el")
 (load! "navigation.el")

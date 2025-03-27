@@ -1,7 +1,7 @@
 ;;; better-defaults.el -*- lexical-binding: t; -*-
 
 (pushnew! global-hl-line-modes 'dired-mode 'occur-mode 'grep-mode)
-(delq! 'prog-mode global-hl-line-modes)
+(cl-callf2 delq 'prog-mode global-hl-line-modes)
 (setq! kmacro-ring-max 8
        gc-cons-percentage 0.2
        garbage-collection-messages t
@@ -678,46 +678,31 @@ used in the POST request made to the LanguageTool server."
   :init
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
-         gptel-temperature 0.8
-         ;; gptel-model 'gpt-4o-mini
-         gptel-model 'anthropic/claude-3.5-sonnet:beta)
+         gptel-temperature 0.8)
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))
   (set-popup-rule! "^\\*ChatGPT\\*$" :side 'right :size 0.4 :vslot 100 :quit t)
   :config
-  (setq! gptel--openai
-         (gptel-make-openai "ChatGPT"
-           :key +open-ai-api-key
-           :stream t
-           :host +open-ai-host
-           :models
-           '((gpt-4o-mini
-              :capabilities (media tool json url)
-              :description "Affordable and intelligent small model for fast, lightweight tasks"
-              :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
-             (gpt-4o
-              :capabilities (media tool json url)
-              :description "High-intelligence flagship model for complex, multi-step tasks"
-              :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")))))
-  (setq! gptel--claude
-         (gptel-make-anthropic "Claude"
-           :stream t
-           :host +anthropic-host
-           :key +anthropic-api-key))
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
-           :stream t
            :host "openrouter.ai"
-           :key +openrouter-api-key
            :endpoint "/api/v1/chat/completions"
-           :models
-           '(anthropic/claude-3.5-sonnet:beta
-             openai/gpt-4o-mini
-             mistralai/mixtral-8x7b-instruct
-             openrouter/auto)))
+           :stream t
+           :key +openrouter-api-key
+           :models gptel--openrouter-models))
+  (setq! gptel-model 'claude-3.7-sonnet-thought)
+  (setq! gptel--gh-copilot
+         (gptel-make-openai "Github Copilot"
+           :protocol "http"
+           :host "localhost:4141"
+           :endpoint "/chat/completions"
+           :stream t
+           :key "no-key"
+           :models gptel--gh-copilot-models))
   (setq! gptel-post-response-functions nil
-         gptel-backend gptel--openrouter)
+         gptel-backend gptel--openrouter
+         gptel-backend gptel--gh-copilot)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (setq gptel-directives
         '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
@@ -974,3 +959,6 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 ;; quote “
 ;; quote ”
+
+(after! persp-mode
+  (setq persp-auto-save-opt 0))

@@ -81,6 +81,7 @@ in {
         # isync-isync
         (isync.override { withCyrusSaslXoauth2 = true; })
         msmtp
+        mkcert
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/make-emacs.nix

@@ -111,8 +111,8 @@
 ;;   (defadvice! +company-box--set-mode (&rest args)
 ;;     "stop company-box add company-pseudo-tooltip-frontend back"
 ;;     :after #'company-box--set-mode
-;;     (delq! 'company-pseudo-tooltip-frontend company-frontends)
-;;     (delq! 'company-pseudo-tooltip-unless-just-one-frontend company-frontends)))
+;;     (cl-callf2 delq 'company-pseudo-tooltip-frontend company-frontends)
+;;     (cl-callf2 delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends)))
 
 (after! orderless
   (setq orderless-component-separator "[ ,j]"))
