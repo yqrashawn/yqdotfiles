@@ -75,3 +75,44 @@
 (defun +workspace-project-root ()
   (with-current-buffer (+current-buffer-from-client)
     (projectile-project-root)))
+
+(defun +magit-wip-diff-n-min-buffer (n)
+  (let ((buf-name (format! " *changes-with-%d-minutes*" n)))
+    ;; (when (get-buffer buf-name) (kill-buffer buf-name))
+    (let ((b (get-buffer-create buf-name t)))
+      (with-current-buffer b
+        (erase-buffer)
+        (insert
+         (concat
+          (format "These are diffs of changes I made within %d minutes\n\n" n)
+          (shell-command-to-string
+           (format!
+            "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
+            (magit-get-current-branch))))))
+      b)))
+
+(defun +project-files-buffers (file-list)
+  "Return a list of buffers for FILE-LIST, where FILE-LIST is a list of relative file paths.
+Each file is opened (if not already) with `find-file-noselect` relative to
+ the current project root."
+  (let ((project-root (doom-project-root))
+        buffers)
+    (setq buffers (mapcar (lambda (file)
+                            (find-file-noselect (expand-file-name file project-root)))
+                          file-list))
+    buffers))
+
+(defun +magit-wip-buffer-changed-within-n-min (n)
+  (when (magit-git-repo-p (doom-project-root))
+    (thread-last
+      (shell-command-to-string
+
+       (format!
+        "git reflog --since=\"%d minutes ago\" --name-only --pretty=format: refs/wip/wtree/refs/heads/%s | grep -v '^$' | sort -u"
+        n
+        (magit-get-current-branch)))
+      s-lines
+      (seq-filter (lambda (s) (not (string-empty-p s))))
+      +project-files-buffers)))
+
+(defvar +ai-project-default-files '())

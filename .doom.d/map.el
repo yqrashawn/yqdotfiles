@@ -46,12 +46,11 @@
  :g "s-m" #'+popup/toggle
  :g "s-u" #'revert-buffer
  :g "s-i" #'+side-notes-toggle-daily-note
- :g "s-j" #'copilot-chat-display
+ :g "s-j" #'gptel
+ ;; :g "s-j" #'gptel-menu
  ;; :g "s-j" #'+whisper-run
  ;; :g "s-j" #'+chat-with-ai
  ;; :g "s-j" #'chatgpt-shell-prompt-compose
- ;; :g "s-j" #'gptel-menu
- ;; :g "s-J" #'gptel
  :g "C-M-s-7" '+windmove-map
  :g "C-M-s-j" #'iflipb-next-buffer
  :g "C-M-s-k" #'iflipb-previous-buffer
@@ -760,6 +759,9 @@
           :n "C-j" #'gptel-context-next
           :n "q" #'quit-window
           :n "C-k" #'gptel-context-previous))
+ (:after gptel
+         (:map gptel-mode-map
+          :g "C-3" (cmd! ())))
  (:after copilot-chat
          (:map copilot-chat-prompt-mode-map
           :g "C-3" (cmd! ()

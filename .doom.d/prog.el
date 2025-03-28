@@ -186,45 +186,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
             '(tsx-ts-mode typescript-ts-mode-indent-offset)
             '(typescript-ts-mode typescript-ts-mode-indent-offset)))
 
-(defun +magit-wip-diff-n-min-buffer (n)
-  (let ((buf-name (format! " *changes-with-%d-minutes*" n)))
-    (when (get-buffer buf-name) (kill-buffer buf-name))
-    (let ((b (get-buffer-create buf-name t)))
-      (with-current-buffer b
-        (erase-buffer)
-        (insert
-         (concat
-          (format "These are diffs of changes I made within %d minutes\n\n" n)
-          (shell-command-to-string
-           (format!
-            "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
-            (magit-get-current-branch))))))
-      b)))
-
-(defun +project-files-buffers (file-list)
-  "Return a list of buffers for FILE-LIST, where FILE-LIST is a list of relative file paths.
-Each file is opened (if not already) with `find-file-noselect` relative to
- the current project root."
-  (let ((project-root (doom-project-root))
-        buffers)
-    (setq buffers (mapcar (lambda (file)
-                            (find-file-noselect (expand-file-name file project-root)))
-                          file-list))
-    buffers))
-
-(defun +magit-wip-buffer-changed-within-n-min (n)
-  (when (magit-git-repo-p (doom-project-root))
-    (thread-last
-      (shell-command-to-string
-
-       (format!
-        "git reflog --since=\"%d minutes ago\" --name-only --pretty=format: refs/wip/wtree/refs/heads/%s | grep -v '^$' | sort -u"
-        n
-        (magit-get-current-branch)))
-      s-lines
-      (seq-filter (lambda (s) (not (string-empty-p s))))
-      +project-files-buffers)))
-
 (use-package! copilot-chat
   :defer t
   :init
@@ -235,23 +196,11 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
     (defun +turn-off-languagetool-for-copilot-chat-buffers ()
       (languagetool-server-mode -1)))
-  ;; (set-popup-rules!
-  ;;   '(;; ("^\\*Copilot Chat "
-  ;;     ;;  :slot 89
-  ;;     ;;  :side right
-  ;;     ;;  :width 0.38
-  ;;     ;;  :select t
-  ;;     ;;  :ttl nil
-  ;;     ;;  :quit t)
-  ;;     ("^\\*Copilot-chat-list\\*$"
-  ;;      :slot 10
-  ;;      :side bottom
-  ;;      :height 0.2
-  ;;      :select nil
-  ;;      :ttl nil
-  ;;      :quit t)))
-  (defvar +copilot-chat-project-default-files '())
   :config
+  (pushnew! doom-unreal-buffer-functions
+            (lambda (buf) (with-current-buffer buf copilot-chat-org-poly-mode)))
+  (pushnew! doom-unreal-buffer-functions
+            (lambda (buf) (with-current-buffer buf copilot-chat-prompt-mode)))
   (defadvice! +copilot-chat--auth ()
     :before #'copilot-chat--auth
     ;; it's possible that the token is available but do not provide copilot chat
@@ -265,11 +214,6 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       (with-current-buffer (pm-get-buffer-of-mode 'copilot-chat-org-prompt-mode)
         (setq-local +word-wrap-extra-indent 2))))
 
-  (pushnew! doom-unreal-buffer-functions
-            (lambda (buf) (with-current-buffer buf copilot-chat-org-poly-mode)))
-  (pushnew! doom-unreal-buffer-functions
-            (lambda (buf) (with-current-buffer buf copilot-chat-prompt-mode)))
-
   (require 'magit)
   (defadvice! +copilot-chat-prompt-send ()
     :before #'copilot-chat-prompt-send
@@ -280,7 +224,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       (dolist (b (mapcar 'window-buffer (window-list)))
         (copilot-chat--add-buffer i b))
 
-      (dolist (b +copilot-chat-project-default-files)
+      (dolist (b +ai-project-default-files)
         (with-current-buffer b
           (copilot-chat--add-buffer i b)))
 

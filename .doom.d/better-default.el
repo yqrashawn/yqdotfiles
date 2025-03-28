@@ -684,6 +684,36 @@ used in the POST request made to the LanguageTool server."
   ;;   (+gptel-kill-default-buffer))
   (set-popup-rule! "^\\*ChatGPT\\*$" :side 'right :size 0.4 :vslot 100 :quit t)
   :config
+  (require 'magit)
+  (add-hook! 'gptel-mode-hook
+    (defun +gptel-mode-setup-kill-buffer-hook ()
+      (add-hook! 'kill-buffer-hook :local
+        (defun +gptel-mode-reset-on-buffer-killed-h ()
+          (with-current-buffer (current-buffer)
+            (gptel-context-remove-all nil))))))
+  (defun +gptel-context-add-buffer (b)
+    (let ((start (with-current-buffer b (point-min)))
+          (end (with-current-buffer b (point-max))))
+      (gptel-context--add-region b start end t)))
+
+  (defadvice! +before-gptel-make-fsm (&optional args)
+    :before #'gptel-send
+    (require 'gptel-context)
+    (gptel-context-remove-all nil)
+    (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
+    (dolist (b (seq-filter
+                (lambda (b)
+                  (and
+                   (not (string= (buffer-name b) "*Messages*"))
+                   (with-current-buffer b
+                     (not gptel-mode))))
+                (mapcar 'window-buffer (window-list))))
+      (+gptel-context-add-buffer b))
+    (when-let ((root (doom-project-root)))
+      (dolist (f +ai-project-default-files)
+        (when-let ((b (get-file-buffer (format "%s%s" root f))))
+          (+gptel-context-add-buffer b)))))
+
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
            :host "openrouter.ai"
@@ -698,7 +728,7 @@ used in the POST request made to the LanguageTool server."
            :host "localhost:4141"
            :endpoint "/chat/completions"
            :stream t
-           :key "no-key"
+           :key "no-key-required"
            :models gptel--gh-copilot-models))
   (setq! gptel-post-response-functions nil
          gptel-backend gptel--openrouter
