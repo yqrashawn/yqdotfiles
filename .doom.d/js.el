@@ -113,12 +113,20 @@
          ("\\.tsx\\'" . typescript-ts-mode)
          ("\\.ts\\'" . typescript-ts-mode)))
 
+(use-package! ts-refactor
+  :hook (typescript-ts-mode tsx-ts-mode)
+  :config
+  (when (modulep! :editor evil +everywhere)
+    (add-hook 'ts-refactor-mode-hook #'evil-normalize-keymaps)
+    (let ((ts-refactor-mode-map (evil-get-auxiliary-keymap ts-refactor-mode-map 'normal t t)))
+      (ts-refactor-add-keybindings-with-prefix (format "%s r" doom-localleader-key)))))
+
 (def-project-mode! ++javascript-npm-mode
   :modes '(html-mode
            css-mode
            web-mode
            markdown-mode
-           js-mode                      ; includes js2-mode and rjsx-mode
+           js-mode                     ; includes js2-mode and rjsx-mode
            json-mode
            typescript-mode
            typescript-ts-mode
