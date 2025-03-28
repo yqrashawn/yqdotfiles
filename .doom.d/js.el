@@ -34,6 +34,8 @@
   (dolist (mode '(rjsx-mode
                   js2-mode
                   typescript-mode
+                  typescript-ts-mode
+                  tsx-ts-mode
                   web-mode))
     (with-eval-after-load mode
       (cl-callf2 delq (assq mode +ligatures-extra-alist) +ligatures-extra-alist)
@@ -111,7 +113,31 @@
 (use-package! typescript-ts-mode
   :mode (("\\.cts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . typescript-ts-mode)
-         ("\\.ts\\'" . typescript-ts-mode)))
+         ("\\.ts\\'" . typescript-ts-mode))
+  :init
+  (after! apheleia
+    (set-formatter!
+      'prettier-typescript
+      (alist-get 'prettier-typescript apheleia-formatters)
+      :modes '(typescript-ts-mode tsx-ts-mode typescript-mode))))
+
+(after! apheleia
+  (set-formatter!
+    'prettier-javascript
+    (alist-get 'prettier-javascript apheleia-formatters)
+    :modes '(rjsx-mode js-mode js2-mode js-ts-mode)))
+
+(add-hook! '+format-with-lsp-mode-hook
+  (defun +turn-off-format-with-lsp-mode-for-modes ()
+    (when +format-with-lsp-mode
+      (when (memq major-mode '(typescript-mode
+                               typescript-ts-mode
+                               tsx-ts-mode
+                               rjsx-mode
+                               js-mode
+                               js2-mode
+                               js-ts-mode))
+        (+format-with-lsp-mode -1)))))
 
 (use-package! ts-refactor
   :hook (typescript-ts-mode tsx-ts-mode)
