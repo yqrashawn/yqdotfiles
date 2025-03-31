@@ -2,7 +2,7 @@
 
 set -u
 
-cert_file=$(mktemp -t "custom-surge-ca-cert-XXXXXXXXXX")
+cert_file=$(mktemp -t "custom-proxyman-ca-cert-XXXXXXXXXX")
 curl -s -o "$cert_file" -w "%{http_code}" http://proxy.man/ssl --proxy "127.0.0.1:9090"
 
 install_ca() {

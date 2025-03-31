@@ -1061,13 +1061,13 @@ result instead of `message'."
          +cider-project-reload-exec-cmd-clj
          (cider-connected-p)
          (cider-current-repl 'clj))
-    (cider-interactive-eval +cider-project-reload-exec-cmd-clj nil nil (cider--nrepl-pr-request-map)))
+    (cider-interactive-eval +cider-project-reload-exec-cmd-clj nil nil (cider--nrepl-pr-request-plist)))
   (when (and
          (boundp '+cider-project-reload-exec-cmd-cljs)
          +cider-project-reload-exec-cmd-cljs
          (cider-connected-p)
          (cider-current-repl 'cljs))
-    (cider-interactive-eval +cider-project-reload-exec-cmd-cljs nil nil (cider--nrepl-pr-request-map))))
+    (cider-interactive-eval +cider-project-reload-exec-cmd-cljs nil nil (cider--nrepl-pr-request-plist))))
 
 ;;;###autoload
 (defun +cider-inspect-tap ()

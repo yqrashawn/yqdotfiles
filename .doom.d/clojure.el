@@ -308,7 +308,7 @@ creates a new one. Don't unnecessarily bother the user."
 "
                                 (nrepl-dict-get a "value"))))
              (if (and ns (member deftype +cider-test-defining-forms))
-                 (cider-interactive-eval form nil nil (cider--nrepl-pr-request-map))
+                 (cider-interactive-eval form nil nil (cider--nrepl-pr-request-plist))
                (message "No test at point"))))))))
 
   (defun +cider-test-ns-execute-cljs ()
