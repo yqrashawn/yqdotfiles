@@ -405,13 +405,13 @@
       "locked": {
         "lastModified": 1736236128,
         "narHash": "sha256-5W722xy3ZDPbXVwfyi9IaT03jXlKNuYcTV3O+iJb/hU=",
-        "owner": "b1-luettje",
+        "owner": "asdf-community",
         "repo": "asdf-uv",
         "rev": "ce093c3592cee00029413c75c896d7c29e1bd51a",
         "type": "github"
       },
       "original": {
-        "owner": "b1-luettje",
+        "owner": "asdf-community",
         "repo": "asdf-uv",
         "type": "github"
       }

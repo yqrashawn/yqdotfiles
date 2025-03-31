@@ -202,7 +202,7 @@
       flake = false;
     };
     asdf-uv = {
-      url = "github:b1-luettje/asdf-uv";
+      url = "github:asdf-community/asdf-uv";
       flake = false;
     };
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
