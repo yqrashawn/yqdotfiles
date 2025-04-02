@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: class-private-function
-# key: private
+# key: pcf
 # --
 private ${1:func name} (${2:arg}: ${3:type})

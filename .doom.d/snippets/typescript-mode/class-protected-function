@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: class-protected-function
-# key: protected
+# key: ptcf
 # --
 protected ${1:func name} (${2:arg}: ${3:type})

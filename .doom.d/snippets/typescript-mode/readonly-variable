@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: readonly
-# key: readonly
+# key: rov
 # --
 readonly ${1:name}: ${2:type}
