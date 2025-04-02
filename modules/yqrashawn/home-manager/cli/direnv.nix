@@ -9,6 +9,8 @@ in {
       whitelist = {
         prefix = [ "${home}/workspace/office"
                    "${home}/workspace/home"
+                   "${home}/Dropbox/sync/scripts/mcp"
+                   "${home}/Library/CloudStorage/Dropbox/sync/scripts/mcp"
                    "/opt/homebrew/var/buildkite-agent/builds" ];
         exact = [ "${home}/miniser" ];
       };
