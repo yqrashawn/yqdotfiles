@@ -659,6 +659,7 @@ used in the POST request made to the LanguageTool server."
   (interactive)
   (when-let ((buf (current-buffer)))
     (with-current-buffer buf
+      (gptel-context-remove-all nil)
       (if buffer-file-name
           (save-buffer)
         (write-file
@@ -710,7 +711,7 @@ used in the POST request made to the LanguageTool server."
                 (mapcar 'window-buffer (window-list))))
       (+gptel-context-add-buffer b))
     (when-let ((root (doom-project-root)))
-      (dolist (f +ai-project-default-files)
+      (dolist (f +llm-project-default-files)
         (when-let ((b (get-file-buffer (format "%s%s" root f))))
           (+gptel-context-add-buffer b)))))
 

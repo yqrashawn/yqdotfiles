@@ -115,4 +115,4 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       (seq-filter (lambda (s) (not (string-empty-p s))))
       +project-files-buffers)))
 
-(defvar +ai-project-default-files '())
+(defvar +llm-project-default-files '())

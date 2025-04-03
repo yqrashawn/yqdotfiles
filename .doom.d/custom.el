@@ -4,8 +4,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(copilot-chat-model "claude-3.7-sonnet-thought")
  '(safe-local-variable-values
-    '((cider-clojure-cli-aliases . ":dev:test")
+    '((+llm-project-default-files "llm.md" "CLAUDE.md")
+       (cider-clojure-cli-aliases . ":dev:test")
        (eval progn (pp-buffer) (indent-buffer))
        (+cider-project-reload-exec-cmd-clj . "(user/x)")
        (cider-clojure-cli-aliases . ":dev")
