@@ -2,11 +2,12 @@
 
 EMACS_BIN=$(which emacs)
 NIX_STORE_EMACS=$(nix-store --query --references "$EMACS_BIN" | grep -E 'emacs30$')
+echo $NIX_STORE_EMACS
 EMACS_VERSION=$(emacs --batch --eval '(print emacs-version)' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 STRAIGHT_PATH=~/.emacs.d/.local/straight
 DOOM_PATH=~/.doom.d
 
-if [ -z "$EMACS_BIN" ] || [ ! -d "$STRAIGHT_PATH/repos/hotfuzz" ] || [ ! -d "$DOOM_PATH" ]; then
+if [ -z "$EMACS_BIN" ] || [ -z "$NIX_STORE_EMACS" ] || [ ! -d "$STRAIGHT_PATH/repos/hotfuzz" ] || [ ! -d "$DOOM_PATH" ]; then
   echo "Skipping the script as one or more conditions are not met."
   exit 0
 fi
@@ -23,7 +24,7 @@ which cmake
 EMACS_ROOT=$NIX_STORE_EMACS \
   cmake -DCMAKE_C_FLAGS='-O3 -march=native -D_SC_NPROCESSORS_ONLN=58' \
   .. && \
-  cmake --build . 
+  cmake --build .
 
 cd ../../../
 cp ./repos/hotfuzz/hotfuzz-module.so ./build-"$EMACS_VERSION"/hotfuzz/ > /dev/null 2>&1

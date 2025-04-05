@@ -35,6 +35,7 @@ in {
         withImageMagick = true;
         # withXwidgets = true;
         # nativeComp = true;
+        # withNativeCompilation = true;
         withNativeCompilation = true;
         withTreeSitter = true;
         webkitgtk = true;

@@ -917,8 +917,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 ;;          kagi-summarize-default-language "EN"
 ;;          kagi-summarize-cache t))
 
-(use-package jinx
-  :hook (doom-first-file . global-jinx-mode))
+;; (use-package jinx
+;;   :hook (doom-first-file . global-jinx-mode))
 
 (defun +kitten (cmd &optional no-focus)
   (call-process-shell-command

@@ -302,6 +302,7 @@
            [:k :!CSclose_bracket]]}
   {:des   "zed"
    :rules [:zed-windmove-mode
+           [:m [:!Sescape]]
            [:s [:!Ck :down_arrow]]
            [:v [:!Ck :right_arrow]]
            [:h [:!Ck :!Cleft_arrow]]
@@ -981,5 +982,3 @@
              :language      "zh-Hans"}
   :cn       {:input_source_id "^com\\.apple\\.inputmethod\\.SCIM\\.ITABC$"}}
  :simlayer-threshold 210}
-
-

@@ -24,6 +24,7 @@ let
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
+  # user -> users.users.<primary user>
   user = {
     description = "Rashawn Zhang";
     home = "${
@@ -33,7 +34,8 @@ in {
   };
 
   # bootstrap home manager using system config
-  hm = import ./home-manager;
+  # hm -> home-manager.users.<primary user>
+  hm = import ./home-manager/default.nix;
 
   # let nix manage home-manager profiles and use global nixpkgs
   home-manager = {
@@ -85,17 +87,18 @@ in {
         # opts at
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/make-emacs.nix
-        (emacsWithPackagesFromUsePackage {
-          package = emacs30-overlay;
 
-          config = "./empty.el";
-          defaultInitFile = false;
-          extraEmacsPackages = epkgs:
-            [
-              epkgs.jinx
-              # emacsPackages.hotfuzz
-            ];
-        })
+        # (emacsWithPackagesFromUsePackage {
+        #   package = emacs30-overlay;
+
+        #   config = "./empty.el";
+        #   defaultInitFile = false;
+        #   extraEmacsPackages = epkgs:
+        #     [
+        #       epkgs.jinx
+        #       # emacsPackages.hotfuzz
+        #     ];
+        # })
 
         ispell
         joker

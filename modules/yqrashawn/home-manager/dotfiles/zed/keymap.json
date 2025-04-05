@@ -1,16 +1,72 @@
 [
   {
-    "context": "vim_mode == normal",
+    "use_key_equivalents": true,
     "bindings": {
-      "space k g g": "editor::CopyPermalinkToLine",
-      "space f e shift-k": "zed::OpenKeymap",
+      "ctrl-j": "menu::SelectNext",
+      "ctrl-k": "menu::SelectPrevious",
+      "ctrl-l": "menu::Confirm",
+      "ctrl-s": "vim::Search"
+    }
+  },
+  {
+    "context": "Editor",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-e": "editor::MoveToEndOfLine",
+      "ctrl-a": "editor::MoveToBeginningOfLine"
+    }
+  },
+  {
+    // "context": "!VimControl || vim_mode == normal",
+    // "context": "(!VimControl && mode!=single_line) || vim_mode == normal",
+    // "context": "vim_mode == normal",
+    "context": "vim_mode == normal || EmptyPane || SharedScreen",
+    "bindings": {
       "space space": "command_palette::Toggle",
+
+      "space k g g": "editor::CopyPermalinkToLine",
+      "space g s": "git_panel::ToggleFocus",
+
+      "space f e shift-k": "zed::OpenKeymap",
+
+      // describe-key
+      "space h k": "debug::OpenKeyContextView",
+
+      // disable vim::Substitude
+      "s": null,
       "s h": "workspace::Save",
       "s m": "file_finder::Toggle",
-      "s c": "pane::CloseActiveItem",
-      "ctrl-e": "editor::MoveToEndOfLine",
-      "ctrl-a": "editor::MoveToBeginningOfLine",
+      "s j": "file_finder::Toggle",
+      "s c": "pane::CloseAllItems",
+      "s k": "pane::CloseActiveItem",
       "s f": "pane::DeploySearch"
+    }
+  },
+  {
+    "context": "vim_mode == visual",
+    "bindings": {
+      "s": ["vim::PushAddSurrounds", {}]
+    }
+  },
+  { "context": "GitPanel && !Editor", "bindings": { "q": "git_panel::Close" } },
+  {
+    "context": "GitDiff > Editor && vim_mode == normal",
+    "bindings": {
+      "x": "git::Restore",
+      "u": "git::UnstageAndNext",
+      "U": "git::UnstageFile",
+      "s": "git::StageAndNext",
+      "S": "git::StageFile",
+      "ctrl-j": "editor::GoToHunk",
+      "ctrl-k": "editor::GoToPreviousHunk"
+    }
+  },
+  {
+    "context": "Editor && (showing_code_actions || showing_completions)",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-k": "editor::ContextMenuPrevious",
+      "ctrl-j": "editor::ContextMenuNext"
     }
   }
 ]

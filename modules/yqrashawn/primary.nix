@@ -22,10 +22,5 @@ in {
 
     # user -> users.users.<primary user>
     users.users.${config.user.name} = mkAliasDefinitions options.user;
-
-    # users.users.yqrashawn = {
-    #   isNormalUser = true;
-    #   passwordFile = config.sops.secrets.yqrashawn.path;
-    # };
   };
 }

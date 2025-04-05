@@ -1,90 +1,5 @@
 ;;; completion.el -*- lexical-binding: t; -*-
 
-;; (when (modulep! :completion company)
-;;   (set-company-backend! +lispy-modes
-;;                         'company-capf
-;;                         'company-files
-;;                         'company-yasnippet
-;;                         'company-keywords
-;;                         'company-dabbrev-code
-;;                         'company-dabbrev)
-
-;;   (set-company-backend! '(prog-mode js2-mode rjsx-mode typescript-mode conf-mode)
-;;                         'company-tabnine
-;;                         'company-capf
-;;                         'company-files
-;;                         'company-yasnippet
-;;                         'company-keywords
-;;                         'company-dabbrev-code
-;;                         'company-dabbrev)
-
-;;   (set-company-backend! 'text-mode
-;;                         '(:separate company-dabbrev company-yasnippet company-files company-ispell)))
-
-;; (use-package! company-flx
-;;   :defer t
-;;   :init (add-hook! emacs-lisp-mode #'company-flx-mode))
-
-;; (defvar yq//company-numbers '(59 ?a ?s ?d ?f ?g ?h ?j ?k ?l))
-
-;; (defun yq//company-format-numbers (numbered)
-;;   (format " %s" (char-to-string (nth (mod numbered 10) yq//company-numbers))))
-
-;; (after! company
-;;   (setq! company-selection-wrap-around t
-;;          company-show-numbers t
-;;          company-frontends '(company-preview-frontend company-echo-frontend)
-;;          company-require-match nil
-;;          company-dabbrev-minimum-length 2
-;;          company-search-regexp-function #'company-search-flex-regexp
-;;          company-show-numbers-function 'yq//company-format-numbers)
-
-;;   (setq-hook!
-;;       '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
-;;     company-idle-delay 0)
-;;   (setq-hook! '(js2-mode-hook rjsx-mode-hook js-mode-hook typescript-mode-hook)
-;;     company-idle-delay 0)
-;;   (after! eldoc
-;;     (defadvice! +eldoc--message (orig-fn &optional string)
-;;       :around #'eldoc--message
-;;       (unless (company--active-p)
-;;         (funcall orig-fn string))))
-
-;;   (dotimes (i 10)
-;;     (define-key! company-active-map
-;;       (read-kbd-macro (format "M-%d" i)) #'company-complete-number
-;;       (read-kbd-macro (format "C-x C-6 %d" i)) #'company-complete-number)))
-
-;; (use-package! company-tabnine
-;;   :defer t
-;;   :after company
-;;   :commands (company-tabnine-restart-server)
-;;   :init
-;;   (setq!
-;;    company-tabnine-binaries-folder "~/.TabNine/binaries/"
-;;    company-tabnine-wait 0.25
-;;    company-tabnine-max-num-results 5
-;;    company-tabnine-no-continue nil
-;;    ;; company-tabnine-context-radius 6000
-;;    ;; company-tabnine-context-radius-after 6000
-;;    company-tabnine-log-file-path "~/Downloads/tabnine.log"))
-
-;; (use-package! company-ctags :defer t)
-
-;; (after! company
-;;   ;; try fix company overlay performance
-;;   ;; TODO: check if this works
-;;   (defadvice! +company-tng-frontend (orig command)
-;;     :around #'company-tng-frontend
-;;     (overlay-recenter (point))
-;;     (setq-local inhibit-field-text-motion t)
-;;     (funcall orig command))
-;;   (defadvice! +company-enable-overriding-keymap (orig keymap)
-;;     :around #'company-enable-overriding-keymap
-;;     (if keymap (setq-local inhibit-field-text-motion t)
-;;       (setq-local inhibit-field-text-motion nil))
-;;     (funcall orig keymap)))
-
 ;; try to speed up the overlay
 (defvar last-post-command-position 0
   "Holds the cursor position from the last run of post-command-hooks.")
@@ -101,18 +16,6 @@
 
 (use-package! capf-autosuggest
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
-
-;; (after! company-box
-;;   (setq! company-box-enable-icon nil
-;;          company-box-color-icon nil
-;;          company-box-max-candidates 15
-;;          company-box-scrollbar nil
-;;          company-box-doc-delay 1.5)
-;;   (defadvice! +company-box--set-mode (&rest args)
-;;     "stop company-box add company-pseudo-tooltip-frontend back"
-;;     :after #'company-box--set-mode
-;;     (cl-callf2 delq 'company-pseudo-tooltip-frontend company-frontends)
-;;     (cl-callf2 delq 'company-pseudo-tooltip-unless-just-one-frontend company-frontends)))
 
 (after! orderless
   (setq orderless-component-separator "[ ,j]"))
@@ -202,18 +105,6 @@
 
 (defun +tabnine-setup ()
   (require 'tabnine))
-
-;; (use-package! tabnine
-;;   :disabled
-;;   :hook
-;;   ((doom-first-file . +tabnine-setup)
-;;    (kill-emacs . tabnine-kill-process))
-;;   ;; :init
-;;   ;; (add-hook! 'prog-mode-hook
-;;   ;;   (defun +corfu-add-tabnine-capf-h ()
-;;   ;;     (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 0 t)))
-;;   :config
-;;   (tabnine-start-process))
 
 (use-package! pabbrev
   :hook (doom-first-file . global-pabbrev-mode)
