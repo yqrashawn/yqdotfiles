@@ -345,7 +345,17 @@ creates a new one. Don't unnecessarily bother the user."
                   ((numberp value-type) value-type)
                   (t nil)))
           (value-type (if (symbolp value-type) value-type 'value)))
-      (funcall orig-fn value value-type point overlay-face))))
+      (funcall orig-fn value value-type point overlay-face)))
+
+  (cider-add-to-alist
+   'cider-jack-in-dependencies
+   "org.clojars.abhinav/snitch"
+   "0.1.16")
+  (cider-add-to-alist
+   'cider-jack-in-cljs-dependencies
+   "org.clojars.abhinav/snitch"
+   "0.1.16"))
+
 
 ;; use ns rather than file name for clj buffer name
 (use-package! clj-ns-name
@@ -386,8 +396,9 @@ creates a new one. Don't unnecessarily bother the user."
      ("math" . "clojure.math")
      ("set"  . "clojure.set")
      ("string"  . "clojure.string")
-     ("a" . "cljure.core.async")
+     ("a" . "clojure.core.async")
      ("response" . "ring.util.response")
+     ("http-response" . "ring.util.http-response")
      ("enc" . "taoensso.encore")
      ("ig" . "integrant.core")
      ("d" . "datalevin.core")
@@ -410,3 +421,77 @@ creates a new one. Don't unnecessarily bother the user."
 
 (setq-default +cider-project-reload-exec-cmd-clj nil
               +cider-project-reload-exec-cmd-cljs nil)
+
+
+"[snitch.core :refer [defn* defmethod* *fn *let]]"
+
+(defun +cljr--re-search-parent (re)
+  (unless (lispyville--top-level-p)
+    (ignore-errors (paredit-backward-up))
+    (let ((s (or (ignore-errors (cljr--extract-sexp)) "")))
+      (when (string-match re s)
+        (point)))))
+
+(defun +cljr--find-snitch-point (&optional snitched-point?)
+  (let ((not-done? t)
+         (rst nil))
+    (while not-done?
+      (let ((found (+cljr--re-search-parent
+                     (if snitched-point?
+                       "^(\\(defn\\*\\|defmethod\\*\\|\\*fn\\|\\*let\\) "
+                       "^(\\(defn\\|defmethod\\|fn\\|let\\) "))))
+        (cond
+          (found
+            (setq not-done? nil
+              rst found))
+          ((lispyville--top-level-p)
+            (setq not-done? nil))
+          (t nil))))
+    rst))
+
+(defun +add-snitch ()
+  (let ((snitch-found (+cljr--find-snitch-point)))
+    (when snitch-found
+      (let ((sexp (save-excursion
+                    (goto-char snitch-found)
+                    (forward-char)
+                    (cljr--extract-sexp))))
+        (forward-char)
+        (when (or
+              (string= sexp "defn")
+              (string= sexp "defmethod"))
+          (forward-sexp))
+        (insert "*")
+        snitch-found))))
+
+(defun +remove-snitch ()
+  (let ((snitched-found (+cljr--find-snitch-point t)))
+    (when snitched-found
+      (let ((sexp (save-excursion
+                    (goto-char snitched-found)
+                    (forward-char)
+                    (cljr--extract-sexp))))
+        (forward-char)
+        (if (or
+              (string= sexp "defn*")
+              (string= sexp "defmethod*"))
+          (forward-sexp)
+          (forward-char))
+        (delete-char -1)
+        snitched-found))))
+
+(defun +clojure-inject-snitch (arg)
+  (interactive "P")
+  (let* ((injected? (ignore-errors (save-excursion (re-search-backward "snitch.core :refer")))))
+    (unless injected?
+      (save-excursion
+        (cljr--insert-in-ns ":require")
+        (if (eq major-mode 'clojurescript-mode)
+          (insert "[snitch.core :refer-macros [defn* defmethod* *fn *let]]")
+          (insert "[snitch.core :refer [defn* defmethod* *fn *let]]"))))
+
+    (save-excursion
+      (if arg
+        (+add-snitch)
+        (unless (save-excursion (+remove-snitch))
+          (+add-snitch))))))

@@ -471,6 +471,7 @@
           :n "td" #'transpose-sexps
           :n "tw" #'lispy-move-up
           :n "tl" #'+spy
+          :n "tk" #'+clojure-inject-snitch
           :n "tJ" #'lispy-join
           :n "t/" #'lispy-splice
           :n "tj" #'symex-evaluate

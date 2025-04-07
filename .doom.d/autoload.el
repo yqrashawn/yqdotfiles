@@ -726,23 +726,48 @@ _b_ranch _j_next _k_prev _h_up
     (call-interactively 'log/--spy arg)))
 
 ;;;###autoload
+(defun +clojure-inject-snitch (arg)
+  (interactive "P")
+  (let* ((injected? (ignore-errors (save-excursion (re-search-backward "snitch.core :refer")))))
+    (unless injected?
+      (save-excursion
+        (cljr--insert-in-ns ":require")
+        (insert "[snitch.core :refer [defn* defmethod* *fn *let]]")))
+
+    (save-excursion
+      (if arg
+          (+add-snitch)
+        (unless (save-excursion (+remove-snitch))
+          (+add-snitch))))))
+
+;;;###autoload
 (defun +clojure-clean-log-ns ()
   (interactive)
   (when (and lispy-mode (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode)))
     (save-excursion
       (goto-char (point-max))
       (when (and
+             (not (ignore-errors (re-search-backward "(\\(defn\\*\\|defmethod\\*\\|\\*fn\\|\\*let\\)")))
+             (ignore-errors (re-search-backward "\\[snitch\.core :refer.*\\]\\]")))
+        (call-interactively #'lispyville-delete-whole-line))
+      (goto-char (point-max))
+      (when (and
              (ignore-errors (save-excursion (re-search-backward ":as log\\]")))
              (not (ignore-errors (save-excursion (re-search-backward "(log/")))))
-        (and (ignore-errors (re-search-backward "\\[taoensso.telemere :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (and (ignore-errors (re-search-backward "\\[taoensso.telemere :as log\\]"))
+             (call-interactively #'lispyville-delete-whole-line))
         (goto-char (point-max))
-        (and (ignore-errors (re-search-backward "\\[lambdaisland.glogi :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (and (ignore-errors (re-search-backward "\\[lambdaisland.glogi :as log\\]"))
+             (call-interactively #'lispyville-delete-whole-line))
         (goto-char (point-max))
-        (and (ignore-errors (re-search-backward "\\[taoensso.timbre :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (and (ignore-errors (re-search-backward "\\[taoensso.timbre :as log\\]"))
+             (call-interactively #'lispyville-delete-whole-line))
         (goto-char (point-max))
-        (and (ignore-errors (re-search-backward "\\[io.pedestal.log :as log\\]")) (call-interactively #'lispyville-delete-whole-line))
+        (and (ignore-errors (re-search-backward "\\[io.pedestal.log :as log\\]"))
+             (call-interactively #'lispyville-delete-whole-line))
         (goto-char (point-max))
-        (and (ignore-errors (re-search-backward "\\[\"@/spy\" :as log\\]")) (call-interactively #'lispyville-delete-whole-line))))))
+        (and (ignore-errors (re-search-backward "\\[\"@/spy\" :as log\\]"))
+             (call-interactively #'lispyville-delete-whole-line))))))
 
 ;; https://xenodium.com/png-to-icns-emacs-dwim-style/
 ;;;###autoload

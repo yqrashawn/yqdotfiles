@@ -15,6 +15,7 @@ let
     # mise
     zprint
     neil
+    bbin
     jet
     zsh-fzf-tab
     zsh-forgit
@@ -88,17 +89,16 @@ in {
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
         # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/make-emacs.nix
 
-        # (emacsWithPackagesFromUsePackage {
-        #   package = emacs30-overlay;
-
-        #   config = "./empty.el";
-        #   defaultInitFile = false;
-        #   extraEmacsPackages = epkgs:
-        #     [
-        #       epkgs.jinx
-        #       # emacsPackages.hotfuzz
-        #     ];
-        # })
+        (emacsWithPackagesFromUsePackage {
+          package = emacs30-overlay;
+          config = "./empty.el";
+          defaultInitFile = false;
+          extraEmacsPackages = epkgs:
+            [
+              epkgs.jinx
+              # emacsPackages.hotfuzz
+            ];
+        })
 
         ispell
         joker
