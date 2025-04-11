@@ -87,7 +87,8 @@
           (format "These are diffs of changes I made within %d minutes\n\n" n)
           (shell-command-to-string
            (format!
-            "git reflog --since=\"30 minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
+            "git reflog --since=\"%d minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
+            n
             (magit-get-current-branch))))))
       b)))
 

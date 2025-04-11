@@ -20,9 +20,8 @@
         ''
           mkdir -p ~/miniser
           cd ~/miniser
-          java -version
           /bin/cp ~/workspace/home/miniser/.env.local ~/miniser/.env
-          SOCKET_PORT=61941 PORT=61942 PROD=true HOSTNAME=$(hostname) exec -a miniser-local-jar ${pkgs.direnv}/bin/direnv exec ./ java --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -XX:MaxDirectMemorySize=1024m -Xmx8G -jar /Users/${config.user.name}/Library/CloudStorage/Dropbox/sync/miniser/miniser-standalone.jar
+          SOCKET_PORT=61941 PORT=61942 PROD=true HOSTNAME=$(hostname) exec -a miniser-local-jar ${pkgs.direnv}/bin/direnv exec ./ /Users/${config.user.name}/.asdf/installs/java/oracle-graalvm-22/bin/java --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -XX:MaxDirectMemorySize=1024m -Xmx8G -jar /Users/${config.user.name}/Library/CloudStorage/Dropbox/sync/miniser/miniser-standalone.jar
         ''
       ];
       RunAtLoad = true;

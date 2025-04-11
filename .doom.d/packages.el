@@ -383,6 +383,7 @@
 (package! polymode)
 (package! claude-code :recipe (:host github :repo "stevemolitor/claude-code.el"))
 (package! ts-refactor :recipe (:host github :repo "yqrashawn/ts-refactor.el"))
+(package! logview)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
