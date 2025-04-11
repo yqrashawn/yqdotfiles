@@ -1,0 +1,23 @@
+[package]
+name = "fuzzy-matcher"
+version = "0.0.1"
+authors = ["Evgeny Kurnevsky <kurnevsky@gmail.com>"]
+license = "GPL-3.0+"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"
+name = "fuzzy_matcher_el"
+crate-type = ["cdylib"]
+
+[dependencies]
+emacs = { git = "https://github.com/kurnevsky/emacs-module-rs.git", rev = "49665c9ae23b19711fc41e15ac526755f6a48072", features = [ "utf-8-validation" ] }
+nucleo-matcher = "0.3"
+lazy_static = "1.5"
+
+[profile.release]
+opt-level = 3
+lto = true
+debug = false
+panic = "abort"
+codegen-units = 1

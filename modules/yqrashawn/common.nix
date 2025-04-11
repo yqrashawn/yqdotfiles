@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, ... }:
+{ inputs, config, pkgs, emacs, ... }:
 let
   own = with pkgs.own; [ ];
   darwins = with pkgs.darwins; [
@@ -22,6 +22,10 @@ let
     zsh-f-sy-h
     zsh-autopair
   ];
+  emacs = pkgs.callPackage ./emacs {
+    emacs = pkgs.emacs30-overlay;
+    inherit inputs;
+  };
 in {
   imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
 
@@ -29,8 +33,8 @@ in {
   user = {
     description = "Rashawn Zhang";
     home = "${
-        if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"
-      }/${config.user.name}";
+      if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"
+    }/${config.user.name}";
     shell = pkgs.zsh;
   };
 
@@ -85,21 +89,7 @@ in {
         (isync.override { withCyrusSaslXoauth2 = true; })
         msmtp
         mkcert
-        # opts at
-        # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/generic.nix
-        # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/applications/editors/emacs/make-emacs.nix
-
-        (emacsWithPackagesFromUsePackage {
-          package = emacs30-overlay;
-          config = "./empty.el";
-          defaultInitFile = false;
-          extraEmacsPackages = epkgs:
-            [
-              epkgs.jinx
-              # emacsPackages.hotfuzz
-            ];
-        })
-
+        emacs
         ispell
         joker
         leiningen

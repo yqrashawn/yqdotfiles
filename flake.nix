@@ -206,6 +206,12 @@
       flake = false;
     };
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
+    hexrgb = {
+      type = "github";
+      owner = "emacsmirror";
+      repo = "hexrgb";
+      flake = false;
+    };
   };
 
   outputs =

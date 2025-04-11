@@ -17,16 +17,12 @@ in {
         name = "emacs30";
         version = "30.0-${inputs.emacs-custom-src.shortRev}";
         src = inputs.emacs-custom-src;
-        patches = # old.patches ++
-          [
-            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/system-appearance.patch"
-            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/round-undecorated-frame.patch"
-            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/poll.patch"
-            # "${home}/.nixpkgs/modules/yqrashawn/emacs-patches/fix-window-role.patch"
-          ];
+        patches = old.patches ++ [];
         buildInputs = old.buildInputs
           ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
-        configureFlags = old.configureFlags ++ [ "--with-xwidgets" ];
+        configureFlags = old.configureFlags ++ [
+          "--with-xwidgets"
+        ];
         # withMacport = true;
         withNS = true;
         # macportVersion = "master";

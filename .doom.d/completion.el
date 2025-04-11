@@ -145,3 +145,66 @@
 
 (after! corfu
   (setq! corfu-preselect 'directory))
+
+
+;; (use-package! fuzzy-matcher
+;;   :ensure nil
+;;   :demand t
+;;   :init
+;;   (load-library "libfuzzy_matcher_el.dylib")
+;;   :config
+;;   (defun fuzzy-matcher-without-tofu-char (string)
+;;     (if (and
+;;          (fboundp 'consult--tofu-p)
+;;          (consult--tofu-p (aref string (- (length string) 1))))
+;;         (substring string 0 (- (length string) 1))
+;;       string))
+;;   (defun fuzzy-matcher-propertize (pattern candidate)
+;;     (let* ((score (fuzzy-matcher-fuzzy-indices pattern (fuzzy-matcher-without-tofu-char candidate)))
+;;            (candidate (copy-sequence candidate)))
+;;       (unless (string-empty-p pattern)
+;;         (put-text-property 0 1 'completion-score (- (* (or (car score) 0) 100) (length candidate)) candidate))
+;;       (dolist (char (cdr score))
+;;         (add-face-text-property char (1+ char) 'completions-common-part nil candidate))
+;;       (when-let* ((char (last (cdr score)))
+;;                   (char (car char)))
+;;         (when (length> candidate (1+ char))
+;;           (add-face-text-property (1+ char) (+ 2 char) 'completions-first-difference nil candidate)))
+;;       candidate))
+;;   (defun fuzzy-matcher-all-completions (string table pred point)
+;;     (let* ((beforepoint (substring string 0 point))
+;;            (afterpoint (substring string point))
+;;            (bounds (completion-boundaries beforepoint table pred afterpoint))
+;;            (infix (concat
+;;                    (substring beforepoint (car bounds))
+;;                    (substring afterpoint 0 (cdr bounds)))))
+;;       (pcase-let ((`(,all ,_pattern ,prefix ,_suffix ,_carbounds)
+;;                    (completion-substring--all-completions string table pred point #'completion-flex--make-flex-pattern)))
+;;         (when all
+;;           (nconc (mapcar (-partial #'fuzzy-matcher-propertize (downcase infix)) all) (length prefix))))))
+;;   (add-to-list 'completion-styles-alist '(fuzzy
+;;                                           completion-flex-try-completion
+;;                                           fuzzy-matcher-all-completions
+;;                                           "Fuzzy completion with scoring."))
+;;   (defun fuzzy-matcher-adjust-metadata (metadata)
+;;     (let ((existing-dsf
+;;            (completion-metadata-get metadata 'display-sort-function))
+;;           (existing-csf
+;;            (completion-metadata-get metadata 'cycle-sort-function)))
+;;       (cl-flet
+;;           ((compose-flex-sort-fn
+;;              (existing-sort-fn)
+;;              (lambda (completions)
+;;                (sort
+;;                 (funcall existing-sort-fn completions) (lambda (c1 c2) (let ((s1 (get-text-property 0 'completion-score c1)) (s2 (get-text-property 0 'completion-score c2))) (> (or s1 0) (or s2 0)))))))) `(metadata (display-sort-function . ,(compose-flex-sort-fn (or existing-dsf #'identity))) (cycle-sort-function . ,(compose-flex-sort-fn (or existing-csf #'identity)))
+;;                                                                                                                                                                                                               (cdr metadata)))))
+;;   (put 'fuzzy 'completion--adjust-metadata (lambda (metadata)
+;;                                              (if (let ((input (minibuffer-contents-no-properties)))
+;;                                                    (or
+;;                                                     (string-empty-p input)
+;;                                                     (and
+;;                                                      (eq (completion-metadata-get metadata 'category) 'file)
+;;                                                      (string-suffix-p "/" input))))
+;;                                                  metadata
+;;                                                (fuzzy-matcher-adjust-metadata metadata))))
+;;   (setq completion-styles '(fuzzy)))

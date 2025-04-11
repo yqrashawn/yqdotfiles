@@ -862,6 +862,22 @@
         "type": "github"
       }
     },
+    "hexrgb": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1514842371,
+        "narHash": "sha256-PxwRIuiX0gzm9pZMUcFIbr8Oe/7lylKzk0KW+jM0tHg=",
+        "owner": "emacsmirror",
+        "repo": "hexrgb",
+        "rev": "90e5f07f14bdb9966648977965094c75072691d4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "emacsmirror",
+        "repo": "hexrgb",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1152,6 +1168,7 @@
         "flake-compat": "flake-compat_2",
         "flake-utils": "flake-utils_3",
         "forgit": "forgit",
+        "hexrgb": "hexrgb",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": [
