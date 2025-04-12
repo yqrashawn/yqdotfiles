@@ -718,6 +718,7 @@ used in the POST request made to the LanguageTool server."
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
            :host "openrouter.ai"
+           :capabilities '(media tool-use cache)
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key +openrouter-api-key
@@ -739,7 +740,14 @@ used in the POST request made to the LanguageTool server."
         '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
           (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
           (writing . "You are a large language model and a writing assistant. Respond concisely.")
-          (chat . "You are a large language model and a conversation partner. Respond concisely."))))
+          (chat . "You are a large language model and a conversation partner. Respond concisely.")))
+
+  (gptel-make-tool
+   :function (lambda () "15.4")
+   :name "get_current_macos_version"
+   :description "Get current macos version"
+   :category "utils"
+   :args '()))
 
 (use-package shrface
   :defer t

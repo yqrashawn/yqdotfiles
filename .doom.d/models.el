@@ -67,32 +67,24 @@
      :context-window 200
      :input-cost 15
      :output-cost 60
-     :cutoff-date "2023-10"
-     :request-params (:stream :json-false))
-    (o3-mini-paygo
-     :description "High intelligence at the same cost and latency targets of o1-mini"
-     :context-window 200
-     :input-cost 1.1
-     :output-cost 4.4
-     :cutoff-date "2023-10"
-     :capabilities (reasoning)
+     :cutoff-date "2024-12"
      :request-params (:stream :json-false))
     (o3-mini
      :description "High intelligence at the same cost and latency targets of o1-mini"
      :context-window 200
      :input-cost 1.1
      :output-cost 4.4
-     :cutoff-date "2023-10"
-     :capabilities (reasoning)
+     :cutoff-date "2025-01-31"
+     :capabilities (reasoning tool-use)
      :request-params (:stream :json-false))
-    (gpt-4o-2024-11-20
+    (gpt-4o
      :description "Advanced model for complex tasks; cheaper & faster than GPT-Turbo"
      :capabilities (media tool-use json url)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
      :context-window 128
      :input-cost 2.5
      :output-cost 10
-     :cutoff-date "2023-10")
+     :cutoff-date "2024-11-20")
     (gpt-4o-mini
      :description "Cheap model for fast tasks; cheaper & more capable than GPT-3.5 Turbo"
      :capabilities (media tool-use json url)
@@ -100,18 +92,42 @@
      :context-window 128
      :input-cost 0.15
      :output-cost 0.6
-     :cutoff-date "2023-10")
+     :cutoff-date "2024-07-18")
+    (claude-3.5-sonnet
+     :description "Hybrid model capable of standard thinking and extended thinking modes"
+     :capabilities (media tool-use json url cache)
+     :mime-types ("image/jpeg" "image/png" "image/webp")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-02")
     (claude-3.7-sonnet
      :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :capabilities (media tool-use json url cache)
+     :mime-types ("image/jpeg" "image/png" "image/webp")
      :context-window 200
      :input-cost 3
      :output-cost 15
      :cutoff-date "2025-02")
     (claude-3.7-sonnet-thought
      :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (media tool-use cache)
+     :capabilities (media cache)
+     :mime-types ("image/jpeg" "image/png" "image/webp")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-02")
+    (gemini-2.0-flash-001
+     :description "Hybrid model capable of standard thinking and extended thinking modes"
+     :capabilities (media)
+     :mime-types ("image/jpeg" "image/png" "image/webp" "application/pdf" "image/heic" "image/heif")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-02")
+    (gemini-2.5-pro
+     :description "Hybrid model capable of standard thinking and extended thinking modes"
+     :capabilities (tool-use)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
      :context-window 200
      :input-cost 3

@@ -145,7 +145,8 @@
            ;; [:f23 :!CT8]
            ;; [:f23 :f18]
            ;; [:f23 [:hsl "/Applications/ChatGPT.app"] :!Games]
-           [:f23 [:op "/Applications/ChatGPT.app"] :!Games]
+           ;; [:f23 [:op "/Applications/ChatGPT.app"] :!Games]
+           [:f23 :!COS7 :!Games]
            [:f23 :left_control :Games]
            [:##right_option :right_option :adv2
             {:alone [:op "/Applications/ChatGPT.app"]}]]}

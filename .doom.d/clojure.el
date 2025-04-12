@@ -174,16 +174,15 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   (interactive)
   (when (< emacs-major-version 27)
     (user-error "`+cider-enable-fuzzy-completion' requires Emacs 27 or later"))
-  (let ((found-styles (when-let ((cider (assq 'cider completion-category-overrides)))
-                        (assq 'styles cider)))
-        (found-cycle (when-let ((cider (assq 'cider completion-category-overrides)))
-                       (assq 'cycle cider))))
-    (setq completion-category-overrides (seq-remove (lambda (x)
-                                                      (equal 'cider (car x)))
-                                                    completion-category-overrides))
-    ;; (unless (member (car completion-styles) found-styles)
-    ;;   (setq found-styles (append found-styles (list (car completion-styles)))))
-    (setq found-styles '(styles fussy))
+  (let* ((cider (assq 'cider completion-category-overrides))
+         (found-styles (when cider (assq 'styles cider)))
+         (found-cycle (when cider (assq 'cycle cider))))
+    (setq completion-category-overrides
+          (seq-remove (lambda (x)
+                        (equal 'cider (car x)))
+                      completion-category-overrides))
+    ;; (setq found-styles '(styles fussy))
+    (setq found-styles '(styles hotfuzz))
     (add-to-list 'completion-category-overrides (apply #'list 'cider found-styles (when found-cycle
                                                                                     (list found-cycle))))))
 
@@ -434,19 +433,19 @@ creates a new one. Don't unnecessarily bother the user."
 
 (defun +cljr--find-snitch-point (&optional snitched-point?)
   (let ((not-done? t)
-         (rst nil))
+        (rst nil))
     (while not-done?
       (let ((found (+cljr--re-search-parent
-                     (if snitched-point?
-                       "^(\\(defn\\*\\|defmethod\\*\\|\\*fn\\|\\*let\\) "
-                       "^(\\(defn\\|defmethod\\|fn\\|let\\) "))))
+                    (if snitched-point?
+                        "^(\\(defn\\*\\|defmethod\\*\\|\\*fn\\|\\*let\\) "
+                      "^(\\(defn\\|defmethod\\|fn\\|let\\) "))))
         (cond
-          (found
-            (setq not-done? nil
-              rst found))
-          ((lispyville--top-level-p)
-            (setq not-done? nil))
-          (t nil))))
+         (found
+          (setq not-done? nil
+                rst found))
+         ((lispyville--top-level-p)
+          (setq not-done? nil))
+         (t nil))))
     rst))
 
 (defun +add-snitch ()
@@ -458,8 +457,8 @@ creates a new one. Don't unnecessarily bother the user."
                     (cljr--extract-sexp))))
         (forward-char)
         (when (or
-              (string= sexp "defn")
-              (string= sexp "defmethod"))
+               (string= sexp "defn")
+               (string= sexp "defmethod"))
           (forward-sexp))
         (insert "*")
         snitch-found))))
@@ -473,9 +472,9 @@ creates a new one. Don't unnecessarily bother the user."
                     (cljr--extract-sexp))))
         (forward-char)
         (if (or
-              (string= sexp "defn*")
-              (string= sexp "defmethod*"))
-          (forward-sexp)
+             (string= sexp "defn*")
+             (string= sexp "defmethod*"))
+            (forward-sexp)
           (forward-char))
         (delete-char -1)
         snitched-found))))
@@ -487,11 +486,11 @@ creates a new one. Don't unnecessarily bother the user."
       (save-excursion
         (cljr--insert-in-ns ":require")
         (if (eq major-mode 'clojurescript-mode)
-          (insert "[snitch.core :refer-macros [defn* defmethod* *fn *let]]")
+            (insert "[snitch.core :refer-macros [defn* defmethod* *fn *let]]")
           (insert "[snitch.core :refer [defn* defmethod* *fn *let]]"))))
 
     (save-excursion
       (if arg
-        (+add-snitch)
+          (+add-snitch)
         (unless (save-excursion (+remove-snitch))
           (+add-snitch))))))

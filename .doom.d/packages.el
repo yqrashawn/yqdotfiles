@@ -269,12 +269,9 @@
 ;; (package! fuz-bin
 ;;   :recipe (:host github :repo "jcs-elpa/fuz-bin"))
 
-(package! fuz
-  :recipe (:host github :repo "rustify-emacs/fuz.el"))
-
-;; (package! flx-rs :recipe (:host github :repo "jcs-elpa/flx-rs" :files (:defaults "bin")))
 (package! fussy :recipe (:host github :repo "jojojames/fussy"))
-(package! hotfuzz)
+(package! fuz :recipe (:host github :repo "rustify-emacs/fuz.el"))
+;; (package! hotfuzz)
 
 ;; (disable-packages! orderless)
 
@@ -301,7 +298,9 @@
 ;;            :branch "fix-inner-block")
 ;;   :pin "29280cd71a05429364cdceef2ff595ae8afade4d")
 
-(package! fzf-native :recipe (:host github :repo "dangduc/fzf-native" :files (:defaults "bin")))
+(package! fzf-native :recipe (:host github
+                              :repo "dangduc/fzf-native"
+                              :files (:defaults "bin")))
 (package! languagetool)
 (disable-packages! langtool)
 (package! consult-git-log-grep)

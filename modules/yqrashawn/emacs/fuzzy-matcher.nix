@@ -13,8 +13,8 @@ rustPlatform.buildRustPackage {
 
   postInstall = ''
     mkdir -p $out/share/emacs/site-lisp/elpa/${pname}-${version}/
-    mv $out/lib/libfuzzy_matcher_el.so $out/share/emacs/site-lisp/elpa/${pname}-${version}/ || true
-    mv $out/lib/libfuzzy_matcher_el.dylib $out/share/emacs/site-lisp/elpa/${pname}-${version}/ || true
+    ls $out/lib
+    mv $out/lib/libfuzzy_matcher_el.* $out/share/emacs/site-lisp/elpa/${pname}-${version}/
     rm -r $out/lib/
   '';
 

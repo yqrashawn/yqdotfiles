@@ -2,10 +2,10 @@
 
 if [ "$#" -eq 0 ]; then
   doom sync
-  ~/local/bin/make-hotfuzz
+  # ~/local/bin/make-hotfuzz
 elif [ "$1" = "sync" ] && [ -z "$2" ]; then
   doom "$@"
-  ~/local/bin/make-hotfuzz
+  # ~/local/bin/make-hotfuzz
 else
   doom "$@"
 fi
