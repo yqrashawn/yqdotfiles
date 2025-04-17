@@ -718,7 +718,6 @@ used in the POST request made to the LanguageTool server."
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
            :host "openrouter.ai"
-           :capabilities '(media tool-use cache)
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key +openrouter-api-key

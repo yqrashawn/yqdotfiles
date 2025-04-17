@@ -17,11 +17,19 @@
                      clojure.test.check.clojure-test/defspec clojure.test/deftest
                      clojure.test.check.properties/for-all   clojure.core/let
                      cljs.cache/defcache                     clojure.core/deftype
-                     clojure.java.jdbc/with-db-transaction   clojure.core/let}
+                     clojure.java.jdbc/with-db-transaction   clojure.core/let
+                     snitch.core/defn*                       clojure.core/defn
+                     snitch.core/fn*                         clojure.core/fn
+                     snitch.core/*let                        clojure.core/let
+                     snitch.core/defmethod*                  clojure.core/defmethod}
  :linters           {:aliased-namespace-symbol {:level :warning}
                      :unresolved-symbol        {:exclude [goog.DEBUG
                                                           (mount.core/defstate)
-                                                          (cljs.core.match/match)]}
+                                                          (cljs.core.match/match)
+                                                          snitch.core/defn*
+                                                          snitch.core/fn*
+                                                          snitch.core/*let
+                                                          snitch.core/defmethod*]}
                      :unresolved-var           {:exclude [deftest is are (comment)]}
                      :refer-all                {:level   :warning
                                                 :exclude [clojure.test]}
