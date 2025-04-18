@@ -60,9 +60,17 @@
      :cutoff-date "2025-02")))
 
 (defconst gptel--gh-copilot-models
-  '((o1
+  '((gpt-4o
+     :description "Advanced model for complex tasks; cheaper & faster than GPT-Turbo"
+     :capabilities (media tool-use json url)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
+     :context-window 128
+     :input-cost 2.5
+     :output-cost 10
+     :cutoff-date "2024-11-20")
+    (o1
      :description "Reasoning model designed to solve hard problems across domains"
-     :capabilities (media reasoning)
+     :capabilities (reasoning tool-use)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
      :context-window 200
      :input-cost 15
@@ -75,24 +83,8 @@
      :input-cost 1.1
      :output-cost 4.4
      :cutoff-date "2025-01-31"
-     :capabilities (reasoning tool-use)
+     :capabilities (reasoning tool-use json)
      :request-params (:stream :json-false))
-    (gpt-4o
-     :description "Advanced model for complex tasks; cheaper & faster than GPT-Turbo"
-     :capabilities (media tool-use json url)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-     :context-window 128
-     :input-cost 2.5
-     :output-cost 10
-     :cutoff-date "2024-11-20")
-    (gpt-4o-mini
-     :description "Cheap model for fast tasks; cheaper & more capable than GPT-3.5 Turbo"
-     :capabilities (media tool-use json url)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-     :context-window 128
-     :input-cost 0.15
-     :output-cost 0.6
-     :cutoff-date "2024-07-18")
     (claude-3.5-sonnet
      :description "Hybrid model capable of standard thinking and extended thinking modes"
      :capabilities (media tool-use json url cache)
@@ -103,7 +95,8 @@
      :cutoff-date "2025-02")
     (claude-3.7-sonnet
      :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (media tool-use json url cache)
+     :capabilities (media tool-use ;; json
+                          url cache)
      :mime-types ("image/jpeg" "image/png" "image/webp")
      :context-window 200
      :input-cost 3
@@ -127,9 +120,23 @@
      :cutoff-date "2025-02")
     (gemini-2.5-pro
      :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (tool-use)
+     :capabilities (tool-use media json)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
      :context-window 200
      :input-cost 3
      :output-cost 15
-     :cutoff-date "2025-02")))
+     :cutoff-date "2025-02")
+    (o4-mini
+     :description "Cheap model for fast tasks; cheaper & more capable than GPT-3.5 Turbo"
+     :capabilities (tool-use json url)
+     :context-window 128
+     :input-cost 0.15
+     :output-cost 0.6
+     :cutoff-date "2024-07-18")
+    (gpt-4.1
+     :description "Cheap model for fast tasks; cheaper & more capable than GPT-3.5 Turbo"
+     :capabilities (tool-use json url)
+     :context-window 128
+     :input-cost 0.15
+     :output-cost 0.6
+     :cutoff-date "2024-07-18")))
