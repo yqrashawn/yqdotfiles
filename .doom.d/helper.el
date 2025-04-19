@@ -117,3 +117,5 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       +project-files-buffers)))
 
 (defvar +llm-project-default-files '())
+(make-variable-buffer-local '+llm-project-default-files)
+(put '+llm-project-default-files 'safe-local-variable #'listp)

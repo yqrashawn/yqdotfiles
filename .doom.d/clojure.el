@@ -112,7 +112,18 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
         (progn
           (setq current-prefix-arg '(1))
           (call-interactively 'cider-pprint-eval-last-sexp))
-      (apply func args))))
+      (apply func args)))
+
+  ;; fix cljr-slash
+  (after! cider
+    (defadvice! +special-lispy-splice-cljr-slash ()
+      :after #'special-lispy-splice
+      (when (and
+             (cider-connected-p)
+             (called-interactively-p 'interactive)
+             (eq (char-before) ?/))
+        (delete-char -1)
+        (call-interactively 'cljr-slash)))))
 
 ;;; cider
 ;; (set-popup-rule! "^\\*cider-test-report\\*" :select nil :side 'right :size 0.5 :ignore t)
@@ -362,6 +373,9 @@ creates a new one. Don't unnecessarily bother the user."
   :config
   (clj-ns-name-install))
 
+(add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
+  (defun +enable-cljr () (clj-refactor-mode 1)))
+
 (after! clj-refactor
   ;; enter evil-insert-state for some cljr fn
   (defadvice! +cljr-add-require-to-ns (orig-fn &rest args)
@@ -395,19 +409,36 @@ creates a new one. Don't unnecessarily bother the user."
      ("math" . "clojure.math")
      ("set"  . "clojure.set")
      ("string"  . "clojure.string")
-     ("a" . "clojure.core.async")
-     ("response" . "ring.util.response")
-     ("http-response" . "ring.util.http-response")
+     ("a" "clojure.core.async" :only ("clj"))
+     ("a" "cljs.core.async" :only ("cljs"))
+     ("resp" . "ring.util.response")
+     ("hresp" . "ring.util.http-response")
      ("enc" . "taoensso.encore")
+     ("tr" . "taoensso.truss")
      ("ig" . "integrant.core")
      ("d" . "datalevin.core")
-     ("r" . "radix")
-     ("rf" . "re-frame.core")
+     ("t" . "tick.core")
+     ("r" "radix" :only ("cljs"))
+     ("rf" "re-frame.core" :only ("cljs"))
      ("walk" . "clojure.walk")
      ("zip"  . "clojure.zip"))
    cljr-clojure-test-declaration "[clojure.test :as t :refer [deftest testing is]]"
    cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t :refer [deftest testing is]]
 :cljs [cljs.test :as t :include-macros])"))
+
+(defvar +local-cljr-magic-require-namespaces '())
+(make-variable-buffer-local '+local-cljr-magic-require-namespaces)
+(put '+local-cljr-magic-require-namespaces 'safe-local-variable #'listp)
+
+(defun +build-cljr-magic-require-namespaces ()
+  (when (and (boundp '+local-cljr-magic-require-namespaces)
+             (listp +local-cljr-magic-require-namespaces))
+    (setq-local
+     cljr-magic-require-namespaces
+     (seq-concatenate 'list
+                      +local-cljr-magic-require-namespaces
+                      cljr-magic-require-namespaces))))
+(add-hook! 'clj-refactor-mode-hook '+build-cljr-magic-require-namespaces)
 
 ;; (after! lispy
 ;;   (after! clojure-mode
