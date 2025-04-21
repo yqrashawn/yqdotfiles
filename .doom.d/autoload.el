@@ -731,7 +731,9 @@ _b_ranch _j_next _k_prev _h_up
   (let* ((injected? (ignore-errors (save-excursion (re-search-backward "snitch.core :refer")))))
     (unless injected?
       (save-excursion
-        (cljr--insert-in-ns ":require")
+        (if (memq major-mode '(clojurescript-mode))
+            (cljr--insert-in-ns ":require-macros")
+          (cljr--insert-in-ns ":require"))
         (insert "[snitch.core :refer [defn* defmethod* *fn *let]]")))
 
     (save-excursion
