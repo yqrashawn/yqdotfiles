@@ -82,30 +82,35 @@
 
   ;; (add-hook 'magit-mode-hook '+marsam/add-pull-request-refs)
 
-  (el-patch-defun magit-stage-file (file)
-    "Stage all changes to FILE.
-With a prefix argument or when there is no file at point ask for
-the file to be staged.  Otherwise stage the file at point without
-requiring confirmation."
+  (el-patch-defun magit-stage-files (files &optional force)
+    "Read one or more files and stage all changes in those files.
+With prefix argument FORCE, offer ignored files for completion."
     (interactive
-     (let* ((atpoint (magit-section-value-if 'file))
-            (current (magit-file-relative-name))
-            (choices (nconc (magit-unstaged-files)
-                            (magit-untracked-files)))
-            (default (car (member (or atpoint current) choices))))
-       (list (if (or current-prefix-arg (not default))
-                 (el-patch-swap
-                   (magit-completing-read "Stage file" choices
-                                          nil t nil nil default)
-                   (progn (set-transient-map yq-s-map) nil))
-               default))))
+     (let* ((choices (if current-prefix-arg
+                         (magit-ignored-files)
+                       (nconc (magit-unstaged-files)
+                              (magit-untracked-files))))
+            (default (or (magit-section-value-if 'file)
+                         (magit-file-relative-name)))
+            (default (car (member default choices))))
+       (el-patch-swap
+         (list (magit-completing-read-multiple
+                (if current-prefix-arg "Stage ignored file,s: " "Stage file,s: ")
+                choices nil t nil nil default)
+               current-prefix-arg)
+         (if current-prefix-arg
+             (list (magit-completing-read-multiple
+                    "Stage ignored file,s: "
+                    choices nil t nil nil default)
+                   current-prefix-arg)
+           (progn (set-transient-map yq-s-map) (list nil nil))))))
     (el-patch-swap
       (magit-with-toplevel
-        (magit-stage-1 nil (list file)))
-      (if (and (eq (length (list file)) 1) (eq (car (list file)) nil))
+        (magit-stage-1 (and force "--force") files))
+      (if (and (eq (length files) 1) (eq (car files) nil))
           nil
         (magit-with-toplevel
-          (magit-stage-1 nil (list file)))))))
+          (magit-stage-1 (and force "--force") files))))))
 
 (use-package! abridge-diff :hook (magit-status-mode . abridge-diff-mode))
 (use-package! magit-cz :after magit)
