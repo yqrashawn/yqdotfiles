@@ -95,12 +95,15 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
     :around #'lispy-eval
     (if (+in-clj-p)
         (if (and lispy-mode (lispy-left-p))
-            ;; eval on the right side
-            (save-excursion
-              (call-interactively #'lispy-different)
-              (if current-prefix-arg
-                  (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
-                (call-interactively #'cider-eval-last-sexp)))
+            (progn
+              (unless (lispy--clojure-middleware-loaded-p)
+                (lispy--clojure-middleware-load))
+              ;; eval on the right side
+              (save-excursion
+                (call-interactively #'lispy-different)
+                (if current-prefix-arg
+                    (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
+                  (call-interactively #'cider-eval-last-sexp))))
           (if current-prefix-arg
               (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
             (call-interactively #'cider-eval-last-sexp)))
