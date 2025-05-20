@@ -95,15 +95,12 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
     :around #'lispy-eval
     (if (+in-clj-p)
         (if (and lispy-mode (lispy-left-p))
-            (progn
-              (unless (lispy--clojure-middleware-loaded-p)
-                (lispy--clojure-middleware-load))
-              ;; eval on the right side
-              (save-excursion
-                (call-interactively #'lispy-different)
-                (if current-prefix-arg
-                    (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
-                  (call-interactively #'cider-eval-last-sexp))))
+            ;; eval on the right side
+            (save-excursion
+              (call-interactively #'lispy-different)
+              (if current-prefix-arg
+                  (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
+                (call-interactively #'cider-eval-last-sexp)))
           (if current-prefix-arg
               (call-interactively #'+cider-pprint-eval-last-sexp-and-insert)
             (call-interactively #'cider-eval-last-sexp)))
@@ -367,7 +364,17 @@ creates a new one. Don't unnecessarily bother the user."
   (cider-add-to-alist
    'cider-jack-in-cljs-dependencies
    "org.clojars.abhinav/snitch"
-   "0.1.16"))
+   "0.1.16")
+
+  (defadvice! +cider-repls (orig-fn &optional type ensure)
+    :around #'cider-repls
+    (let ((proj-root (doom-project-root))
+          (repls (funcall orig-fn type ensure)))
+      (seq-filter
+       (lambda (repl-buf)
+         (with-current-buffer repl-buf
+           (string= (doom-project-root) proj-root)))
+       repls))))
 
 
 ;; use ns rather than file name for clj buffer name
