@@ -372,8 +372,9 @@ creates a new one. Don't unnecessarily bother the user."
           (repls (funcall orig-fn type ensure)))
       (seq-filter
        (lambda (repl-buf)
-         (with-current-buffer repl-buf
-           (string= (doom-project-root) proj-root)))
+         (when (bufferp repl-buf)
+           (with-current-buffer repl-buf
+             (string= (doom-project-root) proj-root))))
        repls))))
 
 
