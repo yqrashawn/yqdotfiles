@@ -13,7 +13,19 @@ in {
     inputs.clojure-lsp.overlays.default
     inputs.emacs-overlay.overlays.default
     (final: prev: {
-      emacs30-overlay = prev.emacs-git.overrideAttrs (old: {
+      emacs30-overlay = (prev.emacs-git.override {
+        withNS = true;
+        withSQLite3 = true;
+        withWebP = true;
+        withImageMagick = true;
+        # withXwidgets = true;
+        # withNativeCompilation = false;
+        withNativeCompilation = true;
+        withTreeSitter = true;
+        withJansson = true;
+        withMailutils = true;
+        withCsrc = true;
+      }).overrideAttrs (old: {
         name = "emacs30";
         version = "30.0-${inputs.emacs-custom-src.shortRev}";
         src = inputs.emacs-custom-src;
@@ -24,20 +36,10 @@ in {
           "--with-xwidgets"
         ];
         # withMacport = true;
-        withNS = true;
         # macportVersion = "master";
-        withSQLite3 = true;
-        withWebP = true;
-        withImageMagick = true;
-        # withXwidgets = true;
-        # nativeComp = true;
-        # withNativeCompilation = true;
-        withNativeCompilation = true;
-        withTreeSitter = true;
         webkitgtk = true;
         # texinfo = true;
         # autoreconfHook = true;
-        withCsrc = true;
       });
     })
     # channels
