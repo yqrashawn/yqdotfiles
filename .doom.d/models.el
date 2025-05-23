@@ -93,20 +93,19 @@
      :input-cost 3
      :output-cost 15
      :cutoff-date "2025-02")
-    (claude-3.7-sonnet
-     :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (media tool-use ;; json
-                          url cache)
-     :mime-types ("image/jpeg" "image/png" "image/webp")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-02")
     (claude-3.7-sonnet-thought
      :description "Hybrid model capable of standard thinking and extended thinking modes"
      :capabilities (media cache)
      :mime-types ("image/jpeg" "image/png" "image/webp")
      :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-02")
+    (claude-sonnet-4
+     :description "Hybrid model capable of standard thinking and extended thinking modes"
+     :capabilities (tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/webp")
+     :context-window 8
      :input-cost 3
      :output-cost 15
      :cutoff-date "2025-02")

@@ -190,7 +190,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :defer t
   :init
   (setq!
-   copilot-chat-model "claude-3.7-sonnet-thought"
+   copilot-chat-model "claude-sonnet-4"
    ;; copilot-chat-model "o3-mini"
    copilot-chat-frontend 'org)
   (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)

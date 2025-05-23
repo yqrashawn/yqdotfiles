@@ -722,7 +722,7 @@ used in the POST request made to the LanguageTool server."
            :stream t
            :key +openrouter-api-key
            :models gptel--openrouter-models))
-  (setq! gptel-model 'claude-3.7-sonnet-thought)
+  (setq! gptel-model 'claude-sonnet-4)
   (setq! gptel--gh-copilot
          (gptel-make-openai "Github Copilot"
            :protocol "http"
