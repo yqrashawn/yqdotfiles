@@ -36,6 +36,7 @@ let
     casko = "brew outdated --cask";
     casku = "brew upgrade --cask";
     rm = "trash";
+    rmm = "rm -rf";
     d = "cd ~/Downloads/";
     wo = "cd ~/workspace/office";
     wt = "cd ~/workspace/third";
