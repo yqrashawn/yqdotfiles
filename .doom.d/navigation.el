@@ -50,15 +50,57 @@
 
 ;; (use-package! counsel-tramp :commands (counsel-tramp))
 
+(after! project
+  (pushnew!
+   project-vc-extra-root-markers
+   "bun.lockb"
+   ".envrc"
+   "bb.edn"
+   "shadow-cljs.edn"
+   "deps.edn"
+   ".tabnine_root"
+   "yarn.lock"
+   ".yarnrc"
+   ".eslintcache"
+   ".node-version"
+   "Cargo.toml"
+   "pyproject.toml"
+   "requirements.txt"
+   "go.mod"))
+
 (after! projectile
   (setq! projectile-verbose nil
          projectile-sort-order 'recentf
          projectile-enable-idle-timer t
          projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
          projectile-idle-timer-seconds 180)
-  (pushnew! projectile-globally-ignored-directories "node_modules" ".shadow-cljs" ".lsp" ".storybook")
-  (pushnew! projectile-project-root-files ".tabnine_root" "yarn.lock" ".yarnrc" ".eslintcache" ".node-version")
-  (pushnew! projectile-globally-ignored-file-suffixes ".min.js" ".min.css" ".map")
+  (pushnew!
+   projectile-globally-ignored-directories
+   "node_modules"
+   ".shadow-cljs"
+   ".lsp"
+   ".storybook")
+  (pushnew!
+   projectile-project-root-files
+   "bun.lockb"
+   ".envrc"
+   "bb.edn"
+   "shadow-cljs.edn"
+   "deps.edn"
+   ".tabnine_root"
+   "yarn.lock"
+   ".yarnrc"
+   ".eslintcache"
+   ".node-version"
+   "Cargo.toml"
+   "pyproject.toml"
+   "requirements.txt"
+   "go.mod")
+  (pushnew!
+   projectile-globally-ignored-file-suffixes
+   ".min.js"
+   ".min.css"
+   ".map")
   (defadvice! +projectile-keep-project-p (orig-fn project)
     :around #'projectile-keep-project-p
     (cond
