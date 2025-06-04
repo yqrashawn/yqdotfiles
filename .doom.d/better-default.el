@@ -683,8 +683,16 @@ used in the POST request made to the LanguageTool server."
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))
-  (set-popup-rule! "^\\*ChatGPT\\*$" :side 'right :size 0.4 :vslot 100 :quit t)
   :config
+  (set-popup-rule!
+    (lambda (bname _action)
+      (and (null gptel-display-buffer-action)
+           (buffer-local-value 'gptel-mode (get-buffer bname))))
+    :select t
+    :side 'right
+    :size 0.35
+    :quit t
+    :ttl nil)
   (require 'magit)
   (add-hook! 'gptel-mode-hook
     (defun +gptel-mode-setup-kill-buffer-hook ()
