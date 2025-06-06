@@ -221,7 +221,20 @@
         (funcall callback)))))
 
 (use-package treesit
-  :mode (("\\.tsx\\'" . tsx-ts-mode)))
+  :mode (("\\.tsx\\'" . tsx-ts-mode))
+  :init
+  (setq! +pair-chars (seq-map 'string-to-char '("(" ")" "<" ">" "{" "}" "[" "]")))
+  :config
+  (after! expand-region
+    (defadvice! +er/prepare-for-more-expansions-for-treesit-modes ()
+      "fix the error that it requires 2 expand-region call to select things in some treesit modes, for example typescript-ts-mode"
+      :after #'er/prepare-for-more-expansions
+      (when (and
+             (treesit-language-at (point))
+             (region-active-p)
+             (= (region-end) (+ (region-beginning) 1))
+             (memq (char-after) +pair-chars))
+        (call-interactively #'er/expand-region 1)))))
 
 (use-package combobulate
   :init
