@@ -31,7 +31,8 @@
     own.url = "github:yqrashawn/nixpkgs/master";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs.follows = "nixpkgs-unstable";
+    # nixpkgs.follows = "nixpkgs-unstable";
+    nixpkgs.url= "github:NixOS/nixpkgs/nixpkgs-unstable";
     clojure-lsp.url = "github:clojure-lsp/clojure-lsp";
     small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -57,7 +58,7 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {

@@ -141,7 +141,6 @@ in {
         # httpie # failed to build
         # procs # ps
         bottom # btm htop
-        thefuck
         nix-tree
         # nix-linter # build failed
         httpstat
@@ -321,11 +320,10 @@ in {
 
   fonts.packages = with pkgs; [
     jetbrains-mono
-    nerdfonts
-    # nerd-fonts.jetbrains-mono
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.hack
+    nerd-fonts.fira-mono
     # nerd-fonts.inconsolata
-    # nerd-fonts.hack
-    # nerd-fonts.fira-mono
     # nerd-fonts.iosevka
   ];
 }

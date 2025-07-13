@@ -2,6 +2,9 @@
 
 {
   networking = {
+    applicationFirewall = {
+      enable = false;
+    };
     knownNetworkServices = [
       "Wi-Fi"
       "Thunderbolt Bridge"
