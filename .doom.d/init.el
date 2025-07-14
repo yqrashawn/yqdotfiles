@@ -321,7 +321,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 ;; https://github.com/doomemacs/doomemacs/issues/6811
 (setq native-comp-deferred-compilation nil)
 (setq straight-vc-git-default-protocol 'https)
-                                        ;(setq straight-vc-git-default-protocol 'ssh)
+(setq straight-vc-git-default-protocol 'ssh)
 (setq native-compile-jit-compilation nil)
 (after! (doom-packages straight)
   (setq straight--native-comp-available t))
