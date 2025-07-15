@@ -19,3 +19,5 @@ __pycache__/
 /modules/yqrashawn/home-manager/dotfiles/zed/embeddings/
 /modules/yqrashawn/home-manager/dotfiles/zed/prompts/
 /modules/yqrashawn/home-manager/dotfiles/zed/conversations
+/.aider.tags.cache.v4/
+/.aider.chat.history.md

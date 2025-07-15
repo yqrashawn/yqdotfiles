@@ -1008,3 +1008,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 (after! persp-mode
   (setq persp-auto-save-opt 0))
+
+(use-package aidermacs
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :custom
+  (aidermacs-default-chat-mode 'architect))
