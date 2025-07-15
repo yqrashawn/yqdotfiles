@@ -41,3 +41,5 @@ flycheck_*
 *.swp
 .clj-kondo/cache
 /.ai-chats/
+
+/.magit-wip-*.diff

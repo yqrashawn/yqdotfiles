@@ -262,3 +262,21 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
                     (delete-window))
                   (select-window (+popup-buffer post-buf '((select . t)))))))))
       (message "No current topic for this project"))))
+
+(defun +write-magit-wip-diffs-on-save ()
+  "If magit-wip-mode is on, generate wip diff files for 1, 3, 5, and 10 minutes in the repo."
+  (require 'magit)
+  (when (bound-and-true-p magit-wip-mode)
+    (let ((repo-root (magit-toplevel)))
+      ;; Generate diffs for 1, 3, 5, and 10 minutes
+      (dolist (minutes '(1 3 5 10))
+        (let* ((diff-buf (+magit-wip-diff-n-min-buffer minutes))
+               (out-file (expand-file-name (format ".magit-wip-%dm.diff" minutes) repo-root)))
+          (with-current-buffer diff-buf
+            (write-region (point-min) (point-max) out-file nil 'silent)))))))
+
+(add-hook! 'magit-wip-mode-hook
+  (lambda ()
+    (if magit-wip-mode
+        (add-hook 'after-save-hook #'+write-magit-wip-diffs-on-save nil t)
+      (remove-hook 'after-save-hook #'+write-magit-wip-diffs-on-save t))))
