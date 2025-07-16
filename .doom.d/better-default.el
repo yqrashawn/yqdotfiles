@@ -1011,5 +1011,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 (use-package aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))
-  :custom
-  (aidermacs-default-chat-mode 'architect))
+  :init
+  (setq!
+   aidermacs-default-chat-mode 'architect
+   aidermacs-comint-multiline-newline-key "<return>"
+   aidermacs-vterm-multiline-newline-key "<return>"))
