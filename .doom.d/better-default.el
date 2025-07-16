@@ -1012,7 +1012,39 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 (use-package aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))
   :init
-  (setq!
-   aidermacs-default-chat-mode 'architect
-   aidermacs-comint-multiline-newline-key "<return>"
-   aidermacs-vterm-multiline-newline-key "<return>"))
+  (setq! aidermacs-default-chat-mode 'ask)
+  :config
+  (add-hook! 'aidermacs-comint-mode-hook
+    (lambda () (setq-local +word-wrap-extra-indent nil)))
+  ;; tmp fix
+  (defadvice! doom--comint-enable-undo-a (process _string)
+    :after #'comint-output-filter
+    (let ((start-marker comint-last-output-start))
+      (when (and
+             start-marker
+             (< start-marker
+                (or (if process (process-mark process))
+                    (point-max-marker)))
+             (eq (char-before start-marker) ?\n)) ;; Account for some of the IELM’s wilderness.
+        (buffer-enable-undo)
+        (setq buffer-undo-list nil))))
+
+  (defadvice! doom--comint-protect-output-in-visual-modes-a (process _string)
+    :after #'comint-output-filter
+    ;; Adapted from https://github.com/michalrus/dotfiles/blob/c4421e361400c4184ea90a021254766372a1f301/.emacs.d/init.d/040-terminal.el.symlink#L33-L49
+    (let* ((start-marker comint-last-output-start)
+           (end-marker (or (if process (process-mark process))
+                           (point-max-marker))))
+      (when (and start-marker (< start-marker end-marker)) ;; Account for some of the IELM’s wilderness.
+        (let ((inhibit-read-only t))
+          ;; Make all past output read-only (disallow buffer modifications)
+          (add-text-properties comint-last-input-start (1- end-marker) '(read-only t))
+          ;; Disallow interleaving.
+          (remove-text-properties start-marker (1- end-marker) '(rear-nonsticky))
+          ;; Make sure that at `max-point' you can always append. Important for
+          ;; bad REPLs that keep writing after giving us prompt (e.g. sbt).
+          (add-text-properties (1- end-marker) end-marker '(rear-nonsticky t))
+          ;; Protect fence (newline of input, just before output).
+          (when (eq (char-before start-marker) ?\n)
+            (remove-text-properties (1- start-marker) start-marker '(rear-nonsticky))
+            (add-text-properties (1- start-marker) start-marker '(read-only t))))))))
