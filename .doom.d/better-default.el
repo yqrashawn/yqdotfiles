@@ -1048,3 +1048,10 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
           (when (eq (char-before start-marker) ?\n)
             (remove-text-properties (1- start-marker) start-marker '(rear-nonsticky))
             (add-text-properties (1- start-marker) start-marker '(read-only t))))))))
+
+(use-package! mcp
+  :after gptel
+  :config
+  (require 'gptel-integrations)
+  (require 'mcp-hub)
+  (mcp-hub-start-all-server))

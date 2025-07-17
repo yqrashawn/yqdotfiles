@@ -384,6 +384,7 @@
 (package! ts-refactor :recipe (:host github :repo "yqrashawn/ts-refactor.el"))
 (package! logview)
 (package! aidermacs)
+(package! mcp)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
