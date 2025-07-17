@@ -30,7 +30,7 @@
       "space f e shift-k": "zed::OpenKeymap",
 
       // describe-key
-      "space h k": "debug::OpenKeyContextView",
+      "space h k": "dev::OpenKeyContextView",
 
       // disable vim::Substitude
       "s": null,

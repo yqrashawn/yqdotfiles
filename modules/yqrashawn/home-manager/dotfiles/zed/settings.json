@@ -10,12 +10,11 @@
   "features": {
     "edit_prediction_provider": "copilot"
   },
-  "assistant": {
+  "agent": {
     "default_model": {
       "provider": "copilot_chat",
       "model": "claude-sonnet-4"
     },
-    "version": "2"
   },
   "telemetry": {
     "diagnostics": false,
