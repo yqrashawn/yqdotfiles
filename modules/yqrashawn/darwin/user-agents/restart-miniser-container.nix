@@ -16,8 +16,8 @@
           /usr/local/bin/docker restart miniser
         ''
       ];
-      RunAtLoad = true;
-      KeepAlive = true;
+      RunAtLoad = false;
+      # KeepAlive = true;
       StartCalendarInterval = {
         Hour = 4;
         Minute = 1;
