@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   imports = [ ./apps-minimal.nix ];
   homebrew = {
     casks = [
@@ -26,7 +32,7 @@
       "discord"
       "dropbox"
       "calibre"
-      "adguard@nightly"
+      "adguard"
       # "adguard"
       "stats"
       "zoom"

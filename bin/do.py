@@ -126,7 +126,7 @@ def build(
         flake = f".#{host}"
     elif cfg == FlakeOutputs.DARWIN:
         flake = f".#{host}"
-        cmd = "darwin-rebuild build --flake"
+        cmd = "sudo darwin-rebuild build --flake"
     elif cfg == FlakeOutputs.HOME_MANAGER:
         flake = f".#{host}"
         cmd = "home-manager build --flake"
@@ -258,7 +258,7 @@ def switch(
     elif cfg == FlakeOutputs.NIXOS:
         cmd = f"sudo nixos-rebuild switch --flake"
     elif cfg == FlakeOutputs.DARWIN:
-        cmd = f"darwin-rebuild switch --flake"
+        cmd = f"sudo darwin-rebuild switch --flake"
     elif cfg == FlakeOutputs.HOME_MANAGER:
         cmd = f"home-manager switch --flake"
     else:
