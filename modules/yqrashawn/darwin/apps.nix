@@ -18,7 +18,7 @@
       # "gfxcardstatus"
       # "uhk-agent"
       "roam-research"
-      # "kitty"
+      "kitty"
       "slack"
       "bitwarden"
       # "clickup"
