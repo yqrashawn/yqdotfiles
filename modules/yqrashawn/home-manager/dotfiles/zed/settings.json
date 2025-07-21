@@ -13,8 +13,8 @@
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4"
-    },
+      "model": "gemini-2.5-pro"
+    }
   },
   "telemetry": {
     "diagnostics": false,
