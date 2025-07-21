@@ -10,5 +10,6 @@
     ./darwin/daemons/kill-bootpd.nix
     ./darwin/daemons/adguard-home-with-proxy.nix
     ./darwin/user-agents/restart-miniser-container.nix
+    ./darwin/user-agents/bind-nextdns-ip.nix
   ];
 }
