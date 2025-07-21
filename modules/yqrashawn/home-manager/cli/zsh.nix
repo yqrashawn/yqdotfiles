@@ -90,6 +90,8 @@ let
     brewsx = "brew services stop";
     ssh = "kitty +kitten ssh";
     e = "~/local/bin/em";
+    br = "bun run";
+    bx = "bun x";
     # man = "nocorrect /etc/profiles/per-user/${config.user.name}/bin/man";
     # man = "nocorrect ${pkgs.man}/bin/man";
   };
