@@ -152,10 +152,14 @@ tasks."
   :defer t
   :init
   (setq! denote-directory (expand-file-name "~/Dropbox/sync/denote")
-         denote-file-type 'markdown-yaml)
+         denote-file-type 'org)
 
   (defun +denote-daily-note-file-name ()
-    (concat denote-directory "/" (format-time-string "%Y%m%dT000000" (current-time)) "==dailynote--daily-note__dailynote.md"))
+    (concat denote-directory "/"
+            (format-time-string
+             "%Y%m%dT000000"
+             (current-time))
+            "==dailynote--daily-note__dailynote.org"))
 
   (defun +denote-daily-note ()
     (interactive)

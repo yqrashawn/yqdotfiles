@@ -23,7 +23,7 @@
       "bitwarden"
       # "clickup"
       # "firefox"
-      "languagetool"
+      "languagetool-desktop"
       "firefox@developer-edition"
       # "safari-technology-preview"
       # "todoist"
@@ -50,7 +50,7 @@
       # "playcover-community"
       # "spectacle"
       # "wechat"
-      "vivid"
+      "vivid-app"
     ];
     masApps = { };
   };

@@ -102,6 +102,9 @@ in
   programs.bash.shellAliases = aliases;
   programs.bash.initExtra = ''
     ${functions}
+    # eat
+    [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+      source "$EAT_SHELL_INTEGRATION_DIR/bash"
   '';
   programs.bash.profileExtra = bashProfileExtra;
   programs.zsh =
@@ -176,6 +179,10 @@ in
         ''}
         unset RPS1
         [[ ! -f ~/.local.zsh ]] || source ~/.local.zsh
+
+        # eat
+        [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+          source "$EAT_SHELL_INTEGRATION_DIR/zsh"
       '';
       envExtra = envExtra;
       profileExtra = zshProfileExtra;

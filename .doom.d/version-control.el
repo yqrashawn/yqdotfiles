@@ -202,45 +202,49 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
 (setq +forge-current-topic-store (expand-file-name "~/Dropbox/sync/doom/store/forge-current-topic.el"))
 
 (defun +forge-current-topic-get ()
-  (doom-store-get (project-root (project-current t)) +forge-current-topic-store))
+  (doom-store-get
+   (project-root (project-current t))
+   +forge-current-topic-store))
 
 (defun +forge-current-topic-set (topic-id)
-  (doom-store-put (project-root (project-current t)) topic-id nil +forge-current-topic-store))
+  (doom-store-put
+   (project-root (project-current t))
+   topic-id
+   nil
+   +forge-current-topic-store))
 
 (after! magit
   (require 'forge))
 
 (after! forge
-  ;; (magit-add-section-hook
-  ;;  'magit-status-sections-hook
-  ;;  #'+forge-insert-current-topic #'forge-insert-pullreqs)
-
-  ;; (defvar-keymap +forge-current-topic-section-map
-  ;;   :doc "Keymap for `stashes' section."
-  ;;   "<remap> <magit-visit-thing>" #'forge-visit-topic)
+  (magit-add-section-hook
+   'magit-status-sections-hook
+   #'+forge-insert-current-topic #'forge-insert-pullreqs)
 
   (defun +forge-insert-current-topic ()
-    (magit-insert-section (current-topic)
-      (when-let ((topic-id (+forge-current-topic-get)))
-        (when (forge-get-topic topic-id)
-          (magit-insert-heading "Current Topic")
-          (forge-insert-topic (forge-get-topic topic-id) nil 10 "#"))
-        ;; (magit-insert-heading "Current Topic: nil")
-        )))
+    (when (forge-get-repository :tracked?)
+      (magit-insert-section (current-topic)
+        (when-let (topic-id (+forge-current-topic-get))
+          (let* ((topic-id (+forge-current-topic-get))
+                 (issue-topic (forge-get-issue topic-id))
+                 (pr-topic (forge-get-pullreq topic-id))
+                 (discussion-topic (forge-get-discussion topic-id))
+                 (topic-type (cond (issue-topic 'issue)
+                                   (pr-topic 'pullreq)
+                                   (discussion-topic 'discussion)))
+                 (topic (or issue-topic
+                            pr-topic
+                            discussion-topic)))
+            (when topic
+              (forge--insert-topics topic-type "Current Topic" (list topic))))))))
 
   (defun +forge-current-topic-refresh-buffer ()
     (+forge-insert-current-topic))
 
-  (defun +forge-set-current-issue (issue)
-    (interactive (list (forge-read-issue "View issue" t)))
+  (defun +forge-set-current-topic (topic)
+    (interactive (list (forge-read-topic "Set current topic")))
     (with-current-buffer (current-buffer)
-      (+forge-current-topic-set issue)
-      (magit-refresh)))
-
-  (defun +forge-set-current-pr (pr)
-    (interactive (list (forge-read-pullreq "View PR" t)))
-    (with-current-buffer (current-buffer)
-      (+forge-current-topic-set pr)
+      (+forge-current-topic-set topic)
       (magit-refresh)))
 
   (defun +forge-clear-current-topic ()
@@ -256,11 +260,11 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
             (unless show-topic-buffer (bury-buffer))
             (with-current-buffer topic-buf
               (forge-create-post)
-              (unless show-topic-buffer
-                (let ((post-buf (current-buffer)))
-                  (with-current-buffer post-buf
-                    (delete-window))
-                  (select-window (+popup-buffer post-buf '((select . t)))))))))
+              (let ((post-buf (current-buffer)))
+                (bury-buffer post-buf)
+                (unless show-topic-buffer
+                  (+popup-buffer post-buf '((select . t)
+                                            (side . bottom))))))))
       (message "No current topic for this project"))))
 
 (defun +write-magit-wip-diffs-on-save ()

@@ -59,8 +59,8 @@
  :g "C-a" #'mwim-beginning-of-code-or-line
  :g "C-e" #'mwim-end-of-code-or-line
  ;; :g "C-'" #'yq/vterm-toggle
- ;; :g "C-'" #'+eat
- :g "C-'" #'+terminal-here
+ :g "C-'" #'+eat
+ ;; :g "C-'" #'+terminal-here
  :n "z=" #'jinx-correct-word
  [remap split-window-below] #'evil-window-split
  [remap split-window-right] #'evil-window-vsplit
@@ -172,8 +172,8 @@
           (:map org-mode-map
            :n "i" nil
            :n "it" #'org-toggle-item
-           :n "iii" #'+org/insert-item-below
-           :n "iik" #'+org/insert-item-above
+           :n "ij" #'+org/insert-item-below
+           :n "ik" #'+org/insert-item-above
            :n "ihh" #'org-insert-heading
            :n "ihj" #'org-insert-heading-after-current
            :n "iht" (cmd! (org-insert-heading) (insert (format-time-string "%T")))

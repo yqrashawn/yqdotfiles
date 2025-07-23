@@ -287,3 +287,63 @@ See `dwim-shell-command-execute-script' for all other params."
 
 (after! fd-dired
   (setq! fd-dired-ls-option '("| xargs -0 ls -ld --quoting-style=literal | uniq" . "-ld")))
+
+(use-package! consult-gh
+  ;; :after consult
+  :defer t
+  :config
+  (setq! consult-gh-default-clone-directory "~/workspace/third"))
+
+(use-package! consult-gh-embark
+  ;; :after consult-gh
+  :defer t
+  :config
+  (consult-gh-embark-mode 1))
+
+(use-package! consult-gh-embark
+  ;; :after consult-gh
+  :defer t
+  :config
+  (consult-gh-embark-mode 1))
+
+(use-package! browser-hist
+  :defer t
+  :init
+  (setq!
+   browser-hist-default-browser 'firefox
+   browser-hist-db-paths
+   '((chrome . "$HOME/Library/Application Support/Google/Chrome/Default/History")
+     (firefox . "$HOME/Library/Application Support/Firefox/Profiles/*.dev-edition-default/places.sqlite"))))
+
+;; (use-package consult-notes
+;;   :commands (consult-notes
+;;              consult-notes-search-in-all-notes
+;;              ;; if using org-roam
+;;              consult-notes-org-roam-find-node
+;;              consult-notes-org-roam-find-node-relation)
+;;   :config
+;;   ;; Set notes dir(s), see below
+;;   ;; (setq consult-notes-file-dir-sources '(("Name" ?k ey "path/to/dir")))
+;;   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
+;;   ;; (setq consult-notes-org-headings-files '("~/path/to/file1.org"
+;;   ;;                                          "~/path/to/file2.org"))
+
+;;   ;; (consult-notes-org-headings-mode)
+
+;;   (consult-notes-denote-mode)
+
+;;   ;; search only for text files in denote dir
+;;   (setq consult-notes-denote-files-function #'denote-directory-text-only-files))
+
+;; (use-package! consult-omni
+;;   ;; :after consult-gh
+;;   :defer t
+;;   :config
+;;   ;; Load Sources Core code
+;;   ;; (require 'consult-omni-sources)
+;;   ;; (consult-omni-sources-load-modules)
+;;   ;; Load Embark Actions
+;;   (require 'consult-omni-embark)
+;;   ;; (setq! consult-omni-multi-sources consult-omni-sources--all-modules-list)
+;;   ;; (setq consult-omni-default-interactive-command #'consult-omni-brave-autosuggest)
+;;   )

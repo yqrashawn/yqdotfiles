@@ -305,7 +305,14 @@
 (disable-packages! langtool)
 (package! consult-git-log-grep)
 
-(package! eat)
+(package! eat
+  :recipe (:host nil
+           :repo "https://codeberg.org/akib/emacs-eat.git"
+           :files ("*.el" ("term" "term/*.el") "*.texi"
+                   "*.ti" ("terminfo/e" "terminfo/e/*")
+                   ("terminfo/65" "terminfo/65/*")
+                   ("integration" "integration/*")
+                   (:exclude ".dir-locals.el" "*-tests.el"))))
 
 (disable-packages! company)
 
@@ -385,6 +392,35 @@
 (package! logview)
 (package! aidermacs)
 (package! mcp)
+
+(package! consult-gh
+  :recipe (:type git
+           :host github
+           :repo "armindarvish/consult-gh"
+           :branch "main"))
+(package! consult-gh-embark
+  :recipe (:type git
+           :host github
+           :repo "armindarvish/consult-gh"
+           :branch "main"))
+(package! consult-gh-forge
+  :recipe (:type git
+           :host github
+           :repo "armindarvish/consult-gh"
+           :branch "main"))
+;; (package! consult-omni
+;;   :recipe (:type git
+;;            :host github
+;;            :repo "armindarvish/consult-omni"
+;;            :branch "main"
+;;            :files (:defaults "sources/*.el")))
+
+;; (package! consult-notes
+;;   :recipe (:type git
+;;            :host github
+;;            :repo "mclear-tools/consult-notes"))
+
+(package! browser-hist)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

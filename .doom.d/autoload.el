@@ -975,7 +975,8 @@ This is for per workspace each task setup"
                                      (format "*eat*<%s>" current-prefix-arg)
                                    "*eat*"))
          (target-eat-buffer (get-buffer target-eat-buffer-name))
-         (target-eat-buffer-window (and target-eat-buffer (get-buffer-window target-eat-buffer-name))))
+         (target-eat-buffer-window
+          (and target-eat-buffer (get-buffer-window target-eat-buffer-name))))
     (if target-eat-buffer-window
         (select-window target-eat-buffer-window)
       (progn
@@ -1105,14 +1106,6 @@ result instead of `message'."
 ;;;###autoload
 (defun +terminal-here ()
   (interactive)
-  ;; (call-process-shell-command
-  ;;  (format! "tmux new-window -n '%s' -c '%s'"
-  ;;           (or buffer-file-name default-directory)
-  ;;           (if buffer-file-name
-  ;;               (file-name-directory buffer-file-name)
-  ;;             default-directory))
-  ;;   nil 0)
-
   (+kitten
    (format!
     "launch --type tab --tab-title '%s' --cwd '%s'"

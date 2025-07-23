@@ -147,12 +147,10 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (eshell-follow-global-mode t))
 
 (use-package! eat
-  :disabled
   :commands (eat)
   :init
   (setq! eat-kill-buffer-on-exit t
          eat-very-visible-cursor-type '(t nil nil)
-         eat-term-terminfo-directory (expand-file-name "~/.emacs.d/.local/straight/repos/eat/terminfo")
          eat-enable-yank-to-terminal t
          eat-enable-blinking-text nil
          process-adaptive-read-buffering nil
