@@ -674,6 +674,7 @@
           :n "'" #'forge-dispatch))
  (:after eat
          (:map eat-mode-map
+          :i "C-y" #'eat-yank
           :g "C-c DEL" #'+workspace/close-window-or-workspace))
  (:after copilot
          (:map copilot-completion-map
