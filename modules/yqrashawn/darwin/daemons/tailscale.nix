@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   launchd.daemons.tailscaled = {
@@ -15,7 +20,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "${pkgs.tailscale}/bin/tailscaled --no-logs-no-support --tun=userspace-networking --statedir=/Users/${config.user.name}/tailscale --socks5-server=localhost:6156 --outbound-http-proxy-listen=localhost:6156"
+        "${pkgs.darwins.tailscale}/bin/tailscaled --no-logs-no-support --tun=userspace-networking --statedir=/Users/${config.user.name}/tailscale --socks5-server=localhost:6156 --outbound-http-proxy-listen=localhost:6156"
         # "/bin/wait4path ${pkgs.tailscale} &amp;&amp; ${pkgs.tailscale}/bin/tailscaled -tun userspace-networking -statedir /Users/${config.user.name}/tailscale -socks5-server=localhost:6156 -outbound-http-proxy-listen=localhost:6156"
         # "/bin/wait4path ${pkgs.tailscale} &amp;&amp; ${pkgs.tailscale}/bin/tailscaled -tun utun0 -statedir /Users/${config.user.name}/tailscale -outbound-http-proxy-listen localhost:6152"
       ];

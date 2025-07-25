@@ -422,6 +422,11 @@
 
 (package! browser-hist)
 
+;; (package! efrit
+;;   :recipe (:type git
+;;             :host github
+;;             :repo "steveyegge/efrit"))
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:
