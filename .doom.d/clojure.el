@@ -417,6 +417,7 @@ creates a new one. Don't unnecessarily bother the user."
    '(("edn"  . "clojure.edn")
      ("io"     "clojure.java.io" :only ("clj"))
      ("pp"     "cljs.pprint" :only ("cljs"))
+     ("oops"     "oops.core" :only ("cljs"))
      ("math" . "clojure.math")
      ("set"  . "clojure.set")
      ("string"  . "clojure.string")
