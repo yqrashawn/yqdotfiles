@@ -309,6 +309,7 @@
           ;; (insert-before-and-after-region "```" "```")
           (gptel--suffix-send `("p" ,(concat "nGPT-" (buffer-name (current-buffer)) ".md")))))
  (:map yq-cljr-map
+  :desc "Wrap in try" "wt" #'+cljr-wrap-in-try
   :desc "Add import to ns" "ai" #'lsp-clojure-add-import-to-namespace
   :desc "Add missing libspec" "am" #'lsp-clojure-add-missing-libspec
   :desc "Add project dependency" "ap" #'cljr-add-project-dependency
@@ -675,6 +676,7 @@
  (:after eat
          (:map eat-mode-map
           :i "C-y" #'eat-yank
+          :i "C-s" #'swiper
           :g "C-c DEL" #'+workspace/close-window-or-workspace))
  (:after copilot
          (:map copilot-completion-map

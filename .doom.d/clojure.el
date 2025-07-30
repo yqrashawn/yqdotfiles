@@ -537,3 +537,22 @@ creates a new one. Don't unnecessarily bother the user."
           (+add-snitch)
         (unless (save-excursion (+remove-snitch))
           (+add-snitch))))))
+
+(defun +cljr-wrap-in-try (arg)
+  (interactive "P")
+  (when (thing-at-point 'sexp)
+    (kill-sexp)
+    (insert
+     (format
+      "(try
+  %s
+  (catch %s %s))"
+      (car kill-ring)
+      (if (eq major-mode 'clojurescript-mode)
+          "js/Error"
+        "Exception")
+      (if arg "_" "e")))
+    (require 'lispy)
+    (special-lispy-tab)
+    (backward-char 2)
+    (unless arg (lispy-newline-and-indent-plain))))
