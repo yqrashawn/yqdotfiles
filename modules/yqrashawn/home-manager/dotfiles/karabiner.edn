@@ -148,8 +148,11 @@
            ;; [:f23 [:op "/Applications/ChatGPT.app"] :!Games]
            [:f23 :!COS7 :!Games]
            [:f23 :left_control :Games]
-           [:##right_option :right_option :adv2
-            {:alone [:op "/Applications/ChatGPT.app"]}]]}
+           [[:n :l] :!COS7]
+           ;; [[:n :l] :f13]
+           ;; [:##right_option :right_option :adv2
+           ;;  {:alone [:op "/Applications/ChatGPT.app"]}]
+           ]}
   {:des   "unstuck emacs"
    :rules [[:!CTg ["/bin/kill -s USR2 $(pgrep Emacs)"
                    "/bin/kill -s USR1 $(pgrep Emacs)"]]]}
@@ -314,7 +317,6 @@
    :rules [[:!Th :delete_or_backspace nil {:params {:alone 500 :held 500}}]]}
   {:des   "contexts"
    :rules [;; [[:n :l] [:f16 ["in-contexts" 1]]]
-           [[:n :l] :f13]
            ;; [:semicolon :right_option nil {:alone :semicolon}]
            [:escape [:escape ["in-contexts" 0]] ["in-contexts" 1]]
            [{:pkey :button1} [{:pkey :button1} ["in-contexts" 0]]
