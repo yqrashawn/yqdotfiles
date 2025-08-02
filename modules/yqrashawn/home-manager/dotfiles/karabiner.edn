@@ -947,6 +947,7 @@
   :Status       ["^im\\.Status\\.NimStatusClient$"]
   :slidepad     ["^com\\.slidepad\\.slidepad"]
   :Browsers     ["^com\\.kagi\\.kagimacOS$"
+                 "^ai\\.perplexity\\.comet"
                  "^org\\.mozilla\\.firefox$"
                  "^org\\.mozilla\\.firefoxdeveloperedition$"
                  "^com\\.google\\.Chrome$"
