@@ -381,14 +381,18 @@ _g_  gfm      _o_ org        _m_ markdown
 ;;;###autoload
 (defun +yas-expand-when-inserting-dot (&optional args)
   (interactive)
-  (if (eq major-mode 'vterm-mode) (vterm--self-insert)
-    (if (eq (preceding-char) ?.)
-        (if (and (not (delete-char -1 nil)) (yas-expand))
-            t
-          (progn
-            (insert ?.)
-            (insert ?.)))
-      (insert ?.))))
+  (cond
+   ((eq major-mode 'vterm-mode)
+    (call-interactively 'vterm--self-insert))
+   ((eq major-mode 'eat-mode)
+    (call-interactively 'eat-self-input))
+   ((eq (preceding-char) ?.)
+    (if (and (not (delete-char -1 nil)) (yas-expand))
+        t
+      (progn
+        (insert ?.)
+        (insert ?.))))
+   (t (insert ?.))))
 
 ;;;###autoload
 (defun yq/vterm-toggle (arg)
