@@ -414,13 +414,13 @@ creates a new one. Don't unnecessarily bother the user."
   (require 'a)
   (setq!
    cljr-magic-require-namespaces
-   '(("edn"  . "clojure.edn")
-     ("io"     "clojure.java.io" :only ("clj"))
-     ("pp"     "cljs.pprint" :only ("cljs"))
-     ("oops"     "oops.core" :only ("cljs"))
+   '(("edn" . "clojure.edn")
+     ("io" "clojure.java.io" :only ("clj"))
+     ("pp" "cljs.pprint" :only ("cljs"))
+     ("oops" "oops.core" :only ("cljs"))
      ("math" . "clojure.math")
-     ("set"  . "clojure.set")
-     ("string"  . "clojure.string")
+     ("set" . "clojure.set")
+     ("string" . "clojure.string")
      ("a" "clojure.core.async" :only ("clj"))
      ("a" "cljs.core.async" :only ("cljs"))
      ("resp" . "ring.util.response")
@@ -433,7 +433,8 @@ creates a new one. Don't unnecessarily bother the user."
      ("r" "radix" :only ("cljs"))
      ("rf" "re-frame.core" :only ("cljs"))
      ("walk" . "clojure.walk")
-     ("zip"  . "clojure.zip"))
+     ("zip" . "clojure.zip")
+     ("mustache" . "cljstache.core"))
    cljr-clojure-test-declaration "[clojure.test :as t :refer [deftest testing is]]"
    cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t :refer [deftest testing is]]
 :cljs [cljs.test :as t :include-macros])"))
