@@ -136,7 +136,8 @@
    :desc "Find file in workspace" "w" (cmd! (let ((default-directory "~/workspace/")) (call-interactively #'find-file)))
    :desc "Home" "h" (cmd! (let ((default-directory "~/workspace/home/")) (call-interactively #'find-file)))
    :desc "Office" "o" (cmd! (let ((default-directory "~/workspace/office/")) (call-interactively #'find-file)))
-   :desc "Third" "t" (cmd! (let ((default-directory "~/workspace/third/")) (call-interactively #'find-file))))
+   :desc "Third" "t" (cmd! (let ((default-directory "~/workspace/third/")) (call-interactively #'find-file)))
+   :desc "Dropbox sync" "s" (cmd! (let ((default-directory "~/Dropbox/sync/")) (call-interactively #'find-file))))
   (:prefix-map ("r" . "Misc")
    ;; :desc "Resume ivy" "l" #'ivy-resume
    :desc "Resume vertico" "l" #'vertico-repeat)
