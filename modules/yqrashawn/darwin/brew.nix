@@ -1,4 +1,10 @@
-{ inputs, config, pkgs, ... }: {
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+{
   homebrew = {
     enable = true;
     onActivation = {
@@ -36,6 +42,7 @@
     brews = [
       # "alerter"
       "yqrashawn/goku/goku"
+      "flyctl"
       "percol"
       # "datalevin"
       "fcitx-remote-for-osx"

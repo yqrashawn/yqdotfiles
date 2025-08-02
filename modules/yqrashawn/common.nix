@@ -28,6 +28,7 @@ let
     zsh-forgit
     zsh-f-sy-h
     zsh-autopair
+    # flyctl
   ];
   emacs = pkgs.callPackage ./emacs {
     emacs = pkgs.emacs30-overlay;
@@ -234,7 +235,6 @@ in
         # espanso # build failed
         nix-doc
         gawk
-        flyctl
         sd
         asdf-vm
         vmtouch
