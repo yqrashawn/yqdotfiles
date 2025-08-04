@@ -506,9 +506,9 @@
   ;; :i "C-m" #'newline-and-indent
   :i "C-j" #'avy-goto-char-timer
   :i "C-l" #'hippie-expand
-  :i "." #'+yas-expand-when-inserting-dot
   ;; :i "," #'+company-complete
   :i "," #'+complete-at-point
+  :i "." #'+yas-expand-when-inserting-dot
   :m "TAB" nil
   ;; seperate C-i and tab
   :m "C-x @ C-x i" #'evil-jump-forward

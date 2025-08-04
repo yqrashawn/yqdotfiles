@@ -367,11 +367,18 @@ _g_  gfm      _o_ org        _m_ markdown
      ;;         (call-interactively #'pabbrev-expand-maybe)
      ;;         (pabbrev-delete-last-suggestion)))
 
-     ((and (eq (preceding-char) ?,) (modulep! :editor evil) (modulep! :completion corfu) corfu-mode)
+     ((and
+       (eq (preceding-char) ?,)
+       (modulep! :editor evil)
+       (modulep! :completion corfu)
+       corfu-mode)
       (progn (delete-char -1 nil)
              (call-interactively #'completion-at-point)))
 
-     ((and (eq (preceding-char) ?.) (bound-and-true-p copilot-mode) (not (copilot--overlay-visible)))
+     ((and
+       (eq (preceding-char) ?.)
+       (bound-and-true-p copilot-mode)
+       (not (copilot--overlay-visible)))
       (progn
         (delete-char -1 nil)
         (call-interactively #'copilot-complete)))
