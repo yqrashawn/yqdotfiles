@@ -150,6 +150,7 @@ in
         duf # du
         yq
         fd
+        q
         ctags
         # gitui
         # httpie # failed to build
