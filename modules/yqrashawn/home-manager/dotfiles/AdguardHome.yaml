@@ -30,13 +30,11 @@ dns:
   upstream_dns_file: /Users/yqrashawn/Dropbox/sync/adguardhome.list.conf
   bootstrap_dns:
     - 1.1.1.1
-    - 199.85.126.20
-    - 185.228.168.168
-    - 156.154.70.3
+    - 94.140.14.140
   fallback_dns:
-    - 210.5.56.145
     - 119.29.29.29
     - 223.5.5.5
+    - 210.5.56.145
   upstream_mode: fastest_addr
   fastest_timeout: 1s
   allowed_clients: []
