@@ -794,4 +794,27 @@
          (:map leetcode-solution-mode-map
           :g "C-4" #'leetcode-try
           :g "C-5" #'leetcode-restore-layout
-          :g "C-7" #'leetcode-submit)))
+          :g "C-7" #'leetcode-submit))
+ (:after launchctl
+         (:map launchctl-mode-map
+          :gn "s-u" #'launchctl-refresh
+          :gn "q" #'quit-window
+          :gn "I" #'launchctl-new
+          :gn "C" #'launchctl-edit
+          :gn "RET" #'launchctl-view
+          :gn "V" #'launchctl-view
+          :gn "S" #'tabulated-list-sort
+          :gn "x" #'launchctl-load
+          :gn "X" #'launchctl-unload
+          :gn "R" #'launchctl-reload
+          :gn "o" #'launchctl-start
+          :gn "O" #'launchctl-stop
+          :gn "U" #'launchctl-restart
+          :gn "X" #'launchctl-remove
+          :gn "D" #'launchctl-disable
+          :gn "d" #'launchctl-enable
+          :gn "v" #'launchctl-info
+          :gn "*" #'launchctl-filter
+          :gn "$" #'launchctl-setenv
+          :gn "#" #'launchctl-unsetenv
+          :gn "H" #'launchctl-help)))

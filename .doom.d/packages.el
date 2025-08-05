@@ -421,6 +421,7 @@
 ;;            :repo "mclear-tools/consult-notes"))
 
 (package! browser-hist)
+(package! launchctl)
 
 ;; (package! efrit
 ;;   :recipe (:type git
