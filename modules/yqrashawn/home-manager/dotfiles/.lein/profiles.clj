@@ -37,7 +37,7 @@
  :user [;; :nrebl
         :hashp
         :fipp
-        :reveal
+        ;; :reveal
         ;; :portal
         :repl]
 

@@ -280,3 +280,36 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (setq! minuet-context-window 512)
   :config
   (setq! minuet-provider 'openai-compatible))
+
+;;;###autoload
+(defun +ejc-capf-setup ()
+  "Add `+ejc-completion-at-point' to `completion-at-point-functions'."
+  (add-hook 'completion-at-point-functions #'+ejc-completion-at-point nil t))
+
+(defun +ejc-completion-at-point ()
+  "Completion-at-point function for `ejc-sql-mode`.
+This can be added to `completion-at-point-functions`."
+  (when (bound-and-true-p ejc-sql-mode)
+    (let ((prefix-info (ejc-company-backend 'prefix)))
+      (when prefix-info
+        (let* ((prefix (if (consp prefix-info) (car prefix-info) prefix-info))
+               (beg (- (point) (length prefix)))
+               (end (point))
+               (candidates (ejc-company-backend 'candidates prefix)))
+          (when candidates
+            (list beg end candidates
+                  :annotation-function
+                  (lambda (c) (ejc-company-backend 'annotation c))
+                  :company-doc-buffer
+                  (lambda (c) (ejc-company-backend 'doc-buffer c)))))))))
+
+(use-package! ejc-sql
+  :defer t
+  :init
+  (setq! clomacs-httpd-default-port 8595
+         clomacs-allow-other-repl t
+         ejc-result-table-impl 'orgtbl-mode)
+  (add-hook! 'ejc-sql-minor-mode-hook (lambda () (ejc-eldoc-setup)))
+  (add-hook! 'ejc-sql-minor-mode-hook #'+ejc-capf-setup)
+  :config
+  (ejc-set-column-width-limit nil))
