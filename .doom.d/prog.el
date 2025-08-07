@@ -312,4 +312,9 @@ This can be added to `completion-at-point-functions`."
   (add-hook! 'ejc-sql-minor-mode-hook (lambda () (ejc-eldoc-setup)))
   (add-hook! 'ejc-sql-minor-mode-hook #'+ejc-capf-setup)
   :config
-  (ejc-set-column-width-limit nil))
+  (ejc-set-column-width-limit nil)
+  (defadvice! +ejc-eval-org-snippet (orig-fn &optional orig-fun body params)
+    :around #'ejc-eval-org-snippet
+    (if (and params (assq :engine params))
+        (funcall orig-fun body params)
+      (funcall orig-fn orig-fun body params))))
