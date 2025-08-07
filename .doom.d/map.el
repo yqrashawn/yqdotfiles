@@ -16,6 +16,7 @@
 (define-prefix-command 'ctl-x-at-6-map)
 (define-prefix-command '+thing-edit-map)
 (define-prefix-command 'visual-t-map)
+(define-prefix-command '+org-emphasis-map)
 
 (global-set-key (kbd "<mouse-4>") (kbd "<wheel-up>"))
 (global-set-key (kbd "<mouse-5>") (kbd "<wheel-down>"))
@@ -178,13 +179,17 @@
            :n "ihh" #'org-insert-heading
            :n "ihj" #'org-insert-heading-after-current
            :n "iht" (cmd! (org-insert-heading) (insert (format-time-string "%T")))
-           :n "ds" #'orgbox-schedule))
+           :n "ds" #'orgbox-schedule
+           :n "j" '+org-emphasis-map))
   (:after clojure-mode
           (:map clojure-mode-map
            :n "," 'yq-cljr-map))
   (:after todoist
           (:map todoist-mode-map
            :g "," #'todoist-task-menu)))
+ (:after org
+         (:map org-mode-map
+          :g "C-c r" verb-command-map))
  (:map help-map
        "K" #'describe-keymap)
  (:map ctl-x-map
@@ -359,6 +364,13 @@
   :desc "Hydra menu for project refactorings" "hp" #'hydra-cljr-project-menu/body
   :desc "Hydra menu for top level refactorings " "ht" #'hydra-cljr-toplevel-form-menu/body
   :desc "Hydra menu for self features" "hs" #'hydra-cljr-cljr-menu/body)
+ (:map +org-emphasis-map
+  :desc "Bold" "b" (lambda () (interactive) (ct/org-emphasize-below-point ?*))
+  :desc "Italic" "i" (lambda () (interactive) (ct/org-emphasize-below-point ?/))
+  :desc "Underscore" "u" (lambda () (interactive) (ct/org-emphasize-below-point ?_))
+  :desc "Verbatim" "v" (lambda () (interactive) (ct/org-emphasize-below-point ?=))
+  :desc "Code" "c" (lambda () (interactive) (ct/org-emphasize-below-point ?~))
+  :desc "Stripe-through" "s" (lambda () (interactive) (ct/org-emphasize-below-point ?+)))
  ;; (:map +thing-edit-map
  ;;  :g "," (cmd! (message "this operator is %s" evil-this-operator))
  ;;  :g "s" (+thing-edit-gen-evil-op-f 'sexp)
@@ -787,9 +799,6 @@
           :g "e" #'verb-export-request-on-point
           :g "v" #'verb-set-var
           :g "x" #'verb-show-vars))
- (:after org
-         (:map org-mode-map
-          :g "C-c r" verb-command-map))
  (:after leetcode
          (:map leetcode-solution-mode-map
           :g "C-4" #'leetcode-try

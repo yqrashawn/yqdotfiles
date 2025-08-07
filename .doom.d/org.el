@@ -2,11 +2,24 @@
 
 ;; fix orgit problem
 (require 'ol)
-(setq org-journal-file-format "%Y-%m-%d-%a.org"
-      org-noter-notes-search-path (expand-file-name "~/Dropbox/ORG/notes")
-      org-roam-directory (expand-file-name "~/Dropbox/ORG")
-      ;; org-roam-verbose nil
-      org-journal-dir (expand-file-name "~/Dropbox/ORG"))
+(setq! org-journal-file-format "%Y-%m-%d-%a.org"
+       org-noter-notes-search-path (expand-file-name "~/Dropbox/ORG/notes")
+       org-roam-directory (expand-file-name "~/Dropbox/ORG")
+       ;; org-roam-verbose nil
+       org-journal-dir (expand-file-name "~/Dropbox/ORG")
+       org-table-convert-region-max-lines 999)
+
+(defun ct/org-emphasize-below-point (&optional char)
+  "Emphasisez region with CHAR.
+
+From https://christiantietze.de/posts/2024/12/org-mode-emphasis-keymap-mnemonics/
+If there's no region, marks the closest s-expression, first.
+Opposed to word boundaries, sexp's work with `subword-mode' enabled."
+  (interactive)
+  (unless (region-active-p)
+    (backward-sexp)
+    (mark-sexp))
+  (org-emphasize char))
 
 (after! org
   (setq! org-log-done 'time
