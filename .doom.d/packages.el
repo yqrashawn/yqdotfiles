@@ -408,12 +408,12 @@
            :host github
            :repo "armindarvish/consult-gh"
            :branch "main"))
-;; (package! consult-omni
-;;   :recipe (:type git
-;;            :host github
-;;            :repo "armindarvish/consult-omni"
-;;            :branch "main"
-;;            :files (:defaults "sources/*.el")))
+(package! consult-omni
+  :recipe (:type git
+           :host github
+           :repo "armindarvish/consult-omni"
+           :branch "main"
+           :files (:defaults "sources/*.el")))
 
 ;; (package! consult-notes
 ;;   :recipe (:type git

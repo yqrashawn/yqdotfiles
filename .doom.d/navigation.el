@@ -315,35 +315,13 @@ See `dwim-shell-command-execute-script' for all other params."
    '((chrome . "$HOME/Library/Application Support/Google/Chrome/Default/History")
      (firefox . "$HOME/Library/Application Support/Firefox/Profiles/*.dev-edition-default/places.sqlite"))))
 
-;; (use-package consult-notes
-;;   :commands (consult-notes
-;;              consult-notes-search-in-all-notes
-;;              ;; if using org-roam
-;;              consult-notes-org-roam-find-node
-;;              consult-notes-org-roam-find-node-relation)
-;;   :config
-;;   ;; Set notes dir(s), see below
-;;   ;; (setq consult-notes-file-dir-sources '(("Name" ?k ey "path/to/dir")))
-;;   ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
-;;   ;; (setq consult-notes-org-headings-files '("~/path/to/file1.org"
-;;   ;;                                          "~/path/to/file2.org"))
-
-;;   ;; (consult-notes-org-headings-mode)
-
-;;   (consult-notes-denote-mode)
-
-;;   ;; search only for text files in denote dir
-;;   (setq consult-notes-denote-files-function #'denote-directory-text-only-files))
-
-;; (use-package! consult-omni
-;;   ;; :after consult-gh
-;;   :defer t
-;;   :config
-;;   ;; Load Sources Core code
-;;   ;; (require 'consult-omni-sources)
-;;   ;; (consult-omni-sources-load-modules)
-;;   ;; Load Embark Actions
-;;   (require 'consult-omni-embark)
-;;   ;; (setq! consult-omni-multi-sources consult-omni-sources--all-modules-list)
-;;   ;; (setq consult-omni-default-interactive-command #'consult-omni-brave-autosuggest)
-;;   )
+(use-package! consult-omni
+  :defer t
+  :init
+  (setq! consult-omni-sources-modules-to-load
+         '(consult-omni-browser-history))
+  (setq! consult-omni-multi-sources '("Browser History"))
+  :config
+  (require 'consult-omni-sources)
+  (require 'consult-omni-embark)
+  (consult-omni-sources-load-modules))
