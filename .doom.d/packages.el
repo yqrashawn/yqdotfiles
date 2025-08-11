@@ -428,6 +428,7 @@
 ;;   :recipe (:type git
 ;;             :host github
 ;;             :repo "steveyegge/efrit"))
+(package! smudge)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

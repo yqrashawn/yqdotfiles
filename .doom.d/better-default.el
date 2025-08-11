@@ -1061,3 +1061,6 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 ;;   :init
 ;;   (setq! efrit-api-url "http://localhost:4141/v1/messages"
 ;;          efrit-model "claude-3.7-sonnet"))
+
+(use-package! smudge
+  :defer t)
