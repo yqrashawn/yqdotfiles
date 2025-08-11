@@ -67,6 +67,7 @@ in
     systemPackages =
       with pkgs;
       [
+        lzip
         clojure-lsp
         notmuch
         # zed-editor

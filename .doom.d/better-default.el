@@ -1062,5 +1062,27 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 ;;   (setq! efrit-api-url "http://localhost:4141/v1/messages"
 ;;          efrit-model "claude-3.7-sonnet"))
 
+(defun enable-global-smudge-remote-mode ()
+  (require 'smudge)
+  (global-smudge-remote-mode 1))
+
 (use-package! smudge
-  :defer t)
+  :hook (doom-first-file . enable-global-smudge-remote-mode)
+  :init
+  (setq! smudge-player-use-transient-map t)
+  (defadvice! +smudge-api-oauth2-auth
+    (_orig-fn auth-url token-url client-id client-secret &optional scope state redirect-uri)
+    :around #'smudge-api-oauth2-auth
+    (let ((inhibit-message t))
+      (oauth2-request-access
+       auth-url
+       token-url
+       client-id
+       client-secret
+       (smudge-api-oauth2-request-authorization
+        auth-url client-id scope state redirect-uri)
+       redirect-uri)))
+  :config
+  (require 'smudge))
+
+(use-package! launchctl :defer t)

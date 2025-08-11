@@ -25,6 +25,7 @@
       doom-localleader-alt-key "M-SPC ,")
 
 (map!
+ :gn "C-c ." 'smudge-command-map
  :gn "C-." #'+eshell/toggle
  :g "C-;" #'embark-act
  :g "C-c" nil
@@ -72,7 +73,8 @@
  [remap compile] #'detached-compile
  [remap recompile] #'detached-compile-recompile
  (:map doom-leader-open-map
-  :desc "proced" "p" #'proced)
+  :desc "proced" "p" #'proced
+  :desc "Spotify" "S" 'smudge-command-map)
  (:leader
   (:prefix-map ("d" . "Detached")
    :desc "View" "l" #'detached-view-session
