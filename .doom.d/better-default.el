@@ -1063,4 +1063,26 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 ;;          efrit-model "claude-3.7-sonnet"))
 
 (use-package! smudge
-  :defer t)
+  :defer t
+  :init
+  (define-key smudge-mode-map (kbd "C-c .") 'smudge-command-map)
+  (setq! smudge-player-use-transient-map t)
+  (defun smudge-api-oauth2-auth (auth-url token-url client-id client-secret &optional scope state redirect-uri)
+    "Authenticate application via OAuth2.
+Send CLIENT-ID and CLIENT-SECRET to AUTH-URL.  Get code and send to TOKEN-URL.
+Replaces functionality from built-in OAuth lib to call smudge-specific
+function that runs a local httpd for code -> token exchange."
+    (let ((inhibit-message t))
+      (oauth2-request-access
+       auth-url
+       token-url
+       client-id
+       client-secret
+       (smudge-api-oauth2-request-authorization
+        auth-url client-id scope state redirect-uri)
+       redirect-uri)))
+  :config
+  (require' smudge-device-select)
+  (global-smudge-remote-mode))
+
+(use-package! launchctl :defer t)
