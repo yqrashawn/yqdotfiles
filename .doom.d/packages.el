@@ -423,6 +423,7 @@
 (package! browser-hist)
 (package! launchctl)
 (package! chatu)
+(package! alert)
 
 ;; (package! efrit
 ;;   :recipe (:type git

@@ -679,7 +679,8 @@ used in the POST request made to the LanguageTool server."
   :init
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
-         gptel-temperature 0.8)
+         gptel-temperature 0.8
+         gptel-org-branching-context t)
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))
@@ -1086,3 +1087,5 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   (require 'smudge))
 
 (use-package! launchctl :defer t)
+
+;; (alert "this is an alert" :severity 'high :style 'notifier)
