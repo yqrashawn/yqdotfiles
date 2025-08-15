@@ -732,6 +732,7 @@ used in the POST request made to the LanguageTool server."
            :key +openrouter-api-key
            :models gptel--openrouter-models))
   (setq! gptel-model 'gemini-2.5-pro)
+  (setq! gptel-model 'claude-sonnet-4)
   (setq! gptel--gh-copilot
          (gptel-make-openai "Github Copilot"
            :protocol "http"
