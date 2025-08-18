@@ -122,6 +122,8 @@
   :hook (text-mode . outline-minor-mode)
   :hook (conf-mode . outline-minor-mode)
   :init
+  ;; (setq! outline-default-state 'outline-show-only-headings)
+  ;; (setq! outline-default-state 3)
   (defun +outline-chomp (str)
     "Chomp leading and trailing whitespace from STR."
     (save-excursion
