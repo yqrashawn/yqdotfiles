@@ -442,6 +442,7 @@ creates a new one. Don't unnecessarily bother the user."
 (defvar +local-cljr-magic-require-namespaces '())
 (make-variable-buffer-local '+local-cljr-magic-require-namespaces)
 (put '+local-cljr-magic-require-namespaces 'safe-local-variable #'listp)
+(put '+cider-project-reload-exec-cmd-clj 'safe-local-variable #'listp)
 
 (defun +build-cljr-magic-require-namespaces ()
   (when (and (boundp '+local-cljr-magic-require-namespaces)
