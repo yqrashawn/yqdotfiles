@@ -429,7 +429,7 @@ creates a new one. Don't unnecessarily bother the user."
      ("tr" . "taoensso.truss")
      ("ig" . "integrant.core")
      ("d" . "datalevin.core")
-     ("t" . "tick.core")
+     ("tick" . "tick.core")
      ("r" "radix" :only ("cljs"))
      ("rf" "re-frame.core" :only ("cljs"))
      ("walk" . "clojure.walk")
