@@ -1071,7 +1071,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   (global-smudge-remote-mode 1))
 
 (use-package! smudge
-  :hook (doom-first-file . enable-global-smudge-remote-mode)
+  :defer t
+  ;; :hook (doom-first-file . enable-global-smudge-remote-mode)
   :init
   (setq! smudge-player-use-transient-map t)
   (defadvice! +smudge-api-oauth2-auth
