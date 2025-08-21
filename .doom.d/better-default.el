@@ -742,7 +742,9 @@ used in the POST request made to the LanguageTool server."
            :endpoint "/chat/completions"
            :stream t
            :key "no-key-required"
-           :models gptel--gh-copilot-models))
+           :models gptel--gh-models))
+  (setq! gptel--gh-copilot
+         (gptel-make-gh-copilot "Copilot"))
   (setq! gptel-post-response-functions nil
          gptel-backend gptel--openrouter
          gptel-backend gptel--gh-copilot)
@@ -758,7 +760,10 @@ used in the POST request made to the LanguageTool server."
    :name "get_current_macos_version"
    :description "Get current macos version"
    :category "utils"
-   :args '()))
+   :args '())
+
+  (setq! gptel-log-level 'debug)
+  (setq! gptel-log-level 'nil))
 
 (use-package shrface
   :defer t
@@ -1058,7 +1063,9 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   :config
   (require 'gptel-integrations)
   (require 'mcp-hub)
-  (mcp-hub-start-all-server))
+  (mcp-hub-start-all-server)
+  (setq! mcp-log-level 'debug)
+  (setq! mcp-log-level 'info))
 
 ;; (use-package! efrit
 ;;   :defer t
