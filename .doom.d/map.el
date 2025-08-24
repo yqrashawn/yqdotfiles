@@ -828,4 +828,12 @@
           :gn "*" #'launchctl-filter
           :gn "$" #'launchctl-setenv
           :gn "#" #'launchctl-unsetenv
-          :gn "H" #'launchctl-help)))
+          :gn "H" #'launchctl-help))
+ (:after mcp-hub
+         (:map mcp-hub-mode-map
+          :gn "s-u" #'mcp-hub-update
+          :gn "R" #'mcp-hub-restart-all-server
+          :gn "r" #'mcp-hub-restart-server
+          :gn "S" #'mcp-hub-start-server
+          :gn "x" #'mcp-hub-close-server
+          :gn "X" #'mcp-hub-close-all-server)))
