@@ -910,6 +910,7 @@
   :Edge         ["^com\\.microsoft\\.edgemac\\.Beta$"]
   :VV           ["^com\\.vivaldi\\.Vivaldi$"]
   :Firefoxes    ["^org\\.mozilla\\.firefox$"
+                 "^org\\.mozilla\\.camoufox$"
                  "^org\\.mozilla\\.firefoxdeveloperedition$"
                  "^org\\.nixos\\.firefoxdeveloperedition$"]
   :Terminals    ["^com\\.apple\\.Terminal$"
@@ -931,6 +932,7 @@
   :Debuggers    ["^org\\.mozilla\\.firefox$"
                  "^com\\.microsoft\\.edgemac\\.Beta$"
                  "^org\\.mozilla\\.firefoxdeveloperedition$"
+                 "^org\\.mozilla\\.camoufox$"
                  "^org\\.nixos\\.firefoxdeveloperedition$"
                  "^com\\.google\\.Chrome$"
                  "^org\\.chromium\\.Chromium$"
@@ -952,6 +954,7 @@
                  "^ai\\.perplexity\\.comet"
                  "^org\\.mozilla\\.firefox$"
                  "^org\\.mozilla\\.firefoxdeveloperedition$"
+                 "^org\\.mozilla\\.camoufox$"
                  "^org\\.nixos\\.firefoxdeveloperedition$"
                  "^com\\.google\\.Chrome$"
                  "^org\\.chromium\\.Chromium$"

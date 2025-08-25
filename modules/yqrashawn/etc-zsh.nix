@@ -1,10 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   paths = [
     "$HOME/Library/CloudStorage/Dropbox/sync/scripts"
     "$HOME/common-lisp/lem"
     "/Applications/kitty.app/Contents/MacOS"
+    "/Applications/Camoufox.app/Contents/MacOS"
     "/Applications/Firefox Developer Edition.app/Contents/MacOS"
     "$HOME/.qlot/bin"
     "$HOME/.web3j"
@@ -26,8 +32,11 @@ let
     # "/usr/local/opt/curl/bin"
     "/opt/homebrew/bin"
   ];
-in {
-  programs.bash = { enable = true; };
+in
+{
+  programs.bash = {
+    enable = true;
+  };
   programs.zsh = {
     enable = true;
     enableCompletion = true;
