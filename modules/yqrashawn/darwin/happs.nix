@@ -17,7 +17,7 @@
       "bitwarden"
       "clickup"
       "languagetool-desktop"
-      "firefox@developer-edition"
+      # "firefox@developer-edition"
       # "safari-technology-preview"
       # "todoist"
       # "skim"

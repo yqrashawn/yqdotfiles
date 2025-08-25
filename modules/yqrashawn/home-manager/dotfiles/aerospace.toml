@@ -51,6 +51,10 @@ M = '^DELL'
 if.app-id = 'org.mozilla.firefoxdeveloperedition'
 if.window-title-regex-substring = '^https://www\.perplexity\.ai - Perplexity$'
 run = 'layout floating'
+[[on-window-detected]]
+if.app-id = 'org.nixos.firefoxdeveloperedition'
+if.window-title-regex-substring = '^https://www\.perplexity\.ai - Perplexity$'
+run = 'layout floating'
 
 ### termial workspace
 [[on-window-detected]]
