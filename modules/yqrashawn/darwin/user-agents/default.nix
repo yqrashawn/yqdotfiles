@@ -1,3 +1,12 @@
-{ config, lib, pkgs, ... }: {
-  imports = [ ./cf-access.nix ./dark-light.nix ./syncmail.nix ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [
+    ./dark-light.nix
+    ./syncmail.nix
+  ];
 }
