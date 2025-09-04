@@ -6,7 +6,7 @@ java oracle-graalvm-24
 nodejs 22.13.0
 python 3.12.2
 ruby 3.2.2
-golang 1.20.12
+golang 1.25.1
 bun 1.2.19
 deno 1.39.1
 lua 5.4.4
