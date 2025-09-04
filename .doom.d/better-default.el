@@ -682,7 +682,8 @@ used in the POST request made to the LanguageTool server."
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
          gptel-temperature 0.8
-         gptel-org-branching-context t)
+         gptel-org-branching-context t
+         gptel-track-media t)
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))

@@ -177,6 +177,10 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (setq! copilot-max-char -1
          copilot-idle-delay 10
          copilot-indent-offset-warning-disable t
+         ;; copilot-lsp-settings
+         ;; '(:github (:copilot (:selectedCompletionModel "gpt-4o-copilot")))
+         ;; copilot-lsp-settings
+         ;; nil
          ;; copilot-server-executable (executable-find "copilot-language-server")
          )
   :config
