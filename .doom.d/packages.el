@@ -322,6 +322,7 @@
 (package! ht)
 
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
+(unpin! gptel)
 (package! elysium :recipe (:host github :repo "lanceberge/elysium"))
 (package! chatgpt-shell)
 
@@ -392,6 +393,7 @@
 (package! logview)
 (package! aidermacs)
 (package! mcp)
+(unpin! mcp)
 
 (package! consult-gh
   :recipe (:type git
