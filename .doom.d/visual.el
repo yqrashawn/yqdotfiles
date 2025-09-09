@@ -36,11 +36,11 @@
   (defun +elcord-local-time ()
     (let ((hour (nth 2 (decode-time (current-time)))))
       (if (> hour 12)
-        (format "%sPM" (- hour 12))
+          (format "%sPM" (- hour 12))
         (format "%sAM" hour))))
   (setq! elcord-quiet t
-    elcord-use-major-mode-as-main-icon t
-    elcord-display-buffer-details nil)
+         elcord-use-major-mode-as-main-icon t
+         elcord-display-buffer-details nil)
   :config
   (defadvice! +elcord--start-idle (orig-fn)
     :around #'elcord--start-idle
@@ -53,33 +53,33 @@
       (cancel-timer elcord--update-presence-timer)
       (setq elcord--startup-time (string-to-number (format-time-string "%s" (time-subtract nil elcord--startup-time)))
 
-        elcord--idle-status t)
+            elcord--idle-status t)
 
       (let* ((local-time (+elcord-local-time))
-              (activity
-                `(("assets" . (,@(elcord--mode-icon-and-text)))
-                   ("timestamps" ("start" ,@(string-to-number (format-time-string "%s" (current-time)))))
-                   ("details" . ,local-time) ("state" . ,elcord-idle-message)))
-              (nonce (format-time-string "%s%N"))
-              (presence
-                `(("cmd" . "SET_ACTIVITY")
-                   ("args" . (("activity" . ,activity)
-                               ("pid" . ,(emacs-pid))))
-                   ("nonce" . ,nonce))))
+             (activity
+              `(("assets" . (,@(elcord--mode-icon-and-text)))
+                ("timestamps" ("start" ,@(string-to-number (format-time-string "%s" (current-time)))))
+                ("details" . ,local-time) ("state" . ,elcord-idle-message)))
+             (nonce (format-time-string "%s%N"))
+             (presence
+              `(("cmd" . "SET_ACTIVITY")
+                ("args" . (("activity" . ,activity)
+                           ("pid" . ,(emacs-pid))))
+                ("nonce" . ,nonce))))
         (elcord--send-packet 1 presence))
       (add-hook 'pre-command-hook 'elcord--cancel-idle)))
 
   (defadvice! +elcord--details-and-state (orig-fn)
     :around #'elcord--details-and-state
     (let ((activity (if elcord-display-buffer-details
+                        (list
+                         (cons "details" (funcall elcord-buffer-details-format-function))
+                         (cons "state" (format "Line %s of %S"
+                                               (format-mode-line "%l")
+                                               (+ 1 (count-lines (point-min) (point-max))))))
                       (list
-                        (cons "details" (funcall elcord-buffer-details-format-function))
-                        (cons "state" (format "Line %s of %S"
-                                        (format-mode-line "%l")
-                                        (+ 1 (count-lines (point-min) (point-max))))))
-                      (list
-                        (cons "details" (+elcord-local-time))
-                        (cons "state" (elcord--mode-text))))))
+                       (cons "details" (+elcord-local-time))
+                       (cons "state" (elcord--mode-text))))))
       (when elcord-display-elapsed
         (push (list "timestamps" (cons "start" elcord--startup-time)) activity))
       activity))
@@ -105,31 +105,10 @@
 
 (add-hook! 'doom-first-input-hook 'maybe-enable-pixel-scroll-precision-mode)
 
-
-(after! js2-mode
+(after! prog-mode
   (font-lock-add-keywords
-   'js2-mode
+   'prog-mode
    (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
-(after! rjsx-mode
-  (font-lock-add-keywords
-   'rjsx-mode
-   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
-(after! typescript-mode
-  (font-lock-add-keywords
-   'typescript-mode
-   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
-(after! clojure-mode
-  (font-lock-add-keywords
-   'clojurescript-mode
-   (append `(("\"0x" (0 (+truncate-0x-hash))))))
-  (font-lock-add-keywords
-   'clojure-mode
-   (append `(("\"0x" (0 (+truncate-0x-hash)))))))
-(after! web-mode
-  (font-lock-add-keywords
-   'web-mode
-   (append `(("\\(\"\\|'\\)0x" (0 (+truncate-0x-hash)))))))
-
 
 (use-package! modus-themes
   :defer t
