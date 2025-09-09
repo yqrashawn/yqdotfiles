@@ -750,11 +750,6 @@ used in the POST request made to the LanguageTool server."
          gptel-backend gptel--openrouter
          gptel-backend gptel--gh-copilot)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
-  (setq gptel-directives
-        '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
-          (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-          (writing . "You are a large language model and a writing assistant. Respond concisely.")
-          (chat . "You are a large language model and a conversation partner. Respond concisely.")))
 
   (gptel-make-tool
    :function (lambda () "15.4")
@@ -1064,7 +1059,7 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   :config
   (require 'gptel-integrations)
   (require 'mcp-hub)
-  (mcp-hub-start-all-server)
+  (mcp-hub-start-all-server (lambda () (gptel-mcp-connect)))
   (setq! mcp-log-level 'debug)
   (setq! mcp-log-level 'info))
 
