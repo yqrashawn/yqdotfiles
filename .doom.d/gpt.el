@@ -1,6 +1,7 @@
 ;;; gpt.el -*- lexical-binding: t; -*-
 
 (use-package! llm
+  :disabled t
   :defer t
   :init
   (setq! llm-warn-on-nonfree nil)

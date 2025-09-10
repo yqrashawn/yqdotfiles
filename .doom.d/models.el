@@ -1,4 +1,4 @@
-;;; ../.nixpkgs/.doom.d/models.el -*- lexical-binding: t; -*-
+;;; .nixpkgs/.doom.d/models.el -*- lexical-binding: t; -*-
 
 
 (defconst gptel--openrouter-models

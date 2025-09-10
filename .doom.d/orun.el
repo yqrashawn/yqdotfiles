@@ -1,4 +1,4 @@
-;;; ../.nixpkgs/.doom.d/orun.el -*- lexical-binding: t; -*-
+;;; .nixpkgs/.doom.d/orun.el -*- lexical-binding: t; -*-
 
 (require 'a)
 (require 'seq)

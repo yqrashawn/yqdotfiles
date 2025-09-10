@@ -1,4 +1,4 @@
-;;; ../.nixpkgs/.doom.d/pragmatapro-prettify-symbols.el -*- lexical-binding: t; -*-
+;;; .nixpkgs/.doom.d/pragmatapro-prettify-symbols.el -*- lexical-binding: t; -*-
 
 ;; https://github.com/fabrizioschiavi/pragmatapro/blob/master/emacs_snippets/pragmatapro-prettify-symbols-v0.830.el
 (setq prettify-symbols-unprettify-at-point 'right-edge)

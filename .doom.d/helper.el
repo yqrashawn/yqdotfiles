@@ -116,6 +116,33 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       (seq-filter (lambda (s) (not (string-empty-p s))))
       +project-files-buffers)))
 
+(defun +visible-buffers ()
+  (seq-filter
+   (lambda (b)
+     (with-current-buffer b
+       (not gptel-mode)))
+   (mapcar 'window-buffer (window-list))))
+
+(defun +visible-buffers-list-buffer ()
+  (let ((buf-list (+visible-buffers))
+        (b (get-buffer-create " *visible-buffers-list*" t)))
+    (with-current-buffer b
+      (insert "# These are the buffers currently visible to the user.")
+      (seq-doseq
+          (b (+visible-buffers))
+        (insert (format! "Buffer name: `%s`%s\n"
+                         (buffer-name b)
+                         (if-let ((buf-file (buffer-file-name b)))
+                             (format! ", File name: `%s`" buf-file)
+                           ""))))
+      buf-list)
+    b))
+
 (defvar +llm-project-default-files '())
 (make-variable-buffer-local '+llm-project-default-files)
 (put '+llm-project-default-files 'safe-local-variable #'listp)
+
+(defun ++workspace-current-project-root ()
+  (or (persp-parameter '+workspace-project (+workspace-current))
+      (when (string= (+workspace-current-name) "main")
+        (expand-file-name "~/.nixpkgs"))))

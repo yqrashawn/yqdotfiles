@@ -1,4 +1,4 @@
-;;; ../.nixpkgs/.doom.d/golang.el -*- lexical-binding: t; -*-
+;;; .nixpkgs/.doom.d/golang.el -*- lexical-binding: t; -*-
 
 (add-hook! go-mode '(hl-line-mode which-func-try-to-enable))
 

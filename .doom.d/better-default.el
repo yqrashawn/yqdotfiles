@@ -661,7 +661,7 @@ used in the POST request made to the LanguageTool server."
   (interactive)
   (when-let ((buf (current-buffer)))
     (with-current-buffer buf
-      (gptel-context-remove-all nil)
+      ;; (gptel-context-remove-all nil)
       (if buffer-file-name
           (save-buffer)
         (write-file
@@ -676,6 +676,18 @@ used in the POST request made to the LanguageTool server."
   (when-let ((buf (get-buffer gptel-default-session)))
     (kill-buffer buf)))
 
+(defun my/gptel-remove-headings (beg end)
+  (when (derived-mode-p 'org-mode)
+    (save-excursion
+      (goto-char beg)
+      (while (re-search-forward org-heading-regexp end t)
+        (forward-line 0)
+        (delete-char (1+ (length (match-string 1))))
+        (insert-and-inherit "*")
+        (end-of-line)
+        (skip-chars-backward " \t\r")
+        (insert-and-inherit "*")))))
+
 (use-package! gptel
   :commands (gptel)
   :init
@@ -688,6 +700,9 @@ used in the POST request made to the LanguageTool server."
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))
   :config
+  (require 'gptel-context)
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
   (set-popup-rule!
     (lambda (bname _action)
       (and (null gptel-display-buffer-action)
@@ -722,7 +737,7 @@ used in the POST request made to the LanguageTool server."
                      (not gptel-mode))))
                 (mapcar 'window-buffer (window-list))))
       (+gptel-context-add-buffer b))
-    (when-let ((root (doom-project-root)))
+    (when-let ((root (++workspace-current-project-root)))
       (dolist (f +llm-project-default-files)
         (when-let ((b (get-file-buffer (format "%s%s" root f))))
           (+gptel-context-add-buffer b)))))
@@ -746,20 +761,26 @@ used in the POST request made to the LanguageTool server."
            :models gptel--gh-models))
   (setq! gptel--gh-copilot
          (gptel-make-gh-copilot "Copilot"))
-  (setq! gptel-post-response-functions nil
-         gptel-backend gptel--openrouter
-         gptel-backend gptel--gh-copilot)
+  (setq! ;; gptel-post-response-functions nil
+   gptel-backend gptel--openrouter
+   gptel-backend gptel--gh-copilot)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
-
-  (gptel-make-tool
-   :function (lambda () "15.4")
-   :name "get_current_macos_version"
-   :description "Get current macos version"
-   :category "utils"
-   :args '())
-
+  (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   (setq! gptel-log-level 'debug)
-  (setq! gptel-log-level 'nil))
+  (setq! gptel-log-level 'nil)
+  (load! "gptel-tools.el")
+
+  (defadvice! +gptel-context--insert-buffer-string (buffer contexts)
+    "add buffer file name"
+    :before #'gptel-context--insert-buffer-string
+    (when-let ((buf-file (buffer-file-name buffer)))
+      (let ((file-project-root (with-current-buffer buffer (doom-project-root))))
+        (insert "In file `%s` (file buffer name is `%s`%s):"
+                buf-file
+                (buffer-name buffer)
+                (if file-project-root
+                    (format! ", file project root is at `%s`" file-project-root)
+                  ""))))))
 
 (use-package shrface
   :defer t
@@ -957,10 +978,10 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
        '("^\*Dirvish-preview"
          "^\*Embark Export:"))
 
-(defun +buffer-visible-in-persp-p (buffer persp-name)
+(defun +buffer-visible-in-persp-p (buffer &optional persp-name)
   "Check if BUFFER is visible in any window of the perspective PERSP."
   (save-window-excursion
-    (+workspace-switch persp-name)
+    (when persp-name (+workspace-switch persp-name))
     (get-buffer-window buffer)))
 
 (defun +buffer-terminator-pred ()
