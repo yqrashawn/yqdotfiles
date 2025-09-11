@@ -61,6 +61,7 @@
     :quit t
     :ttl nil)
   (require 'magit)
+  (require 'gitleaks)
 
   (add-hook! 'gptel-mode-hook
     (defun +gptel-mode-setup-kill-buffer-hook ()
@@ -144,7 +145,7 @@
                 (if file-project-root
                     (format! ", file project root is at `%s`" file-project-root)
                   ""))))
-    (funcall orig-fn)))
+    (funcall orig-fn buffer contexts)))
 
 ;;; mcp
 (use-package! mcp
