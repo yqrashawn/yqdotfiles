@@ -3,7 +3,7 @@
 # Call emacsclient as a pager.
 # First, read in the content of stdin into a temporary file
 
-t=$(mktemp /tmp/emacsclient.XXXXXX) || exit 1
+t=$(mktemp "${TMPDIR}emacsclient.XXXXXX") || exit 1
 
 # echo "Reading into emacs..."
 
