@@ -432,6 +432,10 @@
 ;;             :host github
 ;;             :repo "steveyegge/efrit"))
 (package! smudge)
+(package! gitleaks
+  :recipe (:host github
+           :repo "yqrashawn/gitleaks.el"
+           :branch "main"))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

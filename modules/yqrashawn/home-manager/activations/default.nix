@@ -1,7 +1,12 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  home.activation.defaultSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.defaultSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     cuser="$(id -un)"
 
     rm -rf ~/.doom.d || true
@@ -115,6 +120,10 @@
         echo 'link ~/.config/nyxt/config.lisp'
         mkdir -p ~/.config/nyxt
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/nyxt.lisp ~/.config/nyxt/config.lisp
+    fi
+    if [ -e ~/Dropbox/sync/gitleaks.toml ] && [ ! -e ~/.config/.gitleaks.toml ]; then
+        echo 'link gitleaks config'
+        ln -s ~/Dropbox/sync/gitleaks.toml ~/.config/.gitleaks.toml
     fi
   '';
 }
