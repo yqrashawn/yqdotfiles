@@ -329,3 +329,11 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (setq doom-upgrade-url "git@github.com:doomemacs/doomemacs")
 
 ;; (native-compile-async (expand-file-name "~/.emacs.d/.local/straight/repos/") 'recursively)
+
+(defmacro comment (&rest _body)
+  "Ignore BODY entirely at compile and run time."
+  nil)
+
+;; nice UX:
+(put 'comment 'lisp-indent-function 'defun)   ; indent like a defun
+(put 'comment 'edebug-form-spec '(body))      ; edebug treats it as a container
