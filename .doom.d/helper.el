@@ -134,8 +134,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
                          (buffer-name b)
                          (if-let ((buf-file (buffer-file-name b)))
                              (format! ", File name: `%s`" buf-file)
-                           ""))))
-      buf-list)
+                           "")))))
     b))
 
 (defvar +llm-project-default-files '())
