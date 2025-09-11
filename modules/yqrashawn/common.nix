@@ -18,6 +18,8 @@ let
   ];
   stables = with pkgs.stable; [ ];
   masters = with pkgs.masters; [
+    gitleaks
+    trufflehog
     clj-kondo
     # mise
     zprint
