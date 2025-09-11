@@ -61,12 +61,14 @@
     :quit t
     :ttl nil)
   (require 'magit)
+
   (add-hook! 'gptel-mode-hook
     (defun +gptel-mode-setup-kill-buffer-hook ()
       (add-hook! 'kill-buffer-hook :local
         (defun +gptel-mode-reset-on-buffer-killed-h ()
           (with-current-buffer (current-buffer)
             (gptel-context-remove-all nil))))))
+
   (defun +gptel-context-add-buffer (b)
     (unless (llm-danger-buffer-p b)
       (let ((start (with-current-buffer b (point-min)))
@@ -77,6 +79,7 @@
     :before #'gptel-send
     (require 'gptel-context)
     (gptel-context-remove-all nil)
+    (+gptel-context-add-buffer (+current-workspace-info-buffer))
     (+gptel-context-add-buffer (+visible-buffers-list-buffer))
     (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
     (dolist (b (seq-filter

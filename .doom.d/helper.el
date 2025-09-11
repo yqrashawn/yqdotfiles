@@ -82,15 +82,22 @@
     (let ((b (get-buffer-create buf-name t)))
       (with-current-buffer b
         (erase-buffer)
-        (insert
-         (concat
-          (format "# These are diffs of changes I made within %d minutes\n\n" n)
-          (shell-command-to-string
-           (format!
-            "git reflog --since=\"%d minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
-            n
-            (magit-get-current-branch))))))
+        (insert!
+         ("%s"
+          (concat
+           (format "# These are diffs of changes I made within %d minutes\n\n" n)
+           (shell-command-to-string
+            (format!
+             "git reflog --since=\"%d minutes ago\" --oneline -p refs/wip/wtree/refs/heads/%s"
+             n
+             (magit-get-current-branch)))))))
       b)))
+
+(comment
+  (insert!
+   "\n"
+   ("%s" (with-current-buffer (+magit-wip-diff-n-min-buffer 5)
+           (buffer-string)))))
 
 (defun +project-files-buffers (file-list)
   "Return a list of buffers for FILE-LIST, where FILE-LIST is a list of relative file paths.
@@ -127,14 +134,37 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (let ((buf-list (+visible-buffers))
         (b (get-buffer-create " *visible-buffers-list*" t)))
     (with-current-buffer b
-      (insert "# These are the buffers currently visible to the user.")
+      (erase-buffer)
+      (insert! "# These are the buffers currently visible to the user.\n")
       (seq-doseq
           (b (+visible-buffers))
-        (insert (format! "Buffer name: `%s`%s\n"
-                         (buffer-name b)
-                         (if-let ((buf-file (buffer-file-name b)))
-                             (format! ", File name: `%s`" buf-file)
-                           "")))))
+        (insert! ("Buffer name: `%s`" (buffer-name b)))
+        (when-let ((buf-file (buffer-file-name b)))
+          (insert! (",Buffer's File name: `%s`" buf-file))
+          (if-let ((buf-proj-root (doom-project-root buf-file)))
+              (insert! (",File project root: `%s`" buf-proj-root))
+            (insert! ",File is not in any project")))
+        (insert! "\n"))
+      (insert! "\n"))
+    b))
+
+(comment
+  (insert!
+   "\n"
+   ("%s" (with-current-buffer
+             (+visible-buffers-list-buffer)
+           (buffer-string)))))
+
+(defun +current-workspace-info-buffer ()
+  (let ((b (get-buffer-create " *current-workspace-info*" t)))
+    (with-current-buffer b
+      (insert!
+       "# Current workspace info\n"
+       ("workspace name:`%s`," (+workspace-current-name))
+       ("workspace root:`%s`" (++workspace-current-project-root))
+       ("workspace project name:`%s`" (doom-project-name (++workspace-current-project-root)))
+       ("workspace project root:`%s`" (++workspace-current-project-root))
+       "\n"))
     b))
 
 (defvar +llm-project-default-files '())
