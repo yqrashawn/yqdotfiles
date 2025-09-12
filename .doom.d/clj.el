@@ -366,3 +366,34 @@ Result type follows the first map."
                 alist))
              (t result))))
     result))
+
+(defalias 'comp #'-compose)
+(defalias 'partial #'-partial)
+
+;;; clj/first
+(defun clj/first (coll)
+  "Return the first element of COLL, or nil if COLL is empty or nil."
+  (cond
+   ((null coll) nil)
+   ((listp coll) (car coll))
+   ((vectorp coll) (if (> (length coll) 0) (aref coll 0) nil))
+   ((arrayp coll) (if (> (length coll) 0) (aref coll 0) nil))
+   ((stringp coll) (if (> (length coll) 0) (aref coll 0) nil))
+   (t nil)))
+
+;;; clj/second
+(defun clj/second (coll)
+  "Return the second element of COLL, or nil if not present."
+  (cond
+   ((and (listp coll) (consp (cdr coll))) (cadr coll))
+   ((vectorp coll) (if (> (length coll) 1) (aref coll 1) nil))
+   ((arrayp coll) (if (> (length coll) 1) (aref coll 1) nil))
+   ((stringp coll) (if (> (length coll) 1) (aref coll 1) nil))
+   (t nil)))
+
+;;; clj/constantly
+(defun clj/constantly (x)
+  "Return a function that always returns X, regardless of arguments."
+  (lambda (&rest _) x))
+
+;;; End clj.el

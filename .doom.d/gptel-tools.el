@@ -5,6 +5,7 @@
 
 (load! "gptel-tools/utils.el")
 (load! "gptel-tools/buffer.el")
+(load! "gptel-tools/read.el")
 (load! "gptel-tools/edit-file.el")
 (load! "gptel-tools/create-file.el")
 (load! "gptel-tools/ripgrep.el")

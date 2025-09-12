@@ -159,6 +159,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
 (defun +current-workspace-info-buffer ()
   (let ((b (get-buffer-create " *current-workspace-info*" t)))
     (with-current-buffer b
+      (erase-buffer)
       (insert!
        "# Current workspace info\n"
        ("workspace name:`%s`," (+workspace-current-name))
