@@ -1,6 +1,5 @@
 ;;; .nixpkgs/.doom.d/gptel-tools.el -*- lexical-binding: t; -*-
 
-(require 'gptel)
 (require 'smartparens nil t)
 
 (load! "gptel-tools/utils.el")

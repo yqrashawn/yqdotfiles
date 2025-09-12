@@ -42,12 +42,14 @@
     :backend "CopilotB"
     :model 'gpt-4.1-2025-04-14
     :system (alist-get 'default gptel-directives)
-    :temperatore 0.8
-    :tools (cl-mapcan
-            (lambda (x)
-              (let ((category (car x)))
-                (seq-map 'car (alist-get category gptel--known-tools))))
-            gptel--known-tools)))
+    :temperature 0.8
+    :tools
+    (cl-mapcan
+     (lambda (x)
+       (let ((category (car x)))
+         (seq-map 'car (alist-get category gptel--known-tools))))
+     gptel--known-tools))
+  (gptel--apply-preset 'default))
 
 
 (use-package! gptel

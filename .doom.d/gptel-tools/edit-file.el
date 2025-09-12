@@ -292,9 +292,9 @@ Returns a string describing the result of the operation."
   (gptel-make-tool
    :name "edit-file"
    :function #'gptel-edit-tool-edit-file
-   :description "Edit a file by replacing old text with new text. Opens the file in a buffer if not already open. When the file is a Lisp-family language, both old and new string are expected to be balanced s-expressions (like edit form, not arbitrary fragment) -- an error will be raised if either is unbalanced."
+   :description "Edit a file by replacing old text with new text."
    :args (list '(:name "file-path" :type string
-                 :description "absolute or relative file path to the file to edit, `~/` is supported")
+                 :description "Absolute or relative file path to the file to edit, `~/` is supported")
                '(:name "old-string" :type string
                  :description "The exact text to be replaced")
                '(:name "new-string" :type string
@@ -308,5 +308,119 @@ Returns a string describing the result of the operation."
   "Manually clean up any remaining temporary buffers from edit operations."
   (interactive)
   (gptel-edit-tool--cleanup-temp-buffers))
+
+
+;;; Multi-edit logic
+
+(defun gptel-edit-tool--multi-edit-buffer-impl (buffer edit-list)
+  "Apply multiple edits to BUFFER.
+EDIT-LIST is a list of cons cells (OLD . NEW), applied sequentially.
+For Lisp buffers, checks parentheses balance after all edits.
+Returns a string describing the result."
+  (let ((mj-mode (buffer-local-value 'major-mode buffer))
+        (buf-name (buffer-name buffer))
+        (edit-allowed t)
+        (unbalance-error nil)
+        (applied-count 0)
+        (original-point (with-current-buffer buffer (point))))
+    ;; Apply all edits
+    (with-current-buffer buffer
+      (save-excursion
+        (dolist (edit edit-list)
+          (let ((old (car edit))
+                (new (cdr edit)))
+            (goto-char (point-min))
+            (if (search-forward old nil t)
+                (progn
+                  (let ((start (match-beginning 0))
+                        (end (match-end 0)))
+                    (goto-char start)
+                    (delete-region start end)
+                    (insert new))
+                  (setq applied-count (1+ applied-count)))
+              (error "old-string not found: %s" old))))))
+    ;; For Lisp, check balance after all edits
+    (when (gptel-edit-tool--is-lisp-mode-p mj-mode)
+      (let (temp-buffer)
+        (unwind-protect
+            (progn
+              (setq temp-buffer (generate-new-buffer " *gptel-multi-balance-check*"))
+              (with-current-buffer temp-buffer
+                (erase-buffer)
+                (insert-buffer-substring buffer)
+                (funcall mj-mode)
+                (pcase-let
+                    ((`(,balanced-p . ,error-msg)
+                      (gptel-tools--check-buffer-balanced-parens temp-buffer)))
+                  (unless balanced-p
+                    (setq edit-allowed nil
+                          unbalance-error (or error-msg
+                                              "Buffer would have unbalanced parentheses after multi-edit."))))))
+          (when temp-buffer (kill-buffer temp-buffer)))))
+    (if (not edit-allowed)
+        (error "%s" unbalance-error)
+      ;; Save buffer and format if lsp available
+      (with-current-buffer buffer
+        (save-buffer)
+        (when (and (fboundp 'lsp-format-buffer)
+                   (bound-and-true-p lsp-mode))
+          (condition-case err
+              (lsp-format-buffer)
+            (error (message "LSP formatting failed: %s" err)))))
+      (format "Successfully applied %d edits to buffer: %s" applied-count buf-name))))
+
+;;; Public multi-edit entrypoints
+
+(defun gptel-edit-tool-multi-edit-buffer (buffer-name edit-list)
+  "Apply multiple edits to BUFFER-NAME.
+EDIT-LIST is a list of cons cells (OLD . NEW), each applied sequentially.
+For Lisp code, checks balance after all edits.
+Returns a string describing the result."
+  (let ((buffer (get-buffer buffer-name)))
+    (unless buffer
+      (error "Buffer not found: %s" buffer-name))
+    (gptel-edit-tool--multi-edit-buffer-impl buffer edit-list)))
+
+(defun gptel-edit-tool-multi-edit-file (file-path edit-list)
+  "Apply multiple edits to FILE-PATH.
+EDIT-LIST is a list of cons cells (OLD . NEW), each applied sequentially.
+For Lisp code, checks balance after all edits.
+Returns a string describing the result."
+  (let* ((context (gptel-edit-tool--get-buffer-context file-path))
+         (buffer (plist-get context :buffer))
+         (resolved-path (plist-get context :file-path))
+         (original-path (plist-get context :original-path)))
+    (unless buffer
+      (error "Could not open or create buffer for file: %s (resolved to: %s)"
+             original-path resolved-path))
+    (gptel-edit-tool--multi-edit-buffer-impl buffer edit-list)))
+
+;;; Tool registration for multi-edit
+
+(when (fboundp 'gptel-make-tool)
+  (gptel-make-tool
+   :name "multi-edit-buffer"
+   :function #'gptel-edit-tool-multi-edit-buffer
+   :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old-string . new-string) pair."
+   :args (list '(:name "buffer-name" :type string
+                 :description "The name of the buffer to edit")
+               '(:name "edit-list" :type list
+                 :description "List of cons cells (old-string . new-string) to replace, sequentially"))
+   :category "emacs"
+   :confirm nil
+   :include t))
+
+(when (fboundp 'gptel-make-tool)
+  (gptel-make-tool
+   :name "multi-edit-file"
+   :function #'gptel-edit-tool-multi-edit-file
+   :description "Apply multiple edits to a file by replacing a list of old texts with new texts, sequentially. Each edit is a (old-string . new-string) pair. The file is opened if not already, all edits are applied in order, and saved. For Lisp-family languages, raises error if buffer is unbalanced after all edits."
+   :args (list '(:name "file-path" :type string
+                 :description "absolute or relative file path to the file to edit, `~/` is supported")
+               '(:name "edit-list" :type list
+                 :description "List of cons cells (old-string . new-string) to replace, sequentially"))
+   :category "emacs"
+   :confirm nil
+   :include t))
 
 ;;; gptel-edit-tool.el ends here
