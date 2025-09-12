@@ -115,7 +115,7 @@
            :key "no-key-required"
            :models gptel--claude-code-models))
   ;; self host gh copilot
-  (setq! gptel--gh-copilot
+  (setq! gptel--gh-copilot-local
          (gptel-make-openai "Github Copilot"
            :protocol "http"
            :host "localhost:4141"
@@ -124,10 +124,21 @@
            :key "no-key-required"
            :models gptel--gh-models))
   ;; gptel one
-  (setq! gptel--gh-copilot (gptel-make-gh-copilot "Copilot"))
+  (setq! gptel--gh-copilot-individual
+         (gptel-make-gh-copilot "CopilotI"
+           :host "api.individual.githubcopilot.com"
+           :curl-args (list "--insecure")))
+  (setq! gptel--gh-copilot-business
+         (gptel-make-gh-copilot "CopilotB"
+           :host "api.business.githubcopilot.com"
+           :models gptel--gh-copilot-business-models
+           :curl-args (list "--insecure")
+           :stream t))
   (setq! gptel-backend gptel--openrouter)
-  (setq! gptel-backend gptel--gh-copilot)
   (setq! gptel-backend gptel--gh-claude-code)
+  (setq! gptel-backend gptel--gh-copilot-local)
+  (setq! gptel-backend gptel--gh-copilot-individual)
+  (setq! gptel-backend gptel--gh-copilot-business)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   (setq! gptel-log-level 'debug)
