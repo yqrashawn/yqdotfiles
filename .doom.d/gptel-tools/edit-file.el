@@ -277,7 +277,7 @@ Returns a string describing the result of the operation."
 ;; Register the edit_buffer tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "edit_buffer"
+   :name "edit-buffer"
    :function #'gptel-edit-tool-edit-buffer
    :description "Edit a buffer by replacing old text with new text. When the file is a Lisp-family language, both old and new string are expected to be balanced s-expressions (like edit form, not arbitrary fragment) -- an error will be raised if either is unbalanced."
    :args (list '(:name "buffer-name" :type string
@@ -293,7 +293,7 @@ Returns a string describing the result of the operation."
 ;; Register the edit_file tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "edit_file"
+   :name "edit-file"
    :function #'gptel-edit-tool-edit-file
    :description "Edit a file by replacing old text with new text. Opens the file in a buffer if not already open. When the file is a Lisp-family language, both old and new string are expected to be balanced s-expressions (like edit form, not arbitrary fragment) -- an error will be raised if either is unbalanced."
    :args (list '(:name "file-path" :type string

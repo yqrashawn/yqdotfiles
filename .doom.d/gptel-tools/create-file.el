@@ -145,7 +145,7 @@ Returns a string describing the result of the operation."
 ;; Register the create file buffer tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "create_file_buffer"
+   :name "create-file-buffer"
    :function #'gptel-tools--create-file-buffer
    :description "Create a new file buffer with specified content. Creates directory structure if needed and sets appropriate major mode."
    :args (list '(:name "file-path" :type string
@@ -172,7 +172,7 @@ Buffer is not switched to or displayed. File is created and saved to disk."
 ;;; Register create_temp_file_buffer tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "create_temp_file_buffer"
+   :name "create-temp-file-buffer"
    :function #'gptel-tools--create-temp-file-buffer
    :description "Create a new temp file, open a buffer for it (without displaying), and return the file path. Optional args: prefix, suffix."
    :args (list

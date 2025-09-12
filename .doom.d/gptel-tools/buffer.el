@@ -22,7 +22,7 @@
 ;; Register the get buffer file path tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "get_buffer_file_path"
+   :name "get-buffer-file-path"
    :function #'gptel-tools--get-buffer-file-path
    :description "Given a buffer-name, return the file path that the buffer is visiting or nil"
    :args '((:name "buffer-name" :type string
@@ -52,7 +52,7 @@
 ;; Register the list buffers tool and filter tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "list_buffers"
+   :name "list-buffers"
    :function #'gptel-tools-list-buffers
    :description "Return a list of all visible buffer names (strings)."
    :args nil
@@ -60,7 +60,7 @@
    :confirm nil
    :include t)
   (gptel-make-tool
-   :name "filter_buffers_regex"
+   :name "filter-buffers-regex"
    :function #'gptel-tools-filter-buffers-regex
    :description "Return a list of buffer names matching PATTERN (regex string)."
    :args (list '(:name "pattern" :type string :description "Regex pattern to match buffer names"))
@@ -68,7 +68,7 @@
    :confirm nil
    :include t)
   (gptel-make-tool
-   :name "visible_buffers"
+   :name "visible-buffers"
    :function #'gptel-tools-visible-buffers
    :description "Return a list of buffer names that are currently visible in windows to the user, user usually want to change these buffers."
    :args nil

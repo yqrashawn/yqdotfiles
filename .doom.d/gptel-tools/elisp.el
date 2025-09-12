@@ -56,33 +56,30 @@ Returns a list of matching function names, or an error message if the regex is i
 
 ;;; gptel tool registration
 
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
-   :name "elisp_get_doc"
-   :function #'gptel-elisp-get-docstring
-   :description "Given an elisp function name (string), return its docstring, or an error message if not found."
-   :args (list '(:name "func-name" :type string :description "Name of the elisp function (string or symbol)"))
-   :category "elisp"
-   :confirm nil
-   :include t)
+;; (when (fboundp 'gptel-make-tool)
+;;   (gptel-make-tool
+;;    :name "elisp-get-doc"
+;;    :function #'gptel-elisp-get-docstring
+;;    :description "Given an elisp function name (string), return its docstring, or an error message if not found."
+;;    :args (list '(:name "func-name" :type string :description "Name of the elisp function (string or symbol)"))
+;;    :category "elisp"
+;;    :confirm nil
+;;    :include t)
 
-  (gptel-make-tool
-   :name "elisp_get_source"
-   :function #'gptel-elisp-get-source
-   :description "Given an elisp function name (string), return its elisp source code if available, or an error message if not found."
-   :args (list '(:name "func-name" :type string :description "Name of the elisp function (string or symbol)"))
-   :category "elisp"
-   :confirm nil
-   :include t)
+;;   (gptel-make-tool
+;;    :name "elisp-get-source"
+;;    :function #'gptel-elisp-get-source
+;;    :description "Given an elisp function name (string), return its elisp source code if available, or an error message if not found."
+;;    :args (list '(:name "func-name" :type string :description "Name of the elisp function (string or symbol)"))
+;;    :category "elisp"
+;;    :confirm nil
+;;    :include t)
 
-  ;; next-tool
-
-
-  (gptel-make-tool
-   :name "elisp_find_functions"
-   :function #'gptel-elisp-find-functions
-   :description "Find all elisp callable functions matching a regex pattern. Returns a list of matching function names, or an error message if the regex is invalid."
-   :args (list '(:name "regex-pattern" :type string :description "Regular expression pattern to match function names"))
-   :category "elisp"
-   :confirm nil
-   :include t))
+;;   (gptel-make-tool
+;;    :name "elisp-find-functions"
+;;    :function #'gptel-elisp-find-functions
+;;    :description "Find all elisp callable functions matching a regex pattern. Returns a list of matching function names, or an error message if the regex is invalid."
+;;    :args (list '(:name "regex-pattern" :type string :description "Regular expression pattern to match function names"))
+;;    :category "elisp"
+;;    :confirm nil
+;;    :include t))

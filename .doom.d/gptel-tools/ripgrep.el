@@ -169,7 +169,7 @@ Returns a list of search results with file paths, line numbers, and content."
     (push (format "'%s'" pattern) args)
     (push "." args)
 
-    (let* ((command (log/spy (mapconcat 'identity (cons rg-cmd (reverse args)) " ")))
+    (let* ((command (mapconcat 'identity (cons rg-cmd (reverse args)) " "))
            (output (shell-command-to-string command))
            (lines (split-string output "\n" t))
            results)
@@ -214,7 +214,7 @@ This is a simplified version of content search for regular expressions."
 
   ;; Register helper tool for listing type aliases
   (gptel-make-tool
-   :name "list_ripgrep_types"
+   :name "list-ripgrep-types"
    :function #'gptel-rg-tool-list-type-aliases
    :description "List all available ripgrep type aliases and their corresponding file patterns."
    :args nil
@@ -224,7 +224,7 @@ This is a simplified version of content search for regular expressions."
 
   ;; Register helper tool for getting file types
   (gptel-make-tool
-   :name "get_file_types"
+   :name "get-file-types"
    :function #'gptel-rg-tool-get-file-types
    :description "Get ripgrep type aliases that match a given file path."
    :args (list '(:name "file-path" :type string
@@ -235,7 +235,7 @@ This is a simplified version of content search for regular expressions."
 
   ;; Register content search tools
   (gptel-make-tool
-   :name "search_content"
+   :name "search-content"
    :function #'gptel-rg-tool-search-content
    :description "Search for patterns in file contents using ripgrep. Supports regex patterns, literal text, case sensitivity, file type filtering, and context lines."
    :args (list '(:name "pattern" :type string
@@ -257,7 +257,7 @@ This is a simplified version of content search for regular expressions."
    :include t)
 
   (gptel-make-tool
-   :name "search_literal"
+   :name "search-literal"
    :function #'gptel-rg-tool-search-literal
    :description "Search for literal text in file contents (no regex interpretation)."
    :args (list '(:name "text" :type string
@@ -273,7 +273,7 @@ This is a simplified version of content search for regular expressions."
    :include t)
 
   (gptel-make-tool
-   :name "search_regex"
+   :name "search-regex"
    :function #'gptel-rg-tool-search-regex
    :description "Search for regex patterns in file contents."
    :args (list '(:name "pattern" :type string
