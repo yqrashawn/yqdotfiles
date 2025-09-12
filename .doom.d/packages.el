@@ -437,6 +437,9 @@
            :repo "yqrashawn/gitleaks.el"
            :branch "main"))
 
+(package! mcp-server-lib)
+(package! elisp-dev-mcp)
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:

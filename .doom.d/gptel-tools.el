@@ -11,5 +11,3 @@
 (load! "gptel-tools/edit-file.el")
 (load! "gptel-tools/ripgrep.el")
 (load! "gptel-tools/elisp.el")
-
-(provide 'gptel-tools)

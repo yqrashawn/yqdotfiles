@@ -36,11 +36,26 @@
         (insert-and-inherit "*")))))
 
 ;;; gptel
+(defun +gptel-make-my-presets ()
+  (gptel-make-preset 'default
+    :description "default preset"
+    :backend "CopilotB"
+    :model 'gpt-4.1-2025-04-14
+    :system (alist-get 'default gptel-directives)
+    :temperatore 0.8
+    :tools (cl-mapcan
+            (lambda (x)
+              (let ((category (car x)))
+                (seq-map 'car (alist-get category gptel--known-tools))))
+            gptel--known-tools)))
+
+
 (use-package! gptel
   :commands (gptel)
   :init
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
+         gptel-expert-commands t
          gptel-temperature 0.8
          gptel-org-branching-context t
          gptel-track-media t)
@@ -158,7 +173,11 @@
                 (if file-project-root
                     (format! ", file project root is at `%s`" file-project-root)
                   ""))))
-    (funcall orig-fn buffer contexts)))
+    (funcall orig-fn buffer contexts))
+
+  (defadvice! +gptel-mcp--activate-tools (_)
+    :after #'gptel-mcp--activate-tools
+    (+gptel-make-my-presets)))
 
 ;;; mcp
 (use-package! mcp
@@ -166,6 +185,11 @@
   :config
   (require 'gptel-integrations)
   (require 'mcp-hub)
-  (mcp-hub-start-all-server (lambda () (gptel-mcp-connect)))
+  (mcp-hub-start-all-server
+   (lambda ()
+     (gptel-mcp-connect)
+     (+gptel-make-my-presets)
+
+     (setq-default gptel--preset 'default)))
   (setq! mcp-log-level 'debug)
   (setq! mcp-log-level 'info))

@@ -47,3 +47,15 @@
                  (save-excursion
                    (end-of-defun)
                    (point))))))
+
+(use-package! mcp-server-lib
+  :defer t
+  :init
+  (unless (file-exists-p
+           (concat (expand-file-name user-emacs-directory)
+                   "emacs-mcp-stdio.sh"))
+    (mcp-server-lib-install))
+  (mcp-server-lib-start))
+
+(use-package! elisp-dev-mcp
+  :defer t)
