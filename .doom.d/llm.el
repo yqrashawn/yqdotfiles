@@ -162,18 +162,61 @@
   (setq! gptel-log-level 'nil)
   (load! "gptel-tools.el")
 
-  (defadvice! +gptel-context--insert-buffer-string (orig-fn buffer contexts)
-    "add buffer file name"
-    :around #'gptel-context--insert-buffer-string
-    (when-let ((buf-file (buffer-file-name buffer)))
-      (let ((file-project-root (with-current-buffer buffer (doom-project-root))))
-        (insert "In file `%s` (file buffer name is `%s`%s):"
-                buf-file
-                (buffer-name buffer)
-                (if file-project-root
-                    (format! ", file project root is at `%s`" file-project-root)
-                  ""))))
-    (funcall orig-fn buffer contexts))
+  (el-patch-defun gptel-context--insert-buffer-string (buffer contexts)
+    "Insert at point a context string from all CONTEXTS in BUFFER."
+    (let ((is-top-snippet t)
+          (previous-line 1))
+      (insert (el-patch-swap
+                (format "In buffer `%s`:" (buffer-name buffer))
+                (format "In buffer `%s`%s:"
+                        (buffer-name buffer)
+                        (if-let ((buf-file (buffer-file-name buffer)))
+                            (format ", file `%s`" buf-file)
+                          "")))
+              "\n\n```" (gptel--strip-mode-suffix (buffer-local-value
+                                                   'major-mode buffer))
+              "\n")
+      (dolist (context contexts)
+        (let* ((start (overlay-start context))
+               (end (overlay-end context))
+               content)
+          (let (lineno column)
+            (with-current-buffer buffer
+              (without-restriction
+                (setq lineno (line-number-at-pos start t)
+                      column (save-excursion (goto-char start)
+                                             (current-column))
+                      content (buffer-substring-no-properties start end))))
+            ;; We do not need to insert a line number indicator if we have two regions
+            ;; on the same line, because the previous region should have already put the
+            ;; indicator.
+            (unless (= previous-line lineno)
+              (unless (= lineno 1)
+                (unless is-top-snippet
+                  (insert "\n"))
+                (insert (format "... (Line %d)\n" lineno))))
+            (setq previous-line lineno)
+            (unless (zerop column) (insert " ..."))
+            (if is-top-snippet
+                (setq is-top-snippet nil)
+              (unless (= previous-line lineno) (insert "\n"))))
+          (insert content)))
+      (unless (>= (overlay-end (car (last contexts))) (point-max))
+        (insert "\n..."))
+      (insert "\n```")))
+
+  ;; (undefadvice! +gptel-context--insert-buffer-string (orig-fn buffer contexts)
+  ;;   "add buffer file name"
+  ;;   :around #'gptel-context--insert-buffer-string
+  ;;   (when-let ((buf-file (buffer-file-name buffer)))
+  ;;     (let ((file-project-root (with-current-buffer buffer (doom-project-root))))
+  ;;       (insert! ("In file `%s` (file buffer name is `%s`%s):"
+  ;;                 buf-file
+  ;;                 (buffer-name buffer)
+  ;;                 (if file-project-root
+  ;;                     (format! ", file project root is at `%s`" file-project-root)
+  ;;                   "")))))
+  ;;   (funcall orig-fn buffer contexts))
 
   (defadvice! +gptel-mcp--activate-tools (_)
     :after #'gptel-mcp--activate-tools
