@@ -79,20 +79,6 @@ If FILE-PATH is relative, resolve it against the current project root."
                clojurescript-mode clojurec-mode common-lisp-mode
                lisp-interaction-mode)))
 
-(defun gptel-edit-tool--check-buffer-balanced-parens (buffer)
-  "Check if BUFFER has balanced parentheses for Lisp modes.
-Returns (BALANCED-P . ERROR-MESSAGE)."
-  (let ((major-mode (buffer-local-value 'major-mode buffer)))
-    (if (and (gptel-edit-tool--is-lisp-mode-p major-mode)
-             (fboundp 'sp-region-ok-p))
-        (with-current-buffer buffer
-          (condition-case err
-              (if (sp-region-ok-p (point-min) (point-max))
-                  (cons t nil)
-                (cons nil "Buffer has unbalanced parentheses"))
-            (error (cons nil (error-message-string err)))))
-      (cons t nil)))) ; Non-Lisp modes always pass
-
 ;;; Edit buffer preparation (adapted from gptel-rewrite)
 
 (defun gptel-edit-tool--prepare-edit-buffer (buffer old-string new-string)
@@ -183,30 +169,35 @@ Returns a message describing the result of the operation."
 
 ;;; Shared edit logic
 (defun gptel-edit-tool--edit-buffer-impl (buffer old-string new-string)
-  "Shared implementation for editing BUFFER by replacing OLD-STRING with NEW-STRING.
-Returns a string describing the result of the operation."
-  (let ((major-mode (buffer-local-value 'major-mode buffer))
-        (buffer-name (buffer-name buffer))
-        (temp-buffer nil))
+  "editing BUFFER by replacing OLD-STRING with NEW-STRING.
 
+Returns a string describing the result of the operation."
+  (let ((mj-mode (buffer-local-value 'major-mode buffer))
+        (buf-name (buffer-name buffer))
+        temp-buffer
+        rst-buffer-string
+        (edit-allowed t)
+        unbalance-error)
     ;; Check if old-string exists in buffer
     (with-current-buffer buffer
       (save-excursion
         (goto-char (point-min))
         (unless (search-forward old-string nil t)
-          (error "old-string not found in buffer: %s" buffer-name))))
-
-    ;; For Lisp code, check balance in a temp buffer after replacement
-    (when (gptel-edit-tool--is-lisp-mode-p major-mode)
+          (error "old-string not found in buffer: %s" buf-name))))
+    ;; For Lisp code, check balance in temp buffer after replacement (refuse edit if unbalanced)
+    (when (gptel-edit-tool--is-lisp-mode-p mj-mode)
       (unwind-protect
           (progn
             ;; Create temp buffer with the replacement applied
             (setq temp-buffer (generate-new-buffer " *gptel-balance-check*"))
             (with-current-buffer temp-buffer
+              (erase-buffer)
               ;; Copy original buffer content
               (insert-buffer-substring buffer)
               ;; Set the same major mode
-              (funcall major-mode)
+              mj-mode
+              (funcall mj-mode)
+              major-mode
               ;; Apply the replacement
               (goto-char (point-min))
               (when (search-forward old-string nil t)
@@ -215,17 +206,23 @@ Returns a string describing the result of the operation."
                   (goto-char start)
                   (delete-region start end)
                   (insert new-string)))
-              ;; Check balance of the entire buffer
-              (pcase-let ((`(,balanced-p . ,error-msg)
-                           (gptel-edit-tool--check-buffer-balanced-parens temp-buffer)))
-                (unless balanced-p
-                  (error "Buffer would have unbalanced parentheses after edit: %s" error-msg))))
-            ;; Cleanup temp buffer
-            (when temp-buffer
-              (kill-buffer temp-buffer))))
-
-      ;; Apply edit directly
-      (gptel-edit-tool--apply-edit-directly buffer old-string new-string))))
+              ;; Check balance (smartparens then parinfer)
+              (pcase-let
+                  ((`(,balanced-p . ,error-msg)
+                    (gptel-tools--check-buffer-balanced-parens temp-buffer)))
+                (if balanced-p
+                    (setq rst-buffer-string (buffer-string))
+                  (setq
+                   edit-allowed nil
+                   unbalance-error
+                   (or error-msg "Buffer would have unbalanced parentheses after edit and could not be auto-balanced."))))))
+        (when temp-buffer (kill-buffer temp-buffer))))
+    (if (not edit-allowed)
+        (error "%s" unbalance-error)
+      ;; Non-Lisp or balanced, so apply edit directly
+      (if  rst-buffer-string
+          (gptel-tools--replace-buffer-directly buffer rst-buffer-string)
+        (gptel-edit-tool--apply-edit-directly buffer old-string new-string)))))
 
 ;;; Main edit functions
 (defun gptel-edit-tool-edit-buffer (buffer-name old-string new-string)
@@ -279,7 +276,7 @@ Returns a string describing the result of the operation."
   (gptel-make-tool
    :name "edit-buffer"
    :function #'gptel-edit-tool-edit-buffer
-   :description "Edit a buffer by replacing old text with new text. When the file is a Lisp-family language, both old and new string are expected to be balanced s-expressions (like edit form, not arbitrary fragment) -- an error will be raised if either is unbalanced."
+   :description "Edit a buffer by replacing old text with new text."
    :args (list '(:name "buffer-name" :type string
                  :description "The name of the buffer to edit")
                '(:name "old-string" :type string
@@ -312,5 +309,4 @@ Returns a string describing the result of the operation."
   (interactive)
   (gptel-edit-tool--cleanup-temp-buffers))
 
-(provide 'gptel-edit-tool)
 ;;; gptel-edit-tool.el ends here

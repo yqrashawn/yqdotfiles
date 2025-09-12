@@ -11,49 +11,6 @@
 
 (declare-function sp-region-ok-p "smartparens")
 
-;;; Create file buffer utilities
-
-(defun gptel-tools--get-project-root ()
-  "Get project root for current context."
-  (if (fboundp '++workspace-current-project-root)
-      (++workspace-current-project-root)
-    (when (fboundp 'project-current)
-      (when-let ((project (project-current)))
-        (if (fboundp 'project-root)
-            (project-root project)
-          (car (project-roots project)))))))
-
-(defun gptel-tools--resolve-file-path (file-path)
-  "Resolve FILE-PATH to absolute path.
-If FILE-PATH is relative, resolve it against the current project root."
-  (if (file-name-absolute-p file-path)
-      file-path
-    (let ((project-root (gptel-tools--get-project-root)))
-      (if project-root
-          (expand-file-name file-path project-root)
-        (expand-file-name file-path default-directory)))))
-
-(defun gptel-tools--is-lisp-mode-p (mode)
-  "Check if MODE is a Lisp-related mode."
-  (memq mode '(emacs-lisp-mode lisp-mode clojure-mode scheme-mode
-               clojurescript-mode clojurec-mode common-lisp-mode
-               lisp-interaction-mode)))
-
-(defun gptel-tools--check-balanced-parens (text mode)
-  "Check if TEXT has balanced parentheses for Lisp MODE.
-Returns (BALANCED-P . ERROR-MESSAGE)."
-  (if (and (gptel-tools--is-lisp-mode-p mode)
-           (fboundp 'sp-region-ok-p))
-      (with-temp-buffer
-        (funcall mode)
-        (insert text)
-        (condition-case err
-            (if (sp-region-ok-p (point-min) (point-max))
-                (cons t nil)
-              (cons nil "Parentheses are not balanced"))
-          (error (cons nil (error-message-string err)))))
-    (cons t nil))) ; Non-Lisp modes always pass
-
 ;;; Create file buffer implementation
 
 (defun gptel-tools--create-file-buffer (file-path buffer-content-string)
@@ -75,7 +32,6 @@ This function:
 Returns a string describing the result of the operation."
   (let* ((resolved-path (gptel-tools--resolve-file-path file-path))
          (dir (file-name-directory resolved-path))
-         (file-name (file-name-nondirectory resolved-path))
          (existing-buffer (get-file-buffer resolved-path))
          (project-root (gptel-tools--get-project-root)))
 
@@ -84,16 +40,9 @@ Returns a string describing the result of the operation."
       (unless (y-or-n-p (format "File %s already exists. Overwrite? " file-path))
         (error "File creation cancelled: %s already exists" file-path)))
 
-    ;; Check if buffer is already open for this file
-    (when existing-buffer
-      (unless (y-or-n-p (format "Buffer for %s is already open. Replace content? " file-path))
-        (error "File creation cancelled: buffer for %s is already open" file-path)))
-
     ;; Create directory if it doesn't exist
     (unless (file-directory-p dir)
-      (if (y-or-n-p (format "Directory %s doesn't exist. Create it? " dir))
-          (make-directory dir t)
-        (error "File creation cancelled: directory %s doesn't exist" dir)))
+      (make-directory dir t))
 
     ;; Create or switch to buffer
     (let ((buffer (or existing-buffer (create-file-buffer resolved-path))))
@@ -104,36 +53,25 @@ Returns a string describing the result of the operation."
           (let ((inhibit-read-only t))
             (erase-buffer)))
 
-        ;; Insert the new content
-        (insert buffer-content-string)
+        (set-visited-file-name resolved-path t)
 
-        ;; Set the file name if it's a new buffer
-        (unless existing-buffer
-          (set-visited-file-name resolved-path t))
+        (gptel-edit-tool--edit-buffer-impl buffer "" buffer-content-string)
 
         ;; Determine and set major mode based on file extension
         (let ((auto-mode-alist auto-mode-alist))
           (set-auto-mode))
 
-        ;; Check balanced parentheses for Lisp code
-        (when (gptel-tools--is-lisp-mode-p major-mode)
-          (pcase-let ((`(,balanced-p . ,error-msg)
-                       (gptel-tools--check-balanced-parens buffer-content-string major-mode)))
-            (unless balanced-p
-              (error "Buffer content has unbalanced parentheses: %s" error-msg))))
+        (save-buffer)
 
         ;; Format buffer if LSP is available
         (when (and (fboundp 'lsp-format-buffer)
                    (bound-and-true-p lsp-mode))
           (condition-case err
-              (lsp-format-buffer)
+              (progn (lsp-format-buffer)
+                     (save-buffer))
             (error (message "LSP formatting failed: %s" err))))
 
-        ;; Save the buffer
-        (save-buffer)
-
         ;; Buffer created but not displayed to user
-
         (format "Successfully created file %s (resolved: %s) with %d characters (project: %s, mode: %s)"
                 file-path
                 resolved-path
@@ -156,17 +94,18 @@ Returns a string describing the result of the operation."
    :confirm nil
    :include t))
 
-
 ;;; Create temp file buffer tool implementation
 
-(defun gptel-tools--create-temp-file-buffer (&optional prefix suffix)
+(defun gptel-tools--create-temp-file-buffer
+    (buffer-content-string &optional prefix suffix)
   "Create a temp file, open a buffer for it (not displayed), and return the file path.
+
 PREFIX and SUFFIX are optional; default prefix is \"gptel-\".
 Buffer is not switched to or displayed. File is created and saved to disk."
   (let* ((tmp-path (make-temp-file (or prefix "gptel-") nil (or suffix "")))
          (buf (find-file-noselect tmp-path)))
-    (with-current-buffer buf
-      (save-buffer))
+    (gptel-edit-tool--edit-buffer-impl buf "" buffer-content-string)
+    (with-current-buffer buf (save-buffer))
     tmp-path))
 
 ;;; Register create_temp_file_buffer tool with gptel
@@ -176,6 +115,8 @@ Buffer is not switched to or displayed. File is created and saved to disk."
    :function #'gptel-tools--create-temp-file-buffer
    :description "Create a new temp file, open a buffer for it (without displaying), and return the file path. Optional args: prefix, suffix."
    :args (list
+          '(:name "buffer-content-string" :type string
+            :description "The complete content to write to the new file")
           '(:name "prefix" :type "string" :optional t
             :description "prefix for temp file name (default: gptel-)")
           '(:name "suffix" :type "string" :optional t
@@ -183,6 +124,9 @@ Buffer is not switched to or displayed. File is created and saved to disk."
    :category "emacs"
    :confirm nil
    :include t))
+
+(comment
+  (gptel-tools--create-temp-file-buffer "(comment)" nil ".el"))
 
 (provide 'create-file-buffer-tool)
 ;;; create-file-buffer-tool.el ends here
