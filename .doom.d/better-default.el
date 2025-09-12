@@ -983,3 +983,11 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 (use-package! launchctl :defer t)
 
 ;; (alert "this is an alert" :severity 'high :style 'notifier)
+
+(add-hook! 'kill-buffer-query-functions
+  (defun +tmp-file-skip-kill-buffer-offer-save ()
+    (when (and (buffer-modified-p)
+               (+tmp-file-p (buffer-file-name (current-buffer))))
+      (setq-local buffer-save-without-query t)
+      (save-buffer))
+    t))

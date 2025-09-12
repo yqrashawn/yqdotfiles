@@ -55,6 +55,7 @@
     (lambda (bname _action)
       (and (null gptel-display-buffer-action)
            (buffer-local-value 'gptel-mode (get-buffer bname))))
+    :autosave t
     :select t
     :side 'right
     :size 0.35
@@ -103,8 +104,6 @@
            :stream t
            :key +openrouter-api-key
            :models gptel--openrouter-models))
-  (setq! gptel-model 'gemini-2.5-pro)
-  (setq! gptel-model 'claude-sonnet-4)
   ;; self host claude code
   (setq! gptel--gh-claude-code
          (gptel-make-openai "CCode"
@@ -139,6 +138,9 @@
   (setq! gptel-backend gptel--gh-copilot-local)
   (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-backend gptel--gh-copilot-business)
+  (setq! gptel-model 'gemini-2.5-pro)
+  (setq! gptel-model 'claude-sonnet-4)
+  (setq! gptel-model 'gpt-4.1-2025-04-14)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   (setq! gptel-log-level 'debug)

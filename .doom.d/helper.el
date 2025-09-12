@@ -175,3 +175,8 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (or (persp-parameter '+workspace-project (+workspace-current))
       (when (string= (+workspace-current-name) "main")
         (expand-file-name "~/.nixpkgs"))))
+
+(defun +tmp-file-p (file-path)
+  (or
+   (string-prefix-p "/private/var/folders" file-path)
+   (string-prefix-p "/tmp" file-path)))
