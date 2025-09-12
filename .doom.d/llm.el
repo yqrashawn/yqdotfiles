@@ -70,8 +70,12 @@
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
   (set-popup-rule!
     (lambda (bname _action)
-      (and (null gptel-display-buffer-action)
-           (buffer-local-value 'gptel-mode (get-buffer bname))))
+      (let ((b (get-buffer bname)))
+        (and (null gptel-display-buffer-action)
+             (or (buffer-local-value 'gptel-mode b)
+                 (and (buffer-file-name b)
+                      (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
+                                      (buffer-file-name (current-buffer))))))))
     :autosave t
     :select t
     :side 'right
