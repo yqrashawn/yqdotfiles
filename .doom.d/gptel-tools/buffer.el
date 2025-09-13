@@ -25,22 +25,23 @@
 ;;; Tool registration
 
 ;; Register the get buffer file path tool and get file buffer name tool with gptel
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "get_buffer_file_path"
    :function #'gptelt--get-buffer-file-path
    :description "Given a buffer_name, return the file path that the buffer is visiting"
    :args '((:name "buffer_name" :type string
             :description "buffer name"))
-   :category "emacs"
+   :category "buffer"
    :confirm nil
    :include t)
-  (gptel-make-tool
+
+  (gptelt-make-tool
    :name "get_file_buffer_name"
    :function #'gptelt--get-file-buffer-name
    :description "Given a file_path, return the buffer name that is visiting the file or nil."
    :args '((:name "file_path" :type string :description "absolute file path"))
-   :category "emacs"
+   :category "buffer"
    :confirm nil
    :include t))
 
@@ -69,30 +70,29 @@
 ;;; Tool registration
 
 ;; Register the list buffers tool and filter tool with gptel
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
-   :name "list_buffers"
-   :function #'gptelt-list-buffers
-   :description "Return a list of all visible buffer names (strings)."
-   :args nil
-   :category "emacs"
-   :confirm nil
-   :include t)
-  (gptel-make-tool
-   :name "filter_buffers_regex"
-   :function #'gptelt-filter-buffers-regex
-   :description "Return a list of buffer names matching given pattern (regex string)."
-   :args '((:name "pattern" :type string :description "regex pattern to match buffer names"))
-   :category "emacs"
-   :confirm nil
-   :include t)
-  (gptel-make-tool
-   :name "visible_buffers"
-   :function #'gptelt-visible-buffers
-   :description "Return a list of buffer names that are currently visible in windows to the user, user usually want to change these buffers."
-   :args nil
-   :category "emacs"
-   :confirm nil
-   :include t))
+(gptelt-make-tool
+ :name "list_buffers"
+ :function #'gptelt-list-buffers
+ :description "Return a list of all visible buffer names (strings)."
+ :args '()
+ :category "buffer"
+ :confirm nil
+ :include t)
+(gptelt-make-tool
+ :name "filter_buffers_regex"
+ :function #'gptelt-filter-buffers-regex
+ :description "Return a list of buffer names matching given pattern (regex string)."
+ :args '((:name "pattern" :type string :description "regex pattern to match buffer names"))
+ :category "buffer"
+ :confirm nil
+ :include t)
+(gptelt-make-tool
+ :name "visible_buffers"
+ :function #'gptelt-visible-buffers
+ :description "Return a list of buffer names that are currently visible in windows to the user, user usually want to change these buffers."
+ :args nil
+ :category "buffer"
+ :confirm nil
+ :include t)
 
 ;;; buffer-tool.el ends here

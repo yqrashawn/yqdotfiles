@@ -268,8 +268,8 @@ Returns a string describing the result of the operation."
     (gptelt-edit--edit-buffer-impl buffer old-string new-string replace-all)))
 
 ;;; Tool registration
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "edit_buffer"
    :function #'gptelt-edit-edit-buffer
    :description "Performs exact string replacements in buffers"
@@ -285,8 +285,8 @@ Returns a string describing the result of the operation."
    :confirm nil
    :include t))
 
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "edit_file"
    :function #'gptelt-edit-edit-file
    :description "Performs exact string replacements in files"
@@ -353,8 +353,8 @@ Returns a string describing the result."
    "gptelt-wZh7RJ"
    (list (list :old_string "a11" :new_string "a11"))))
 
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "multi_edit_buffer"
    :function #'gptelt-edit-multi-edit-buffer
    :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair."
@@ -382,8 +382,8 @@ Returns a string describing the result."
    :confirm nil
    :include t))
 
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "multi_edit_file"
    :function #'gptelt-edit-multi-edit-file
    :description "Apply multiple edits to a single file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. Each edit operates on the result of the previous edit. The file is opened if not already, all edits are applied in order, and saved."
@@ -391,12 +391,18 @@ Returns a string describing the result."
             :description "absolute or relative file path to the file to edit, `~/` is supported")
            (:name "edits"
             :type array
-            :items (:type object
-                    :properties (:old_string (:type string :description "The exact text to be replaced")
-                                 :new_string (:type string :description "The new text to replace the old text with")
-                                 :replace_all (:type boolean :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
-                    :required ["old_string" "new_string"]
-                    :description "An object with old_string, new_string, and optional replace_all fields for each edit.")
+            :items
+            (:type object
+             :properties
+             (:old_string (:type string
+                           :description "The exact text to be replaced")
+                          :new_string (:type string
+                                       :description "The new text to replace the old text with")
+                          :replace_all (:type boolean
+                                        :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence."
+                                        :optional t))
+             :required ["old_string" "new_string"]
+             :description "An object with old_string, new_string, and optional replace_all fields for each edit.")
             :description "List of edits: each element is an object with old_string, new_string, and optional replace_all fields, applied sequentially."))
    :category "emacs"
    :confirm nil

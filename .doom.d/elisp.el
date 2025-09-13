@@ -55,6 +55,8 @@
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
     (mcp-server-lib-install))
+  (comment
+    (mcp-server-lib-stop))
   (mcp-server-lib-start))
 
 (use-package! elisp-dev-mcp

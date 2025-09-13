@@ -13,8 +13,8 @@
 
 ;;; Create file buffer implementation
 
-(defun gptelt--create-file-buffer (file-path buffer-content-string)
-  "Create a new file buffer with FILE-PATH and BUFFER-CONTENT-STRING.
+(defun gptelt--create-file-buffer (file-path content-string)
+  "Create a new file buffer with FILE-PATH and CONTENT-STRING.
 
 FILE-PATH must be an absolute path.
 
@@ -51,7 +51,7 @@ Returns a string describing the result of the operation."
 
         (set-visited-file-name resolved-path t)
 
-        (gptelt-edit--edit-buffer-impl buffer "" buffer-content-string)
+        (gptelt-edit--edit-buffer-impl buffer "" content-string)
 
         ;; Determine and set major mode based on file extension
         (let ((auto-mode-alist auto-mode-alist))
@@ -71,45 +71,47 @@ Returns a string describing the result of the operation."
         (format "Successfully created file %s (resolved: %s) with %d characters (project: %s, mode: %s)"
                 file-path
                 resolved-path
-                (length buffer-content-string)
+                (length content-string)
                 project-root
                 major-mode)))))
 
 ;;; Tool registration
 ;; Register the create file buffer tool with gptel
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "create_file_buffer"
    :function #'gptelt--create-file-buffer
    :description "Create a new file with specified content. Only accepts absolute file paths."
-   :args '((:name "file_path" :type string
+   :args '((:name "file_path"
+            :type string
             :description "Absolute path where the new file should be created (must be absolute, not relative)")
-           '(:name "buffer_content_string" :type string
-             :description "The complete content to write to the new file"))
+           (:name "content_string"
+            :type string
+            :description "The complete content to write to the new file"))
    :category "emacs"
    :confirm nil
    :include t))
 
 ;;; Create temp file buffer tool implementation
 
-(defun gptelt--create-temp-file-buffer (buffer-content-string &optional prefix suffix)
+(defun gptelt--create-temp-file-buffer (content-string &optional prefix suffix)
   "Create a temp file, open a buffer for it (not displayed), and return the file path.
 
 PREFIX and SUFFIX are optional; default prefix is \"gptelt-\".
 Buffer is not switched to or displayed. File is created and saved to disk."
   (let* ((tmp-path (make-temp-file (or prefix "gptelt-") nil (or suffix "")))
          (buf (find-file-noselect tmp-path)))
-    (gptelt-edit--edit-buffer-impl buf "" buffer-content-string)
+    (gptelt-edit--edit-buffer-impl buf "" content-string)
     (with-current-buffer buf (save-buffer))
     tmp-path))
 
 ;;; Register create_temp_file_buffer tool with gptel
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "create_temp_file_buffer"
    :function #'gptelt--create-temp-file-buffer
    :description "Create a new temp file with specified content and return the temp file path."
-   :args '((:name "buffer_content_string" :type string
+   :args '((:name "content_string" :type string
             :description "The complete content to write to the new file")
            (:name "prefix" :type "string" :optional t
             :description "prefix for temp file name (default: gptelt-)")

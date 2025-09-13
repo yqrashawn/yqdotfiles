@@ -139,42 +139,53 @@ Returns a list of search results with file paths, line numbers, and content."
 ;;; Tool registration
 
 ;; Register file finding tools
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
-   :name "glob"
-   :function #'gptelt-rg-tool-glob
-   :description "- Fast file pattern matching tool that works with any codebase size
-- Supports glob patterns like \"**/*.clj\" or \"src/**/*.{clj,cljs,cljc}\"
-- Returns matching file paths sorted by modification time
-- Use this tool when you need to find files by name patterns"
-   :args '((:name "pattern" :type string
-            :description "The glob pattern to match files against")
-           (:name "path" :type string :optional t
-            :description "The directory to search in. Defaults to the current project root.")
-           (:name "max_results" :type integer :optional t
-            :description "Maximum number of results to return (default: 50)"))
-   :category "file-search"
-   :confirm nil
-   :include t)
+(gptelt-make-tool
+ :name "glob"
+ :function #'gptelt-rg-tool-glob
+ :description "- Fast file pattern matching tool that works with any codebase size
+  - Supports glob patterns like \"**/*.clj\" or \"src/**/*.{clj,cljs,cljc}\"
+  - Returns matching file paths sorted by modification time
+  - Use this tool when you need to find files by name patterns"
+ :args '((:name "pattern"
+          :type string
+          :description "The glob pattern to match files against")
+         (:name "path"
+          :type string
+          :optional t
+          :description "The directory to search in. Defaults to the current project root.")
+         (:name "max_results"
+          :type integer
+          :optional t
+          :description "Maximum number of results to return (default: 50)"))
+ :category "file-search"
+ :confirm nil
+ :include t)
 
-  (gptel-make-tool
-   :name "grep"
-   :function #'gptelt-rg-tool-search-regex
-   :description "
-- Fast content search tool that works with any codebase size
-- Searches file contents using regular expressions
-- Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)
-- Filter files by pattern with the include parameter (eg. \"*.js\", \"*.{ts,tsx}\")
-- Returns matching file paths sorted by modification time
-- Use this tool when you need to find files containing specific patterns "
-   :args '((:name "pattern" :type string
-            :description "The regular expression pattern to search for in file contents")
-           (:name "path" :type string :optional t
-            :description "The directory to search in. Defaults to the current project root.")
-           (:name "include" :type string :optional t
-            :description "File pattern to include in the search (e.g. '*.js', '*.{ts,tsx}')")
-           (:name "max_results" :type integer :optional t
-            :description "Maximum results (default: 50)"))
-   :category "content-search"
-   :confirm nil
-   :include t))
+(gptelt-make-tool
+ :name "grep"
+ :function #'gptelt-rg-tool-search-regex
+ :description "
+  - Fast content search tool that works with any codebase size
+  - Searches file contents using regular expressions
+  - Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)
+  - Filter files by pattern with the include parameter (eg. \"*.js\", \"*.{ts,tsx}\")
+  - Returns matching file paths sorted by modification time
+  - Use this tool when you need to find files containing specific patterns "
+ :args '((:name "pattern"
+          :type string
+          :description "The regular expression pattern to search for in file contents")
+         (:name "path"
+          :type string
+          :optional t
+          :description "The directory to search in. Defaults to the current project root.")
+         (:name "include"
+          :type string
+          :optional t
+          :description "File pattern to include in the search (e.g. '*.js', '*.{ts,tsx}')")
+         (:name "max_results"
+          :type integer
+          :optional t
+          :description "Maximum results (default: 50)"))
+ :category "content-search"
+ :confirm nil
+ :include t)

@@ -10,9 +10,22 @@
 (load! "gptel-tools/ripgrep.el")
 (load! "gptel-tools/elisp.el")
 
+(comment
+  (+gptel-reload-tools)
+
+  (mcp-stop-server "emacs")
+  (mcp-hub--start-server
+   (cl-find "emacs" mcp-hub-servers :key #'car :test #'equal)))
+
 (defun +gptel-reload-tools ()
   (interactive)
+  (setq mcp-server-lib--tools (make-hash-table :test 'equal))
   (setq gptel--known-tools nil)
+  (mcp-stop-server "emacs")
+  (load! "gptel-tools.el")
+  (mcp-hub--start-server
+   (cl-find "emacs" mcp-hub-servers :key #'car :test #'equal)
+   nil t)
   (gptel-mcp-connect)
   (load! "gptel-tools.el")
   (+gptel-make-my-presets))

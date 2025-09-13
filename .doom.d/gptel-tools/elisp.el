@@ -104,8 +104,8 @@
   (gptelt-run-ert-test "list-buffers-test"))
 
 ;;; gptel tool registration
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "evaluate_elisp_buffer"
    :function #'gptelt-evaluate-elisp-buffer
    :description "Evaluate emacs-lisp-mode a buffer by buffer name."
@@ -114,7 +114,7 @@
    :confirm nil
    :include t)
 
-  (gptel-make-tool
+  (gptelt-make-tool
    :name "evaluate_elisp_file"
    :function #'gptelt-evaluate-elisp-file
    :description "Evaluate a \".el\" file by loading it as a buffer and evaluating."
@@ -125,7 +125,7 @@
    :confirm nil
    :include t)
 
-  (gptel-make-tool
+  (gptelt-make-tool
    :name "run_ert_test"
    :function #'gptelt-run-ert-test
    :description "Run Emacs ERT test(s) by selector regex, return summary report."
@@ -134,7 +134,7 @@
    :confirm nil
    :include t)
 
-  (gptel-make-tool
+  (gptelt-make-tool
    :name "evaluate_elisp_string"
    :function #'gptelt-evaluate-elisp-string
    :description "Evaluate emacs-lisp code from a string in a temp buffer, after user confirmation. Returns the result string."

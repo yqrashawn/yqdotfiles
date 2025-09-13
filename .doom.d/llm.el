@@ -49,8 +49,15 @@
        (let ((category (car x)))
          (seq-map 'car (alist-get category gptel--known-tools))))
      gptel--known-tools))
-  (gptel--apply-preset 'default))
 
+  (gptel-make-preset 'claude
+    :description "claude code"
+    :backend "CCode"
+    :model 'sonnet
+    :parents '(default)
+    :tools '())
+  (gptel--apply-preset 'default)
+  (gptel--apply-preset 'claude))
 
 (use-package! gptel
   :commands (gptel)
@@ -166,7 +173,6 @@
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   (setq! gptel-log-level 'debug)
   (setq! gptel-log-level 'nil)
-  (load! "gptel-tools.el")
 
   (el-patch-defun gptel-context--insert-buffer-string (buffer contexts)
     "Insert at point a context string from all CONTEXTS in BUFFER."
@@ -227,6 +233,7 @@
   :config
   (require 'gptel-integrations)
   (require 'mcp-hub)
+  (load! "gptel-tools.el")
   (mcp-hub-start-all-server
    (lambda ()
      (gptel-mcp-connect)

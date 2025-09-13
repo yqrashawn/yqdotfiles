@@ -6,7 +6,6 @@
 ;;  - Read a buffer's content by buffer name.
 
 ;;; Code:
-
 (defun gptelt-read-file (file_path &optional offset limit)
   "Return up to LIMIT lines (default 2000) from FILE_PATH (must be absolute), starting at OFFSET (default 0). Return nil if not readable."
   (unless (and (stringp file_path) (file-name-absolute-p file_path))
@@ -37,8 +36,8 @@
           (buffer-substring-no-properties start (point)))))))
 
 ;; Register the file and buffer reading tools with gptel
-(when (fboundp 'gptel-make-tool)
-  (gptel-make-tool
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
    :name "read_file"
    :function #'gptelt-read-file
    :description (concat "Read a file from the local filesystem. "
@@ -54,7 +53,7 @@
    :category "emacs"
    :confirm nil
    :include t)
-  (gptel-make-tool
+  (gptelt-make-tool
    :name "read_buffer"
    :function #'gptelt-read-buffer
    :description (concat "Read a buffer by buffer name. "
