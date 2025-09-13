@@ -66,6 +66,7 @@
   ;;   (+gptel-kill-default-buffer))
   :config
   (require 'gptel-context)
+  (require 'pcre2el)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
   (set-popup-rule!
@@ -75,7 +76,7 @@
              (or (buffer-local-value 'gptel-mode b)
                  (and (buffer-file-name b)
                       (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
-                                      (buffer-file-name (current-buffer))))))))
+                                      (buffer-file-name b)))))))
     :autosave t
     :select t
     :side 'right
@@ -207,8 +208,8 @@
                 (setq is-top-snippet nil)
               (unless (= previous-line lineno) (insert "\n"))))
           (insert content)))
-      (unless (>= (log/spy (overlay-end (car (last contexts))))
-                  (log/spy (point-max)))
+      (unless (>= (overlay-end (car (last contexts)))
+                  (point-max))
         (insert "\n..."))
       (insert "\n```")))
 

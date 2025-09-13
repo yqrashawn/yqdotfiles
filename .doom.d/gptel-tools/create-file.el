@@ -16,11 +16,10 @@
 (defun gptel-tools--create-file-buffer (file-path buffer-content-string)
   "Create a new file buffer with FILE-PATH and BUFFER-CONTENT-STRING.
 
-FILE-PATH can be absolute or relative. If relative, it will be resolved
-against the current project root.
+FILE-PATH must be an absolute path.
 
 This function:
-1. Resolves the file path (relative to project root if needed)
+1. Ensures the file path is absolute
 2. Checks if the file already exists and prompts for confirmation if it does
 3. Creates the directory structure if it doesn't exist
 4. Creates a new buffer with the specified content
@@ -30,15 +29,12 @@ This function:
 8. Saves the buffer to the specified file path
 
 Returns a string describing the result of the operation."
-  (let* ((resolved-path (gptel-tools--resolve-file-path file-path))
+  (unless (file-name-absolute-p file-path)
+    (error "file_path must be an absolute path"))
+  (let* ((resolved-path file-path)
          (dir (file-name-directory resolved-path))
          (existing-buffer (get-file-buffer resolved-path))
          (project-root (gptel-tools--get-project-root)))
-
-    ;; Check if file already exists
-    (when (file-exists-p resolved-path)
-      (unless (y-or-n-p (format "File %s already exists. Overwrite? " file-path))
-        (error "File creation cancelled: %s already exists" file-path)))
 
     ;; Create directory if it doesn't exist
     (unless (file-directory-p dir)
@@ -83,12 +79,12 @@ Returns a string describing the result of the operation."
 ;; Register the create file buffer tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "create-file-buffer"
+   :name "create_file_buffer"
    :function #'gptel-tools--create-file-buffer
-   :description "Create a new file buffer with specified content. Creates directory structure if needed and sets appropriate major mode."
-   :args (list '(:name "file-path" :type string
-                 :description "absolute or relative file path where the new file should be created, `~/` is supported")
-               '(:name "buffer-content-string" :type string
+   :description "Create a new file with specified content. Only accepts absolute file paths."
+   :args (list '(:name "file_path" :type string
+                 :description "Absolute path where the new file should be created (must be absolute, not relative)")
+               '(:name "buffer_content_string" :type string
                  :description "The complete content to write to the new file"))
    :category "emacs"
    :confirm nil
@@ -96,8 +92,7 @@ Returns a string describing the result of the operation."
 
 ;;; Create temp file buffer tool implementation
 
-(defun gptel-tools--create-temp-file-buffer
-    (buffer-content-string &optional prefix suffix)
+(defun gptel-tools--create-temp-file-buffer (buffer-content-string &optional prefix suffix)
   "Create a temp file, open a buffer for it (not displayed), and return the file path.
 
 PREFIX and SUFFIX are optional; default prefix is \"gptel-\".
@@ -111,11 +106,11 @@ Buffer is not switched to or displayed. File is created and saved to disk."
 ;;; Register create_temp_file_buffer tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "create-temp-file-buffer"
+   :name "create_temp_file_buffer"
    :function #'gptel-tools--create-temp-file-buffer
-   :description "Create a new temp file, open a buffer for it (without displaying), and return the file path. Optional args: prefix, suffix."
+   :description "Create a new temp file with specified content and return the temp file path."
    :args (list
-          '(:name "buffer-content-string" :type string
+          '(:name "buffer_content_string" :type string
             :description "The complete content to write to the new file")
           '(:name "prefix" :type "string" :optional t
             :description "prefix for temp file name (default: gptel-)")

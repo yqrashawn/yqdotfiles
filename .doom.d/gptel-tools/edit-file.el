@@ -1,37 +1,17 @@
 ;;; .nixpkgs/.doom.d/gptel-tools/edit-tool.el -*- lexical-binding: t; -*-
 ;;; Commentary:
 
-;; Improved implementation of gptel edit tool using ediff instead of smerge.
-;; Inspired by and reuses patterns from gptel-rewrite.el.
-
 ;;; Code:
 
 (require 'gptel)
-(require 'ediff)
 (require 'smartparens nil t)
 
 (declare-function sp-region-ok-p "smartparens")
-(declare-function ediff-setup-windows-plain "ediff-wind")
-
-;;; Edit buffer
-;;
-;; Flow:
-;; - Read the file if there's no buffer for it in Emacs
-;; - Generate context based on file-path:
-;;   - file-buffer
-;;   - project-root with `++workspace-current-project-root'
-;;   - buffer major-mode
-;;   - buffer minor-modes
-;; - If is Lisp (elisp, clojure, scheme ...) code, use `sp-region-ok-p' to check the new-string is balanced
-;; - Use patch, ediff, smerge-mode and hydra-smerge/body to show diffs and let user decide
-;; - Use `lsp-format-region' to format the changed region if `lsp-mode' is enabled in the buffer
 
 ;;; Variables
 (defvar gptel-edit-tool--temp-buffers nil
   "List of temporary buffers created by edit tool for cleanup.")
 
-;; Test comment added by edit_buffer tool
-;; Test comment added by edit_file tool
 
 ;;; Utility functions (reused from gptel-tools.el)
 
@@ -56,8 +36,10 @@ If FILE-PATH is relative, resolve it against the current project root."
         (expand-file-name file-path default-directory)))))
 
 (defun gptel-edit-tool--get-buffer-context (file-path)
-  "Generate context information for FILE-PATH including buffer, project, and mode info."
-  (let* ((resolved-path (gptel-edit-tool--resolve-file-path file-path))
+  "Generate context information for FILE-PATH (must be absolute path) including buffer, project, and mode info."
+  (unless (file-name-absolute-p file-path)
+    (error "file-path must be an absolute path"))
+  (let* ((resolved-path file-path)
          (buffer (or (get-file-buffer resolved-path)
                      (when (file-exists-p resolved-path)
                        (find-file-noselect resolved-path))))
@@ -80,10 +62,8 @@ If FILE-PATH is relative, resolve it against the current project root."
                lisp-interaction-mode)))
 
 ;;; Edit buffer preparation (adapted from gptel-rewrite)
-
 (defun gptel-edit-tool--prepare-edit-buffer (buffer old-string new-string)
   "Prepare new buffer with edit applied and return it.
-This is used for ediff purposes, adapted from gptel--rewrite-prepare-buffer.
 
 BUFFER is the original buffer.
 OLD-STRING is the text to be replaced.
@@ -220,9 +200,12 @@ Returns a string describing the result of the operation."
     (if (not edit-allowed)
         (error "%s" unbalance-error)
       ;; Non-Lisp or balanced, so apply edit directly
-      (if  rst-buffer-string
-          (gptel-tools--replace-buffer-directly buffer rst-buffer-string)
-        (gptel-edit-tool--apply-edit-directly buffer old-string new-string)))))
+      (let ((rst-message
+             (if rst-buffer-string
+                 (gptel-tools--replace-buffer-directly buffer rst-buffer-string)
+               (gptel-edit-tool--apply-edit-directly buffer old-string new-string))))
+        (+gptel-context-add-buffer buffer)
+        rst-message))))
 
 ;;; Main edit functions
 (defun gptel-edit-tool-edit-buffer (buffer-name old-string new-string)
@@ -246,11 +229,10 @@ Returns a string describing the result of the operation."
 (defun gptel-edit-tool-edit-file (file-path old-string new-string)
   "Edit file by replacing OLD-STRING with NEW-STRING in FILE-PATH.
 
-FILE-PATH can be absolute or relative. If relative, it will be resolved
-against the current project root.
+FILE-PATH must be an absolute path.
 
 This function:
-1. Resolves the file path (relative to project root if needed)
+1. Ensures file-path is absolute
 2. Reads the file if no buffer exists for it
 3. Generates context (project root, major mode, minor modes)
 4. Validates balanced parentheses for Lisp code
@@ -258,6 +240,8 @@ This function:
 6. Formats the changed region if LSP is available
 
 Returns a string describing the result of the operation."
+  (unless (file-name-absolute-p file-path)
+    (error "file-path must be an absolute path"))
   (let* ((context (gptel-edit-tool--get-buffer-context file-path))
          (buffer (plist-get context :buffer))
          (resolved-path (plist-get context :file-path))
@@ -270,44 +254,35 @@ Returns a string describing the result of the operation."
     (gptel-edit-tool--edit-buffer-impl buffer old-string new-string)))
 
 ;;; Tool registration
-
-;; Register the edit_buffer tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "edit-buffer"
+   :name "edit_buffer"
    :function #'gptel-edit-tool-edit-buffer
    :description "Edit a buffer by replacing old text with new text."
-   :args (list '(:name "buffer-name" :type string
+   :args (list '(:name "buffer_name" :type string
                  :description "The name of the buffer to edit")
-               '(:name "old-string" :type string
+               '(:name "old_string" :type string
                  :description "The exact text to be replaced")
-               '(:name "new-string" :type string
+               '(:name "new_string" :type string
                  :description "The new text to replace the old text with"))
    :category "emacs"
    :confirm nil
    :include t))
 
-;; Register the edit_file tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "edit-file"
+   :name "edit_file"
    :function #'gptel-edit-tool-edit-file
-   :description "Edit a file by replacing old text with new text."
-   :args (list '(:name "file-path" :type string
-                 :description "Absolute or relative file path to the file to edit, `~/` is supported")
-               '(:name "old-string" :type string
+   :description "Edit a file by replacing old text with new text. Only accepts absolute file paths."
+   :args (list '(:name "file_path" :type string
+                 :description "Absolute path to the file to edit (must be absolute, not relative)")
+               '(:name "old_string" :type string
                  :description "The exact text to be replaced")
-               '(:name "new-string" :type string
+               '(:name "new_string" :type string
                  :description "The new text to replace the old text with"))
    :category "emacs"
    :confirm nil
    :include t))
-
-;;; Cleanup function for manual use
-(defun gptel-edit-tool-cleanup ()
-  "Manually clean up any remaining temporary buffers from edit operations."
-  (interactive)
-  (gptel-edit-tool--cleanup-temp-buffers))
 
 
 ;;; Multi-edit logic
@@ -399,28 +374,41 @@ Returns a string describing the result."
 
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "multi-edit-buffer"
+   :name "multi_edit_buffer"
    :function #'gptel-edit-tool-multi-edit-buffer
-   :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old-string . new-string) pair."
-   :args (list '(:name "buffer-name" :type string
+   :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair."
+   :args (list '(:name "buffer_name" :type string
                  :description "The name of the buffer to edit")
-               '(:name "edit-list" :type list
-                 :description "List of cons cells (old-string . new-string) to replace, sequentially"))
+               '(:name "edit_list"
+                 :type array
+                 :items (:type object
+                         :properties (:old_string (:type string :description "The exact text to be replaced")
+                                      :new_string (:type string :description "The new text to replace the old text with"))
+                         :required ["old_string" "new_string"]
+                         :description "An object with old_string and new_string fields for each edit.")
+                 :description "List of edits: each element is an object with old_string and new_string fields, applied sequentially."))
    :category "emacs"
    :confirm nil
    :include t))
 
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
-   :name "multi-edit-file"
+   :name "multi_edit_file"
    :function #'gptel-edit-tool-multi-edit-file
-   :description "Apply multiple edits to a file by replacing a list of old texts with new texts, sequentially. Each edit is a (old-string . new-string) pair. The file is opened if not already, all edits are applied in order, and saved. For Lisp-family languages, raises error if buffer is unbalanced after all edits."
-   :args (list '(:name "file-path" :type string
+   :description "Apply multiple edits to a file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. The file is opened if not already, all edits are applied in order, and saved."
+   :args (list '(:name "file_path" :type string
                  :description "absolute or relative file path to the file to edit, `~/` is supported")
-               '(:name "edit-list" :type list
-                 :description "List of cons cells (old-string . new-string) to replace, sequentially"))
+               '(:name "edit_list"
+                 :type array
+                 :items (:type object
+                         :properties (:old_string (:type string :description "The exact text to be replaced")
+                                      :new_string (:type string :description "The new text to replace the old text with"))
+                         :required ["old_string" "new_string"]
+                         :description "An object with old_string and new_string fields for each edit.")
+                 :description "List of edits: each element is an object with old_string and new_string fields, applied sequentially."))
    :category "emacs"
    :confirm nil
    :include t))
+
 
 ;;; gptel-edit-tool.el ends here

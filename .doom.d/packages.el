@@ -440,6 +440,7 @@
 (package! mcp-server-lib)
 (package! elisp-dev-mcp)
 (package! list-utils)
+(package! pcre2el)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

@@ -17,14 +17,10 @@
           (car (project-roots project)))))))
 
 (defun gptel-tools--resolve-file-path (file-path)
-  "Resolve FILE-PATH to absolute path.
-If FILE-PATH is relative, resolve it against the current project root."
-  (if (file-name-absolute-p file-path)
-      file-path
-    (let ((project-root (gptel-tools--get-project-root)))
-      (if project-root
-          (expand-file-name file-path project-root)
-        (expand-file-name file-path default-directory)))))
+  "Resolve FILE-PATH to absolute path. Only accepts absolute paths."
+  (unless (file-name-absolute-p file-path)
+    (error "file_path must be an absolute path"))
+  file-path)
 
 ;;; Mode/Lisp checks
 (defun gptel-tools--is-lisp-mode-p (mode)

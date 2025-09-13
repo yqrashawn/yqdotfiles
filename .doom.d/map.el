@@ -371,6 +371,7 @@
   :desc "Italic" "i" (lambda () (interactive) (ct/org-emphasize-below-point ?/))
   :desc "Underscore" "u" (lambda () (interactive) (ct/org-emphasize-below-point ?_))
   :desc "Verbatim" "v" (lambda () (interactive) (ct/org-emphasize-below-point ?=))
+  :desc "Verbatim" "j" (lambda () (interactive) (ct/org-emphasize-below-point ?=))
   :desc "Code" "c" (lambda () (interactive) (ct/org-emphasize-below-point ?~))
   :desc "Stripe-through" "s" (lambda () (interactive) (ct/org-emphasize-below-point ?+)))
  ;; (:map +thing-edit-map
