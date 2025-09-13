@@ -17,5 +17,7 @@
     (unwind-protect
         (progn
           (with-current-buffer buf (insert "ReadBufferTest123\nfoobar\n"))
-          (should (string-match-p "ReadBufferTest123" (gptelt-read-buffer "gptelt-read-buffer-test" 0 10))))
+          (should (string-match-p
+                   "ReadBufferTest123"
+                   (gptelt-read-buffer "gptelt-read-buffer-test" 0 10))))
       (kill-buffer buf))))
