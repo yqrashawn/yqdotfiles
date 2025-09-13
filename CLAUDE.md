@@ -6,8 +6,13 @@ This file provides guidance to LLM when working with code in `<project-root>/.do
 
 The `.doom.d/` directory contains a comprehensive Doom Emacs configuration with extensive customizations:
 
+### Instructions
+- use `get_buffer_file_path` tool to get absolute path of a buffer
+- whenever working on emacs lisp buffer `foo.el`, evaluate the buffer after changes made, check `foo-test.el` at the same directory see if corresponding test is missing or outdated
+
 ### Run Tests
 - use `run_ert_test` tool to run Emacs ERT tests
+- evaluate test file before run the test, test files are not loaded by default
 
 ### Core Files
 - **init.el**: Doom module configuration and feature flags

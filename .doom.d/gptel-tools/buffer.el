@@ -31,7 +31,7 @@
   (gptel-make-tool
    :name "get_buffer_file_path"
    :function #'gptel-tools--get-buffer-file-path
-   :description "Given a buffer-name, return the file path that the buffer is visiting or nil"
+   :description "Given a buffer_name, return the file path that the buffer is visiting"
    :args '((:name "buffer_name" :type string
             :description "buffer name"))
    :category "emacs"
@@ -40,7 +40,7 @@
   (gptel-make-tool
    :name "get_file_buffer_name"
    :function #'gptel-tools--get-file-buffer-name
-   :description "Given a file-path, return the buffer name that is visiting the file or nil."
+   :description "Given a file_path, return the buffer name that is visiting the file or nil."
    :args '((:name "file_path" :type string :description "absolute file path"))
    :category "emacs"
    :confirm nil

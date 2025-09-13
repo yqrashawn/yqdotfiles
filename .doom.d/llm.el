@@ -115,7 +115,7 @@
       (+gptel-context-add-buffer b))
     (when-let ((root (++workspace-current-project-root)))
       (dolist (f +llm-project-default-files)
-        (when-let ((b (get-file-buffer (format "%s%s" root f))))
+        (when-let ((b (get-file-buffer (format "%s/%s" root f))))
           (+gptel-context-add-buffer b)))))
 
   (setq! gptel--openrouter
@@ -217,8 +217,8 @@
     :after #'gptel-mcp--activate-tools
     (+gptel-make-my-presets))
 
-  (defadvice! +gptel-make-tool (_)
-    :after #'+gptel-make-tool
+  (defadvice! +gptel-make-tool (&rest args)
+    :after #'gptel-make-tool
     (+gptel-make-my-presets)))
 
 ;;; mcp

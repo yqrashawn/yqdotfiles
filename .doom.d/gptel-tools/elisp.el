@@ -39,6 +39,30 @@
     (error "File %s is not an .el file" file-path))
   (gptel-evaluate-elisp-buffer (find-file-noselect file-path)))
 
+;;; Tool: Evaluate Elisp String (put string in temp buffer, eval after confirmation, return result)
+(defun gptel-evaluate-elisp-string (elisp-string)
+  "Put ELISP-STRING into a temp buffer for confirmation, then eval using (eval (read ...)), return result."
+  (interactive)
+  (let* ((buf (generate-new-buffer " *gptel-eval-elisp*"))
+         (eval-result nil)
+         (eval-err nil)
+         win)
+    (with-current-buffer buf
+      (emacs-lisp-mode)
+      (insert elisp-string)
+      (goto-char (point-min)))
+    (setq win (display-buffer buf))
+    (when (y-or-n-p "Evaluate elisp string in temp buffer? ")
+      (condition-case err
+          (setq eval-result (eval (read elisp-string)))
+        (error (setq eval-err (format "Error evaluating elisp string: %s" (error-message-string err))))))
+    (when (and win (window-live-p win))
+      (quit-restore-window win 'bury))
+    (when (buffer-live-p buf) (kill-buffer buf))
+    (if eval-err
+        eval-err
+      (format "Result: %S" eval-result))))
+
 ;;; Tool: Run ERT test by selector regex and return summary report
 (defun gptel-run-ert-test (test_selector_regex)
   "Run ERT tests matching TEST_SELECTOR_REGEX, return summary report as string. Handles 'test-started and 'test-ended events."
@@ -107,6 +131,15 @@
    :function #'gptel-run-ert-test
    :description "Run Emacs ERT test(s) by selector regex, return summary report."
    :args (list '(:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
+   :category "elisp"
+   :confirm nil
+   :include t)
+
+  (gptel-make-tool
+   :name "evaluate_elisp_string"
+   :function #'gptel-evaluate-elisp-string
+   :description "Evaluate emacs-lisp code from a string in a temp buffer, after user confirmation. Returns the result string."
+   :args (list '(:name "elisp_string" :type string :description "The elisp code string to evaluate."))
    :category "elisp"
    :confirm nil
    :include t))

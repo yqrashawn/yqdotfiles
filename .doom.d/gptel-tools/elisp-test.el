@@ -64,3 +64,27 @@
       (when (boundp 'gptel-eval-file-test-value)
         (makunbound 'gptel-eval-file-test-value))
       (when (file-exists-p file-path) (delete-file file-path)))))
+
+(ert-deftest gptel-tools-evaluate-elisp-string-test ()
+  "Test gptel-evaluate-elisp-string sets value using elisp string."
+  (let* ((elisp-string "(setq gptel-eval-string-test-value 123)")
+         (result nil))
+    (unwind-protect
+        (progn
+          (let ((old-yn (symbol-function 'y-or-n-p)))
+            (cl-letf (((symbol-function 'y-or-n-p) (lambda (&rest _) t)))
+              (setq result (gptel-evaluate-elisp-string elisp-string))))
+          (should (and (boundp 'gptel-eval-string-test-value)
+                       (= gptel-eval-string-test-value 123)))
+          (should (string-match-p "Result: " result)))
+      (when (boundp 'gptel-eval-string-test-value)
+        (makunbound 'gptel-eval-string-test-value)))))
+
+(ert-deftest gptel-tools-evaluate-elisp-string-error-test ()
+  "Test gptel-evaluate-elisp-string error result for bad code."
+  (let* ((elisp-string "(this-is-not-a-symbol)")
+         (result nil))
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (&rest _) t)))
+      (setq result (gptel-evaluate-elisp-string elisp-string)))
+    (should (and (stringp result)
+                 (string-match-p "Error evaluating elisp string" result)))))

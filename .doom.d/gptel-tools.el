@@ -10,4 +10,11 @@
 (load! "gptel-tools/ripgrep.el")
 (load! "gptel-tools/elisp.el")
 
+(defun +gptel-reload-tools ()
+  (interactive)
+  (setq gptel--known-tools nil)
+  (gptel-mcp-connect)
+  (load! "gptel-tools.el")
+  (+gptel-make-my-presets))
+
 ;;; End
