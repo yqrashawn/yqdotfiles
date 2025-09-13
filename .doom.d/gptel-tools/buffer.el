@@ -82,7 +82,7 @@
    :name "filter_buffers_regex"
    :function #'gptelt-filter-buffers-regex
    :description "Return a list of buffer names matching given pattern (regex string)."
-   :args (list '(:name "pattern" :type string :description "regex pattern to match buffer names"))
+   :args '((:name "pattern" :type string :description "regex pattern to match buffer names"))
    :category "emacs"
    :confirm nil
    :include t)

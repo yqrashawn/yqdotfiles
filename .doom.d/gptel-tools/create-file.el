@@ -82,10 +82,10 @@ Returns a string describing the result of the operation."
    :name "create_file_buffer"
    :function #'gptelt--create-file-buffer
    :description "Create a new file with specified content. Only accepts absolute file paths."
-   :args (list '(:name "file_path" :type string
-                 :description "Absolute path where the new file should be created (must be absolute, not relative)")
-               '(:name "buffer_content_string" :type string
-                 :description "The complete content to write to the new file"))
+   :args '((:name "file_path" :type string
+            :description "Absolute path where the new file should be created (must be absolute, not relative)")
+           '(:name "buffer_content_string" :type string
+             :description "The complete content to write to the new file"))
    :category "emacs"
    :confirm nil
    :include t))
@@ -109,12 +109,11 @@ Buffer is not switched to or displayed. File is created and saved to disk."
    :name "create_temp_file_buffer"
    :function #'gptelt--create-temp-file-buffer
    :description "Create a new temp file with specified content and return the temp file path."
-   :args (list
-          '(:name "buffer_content_string" :type string
+   :args '((:name "buffer_content_string" :type string
             :description "The complete content to write to the new file")
-          '(:name "prefix" :type "string" :optional t
+           (:name "prefix" :type "string" :optional t
             :description "prefix for temp file name (default: gptelt-)")
-          '(:name "suffix" :type "string" :optional t
+           (:name "suffix" :type "string" :optional t
             :description "file name suffix (e.g. .el, .py), default: none"))
    :category "emacs"
    :confirm nil

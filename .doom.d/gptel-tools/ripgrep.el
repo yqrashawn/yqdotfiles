@@ -52,11 +52,11 @@ Returns a list of file paths relative to the project root."
       (error "Directory does not exist: %s" dir))
     ;; Check if pattern is a type alias
     (if-let ((alias-entry (assoc pattern type-aliases)))
-        (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
-          (condition-case _
-              (let ((output (shell-command-to-string rg-command)))
-                (setq results (split-string output "\n" t)))
-            (error (setq results nil))))
+      (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
+        (condition-case _
+            (let ((output (shell-command-to-string rg-command)))
+              (setq results (split-string output "\n" t)))
+          (error (setq results nil))))
       ;; Handle as glob pattern(s)
       (let* ((patterns (split-string pattern nil t))
              (glob-args (mapconcat (lambda (p) (format "--glob='%s'" p)) patterns " "))
@@ -147,12 +147,12 @@ Returns a list of search results with file paths, line numbers, and content."
 - Supports glob patterns like \"**/*.clj\" or \"src/**/*.{clj,cljs,cljc}\"
 - Returns matching file paths sorted by modification time
 - Use this tool when you need to find files by name patterns"
-   :args (list '(:name "pattern" :type string
-                 :description "The glob pattern to match files against")
-               '(:name "path" :type string :optional t
-                 :description "The directory to search in. Defaults to the current project root.")
-               '(:name "max_results" :type integer :optional t
-                 :description "Maximum number of results to return (default: 50)"))
+   :args '((:name "pattern" :type string
+            :description "The glob pattern to match files against")
+           (:name "path" :type string :optional t
+            :description "The directory to search in. Defaults to the current project root.")
+           (:name "max_results" :type integer :optional t
+            :description "Maximum number of results to return (default: 50)"))
    :category "file-search"
    :confirm nil
    :include t)
@@ -167,14 +167,14 @@ Returns a list of search results with file paths, line numbers, and content."
 - Filter files by pattern with the include parameter (eg. \"*.js\", \"*.{ts,tsx}\")
 - Returns matching file paths sorted by modification time
 - Use this tool when you need to find files containing specific patterns "
-   :args (list '(:name "pattern" :type string
-                 :description "The regular expression pattern to search for in file contents")
-               '(:name "path" :type string :optional t
-                 :description "The directory to search in. Defaults to the current project root.")
-               '(:name "include" :type string :optional t
-                 :description "File pattern to include in the search (e.g. '*.js', '*.{ts,tsx}')")
-               '(:name "max_results" :type integer :optional t
-                 :description "Maximum results (default: 50)"))
+   :args '((:name "pattern" :type string
+            :description "The regular expression pattern to search for in file contents")
+           (:name "path" :type string :optional t
+            :description "The directory to search in. Defaults to the current project root.")
+           (:name "include" :type string :optional t
+            :description "File pattern to include in the search (e.g. '*.js', '*.{ts,tsx}')")
+           (:name "max_results" :type integer :optional t
+            :description "Maximum results (default: 50)"))
    :category "content-search"
    :confirm nil
    :include t))

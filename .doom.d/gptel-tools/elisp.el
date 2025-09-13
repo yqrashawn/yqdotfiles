@@ -109,7 +109,7 @@
    :name "evaluate_elisp_buffer"
    :function #'gptelt-evaluate-elisp-buffer
    :description "Evaluate emacs-lisp-mode a buffer by buffer name."
-   :args (list '(:name "buffer_name" :type string :description "The name of the buffer to evaluate"))
+   :args '((:name "buffer_name" :type string :description "The name of the buffer to evaluate"))
    :category "elisp"
    :confirm nil
    :include t)
@@ -118,8 +118,7 @@
    :name "evaluate_elisp_file"
    :function #'gptelt-evaluate-elisp-file
    :description "Evaluate a \".el\" file by loading it as a buffer and evaluating."
-   :args (list
-          '(:name "file_path"
+   :args '((:name "file_path"
             :type string
             :description "Absolute path to the elisp file to evaluate"))
    :category "elisp"
@@ -130,7 +129,7 @@
    :name "run_ert_test"
    :function #'gptelt-run-ert-test
    :description "Run Emacs ERT test(s) by selector regex, return summary report."
-   :args (list '(:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
+   :args '((:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
    :category "elisp"
    :confirm nil
    :include t)
@@ -139,7 +138,7 @@
    :name "evaluate_elisp_string"
    :function #'gptelt-evaluate-elisp-string
    :description "Evaluate emacs-lisp code from a string in a temp buffer, after user confirmation. Returns the result string."
-   :args (list '(:name "elisp_string" :type string :description "The elisp code string to evaluate."))
+   :args '((:name "elisp_string" :type string :description "The elisp code string to evaluate."))
    :category "elisp"
    :confirm nil
    :include t))

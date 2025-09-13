@@ -273,14 +273,14 @@ Returns a string describing the result of the operation."
    :name "edit_buffer"
    :function #'gptelt-edit-edit-buffer
    :description "Performs exact string replacements in buffers"
-   :args (list '(:name "buffer_name" :type string
-                 :description "The name of the buffer to edit")
-               '(:name "old_string" :type string
-                 :description "The exact text to be replaced")
-               '(:name "new_string" :type string
-                 :description "The new text to replace the old text with")
-               '(:name "replace_all" :type boolean
-                 :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
+   :args '((:name "buffer_name" :type string
+            :description "The name of the buffer to edit")
+           (:name "old_string" :type string
+            :description "The exact text to be replaced")
+           (:name "new_string" :type string
+            :description "The new text to replace the old text with")
+           (:name "replace_all" :type boolean
+            :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
    :category "emacs"
    :confirm nil
    :include t))
@@ -290,14 +290,14 @@ Returns a string describing the result of the operation."
    :name "edit_file"
    :function #'gptelt-edit-edit-file
    :description "Performs exact string replacements in files"
-   :args (list '(:name "file_path" :type string
-                 :description "Absolute path to the file to edit (must be absolute, not relative)")
-               '(:name "old_string" :type string
-                 :description "The exact text to be replaced")
-               '(:name "new_string" :type string
-                 :description "The new text to replace the old text with")
-               '(:name "replace_all" :type boolean
-                 :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
+   :args '((:name "file_path" :type string
+            :description "Absolute path to the file to edit (must be absolute, not relative)")
+           (:name "old_string" :type string
+            :description "The exact text to be replaced")
+           (:name "new_string" :type string
+            :description "The new text to replace the old text with")
+           (:name "replace_all" :type boolean
+            :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
    :category "emacs"
    :confirm nil
    :include t))
@@ -358,10 +358,9 @@ Returns a string describing the result."
    :name "multi_edit_buffer"
    :function #'gptelt-edit-multi-edit-buffer
    :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair."
-   :args (list
-          '(:name "buffer_name" :type string
+   :args '((:name "buffer_name" :type string
             :description "The name of the buffer to edit")
-          '(:name "edits"
+           (:name "edits"
             :type array
             :items
             (:type object
@@ -388,17 +387,17 @@ Returns a string describing the result."
    :name "multi_edit_file"
    :function #'gptelt-edit-multi-edit-file
    :description "Apply multiple edits to a single file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. Each edit operates on the result of the previous edit. The file is opened if not already, all edits are applied in order, and saved."
-   :args (list '(:name "file_path" :type string
-                 :description "absolute or relative file path to the file to edit, `~/` is supported")
-               '(:name "edits"
-                 :type array
-                 :items (:type object
-                         :properties (:old_string (:type string :description "The exact text to be replaced")
-                                      :new_string (:type string :description "The new text to replace the old text with")
-                                      :replace_all (:type boolean :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
-                         :required ["old_string" "new_string"]
-                         :description "An object with old_string, new_string, and optional replace_all fields for each edit.")
-                 :description "List of edits: each element is an object with old_string, new_string, and optional replace_all fields, applied sequentially."))
+   :args '((:name "file_path" :type string
+            :description "absolute or relative file path to the file to edit, `~/` is supported")
+           (:name "edits"
+            :type array
+            :items (:type object
+                    :properties (:old_string (:type string :description "The exact text to be replaced")
+                                 :new_string (:type string :description "The new text to replace the old text with")
+                                 :replace_all (:type boolean :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
+                    :required ["old_string" "new_string"]
+                    :description "An object with old_string, new_string, and optional replace_all fields for each edit.")
+            :description "List of edits: each element is an object with old_string, new_string, and optional replace_all fields, applied sequentially."))
    :category "emacs"
    :confirm nil
    :include t))
