@@ -2,25 +2,25 @@
 
 (require 'ert)
 
-(ert-deftest gptel-edit-tool-edit-file-buffer-temp-test ()
+(ert-deftest gptelt-edit-edit-file-buffer-temp-test ()
   "Test create-file-buffer, edit-file, and edit-buffer (with temp files)."
-  (let* ((temp-el-path (gptel-tools--create-temp-file-buffer ";; TEMP TEST FILE\n(foo 1)\n(bar 2)\n" nil ".el"))
-         (temp-txt-path (gptel-tools--create-temp-file-buffer ";; new temp file\ndata: test123" nil ".txt")))
+  (let* ((temp-el-path (gptelt--create-temp-file-buffer ";; TEMP TEST FILE\n(foo 1)\n(bar 2)\n" nil ".el"))
+         (temp-txt-path (gptelt--create-temp-file-buffer ";; new temp file\ndata: test123" nil ".txt")))
     (unwind-protect
         (progn
           ;; Edit temp .el file and verify
-          (gptel-edit-tool-edit-file temp-el-path "(foo 1)" "(foo 42)")
-          (let ((el-content (gptel-tools-read-file temp-el-path 0 2000)))
+          (gptelt-edit-edit-file temp-el-path "(foo 1)" "(foo 42)")
+          (let ((el-content (gptelt-read-file temp-el-path 0 2000)))
             (should (and el-content (string-match-p "(foo 42)" el-content))))
           ;; Edit temp .txt file and verify
-          (gptel-edit-tool-edit-file temp-txt-path "test123" "xyz789")
-          (let ((txt-content (gptel-tools-read-file temp-txt-path 0 2000)))
+          (gptelt-edit-edit-file temp-txt-path "test123" "xyz789")
+          (let ((txt-content (gptelt-read-file temp-txt-path 0 2000)))
             (should (and txt-content (string-match-p "xyz789" txt-content))))
           ;; Edit buffer for temp .el file and verify
           (let* ((buf (find-file-noselect temp-el-path))
                  (old "(bar 2)")
                  (new "(bar 99)"))
-            (gptel-edit-tool-edit-buffer (buffer-name buf) old new)
+            (gptelt-edit-edit-buffer (buffer-name buf) old new)
             (let ((new-content (with-current-buffer buf (buffer-string))))
               (should (string-match-p "(bar 99)" new-content))))
           )
@@ -28,10 +28,10 @@
       (when (file-exists-p temp-txt-path) (delete-file temp-txt-path)))))
 
 
-(ert-deftest gptel-edit-tool-multi-edit-buffer-test ()
+(ert-deftest gptelt-edit-multi-edit-buffer-test ()
   "Test multi_edit_buffer tool on two temp buffers."
-  (let* ((temp1-path (gptel-tools--create-temp-file-buffer ";; TEMP1\n(foo 1)\n(bar 2)\n" nil ".el"))
-         (temp2-path (gptel-tools--create-temp-file-buffer ";; TEMP2\ndata: alpha\ndata: beta" nil ".txt")))
+  (let* ((temp1-path (gptelt--create-temp-file-buffer ";; TEMP1\n(foo 1)\n(bar 2)\n" nil ".el"))
+         (temp2-path (gptelt--create-temp-file-buffer ";; TEMP2\ndata: alpha\ndata: beta" nil ".txt")))
     (unwind-protect
         (progn
           (let* ((buf1 (find-file-noselect temp1-path))
@@ -43,8 +43,8 @@
             (should (string-match-p "(foo 1)" (with-current-buffer buf1 (buffer-string))))
             (should (string-match-p "alpha" (with-current-buffer buf2 (buffer-string))))
 
-            (gptel-edit-tool-multi-edit-buffer (buffer-name buf1) edits1)
-            (gptel-edit-tool-multi-edit-buffer (buffer-name buf2) edits2)
+            (gptelt-edit-multi-edit-buffer (buffer-name buf1) edits1)
+            (gptelt-edit-multi-edit-buffer (buffer-name buf2) edits2)
 
             (let ((b1-content (with-current-buffer buf1 (buffer-string)))
                   (b2-content (with-current-buffer buf2 (buffer-string))))

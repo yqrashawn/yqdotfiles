@@ -1,7 +1,7 @@
 ;;; .nixpkgs/.doom.d/gptel-tools/elisp.el -*- lexical-binding: t; -*-
 
 ;;; Tool: Evaluate Elisp Buffer (ask for confirmation, show buffer if not visible)
-(defun gptel-evaluate-elisp-buffer (buffer-name)
+(defun gptelt-evaluate-elisp-buffer (buffer-name)
   "Evaluate elisp BUFFER-NAME after confirming with user. Show buffer if not visible. Bury if not shown before."
   (interactive)
   (let* ((buf (get-buffer buffer-name))
@@ -31,16 +31,16 @@
       eval-err)))
 
 ;;; Tool: Evaluate Elisp File (load file into buffer, then evaluate, with confirmation)
-(defun gptel-evaluate-elisp-file (file-path)
+(defun gptelt-evaluate-elisp-file (file-path)
   "Load FILE-PATH into buffer and evaluate after confirming with user. Show buffer if not visible. Bury if not shown before."
   (interactive)
   (unless (file-name-absolute-p file-path) (error "file-path must be absolute"))
   (unless (string-suffix-p ".el" file-path)
     (error "File %s is not an .el file" file-path))
-  (gptel-evaluate-elisp-buffer (find-file-noselect file-path)))
+  (gptelt-evaluate-elisp-buffer (find-file-noselect file-path)))
 
 ;;; Tool: Evaluate Elisp String (put string in temp buffer, eval after confirmation, return result)
-(defun gptel-evaluate-elisp-string (elisp-string)
+(defun gptelt-evaluate-elisp-string (elisp-string)
   "Put ELISP-STRING into a temp buffer for confirmation, then eval using (eval (read ...)), return result."
   (interactive)
   (let* ((buf (generate-new-buffer " *gptel-eval-elisp*"))
@@ -64,7 +64,7 @@
       (format "Result: %S" eval-result))))
 
 ;;; Tool: Run ERT test by selector regex and return summary report
-(defun gptel-run-ert-test (test_selector_regex)
+(defun gptelt-run-ert-test (test_selector_regex)
   "Run ERT tests matching TEST_SELECTOR_REGEX, return summary report as string. Handles 'test-started and 'test-ended events."
   (let* ((output-string "")
          (listener
@@ -101,13 +101,13 @@
     output-string))
 
 (comment
-  (gptel-run-ert-test "list-buffers-test"))
+  (gptelt-run-ert-test "list-buffers-test"))
 
 ;;; gptel tool registration
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "evaluate_elisp_buffer"
-   :function #'gptel-evaluate-elisp-buffer
+   :function #'gptelt-evaluate-elisp-buffer
    :description "Evaluate emacs-lisp-mode a buffer by buffer name."
    :args (list '(:name "buffer_name" :type string :description "The name of the buffer to evaluate"))
    :category "elisp"
@@ -116,7 +116,7 @@
 
   (gptel-make-tool
    :name "evaluate_elisp_file"
-   :function #'gptel-evaluate-elisp-file
+   :function #'gptelt-evaluate-elisp-file
    :description "Evaluate a \".el\" file by loading it as a buffer and evaluating."
    :args (list
           '(:name "file_path"
@@ -128,7 +128,7 @@
 
   (gptel-make-tool
    :name "run_ert_test"
-   :function #'gptel-run-ert-test
+   :function #'gptelt-run-ert-test
    :description "Run Emacs ERT test(s) by selector regex, return summary report."
    :args (list '(:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
    :category "elisp"
@@ -137,7 +137,7 @@
 
   (gptel-make-tool
    :name "evaluate_elisp_string"
-   :function #'gptel-evaluate-elisp-string
+   :function #'gptelt-evaluate-elisp-string
    :description "Evaluate emacs-lisp code from a string in a temp buffer, after user confirmation. Returns the result string."
    :args (list '(:name "elisp_string" :type string :description "The elisp code string to evaluate."))
    :category "elisp"

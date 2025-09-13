@@ -6,7 +6,7 @@
 (require 'smartparens nil t)
 
 ;;; Project/file path
-(defun gptel-tools--get-project-root ()
+(defun gptelt--get-project-root ()
   "Get project root for current context."
   (if (fboundp '++workspace-current-project-root)
       (++workspace-current-project-root)
@@ -16,20 +16,20 @@
             (project-root project)
           (car (project-roots project)))))))
 
-(defun gptel-tools--resolve-file-path (file-path)
+(defun gptelt--resolve-file-path (file-path)
   "Resolve FILE-PATH to absolute path. Only accepts absolute paths."
   (unless (file-name-absolute-p file-path)
     (error "file_path must be an absolute path"))
   file-path)
 
 ;;; Mode/Lisp checks
-(defun gptel-tools--is-lisp-mode-p (mode)
+(defun gptelt--is-lisp-mode-p (mode)
   "Check if MODE is a Lisp-related mode."
   (memq mode '(emacs-lisp-mode lisp-mode clojure-mode scheme-mode
                clojurescript-mode clojurec-mode common-lisp-mode
                lisp-interaction-mode)))
 
-(defun gptel-tools--attempt-parinfer-balance (buffer)
+(defun gptelt--attempt-parinfer-balance (buffer)
   "Use parinfer-rust-mode to attempt to balance BUFFER.
 
 Returns (t . nil) if successful, (nil . error-message) if failed.
@@ -62,34 +62,34 @@ Does nothing if parinfer-rust-mode not available."
               (cons result error-msg))
           (error (cons nil (error-message-string err))))))))
 
-(defun gptel-tools--check-buffer-balanced-parens (buffer)
+(defun gptelt--check-buffer-balanced-parens (buffer)
   "Check if BUFFER has balanced parentheses for Lisp modes.
 Returns (BALANCED-P . ERROR-MESSAGE). Tries parinfer auto-repair if available."
   (let ((mj-mode (buffer-local-value 'major-mode buffer)))
-    (if (and (gptel-tools--is-lisp-mode-p mj-mode)
+    (if (and (gptelt--is-lisp-mode-p mj-mode)
              (fboundp 'sp-region-ok-p))
         (with-current-buffer buffer
           (condition-case err
               (if (sp-region-ok-p (point-min) (point-max))
                   (cons t nil)
                 ;; Try parinfer auto-repair if unbalanced
-                (gptel-tools--attempt-parinfer-balance buffer))
+                (gptelt--attempt-parinfer-balance buffer))
             (error (cons nil (error-message-string err)))))
       (cons t nil)))) ; Non-Lisp modes always pass
 
-(defun gptel-tools--check-string-balanced-parens (string major-mode-symbol)
+(defun gptelt--check-string-balanced-parens (string major-mode-symbol)
   "Check if STRING has balanced parentheses for Lisp MAJOR-MODE-SYMBOL.
 
 Uses temp buffer."
-  (if (and (gptel-tools--is-lisp-mode-p major-mode-symbol)
+  (if (and (gptelt--is-lisp-mode-p major-mode-symbol)
            (fboundp 'sp-region-ok-p))
       (with-temp-buffer
         (funcall major-mode-symbol)
         (insert string)
-        (gptel-tools--check-buffer-balanced-parens (current-buffer)))
+        (gptelt--check-buffer-balanced-parens (current-buffer)))
     (cons t nil)))
 
-(defun gptel-tools--replace-buffer-directly (buffer result-string)
+(defun gptelt--replace-buffer-directly (buffer result-string)
   "Apply edit to BUFFER by directly replacing OLD-STRING with NEW-STRING.
 Returns a message describing the result of the operation."
   (let ((original-buffer buffer)

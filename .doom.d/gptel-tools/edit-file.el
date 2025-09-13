@@ -9,13 +9,12 @@
 (declare-function sp-region-ok-p "smartparens")
 
 ;;; Variables
-(defvar gptel-edit-tool--temp-buffers nil
+(defvar gptelt-edit--temp-buffers nil
   "List of temporary buffers created by edit tool for cleanup.")
 
 
-;;; Utility functions (reused from gptel-tools.el)
-
-(defun gptel-edit-tool--get-project-root ()
+;;; Utility functions
+(defun gptelt-edit--get-project-root ()
   "Get project root for current context."
   (if (fboundp '++workspace-current-project-root)
       (++workspace-current-project-root)
@@ -25,17 +24,17 @@
             (project-root project)
           (car (project-roots project)))))))
 
-(defun gptel-edit-tool--resolve-file-path (file-path)
+(defun gptelt-edit--resolve-file-path (file-path)
   "Resolve FILE-PATH to absolute path.
 If FILE-PATH is relative, resolve it against the current project root."
   (if (file-name-absolute-p file-path)
       file-path
-    (let ((project-root (gptel-edit-tool--get-project-root)))
+    (let ((project-root (gptelt-edit--get-project-root)))
       (if project-root
           (expand-file-name file-path project-root)
         (expand-file-name file-path default-directory)))))
 
-(defun gptel-edit-tool--get-buffer-context (file-path)
+(defun gptelt-edit--get-buffer-context (file-path)
   "Generate context information for FILE-PATH (must be absolute path) including buffer, project, and mode info."
   (unless (file-name-absolute-p file-path)
     (error "file-path must be an absolute path"))
@@ -43,7 +42,7 @@ If FILE-PATH is relative, resolve it against the current project root."
          (buffer (or (get-file-buffer resolved-path)
                      (when (file-exists-p resolved-path)
                        (find-file-noselect resolved-path))))
-         (project-root (gptel-edit-tool--get-project-root))
+         (project-root (gptelt-edit--get-project-root))
          (major-mode (when buffer (buffer-local-value 'major-mode buffer)))
          (minor-modes (when buffer
                         (buffer-local-value 'minor-mode-list buffer))))
@@ -55,14 +54,13 @@ If FILE-PATH is relative, resolve it against the current project root."
           :minor-modes minor-modes
           :exists-p (and buffer (get-file-buffer resolved-path)))))
 
-(defun gptel-edit-tool--is-lisp-mode-p (mode)
+(defun gptelt-edit--is-lisp-mode-p (mode)
   "Check if MODE is a Lisp-related mode."
   (memq mode '(emacs-lisp-mode lisp-mode clojure-mode scheme-mode
                clojurescript-mode clojurec-mode common-lisp-mode
                lisp-interaction-mode)))
 
-;;; Edit buffer preparation (adapted from gptel-rewrite)
-(defun gptel-edit-tool--prepare-edit-buffer (buffer old-string new-string)
+(defun gptelt-edit--prepare-edit-buffer (buffer old-string new-string)
   "Prepare new buffer with edit applied and return it.
 
 BUFFER is the original buffer.
@@ -70,13 +68,13 @@ OLD-STRING is the text to be replaced.
 NEW-STRING is the replacement text."
   (let* ((original-buffer buffer)
          (original-file-name (buffer-file-name original-buffer))
-         (newbuf-name (format "*gptel-edit-%s*" (buffer-name original-buffer)))
+         (newbuf-name (format "*gptelt-edit-%s*" (buffer-name original-buffer)))
          (newbuf (get-buffer-create newbuf-name))
          (inhibit-read-only t)
          (inhibit-message t))
 
     ;; Track temp buffer for cleanup
-    (push newbuf gptel-edit-tool--temp-buffers)
+    (push newbuf gptelt-edit--temp-buffers)
 
     ;; Copy original buffer content to new buffer
     (with-current-buffer newbuf
@@ -106,7 +104,7 @@ NEW-STRING is the replacement text."
 
 ;;; Direct edit application
 
-(defun gptel-edit-tool--apply-edit-directly (buffer old-string new-string)
+(defun gptelt-edit--apply-edit-directly (buffer old-string new-string)
   "Apply edit to BUFFER by directly replacing OLD-STRING with NEW-STRING.
 Returns a message describing the result of the operation."
   (let* ((original-buffer buffer)
@@ -148,7 +146,7 @@ Returns a message describing the result of the operation."
             (length new-string))))
 
 ;;; Shared edit logic
-(defun gptel-edit-tool--edit-buffer-impl (buffer old-string new-string)
+(defun gptelt-edit--edit-buffer-impl (buffer old-string new-string)
   "editing BUFFER by replacing OLD-STRING with NEW-STRING.
 
 Returns a string describing the result of the operation."
@@ -165,11 +163,11 @@ Returns a string describing the result of the operation."
         (unless (search-forward old-string nil t)
           (error "old-string not found in buffer: %s" buf-name))))
     ;; For Lisp code, check balance in temp buffer after replacement (refuse edit if unbalanced)
-    (when (gptel-edit-tool--is-lisp-mode-p mj-mode)
+    (when (gptelt-edit--is-lisp-mode-p mj-mode)
       (unwind-protect
           (progn
             ;; Create temp buffer with the replacement applied
-            (setq temp-buffer (generate-new-buffer " *gptel-balance-check*"))
+            (setq temp-buffer (generate-new-buffer " *gptelt-balance-check*"))
             (with-current-buffer temp-buffer
               (erase-buffer)
               ;; Copy original buffer content
@@ -189,7 +187,7 @@ Returns a string describing the result of the operation."
               ;; Check balance (smartparens then parinfer)
               (pcase-let
                   ((`(,balanced-p . ,error-msg)
-                    (gptel-tools--check-buffer-balanced-parens temp-buffer)))
+                    (gptelt--check-buffer-balanced-parens temp-buffer)))
                 (if balanced-p
                     (setq rst-buffer-string (buffer-string))
                   (setq
@@ -202,13 +200,13 @@ Returns a string describing the result of the operation."
       ;; Non-Lisp or balanced, so apply edit directly
       (let ((rst-message
              (if rst-buffer-string
-                 (gptel-tools--replace-buffer-directly buffer rst-buffer-string)
-               (gptel-edit-tool--apply-edit-directly buffer old-string new-string))))
+                 (gptelt--replace-buffer-directly buffer rst-buffer-string)
+               (gptelt-edit--apply-edit-directly buffer old-string new-string))))
         (+gptel-context-add-buffer buffer)
         rst-message))))
 
 ;;; Main edit functions
-(defun gptel-edit-tool-edit-buffer (buffer-name old-string new-string)
+(defun gptelt-edit-edit-buffer (buffer-name old-string new-string)
   "Edit buffer by replacing OLD-STRING with NEW-STRING in BUFFER-NAME.
 
 BUFFER-NAME should be the name of an existing buffer.
@@ -224,9 +222,9 @@ Returns a string describing the result of the operation."
     (unless buffer
       (error "Buffer not found: %s" buffer-name))
 
-    (gptel-edit-tool--edit-buffer-impl buffer old-string new-string)))
+    (gptelt-edit--edit-buffer-impl buffer old-string new-string)))
 
-(defun gptel-edit-tool-edit-file (file-path old-string new-string)
+(defun gptelt-edit-edit-file (file-path old-string new-string)
   "Edit file by replacing OLD-STRING with NEW-STRING in FILE-PATH.
 
 FILE-PATH must be an absolute path.
@@ -242,7 +240,7 @@ This function:
 Returns a string describing the result of the operation."
   (unless (file-name-absolute-p file-path)
     (error "file-path must be an absolute path"))
-  (let* ((context (gptel-edit-tool--get-buffer-context file-path))
+  (let* ((context (gptelt-edit--get-buffer-context file-path))
          (buffer (plist-get context :buffer))
          (resolved-path (plist-get context :file-path))
          (original-path (plist-get context :original-path)))
@@ -251,13 +249,13 @@ Returns a string describing the result of the operation."
       (error "Could not open or create buffer for file: %s (resolved to: %s)"
              original-path resolved-path))
 
-    (gptel-edit-tool--edit-buffer-impl buffer old-string new-string)))
+    (gptelt-edit--edit-buffer-impl buffer old-string new-string)))
 
 ;;; Tool registration
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "edit_buffer"
-   :function #'gptel-edit-tool-edit-buffer
+   :function #'gptelt-edit-edit-buffer
    :description "Edit a buffer by replacing old text with new text."
    :args (list '(:name "buffer_name" :type string
                  :description "The name of the buffer to edit")
@@ -272,7 +270,7 @@ Returns a string describing the result of the operation."
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "edit_file"
-   :function #'gptel-edit-tool-edit-file
+   :function #'gptelt-edit-edit-file
    :description "Edit a file by replacing old text with new text. Only accepts absolute file paths."
    :args (list '(:name "file_path" :type string
                  :description "Absolute path to the file to edit (must be absolute, not relative)")
@@ -287,7 +285,7 @@ Returns a string describing the result of the operation."
 
 ;;; Multi-edit logic
 
-(defun gptel-edit-tool--multi-edit-buffer-impl (buffer edit-list)
+(defun gptelt-edit--multi-edit-buffer-impl (buffer edit-list)
   "Apply multiple edits to BUFFER.
 EDIT-LIST is a list of cons cells (OLD . NEW), applied sequentially.
 For Lisp buffers, checks parentheses balance after all edits.
@@ -315,18 +313,18 @@ Returns a string describing the result."
                   (setq applied-count (1+ applied-count)))
               (error "old-string not found: %s" old))))))
     ;; For Lisp, check balance after all edits
-    (when (gptel-edit-tool--is-lisp-mode-p mj-mode)
+    (when (gptelt-edit--is-lisp-mode-p mj-mode)
       (let (temp-buffer)
         (unwind-protect
             (progn
-              (setq temp-buffer (generate-new-buffer " *gptel-multi-balance-check*"))
+              (setq temp-buffer (generate-new-buffer " *gptelt-multi-balance-check*"))
               (with-current-buffer temp-buffer
                 (erase-buffer)
                 (insert-buffer-substring buffer)
                 (funcall mj-mode)
                 (pcase-let
                     ((`(,balanced-p . ,error-msg)
-                      (gptel-tools--check-buffer-balanced-parens temp-buffer)))
+                      (gptelt--check-buffer-balanced-parens temp-buffer)))
                   (unless balanced-p
                     (setq edit-allowed nil
                           unbalance-error (or error-msg
@@ -346,7 +344,7 @@ Returns a string describing the result."
 
 ;;; Public multi-edit entrypoints
 
-(defun gptel-edit-tool-multi-edit-buffer (buffer-name edit-list)
+(defun gptelt-edit-multi-edit-buffer (buffer-name edit-list)
   "Apply multiple edits to BUFFER-NAME.
 EDIT-LIST is a list of cons cells (OLD . NEW), each applied sequentially.
 For Lisp code, checks balance after all edits.
@@ -354,28 +352,28 @@ Returns a string describing the result."
   (let ((buffer (get-buffer buffer-name)))
     (unless buffer
       (error "Buffer not found: %s" buffer-name))
-    (gptel-edit-tool--multi-edit-buffer-impl buffer edit-list)))
+    (gptelt-edit--multi-edit-buffer-impl buffer edit-list)))
 
-(defun gptel-edit-tool-multi-edit-file (file-path edit-list)
+(defun gptelt-edit-multi-edit-file (file-path edit-list)
   "Apply multiple edits to FILE-PATH.
 EDIT-LIST is a list of cons cells (OLD . NEW), each applied sequentially.
 For Lisp code, checks balance after all edits.
 Returns a string describing the result."
-  (let* ((context (gptel-edit-tool--get-buffer-context file-path))
+  (let* ((context (gptelt-edit--get-buffer-context file-path))
          (buffer (plist-get context :buffer))
          (resolved-path (plist-get context :file-path))
          (original-path (plist-get context :original-path)))
     (unless buffer
       (error "Could not open or create buffer for file: %s (resolved to: %s)"
              original-path resolved-path))
-    (gptel-edit-tool--multi-edit-buffer-impl buffer edit-list)))
+    (gptelt-edit--multi-edit-buffer-impl buffer edit-list)))
 
 ;;; Tool registration for multi-edit
 
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "multi_edit_buffer"
-   :function #'gptel-edit-tool-multi-edit-buffer
+   :function #'gptelt-edit-multi-edit-buffer
    :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair."
    :args (list '(:name "buffer_name" :type string
                  :description "The name of the buffer to edit")
@@ -394,7 +392,7 @@ Returns a string describing the result."
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "multi_edit_file"
-   :function #'gptel-edit-tool-multi-edit-file
+   :function #'gptelt-edit-multi-edit-file
    :description "Apply multiple edits to a file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. The file is opened if not already, all edits are applied in order, and saved."
    :args (list '(:name "file_path" :type string
                  :description "absolute or relative file path to the file to edit, `~/` is supported")

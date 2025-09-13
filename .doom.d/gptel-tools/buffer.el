@@ -3,21 +3,19 @@
 
 ;;; Commentary:
 ;; Buffer tool for gptel.
-;; Moved from gptel-tools.el for better organization.
 
 ;;; Code:
 
-(require 'gptel)
 (require 'cl-lib)
 
 ;;; Get buffer file path utilities
 
-(defun gptel-tools--get-buffer-file-path (buf-name)
+(defun gptelt--get-buffer-file-path (buf-name)
   "Return the file path for buffer BUF-NAME."
   (when-let ((b (get-buffer buf-name)))
     (buffer-file-name b)))
 
-(defun gptel-tools--get-file-buffer-name (file-path)
+(defun gptelt--get-file-buffer-name (file-path)
   "Return the buffer name visiting FILE-PATH, or nil if not found."
   (let ((buf (cl-find file-path (buffer-list)
                       :key #'buffer-file-name
@@ -30,7 +28,7 @@
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "get_buffer_file_path"
-   :function #'gptel-tools--get-buffer-file-path
+   :function #'gptelt--get-buffer-file-path
    :description "Given a buffer_name, return the file path that the buffer is visiting"
    :args '((:name "buffer_name" :type string
             :description "buffer name"))
@@ -39,7 +37,7 @@
    :include t)
   (gptel-make-tool
    :name "get_file_buffer_name"
-   :function #'gptel-tools--get-file-buffer-name
+   :function #'gptelt--get-file-buffer-name
    :description "Given a file_path, return the buffer name that is visiting the file or nil."
    :args '((:name "file_path" :type string :description "absolute file path"))
    :category "emacs"
@@ -48,11 +46,11 @@
 
 ;;; List buffers utilities
 
-(defun gptel-tools-list-buffers ()
+(defun gptelt-list-buffers ()
   "Return a list of all visible buffer names."
   (mapcar #'buffer-name (buffer-list)))
 
-(defun gptel-tools-filter-buffers-regex (pattern)
+(defun gptelt-filter-buffers-regex (pattern)
   "Return a list of buffer names matching given pattern (regex string). Supports PCRE if pcre2el is available."
   (let ((rx pattern)
         (pcre2el-available (require 'pcre2el nil t)))
@@ -64,7 +62,7 @@
       (cl-remove-if-not (lambda (name) (string-match-p regex name))
                         (mapcar #'buffer-name (buffer-list))))))
 
-(defun gptel-tools-visible-buffers ()
+(defun gptelt-visible-buffers ()
   "Return a list of buffer names that are currently visible in windows."
   (+visible-buffers))
 
@@ -74,7 +72,7 @@
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "list_buffers"
-   :function #'gptel-tools-list-buffers
+   :function #'gptelt-list-buffers
    :description "Return a list of all visible buffer names (strings)."
    :args nil
    :category "emacs"
@@ -82,7 +80,7 @@
    :include t)
   (gptel-make-tool
    :name "filter_buffers_regex"
-   :function #'gptel-tools-filter-buffers-regex
+   :function #'gptelt-filter-buffers-regex
    :description "Return a list of buffer names matching given pattern (regex string)."
    :args (list '(:name "pattern" :type string :description "regex pattern to match buffer names"))
    :category "emacs"
@@ -90,7 +88,7 @@
    :include t)
   (gptel-make-tool
    :name "visible_buffers"
-   :function #'gptel-tools-visible-buffers
+   :function #'gptelt-visible-buffers
    :description "Return a list of buffer names that are currently visible in windows to the user, user usually want to change these buffers."
    :args nil
    :category "emacs"

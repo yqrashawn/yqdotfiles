@@ -7,9 +7,7 @@
 
 ;;; Code:
 
-(require 'gptel)
-
-(defun gptel-tools-read-file (file_path &optional offset limit)
+(defun gptelt-read-file (file_path &optional offset limit)
   "Return up to LIMIT lines (default 2000) from FILE_PATH (must be absolute), starting at OFFSET (default 0). Return nil if not readable."
   (unless (and (stringp file_path) (file-name-absolute-p file_path))
     (error "file_path must be an absolute path"))
@@ -25,7 +23,7 @@
           (forward-line max-lines)
           (buffer-substring-no-properties start (point)))))))
 
-(defun gptel-tools-read-buffer (buffer_name &optional offset limit)
+(defun gptelt-read-buffer (buffer_name &optional offset limit)
   "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Nil if not exists."
   (let ((max-lines (or limit 2000))
         (line-offset (or offset 0)))
@@ -42,7 +40,7 @@
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "read_file"
-   :function #'gptel-tools-read-file
+   :function #'gptelt-read-file
    :description (concat "Read a file from the local filesystem. "
                         "The file_path parameter must be an absolute path. "
                         "Reads up to 2000 lines starting from the beginning of the file by default. "
@@ -58,7 +56,7 @@
    :include t)
   (gptel-make-tool
    :name "read_buffer"
-   :function #'gptel-tools-read-buffer
+   :function #'gptelt-read-buffer
    :description (concat "Read a buffer by buffer name. "
                         "Reads up to 2000 lines starting from the beginning by default. "
                         "Optional: offset (line number to start at), limit (number of lines)")

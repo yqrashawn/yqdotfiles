@@ -13,7 +13,7 @@
 
 ;;; Create file buffer implementation
 
-(defun gptel-tools--create-file-buffer (file-path buffer-content-string)
+(defun gptelt--create-file-buffer (file-path buffer-content-string)
   "Create a new file buffer with FILE-PATH and BUFFER-CONTENT-STRING.
 
 FILE-PATH must be an absolute path.
@@ -34,7 +34,7 @@ Returns a string describing the result of the operation."
   (let* ((resolved-path file-path)
          (dir (file-name-directory resolved-path))
          (existing-buffer (get-file-buffer resolved-path))
-         (project-root (gptel-tools--get-project-root)))
+         (project-root (gptelt--get-project-root)))
 
     ;; Create directory if it doesn't exist
     (unless (file-directory-p dir)
@@ -51,7 +51,7 @@ Returns a string describing the result of the operation."
 
         (set-visited-file-name resolved-path t)
 
-        (gptel-edit-tool--edit-buffer-impl buffer "" buffer-content-string)
+        (gptelt-edit--edit-buffer-impl buffer "" buffer-content-string)
 
         ;; Determine and set major mode based on file extension
         (let ((auto-mode-alist auto-mode-alist))
@@ -80,7 +80,7 @@ Returns a string describing the result of the operation."
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "create_file_buffer"
-   :function #'gptel-tools--create-file-buffer
+   :function #'gptelt--create-file-buffer
    :description "Create a new file with specified content. Only accepts absolute file paths."
    :args (list '(:name "file_path" :type string
                  :description "Absolute path where the new file should be created (must be absolute, not relative)")
@@ -92,14 +92,14 @@ Returns a string describing the result of the operation."
 
 ;;; Create temp file buffer tool implementation
 
-(defun gptel-tools--create-temp-file-buffer (buffer-content-string &optional prefix suffix)
+(defun gptelt--create-temp-file-buffer (buffer-content-string &optional prefix suffix)
   "Create a temp file, open a buffer for it (not displayed), and return the file path.
 
-PREFIX and SUFFIX are optional; default prefix is \"gptel-\".
+PREFIX and SUFFIX are optional; default prefix is \"gptelt-\".
 Buffer is not switched to or displayed. File is created and saved to disk."
-  (let* ((tmp-path (make-temp-file (or prefix "gptel-") nil (or suffix "")))
+  (let* ((tmp-path (make-temp-file (or prefix "gptelt-") nil (or suffix "")))
          (buf (find-file-noselect tmp-path)))
-    (gptel-edit-tool--edit-buffer-impl buf "" buffer-content-string)
+    (gptelt-edit--edit-buffer-impl buf "" buffer-content-string)
     (with-current-buffer buf (save-buffer))
     tmp-path))
 
@@ -107,13 +107,13 @@ Buffer is not switched to or displayed. File is created and saved to disk."
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "create_temp_file_buffer"
-   :function #'gptel-tools--create-temp-file-buffer
+   :function #'gptelt--create-temp-file-buffer
    :description "Create a new temp file with specified content and return the temp file path."
    :args (list
           '(:name "buffer_content_string" :type string
             :description "The complete content to write to the new file")
           '(:name "prefix" :type "string" :optional t
-            :description "prefix for temp file name (default: gptel-)")
+            :description "prefix for temp file name (default: gptelt-)")
           '(:name "suffix" :type "string" :optional t
             :description "file name suffix (e.g. .el, .py), default: none"))
    :category "emacs"
@@ -121,7 +121,7 @@ Buffer is not switched to or displayed. File is created and saved to disk."
    :include t))
 
 (comment
-  (gptel-tools--create-temp-file-buffer "(comment)" nil ".el"))
+  (gptelt--create-temp-file-buffer "(comment)" nil ".el"))
 
 (provide 'create-file-buffer-tool)
 ;;; create-file-buffer-tool.el ends here

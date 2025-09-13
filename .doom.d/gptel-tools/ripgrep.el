@@ -2,16 +2,12 @@
 
 ;;; Commentary:
 
-;; Glob tool using rg.el for file pattern matching and type alias operations.
-;; Provides functionality to search for files matching glob patterns using ripgrep's
-;; built-in type system and custom patterns.
-
 ;;; Code:
 
 (require 'rg)
 
 ;;; Utility functions
-(defun gptel-rg-tool--get-project-root ()
+(defun gptelt-rg-tool--get-project-root ()
   "Get project root for current context."
   (if (fboundp '++workspace-current-project-root)
       (++workspace-current-project-root)
@@ -21,20 +17,20 @@
             (project-root project)
           (car (project-roots project)))))))
 
-(defun gptel-rg-tool--resolve-directory (dir)
+(defun gptelt-rg-tool--resolve-directory (dir)
   "Resolve DIR to absolute path.
 If DIR is relative, resolve it against the current project root."
   (cond
-   ((string= dir "project") (or (gptel-rg-tool--get-project-root) default-directory))
+   ((string= dir "project") (or (gptelt-rg-tool--get-project-root) default-directory))
    ((string= dir "current") default-directory)
    ((file-name-absolute-p dir) dir)
-   (t (let ((project-root (gptel-rg-tool--get-project-root)))
+   (t (let ((project-root (gptelt-rg-tool--get-project-root)))
         (if project-root
             (expand-file-name dir project-root)
           (expand-file-name dir default-directory))))))
 
 ;;; Main glob function
-(defun gptel-rg-tool-glob (pattern &optional path max-results)
+(defun gptelt-rg-tool-glob (pattern &optional path max-results)
   "Find files matching PATTERN in DIRECTORY using ripgrep.
 
 PATTERN can be:
@@ -46,8 +42,8 @@ DIRECTORY is absolute or relative to project root. Defaults to project root.
 MAX-RESULTS limits the number of results (default: 50).
 
 Returns a list of file paths relative to the project root."
-  (let* ((project-root (gptel-rg-tool--get-project-root))
-         (dir (gptel-rg-tool--resolve-directory (or path project-root)))
+  (let* ((project-root (gptelt-rg-tool--get-project-root))
+         (dir (gptelt-rg-tool--resolve-directory (or path project-root)))
          (limit (or max-results 50))
          (default-directory dir)
          (type-aliases (rg-get-type-aliases))
@@ -79,7 +75,7 @@ Returns a list of file paths relative to the project root."
         limited-results))))
 
 ;;; Content search functions
-(defun gptel-rg-tool-search-content
+(defun gptelt-rg-tool-search-content
     (pattern &optional path include case-sensitive literal context-lines max-results)
   "Search for PATTERN in file contents using ripgrep.
 
@@ -92,8 +88,8 @@ CONTEXT-LINES shows N lines before and after matches.
 MAX-RESULTS limits the number of results (default: 50).
 
 Returns a list of search results with file paths, line numbers, and content."
-  (let* ((project-root (gptel-rg-tool--get-project-root))
-         (dir (gptel-rg-tool--resolve-directory (or path project-root)))
+  (let* ((project-root (gptelt-rg-tool--get-project-root))
+         (dir (gptelt-rg-tool--resolve-directory (or path project-root)))
          (limit (or max-results 50))
          (context (or context-lines 0))
          (default-directory dir)
@@ -135,10 +131,10 @@ Returns a list of search results with file paths, line numbers, and content."
                         :line line-num :column column :content content) results))))
       (reverse results))))
 
-(defun gptel-rg-tool-search-regex
+(defun gptelt-rg-tool-search-regex
     (pattern &optional path include max-results)
   "Search file contents using regular expressions."
-  (gptel-rg-tool-search-content pattern path include nil nil nil max-results))
+  (gptelt-rg-tool-search-content pattern path include nil nil nil max-results))
 
 ;;; Tool registration
 
@@ -146,7 +142,7 @@ Returns a list of search results with file paths, line numbers, and content."
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "glob"
-   :function #'gptel-rg-tool-glob
+   :function #'gptelt-rg-tool-glob
    :description "- Fast file pattern matching tool that works with any codebase size
 - Supports glob patterns like \"**/*.clj\" or \"src/**/*.{clj,cljs,cljc}\"
 - Returns matching file paths sorted by modification time
@@ -163,7 +159,7 @@ Returns a list of search results with file paths, line numbers, and content."
 
   (gptel-make-tool
    :name "grep"
-   :function #'gptel-rg-tool-search-regex
+   :function #'gptelt-rg-tool-search-regex
    :description "
 - Fast content search tool that works with any codebase size
 - Searches file contents using regular expressions
@@ -182,8 +178,3 @@ Returns a list of search results with file paths, line numbers, and content."
    :category "content-search"
    :confirm nil
    :include t))
-
-(provide 'gptel-rg-tool)
-
-;;; glob tool using rg.el
-;; glob in given dir for given args, if no dir given, use project root from ++workspace-current-project-root
