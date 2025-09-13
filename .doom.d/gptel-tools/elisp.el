@@ -1,46 +1,112 @@
 ;;; .nixpkgs/.doom.d/gptel-tools/elisp.el -*- lexical-binding: t; -*-
 
-(require 'find-func)
-
 ;;; Tool: Evaluate Elisp Buffer (ask for confirmation, show buffer if not visible)
 (defun gptel-evaluate-elisp-buffer (buffer-name)
   "Evaluate elisp BUFFER-NAME after confirming with user. Show buffer if not visible. Bury if not shown before."
   (interactive)
   (let* ((buf (get-buffer buffer-name))
+         (buf-file (buffer-file-name buf))
          (shown-before (get-buffer-window buf))
+         (eval-ok? nil)
+         (eval-err nil)
          win)
     (unless buf (error "Buffer not found: %s" buffer-name))
+    (unless (eq (buffer-local-value 'major-mode buf) 'emacs-lisp-mode)
+      (error "Buffer %s is not in emacs-lisp-mode" buffer-name))
     (setq win (unless shown-before (display-buffer buf)))
     (when (y-or-n-p (format "Evaluate buffer %s? " buffer-name))
-      (with-current-buffer buf
-        (eval-buffer)
-        (message "Evaluated buffer: %s" buffer-name)))
+      (setq eval-err
+            (condition-case err
+                (progn
+                  (eval-buffer buf t buf-file nil t)
+                  (setq eval-ok? t))
+              (error (format "Error evaluate buffer `%s`: %s"
+                             buf
+                             (error-message-string err)))))
+      (message "Evaluated buffer: %s" buffer-name))
     (when (and win (window-live-p win))
-      (quit-restore-window win 'bury))))
+      (quit-restore-window win 'bury))
+    (if eval-ok?
+        (format "Successfully evaluated buffer `%s`" buffer-name)
+      eval-err)))
 
 ;;; Tool: Evaluate Elisp File (load file into buffer, then evaluate, with confirmation)
 (defun gptel-evaluate-elisp-file (file-path)
   "Load FILE-PATH into buffer and evaluate after confirming with user. Show buffer if not visible. Bury if not shown before."
   (interactive)
   (unless (file-name-absolute-p file-path) (error "file-path must be absolute"))
+  (unless (string-suffix-p ".el" file-path)
+    (error "File %s is not an .el file" file-path))
   (gptel-evaluate-elisp-buffer (find-file-noselect file-path)))
+
+;;; Tool: Run ERT test by selector regex and return summary report
+(defun gptel-run-ert-test (test_selector_regex)
+  "Run ERT tests matching TEST_SELECTOR_REGEX, return summary report as string. Handles 'test-started and 'test-ended events."
+  (let* ((output-string "")
+         (listener
+          (lambda (event-type &rest event-args)
+            (cl-ecase event-type
+              (run-started
+               (cl-destructuring-bind (stats) event-args
+                 (setq output-string (format "Running %s tests (selector: %S)\n"
+                                             (length (ert--stats-tests stats))
+                                             test_selector_regex))))
+              (test-started
+               (cl-destructuring-bind (stats test) event-args
+                 (setq output-string (concat output-string
+                                             (format "Started: %S\n" (ert-test-name test))))))
+              (test-ended
+               (cl-destructuring-bind (stats test result) event-args
+                 (let ((expectedp (ert-test-result-expected-p test result)))
+                   (setq output-string (concat output-string
+                                               (format "Ended:   %S\n%9s  %S%s\n"
+                                                       (ert-test-name test)
+                                                       (ert-string-for-test-result result expectedp)
+                                                       (ert-test-name test)
+                                                       (ert-reason-for-test-result result)))))))
+              (run-ended
+               (cl-destructuring-bind (stats abortedp) event-args
+                 (setq output-string (concat output-string
+                                             (format "\nRan %s tests, %s results as expected, %s unexpected, %s skipped%s\n"
+                                                     (ert-stats-total stats)
+                                                     (ert-stats-completed-expected stats)
+                                                     (ert-stats-completed-unexpected stats)
+                                                     (ert-stats-skipped stats)
+                                                     (if abortedp ", ABORTED" "")))))))))
+         (stats (ert-run-tests test_selector_regex listener)))
+    output-string))
+
+(comment
+  (gptel-run-ert-test "list-buffers-test"))
 
 ;;; gptel tool registration
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "evaluate_elisp_buffer"
    :function #'gptel-evaluate-elisp-buffer
-   :description "Evaluate a buffer by buffer name (after user confirmation). Shows buffer if not visible, buries if not shown before."
+   :description "Evaluate emacs-lisp-mode a buffer by buffer name."
    :args (list '(:name "buffer_name" :type string :description "The name of the buffer to evaluate"))
    :category "elisp"
-   :confirm t
+   :confirm nil
    :include t)
 
   (gptel-make-tool
    :name "evaluate_elisp_file"
    :function #'gptel-evaluate-elisp-file
-   :description "Evaluate a file by loading it as a buffer and evaluating (after user confirmation). Shows buffer if not visible, buries if not shown before."
-   :args (list '(:name "file_path" :type string :description "Absolute path to the elisp file to evaluate"))
+   :description "Evaluate a \".el\" file by loading it as a buffer and evaluating."
+   :args (list
+          '(:name "file_path"
+            :type string
+            :description "Absolute path to the elisp file to evaluate"))
    :category "elisp"
-   :confirm t
+   :confirm nil
+   :include t)
+
+  (gptel-make-tool
+   :name "run_ert_test"
+   :function #'gptel-run-ert-test
+   :description "Run Emacs ERT test(s) by selector regex, return summary report."
+   :args (list '(:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
+   :category "elisp"
+   :confirm nil
    :include t))

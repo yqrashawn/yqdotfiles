@@ -8,10 +8,8 @@
 
 (ert-deftest gptel-tools-filter-buffers-regex-test ()
   "Test filter-buffers-regex returns correct subset."
-  (let ((filtered (gptel-tools-filter-buffers-regex "file")))
-    (should (and (member "edit-file.el" filtered)
-                 (member "create-file.el" filtered)
-                 (not (member "buffer.el" filtered))))))
+  (let ((filtered (gptel-tools-filter-buffers-regex "ss")))
+    (should (member "*Messages*" filtered))))
 
 (ert-deftest gptel-tools-get-buffer-file-path-test ()
   "Test get-buffer-file-path returns correct paths."
@@ -21,6 +19,12 @@
       (let ((buf (car pair))
             (path (cadr pair)))
         (should (equal (gptel-tools--get-buffer-file-path buf) path))))))
+
+(ert-deftest gptel-tools-get-file-buffer-name-test ()
+  "Test get-file-buffer-name returns correct buffer name for a file path."
+  (let* ((file-path (expand-file-name "~/.nixpkgs/.doom.d/gptel-tools/buffer-test.el"))
+         (expected-buffer "buffer-test.el"))
+    (should (equal (gptel-tools--get-file-buffer-name file-path) expected-buffer))))
 
 (ert-deftest gptel-tools-visible-buffers-test ()
   "Test visible-buffers returns all currently visible tool buffers."

@@ -215,6 +215,10 @@
 
   (defadvice! +gptel-mcp--activate-tools (_)
     :after #'gptel-mcp--activate-tools
+    (+gptel-make-my-presets))
+
+  (defadvice! +gptel-make-tool (_)
+    :after #'+gptel-make-tool
     (+gptel-make-my-presets)))
 
 ;;; mcp

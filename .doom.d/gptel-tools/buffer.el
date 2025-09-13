@@ -17,9 +17,16 @@
   (when-let ((b (get-buffer buf-name)))
     (buffer-file-name b)))
 
+(defun gptel-tools--get-file-buffer-name (file-path)
+  "Return the buffer name visiting FILE-PATH, or nil if not found."
+  (let ((buf (cl-find file-path (buffer-list)
+                      :key #'buffer-file-name
+                      :test #'string-equal)))
+    (when buf (buffer-name buf))))
+
 ;;; Tool registration
 
-;; Register the get buffer file path tool with gptel
+;; Register the get buffer file path tool and get file buffer name tool with gptel
 (when (fboundp 'gptel-make-tool)
   (gptel-make-tool
    :name "get_buffer_file_path"
@@ -27,6 +34,14 @@
    :description "Given a buffer-name, return the file path that the buffer is visiting or nil"
    :args '((:name "buffer_name" :type string
             :description "buffer name"))
+   :category "emacs"
+   :confirm nil
+   :include t)
+  (gptel-make-tool
+   :name "get_file_buffer_name"
+   :function #'gptel-tools--get-file-buffer-name
+   :description "Given a file-path, return the buffer name that is visiting the file or nil."
+   :args '((:name "file_path" :type string :description "absolute file path"))
    :category "emacs"
    :confirm nil
    :include t))
