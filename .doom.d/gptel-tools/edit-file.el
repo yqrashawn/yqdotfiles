@@ -27,18 +27,14 @@
 (defun gptelt-edit--resolve-file-path (file-path)
   "Resolve FILE-PATH to absolute path.
 If FILE-PATH is relative, resolve it against the current project root."
-  (if (file-name-absolute-p file-path)
-      file-path
-    (let ((project-root (gptelt-edit--get-project-root)))
-      (if project-root
-          (expand-file-name file-path project-root)
-        (expand-file-name file-path default-directory)))))
+  (let ((file-path (expand-file-name file-path)))
+    (unless (file-name-absolute-p file-path)
+      (error "file_path must be an absolute path"))
+    file-path))
 
 (defun gptelt-edit--get-buffer-context (file-path)
   "Generate context information for FILE-PATH (must be absolute path) including buffer, project, and mode info."
-  (unless (file-name-absolute-p file-path)
-    (error "file-path must be an absolute path"))
-  (let* ((resolved-path file-path)
+  (let* ((resolved-path (gptelt-edit--resolve-file-path file-path))
          (buffer (or (get-file-buffer resolved-path)
                      (when (file-exists-p resolved-path)
                        (find-file-noselect resolved-path))))
@@ -261,9 +257,8 @@ This function:
 6. Formats the changed region if LSP is available
 
 Returns a string describing the result of the operation."
-  (unless (file-name-absolute-p file-path)
-    (error "file-path must be an absolute path"))
-  (let* ((context (gptelt-edit--get-buffer-context file-path))
+  (let* ((file-path (gptelt-edit--resolve-file-path file-path))
+         (context (gptelt-edit--get-buffer-context file-path))
          (buffer (plist-get context :buffer))
          (resolved-path (plist-get context :file-path))
          (original-path (plist-get context :original-path)))
@@ -277,7 +272,7 @@ Returns a string describing the result of the operation."
   (gptel-make-tool
    :name "edit_buffer"
    :function #'gptelt-edit-edit-buffer
-   :description "Edit a buffer by replacing old text with new text. If replace_all is t, replaces all occurrences."
+   :description "Performs exact string replacements in buffers"
    :args (list '(:name "buffer_name" :type string
                  :description "The name of the buffer to edit")
                '(:name "old_string" :type string
@@ -294,7 +289,7 @@ Returns a string describing the result of the operation."
   (gptel-make-tool
    :name "edit_file"
    :function #'gptelt-edit-edit-file
-   :description "Edit a file by replacing old text with new text. Only accepts absolute file paths. If replace_all is t, replaces all occurrences."
+   :description "Performs exact string replacements in files"
    :args (list '(:name "file_path" :type string
                  :description "Absolute path to the file to edit (must be absolute, not relative)")
                '(:name "old_string" :type string
@@ -392,7 +387,7 @@ Returns a string describing the result."
   (gptel-make-tool
    :name "multi_edit_file"
    :function #'gptelt-edit-multi-edit-file
-   :description "Apply multiple edits to a file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. The file is opened if not already, all edits are applied in order, and saved."
+   :description "Apply multiple edits to a single file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. Each edit operates on the result of the previous edit. The file is opened if not already, all edits are applied in order, and saved."
    :args (list '(:name "file_path" :type string
                  :description "absolute or relative file path to the file to edit, `~/` is supported")
                '(:name "edits"
