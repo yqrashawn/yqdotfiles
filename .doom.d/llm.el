@@ -54,6 +54,7 @@
     :description "claude code"
     :backend "CCode"
     :model 'sonnet
+    :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
   (gptel--apply-preset 'default)

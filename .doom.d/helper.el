@@ -157,16 +157,18 @@ Each file is opened (if not already) with `find-file-noselect` relative to
            (buffer-string)))))
 
 (defun +current-workspace-info-buffer ()
-  (let ((b (get-buffer-create " *current-workspace-info*" t)))
+  (let ((b (get-buffer-create " *user-current-workspace-info*" t)))
     (with-current-buffer b
       (erase-buffer)
       (insert!
-       "# Current workspace info\n"
-       ("workspace name:`%s`," (+workspace-current-name))
-       ("workspace root:`%s`" (++workspace-current-project-root))
-       ("workspace project name:`%s`" (doom-project-name (++workspace-current-project-root)))
-       ("workspace project root:`%s`" (++workspace-current-project-root))
-       "\n"))
+       "# User Current Workspace Info\n"
+       "<env>\n"
+       ("Today's date: `%s`\n" (format-time-string "%Y-%m-%d"))
+       ("workspace name: `%s`\n" (+workspace-current-name))
+       ("workspace root: `%s`\n" (++workspace-current-project-root))
+       ("workspace project name: `%s`\n" (doom-project-name (++workspace-current-project-root)))
+       ("workspace project root: `%s`\n" (++workspace-current-project-root))
+       "</env>"))
     b))
 
 (defvar +llm-project-default-files '())
