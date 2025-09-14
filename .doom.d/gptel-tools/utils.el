@@ -37,7 +37,7 @@ Does nothing if parinfer-rust-mode not available."
   (if (not (featurep 'parinfer-rust-mode))
       (cons t nil)             ; No-op, treat as success if parinfer not available
     (with-current-buffer buffer
-      (let ((parinfer-rust-preferred-mode "smart")
+      (let ((parinfer-rust-preferred-mode "indent")
             (parinfer-rust--in-debug nil)
             (parinfer-rust--disable nil)
             (result nil)
@@ -50,7 +50,7 @@ Does nothing if parinfer-rust-mode not available."
                   (parinfer-rust-mode 1))
                 (setq parinfer-rust--disable nil)
                 (setq parinfer-rust--in-debug nil)
-                (setq parinfer-rust--mode "smart")
+                (setq parinfer-rust--mode "indent")
                 (parinfer-rust--execute)
                 (let ((errval (and (boundp 'parinfer-rust--error) parinfer-rust--error)))
                   (if (not errval)

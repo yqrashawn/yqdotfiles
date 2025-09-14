@@ -991,3 +991,13 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
       (setq-local buffer-save-without-query t)
       (save-buffer))
     t))
+
+
+(prefer-coding-system 'utf-8)
+
+(comment
+  (progn
+    (set-default-coding-systems 'utf-8)
+    (prefer-coding-system 'utf-8)
+    (setq-local coding-system-for-read 'utf-8)
+    (setq-local coding-system-for-write 'utf-8)))
