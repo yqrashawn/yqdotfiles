@@ -52,11 +52,11 @@ Returns a list of file paths relative to the project root."
       (error "Directory does not exist: %s" dir))
     ;; Check if pattern is a type alias
     (if-let ((alias-entry (assoc pattern type-aliases)))
-      (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
-        (condition-case _
-            (let ((output (shell-command-to-string rg-command)))
-              (setq results (split-string output "\n" t)))
-          (error (setq results nil))))
+        (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
+          (condition-case _
+              (let ((output (shell-command-to-string rg-command)))
+                (setq results (split-string output "\n" t)))
+            (error (setq results nil))))
       ;; Handle as glob pattern(s)
       (let* ((patterns (split-string pattern nil t))
              (glob-args (mapconcat (lambda (p) (format "--glob='%s'" p)) patterns " "))
@@ -142,10 +142,23 @@ Returns a list of search results with file paths, line numbers, and content."
 (gptelt-make-tool
  :name "glob"
  :function #'gptelt-rg-tool-glob
- :description "- Fast file pattern matching tool that works with any codebase size
-  - Supports glob patterns like \"**/*.clj\" or \"src/**/*.{clj,cljs,cljc}\"
-  - Returns matching file paths sorted by modification time
-  - Use this tool when you need to find files by name patterns"
+ :description (concat "Fast file pattern matching tool that works with any codebase size using ripgrep. "
+                      "Efficiently finds files by name patterns and file types. "
+                      "\n\nSupported pattern types:\n"
+                      "- Glob patterns: '*.el', '**/*.py', 'src/**/*.{js,ts}'\n"
+                      "- Ripgrep type aliases: 'elisp', 'python', 'javascript'\n"
+                      "- Multiple patterns: '*.js *.ts' (space-separated)\n\n"
+                      "Usage examples:\n"
+                      "- Find all Python files: glob('*.py')\n"
+                      "- Find TypeScript in src: glob('**/*.ts', 'src')\n"
+                      "- Use type alias: glob('elisp')\n"
+                      "- Limit results: glob('*.js', '/project', 20)\n\n"
+                      "Path parameter supports:\n"
+                      "- 'project' (default): Search from project root\n"
+                      "- 'current': Search from current directory\n"
+                      "- Absolute paths: '/specific/directory'\n"
+                      "- Relative paths: Resolved against project root\n\n"
+                      "Returns file paths relative to project root when possible, making them easy to use with other tools.")
  :args '((:name "pattern"
           :type string
           :description "The glob pattern to match files against")
@@ -164,13 +177,24 @@ Returns a list of search results with file paths, line numbers, and content."
 (gptelt-make-tool
  :name "grep"
  :function #'gptelt-rg-tool-search-regex
- :description "
-  - Fast content search tool that works with any codebase size
-  - Searches file contents using regular expressions
-  - Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)
-  - Filter files by pattern with the include parameter (eg. \"*.js\", \"*.{ts,tsx}\")
-  - Returns matching file paths sorted by modification time
-  - Use this tool when you need to find files containing specific patterns "
+ :description (concat "Fast content search tool that works with any codebase size using ripgrep. "
+                      "Searches file contents using powerful regular expressions with high performance. "
+                      "\n\nRegex capabilities:\n"
+                      "- Full regex syntax: 'log.*Error', 'function\\s+\\w+', '^class \\w+'\n"
+                      "- Case-sensitive and case-insensitive search\n"
+                      "- Literal string matching (non-regex) option\n"
+                      "- Context lines: Show N lines before/after matches\n\n"
+                      "Usage examples:\n"
+                      "- Find function definitions: grep('function\\s+\\w+')\n"
+                      "- Search in specific files: grep('TODO', '/project', '*.py')\n"
+                      "- Case-sensitive search: grep('Error', '/project', '*.log', true)\n"
+                      "- With context: grep('import.*react', '/src', '*.js', false, false, 3)\n\n"
+                      "File filtering options:\n"
+                      "- include parameter: '*.js', '*.{ts,tsx}', '**/*.py'\n"
+                      "- Searches hidden files by default\n"
+                      "- Respects .gitignore patterns\n\n"
+                      "Returns structured results with file paths (relative to project root), line numbers, "
+                      "column positions, and matched content. Perfect for code analysis and refactoring tasks.")
  :args '((:name "pattern"
           :type string
           :description "The regular expression pattern to search for in file contents")

@@ -272,7 +272,17 @@ Returns a string describing the result of the operation."
   (gptelt-make-tool
    :name "edit_buffer"
    :function #'gptelt-edit-edit-buffer
-   :description "Performs exact string replacements in buffers"
+   :description (concat "Performs exact string replacements in buffers. "
+                        "This tool edits already open Emacs buffers by replacing old_string with new_string. "
+                        "\n\nIMPORTANT REQUIREMENTS:\n"
+                        "1. UNIQUENESS: The old_string MUST uniquely identify the text to change\n"
+                        "2. EXACT MATCH: Include all whitespace, indentation, and surrounding code exactly\n"
+                        "3. CONTEXT: Include 3-5 lines before and after the change for uniqueness\n\n"
+                        "Usage examples:\n"
+                        "- Replace function: edit_buffer('main.py', 'def old_func():\\n    pass', 'def new_func():\\n    return True')\n"
+                        "- Replace all occurrences: edit_buffer('config.js', 'localhost', '127.0.0.1', true)\n\n"
+                        "For Lisp code, automatically validates parentheses balance and applies LSP formatting. "
+                        "Use this instead of edit_file when the buffer is already open in Emacs.")
    :args '((:name "buffer_name" :type string
             :description "The name of the buffer to edit")
            (:name "old_string" :type string
@@ -289,7 +299,20 @@ Returns a string describing the result of the operation."
   (gptelt-make-tool
    :name "edit_file"
    :function #'gptelt-edit-edit-file
-   :description "Performs exact string replacements in files"
+   :description (concat "Performs exact string replacements in files. "
+                        "This tool edits files by replacing old_string with new_string. The file will be opened "
+                        "if not already loaded, and automatically saved after the edit. "
+                        "\n\nIMPORTANT REQUIREMENTS:\n"
+                        "1. ABSOLUTE PATH: file_path must be an absolute path, not relative\n"
+                        "2. UNIQUENESS: The old_string MUST uniquely identify the text to change\n"
+                        "3. EXACT MATCH: Include all whitespace, indentation, and surrounding code exactly\n"
+                        "4. CONTEXT: Include 3-5 lines before and after the change for uniqueness\n\n"
+                        "Usage examples:\n"
+                        "- Simple replacement: edit_file('/path/to/main.py', 'old_value = 1', 'new_value = 2')\n"
+                        "- Function replacement: edit_file('/path/to/app.js', 'function oldName() {\\n  return false;\\n}', 'function newName() {\\n  return true;\\n}')\n"
+                        "- Replace all: edit_file('/path/to/config.json', '\"debug\": false', '\"debug\": true', true)\n\n"
+                        "For Lisp code, automatically validates parentheses balance and applies LSP formatting. "
+                        "Creates the file if it doesn't exist (use empty old_string for new files).")
    :args '((:name "file_path" :type string
             :description "Absolute path to the file to edit (must be absolute, not relative)")
            (:name "old_string" :type string
@@ -357,7 +380,22 @@ Returns a string describing the result."
   (gptelt-make-tool
    :name "multi_edit_buffer"
    :function #'gptelt-edit-multi-edit-buffer
-   :description "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair."
+   :description (concat "Apply multiple edits to a buffer by replacing a list of old texts with new texts, sequentially. "
+                        "Each edit is applied in order to the result of the previous edit. "
+                        "\n\nAdvantages over single edits:\n"
+                        "- More efficient for multiple changes to the same buffer\n"
+                        "- Maintains context between related changes\n"
+                        "- Single save operation after all changes\n\n"
+                        "Usage example:\n"
+                        "multi_edit_buffer('app.py', [\n"
+                        "  {\"old_string\": \"debug = False\", \"new_string\": \"debug = True\"},\n"
+                        "  {\"old_string\": \"version = '1.0'\", \"new_string\": \"version = '1.1'\"}\n"
+                        "])\n\n"
+                        "Each edit object supports:\n"
+                        "- old_string: Exact text to replace (required)\n"
+                        "- new_string: Replacement text (required)\n"
+                        "- replace_all: Replace all occurrences (optional, default false)\n\n"
+                        "For Lisp code, validates parentheses balance after all edits are applied.")
    :args '((:name "buffer_name" :type string
             :description "The name of the buffer to edit")
            (:name "edits"
@@ -386,7 +424,24 @@ Returns a string describing the result."
   (gptelt-make-tool
    :name "multi_edit_file"
    :function #'gptelt-edit-multi-edit-file
-   :description "Apply multiple edits to a single file by replacing a list of old texts with new texts, sequentially. Each edit is a (old_string . new_string) pair. Each edit operates on the result of the previous edit. The file is opened if not already, all edits are applied in order, and saved."
+   :description (concat "Apply multiple edits to a single file by replacing a list of old texts with new texts, sequentially. "
+                        "Each edit operates on the result of the previous edit. The file is opened if not already loaded, "
+                        "all edits are applied in order, and automatically saved. "
+                        "\n\nBest practices:\n"
+                        "- Use for related changes that should be applied together\n"
+                        "- Ensure old_string patterns account for previous edits in the sequence\n"
+                        "- More efficient than multiple separate edit_file calls\n\n"
+                        "Usage example:\n"
+                        "multi_edit_file('/path/to/config.js', [\n"
+                        "  {\"old_string\": \"port: 3000\", \"new_string\": \"port: 8080\"},\n"
+                        "  {\"old_string\": \"env: 'dev'\", \"new_string\": \"env: 'prod'\"}\n"
+                        "])\n\n"
+                        "Each edit object supports:\n"
+                        "- old_string: Exact text to replace (required)\n"
+                        "- new_string: Replacement text (required)\n"
+                        "- replace_all: Replace all occurrences (optional, default false)\n\n"
+                        "For Lisp code, validates parentheses balance after all edits. "
+                        "Supports both absolute paths and paths relative to project root (~/ expansion supported).")
    :args '((:name "file_path" :type string
             :description "absolute or relative file path to the file to edit, `~/` is supported")
            (:name "edits"
