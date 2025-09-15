@@ -138,9 +138,9 @@ If multiple items, adds all in order."
           (setq result (cons item result)))
         result)))
    ((vectorp coll)
-    (apply #'vconcat coll items))
+    (vconcat coll items))
    ((arrayp coll)
-    (apply #'vconcat coll items))
+    (vconcat coll items))
    ((hash-table-p coll)
     (let ((copy (copy-hash-table coll)))
       (while items
@@ -225,8 +225,8 @@ The type of the first map determines the result."
                              (when (and (natnump i) (< i (length copy)))
                                (aset copy i v))) m)))
                 copy))
-             ((and (listp result) (plist-get result (car result)))
-              ;; plist
+             ((and (listp result) (not (null result)) (symbolp (car result)))
+              ;; plist - check if first element is a symbol (plist keys are symbols)
               (let* ((plist (copy-sequence result))
                      (pl m))
                 (when (listp pl)
@@ -367,9 +367,6 @@ Result type follows the first map."
              (t result))))
     result))
 
-(defalias 'comp #'-compose)
-(defalias 'partial #'-partial)
-
 ;;; clj/first
 (defun clj/first (coll)
   "Return the first element of COLL, or nil if COLL is empty or nil."
@@ -395,5 +392,91 @@ Result type follows the first map."
 (defun clj/constantly (x)
   "Return a function that always returns X, regardless of arguments."
   (lambda (&rest _) x))
+
+;;; clj/comp
+(defun clj/comp (&rest fns)
+  "Return a function that is the composition of FNS.
+Apply functions right-to-left. If no functions given, return identity.
+Example: (funcall (clj/comp inc str) 5) => \"6\""
+  (if (null fns)
+      #'clj/identity
+    (apply #'-compose fns)))
+
+;;; clj/partial
+(defun clj/partial (f &rest args)
+  "Return a function that is a partial application of F to ARGS.
+The returned function takes additional arguments and applies F to ARGS + those arguments.
+Example: (funcall (clj/partial + 1 2) 3 4) => 10"
+  (apply #'-partial f args))
+
+;;; clj/identity
+(defun clj/identity (x)
+  "Return X unchanged."
+  x)
+
+;;; clj/map
+(defun clj/map (f coll &rest colls)
+  "Apply F to each element of COLL(s) and return a list of results.
+If multiple collections are provided, F should accept that many arguments."
+  (if colls
+      (apply #'cl-mapcar f coll colls)
+    (mapcar f coll)))
+
+;;; clj/filter
+(defun clj/filter (pred coll)
+  "Return a list of elements in COLL for which PRED returns non-nil."
+  (-filter pred coll))
+
+;;; clj/remove
+(defun clj/remove (pred coll)
+  "Return a list of elements in COLL for which PRED returns nil."
+  (-remove pred coll))
+
+;;; clj/some
+(defun clj/some (pred coll)
+  "Return the first non-nil result of applying PRED to elements of COLL.
+Return nil if no element satisfies PRED."
+  (-some pred coll))
+
+;;; clj/doseq
+(defmacro clj/doseq (bindings &rest body)
+  "Execute BODY for each element in collection(s) specified by BINDINGS.
+BINDINGS should be [var coll] or [var1 coll1 var2 coll2 ...].
+Returns nil."
+  (if (= (length bindings) 2)
+      ;; Single binding case
+      (let ((var (nth 0 bindings))
+            (coll (nth 1 bindings)))
+        `(dolist (,var ,coll) ,@body))
+    ;; Multiple bindings case - nested loops
+    (let ((var (nth 0 bindings))
+          (coll (nth 1 bindings))
+          (rest-bindings (nthcdr 2 bindings)))
+      `(dolist (,var ,coll)
+         (clj/doseq ,rest-bindings ,@body)))))
+
+;;; clj/->
+(defmacro clj/-> (x &rest forms)
+  "Thread X through FORMS as the first argument.
+Insert X as the first argument in the first form, then the result
+as the first argument in the second form, etc."
+  (if forms
+      `(clj/-> ,(if (listp (car forms))
+                    `(,(caar forms) ,x ,@(cdar forms))
+                  `(,(car forms) ,x))
+               ,@(cdr forms))
+    x))
+
+;;; clj/->>
+(defmacro clj/->> (x &rest forms)
+  "Thread X through FORMS as the last argument.
+Insert X as the last argument in the first form, then the result
+as the last argument in the second form, etc."
+  (if forms
+      `(clj/->> ,(if (listp (car forms))
+                     `(,@(car forms) ,x)
+                   `(,(car forms) ,x))
+                ,@(cdr forms))
+    x))
 
 ;;; End clj.el

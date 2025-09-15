@@ -14,7 +14,9 @@
     (unless (eq (buffer-local-value 'major-mode buf) 'emacs-lisp-mode)
       (error "Buffer %s is not in emacs-lisp-mode" buffer-name))
     (setq win (unless shown-before (display-buffer buf)))
-    (when (y-or-n-p (format "Evaluate buffer %s? " buffer-name))
+    (when (or
+           (not shown-before)
+           (y-or-n-p (format "Evaluate buffer %s? " buffer-name)))
       (setq eval-err
             (condition-case err
                 (progn
@@ -66,42 +68,20 @@
 ;;; Tool: Run ERT test by selector regex and return summary report
 (defun gptelt-run-ert-test (test_selector_regex)
   "Run ERT tests matching TEST_SELECTOR_REGEX, return summary report as string. Handles 'test-started and 'test-ended events."
-  (let* ((output-string "")
-         (listener
-          (lambda (event-type &rest event-args)
-            (cl-ecase event-type
-              (run-started
-               (cl-destructuring-bind (stats) event-args
-                 (setq output-string (format "Running %s tests (selector: %S)\n"
-                                             (length (ert--stats-tests stats))
-                                             test_selector_regex))))
-              (test-started
-               (cl-destructuring-bind (stats test) event-args
-                 (setq output-string (concat output-string
-                                             (format "Started: %S\n" (ert-test-name test))))))
-              (test-ended
-               (cl-destructuring-bind (stats test result) event-args
-                 (let ((expectedp (ert-test-result-expected-p test result)))
-                   (setq output-string (concat output-string
-                                               (format "Ended:   %S\n%9s  %S%s\n"
-                                                       (ert-test-name test)
-                                                       (ert-string-for-test-result result expectedp)
-                                                       (ert-test-name test)
-                                                       (ert-reason-for-test-result result)))))))
-              (run-ended
-               (cl-destructuring-bind (stats abortedp) event-args
-                 (setq output-string (concat output-string
-                                             (format "\nRan %s tests, %s results as expected, %s unexpected, %s skipped%s\n"
-                                                     (ert-stats-total stats)
-                                                     (ert-stats-completed-expected stats)
-                                                     (ert-stats-completed-unexpected stats)
-                                                     (ert-stats-skipped stats)
-                                                     (if abortedp ", ABORTED" "")))))))))
-         (stats (ert-run-tests test_selector_regex listener)))
-    output-string))
+  (let ((msgb (generate-new-buffer "*temp-ert-report*" t)))
+    (letf!
+      ((defadvice message (:around (fn msg &rest args))
+         (with-current-buffer msgb
+           (insert (apply fn msg args))
+           (insert "\n"))))
+      (ert-run-tests-batch test_selector_regex)
+      (let ((report (with-current-buffer msgb (buffer-string))))
+        (kill-buffer msgb)
+        report))))
 
 (comment
-  (gptelt-run-ert-test "list-buffers-test"))
+  (gptelt-run-ert-test "list-buffers-test")
+  (gptelt-run-ert-test "clj-test-"))
 
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
@@ -126,9 +106,9 @@
    :include t)
 
   (gptelt-make-tool
-   :name "run_ert_test"
+   :name "run_ert_tests"
    :function #'gptelt-run-ert-test
-   :description "Run Emacs ERT test(s) by selector regex, return summary report."
+   :description "Run elisp ert test(s) by selector regex, return summary report."
    :args '((:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
    :category "elisp"
    :confirm nil

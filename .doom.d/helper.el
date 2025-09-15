@@ -166,8 +166,12 @@ Each file is opened (if not already) with `find-file-noselect` relative to
        ("Today's date: `%s`\n" (format-time-string "%Y-%m-%d"))
        ("workspace name: `%s`\n" (+workspace-current-name))
        ("workspace root: `%s`\n" (++workspace-current-project-root))
-       ("workspace project name: `%s`\n" (doom-project-name (++workspace-current-project-root)))
+       ("workspace project name: `%s`\n"
+        (doom-project-name (++workspace-current-project-root)))
        ("workspace project root: `%s`\n" (++workspace-current-project-root))
+       ("Is project a git repo: %s"
+        (if (magit-git-repo-p (++workspace-current-project-root))
+            "Yes" "No"))
        "</env>"))
     b))
 
