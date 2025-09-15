@@ -239,7 +239,7 @@ A plist has an even number of elements and alternates between keywords and value
                              gptel--openai
                              (list one-gptel-tool)))
                            :function)))
-      (let ((id (format! "emacs_%s" (plist-get tool :name)))
+      (let ((id (plist-get tool :name))
             (description (plist-get tool :description))
             (schema (plist-get tool :parameters)))
         (mcp-server-lib--ref-counted-unregister
@@ -272,7 +272,6 @@ A plist has an even number of elements and alternates between keywords and value
     ))
 
 (comment
-  (gptelt-parse-tool-schema "emacs_glob")
   (gptelt-parse-tool-schema "glob")
   (type-of (gptel-tool-function (gptelt-get-tool "visible_buffers")))
 
