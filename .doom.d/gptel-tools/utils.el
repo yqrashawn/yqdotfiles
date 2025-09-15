@@ -263,6 +263,8 @@ A plist has an even number of elements and alternates between keywords and value
        (gptel-tool-name tool)))))
 
 (defun gptelt-make-tool (&rest args)
+  (when (null (plist-get args :args))
+    (error ":args must be a list"))
   (let ((tool (apply #'gptel-make-tool args)))
     (gptelt-mcp-register-one-gptel-tool tool)
     tool
