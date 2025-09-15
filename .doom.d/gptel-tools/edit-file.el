@@ -184,9 +184,7 @@ Returns a string describing the result of the operation."
               ;; Copy original buffer content
               (insert-buffer-substring buffer)
               ;; Set the same major mode
-              mj-mode
               (funcall mj-mode)
-              major-mode
               ;; Apply the replacement
               (goto-char (point-min))
               (if replace-all
@@ -211,10 +209,11 @@ Returns a string describing the result of the operation."
                   (setq
                    edit-allowed nil
                    unbalance-error
-                   (or error-msg "Buffer would have unbalanced parentheses after edit and could not be auto-balanced."))))))
+                   (or error-msg
+                       (format! "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY." (symbol-name mj-mode))))))))
         (when temp-buffer (kill-buffer temp-buffer))))
     (if (not edit-allowed)
-        (error "%s" unbalance-error)
+        (error (substring-no-properties unbalance-error))
       ;; Non-Lisp or balanced, so apply edit directly
       (let ((rst-message
              (if rst-buffer-string

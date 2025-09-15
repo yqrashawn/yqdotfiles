@@ -90,7 +90,7 @@
  :name "visible_buffers"
  :function #'gptelt-visible-buffers
  :description "Return a list of buffer names that are currently visible in windows to the user, user usually want to change these buffers."
- :args nil
+ :args '()
  :category "buffer"
  :confirm nil
  :include t)
