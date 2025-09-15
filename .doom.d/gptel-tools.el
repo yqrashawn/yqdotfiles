@@ -23,7 +23,9 @@
   (setq mcp-server-lib--tools (make-hash-table :test 'equal))
   (setq gptel--known-tools nil)
   (mcp-stop-server "emacs")
+  (mcp-server-lib-stop)
   (load! "gptel-tools.el")
+  (mcp-server-lib-start)
   (mcp-hub--start-server
    (cl-find "emacs" mcp-hub-servers :key #'car :test #'equal)
    nil t)

@@ -188,6 +188,11 @@
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   (setq! gptel-log-level 'debug)
+  (defun +gptel-toggle-debug ()
+    (interactive)
+    (if gptel-log-level
+        (setq! gptel-log-level 'debug)
+      (setq! gptel-log-level nil)))
   (setq! gptel-log-level 'nil)
 
   (el-patch-defun gptel-context--insert-buffer-string (buffer contexts)

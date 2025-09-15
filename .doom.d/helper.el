@@ -156,6 +156,51 @@ Each file is opened (if not already) with `find-file-noselect` relative to
              (+visible-buffers-list-buffer)
            (buffer-string)))))
 
+(defun ++workspace-cljs? ()
+  (-> (expand-file-name
+       "shadow-cljs.edn"
+       (++workspace-current-project-root))
+      (file-exists-p)))
+
+(defun ++workspace-clj? ()
+  (-> (expand-file-name
+       "deps.edn"
+       (++workspace-current-project-root))
+      (file-exists-p)))
+
+(defun ++workspace-clojure? ()
+  (or (++workspace-clj?)
+      (++workspace-cljs?)))
+
+(defun ++workspace-cljs-repl-connected? ()
+  (when (and (++workspace-cljs?)
+             (fboundp 'cider-connected-p))
+    (let ((cljs-buf
+           (-> (clj/filter
+                (comp
+                 (partial 'string-suffix-p ".cljs")
+                 'buffer-file-name)
+                (+workspace-buffer-list))
+               (clj/first))))
+      (when (buffer-live-p cljs-buf)
+        (with-current-buffer cljs-buf
+          (cider-connected-p))))))
+
+(defun ++workspace-clj-repl-connected? ()
+  (when (and (++workspace-clj?)
+             (fboundp 'cider-connected-p))
+    (with-current-buffer
+        (-> (expand-file-name
+             "deps.edn"
+             (++workspace-current-project-root))
+            (find-file-noselect))
+      (cider-connected-p))))
+
+(defun ++workspace-cider-connected-p ()
+  (and (++workspace-clojure?)
+       (or (++workspace-cljs-repl-connected?)
+           (++workspace-clj-repl-connected?))))
+
 (defun +current-workspace-info-buffer ()
   (let ((b (get-buffer-create " *user-current-workspace-info*" t)))
     (with-current-buffer b
@@ -169,9 +214,27 @@ Each file is opened (if not already) with `find-file-noselect` relative to
        ("workspace project name: `%s`\n"
         (doom-project-name (++workspace-current-project-root)))
        ("workspace project root: `%s`\n" (++workspace-current-project-root))
-       ("Is project a git repo: %s"
+       ("Is project a git repo: %s\n"
         (if (magit-git-repo-p (++workspace-current-project-root))
             "Yes" "No"))
+
+       ((and (++workspace-clojure?)
+             "workspace project type: %s project\n")
+        (cond
+         ((and (++workspace-cljs?) (++workspace-clj?)) "clj and cljs")
+         ((++workspace-cljs?) "cljs")
+         (t "clj")))
+
+       ((and (++workspace-clj?)
+             "clj nREPL is %s.\n")
+        (if (++workspace-clj-repl-connected?)
+            "connected, you can evaluate clj file/buffer/code"
+          "not connected, you can't evaluate clj"))
+       ((and (++workspace-clj?)
+             "shadow-cljs nREPL is %s.\n")
+        (if (++workspace-cljs-repl-connected?)
+            "connected, you can evaluate cljs file/buffer/code"
+          "not connected, you can't evaluate cljs"))
        "</env>"))
     b))
 

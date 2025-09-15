@@ -106,7 +106,16 @@
     (cond
      ((file-remote-p project nil t) (file-readable-p project))
      ;; ((file-remote-p project))
-     ((not (file-remote-p project)) (file-readable-p project)))))
+     ((not (file-remote-p project)) (file-readable-p project))))
+
+  (projectile-register-project-type
+   'clojure-deps '("deps.edn")
+   :project-file "deps.edn"
+   :test-suffix "_test")
+  (projectile-register-project-type
+   'clojure-shadow-cljs '("shadow-cljs.edn")
+   :project-file "shadow-cljs.edn"
+   :test-suffix "_test"))
 
 (after! dired
   (setq! dired-recursive-deletes 'always
