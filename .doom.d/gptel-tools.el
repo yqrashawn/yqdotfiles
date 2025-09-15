@@ -3,6 +3,7 @@
 (require 'smartparens nil t)
 
 (load! "gptel-tools/utils.el")
+(load! "gptel-tools/todo.el")
 (load! "gptel-tools/buffer.el")
 (load! "gptel-tools/read.el")
 (load! "gptel-tools/edit-file.el")
