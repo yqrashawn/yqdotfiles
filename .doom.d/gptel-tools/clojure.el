@@ -165,6 +165,93 @@ Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clj-get-ns-file-url "user")
   (gptelt-clj-get-ns-file-url "users"))
 
+;;; get symbol documentation
+(defun gptelt-clj-get-doc-for-symbol (symbol &optional namespace)
+  "Get documentation for SYMBOL in optional NAMESPACE.
+Returns the documentation string if available, or an error if not found.
+Ensures clj workspace and nREPL connection before proceeding."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (condition-case err
+      (let* ((qualified-symbol (if namespace
+                                   (format "%s/%s" namespace symbol)
+                                 symbol))
+             (info (cider-var-info qualified-symbol)))
+        (if info
+            (let ((doc (nrepl-dict-get info "doc"))
+                  (name (nrepl-dict-get info "name"))
+                  (ns (nrepl-dict-get info "ns"))
+                  (arglists (nrepl-dict-get info "arglists-str"))
+                  (macro (nrepl-dict-get info "macro"))
+                  (special (nrepl-dict-get info "special-form")))
+              (format "%s%s%s%s%s"
+                      (if ns (format "%s/%s" ns name) name)
+                      (if arglists (format "\n%s" arglists) "")
+                      (cond
+                       (special "\nSpecial Form")
+                       (macro "\nMacro")
+                       (t ""))
+                      (if doc (format "\n\n%s" doc) "\n\nNo documentation available.")
+                      ""))
+          (error "Symbol '%s' not found or not resolved" qualified-symbol)))
+    (error (error "Error getting symbol documentation: %s" (error-message-string err)))))
+
+(comment
+  (gptelt-clj-get-doc-for-symbol "defn"))
+
+;;; evaluate buffer
+(defun gptelt-clj-eval-buffer (buffer-name)
+  "Evaluate a Clojure buffer by BUFFER-NAME.
+Ensures the buffer exists, its file is in the current project, and evaluates it."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (let* ((buffer (get-buffer buffer-name))
+         (shown-before (get-buffer-window buffer))
+         win)
+    (unless buffer
+      (error "Buffer '%s' not found" buffer-name))
+    (let ((file-path (buffer-file-name buffer)))
+      (unless file-path
+        (error "Buffer '%s' is not associated with a file" buffer-name))
+      (gptel-clojure--ensure-current-project-file file-path)
+      (with-current-buffer buffer
+        (unless (or (eq major-mode 'clojure-mode)
+                    (eq major-mode 'clojurec-mode))
+          (error "Buffer '%s' is not a Clojure buffer (mode: %s)" buffer-name major-mode))
+
+        (setq win (unless shown-before (display-buffer buffer)))
+
+        (when (or
+               shown-before
+               (y-or-n-p (format "Evaluate Clojure file %s? " file-path)))
+          (unwind-protect
+              (condition-case err
+                  (progn
+                    (cider-load-buffer buffer)
+                    (format "Successfully evaluated buffer '%s'" buffer-name))
+                (error (format "Error evaluating buffer '%s': %s" buffer-name (error-message-string err))))
+            (when (and win (window-live-p win))
+              (quit-restore-window win 'bury))))))))
+
+(comment
+  (gptelt-clj-eval-buffer
+   (find-file-noselect "../../src/user.clj")))
+
+;;; evaluate file
+;;; evaluate file
+(defun gptelt-clj-eval-file (file-path)
+  "Evaluate a Clojure source file by FILE-PATH.
+Ensures the file exists, is in the current project, loads it into buffer,
+shows buffer if not visible, asks for user permission, and evaluates it."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (gptel-clojure--ensure-current-project-file file-path)
+  (let* ((abs-path (gptel-clojure--resolve-file-path file-path))
+         (buffer (find-file-noselect abs-path))
+         (eval-ok? nil)
+         (eval-err nil))
+    (gptelt-clj-eval-buffer buffer)))
+
+(comment
+  (gptelt-clj-eval-file "src/user.clj"))
+
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
@@ -225,15 +312,52 @@ Ensures clj workspace and nREPL connection before proceeding."
             :description "Path to the Clojure file in the current project root (relative or absolute)"))
    :category "clojure"
    :confirm nil
-   :include t))
+   :include t)
 
-(gptelt-make-tool
- :name "clj_get_ns_file_url"
- :function #'gptelt-clj-get-ns-file-url
- :description "Get file url for a given namespace: file path"
- :args '((:name "namespace"
-          :type string
-          :description "The namespace to get file information for"))
- :category "clojure"
- :confirm nil
- :include t)
+  (gptelt-make-tool
+   :name "clj_get_ns_file_url"
+   :function #'gptelt-clj-get-ns-file-url
+   :description "Get file url for a given namespace: file path"
+   :args '((:name "namespace"
+            :type string
+            :description "The namespace to get file information for"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "clj_get_doc_for_symbol"
+   :function #'gptelt-clj-get-doc-for-symbol
+   :description "Get documentation for a Clojure symbol (function, macro, var, namespace, etc.). Returns formatted documentation including arglists, type, and docstring."
+   :args '((:name "symbol"
+            :type string
+            :description "The Clojure symbol to get documentation for (e.g., 'map', 'reduce', 'defn')")
+           (:name "namespace"
+            :type string
+            :optional t
+            :description "Optional namespace to qualify the symbol, default to clojure.core (e.g., 'clojure.core')"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "clj_eval_buffer"
+   :function #'gptelt-clj-eval-buffer
+   :description "Evaluate a Clojure buffer by buffer name. Ensures the buffer exists, its file is in the current project, and evaluates the entire buffer."
+   :args '((:name "buffer_name"
+            :type string
+            :description "The name of the Clojure buffer to evaluate"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "clj_eval_file"
+   :function #'gptelt-clj-eval-file
+   :description "Evaluate a Clojure source file by file path. Ensures the file exists, is in the current project, and evaluates the entire file."
+   :args '((:name "file_path"
+            :type string
+            :description "Path to the Clojure file in the current project root (relative or absolute)"))
+   :category "clojure"
+   :confirm nil
+   :include t))
