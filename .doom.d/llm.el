@@ -91,6 +91,21 @@
     :size 0.35
     :quit t
     :ttl nil)
+
+  (defadvice! ++popup--delete-window (win)
+    :before #'+popup--delete-window
+    (let* ((buffer (window-buffer win))
+           (buf-file (or (buffer-file-name buffer)
+                         (if-let* ((base-buffer (buffer-base-buffer buffer)))
+                             (buffer-file-name base-buffer)))))
+      (when (and
+             buf-file
+             (buffer-modified-p buffer)
+             (string-prefix-p
+              (file-truename "~/Dropbox/sync/gptel")
+              (file-truename buf-file)))
+        (with-current-buffer buffer (save-buffer)))))
+
   (require 'magit)
   (require 'gitleaks)
 
