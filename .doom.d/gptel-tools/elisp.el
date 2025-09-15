@@ -15,7 +15,7 @@
       (error "Buffer %s is not in emacs-lisp-mode" buffer-name))
     (setq win (unless shown-before (display-buffer buf)))
     (when (or
-           (not shown-before)
+           shown-before
            (y-or-n-p (format "Evaluate buffer %s? " buffer-name)))
       (setq eval-err
             (condition-case err
