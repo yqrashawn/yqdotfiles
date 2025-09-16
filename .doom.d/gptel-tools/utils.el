@@ -4,6 +4,32 @@
 ;;; Code:
 
 (require 'smartparens nil t)
+(require 'lgr)
+
+(setq gpteltl (lgr-get-logger "gptelt"))
+
+(progn
+  (lgr-reset-appenders gpteltl)
+  (-> gpteltl
+      (lgr-add-appender
+       (-> (lgr-appender-file
+            :file (expand-file-name "~/.nixpkgs/.doom.d/gptel-tools/gptelt.log"))
+           (lgr-set-layout
+            (lgr-layout-format
+             :format "** [%t] :%L: %m %j\n#+end_src"
+             :timestamp-format "%Y-%m-%d %a %H:%M %z"))))
+      (lgr-set-threshold lgr-level-debug)))
+
+(defun +json-serialize-json-false (orig-fn data &rest args)
+  (apply orig-fn data :false-object :json-false args))
+
+(defun gptelt-log-mcp-tool (tool-name tool-args tool-result)
+  (letf! ((defadvice #'json-serialize :around #'+json-serialize-json-false))
+    (lgr-debug
+        gpteltl
+      ":%s:\n#+begin_src json-ts\n" tool-name
+      :args tool-args
+      :rst tool-result)))
 
 ;;; Project/file path
 (defun gptelt--get-project-root ()
@@ -300,6 +326,8 @@ A plist has an even number of elements and alternates between keywords and value
                        ,(vector
                          `((type . "text") (text . ,result-text))))
                       (isError . :json-false))))
+                (gptelt-log-mcp-tool
+                 tool-name tool-args formatted-result)
                 (mcp-server-lib-metrics--track-tool-call tool-name)
                 (mcp-server-lib--respond-with-result
                  context formatted-result))

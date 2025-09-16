@@ -177,8 +177,8 @@ Each file is opened (if not already) with `find-file-noselect` relative to
              (fboundp 'cider-connected-p))
     (let ((cljs-buf
            (-> (clj/filter
-                (comp
-                 (partial 'string-suffix-p ".cljs")
+                (clj/comp
+                 (clj/partial 'string-suffix-p ".cljs")
                  'buffer-file-name)
                 (+workspace-buffer-list))
                (clj/first))))

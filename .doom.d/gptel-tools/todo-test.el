@@ -23,11 +23,14 @@
   "Test basic todo creation with gptelt-todo-write."
   (gptelt-todo-test-setup)
   (unwind-protect
-      (let ((result (gptelt-todo-write "Test task")))
-        (should (plist-get result :id))
-        (should (string= (plist-get result :content) "Test task"))
-        (should (eq (plist-get result :status) 'pending))
-        (should (eq (plist-get result :priority) 'medium))
+      (let ((result (gptelt-todo-write '((:content "Test task")))))
+        (should (listp result))
+        (should (= (length result) 1))
+        (let ((todo (car result)))
+          (should (plist-get todo :id))
+          (should (string= (plist-get todo :content) "Test task"))
+          (should (eq (plist-get todo :status) 'pending))
+          (should (eq (plist-get todo :priority) 'medium)))
         (should (= (length gptelt-todo-list) 1)))
     (gptelt-todo-test-teardown)))
 
@@ -35,21 +38,26 @@
   "Test todo creation with specific status."
   (gptelt-todo-test-setup)
   (unwind-protect
-      (let ((result (gptelt-todo-write "In progress task" "in_progress" "high")))
-        (should (eq (plist-get result :status) 'in_progress))
-        (should (eq (plist-get result :priority) 'high)))
+      (let ((result (gptelt-todo-write '((:content "In progress task" :status "in_progress" :priority "high")))))
+        (should (listp result))
+        (should (= (length result) 1))
+        (let ((todo (car result)))
+          (should (eq (plist-get todo :status) 'in_progress))
+          (should (eq (plist-get todo :priority) 'high))))
     (gptelt-todo-test-teardown)))
 
 (ert-deftest gptelt-todo-write-update-test ()
   "Test updating existing todo by ID."
   (gptelt-todo-test-setup)
   (unwind-protect
-      (let* ((initial (gptelt-todo-write "Initial task"))
-             (id (plist-get initial :id))
-             (updated (gptelt-todo-write "Updated task" "in_progress" "low" id)))
-        (should (string= (plist-get updated :id) id))
-        (should (string= (plist-get updated :content) "Updated task"))
-        (should (eq (plist-get updated :status) 'in_progress))
+      (let* ((initial (gptelt-todo-write '((:content "Initial task"))))
+             (id (plist-get (car initial) :id))
+             (updated (gptelt-todo-write `((:content "Updated task" :status "in_progress" :priority "low" :id ,id)))))
+        (should (= (length updated) 1))
+        (let ((todo (car updated)))
+          (should (string= (plist-get todo :id) id))
+          (should (string= (plist-get todo :content) "Updated task"))
+          (should (eq (plist-get todo :status) 'in_progress)))
         (should (= (length gptelt-todo-list) 1)))
     (gptelt-todo-test-teardown)))
 
@@ -66,8 +74,8 @@
   (gptelt-todo-test-setup)
   (unwind-protect
       (progn
-        (gptelt-todo-write "Task 1")
-        (gptelt-todo-write "Task 2" "in_progress")
+        (gptelt-todo-write '((:content "Task 1")
+                             (:content "Task 2" :status "in_progress")))
         (let ((result (gptelt-todo-read)))
           (should (listp result))
           (should (= (length result) 2))))
@@ -78,9 +86,9 @@
   (gptelt-todo-test-setup)
   (unwind-protect
       (progn
-        (gptelt-todo-write "Task 1")
+        (gptelt-todo-write '((:content "Task 1")))
         (let* ((task1-id (plist-get (car gptelt-todo-list) :id)))
-          (gptelt-todo-write "Task 1 completed" "completed" "medium" task1-id)
+          (gptelt-todo-write `((:content "Task 1 completed" :status "completed" :priority "medium" :id ,task1-id)))
           (should (null gptelt-todo-list))))
     (gptelt-todo-test-teardown)))
 
@@ -89,9 +97,9 @@
   (gptelt-todo-test-setup)
   (unwind-protect
       (progn
-        (gptelt-todo-write "Pending task" "pending")
-        (gptelt-todo-write "In progress task" "in_progress")
-        (gptelt-todo-write "Completed task" "completed")
+        (gptelt-todo-write '((:content "Pending task" :status "pending")
+                             (:content "In progress task" :status "in_progress")
+                             (:content "Completed task" :status "completed")))
         (should (= (gptelt-todo--count-unfinished) 2)))
     (gptelt-todo-test-teardown)))
 
@@ -99,19 +107,19 @@
   "Test error handling for invalid status."
   (gptelt-todo-test-setup)
   (unwind-protect
-      (should-error (gptelt-todo-write "Test task" "invalid_status"))
+      (should-error (gptelt-todo-write '((:content "Test task" :status "invalid_status"))))
     (gptelt-todo-test-teardown)))
 
 (ert-deftest gptelt-todo-invalid-priority-test ()
   "Test error handling for invalid priority."
   (gptelt-todo-test-setup)
   (unwind-protect
-      (should-error (gptelt-todo-write "Test task" "pending" "invalid_priority"))
+      (should-error (gptelt-todo-write '((:content "Test task" :status "pending" :priority "invalid_priority"))))
     (gptelt-todo-test-teardown)))
 
 (ert-deftest gptelt-todo-empty-content-test ()
   "Test error handling for empty content."
   (gptelt-todo-test-setup)
   (unwind-protect
-      (should-error (gptelt-todo-write ""))
+      (should-error (gptelt-todo-write '((:content ""))))
     (gptelt-todo-test-teardown)))

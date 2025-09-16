@@ -67,6 +67,7 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(load! "clj.el")
 (load! "helper.el")
 (load! "not-secret.el" (expand-file-name "~/Dropbox/sync/") t)
 (load! "map.el")
