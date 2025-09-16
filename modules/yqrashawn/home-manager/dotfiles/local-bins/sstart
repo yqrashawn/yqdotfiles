@@ -3,12 +3,12 @@
 (ns sstart
   (:require
     ;; [babashka.process :refer [process]]
-    [babashka.fs :as fs]
-    [babashka.tasks :refer [shell]]
-    [cheshire.core :as json]
-    [clojure.java.shell :refer [sh]]
-    [clojure.string :as s]
-    [taoensso.timbre :as log]))
+   [babashka.fs :as fs]
+   [babashka.tasks :refer [shell]]
+   [cheshire.core :as json]
+   [clojure.java.shell :refer [sh]]
+   [clojure.string :as s]
+   [taoensso.timbre :as log]))
 
 (defonce project-dir (fs/cwd))
 
@@ -43,59 +43,59 @@
 
 (defn- get-shadow-cljs-command
   [args]
-  (let [command "npx shadow-cljs"
+  (let [command "bunx shadow-cljs"
         command
-          (str
-           command
-           " -d cider/cider-nrepl:"
-           (->
-            (sh
-             ec
-             "--eval"
-             "(progn (require 'cider) cider-injected-middleware-version)"
-             :env ec-env)
-            :out
-            s/trim-newline
-            read-string)
-           " -d nrepl/nrepl:"
-           (-> (sh ec
-                   "--eval"
-                   "(progn (require 'cider) cider-injected-nrepl-version)"
-                   :env ec-env)
-               :out
-               s/trim-newline
-               read-string)
-           ;; " -d refactor-nrepl/refactor-nrepl:"
-           ;; (-> (sh ec
-           ;;         "--eval"
-           ;;         "cljr-injected-middleware-version"
-           ;;         :env ec-env)
-           ;;     :out
-           ;;     s/trim-newline
-           ;;     read-string)
-           )
+        (str
+         command
+         " -d cider/cider-nrepl:"
+         (->
+          (sh
+           ec
+           "--eval"
+           "(progn (require 'cider) cider-injected-middleware-version)"
+           :env ec-env)
+          :out
+          s/trim-newline
+          read-string)
+         " -d nrepl/nrepl:"
+         (-> (sh ec
+                 "--eval"
+                 "(progn (require 'cider) cider-injected-nrepl-version)"
+                 :env ec-env)
+             :out
+             s/trim-newline
+             read-string)
+         ;; " -d refactor-nrepl/refactor-nrepl:"
+         ;; (-> (sh ec
+         ;;         "--eval"
+         ;;         "cljr-injected-middleware-version"
+         ;;         :env ec-env)
+         ;;     :out
+         ;;     s/trim-newline
+         ;;     read-string)
+         )
         jack-in-deps
         (-> (sh ec
                 "--eval"
                 "(progn (require 'cider) cider-jack-in-dependencies)"
                 :env ec-env)
-              :out
-              s/trim-newline
-              read-string)
-        deps jack-in-deps
+            :out
+            s/trim-newline
+            read-string)
+        deps    jack-in-deps
         ;; => "npx shadow-cljs -d nrepl/nrepl:0.9.0-beta5
         ;;                     -d
         ;;                     refactor-nrepl/refactor-nrepl:3.0.0-alpha13
         ;;                     -d cider/cider-nrepl:0.27.2 "
         command (reduce (fn [acc [library version]]
                           (str acc " -d " library ":" version))
-                  command
-                  deps)]
+                        command
+                        deps)]
     command))
 
 (defn run
   [& args]
-  (let [args (or (seq args) ["server"])
+  (let [args                (or (seq args) ["server"])
         shadow-cljs-command (get-shadow-cljs-command args)]
     (println (s/join " " (concat [">" shadow-cljs-command] args)))
     (apply shell shadow-cljs-command args)))

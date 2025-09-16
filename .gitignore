@@ -21,3 +21,8 @@ __pycache__/
 /modules/yqrashawn/home-manager/dotfiles/zed/conversations
 /.aider.tags.cache.v4/
 /.aider.chat.history.md
+/.shadow-cljs/
+/node_modules/
+/resources/public/js/
+/resources/public/app/js/
+/resources/public/ground/js

@@ -1,0 +1,38 @@
+{:deps {:aliases [:dev]}
+
+ :nrepl    {:port 7013}
+ :http     {:port 9622}
+ :dev-http {3201 ["resources/public/app"
+                  "classpath:public"]
+            3202 ["resources/public/ground"
+                  "classpath:public"]}
+ :builds
+ {:app
+  {:target           :browser
+   :module-loader    true
+   :asset-path       "/js"
+   :output-dir       "resources/public/app/js"
+   :dev              {:build-hooks     [(portal.shadow.remote/hook)]
+                      :closure-defines {re-frame.trace.trace-enabled?        true
+                                        day8.re-frame.tracing.trace-enabled? true}}
+   :release          {:build-options
+                      {:ns-aliases
+                       {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
+   :compiler-options {:infer-externs :auto}
+   :modules          {:shared {:entries []}
+                      :main   {:entries    [app.core]
+                               :init-fn    app.core/init
+                               :depends-on #{:shared}}}
+
+   :devtools {:devtools-url "http://localhost:9622"
+              :after-load   app.core/re-render
+              :preloads     [devtools.preload
+                             shadow.remote.runtime.cljs.browser
+                             user
+                             ;; portal.shadow.preload
+                             ;; day8.re-frame-10x.preload
+                             ]}}
+  :ground
+  {:target  :browser
+   :modules {:main {:init-fn ground.core/init}}
+   :dev     {:output-dir "resources/public/ground/js"}}}}
