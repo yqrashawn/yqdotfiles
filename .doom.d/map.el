@@ -166,6 +166,9 @@
    :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
    :desc "Find library" "l" #'find-library))
  (:localleader
+  (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
+        "C" #'cider-connect-clj&cljs
+        "0" #'cider-connect-cljs)
   (:after js2-mode
           (:map js2-mode-map
            :n "jj" #'+jest-popup

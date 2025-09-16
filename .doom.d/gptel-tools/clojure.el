@@ -71,7 +71,7 @@ Optional FILTER-REGEX filters the classpath list before returning."
   (gptelt-clj-list-classpath "\\.jar$"))
 
 ;;; eval clj string
-(defun gptelt-eval-clj-string (clj-string &optional namespace)
+(defun gptelt-eval--clj-string (clj-string &optional namespace no-confirm)
   "Evaluate CLJ-STRING in NAMESPACE (defaults to 'user') and return result or error.
 Checks if clj nREPL is connected and namespace is available before evaluation."
   (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
@@ -81,11 +81,13 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
 
     (with-temp-buffer
       (insert clj-string)
-      (let ((win (display-buffer (current-buffer))))
+      (let ((win (unless no-confirm (display-buffer (current-buffer)))))
         (clojure-mode)
         (setq allow?
-              (y-or-n-p (format "Evaluate clj code in ns %s? " ns)))
-        (quit-restore-window win 'bury)))
+              (if no-confirm
+                  t
+                (y-or-n-p (format "Evaluate clj code in ns %s? " ns))))
+        (unless no-confirm (quit-restore-window win 'bury))))
 
     (if allow?
         ;; Evaluate the code
@@ -98,8 +100,15 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
           (error (format "Error evaluating clj code: %s" (error-message-string err))))
       "User rejected the eval request")))
 
+(defun gptelt-eval-clj-string (clj-string &optional namespace)
+  "Evaluate CLJ-STRING in NAMESPACE (defaults to 'user') and return result or error.
+Checks if clj nREPL is connected and namespace is available before evaluation."
+  (gptelt-eval--clj-string clj-string namespace))
+
 (comment
-  (gptelt-eval-clj-string "+" "clojure.core"))
+  (gptelt-eval-clj-string "+" "clojure.core")
+  (gptelt-eval-clj-string ""
+                          "clojure.core"))
 
 ;;; get buffer namespace
 (defun gptelt-clj-get-buffer-ns (buffer-name)
@@ -223,19 +232,21 @@ Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clj-get-symbol-source-code "when"))
 
 ;;; evaluate buffer
-(defun gptelt-clj-eval-buffer (buffer-name)
+(defun gptelt-clj--eval-buffer
+    (buffer-name &optional no-confirm no-check-project-file)
   "Evaluate a Clojure buffer by BUFFER-NAME.
 Ensures the buffer exists, its file is in the current project, and evaluates it."
   (gptelt-clojure--ensure-workspace 'clj)
   (let* ((buffer (get-buffer buffer-name))
-         (shown-before (get-buffer-window buffer))
+         (shown-before (if no-confirm t (get-buffer-window buffer)))
          win)
     (unless buffer
       (error "Buffer '%s' not found" buffer-name))
     (let ((file-path (buffer-file-name buffer)))
       (unless file-path
         (error "Buffer '%s' is not associated with a file" buffer-name))
-      (gptel-clojure--ensure-current-project-file file-path)
+      (unless no-check-project-file
+        (gptel-clojure--ensure-current-project-file file-path))
       (with-current-buffer buffer
         (unless (or (eq major-mode 'clojure-mode)
                     (eq major-mode 'clojurec-mode))
@@ -255,7 +266,13 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
             (when (and win (window-live-p win))
               (quit-restore-window win 'bury))))))))
 
+(defun gptelt-clj-eval-buffer (buffer-name)
+  "Evaluate a Clojure buffer by BUFFER-NAME.
+Ensures the buffer exists, its file is in the current project, and evaluates it."
+  (gptelt-clj--eval-buffer buffer-name))
+
 (comment
+  (gptelt-clj-eval-buffer "shadow-cljs-helpers.get-running-builds <.nixpkgs>")
   (gptelt-clj-eval-buffer
    (find-file-noselect "../../src/user.clj")))
 
