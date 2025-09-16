@@ -389,9 +389,7 @@ Result type follows the first map."
    (t nil)))
 
 ;;; clj/constantly
-(defun clj/constantly (x)
-  "Return a function that always returns X, regardless of arguments."
-  (lambda (&rest _) x))
+(defalias 'clj/constantly '-const)
 
 ;;; clj/comp
 (defun clj/comp (&rest fns)

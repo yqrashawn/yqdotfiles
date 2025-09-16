@@ -25,11 +25,23 @@
 
 (defun gptelt-log-mcp-tool (tool-name tool-args tool-result)
   (letf! ((defadvice #'json-serialize :around #'+json-serialize-json-false))
-    (lgr-debug
-        gpteltl
-      ":%s:\n#+begin_src json-ts\n" tool-name
-      :args tool-args
-      :rst tool-result)))
+    (condition-case nil
+        (let ((is-error? (not (eq (alist-get 'isError tool-result) :json-false))))
+          (when (log/spy is-error?)
+            (lgr-debug
+                gpteltl
+              ":%s:error:\n#+begin_src json-ts\n"
+              tool-name
+              :args tool-args
+              :rst tool-result)))
+      (-const nil))))
+
+(defun gptelt-log-check ()
+  (interactive)
+  (-> "~/Dropbox/sync/gptelt.log"
+      (expand-file-name)
+      (find-file-noselect)
+      (pop-to-buffer)))
 
 ;;; Project/file path
 (defun gptelt--get-project-root ()
