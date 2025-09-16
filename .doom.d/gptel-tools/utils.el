@@ -154,10 +154,7 @@ Keywords become string keys, and :json-false becomes \"json-false\"."
       (mapcar #'plist-to-alist plist)))
 
    ;; Handle the special :json-false keyword
-   ((eq plist :json-false)
-    :json-false
-    ;; "json-false"
-    )
+   ((eq plist :json-false) :json-false)
 
    ;; Handle other keywords (shouldn't happen in this context, but just in case)
    ((keywordp plist)
@@ -197,16 +194,6 @@ A plist has an even number of elements and alternates between keywords and value
              (setq is-plist nil))
            (setq current (cddr current)))
          is-plist)))
-
-;; Example usage:
-(setq original-structure
-      '(:type "object"
-        :properties (:file_path (:type "string"
-                                 :description "Absolute path where the new file should be created (must be absolute, not relative)")
-                                :content_string (:type "string"
-                                                 :description "The complete content to write to the new file"))
-        :required ["file_path" "content_string"]
-        :additionalProperties :json-false))
 
 (comment
   (setq original-structure
@@ -280,7 +267,6 @@ A plist has an even number of elements and alternates between keywords and value
 
 
 (defun +mcp-server-lib--call-gptel-tool (tool args)
-  (setq a1 tool a2 args)
   (let (arg-values)
     (setq arg-values
           (mapcar
