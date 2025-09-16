@@ -74,6 +74,9 @@ Returns a list of file paths relative to the project root."
                   limited-results)
         limited-results))))
 
+(comment
+  (gptelt-rg-tool-glob "**/*.clj"))
+
 ;;; Content search functions
 (defun gptelt-rg-tool-search-content
     (pattern &optional path include case-sensitive literal context-lines max-results)
