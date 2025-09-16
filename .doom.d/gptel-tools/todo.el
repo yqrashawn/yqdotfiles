@@ -69,39 +69,46 @@ Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY
     ('completed "✅")
     (_ "❓")))
 
-(defun gptelt-todo-write (content &optional status priority id)
-  "Add or update a todo item.
-CONTENT: string. STATUS: symbol, one of gptelt-todo-valid-status. PRIORITY: symbol, one of gptelt-todo-valid-priority. ID: string (to update).
-Returns the updated todo item as plist."
+(defun gptelt-todo-write (todos)
+  "Add or update todo items from a list.
+TODOS: list of plists, each with :content (required), :status (optional), :priority (optional), :id (optional).
+Returns the updated todo list."
   (gptelt-todo--ensure-loaded)
-  (unless (and content (stringp content) (> (length content) 0))
-    (error "Todo content must be non-empty string"))
-  (let ((status (or (and status (intern (downcase (format "%s" status)))) 'pending))
-        (priority (or (and priority (intern (downcase (format "%s" priority)))) 'medium)))
-    (unless (memq status gptelt-todo-valid-status)
-      (error "Invalid todo status: %s" status))
-    (unless (memq priority gptelt-todo-valid-priority)
-      (error "Invalid todo priority: %s" priority))
-    (let ((new-id (or id (gptelt-todo--make-id)))
-          (new-item (list :id (or id (gptelt-todo--make-id)) :content content :status status :priority priority)))
-      (if id
-          ;; update existing
-          (setq gptelt-todo-list
-                (mapcar (lambda (item)
-                          (if (equal (plist-get item :id) id)
-                              new-item
-                            item))
-                        gptelt-todo-list))
-        ;; insert new
-        (push new-item gptelt-todo-list))
-      (gptelt-todo--save)
-      (let ((unfinished-count (gptelt-todo--count-unfinished))
-            (emoji (gptelt-todo--status-emoji status)))
-        (when content
-          (message "[%d] %s %s" unfinished-count emoji content))
-        (when (= unfinished-count 0)
-          (gptel-todo-clear-all)))
-      new-item)))
+  (unless (listp todos)
+    (error "Todos must be a list"))
+  (dolist (todo todos)
+    (unless (plistp todo)
+      (error "Each todo must be a plist"))
+    (let ((content (plist-get todo :content))
+          (status (plist-get todo :status))
+          (priority (plist-get todo :priority))
+          (id (plist-get todo :id)))
+      (unless (and content (stringp content) (> (length content) 0))
+        (error "Todo content must be non-empty string"))
+      (let ((status (or (and status (intern (downcase (format "%s" status)))) 'pending))
+            (priority (or (and priority (intern (downcase (format "%s" priority)))) 'medium)))
+        (unless (memq status gptelt-todo-valid-status)
+          (error "Invalid todo status: %s" status))
+        (unless (memq priority gptelt-todo-valid-priority)
+          (error "Invalid todo priority: %s" priority))
+        (let ((new-id (or id (gptelt-todo--make-id)))
+              (new-item (list :id (or id (gptelt-todo--make-id)) :content content :status status :priority priority)))
+          (if id
+              ;; update existing
+              (setq gptelt-todo-list
+                    (mapcar (lambda (item)
+                              (if (equal (plist-get item :id) id)
+                                  new-item
+                                item))
+                            gptelt-todo-list))
+            ;; insert new
+            (push new-item gptelt-todo-list))))))
+  (gptelt-todo--save)
+  (let ((unfinished-count (gptelt-todo--count-unfinished)))
+    (message "[%d] todos updated" unfinished-count)
+    (when (= unfinished-count 0)
+      (gptel-todo-clear-all)))
+  gptelt-todo-list)
 
 ;;; API: todo_read
 (defun gptelt-todo-read ()
@@ -119,8 +126,8 @@ Returns the updated todo item as plist."
   (message "All todos cleared"))
 
 (comment
-  (gptelt-todo-write "task1" "pending" "low")
-  (gptelt-todo-write "task2" "pending" "low")
+  (gptelt-todo-write '((:content "task1" :status pending :priority low)
+                       (:content "task2" :status pending :priority low)))
   (gptelt-todo-read))
 
 ;;; Tool registration
@@ -128,22 +135,30 @@ Returns the updated todo item as plist."
   (gptelt-make-tool
    :name "todo_write"
    :function #'gptelt-todo-write
-   :description "Create or update a todo entry. Params: content (string), status ('pending|'in_progress|'completed'), priority ('high|'medium|'low'), optional id (string for update). Returns the updated entry as plist."
-   :args '((:name "content"
-            :type string
-            :description "Todo content string")
-           (:name "status"
-            :type string
-            :optional t
-            :description "Status: pending, in_progress, completed")
-           (:name "priority"
-            :type string
-            :optional t
-            :description "Priority: high, medium, low")
-           (:name "id"
-            :type string
-            :optional t
-            :description "Todo id to update (for updating instead of creating)"))
+   :description "Create or update todo entries from an array. Params: todos (array of objects with content, status, priority, id). Returns the updated todo list."
+   :args '((:name "todos"
+            :type array
+            :items
+            (:type object
+             :properties
+             (:content
+              (:type string
+               :description "Todo content string")
+              :status
+              (:type string
+               :optional t
+               :description "Status: pending, in_progress, completed")
+              :priority
+              (:type string
+               :optional t
+               :description "Priority: high, medium, low")
+              :id
+              (:type string
+               :optional t
+               :description "Todo id to update (for updating instead of creating)"))
+             :required ["content"]
+             :description "Todo object with content (required), status (optional), priority (optional), id (optional)")
+            :description "Array of todo objects"))
    :category "todo"
    :confirm nil
    :include t)
