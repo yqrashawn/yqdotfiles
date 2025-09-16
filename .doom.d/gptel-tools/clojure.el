@@ -198,6 +198,30 @@ Ensures clj workspace and nREPL connection before proceeding."
 (comment
   (gptelt-clj-get-doc-for-symbol "defn"))
 
+;;; get symbol source code
+(defun gptelt-clj-get-symbol-source-code (symbol &optional namespace)
+  "Get source code for SYMBOL in optional NAMESPACE.
+Returns the source code string if available, or an error if not found.
+Ensures clj workspace and nREPL connection before proceeding."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (condition-case err
+      (let* ((qualified-symbol (if namespace
+                                   (format "%s/%s" namespace symbol)
+                                 symbol))
+             (source-code (cider-nrepl-sync-request:eval
+                           (format "(with-out-str (clojure.repl/source %s))" qualified-symbol)
+                           nil "user")))
+        (if source-code
+            (let ((code (nrepl-dict-get source-code "value")))
+              (if (and code (not (string= code "nil")))
+                  (string-trim (substring code 1 -1))
+                (error "Source code not found for symbol '%s'" qualified-symbol)))
+          (error "Symbol '%s' not found or not resolved" qualified-symbol)))
+    (error (error "Error getting symbol source code: %s" (error-message-string err)))))
+
+(comment
+  (gptelt-clj-get-symbol-source-code "when"))
+
 ;;; evaluate buffer
 (defun gptelt-clj-eval-buffer (buffer-name)
   "Evaluate a Clojure buffer by BUFFER-NAME.
@@ -235,7 +259,6 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
   (gptelt-clj-eval-buffer
    (find-file-noselect "../../src/user.clj")))
 
-;;; evaluate file
 ;;; evaluate file
 (defun gptelt-clj-eval-file (file-path)
   "Evaluate a Clojure source file by FILE-PATH.
@@ -336,6 +359,21 @@ shows buffer if not visible, asks for user permission, and evaluates it."
             :type string
             :optional t
             :description "Optional namespace to qualify the symbol, default to clojure.core (e.g., 'clojure.core')"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "clj_get_symbol_source_code"
+   :function #'gptelt-clj-get-symbol-source-code
+   :description "Get source code for a Clojure symbol (function, macro, var, etc.). Returns the complete source code definition."
+   :args '((:name "symbol"
+            :type string
+            :description "The Clojure symbol to get source code for (e.g., 'map', 'reduce', 'when')")
+           (:name "namespace"
+            :type string
+            :optional t
+            :description "Optional namespace to qualify the symbol (e.g., 'clojure.core')"))
    :category "clojure"
    :confirm nil
    :include t)
