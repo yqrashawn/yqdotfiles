@@ -993,7 +993,6 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
     t))
 
 
-(prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 
 (comment

@@ -35,7 +35,9 @@
           (when (or gptelt-log-persist-all-log is-error?)
             (lgr-debug
                 gpteltl
-              ":%s:error:\n#+begin_src json-ts\n"
+              (if is-error?
+                  ":%s:error:\n#+begin_src json-ts\n"
+                ":%s:\n#+begin_src json-ts\n")
               tool-name
               :args tool-args
               :rst tool-result)))

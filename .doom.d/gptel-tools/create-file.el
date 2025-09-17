@@ -75,6 +75,12 @@ Returns a string describing the result of the operation."
                 project-root
                 major-mode)))))
 
+(comment
+  (let ((f (make-temp-file "gptelt-create-tool")))
+    (gptelt--create-file-buffer f "(message \"hello\")")
+    (with-current-buffer (find-file-noselect f)
+      (buffer-string))))
+
 ;;; Tool registration
 ;; Register the create file buffer tool with gptel
 (when (fboundp 'gptelt-make-tool)
@@ -104,6 +110,13 @@ Buffer is not switched to or displayed. File is created and saved to disk."
     (gptelt-edit--edit-buffer-impl buf "" content-string)
     (with-current-buffer buf (save-buffer))
     tmp-path))
+
+(comment
+  (gptelt--create-temp-file-buffer "(message \"temp hello\")" "test-" ".el")
+  (with-current-buffer
+      (find-file-noselect
+       (gptelt--create-temp-file-buffer "(message \"temp hello\")" "test-" ".el"))
+    (buffer-string)))
 
 ;;; Register create_temp_file_buffer tool with gptel
 (when (fboundp 'gptelt-make-tool)

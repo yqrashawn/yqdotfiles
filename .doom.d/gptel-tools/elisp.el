@@ -32,6 +32,9 @@
         (format "Successfully evaluated buffer `%s`" buffer-name)
       eval-err)))
 
+(comment
+  (gptelt-evaluate-elisp-buffer (current-buffer)))
+
 ;;; Tool: Evaluate Elisp File (load file into buffer, then evaluate, with confirmation)
 (defun gptelt-evaluate-elisp-file (file-path)
   "Load FILE-PATH into buffer and evaluate after confirming with user. Show buffer if not visible. Bury if not shown before."
@@ -40,6 +43,10 @@
   (unless (string-suffix-p ".el" file-path)
     (error "File %s is not an .el file" file-path))
   (gptelt-evaluate-elisp-buffer (find-file-noselect file-path)))
+
+(comment
+  (gptelt-evaluate-elisp-file
+   (expand-file-name ".doom.d/gptel-tools/elisp.el" "~/.nixpkgs")))
 
 ;;; Tool: Evaluate Elisp String (put string in temp buffer, eval after confirmation, return result)
 (defun gptelt-evaluate-elisp-string (elisp-string)

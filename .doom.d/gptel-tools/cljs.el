@@ -6,6 +6,9 @@
    (find-file-noselect"~/.nixpkgs/env/dev/cljs_helper.clj")
    t t))
 
+(comment
+  (gptelt-cljs-ensure-helper-loaded))
+
 ;;; list all loaded namespace
 (defun gptelt-cljs-list-ns (build-id _runtime-id &optional regex-filter)
   (gptelt-cljs-ensure-helper-loaded)
@@ -49,6 +52,9 @@
 Ensures the buffer exists, its file is in the current project, and evaluates it."
   (gptelt-cider--eval-buffer 'cljs buffer-name))
 
+(comment
+  (gptelt-cljs-eval-buffer "core.cljs"))
+
 ;;; eval file
 (defun gptelt-cljs-eval-file (file-path)
   "Evaluate a Clojure source file by FILE-PATH.
@@ -60,6 +66,9 @@ shows buffer if not visible, asks for user permission, and evaluates it."
   (let* ((abs-path (gptel-clojure--resolve-file-path file-path))
          (buffer (find-file-noselect abs-path)))
     (gptelt-cljs-eval-buffer buffer)))
+
+(comment
+  (gptelt-cljs-eval-file "src/app/core.cljs"))
 
 ;;; get symbol documentation
 (defun gptelt-cljs-get-symbol-doc (symbol build-id runtime-id &optional namespace)

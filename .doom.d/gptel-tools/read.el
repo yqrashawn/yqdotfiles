@@ -1,4 +1,4 @@
-;;; .nixpkgs/.doom.d/gptel-tools/read.el -*- lexical-binding: t; coding: utf-8 -*-
+;;; .nixpkgs/.doom.d/gptel-tools/read.el -*- lexical-binding: t; coding: utf-8; -*-
 
 ;;; Commentary:
 ;; Reading utilities for gptel-tools:
@@ -12,8 +12,9 @@
     (error "file_path must be an absolute path"))
   (let ((max-lines (or limit 2000))
         (line-offset (or offset 0))
-        (coding-system-for-read 'utf-8)
-        (coding-system-for-write 'utf-8))
+        (buffer-file-coding-system 'utf-8-unix)
+        (coding-system-for-read 'utf-8-unix)
+        (coding-system-for-write 'utf-8-unix))
     (when (file-readable-p file_path)
       (with-temp-buffer
         (insert-file-contents file_path)
@@ -28,29 +29,40 @@
             (let ((content (buffer-substring-no-properties start (point))))
               (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[File path: %s]\n"
                               total-lines start-line end-line file_path)
-                      "\n␂" content "␃"))))))))
+                      "\n␂" content "␃\n"))))))))
+
+(comment
+  (gptelt-read-file
+   (expand-file-name "deps.edn" "~/.nixpkgs")))
 
 (defun gptelt-read-buffer (buffer_name &optional offset limit)
   "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Nil if not exists. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the buffer and the start/end line numbers of the wrapped content."
   (let ((max-lines (or limit 2000))
-        (line-offset (or offset 0)))
+        (line-offset (or offset 0))
+        (buffer-file-coding-system 'utf-8-unix)
+        (coding-system-for-read 'utf-8-unix)
+        (coding-system-for-write 'utf-8-unix))
     (when-let ((b (get-buffer buffer_name)))
       (with-current-buffer b
         (when (llm-danger-buffer-p) (error "User denied the read request"))
-        (let* ((total-lines (count-lines (point-min) (point-max)))
-               (start-line (1+ line-offset))
-               (end-line (min total-lines (+ line-offset max-lines))))
-          (goto-char (point-min))
-          (forward-line line-offset)
-          (let ((start (point)))
-            (forward-line max-lines)
-            (let ((content (buffer-substring-no-properties start (point))))
-              (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n%s"
-                              total-lines start-line end-line buffer_name
-                              (if-let ((buf-file (buffer-file-name b)))
-                                  (format "[File path: %s]" buf-file)
-                                ""))
-                      "\n␂" content "␃"))))))))
+        (save-excursion
+          (let* ((total-lines (count-lines (point-min) (point-max)))
+                 (start-line (1+ line-offset))
+                 (end-line (min total-lines (+ line-offset max-lines))))
+            (goto-char (point-min))
+            (forward-line line-offset)
+            (let ((start (point)))
+              (forward-line max-lines)
+              (let ((content (buffer-substring-no-properties start (point))))
+                (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n%s"
+                                total-lines start-line end-line buffer_name
+                                (if-let ((buf-file (buffer-file-name b)))
+                                    (format "[File path: %s]" buf-file)
+                                  ""))
+                        "\n␂" content "␃\n")))))))))
+
+(comment
+  (gptelt-read-buffer (current-buffer)))
 
 ;; Register the file and buffer reading tools with gptel
 (when (fboundp 'gptelt-make-tool)

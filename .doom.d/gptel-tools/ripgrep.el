@@ -134,10 +134,16 @@ Returns a list of search results with file paths, line numbers, and content."
                         :line line-num :column column :content content) results))))
       (reverse results))))
 
+(comment
+  (gptelt-rg-tool-search-content "defun" nil "*.el"))
+
 (defun gptelt-rg-tool-search-regex
     (pattern &optional path include max-results)
   "Search file contents using regular expressions."
   (gptelt-rg-tool-search-content pattern path include nil nil nil max-results))
+
+(comment
+  (gptelt-rg-tool-search-regex "defun.*gptelt" nil "*.el"))
 
 ;;; Tool registration
 

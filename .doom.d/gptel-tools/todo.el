@@ -110,6 +110,9 @@ Returns the updated todo list."
       (gptel-todo-clear-all)))
   gptelt-todo-list)
 
+(comment
+  (gptelt-todo-write '((:content "test task" :status pending))))
+
 ;;; API: todo_read
 (defun gptelt-todo-read ()
   "Return the current todo list as a lisp list (each item is a plist)."
@@ -118,12 +121,18 @@ Returns the updated todo list."
       "No task"
     gptelt-todo-list))
 
+(comment
+  (gptelt-todo-read))
+
 (defun gptel-todo-clear-all ()
   "Clear all todos from the list."
   (interactive)
   (setq gptelt-todo-list nil)
   (gptelt-todo--save)
   (message "All todos cleared"))
+
+(comment
+  (gptel-todo-clear-all))
 
 (comment
   (gptelt-todo-write '((:content "task1" :status pending :priority low)

@@ -103,7 +103,7 @@
         evil-owl-max-string-length 50))
 
 (use-package! evil-matchit
-  :hook (doom-first-input . global-evil-matchit-mode)
+  :hook (prog-mode . evil-matchit-mode)
   :after evil
   :config
   (add-hook! '(ibuffer-mode-hook dired-mode-hook magit-status-mode-hook magit-log-mode-hook cider-inspector-mode)

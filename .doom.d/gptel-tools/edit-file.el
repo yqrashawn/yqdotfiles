@@ -241,6 +241,14 @@ Returns a string describing the result of the operation."
       (error "Buffer not found: %s" buffer-name))
     (gptelt-edit--edit-buffer-impl buffer old-string new-string replace-all)))
 
+(comment
+  (let ((f (make-temp-file "test-gptelt-edit")))
+    (with-current-buffer (find-file-noselect f)
+      (erase-buffer)
+      (insert "old")
+      (gptelt-edit-edit-buffer (current-buffer) "old" "new")
+      (buffer-string))))
+
 (defun gptelt-edit-edit-file (file-path old-string new-string &optional replace-all)
   "Edit file by replacing OLD-STRING with NEW-STRING in FILE-PATH.
 If REPLACE-ALL is non-nil, replaces all occurrences.
@@ -265,6 +273,15 @@ Returns a string describing the result of the operation."
       (error "Could not open or create buffer for file: %s (resolved to: %s)"
              original-path resolved-path))
     (gptelt-edit--edit-buffer-impl buffer old-string new-string replace-all)))
+
+(comment
+  (let ((f (make-temp-file "test-gptelt-edit")))
+    (with-current-buffer (find-file-noselect f)
+      (erase-buffer)
+      (insert "old")
+      (save-buffer)
+      (gptelt-edit-edit-file f "old" "new")
+      (buffer-string))))
 
 ;;; Tool registration
 (when (fboundp 'gptelt-make-tool)
@@ -353,6 +370,19 @@ Returns a string describing the result."
       (error "Buffer not found: %s" buffer-name))
     (gptelt-edit--multi-edit-buffer-impl buffer edits)))
 
+(comment
+  (let ((f (make-temp-file "test-gptelt-edit")))
+    (with-current-buffer (find-file-noselect f)
+      (erase-buffer)
+      (insert "old1, old2")
+      (gptelt-edit-multi-edit-buffer
+       (current-buffer)
+       '((:old_string "old1"
+          :new_string "new1")
+         (:old_string "old2"
+          :new_string "new2")))
+      (buffer-string))))
+
 (defun gptelt-edit-multi-edit-file (file-path edits)
   "Apply multiple edits to FILE-PATH.
 EDITS is a list where each element is either a cons cell (OLD . NEW), or an object with :old_string, :new_string, and optional :replace_all (boolean).
@@ -366,6 +396,20 @@ Returns a string describing the result."
       (error "Could not open or create buffer for file: %s (resolved to: %s)"
              original-path resolved-path))
     (gptelt-edit--multi-edit-buffer-impl buffer edits)))
+
+(comment
+  (let ((f (make-temp-file "test-gptelt-edit")))
+    (with-current-buffer (find-file-noselect f)
+      (erase-buffer)
+      (insert "old1, old2")
+      (save-buffer)
+      (gptelt-edit-multi-edit-file
+       f
+       '((:old_string "old1"
+          :new_string "new1")
+         (:old_string "old2"
+          :new_string "new2")))
+      (buffer-string))))
 
 ;;; Tool registration for multi-edit
 
