@@ -11,7 +11,7 @@ The `.doom.d/` directory contains a comprehensive Doom Emacs configuration with 
 - whenever working on emacs lisp buffer `foo.el`, evaluate the buffer after changes made, check `foo-test.el` at the same directory see if corresponding test is missing or outdated
 
 ### Run Tests
-- use `emacs_run_ert_test` or `mcp__emacs__emacs_run_ert_test` tool to run elisp ert tests
+- use `run_ert_test` or `mcp__emacs__run_ert_test` tool to run elisp ert tests
 - evaluate test file before run the test, test files are not loaded by default
 
 ### Core Files
@@ -20,7 +20,7 @@ The `.doom.d/` directory contains a comprehensive Doom Emacs configuration with 
 - **packages.el**: Additional package declarations and overrides
 
 ### Language-Specific Configurations
-- **clojure.el** / **clj.el**: Clojure/ClojureScript development setup
+- **clojure.el**: Clojure/ClojureScript development setup
 - **js.el**: JavaScript/TypeScript configuration
 - **golang.el**: Go language support
 - **lisp.el** / **clisp.el**: Common Lisp development
@@ -41,13 +41,17 @@ The `.doom.d/` directory contains a comprehensive Doom Emacs configuration with 
 - **better-default.el**: Improved default behaviors
 
 ### Custom Tools
-- **gptel-tools/**: Directory containing custom AI integration tools:
+- **gptel-tools/**: Directory containing custom AI integration tools definition:
+  - **utils.el**: Utilities for other tools
+  - **todo.el**: Read/Write todo tools
   - **buffer.el**: Buffer manipulation tools
   - **elisp.el**: Emacs Lisp development utilities
   - **read.el**: File reading tools
   - **edit-file.el**: File editing utilities
   - **create-file.el**: File creation tools
   - **ripgrep.el**: Search integration
+  - **clj.el**: Clojure development
+  - **cljs.el**: Clojurescript development
   - Corresponding test files for each tool
 
 ### Snippets

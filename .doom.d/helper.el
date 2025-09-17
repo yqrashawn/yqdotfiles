@@ -5,7 +5,7 @@
 (require 'a)
 (require 'seq)
 (require 'f)
-(load! "clj.el")
+(load! "clj-elisp.el")
 
 (defalias 'prn #'print)
 

@@ -1,4 +1,4 @@
-;;; .nixpkgs/.doom.d/gptel-tools/clojure.el -*- lexical-binding: t; -*-
+;;; .nixpkgs/.doom.d/gptel-tools/clj.el -*- lexical-binding: t; -*-
 
 (require 'cider)
 
@@ -50,7 +50,9 @@ Optional FILTER-REGEX filters the namespace list before returning."
 
 (comment
   (gptelt-clj-list-ns)
-  (gptelt-clj-list-ns "nrepl"))
+  (gptelt-clj-list-ns "nrepl")
+  (gptelt-clj-list-ns "clojure.core")
+  (gptelt-clj-list-ns "cljs.core"))
 
 ;;; list all classpath entries
 (defun gptelt-clj-list-classpath (&optional filter-regex)
@@ -108,8 +110,7 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
 (comment
   (gptelt-eval-clj-string "+" "clojure.core")
   (gptelt-eval-clj-string "+" "cljs.core")
-  (gptelt-eval-clj-string ""
-                          "clojure.core"))
+  (gptelt-eval-clj-string "(name :abc)" "clojure.core"))
 
 ;;; get buffer namespace
 (defun gptelt-clj-get-buffer-ns (buffer-name)
@@ -233,11 +234,12 @@ Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clj-get-symbol-source-code "when"))
 
 ;;; evaluate buffer
-(defun gptelt-clj--eval-buffer
-    (buffer-name &optional no-confirm no-check-project-file)
+(defun gptelt-cider--eval-buffer
+    (type buffer-name &optional no-confirm no-check-project-file)
   "Evaluate a Clojure buffer by BUFFER-NAME.
+
 Ensures the buffer exists, its file is in the current project, and evaluates it."
-  (gptelt-clojure--ensure-workspace 'clj)
+  (gptelt-clojure--ensure-workspace type)
   (let* ((buffer (get-buffer buffer-name))
          (shown-before (if no-confirm t (get-buffer-window buffer)))
          win)
@@ -249,15 +251,21 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
       (unless no-check-project-file
         (gptel-clojure--ensure-current-project-file file-path))
       (with-current-buffer buffer
-        (unless (or (eq major-mode 'clojure-mode)
-                    (eq major-mode 'clojurec-mode))
+        (unless (if (eq type 'cljs)
+                    (or (eq major-mode 'clojurescript-mode)
+                        (eq major-mode 'clojurec-mode))
+                  (or (eq major-mode 'clojure-mode)
+                      (eq major-mode 'clojurec-mode)))
           (error "Buffer '%s' is not a Clojure buffer (mode: %s)" buffer-name major-mode))
 
         (setq win (unless shown-before (display-buffer buffer)))
 
         (when (or
                shown-before
-               (y-or-n-p (format "Evaluate Clojure file %s? " file-path)))
+               (y-or-n-p
+                (if (eq type 'cljs)
+                    (format "Evaluate CLJS file %s? " file-path)
+                  (format "Evaluate CLJ file %s? " file-path))))
           (unwind-protect
               (condition-case err
                   (progn
@@ -269,8 +277,9 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
 
 (defun gptelt-clj-eval-buffer (buffer-name)
   "Evaluate a Clojure buffer by BUFFER-NAME.
+
 Ensures the buffer exists, its file is in the current project, and evaluates it."
-  (gptelt-clj--eval-buffer buffer-name))
+  (gptelt-cider--eval-buffer 'clj buffer-name))
 
 (comment
   (gptelt-clj-eval-buffer "shadow-cljs-helpers.get-running-builds <.nixpkgs>")
@@ -287,9 +296,7 @@ shows buffer if not visible, asks for user permission, and evaluates it."
   (gptelt-clojure--ensure-workspace 'clj)
   (gptel-clojure--ensure-current-project-file file-path)
   (let* ((abs-path (gptel-clojure--resolve-file-path file-path))
-         (buffer (find-file-noselect abs-path))
-         (eval-ok? nil)
-         (eval-err nil))
+         (buffer (find-file-noselect abs-path)))
     (gptelt-clj-eval-buffer buffer)))
 
 (comment
@@ -335,6 +342,7 @@ shows buffer if not visible, asks for user permission, and evaluates it."
    :category "clojure"
    :confirm nil
    :include t)
+
   (gptelt-make-tool
    :name "clj_get_buffer_ns"
    :function #'gptelt-clj-get-buffer-ns
@@ -369,7 +377,7 @@ shows buffer if not visible, asks for user permission, and evaluates it."
    :include t)
 
   (gptelt-make-tool
-   :name "clj_get_doc_for_symbol"
+   :name "clj_get_symbol_doc"
    :function #'gptelt-clj-get-doc-for-symbol
    :description "Get documentation for a Clojure symbol (function, macro, var, namespace, etc.). Returns formatted documentation including arglists, type, and docstring."
    :args '((:name "symbol"

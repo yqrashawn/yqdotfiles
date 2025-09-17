@@ -1,4 +1,4 @@
-;;; .nixpkgs/.doom.d/clj.el -*- lexical-binding: t; -*-
+;;; .nixpkgs/.doom.d/clj-elisp.el -*- lexical-binding: t; -*-
 
 (require 'map)
 (require 'dash)

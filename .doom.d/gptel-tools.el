@@ -10,6 +10,8 @@
 (load! "gptel-tools/create-file.el")
 (load! "gptel-tools/ripgrep.el")
 (load! "gptel-tools/elisp.el")
+(load! "gptel-tools/clj.el")
+(load! "gptel-tools/cljs.el")
 
 (comment
   (+gptel-reload-tools)

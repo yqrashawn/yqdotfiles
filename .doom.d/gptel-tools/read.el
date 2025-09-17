@@ -11,7 +11,9 @@
   (unless (and (stringp file_path) (file-name-absolute-p file_path))
     (error "file_path must be an absolute path"))
   (let ((max-lines (or limit 2000))
-        (line-offset (or offset 0)))
+        (line-offset (or offset 0))
+        (coding-system-for-read 'utf-8)
+        (coding-system-for-write 'utf-8))
     (when (file-readable-p file_path)
       (with-temp-buffer
         (insert-file-contents file_path)

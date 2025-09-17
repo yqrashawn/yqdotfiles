@@ -6,5 +6,7 @@
 (pr/defscene button
   [:button.button "I am a button"])
 
-(defn init []
+(defn init
+  "doc here"
+  []
   (ui/start!))
