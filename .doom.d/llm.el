@@ -11,12 +11,28 @@
       ;; (gptel-context-remove-all nil)
       (if buffer-file-name
           (save-buffer)
-        (write-file
-         (format
-          (expand-file-name
-           "~/Dropbox/sync/gptel/gptel-%s.org")
-          (format-time-string
-           "%Y%m%d-%H%M%S-%3N")))))))
+        (progn
+          (get-gptel-org-title
+           (buffer-string)
+           (lambda (title)
+             (let
+                 ((dir (format
+                        "~/Dropbox/sync/gptel/%s/%s/%s"
+                        (format-time-string "%Y")
+                        (format-time-string "%m")
+                        (format-time-string "%d")))
+                  (unless (file-directory-p dir)
+                    (make-directory dir t))
+                  (+set-org-title title)
+                  (write-file
+                   (expand-file-name
+                    (format
+                     "%s-%s.org"
+                     (format-time-string "%H_%M")
+                     title)
+                    dir)))))
+           (lambda (e) (user-error "Error setting gptel org title: %s" e)))
+          t)))))
 
 (defun +gptel-kill-default-buffer ()
   (interactive)
@@ -123,23 +139,24 @@
 
   (defadvice! +before-gptel-make-fsm (&optional args)
     :before #'gptel-send
-    (require 'gptel-context)
-    (gptel-context-remove-all nil)
-    (+gptel-context-add-buffer (+current-workspace-info-buffer))
-    (+gptel-context-add-buffer (+visible-buffers-list-buffer))
-    (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
-    (dolist (b (seq-filter
-                (lambda (b)
-                  (and
-                   (not (string= (buffer-name b) "*Messages*"))
-                   (with-current-buffer b
-                     (not gptel-mode))))
-                (mapcar 'window-buffer (window-list))))
-      (+gptel-context-add-buffer b))
-    (when-let ((root (++workspace-current-project-root)))
-      (dolist (f +llm-project-default-files)
-        (when-let ((b (get-file-buffer (format "%s/%s" root f))))
-          (+gptel-context-add-buffer b)))))
+    (unless simple-llm-req-p
+      (require 'gptel-context)
+      (gptel-context-remove-all nil)
+      (+gptel-context-add-buffer (+current-workspace-info-buffer))
+      (+gptel-context-add-buffer (+visible-buffers-list-buffer))
+      (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
+      (dolist (b (seq-filter
+                  (lambda (b)
+                    (and
+                     (not (string= (buffer-name b) "*Messages*"))
+                     (with-current-buffer b
+                       (not gptel-mode))))
+                  (mapcar 'window-buffer (window-list))))
+        (+gptel-context-add-buffer b))
+      (when-let ((root (++workspace-current-project-root)))
+        (dolist (f +llm-project-default-files)
+          (when-let ((b (get-file-buffer (format "%s/%s" root f))))
+            (+gptel-context-add-buffer b))))))
 
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
@@ -263,3 +280,64 @@
      (setq-default gptel--preset 'default)))
   (setq! mcp-log-level 'debug)
   (setq! mcp-log-level 'info))
+
+(defvar simple-llm-req-p nil)
+
+(defun simple-llm-req (prompt &rest args)
+  (let ((simple-llm-req-p t)
+        (gptel-backend (plist-get args :backend))
+        (gptel-model (plist-get args :model))
+        (gptel-temperature (clj/get args :temperature gptel-temperature))
+        (gptel--system-message (clj/get args :system ""))
+        (gptel-max-tokens (clj/get args :max-token gptel-max-tokens))
+        (gptel-cache (clj/get args :cache t))
+        (gptel--num-messages-to-send 1)
+        (gptel-include-reasoning nil)
+        (gptel-track-media nil)
+        (gptel-use-context nil)
+        (gptel-stream nil)
+        (on-finish (clj/get args :cb 'clj/identity))
+        (on-error (clj/get args :error 'clj/identity)))
+    (gptel-request prompt
+      :stream nil
+      :callback (lambda (response info)
+                  (if response
+                      (funcall on-finish response)
+                    (funcall on-error info))))))
+
+(defun get-gptel-org-title (&optional chat-content on-title on-error)
+  (simple-llm-req
+   (format "```\n%s```\n\nGenerate a file title for the above conversation with llm"
+           (or chat-content
+               (with-current-buffer (current-buffer) (buffer-string))))
+   :backend gptel--openrouter
+   :model 'google/gemini-2.5-flash
+   :temperature 0.5
+   :max-token 20
+   :cb (or on-title 'print)
+   :error (or on-error 'print)
+   :system "You are an expert chat titling AI. Your sole purpose is to read the beginning of a chat conversation and generate a concise, descriptive title for it. This title will be used as a filename or an HTML page title.
+
+RULES:
+1.  Directly output the title text and NOTHING ELSE.
+2.  Do NOT use quotation marks or any other formatting.
+3.  Do NOT include prefixes like \"Title:\" or \"Chat about:\".
+4.  Do NOT add any explanation or commentary.
+5.  The title should be brief, typically 3-7 words.
+6.  Capture the core subject or the user's primary intent from the provided text.
+
+EXAMPLES:
+- User asks for a Python function to sort a list -> Title: Python List Sorting Function
+- User asks for ideas for a sci-fi story -> Title: Sci-Fi Story Ideas
+- User asks \"What were the main causes of World War 1?\" -> Title: Main Causes of WWI
+
+The user's chat will now follow. Generate the title."))
+
+(comment
+  (get-gptel-org-title)
+  (simple-llm-req
+   "hi"
+   :backend gptel--openrouter
+   :model 'google/gemini-2.5-flash
+   :cb 'print
+   :error 'print))

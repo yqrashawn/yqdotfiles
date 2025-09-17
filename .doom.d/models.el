@@ -2,38 +2,22 @@
 
 
 (defconst gptel--openrouter-models
-  '((openai/o3-mini-high
-     :description "High intelligence at the same cost and latency targets of o1-mini"
-     :context-window 200
-     :input-cost 1.1
-     :output-cost 4.4
-     :cutoff-date "2023-10"
-     :capabilities (reasoning)
-     :request-params (:stream :json-false))
-    (openai/o3-mini
-     :description "High intelligence at the same cost and latency targets of o1-mini"
-     :context-window 200
-     :input-cost 1.1
-     :output-cost 4.4
-     :cutoff-date "2023-10"
-     :capabilities (reasoning)
-     :request-params (:stream :json-false))
-    (openai/gpt-4o-search-preview
-     :description "Advanced model for complex tasks; cheaper & faster than GPT-Turbo"
+  '((openai/gpt-5
+     :description "Flagship model for coding, reasoning, and agentic tasks across domains"
      :capabilities (media tool-use json url)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-     :context-window 128
-     :input-cost 2.5
+     :context-window 400
+     :input-cost 1.25
      :output-cost 10
-     :cutoff-date "2023-10")
-    (openai/gpt-4o-mini-search-preview
-     :description "Cheap model for fast tasks; cheaper & more capable than GPT-3.5 Turbo"
+     :cutoff-date "2024-09")
+    (openai/gpt-5-mini
+     :description "Faster, more cost-efficient version of GPT-5"
      :capabilities (media tool-use json url)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-     :context-window 128
-     :input-cost 0.15
-     :output-cost 0.6
-     :cutoff-date "2023-10")
+     :context-window 400
+     :input-cost 0.25
+     :output-cost 2.0
+     :cutoff-date "2024-09")
     (openai/gpt-4o-mini
      :description "Cheap model for fast tasks; cheaper & more capable than GPT-3.5 Turbo"
      :capabilities (media tool-use json url)
@@ -42,22 +26,28 @@
      :input-cost 0.15
      :output-cost 0.6
      :cutoff-date "2023-10")
-    (anthropic/claude-3.7-sonnet:beta
-     :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-02")
-    (anthropic/claude-3.7-sonnet:thinking
-     :description "Hybrid model capable of standard thinking and extended thinking modes"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-02")))
+    (gemini-2.5-pro
+     :description "Most powerful Gemini thinking model with state-of-the-art performance"
+     :capabilities (tool-use json media audio video)
+     :mime-types ("image/png" "image/jpeg" "image/webp" "image/heic" "image/heif"
+                  "application/pdf" "text/plain" "text/csv" "text/html"
+                  "audio/mpeg" "audio/wav" "audio/ogg" "audio/flac" "audio/aac" "audio/mp3"
+                  "video/mp4" "video/mpeg" "video/avi" "video/quicktime" "video/webm")
+     :context-window 1048             ; 65536 output token limit
+     :input-cost 1.25                 ; 2.50 for >200k tokens
+     :output-cost 10.00               ; 15 for >200k tokens
+     :cutoff-date "2025-01")
+    (google/gemini-2.5-flash
+     :description "Best in terms of price-performance, with well-rounded capabilities"
+     :capabilities (tool-use json media audio video)
+     :mime-types ("image/png" "image/jpeg" "image/webp" "image/heic" "image/heif"
+                  "application/pdf" "text/plain" "text/csv" "text/html"
+                  "audio/mpeg" "audio/wav" "audio/ogg" "audio/flac" "audio/aac" "audio/mp3"
+                  "video/mp4" "video/mpeg" "video/avi" "video/quicktime" "video/webm")
+     :context-window 1048             ; 65536 output token limit
+     :input-cost 0.3
+     :output-cost 2.5
+     :cutoff-date "2025-01")))
 
 (defconst gptel--gh-models
   '((gpt-5-mini

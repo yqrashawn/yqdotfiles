@@ -192,3 +192,19 @@ tasks."
         (bury-buffer))
       (setq! side-notes-file daily-note-file)
       (call-interactively #'side-notes-toggle-notes))))
+
+(defun +set-org-title (title)
+  "Update the Org-mode buffer's title or insert it if missing."
+  (interactive "sEnter new title: ")
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Current buffer is not a org-mode buffer"))
+  (save-excursion
+    (goto-char (point-min))
+    (forward-line 7)
+    (let ((bound (line-end-position)))
+      (goto-char (point-min))
+      (if (re-search-forward "^#\\+TITLE:[ \t]*.*" bound t)
+          (replace-match
+           (format "#+TITLE: %s" title))
+        (goto-char (point-min))
+        (insert (format "#+TITLE: %s\n" title))))))
