@@ -21,7 +21,10 @@
       (lgr-set-threshold lgr-level-debug)))
 
 (defun +json-serialize-json-false (orig-fn data &rest args)
-  (apply orig-fn data :false-object :json-false args))
+  (apply orig-fn data
+         :false-object :json-false
+         :null-object :null
+         args))
 
 (defun gptelt-log-mcp-tool (tool-name tool-args tool-result)
   (letf! ((defadvice #'json-serialize :around #'+json-serialize-json-false))
@@ -240,10 +243,16 @@ A plist has an even number of elements and alternates between keywords and value
                                    :description "Absolute path where the new file should be created (must be absolute, not relative)")
                                   :content_string (:type "string"
                                                    :description "The complete content to write to the new file"))
-          :required ["file_path" "content_string"]
+          ;; :required ["file_path" "content_string"]
+          :required []
           :additionalProperties :json-false))
+  (gptelt-parse-tool-schema original-structure))
 
-  (plist-to-alist original-structure))
+(defun gptel-parse-tool-schema-ensure-required-array (schema)
+  (if (and (clj/get schema "properties")
+           (null (clj/get schema "required")))
+      (clj/assoc schema "required" [])
+    schema))
 
 (defun gptelt-parse-tool-schema (tool-or-name)
   (when-let ((one-gptel-tool (gptelt-get-tool tool-or-name)))
@@ -255,7 +264,7 @@ A plist has an even number of elements and alternates between keywords and value
            (schema (plist-get tool :parameters)))
       (if (eq schema :null)
           '((type . "object"))
-        (plist-to-alist schema)))))
+        (gptel-parse-tool-schema-ensure-required-array (plist-to-alist schema))))))
 
 (defun gptelt-mcp-register-one-gptel-tool (tool-or-name)
   (when-let ((one-gptel-tool (gptelt-get-tool tool-or-name)))
@@ -276,9 +285,10 @@ A plist has an even number of elements and alternates between keywords and value
           :handler (gptel-tool-function one-gptel-tool)
           :gptel-tool one-gptel-tool
           :description description
-          :schema (if (eq schema :null)
-                      '((type . "object"))
-                    (plist-to-alist schema)))
+          :schema
+          (if (eq schema :null)
+              '((type . "object"))
+            (gptel-parse-tool-schema-ensure-required-array (plist-to-alist schema))))
          mcp-server-lib--tools)))))
 
 (defun gptelt-mcp-register-all-gptel-tools ()
