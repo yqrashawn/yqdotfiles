@@ -70,13 +70,6 @@
           (when newline (unless (bolp) (newline)))
           (insert content))))))
 
-(defun +current-buffer-from-client ()
-  (window-buffer (selected-window)))
-
-(defun +workspace-project-root ()
-  (with-current-buffer (+current-buffer-from-client)
-    (projectile-project-root)))
-
 (defun +magit-wip-diff-n-min-buffer (n)
   (let ((buf-name (format! " *changes-with-%d-minutes*" n)))
     ;; (when (get-buffer buf-name) (kill-buffer buf-name))
@@ -143,7 +136,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-              (insert! (",File project root: `%s`" buf-proj-root))
+            (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -246,6 +239,17 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (or (persp-parameter '+workspace-project (+workspace-current))
       (when (string= (+workspace-current-name) "main")
         (expand-file-name "~/.nixpkgs"))))
+
+;;;###autoload
+(defun ++workspace-set-project-to-current-buffer-project ()
+  "Set persp workspace project to current buffer project"
+  (interactive)
+  (unless (+workspace-current)
+    (user-error "No current workspace"))
+  (unless (doom-project-root)
+    (user-error "No project root"))
+  (set-persp-parameter
+   '+workspace-project (doom-project-root) (+workspace-current)))
 
 (defun +tmp-file-p (file-path)
   (or
