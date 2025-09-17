@@ -100,6 +100,43 @@ Returns the source code string if available, or an error if not found."
   (gptelt-cljs-get-symbol-source-code "defn" ":ground" -1)
   (gptelt-cljs-get-symbol-source-code "defff" ":ground" -1))
 
+;;; get buffer namespace
+(defun gptelt-cljs-get-buffer-ns (buffer-name)
+  (gptelt-clojure--ensure-workspace 'cljs)
+  (gptelt-clj-get-buffer-ns buffer-name))
+
+(comment
+  (gptelt-cljs-get-buffer-ns
+   (find-file-noselect "../../src/ground/core.cljs"))
+  (gptelt-cljs-get-buffer-ns "foo"))
+
+;;; get file namespace
+(defun gptelt-cljs-get-file-ns (file-path)
+  (gptelt-clojure--ensure-workspace 'cljs)
+  (gptelt-clj-get-file-ns file-path))
+
+(comment
+  (gptelt-cljs-get-file-ns "src/ground/core.cljs")
+  (gptelt-cljs-get-file-ns "src/ground/core.cljss"))
+
+;;; get namespace file url
+(defun gptelt-cljs-get-ns-file-url (namespace)
+  (gptelt-clojure--ensure-workspace 'cljs namespace)
+  (gptelt-clj-get-ns-file-url namespace))
+
+(comment
+  (gptelt-cljs-get-ns-file-url "ground.core")
+  (gptelt-cljs-get-ns-file-url "ground.coree"))
+
+;;; read file url
+(defun gptelt-cljs-read-file-url (file-url &optional limit offset)
+  (gptelt-clojure--ensure-workspace 'cljs)
+  (gptelt-clj-read-file-url file-url limit offset))
+
+(comment
+  (gptelt-cljs-read-file-url (gptelt-cljs-get-ns-file-url"shadow.json"))
+  (gptelt-cljs-read-file-url "foo"))
+
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
@@ -190,5 +227,59 @@ Returns the source code string if available, or an error if not found."
             :optional t
             :description "Optional namespace to qualify the symbol (e.g., 'cljs.core', defaults to 'cljs.user')"))
    :category "clojurescript"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "cljs_get_buffer_ns"
+   :function #'gptelt-cljs-get-buffer-ns
+   :description "Get the namespace of a cljs buffer by buffer name."
+   :args '((:name "buffer_name"
+            :type string
+            :description "The name of the cljs buffer to get the namespace from"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "cljs_get_file_ns"
+   :function #'gptelt-cljs-get-file-ns
+   :description "Get the namespace of a cljs source file in the current project, given the file path. File must be under project root and be a .clj, .cljc"
+   :args '((:name "file_path"
+            :type string
+            :description
+            "Path to the cljs file in the current project root (relative or absolute)"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "cljs_get_ns_file_url"
+   :function #'gptelt-cljs-get-ns-file-url
+   :description "Get file url for a given cljs namespace"
+   :args '((:name "namespace"
+            :type string
+            :description "The cljs namespace to get file information for"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "cljs_read_file_url"
+   :function #'gptelt-cljs-read-file-url
+   :description
+   "Read the content of file url returned by cljs_get_ns_file_url, the content will be wrapped with ␂ at the start and ␃ at the end."
+   :args '((:name "file_url"
+            :type string
+            :description "file_url return by cljs_get_ns_file_url")
+           (:name "limit"
+            :type integer
+            :optional t
+            :description "The number of lines to read. Default to 2000. Only provide if the file is too large to read at once.")
+           (:name "offset"
+            :type integer
+            :optional t
+            :description "The line number to start reading from. Only provide if the file is too large to read at once"))
+   :category "clojure"
    :confirm nil
    :include t))

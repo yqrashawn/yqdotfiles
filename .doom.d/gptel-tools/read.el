@@ -63,16 +63,10 @@
   (gptelt-make-tool
    :name "read_file"
    :function #'gptelt-read-file
-   :description (concat "Read a file from the local filesystem. The file_path parameter must be an absolute path, not a relative path. "
-                        "By default, it reads up to 2000 lines starting from the beginning of the file. "
-                        "You can optionally specify a line offset and limit (especially handy for long files), "
-                        "but it's recommended to read the whole file by not providing these parameters. "
-                        "Any lines longer than 2000 characters will be truncated. "
-                        "IMPORTANT: Use this tool for reading specific file paths. For reading currently open Emacs buffers, "
-                        "use read_buffer instead as it's faster and doesn't require the full path.\n\n"
-                        "The returned result includes a description line with the total lines in the file, "
-                        "and the start/end line numbers of the wrapped content. "
-                        "The content is wrapped with ␂ at the start and ␃ at the end.")
+   :description
+   "Read a file from the local filesystem. The file_path parameter must be an absolute path, not a relative path. By default, it reads up to 2000 lines starting from the beginning of the file. You can optionally specify a line offset and limit (especially handy for long files), but it's recommended to read the whole file by not providing these parameters. Any lines longer than 2000 characters will be truncated. IMPORTANT: Use this tool for reading specific file paths. For reading currently open Emacs buffers, use read_buffer instead as it's faster and doesn't require the full path.
+
+The returned result includes a description line with the total lines in the file, and the start/end line numbers of the wrapped content. The content is wrapped with ␂ at the start and ␃ at the end."
    :args '((:name "file_path" :type string
             :description "The absolute path to the file to read (must be absolute, not relative)")
            (:name "offset" :type integer :optional t
@@ -86,14 +80,10 @@
   (gptelt-make-tool
    :name "read_buffer"
    :function #'gptelt-read-buffer
-   :description (concat "Read a buffer by buffer name. Reads up to 2000 lines starting from the beginning by default. "
-                        "Optional: offset (line number to start at), limit (number of lines). "
-                        "This tool is optimized for reading currently open files in Emacs without needing the full file path. "
-                        "Use this instead of read_file when you know the buffer name, as it's faster and more convenient. "
-                        "To see available buffers, you can use the buffer management tools.\n\n"
-                        "The returned result includes a description line with the total lines in the buffer, "
-                        "and the start/end line numbers of the wrapped content. "
-                        "The content is wrapped with ␂ at the start and ␃ at the end.")
+   :description
+   "Read a buffer by buffer name. Reads up to 2000 lines starting from the beginning by default. Optional: offset (line number to start at), limit (number of lines). This tool is optimized for reading currently open files in Emacs without needing the full file path. Use this instead of read_file when you know the buffer name, as it's faster and more convenient. To see available buffers, you can use the buffer management tools.
+
+The returned result includes a description line with the total lines in the buffer, and the start/end line numbers of the wrapped content. The content is wrapped with ␂ at the start and ␃ at the end."
    :args '((:name "buffer_name" :type string
             :description "The buffer name to read")
            (:name "offset" :type integer :optional t

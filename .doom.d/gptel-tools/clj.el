@@ -3,20 +3,28 @@
 (require 'cider)
 
 ;;; utilities
+(defun gptelt-clj-ensure-helper-loaded ()
+  (gptelt-cider--eval-buffer
+   'clj
+   (find-file-noselect"~/.nixpkgs/env/dev/clj_helper.clj")
+   t t))
+
 (defun gptelt-clojure--ensure-workspace (type &optional ns)
-  (when (eq type 'clj)
+  (when (eq type 'cljs)
+    (unless (++workspace-cljs?)
+      (error "This is not a clojure project"))
+    (unless (++workspace-cljs-repl-connected?)
+      (error "Clojure nREPL is not connected")))
+
+  (when (or (eq type 'clj)
+            (eq type 'cljs))
     (unless (++workspace-clj?)
       (error "This is not a clojure project"))
     (unless (++workspace-clj-repl-connected?)
       (error "Clojure nREPL is not connected"))
     (when ns
       (unless (member ns (cider-sync-request:ns-list))
-        (error "Namespace '%s' is not available" ns))))
-  (when (eq type 'cljs)
-    (unless (++workspace-cljs?)
-      (error "This is not a clojure project"))
-    (unless (++workspace-cljs-repl-connected?)
-      (error "Clojure nREPL is not connected"))))
+        (error "Namespace '%s' is not available" ns)))))
 
 (defun gptel-clojure--resolve-file-path (file-path)
   (let* ((proj-root (++workspace-current-project-root))
@@ -130,10 +138,12 @@ Returns the namespace string if found, or nil if no namespace is detected."
         (when-let ((ns-form (cider-ns-form)))
           (let ((ns-name (cider-get-ns-name)))
             (if ns-name
-                ns-name
+                (substring-no-properties ns-name 0)
               (error "Could not determine namespace from buffer '%s'" buffer-name))))))))
 
 (comment
+  (gptelt-clj-get-buffer-ns
+   (find-file-noselect "../../src/ground/core.cljs"))
   (gptelt-clj-get-buffer-ns (buffer-name (find-file-noselect "../../src/user.clj")))
   (gptelt-clj-get-buffer-ns "some-clj-buffer"))
 
@@ -153,11 +163,13 @@ Returns the namespace string if found, or an error if not."
           (when-let ((ns-form (cider-ns-form)))
             (let ((ns-name (cider-get-ns-name)))
               (if ns-name
-                  ns-name
+                  (substring-no-properties ns-name 0)
                 (error "Could not determine namespace from file '%s'" abs-path)))))))))
 
 (comment
-  (gptelt-clj-get-file-ns "src/user.clj"))
+  (gptelt-clj-get-file-ns "src/user.clj")
+  (gptelt-clj-get-file-ns
+   (expand-file-name "../../src/ground/core.cljs")))
 
 ;;; get namespace file info
 (defun gptelt-clj-get-ns-file-url (namespace)
@@ -173,6 +185,7 @@ Ensures clj workspace and nREPL connection before proceeding."
     (error (error "Error getting namespace file info: %s" (error-message-string err)))))
 
 (comment
+  (gptelt-clj-get-ns-file-url "ground.core")
   (gptelt-clj-get-ns-file-url "user")
   (gptelt-clj-get-ns-file-url "users"))
 
@@ -302,6 +315,31 @@ shows buffer if not visible, asks for user permission, and evaluates it."
 (comment
   (gptelt-clj-eval-file "src/user.clj"))
 
+;;; read file url
+(defun gptelt-clj-read-file-url
+    (file-url &optional limit offset)
+  (gptelt-clojure--ensure-workspace 'clj)
+  (gptelt-clj-ensure-helper-loaded)
+  (let ((rst (read (gptelt-eval--clj-string
+                    (if (or limit offset)
+                        (format "(read-file-url \"%s\" {:limit %s :offset %s})"
+                                file-url
+                                (or limit 2000)
+                                (or offset 0))
+                      (format "(read-file-url \"%s\")" file-url))
+                    "clj-helper"
+                    t))))
+    (if (string-prefix-p "Failed to read file url: " rst)
+        (error rst)
+      rst)))
+
+(comment
+  (gptelt-clj-read-file-url
+   (gptelt-clj-get-ns-file-url "clojure.core")
+   100 100)
+  (gptelt-clj-read-file-url (gptelt-clj-get-ns-file-url "shadow.json"))
+  (gptelt-clj-read-file-url "a"))
+
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
@@ -368,10 +406,30 @@ shows buffer if not visible, asks for user permission, and evaluates it."
   (gptelt-make-tool
    :name "clj_get_ns_file_url"
    :function #'gptelt-clj-get-ns-file-url
-   :description "Get file url for a given namespace: file path"
+   :description "Get file url for a given clj namespace"
    :args '((:name "namespace"
             :type string
-            :description "The namespace to get file information for"))
+            :description "The clj namespace to get file information for"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "clj_read_file_url"
+   :function #'gptelt-clj-read-file-url
+   :description
+   "Read the content of file url returned by cljs_get_ns_file_url, the content will be wrapped with ␂ at the start and ␃ at the end."
+   :args '((:name "file_url"
+            :type string
+            :description "file_url return by clj_get_ns_file_url")
+           (:name "limit"
+            :type integer
+            :optional t
+            :description "The number of lines to read. Default to 2000, Only provide if the file is too large to read at once.")
+           (:name "offset"
+            :type integer
+            :optional t
+            :description "The line number to start reading from. Only provide if the file is too large to read at once"))
    :category "clojure"
    :confirm nil
    :include t)

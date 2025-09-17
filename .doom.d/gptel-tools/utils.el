@@ -26,7 +26,7 @@
          :null-object :null
          args))
 
-(defvar gptelt-log-persist-all-log nil)
+(defvar gptelt-log-persist-all-log t)
 
 (defun gptelt-log-mcp-tool (tool-name tool-args tool-result)
   (letf! ((defadvice #'json-serialize :around #'+json-serialize-json-false))
@@ -351,38 +351,38 @@ A plist has an even number of elements and alternates between keywords and value
          (tool (gethash tool-name mcp-server-lib--tools))
          (tool-args (alist-get 'arguments params)))
     (if-let ((one-gptel-tool (and tool (plist-get tool :gptel-tool))))
-      (let ((context (list :id id)))
-        (condition-case err
-            (let*
-                ((result
-                  (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
-                 (result-text
-                  (cond
-                   ((null result) "")
-                   (t (gptel--to-string result))))
-                 ;; Wrap the handler result in the MCP format
-                 (formatted-result
-                  `((content
-                     .
-                     ,(vector
-                       `((type . "text") (text . ,result-text))))
-                    (isError . :json-false))))
-              (gptelt-log-mcp-tool
-               tool-name tool-args formatted-result)
-              (mcp-server-lib-metrics--track-tool-call tool-name)
-              (mcp-server-lib--respond-with-result
-               context formatted-result))
-          (error
-           (mcp-server-lib-metrics--track-tool-call tool-name t)
-           (cl-incf (mcp-server-lib-metrics-errors method-metrics))
-           (let ((formatted-error
-                  `((content
-                     .
-                     ,(vector
-                       `((type . "text") (text . ,(gptel--to-string err)))))
-                    (isError . t))))
-             (mcp-server-lib--respond-with-result
-              context formatted-error)))))
+        (let ((context (list :id id)))
+          (condition-case err
+              (let*
+                  ((result
+                    (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
+                   (result-text
+                    (cond
+                     ((null result) "")
+                     (t (gptel--to-string result))))
+                   ;; Wrap the handler result in the MCP format
+                   (formatted-result
+                    `((content
+                       .
+                       ,(vector
+                         `((type . "text") (text . ,result-text))))
+                      (isError . :json-false))))
+                (gptelt-log-mcp-tool
+                 tool-name tool-args formatted-result)
+                (mcp-server-lib-metrics--track-tool-call tool-name)
+                (mcp-server-lib--respond-with-result
+                 context formatted-result))
+            (error
+             (mcp-server-lib-metrics--track-tool-call tool-name t)
+             (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+             (let ((formatted-error
+                    `((content
+                       .
+                       ,(vector
+                         `((type . "text") (text . ,(gptel--to-string err)))))
+                      (isError . t))))
+               (mcp-server-lib--respond-with-result
+                context formatted-error)))))
       (funcall orig-fn id params method-metrics))))
 
 ;;; utils.el ends here
