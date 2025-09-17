@@ -145,30 +145,35 @@ Returns a list of search results with file paths, line numbers, and content."
 (gptelt-make-tool
  :name "glob"
  :function #'gptelt-rg-tool-glob
- :description (concat "Fast file pattern matching tool that works with any codebase size using ripgrep. "
-                      "Efficiently finds files by name patterns and file types. "
-                      "\n\nSupported pattern types:\n"
-                      "- Glob patterns: '*.el', '**/*.py', 'src/**/*.{js,ts}'\n"
-                      "- Ripgrep type aliases: 'elisp', 'python', 'javascript'\n"
-                      "- Multiple patterns: '*.js *.ts' (space-separated)\n\n"
-                      "Usage examples:\n"
-                      "- Find all Python files: glob('*.py')\n"
-                      "- Find TypeScript in src: glob('**/*.ts', 'src')\n"
-                      "- Use type alias: glob('elisp')\n"
-                      "- Limit results: glob('*.js', '/project', 20)\n\n"
-                      "Path parameter supports:\n"
-                      "- 'project' (default): Search from project root\n"
-                      "- 'current': Search from current directory\n"
-                      "- Absolute paths: '/specific/directory'\n"
-                      "- Relative paths: Resolved against project root\n\n"
-                      "Returns file paths relative to project root when possible, making them easy to use with other tools.")
+ :description
+ "Fast file pattern matching tool that works with any codebase size using ripgrep.Efficiently finds files by name patterns and file types.
+
+Supported pattern types:
+- Glob patterns: '*.el', '**/*.py', 'src/**/*.{js,ts}'
+- Ripgrep type aliases: 'elisp', 'python', 'javascript'
+- Multiple patterns: '*.js *.ts' (space-separated)
+
+Usage examples:
+- Find all Python files: glob('*.py')
+- Find TypeScript in src: glob('**/*.ts', 'src')
+- Use type alias: glob('elisp')
+- Limit results: glob('*.js', '/project', 20)
+
+Path parameter supports:
+- 'project' (default): Search from project root
+- 'current': Search from current directory
+- Absolute paths: '/specific/directory'
+- Relative paths: Resolved against project root
+
+Returns file paths relative to project root when possible, making them easy to use with other tools."
  :args '((:name "pattern"
           :type string
           :description "The glob pattern to match files against")
          (:name "path"
           :type string
           :optional t
-          :description "The directory to search in. Defaults to the current project root.")
+          :description
+          "The directory to search in. Defaults to the current project root.")
          (:name "max_results"
           :type integer
           :optional t
@@ -180,24 +185,28 @@ Returns a list of search results with file paths, line numbers, and content."
 (gptelt-make-tool
  :name "grep"
  :function #'gptelt-rg-tool-search-regex
- :description (concat "Fast content search tool that works with any codebase size using ripgrep. "
-                      "Searches file contents using powerful regular expressions with high performance. "
-                      "\n\nRegex capabilities:\n"
-                      "- Full regex syntax: 'log.*Error', 'function\\s+\\w+', '^class \\w+'\n"
-                      "- Case-sensitive and case-insensitive search\n"
-                      "- Literal string matching (non-regex) option\n"
-                      "- Context lines: Show N lines before/after matches\n\n"
-                      "Usage examples:\n"
-                      "- Find function definitions: grep('function\\s+\\w+')\n"
-                      "- Search in specific files: grep('TODO', '/project', '*.py')\n"
-                      "- Case-sensitive search: grep('Error', '/project', '*.log', true)\n"
-                      "- With context: grep('import.*react', '/src', '*.js', false, false, 3)\n\n"
-                      "File filtering options:\n"
-                      "- include parameter: '*.js', '*.{ts,tsx}', '**/*.py'\n"
-                      "- Searches hidden files by default\n"
-                      "- Respects .gitignore patterns\n\n"
-                      "Returns structured results with file paths (relative to project root), line numbers, "
-                      "column positions, and matched content. Perfect for code analysis and refactoring tasks.")
+ :description
+ "Fast content search tool that works with any codebase size using ripgrep. Searches file contents using powerful regular expressions with high performance.
+
+Regex capabilities:
+- Full regex syntax: 'log.*Error', 'function\\s+\\w+', '^class \\w+'
+- Case-sensitive and case-insensitive search
+- Literal string matching (non-regex) option
+- Context lines: Show N lines before/after matches
+
+Usage examples:
+- Find function definitions: grep('function\\s+\\w+')
+- Search in specific files: grep('TODO', '/project', '*.py')
+- Case-sensitive search: grep('Error', '/project', '*.log', true)
+- With context: grep('import.*react', '/src', '*.js', false, false, 3)
+
+File filtering options:
+- include parameter: '*.js', '*.{ts,tsx}', '**/*.py'
+- Searches hidden files by default
+- Respects .gitignore patterns
+
+Returns structured results with file paths (relative to project root), line numbers, column positions, and matched content. Perfect for code analysis and refactoring tasks."
+
  :args '((:name "pattern"
           :type string
           :description "The regular expression pattern to search for in file contents")

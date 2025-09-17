@@ -107,6 +107,7 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
 
 (comment
   (gptelt-eval-clj-string "+" "clojure.core")
+  (gptelt-eval-clj-string "+" "cljs.core")
   (gptelt-eval-clj-string ""
                           "clojure.core"))
 
@@ -274,7 +275,9 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
 (comment
   (gptelt-clj-eval-buffer "shadow-cljs-helpers.get-running-builds <.nixpkgs>")
   (gptelt-clj-eval-buffer
-   (find-file-noselect "../../src/user.clj")))
+   (find-file-noselect "../../src/user.clj"))
+  (gptelt-clj-eval-buffer
+   (find-file-noselect "../../env/dev/cljs_helper.clj")))
 
 ;;; evaluate file
 (defun gptelt-clj-eval-file (file-path)
