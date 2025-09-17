@@ -26,11 +26,13 @@
          :null-object :null
          args))
 
+(defvar gptelt-log-persist-all-log nil)
+
 (defun gptelt-log-mcp-tool (tool-name tool-args tool-result)
   (letf! ((defadvice #'json-serialize :around #'+json-serialize-json-false))
     (condition-case nil
         (let ((is-error? (not (eq (alist-get 'isError tool-result) :json-false))))
-          (when (log/spy is-error?)
+          (when (or gptelt-log-persist-all-log is-error?)
             (lgr-debug
                 gpteltl
               ":%s:error:\n#+begin_src json-ts\n"
@@ -45,6 +47,14 @@
       (expand-file-name)
       (find-file-noselect)
       (pop-to-buffer)))
+
+(defun gptelt-log-toggle-all ()
+  (interactive)
+  (setq gptelt-log-persist-all-log
+        (not gptelt-log-persist-all-log))
+  (if gptelt-log-persist-all-log
+      (message "Now persist all log")
+    (message "Now persist error log")))
 
 ;;; Project/file path
 (defun gptelt--get-project-root ()
