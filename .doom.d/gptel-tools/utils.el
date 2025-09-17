@@ -33,14 +33,17 @@
     (condition-case nil
         (let ((is-error? (not (eq (alist-get 'isError tool-result) :json-false))))
           (when (or gptelt-log-persist-all-log is-error?)
-            (lgr-debug
-                gpteltl
-              (if is-error?
-                  ":%s:error:\n#+begin_src json-ts\n"
-                ":%s:\n#+begin_src json-ts\n")
-              tool-name
-              :args tool-args
-              :rst tool-result)))
+            (let ((buffer-file-coding-system 'utf-8-unix)
+                  (coding-system-for-read 'utf-8-unix)
+                  (coding-system-for-write 'utf-8-unix))
+              (lgr-debug
+                  gpteltl
+                (if is-error?
+                    ":%s:error:\n#+begin_src json-ts\n"
+                  ":%s:\n#+begin_src json-ts\n")
+                tool-name
+                :args tool-args
+                :rst tool-result))))
       (-const nil))))
 
 (defun gptelt-log-check ()
@@ -348,38 +351,38 @@ A plist has an even number of elements and alternates between keywords and value
          (tool (gethash tool-name mcp-server-lib--tools))
          (tool-args (alist-get 'arguments params)))
     (if-let ((one-gptel-tool (and tool (plist-get tool :gptel-tool))))
-        (let ((context (list :id id)))
-          (condition-case err
-              (let*
-                  ((result
-                    (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
-                   (result-text
-                    (cond
-                     ((null result) "")
-                     (t (gptel--to-string result))))
-                   ;; Wrap the handler result in the MCP format
-                   (formatted-result
-                    `((content
-                       .
-                       ,(vector
-                         `((type . "text") (text . ,result-text))))
-                      (isError . :json-false))))
-                (gptelt-log-mcp-tool
-                 tool-name tool-args formatted-result)
-                (mcp-server-lib-metrics--track-tool-call tool-name)
-                (mcp-server-lib--respond-with-result
-                 context formatted-result))
-            (error
-             (mcp-server-lib-metrics--track-tool-call tool-name t)
-             (cl-incf (mcp-server-lib-metrics-errors method-metrics))
-             (let ((formatted-error
-                    `((content
-                       .
-                       ,(vector
-                         `((type . "text") (text . ,(gptel--to-string err)))))
-                      (isError . t))))
-               (mcp-server-lib--respond-with-result
-                context formatted-error)))))
+      (let ((context (list :id id)))
+        (condition-case err
+            (let*
+                ((result
+                  (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
+                 (result-text
+                  (cond
+                   ((null result) "")
+                   (t (gptel--to-string result))))
+                 ;; Wrap the handler result in the MCP format
+                 (formatted-result
+                  `((content
+                     .
+                     ,(vector
+                       `((type . "text") (text . ,result-text))))
+                    (isError . :json-false))))
+              (gptelt-log-mcp-tool
+               tool-name tool-args formatted-result)
+              (mcp-server-lib-metrics--track-tool-call tool-name)
+              (mcp-server-lib--respond-with-result
+               context formatted-result))
+          (error
+           (mcp-server-lib-metrics--track-tool-call tool-name t)
+           (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+           (let ((formatted-error
+                  `((content
+                     .
+                     ,(vector
+                       `((type . "text") (text . ,(gptel--to-string err)))))
+                    (isError . t))))
+             (mcp-server-lib--respond-with-result
+              context formatted-error)))))
       (funcall orig-fn id params method-metrics))))
 
 ;;; utils.el ends here

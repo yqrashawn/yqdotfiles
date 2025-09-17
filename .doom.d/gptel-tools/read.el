@@ -11,10 +11,7 @@
   (unless (and (stringp file_path) (file-name-absolute-p file_path))
     (error "file_path must be an absolute path"))
   (let ((max-lines (or limit 2000))
-        (line-offset (or offset 0))
-        (buffer-file-coding-system 'utf-8-unix)
-        (coding-system-for-read 'utf-8-unix)
-        (coding-system-for-write 'utf-8-unix))
+        (line-offset (or offset 0)))
     (when (file-readable-p file_path)
       (with-temp-buffer
         (insert-file-contents file_path)
@@ -38,10 +35,7 @@
 (defun gptelt-read-buffer (buffer_name &optional offset limit)
   "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Nil if not exists. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the buffer and the start/end line numbers of the wrapped content."
   (let ((max-lines (or limit 2000))
-        (line-offset (or offset 0))
-        (buffer-file-coding-system 'utf-8-unix)
-        (coding-system-for-read 'utf-8-unix)
-        (coding-system-for-write 'utf-8-unix))
+        (line-offset (or offset 0)))
     (when-let ((b (get-buffer buffer_name)))
       (with-current-buffer b
         (when (llm-danger-buffer-p) (error "User denied the read request"))
