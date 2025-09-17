@@ -298,14 +298,18 @@ A plist has an even number of elements and alternates between keywords and value
 
 (comment
   (gptelt-parse-tool-schema "glob")
+  (gptelt-parse-tool-schema "clj_list_ns")
   (type-of (gptel-tool-function (gptelt-get-tool "visible_buffers")))
+  (gptelt-get-tool "visible_buffers")
+
 
   (setq mcp-server-lib-log-io t)
   mcp-server-lib--tools)
 
 
 (defun +mcp-server-lib--call-gptel-tool (tool args)
-  (let (arg-values)
+  (let ((default-directory (++workspace-current-project-root))
+        (arg-values))
     (setq arg-values
           (mapcar
            (lambda (arg)
