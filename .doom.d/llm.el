@@ -20,17 +20,17 @@
                         "~/Dropbox/sync/gptel/%s/%s/%s"
                         (format-time-string "%Y")
                         (format-time-string "%m")
-                        (format-time-string "%d")))
-                  (unless (file-directory-p dir)
-                    (make-directory dir t))
-                  (+set-org-title title)
-                  (write-file
-                   (expand-file-name
-                    (format
-                     "%s-%s.org"
-                     (format-time-string "%H_%M")
-                     title)
-                    dir)))))
+                        (format-time-string "%d"))))
+               (unless (file-directory-p dir)
+                 (make-directory dir t))
+               (+set-org-title title)
+               (write-file
+                (expand-file-name
+                 (format
+                  "%s-%s.org"
+                  (format-time-string "%H_%M")
+                  title)
+                 dir))))
            (lambda (e) (user-error "Error setting gptel org title: %s" e)))
           t)))))
 
@@ -50,6 +50,11 @@
         (end-of-line)
         (skip-chars-backward " \t\r")
         (insert-and-inherit "*")))))
+
+(defun my/claude-code-message-separator ()
+  (when (eq gptel-backend gptel--claude-code)
+    (unless (eq (char-before) ?\n)
+      (call-interactively '+org/return))))
 
 ;;; gptel
 (defun +gptel-make-my-presets ()
@@ -166,7 +171,7 @@
            :key +openrouter-api-key
            :models gptel--openrouter-models))
   ;; self host claude code
-  (setq! gptel--gh-claude-code
+  (setq! gptel--claude-code
          (gptel-make-openai "CCode"
            :protocol "http"
            :host "localhost:14141"
@@ -195,7 +200,7 @@
            :curl-args (list "--insecure")
            :stream t))
   (setq! gptel-backend gptel--openrouter)
-  (setq! gptel-backend gptel--gh-claude-code)
+  (setq! gptel-backend gptel--claude-code)
   (setq! gptel-backend gptel--gh-copilot-local)
   (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-backend gptel--gh-copilot-business)
@@ -204,6 +209,7 @@
   (setq! gptel-model 'gpt-4.1-2025-04-14)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
+  (add-hook! 'gptel-pre-response-hook 'my/claude-code-message-separator)
   (setq! gptel-log-level 'debug)
   (defun +gptel-toggle-debug ()
     (interactive)
