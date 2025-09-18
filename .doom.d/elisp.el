@@ -57,7 +57,8 @@
     (mcp-server-lib-install))
   (comment
     (mcp-server-lib-stop))
-  (mcp-server-lib-start))
+  (unless (and (boundp 'mcp-server-lib--running) mcp-server-lib--running)
+    (mcp-server-lib-start)))
 
 (use-package! elisp-dev-mcp
   :defer t)
