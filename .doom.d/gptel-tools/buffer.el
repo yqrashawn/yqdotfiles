@@ -77,7 +77,7 @@
 
 (defun gptelt-visible-buffers ()
   "Return a list of buffer names that are currently visible in windows."
-  (+visible-buffers))
+  (seq-map 'buffer-name (+visible-buffers)))
 
 (comment
   (gptelt-visible-buffers))

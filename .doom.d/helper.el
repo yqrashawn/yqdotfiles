@@ -120,8 +120,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
 (defun +visible-buffers ()
   (seq-filter
    (lambda (b)
-     (with-current-buffer b
-       (not gptel-mode)))
+     (with-current-buffer b (not gptel-mode)))
    (mapcar 'window-buffer (window-list))))
 
 (defun +visible-buffers-list-buffer ()
@@ -136,7 +135,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-            (insert! (",File project root: `%s`" buf-proj-root))
+              (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
