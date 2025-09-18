@@ -15,19 +15,18 @@
           (get-gptel-org-title
            (buffer-string)
            (lambda (title)
-             (let
-                 ((dir (format
-                        "~/Dropbox/sync/gptel/%s/%s/%s"
-                        (format-time-string "%Y")
-                        (format-time-string "%m")
-                        (format-time-string "%d"))))
+             (let ((dir (format
+                         "~/Dropbox/sync/gptel/%s/%s"
+                         (format-time-string "%Y")
+                         (format-time-string "%m"))))
                (unless (file-directory-p dir)
                  (make-directory dir t))
                (+set-org-title title)
                (write-file
                 (expand-file-name
                  (format
-                  "%s-%s.org"
+                  "%s-%s-%s.org"
+                  (format-time-string "%d")
                   (format-time-string "%H_%M")
                   title)
                  dir))))
