@@ -164,7 +164,12 @@
                                   (call-interactively #'project-find-file)))
    :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
    :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
-   :desc "Find library" "l" #'find-library))
+   :desc "Find library" "l" #'find-library)
+  (:prefix ("o" . "open")
+           (:when (modulep! :tools llm)
+             (:prefix ("l" . "llm")
+              :desc "Reload all gptel tools" "R" #'+gptel-reload-tools
+              :desc "Reload all gptel tools" "L" #'gptelt-log-check))))
  (:localleader
   (:after cider
           (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
