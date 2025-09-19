@@ -51,6 +51,16 @@
         (skip-chars-backward " \t\r")
         (insert-and-inherit "*")))))
 
+(defadvice! +gptel-curl--stream-insert-response (f reponse info &optional raw)
+  :around #'gptel-curl--stream-insert-response
+  (let ((start-marker (plist-get info :position)))
+    (with-current-buffer (marker-buffer start-marker)
+      (save-excursion
+        (goto-char start-marker)
+        (unless (eq (char-before) ?\n)
+          (call-interactively '+org/return)))))
+  (funcall f response info raw))
+
 (defun my/claude-code-message-separator ()
   (when (log/spy (eq gptel-backend gptel--claude-code))
     (unless (eq (log/spy (char-before)) ?\n)
@@ -209,7 +219,7 @@
   (setq! gptel-model 'gpt-4.1-2025-04-14)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
-  (add-hook! 'gptel-pre-response-hook 'my/claude-code-message-separator)
+  ;; (add-hook! 'gptel-pre-response-hook 'my/claude-code-message-separator)
   (setq! gptel-log-level 'debug)
   (defun +gptel-toggle-debug ()
     (interactive)
