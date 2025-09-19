@@ -18,7 +18,22 @@
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
 
 (after! orderless
-  (setq orderless-component-separator "[ ,j]"))
+  (setq orderless-component-separator "[ ,j]")
+  (setq! completion-category-overrides
+         (clj/assoc
+          completion-category-overrides
+          'file
+          '((styles orderless partial-completion))))
+  (setq! completion-category-overrides
+         (clj/assoc
+          completion-category-overrides
+          'buffer
+          '((styles orderless partial-completion))))
+  (setq! completion-category-overrides
+         (clj/assoc
+          completion-category-overrides
+          'project-file
+          '((styles orderless partial-completion)))))
 
 (defun +company-abort ()
   (when (fboundp 'company--active-p)
@@ -72,9 +87,14 @@
    fussy-use-cache t
    fussy-remove-bad-char-fn nil
    fussy-default-regex-fn #'fussy-pattern-flex-2
+   fussy-compare-same-score-fn #'fussy-histlen->strlen<
    ;; completion-category-defaults nil
-   completion-category-overrides '((cider (styles fussy))
-                                   (lsp-capf (styles fussy))))
+   completion-category-overrides
+   '((cider (styles fussy))
+     (lsp-capf (styles fussy))
+     (file (styles orderless basic))
+     (project-file (styles orderless basic))
+     (buffer (styles orderless basic))))
 
   (after! corfu
     (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
@@ -87,7 +107,20 @@
   (defadvice! +read-extended-command (orig-fn &optional prompt)
     :around #'read-extended-command
     (let ((completion-styles '(fussy orderless basic)))
-      (funcall orig-fn prompt))))
+      (funcall orig-fn prompt)))
+
+  ;; Preserve chronological order for short queries in file completion
+  (defun +preserve-recency-for-short-queries ()
+    "Use basic completion for very short queries to preserve recency order."
+    (when (and (minibufferp)
+               (memq (completion-metadata-get
+                      (completion-metadata "" minibuffer-completion-table minibuffer-completion-predicate)
+                      'category)
+                     '(file project-file buffer))
+               (<= (- (point-max) (minibuffer-prompt-end)) 2))
+      (setq-local completion-styles '(orderless basic))))
+
+  (add-hook 'minibuffer-setup-hook #'+preserve-recency-for-short-queries))
 
 (after! cape
   (setq! cape-dict-file (list

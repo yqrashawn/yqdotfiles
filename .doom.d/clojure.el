@@ -185,17 +185,9 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   (interactive)
   (when (< emacs-major-version 27)
     (user-error "`+cider-enable-fuzzy-completion' requires Emacs 27 or later"))
-  (let* ((cider (assq 'cider completion-category-overrides))
-         (found-styles (when cider (assq 'styles cider)))
-         (found-cycle (when cider (assq 'cycle cider))))
-    (setq completion-category-overrides
-          (seq-remove (lambda (x)
-                        (equal 'cider (car x)))
-                      completion-category-overrides))
-    ;; (setq found-styles '(styles fussy))
-    (setq found-styles '(styles hotfuzz))
-    (add-to-list 'completion-category-overrides (apply #'list 'cider found-styles (when found-cycle
-                                                                                    (list found-cycle))))))
+  (setq!
+   completion-category-overrides
+   (clj/assoc completion-category-overrides 'cider '((styles hotfuzz)))))
 
 (add-hook! '(cider-mode-hook cider-repl-mode-hook)
            '+cider-enable-fuzzy-completion)
