@@ -15,21 +15,22 @@
           (get-gptel-org-title
            (buffer-string)
            (lambda (title)
-             (let ((dir (format
-                         "~/Dropbox/sync/gptel/%s/%s"
-                         (format-time-string "%Y")
-                         (format-time-string "%m"))))
-               (unless (file-directory-p dir)
-                 (make-directory dir t))
-               (+set-org-title title)
-               (write-file
-                (expand-file-name
-                 (format
-                  "%s-%s-%s.org"
-                  (format-time-string "%d")
-                  (format-time-string "%H_%M")
-                  title)
-                 dir))))
+             (with-current-buffer buf
+               (let ((dir (format
+                           "~/Dropbox/sync/gptel/%s/%s"
+                           (format-time-string "%Y")
+                           (format-time-string "%m"))))
+                 (unless (file-directory-p dir)
+                   (make-directory dir t))
+                 (+set-org-title title)
+                 (write-file
+                  (expand-file-name
+                   (format
+                    "%s-%s-%s.org"
+                    (format-time-string "%d")
+                    (format-time-string "%H_%M")
+                    title)
+                   dir)))))
            (lambda (e) (user-error "Error setting gptel org title: %s" e)))
           t)))))
 
@@ -51,8 +52,8 @@
         (insert-and-inherit "*")))))
 
 (defun my/claude-code-message-separator ()
-  (when (eq gptel-backend gptel--claude-code)
-    (unless (eq (char-before) ?\n)
+  (when (log/spy (eq gptel-backend gptel--claude-code))
+    (unless (eq (log/spy (char-before)) ?\n)
       (call-interactively '+org/return))))
 
 ;;; gptel
@@ -117,7 +118,7 @@
     (let* ((buffer (window-buffer win))
            (buf-file (or (buffer-file-name buffer)
                          (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                             (buffer-file-name base-buffer)))))
+                           (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -227,7 +228,7 @@
          (format "In buffer `%s`%s:"
                  (buffer-name buffer)
                  (if-let ((buf-file (buffer-file-name buffer)))
-                     (format ", file `%s`" buf-file)
+                   (format ", file `%s`" buf-file)
                    "")))
        "\n\n```" (gptel--strip-mode-suffix (buffer-local-value
                                             'major-mode buffer))
