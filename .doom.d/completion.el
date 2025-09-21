@@ -100,28 +100,30 @@
   ;; Preserve chronological order for short queries in file completion
   (defun +preserve-recency-for-short-queries ()
     "Use basic completion for very short queries to preserve recency order."
-    (when (and (minibufferp)
-               (memq (completion-metadata-get
-                      (completion-metadata
-                       ""
-                       minibuffer-completion-table
-                       minibuffer-completion-predicate)
-                      'category)
-                     '(file project-file buffer)))
+    (when (and
+           (minibufferp)
+           (memq (completion-metadata-get
+                  (ignore-errors
+                    (completion-metadata
+                     ""
+                     minibuffer-completion-table
+                     minibuffer-completion-predicate))
+                  'category)
+                 '(file project-file buffer)))
       (if (<= (- (point-max) (minibuffer-prompt-end)) 5)
           (progn
             (when (null +preserve-recency-tmp-minibuffer-completion-styles)
               (setq-local
                +preserve-recency-tmp-minibuffer-completion-styles
                completion-styles))
-            +preserve-recency-tmp-minibuffer-completion-styles
             (setq-local completion-styles '(orderless partial-completion)))
-        (progn (setq-local
-                completion-styles
-                (or +preserve-recency-tmp-minibuffer-completion-styles
-                    '(orderless hotfuzz fussy partial-completion)))
-               (setq-local
-                +preserve-recency-tmp-minibuffer-completion-styles nil)))))
+        (progn
+          (setq-local
+           completion-styles
+           (or +preserve-recency-tmp-minibuffer-completion-styles
+               '(orderless hotfuzz fussy partial-completion)))
+          (setq-local
+           +preserve-recency-tmp-minibuffer-completion-styles nil)))))
 
   (add-hook! 'minibuffer-setup-hook
     (defun +preserve-recency-for-short-queries-h ()
@@ -191,8 +193,9 @@
 
 (use-package! swiper
   :defer t
-  :config
-  (defun swiper-isearch-function (str &rest args)
-    "Collect STR matches in the current buffer for `swiper-isearch'."
-    (with-ivy-window
-      (swiper--isearch-function str))))
+  ;; :config
+  ;; (defun swiper-isearch-function (str &rest args)
+  ;;   "Collect STR matches in the current buffer for `swiper-isearch'."
+  ;;   (with-ivy-window
+  ;;     (swiper--isearch-function str)))
+  )

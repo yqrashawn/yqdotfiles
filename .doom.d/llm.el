@@ -51,7 +51,7 @@
         (skip-chars-backward " \t\r")
         (insert-and-inherit "*")))))
 
-(defadvice! +gptel-curl--stream-insert-response (f reponse info &optional raw)
+(defadvice! +gptel-curl--stream-insert-response (f response info &optional raw)
   :around #'gptel-curl--stream-insert-response
   (let ((start-marker (plist-get info :position)))
     (with-current-buffer (marker-buffer start-marker)
@@ -128,7 +128,7 @@
     (let* ((buffer (window-buffer win))
            (buf-file (or (buffer-file-name buffer)
                          (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                           (buffer-file-name base-buffer)))))
+                             (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -238,7 +238,7 @@
          (format "In buffer `%s`%s:"
                  (buffer-name buffer)
                  (if-let ((buf-file (buffer-file-name buffer)))
-                   (format ", file `%s`" buf-file)
+                     (format ", file `%s`" buf-file)
                    "")))
        "\n\n```" (gptel--strip-mode-suffix (buffer-local-value
                                             'major-mode buffer))
