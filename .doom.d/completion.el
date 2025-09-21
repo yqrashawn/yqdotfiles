@@ -18,22 +18,7 @@
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
 
 (after! orderless
-  (setq orderless-component-separator "[ ,j]")
-  (setq! completion-category-overrides
-         (clj/assoc
-          completion-category-overrides
-          'file
-          '((styles orderless partial-completion))))
-  (setq! completion-category-overrides
-         (clj/assoc
-          completion-category-overrides
-          'buffer
-          '((styles orderless partial-completion))))
-  (setq! completion-category-overrides
-         (clj/assoc
-          completion-category-overrides
-          'project-file
-          '((styles orderless partial-completion)))))
+  (setq orderless-component-separator "[ ,j]"))
 
 (defun +company-abort ()
   (when (fboundp 'company--active-p)
@@ -90,11 +75,9 @@
    fussy-compare-same-score-fn #'fussy-histlen->strlen<
    ;; completion-category-defaults nil
    completion-category-overrides
-   '((cider (styles fussy))
-     (lsp-capf (styles fussy))
-     (file (styles orderless basic))
-     (project-file (styles orderless basic))
-     (buffer (styles orderless basic))))
+   '((cider (styles hotfuzz))
+     (sly-completion (styles sly--external-completion))
+     (lsp-capf (styles fussy))))
 
   (after! corfu
     (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
@@ -106,21 +89,48 @@
 
   (defadvice! +read-extended-command (orig-fn &optional prompt)
     :around #'read-extended-command
-    (let ((completion-styles '(fussy orderless basic)))
+    (let ((completion-styles '(fussy orderless partial-completion)))
       (funcall orig-fn prompt)))
+
+  (defun +preserve-recency-for-short-queries-h ()
+    (add-hook! 'post-command-hook :local '+preserve-recency-for-short-queries))
+
+  (defvar +preserve-recency-tmp-minibuffer-completion-styles nil)
 
   ;; Preserve chronological order for short queries in file completion
   (defun +preserve-recency-for-short-queries ()
     "Use basic completion for very short queries to preserve recency order."
     (when (and (minibufferp)
                (memq (completion-metadata-get
-                      (completion-metadata "" minibuffer-completion-table minibuffer-completion-predicate)
+                      (completion-metadata
+                       ""
+                       minibuffer-completion-table
+                       minibuffer-completion-predicate)
                       'category)
-                     '(file project-file buffer))
-               (<= (- (point-max) (minibuffer-prompt-end)) 2))
-      (setq-local completion-styles '(orderless basic))))
+                     '(file project-file buffer)))
+      (if (<= (- (point-max) (minibuffer-prompt-end)) 5)
+          (progn
+            (when (null +preserve-recency-tmp-minibuffer-completion-styles)
+              (setq-local
+               +preserve-recency-tmp-minibuffer-completion-styles
+               completion-styles))
+            +preserve-recency-tmp-minibuffer-completion-styles
+            (setq-local completion-styles '(orderless partial-completion)))
+        (progn (setq-local
+                completion-styles
+                (or +preserve-recency-tmp-minibuffer-completion-styles
+                    '(orderless hotfuzz fussy partial-completion)))
+               (setq-local
+                +preserve-recency-tmp-minibuffer-completion-styles nil)))))
 
-  (add-hook 'minibuffer-setup-hook #'+preserve-recency-for-short-queries))
+  (add-hook! 'minibuffer-setup-hook
+    (defun +preserve-recency-for-short-queries-h ()
+      (add-hook! 'post-command-hook :local '+preserve-recency-for-short-queries)))
+  (add-hook! 'minibuffer-exit-hook
+    (defun +preserve-recency-for-short-queries-exit-h ()
+      (when (minibufferp)
+        (setq-local
+         +preserve-recency-tmp-minibuffer-completion-styles nil)))))
 
 (after! cape
   (setq! cape-dict-file (list
@@ -178,3 +188,11 @@
 
 (after! corfu
   (setq! corfu-preselect 'directory))
+
+(use-package! swiper
+  :defer t
+  :config
+  (defun swiper-isearch-function (str &rest args)
+    "Collect STR matches in the current buffer for `swiper-isearch'."
+    (with-ivy-window
+      (swiper--isearch-function str))))

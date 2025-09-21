@@ -67,6 +67,7 @@
 (package! side-notes)
 (package! explain-pause-mode :recipe (:type git :host github :repo "lastquestion/explain-pause-mode"))
 
+(package! swiper)
 ;; (package! ivy :recipe (:host github :repo "abo-abo/swiper" :branch "master"
 ;;                        :files
 ;;                        (:defaults (:exclude "swiper.el" "counsel.el" "ivy-hydra.el") "doc/ivy-help.org")
