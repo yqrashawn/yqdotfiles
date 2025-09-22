@@ -34,6 +34,22 @@
         (should (= (length gptelt-todo-list) 1)))
     (gptelt-todo-test-teardown)))
 
+(ert-deftest gptelt-todo-write-vector-test ()
+  "Test todo creation with gptelt-todo-write using a vector input."
+  (gptelt-todo-test-setup)
+  (unwind-protect
+      (let ((result (gptelt-todo-write [(:content "Vector Task 1")
+                                        (:content "Vector Task 2" :status "completed" :priority "high")])))
+        (should (listp result))
+        (should (= (length result) 2))
+        (should (string= (plist-get (car result) :content) "Vector Task 2"))
+        (should (eq (plist-get (car result) :status) 'completed))
+        (should (eq (plist-get (car result) :priority) 'high))
+        (should (string= (plist-get (cadr result) :content) "Vector Task 1"))
+        (should (eq (plist-get (cadr result) :status) 'pending))
+        (should (eq (plist-get (cadr result) :priority) 'medium)))
+    (gptelt-todo-test-teardown)))
+
 (ert-deftest gptelt-todo-write-with-status-test ()
   "Test todo creation with specific status."
   (gptelt-todo-test-setup)
@@ -77,7 +93,7 @@
         (gptelt-todo-write '((:content "Task 1")
                              (:content "Task 2" :status "in_progress")))
         (let ((result (gptelt-todo-read)))
-          (should (listp result))
+          (should (vectorp result))
           (should (= (length result) 2))))
     (gptelt-todo-test-teardown)))
 

@@ -70,12 +70,15 @@ Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY
     (_ "❓")))
 
 (defun gptelt-todo-write (todos)
-  "Add or update todo items from a list.
-TODOS: list of plists, each with :content (required), :status (optional), :priority (optional), :id (optional).
+  "Add or update todo items from a list or vector.
+TODOS: list or vector of plists, each with :content (required), :status (optional), :priority (optional), :id (optional).
 Returns the updated todo list."
   (gptelt-todo--ensure-loaded)
+  ;; Accept both lists and vectors, convert vectors to lists
+  (when (vectorp todos)
+    (setq todos (append todos nil)))
   (unless (listp todos)
-    (error "Todos must be a list"))
+    (error "Todos must be a list or vector"))
   (dolist (todo todos)
     (unless (plistp todo)
       (error "Each todo must be a plist"))
@@ -115,11 +118,11 @@ Returns the updated todo list."
 
 ;;; API: todo_read
 (defun gptelt-todo-read ()
-  "Return the current todo list as a lisp list (each item is a plist)."
+  "Return the current todo list as a vector (each item is a plist)."
   (gptelt-todo--ensure-loaded)
   (if (seq-empty-p gptelt-todo-list)
       "No task"
-    gptelt-todo-list))
+    (vconcat gptelt-todo-list)))
 
 (comment
   (gptelt-todo-read))
@@ -137,6 +140,8 @@ Returns the updated todo list."
 (comment
   (gptelt-todo-write '((:content "task1" :status pending :priority low)
                        (:content "task2" :status pending :priority low)))
+  (gptelt-todo-write [(:content "task1" :status pending :priority low)
+                      (:content "task2" :status pending :priority low)])
   (gptelt-todo-read))
 
 ;;; Tool registration
