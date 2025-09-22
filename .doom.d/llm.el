@@ -22,6 +22,8 @@
                            (format-time-string "%m"))))
                  (unless (file-directory-p dir)
                    (make-directory dir t))
+                 (+set-org-top-header title)
+                 (insert "\n")
                  (+set-org-title title)
                  (write-file
                   (expand-file-name

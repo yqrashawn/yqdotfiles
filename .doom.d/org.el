@@ -208,3 +208,19 @@ tasks."
            (format "#+TITLE: %s" title))
         (goto-char (point-min))
         (insert (format "#+TITLE: %s\n" title))))))
+
+(defun +set-org-top-header (title)
+  "Update the Org-mode buffer's title or insert it if missing."
+  (interactive "sEnter new title: ")
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Current buffer is not a org-mode buffer"))
+  (save-excursion
+    (goto-char (point-min))
+    (forward-line 7)
+    (let ((bound (line-end-position)))
+      (goto-char (point-min))
+      (if (re-search-forward "^\\*\\s.*" bound t)
+          (replace-match
+           (format "* %s" title))
+        (goto-char (point-min))
+        (insert (format "* %s\n" title))))))
