@@ -10,7 +10,7 @@
   "Return up to LIMIT lines (default 2000) from FILE_PATH (must be absolute), starting at OFFSET (default 0). Return nil if not readable. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the file and the start/end line numbers of the wrapped content."
   (unless (and (stringp file_path) (file-name-absolute-p file_path))
     (error "file_path must be an absolute path"))
-  (let ((max-lines (or limit 2000))
+  (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
         (line-offset (or offset 0)))
     (when (file-readable-p file_path)
       (with-temp-buffer
@@ -34,7 +34,7 @@
 
 (defun gptelt-read-buffer (buffer_name &optional offset limit)
   "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Nil if not exists. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the buffer and the start/end line numbers of the wrapped content."
-  (let ((max-lines (or limit 2000))
+  (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
         (line-offset (or offset 0)))
     (when-let ((b (get-buffer buffer_name)))
       (with-current-buffer b
@@ -69,10 +69,10 @@
 The returned result includes a description line with the total lines in the file, and the start/end line numbers of the wrapped content. The content is wrapped with ␂ at the start and ␃ at the end."
    :args '((:name "file_path" :type string
             :description "The absolute path to the file to read (must be absolute, not relative)")
-           (:name "offset" :type integer :optional t
+           (:name "offset" :type integer :optional t :minimum 0
             :description "The line number to start reading from. Only provide if the file is too large to read at once")
-           (:name "limit" :type integer :optional t
-            :description "The number of lines to read. Only provide if the file is too large to read at once."))
+           (:name "limit" :type integer :optional t :minimum 300
+            :description "The number of lines to read. Only provide if the file is too large to read at once. Min value is 300."))
    :category "emacs"
    :confirm nil
    :include t)
@@ -86,10 +86,10 @@ The returned result includes a description line with the total lines in the file
 The returned result includes a description line with the total lines in the buffer, and the start/end line numbers of the wrapped content. The content is wrapped with ␂ at the start and ␃ at the end."
    :args '((:name "buffer_name" :type string
             :description "The buffer name to read")
-           (:name "offset" :type integer :optional t
+           (:name "offset" :type integer :optional t :minimum 0
             :description "The line number to start reading from. Only provide if the buffer is too large to read at once")
-           (:name "limit" :type integer :optional t
-            :description "The number of lines to read. Only provide if the buffer is too large to read at once."))
+           (:name "limit" :type integer :optional t :minimum 300
+            :description "The number of lines to read. Only provide if the buffer is too large to read at once. Min value is 300."))
    :category "emacs"
    :confirm nil
    :include t))
