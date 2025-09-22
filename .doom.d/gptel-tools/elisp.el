@@ -61,7 +61,7 @@
       (insert elisp-string)
       (goto-char (point-min)))
     (setq win (display-buffer buf))
-    (when (y-or-n-p "Evaluate elisp string in temp buffer? ")
+    (when (or t (y-or-n-p "Evaluate elisp string in temp buffer? "))
       (condition-case err
           (setq eval-result (eval (read elisp-string)))
         (error (setq eval-err (format "Error evaluating elisp string: %s" (error-message-string err))))))
