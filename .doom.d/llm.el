@@ -53,19 +53,25 @@
         (skip-chars-backward " \t\r")
         (insert-and-inherit "*")))))
 
-(defadvice! +gptel-curl--stream-insert-response (f response info &optional raw)
+(defadvice! +gptel-curl--stream-insert-response
+  (f response info &optional raw)
   :around #'gptel-curl--stream-insert-response
-  (let ((start-marker (plist-get info :position)))
-    (with-current-buffer (marker-buffer start-marker)
-      (save-excursion
-        (goto-char start-marker)
-        (unless (eq (char-before) ?\n)
-          (call-interactively '+org/return)))))
+  (let* ((start-marker (plist-get info :position))
+         (tracking-marker (plist-get info :tracking-marker))
+         (cur-marker (or tracking-marker start-marker)))
+    (with-current-buffer (marker-buffer cur-marker)
+      (when (eq gptel-backend gptel--claude-code)
+        (save-excursion
+          (goto-char cur-marker)
+          (when (or (eq (char-before) ?:)
+                    (eq (char-before) ?.))
+            (insert ?\n)
+            (insert ?\n))))))
   (funcall f response info raw))
 
 (defun my/claude-code-message-separator ()
-  (when (log/spy (eq gptel-backend gptel--claude-code))
-    (unless (eq (log/spy (char-before)) ?\n)
+  (when (eq gptel-backend gptel--claude-code)
+    (unless (eq (char-before) ?\n)
       (call-interactively '+org/return))))
 
 ;;; gptel
@@ -74,7 +80,8 @@
     :description "default preset"
     :backend "CopilotB"
     :model 'gpt-4.1-2025-04-14
-    :system (alist-get 'default gptel-directives)
+    ;; :system (alist-get 'default gptel-directives)
+    :system (alist-get 'claude gptel-directives)
     :temperature 0.8
     :tools
     (cl-mapcan

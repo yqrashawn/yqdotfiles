@@ -9,7 +9,8 @@
   (require 's)
   (require 'seq)
   (require 'dash)
-  (require 'subr-x))
+  (require 'subr-x)
+  (load! "gptel-tools/embeddings.el"))
 
 (defvar +gpt-system-message "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
 
