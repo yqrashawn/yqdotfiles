@@ -110,7 +110,7 @@
                      minibuffer-completion-predicate))
                   'category)
                  '(file project-file buffer)))
-      (if (<= (- (point-max) (minibuffer-prompt-end)) 5)
+      (if (<= (- (point-max) (minibuffer-prompt-end)) 4)
           (progn
             (when (null +preserve-recency-tmp-minibuffer-completion-styles)
               (setq-local
