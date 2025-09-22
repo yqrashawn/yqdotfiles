@@ -8,6 +8,7 @@
 (load! "gptel-tools/read.el")
 (load! "gptel-tools/edit-file.el")
 (load! "gptel-tools/create-file.el")
+(load! "gptel-tools/lint.el")
 (load! "gptel-tools/ripgrep.el")
 (load! "gptel-tools/elisp.el")
 (load! "gptel-tools/clj.el")

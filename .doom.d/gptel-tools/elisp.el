@@ -1,4 +1,14 @@
-;;; .nixpkgs/.doom.d/gptel-tools/elisp.el -*- lexical-binding: t; -*-
+;;; elisp.el --- GPTEL elisp tools -*- lexical-binding: t; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "24.4"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools
+
+;;; Commentary:
+;;
+;; Utilities for evaluating, reading, and testing Emacs Lisp code.
+;;
+;;; Code:
 
 ;;; Tool: Evaluate Elisp Buffer (ask for confirmation, show buffer if not visible)
 (defun gptelt-evaluate-elisp-buffer (buffer-name)

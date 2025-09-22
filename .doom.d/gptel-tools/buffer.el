@@ -1,12 +1,16 @@
-;;; .nixpkgs/.doom.d/gptel-tools/buffer.el -*- lexical-binding: t; -*-
-
+;;; buffer.el --- GPTEL buffer tool  -*- lexical-binding: t; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "25.1"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools
 
 ;;; Commentary:
-;; Buffer tool for gptel.
-
+;;
+;; Buffer manipulation utilities for GPTEL.
+;;
 ;;; Code:
 
-(require 'cl-lib)
+
 
 ;;; Get buffer file path utilities
 
@@ -110,4 +114,4 @@
  :confirm nil
  :include t)
 
-;;; buffer-tool.el ends here
+;;; buffer.el ends here

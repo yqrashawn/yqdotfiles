@@ -1,9 +1,14 @@
-;;; .nixpkgs/.doom.d/gptel-tools/create-file.el -*- lexical-binding: t; -*-
-;;; Commentary:
+;;; create-file.el --- GPTEL create file tool -*- lexical-binding: t; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "25.1"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools, file
 
+;;; Commentary:
+;;
 ;; Create file buffer tool for gptel.
 ;; Moved from gptel-tools.el for better organization.
-
+;;
 ;;; Code:
 
 (require 'gptel)

@@ -1,4 +1,14 @@
-;;; .nixpkgs/.doom.d/gptel-tools/read.el -*- lexical-binding: t; coding: utf-8; -*-
+;;; read.el --- GPTEL read tool -*- lexical-binding: t; coding: utf-8; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "25.1"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools, read
+
+;;; Commentary:
+;;
+;; Buffer and file reading utilities for GPTEL.
+;;
+;;; Code:
 
 ;;; Commentary:
 ;; Reading utilities for gptel-tools:

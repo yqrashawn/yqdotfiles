@@ -1,4 +1,14 @@
-;;; .nixpkgs/.doom.d/gptel-tools/utils.el -*- lexical-binding: t; -*-
+;;; utils.el --- GPTEL utilities -*- lexical-binding: t; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "27.1"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools, util
+
+;;; Commentary:
+;;
+;; Utility functions for GPTEL tools.
+;;
+;;; Code:
 ;;; Commentary:
 ;; Shared utilities for gptel edit/create tools: project/file/mode/balance logic.
 ;;; Code:

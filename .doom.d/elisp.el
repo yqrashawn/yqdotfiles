@@ -62,3 +62,8 @@
 
 (use-package! elisp-dev-mcp
   :defer t)
+
+(use-package! package-lint
+  :defer t
+  :init
+  (setq! package-lint-batch-fail-on-warnings nil))

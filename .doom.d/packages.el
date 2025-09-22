@@ -443,6 +443,7 @@
 (package! list-utils)
 (package! pcre2el)
 (package! lgr)
+(package! claude-code-ide)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

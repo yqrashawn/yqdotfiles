@@ -1,4 +1,14 @@
-;;; .nixpkgs/.doom.d/gptel-tools/elisp-test.el -*- lexical-binding: t; -*-
+;;; elisp-test.el --- GPTEL Elisp test suite -*- lexical-binding: t; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "24.1"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools, test
+
+;;; Commentary:
+;;
+;; Test suite for elisp utilities in GPTEL.
+;;
+;;; Code:
 
 (require 'ert)
 

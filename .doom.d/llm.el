@@ -79,7 +79,7 @@
   (gptel-make-preset 'default
     :description "default preset"
     :backend "CopilotB"
-    :model 'gpt-4.1-2025-04-14
+    :model 'claude-3.7-sonnet
     ;; :system (alist-get 'default gptel-directives)
     :system (alist-get 'claude gptel-directives)
     :temperature 0.8
@@ -97,8 +97,8 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
-  (gptel--apply-preset 'default)
-  (gptel--apply-preset 'claude))
+  (gptel--apply-preset 'claude)
+  (gptel--apply-preset 'default))
 
 (use-package! gptel
   :commands (gptel)

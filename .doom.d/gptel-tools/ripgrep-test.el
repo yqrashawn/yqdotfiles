@@ -1,4 +1,14 @@
-;;; .nixpkgs/.doom.d/gptel-tools/ripgrep-test.el -*- lexical-binding: t; -*-
+;;; ripgrep-test.el --- GPTEL ripgrep tests -*- lexical-binding: t; -*-
+;; Version: 0.1
+;; Package-Requires: ((emacs "25.1"))
+;; Homepage: https://github.com/yqrashawn/gptel-tools
+;; Keywords: tools, test
+
+;;; Commentary:
+;;
+;; Tests for GPTEL ripgrep tool.
+;;
+;;; Code:
 
 (require 'ert)
 
