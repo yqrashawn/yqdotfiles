@@ -97,8 +97,8 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
-  (gptel--apply-preset 'claude)
-  (gptel--apply-preset 'default))
+  (gptel--apply-preset 'default)
+  (gptel--apply-preset 'claude))
 
 (use-package! gptel
   :commands (gptel)

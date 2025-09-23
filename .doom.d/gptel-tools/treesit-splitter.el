@@ -14,6 +14,127 @@
   :type 'integer
   :group 'treesit-splitter)
 
+;; Enhanced Symbol and Dependency Patterns
+
+(defvar treesit-splitter--symbol-patterns
+  '((clojure . ((function . "(defn\\s-+\\([a-zA-Z_][a-zA-Z0-9_*+\\-]*\\)")
+                (macro . "(defmacro\\s-+\\([a-zA-Z_][a-zA-Z0-9_*+\\-]*\\)")
+                (variable . "(def\\s-+\\([a-zA-Z_][a-zA-Z0-9_*+\\-]*\\)")
+                (protocol . "(defprotocol\\s-+\\([a-zA-Z_][a-zA-Z0-9_*+\\-]*\\)")
+                (record . "(defrecord\\s-+\\([a-zA-Z_][a-zA-Z0-9_*+\\-]*\\)")
+                (type . "(deftype\\s-+\\([a-zA-Z_][a-zA-Z0-9_*+\\-]*\\)")
+                (namespace . "(ns\\s-+\\([a-zA-Z_][a-zA-Z0-9_.\\-]*\\)")
+                (call . "\\([a-zA-Z_][a-zA-Z0-9_*+\\-/]*\\)\\s-*(")
+                (keyword . ":\\([a-zA-Z_][a-zA-Z0-9_*+\\-/]*\\)")))
+    (javascript . ((function . "function\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (arrow-function . "\\(const\\|let\\|var\\)\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-*=\\s-*")
+                   (class . "class\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (method . "\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-*(")
+                   (variable . "\\(const\\|let\\|var\\)\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (property . "\\.\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (call . "\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-*(")
+                   (export . "export\\s-+\\(?:default\\s-+\\)?\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")))
+    (typescript . ((function . "function\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (arrow-function . "\\(const\\|let\\|var\\)\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-*=\\s-*")
+                   (class . "class\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (interface . "interface\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (type . "type\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (method . "\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-*(")
+                   (variable . "\\(const\\|let\\|var\\)\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (property . "\\.\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")
+                   (call . "\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-*(")
+                   (export . "export\\s-+\\(?:default\\s-+\\)?\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)")))
+    (python . ((function . "def\\s-+\\([a-zA-Z_][a-zA-Z0-9_]*\\)")
+               (class . "class\\s-+\\([a-zA-Z_][a-zA-Z0-9_]*\\)")
+               (variable . "\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\s-*=")
+               (call . "\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\s-*(")
+               (attribute . "\\.\\([a-zA-Z_][a-zA-Z0-9_]*\\)")))
+    (elisp . ((function . "(defun\\s-+\\([a-zA-Z_-][a-zA-Z0-9_-]*\\)")
+              (macro . "(defmacro\\s-+\\([a-zA-Z_-][a-zA-Z0-9_-]*\\)")
+              (variable . "(def\\(?:var\\|custom\\|const\\)\\s-+\\([a-zA-Z_-][a-zA-Z0-9_-]*\\)")
+              (call . "(\\([a-zA-Z_-][a-zA-Z0-9_-]*\\)"))))
+  "Language-specific regex patterns for extracting symbols.")
+
+(defvar treesit-splitter--enhanced-dependency-patterns
+  '((clojure . ((require . "(require\\s-+'?\\(?:\\[\\)?\\([a-zA-Z0-9_.\\-]+\\)")
+                (use . "(use\\s-+'?\\(?:\\[\\)?\\([a-zA-Z0-9_.\\-]+\\)")
+                (import . "(import\\s-+'?\\(?:\\[\\)?\\([a-zA-Z0-9_.\\-]+\\)")
+                (ns-require . "\\[\\([a-zA-Z0-9_.\\-]+\\)\\(?:\\s-+:as\\s-+[a-zA-Z0-9_.\\-]+\\)?\\]")
+                (ns-use . ":use\\s-+\\[\\([^\\]]+\\)\\]")
+                (ns-import . "(\\([a-zA-Z0-9_.\\-]+\\)\\s-+[A-Z][a-zA-Z0-9]*)")
+                (namespace . "(ns\\s-+\\([a-zA-Z0-9_.\\-]+\\)")))
+    (javascript . ((import-from . "import\\s-+.*from\\s-+['\"]\\([^'\"]+\\)['\"]")
+                   (import-default . "import\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-+from")
+                   (import-named . "import\\s-+{\\([^}]+\\)}\\s-+from")
+                   (require . "require\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]")
+                   (dynamic-import . "import\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]")
+                   (export-from . "export\\s-+.*from\\s-+['\"]\\([^'\"]+\\)['\"]")))
+    (typescript . ((import-from . "import\\s-+.*from\\s-+['\"]\\([^'\"]+\\)['\"]")
+                   (import-default . "import\\s-+\\([a-zA-Z_$][a-zA-Z0-9_$]*\\)\\s-+from")
+                   (import-named . "import\\s-+{\\([^}]+\\)}\\s-+from")
+                   (import-type . "import\\s-+type\\s-+.*from\\s-+['\"]\\([^'\"]+\\)['\"]")
+                   (require . "require\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]")
+                   (dynamic-import . "import\\s-*(\\s-*['\"]\\([^'\"]+\\)['\"]")
+                   (export-from . "export\\s-+.*from\\s-+['\"]\\([^'\"]+\\)['\"]")))
+    (python . ((import . "^import\\s-+\\([a-zA-Z0-9_.]+\\)")
+               (from-import . "^from\\s-+\\([a-zA-Z0-9_.]+\\)\\s-+import")
+               (import-as . "import\\s-+\\([a-zA-Z0-9_.]+\\)\\s-+as")
+               (from-import-as . "from\\s-+\\([a-zA-Z0-9_.]+\\)\\s-+import\\s-+.*as")))
+    (elisp . ((require . "(require\\s-+'\\([a-zA-Z0-9_-]+\\)")
+              (load . "(load\\s-+\\(\"[^\"]+\"\\|'[a-zA-Z0-9_-]+\\)")
+              (autoload . "(autoload\\s-+'\\([a-zA-Z0-9_-]+\\)")
+              (use-package . "(use-package\\s-+\\([a-zA-Z0-9_-]+\\)"))))
+  "Enhanced language-specific regex patterns for extracting dependencies.")
+
+;; Enhanced Symbol Extraction Functions
+
+(defun treesit-splitter--extract-symbols-defined (content language)
+  "Extract symbols defined in CONTENT for LANGUAGE."
+  (when treesit-splitter-extract-symbols
+    (let ((patterns (alist-get language treesit-splitter--symbol-patterns))
+          (symbols '()))
+      (when patterns
+        (dolist (pattern-pair patterns)
+          (let ((symbol-type (car pattern-pair))
+                (pattern (cdr pattern-pair))
+                (pos 0))
+            ;; Only extract definition patterns
+            (when (member symbol-type '(function macro variable class interface type protocol record namespace export))
+              (while (string-match pattern content pos)
+                (let ((match (match-string (if (eq symbol-type 'arrow-function) 2 1) content)))
+                  (when (and match (not (cl-find match symbols :key (lambda (s) (plist-get s :name)) :test #'string=)))
+                    (push (list :name match :type symbol-type) symbols)))
+                (setq pos (match-end 0)))))))
+      symbols)))
+
+(defun treesit-splitter--extract-enhanced-symbols-used (content language)
+  "Extract symbols used/referenced in CONTENT for LANGUAGE with enhanced tracking."
+  (when treesit-splitter-extract-symbols
+    (let ((patterns (alist-get language treesit-splitter--symbol-patterns))
+          (symbols '())
+          (defined-symbols (mapcar (lambda (s) (plist-get s :name))
+                                   (treesit-splitter--extract-symbols-defined content language))))
+      (when patterns
+        (dolist (pattern-pair patterns)
+          (let ((symbol-type (car pattern-pair))
+                (pattern (cdr pattern-pair))
+                (pos 0))
+            ;; Extract usage patterns
+            (when (member symbol-type '(call property attribute keyword))
+              (while (string-match pattern content pos)
+                (let ((match (match-string 1 content)))
+                  (when (and match
+                             (not (member match symbols))
+                             (not (member match defined-symbols))
+                             ;; Filter out common keywords and noise
+                             (not (member match '("if" "when" "cond" "let" "def" "defn" "for" "while"
+                                                  "function" "class" "const" "var" "let" "return"
+                                                  "true" "false" "nil" "null" "undefined"
+                                                  "String" "Number" "Object" "Array" "Boolean"))))
+                    (push match symbols)))
+                (setq pos (match-end 0)))))))
+      symbols)))
+
 (defcustom treesit-splitter-chunk-overlap 300
   "Default chunk overlap in characters."
   :type 'integer
@@ -116,6 +237,84 @@ Ordered by preference - smaller, more specific nodes first.")
        (delete-dups deps)))
     (_ nil)))
 
+;; Enhanced Dependency & Import Tracking Configuration
+
+(defcustom treesit-splitter-extract-symbols t
+  "Whether to extract symbols defined and used in chunks."
+  :type 'boolean
+  :group 'treesit-splitter)
+
+(defcustom treesit-splitter-track-dependencies t
+  "Whether to track dependencies and imports."
+  :type 'boolean
+  :group 'treesit-splitter)
+
+;; Enhanced Symbol Extraction Functions
+
+(defun treesit-splitter--extract-symbols-defined (content language)
+  "Extract symbols defined in CONTENT for LANGUAGE."
+  (when treesit-splitter-extract-symbols
+    (let ((patterns (alist-get language treesit-splitter--symbol-patterns))
+          (symbols '()))
+      (when patterns
+        (dolist (pattern-pair patterns)
+          (let ((symbol-type (car pattern-pair))
+                (pattern (cdr pattern-pair))
+                (pos 0))
+            ;; Only extract definition patterns
+            (when (member symbol-type '(function macro variable class interface type protocol record namespace export))
+              (while (string-match pattern content pos)
+                (let ((match (match-string (if (eq symbol-type 'arrow-function) 2 1) content)))
+                  (when (and match (not (cl-find match symbols :key (lambda (s) (plist-get s :name)) :test #'string=)))
+                    (push (list :name match :type symbol-type) symbols)))
+                (setq pos (match-end 0)))))))
+      symbols)))
+
+(defun treesit-splitter--extract-enhanced-symbols-used (content language)
+  "Extract symbols used/referenced in CONTENT for LANGUAGE with enhanced tracking."
+  (when treesit-splitter-extract-symbols
+    (let ((patterns (alist-get language treesit-splitter--symbol-patterns))
+          (symbols '())
+          (defined-symbols (mapcar (lambda (s) (plist-get s :name))
+                                   (treesit-splitter--extract-symbols-defined content language))))
+      (when patterns
+        (dolist (pattern-pair patterns)
+          (let ((symbol-type (car pattern-pair))
+                (pattern (cdr pattern-pair))
+                (pos 0))
+            ;; Extract usage patterns
+            (when (member symbol-type '(call property attribute keyword))
+              (while (string-match pattern content pos)
+                (let ((match (match-string 1 content)))
+                  (when (and match
+                             (not (member match symbols))
+                             (not (member match defined-symbols))
+                             ;; Filter out common keywords and noise
+                             (not (member match '("if" "when" "cond" "let" "def" "defn" "for" "while"
+                                                  "function" "class" "const" "var" "let" "return"
+                                                  "true" "false" "nil" "null" "undefined"
+                                                  "String" "Number" "Object" "Array" "Boolean"))))
+                    (push match symbols)))
+                (setq pos (match-end 0)))))))
+      symbols)))
+
+(defun treesit-splitter--extract-enhanced-dependencies (content language)
+  "Extract enhanced dependencies/imports from CONTENT for LANGUAGE with comprehensive patterns."
+  (when treesit-splitter-track-dependencies
+    (let ((patterns (alist-get language treesit-splitter--enhanced-dependency-patterns))
+          (dependencies '()))
+      (when patterns
+        (dolist (pattern-pair patterns)
+          (let ((dep-type (car pattern-pair))
+                (pattern (cdr pattern-pair))
+                (pos 0))
+            (while (string-match pattern content pos)
+              (let ((match (match-string 1 content)))
+                (when (and match (not (cl-find match dependencies :key (lambda (d) (plist-get d :name)) :test #'string=)))
+                  (push (list :name match :type dep-type) dependencies)))
+              (setq pos (match-end 0))))))
+      (nreverse dependencies))))
+
 (defun treesit-splitter--enhance-chunk-with-lsp (chunk pos &optional original-buffer)
   "Enhance CHUNK with LSP metadata at POS using ORIGINAL-BUFFER for LSP context."
   (let* ((content (treesit-splitter-chunk-content chunk))
@@ -123,10 +322,11 @@ Ordered by preference - smaller, more specific nodes first.")
          (language (treesit-splitter-chunk-language chunk))
          ;; Extract basic information
          (def-name (treesit-splitter--extract-function-name content node-type))
-         (symbols-used (treesit-splitter--extract-symbols-used content language))
+         (symbols-defined (treesit-splitter--extract-symbols-defined content language))
+         (symbols-used (treesit-splitter--extract-enhanced-symbols-used content language))
          (complexity (treesit-splitter--calculate-complexity content))
          (checksum (secure-hash 'md5 content))
-         (dependencies (treesit-splitter--extract-dependencies content language))
+         (dependencies (treesit-splitter--extract-enhanced-dependencies content language))
          ;; Get LSP information from original buffer
          (hover-info (treesit-splitter--get-lsp-hover-info pos original-buffer))
          (symbol-info (treesit-splitter--get-lsp-symbol-info pos original-buffer)))
@@ -136,6 +336,7 @@ Ordered by preference - smaller, more specific nodes first.")
     (setf (treesit-splitter-chunk-definition-type chunk)
           (treesit-splitter--normalize-definition-type node-type))
     (setf (treesit-splitter-chunk-hover-info chunk) hover-info)
+    (setf (treesit-splitter-chunk-symbols-defined chunk) symbols-defined)
     (setf (treesit-splitter-chunk-symbols-used chunk) symbols-used)
     (setf (treesit-splitter-chunk-complexity-score chunk) complexity)
     (setf (treesit-splitter-chunk-checksum chunk) checksum)
