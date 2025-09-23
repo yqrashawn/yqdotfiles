@@ -273,8 +273,8 @@ See `dwim-shell-command-execute-script' for all other params."
 (defun +doom-project-ignored-p (project-root)
   (if (file-in-directory-p project-root doom-local-dir)
       (not (string-match-p
-            "(gitleaks\\.el/)$"
-            (log/spy project-root)))
+            "(gitleaks\\.el\\|treesit-chunking\\|fd-dired)/$"
+            project-root))
     (doom-project-ignored-p project-root)))
 
 (use-package! projectile

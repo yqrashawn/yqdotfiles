@@ -433,17 +433,18 @@
 ;;             :host github
 ;;             :repo "steveyegge/efrit"))
 (package! smudge)
-(package! gitleaks
-  :recipe (:host github
-           :repo "yqrashawn/gitleaks.el"
-           :branch "main"))
-
 (package! mcp-server-lib)
+
 (package! elisp-dev-mcp)
 (package! list-utils)
 (package! pcre2el)
 (package! lgr)
 (package! claude-code-ide)
+
+(package! gitleaks
+  :recipe (:host github :repo "yqrashawn/gitleaks.el" :branch "main"))
+(package! treesit-chunking
+  :recipe (:host github :repo "yqrashawn/treesit-chunking" :branch "main"))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
