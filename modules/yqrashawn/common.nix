@@ -246,6 +246,7 @@ in
         # commitizen
         graphviz
         # perl534Packages.GitAutofixup # https://github.com/torbiak/git-autofixup
+        git-extras
         git-autofixup
         git-absorb # https://github.com/tummychow/git-absorb
         gnumake
