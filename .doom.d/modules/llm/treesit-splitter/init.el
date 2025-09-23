@@ -1,4 +1,7 @@
-;;; .nixpkgs/.doom.d/gptel-tools/treesit-splitter.el -*- lexical-binding: t;coding: utf-8-unix; -*-
+;;; llm/treesit-splitter/init.el -*- lexical-binding: t; -*-
+;;; Commentary:
+
+;;; Code:
 
 (require 'treesit)
 (require 'lsp-mode nil t)
@@ -1529,4 +1532,5 @@ LANGUAGE is optional and will be auto-detected if nil."
     (unless existing-buffer
       (kill-buffer source-buffer))))
 
-(provide 'treesit-splitter)
+
+;;; init.el ends here

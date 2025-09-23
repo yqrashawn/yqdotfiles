@@ -302,7 +302,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        (default +bindings +smartparens +gnupg)
 
        :llm
-       git-heatmap)
+       git-heatmap
+       treesit-splitter)
 
 ;; https://discourse.doomemacs.org/t/using-lsp-use-plists-with-doom/2832
 (setenv "LSP_USE_PLISTS" "true")
