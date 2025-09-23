@@ -270,6 +270,13 @@ See `dwim-shell-command-execute-script' for all other params."
     (let ((default-directory (or (doom-project-root) default-directory)))
       (funcall-interactively orig-fn file))))
 
+(defun +doom-project-ignored-p (project-root)
+  (if (file-in-directory-p project-root doom-local-dir)
+      (not (string-match-p
+            "(gitleaks\\.el/)$"
+            (log/spy project-root)))
+    (doom-project-ignored-p project-root)))
+
 (use-package! projectile
   :commands (projectile-switch-project-by-name)
   :init
@@ -282,7 +289,9 @@ See `dwim-shell-command-execute-script' for all other params."
     (let* ((default-name (projectile-default-project-name project-root))
            (alias (alist-get default-name +project-name-alises nil nil 'string=)))
       (or alias default-name)))
-  (setq! projectile-project-name-function '+projectile-project-name))
+  (setq! projectile-project-name-function '+projectile-project-name)
+  :config
+  (setq! projectile-ignored-project-function #'+doom-project-ignored-p))
 
 (defadvice! ++workspace/close-window-or-workspace (orig-fn)
   "Don't delete workspace if only visible window is magit-status buffer"

@@ -1,4 +1,4 @@
-;;; llm/treesit-splitter/init.el -*- lexical-binding: t; -*-
+;;; llm/treesit-splitter/config.el -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -1532,5 +1532,5 @@ LANGUAGE is optional and will be auto-detected if nil."
     (unless existing-buffer
       (kill-buffer source-buffer))))
 
-
-;;; init.el ends here
+(provide 'treesit-splitter)
+;;; config.el ends here

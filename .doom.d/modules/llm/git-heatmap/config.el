@@ -1,4 +1,4 @@
-;;; llm/git-heatmap/init.el -*- lexical-binding: t; -*-
+;;; llm/git-heatmap/config.el -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -46,4 +46,4 @@ DIRECTORY defaults to current directory."
   (git-heatmap-rank-files "1.year")
   (git-heatmap-rank-files "2.year" 3))
 
-;;; init.el ends here
+;;; config.el ends here
