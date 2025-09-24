@@ -15,24 +15,26 @@
           (get-gptel-org-title
            (buffer-string)
            (lambda (title)
-             (with-current-buffer buf
-               (let ((dir (format
-                           "~/Dropbox/sync/gptel/%s/%s"
-                           (format-time-string "%Y")
-                           (format-time-string "%m"))))
-                 (unless (file-directory-p dir)
-                   (make-directory dir t))
-                 (+set-org-top-header title)
-                 (insert "\n")
-                 (+set-org-title title)
-                 (write-file
-                  (expand-file-name
-                   (format
-                    "%s-%s-%s.org"
-                    (format-time-string "%d")
-                    (format-time-string "%H_%M")
-                    title)
-                   dir)))))
+             (let* ((new-title (string-replace "\n" "_" title))
+                    (new-title (string-replace "```" "" new-title)))
+               (with-current-buffer buf
+                 (let ((dir (format
+                             "~/Dropbox/sync/gptel/%s/%s"
+                             (format-time-string "%Y")
+                             (format-time-string "%m"))))
+                   (unless (file-directory-p dir)
+                     (make-directory dir t))
+                   (+set-org-top-header new-title)
+                   (insert "\n")
+                   (+set-org-title new-title)
+                   (write-file
+                    (expand-file-name
+                     (format
+                      "%s-%s-%s.org"
+                      (format-time-string "%d")
+                      (format-time-string "%H_%M")
+                      new-title)
+                     dir))))))
            (lambda (e) (user-error "Error setting gptel org title: %s" e)))
           t)))))
 
@@ -97,8 +99,8 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
-  (gptel--apply-preset 'default)
-  (gptel--apply-preset 'claude))
+  (gptel--apply-preset 'claude)
+  (gptel--apply-preset 'default))
 
 (use-package! gptel
   :commands (gptel)
