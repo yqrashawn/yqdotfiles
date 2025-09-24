@@ -71,6 +71,7 @@ Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY
 
 (defun gptelt-todo-write (todos)
   "Add or update todo items from a list or vector.
+
 TODOS: list or vector of plists, each with :content (required), :status (optional), :priority (optional), :id (optional).
 Returns the updated todo list."
   (gptelt-todo--ensure-loaded)
@@ -80,12 +81,18 @@ Returns the updated todo list."
   (unless (listp todos)
     (error "Todos must be a list or vector"))
   (dolist (todo todos)
-    (unless (plistp todo)
-      (error "Each todo must be a plist"))
-    (let ((content (plist-get todo :content))
-          (status (plist-get todo :status))
-          (priority (plist-get todo :priority))
-          (id (plist-get todo :id)))
+    (let ((content (if (listp todo)
+                       (or (plist-get todo :content) (cdr (assoc 'content todo)))
+                     (error "Each todo must be a list")))
+          (status (if (listp todo)
+                      (or (plist-get todo :status) (cdr (assoc 'status todo)))
+                    nil))
+          (priority (if (listp todo)
+                        (or (plist-get todo :priority) (cdr (assoc 'priority todo)))
+                      nil))
+          (id (if (listp todo)
+                  (or (plist-get todo :id) (cdr (assoc 'id todo)))
+                nil)))
       (unless (and content (stringp content) (> (length content) 0))
         (error "Todo content must be non-empty string"))
       (let ((status (or (and status (intern (downcase (format "%s" status)))) 'pending))
@@ -189,7 +196,7 @@ Returns the updated todo list."
   (gptelt-make-tool
    :name "todo_read"
    :function #'gptelt-todo-read
-   :description "Read the current todo list. Returns a lisp list of plists."
+   :description "Read the current todo list."
    :args '()
    :category "todo"
    :confirm nil
