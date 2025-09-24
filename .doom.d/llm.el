@@ -210,7 +210,7 @@
   ;; gptel one
   (setq! gptel--gh-copilot-individual
          (gptel-make-gh-copilot "CopilotI"
-           :host "api.individual.githubcopilot.com"
+           ;; :host "api.individual.githubcopilot.com"
            :curl-args (list "--insecure")))
   (setq! gptel--gh-copilot-business
          (gptel-make-gh-copilot "CopilotB"
@@ -416,7 +416,11 @@ The user's chat will now follow. Generate the title."))
            f
            (format "```%s\n%s\n```" lang code)
            :backend gptel--gh-copilot-business
+           ;; :backend gptel--gh-copilot-individual
            :model 'gpt-4.1
+           ;; :model 'gpt-4o
+           ;; :model 'gpt-4o-mini
+           ;; :model 'gpt-5-mini
            :temperature 0.5
            :system llm-lisp-balancer-system-message
            :timeout 60
