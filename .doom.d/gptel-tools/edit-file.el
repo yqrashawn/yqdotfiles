@@ -95,7 +95,7 @@ NEW-STRING is the replacement text."
               (condition-case err
                   (lsp-format-region start (+ start (length new-string)))
                 (error (message "LSP formatting failed: %s" err)))))
-        (error "old-string not found in buffer content")))
+        (error "old_string not found in the original content, CHECK CAREFULLY.")))
     newbuf))
 
 ;;; Direct edit application
@@ -133,7 +133,7 @@ Returns a message describing the result of the operation."
                 (insert new-string)
                 (setq replacement-end (+ start (length new-string)))
                 (setq replacement-count 1))
-            (error "old-string not found in buffer content")))
+            (error "old_string not found in original content, CHECK CAREFULLY.")))
 
         (save-buffer)
         ;; Format the changed region if LSP is available
@@ -172,7 +172,7 @@ Returns a string describing the result of the operation."
       (save-excursion
         (goto-char (point-min))
         (unless (search-forward old-string nil t)
-          (error "old-string not found in buffer: %s" buf-name))))
+          (error "old_string not found in buffer: `%s`, CHECK CAREFULLY." buf-name))))
     ;; For Lisp code, check balance in temp buffer after replacement (refuse edit if unbalanced)
     (when (gptelt-edit--is-lisp-mode-p mj-mode)
       (unwind-protect
