@@ -995,6 +995,10 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 (set-default-coding-systems 'utf-8)
 
+(defadvice! +select-safe-coding-system-interactively (orig-fn &rest args)
+  :around #'select-safe-coding-system-interactively
+  'utf-8-unix)
+
 (comment
   (progn
     (set-default-coding-systems 'utf-8)
