@@ -95,6 +95,21 @@
                clojurescript-mode clojurec-mode common-lisp-mode
                lisp-interaction-mode)))
 
+(defun +check-parens ()
+  (and (condition-case _
+           (unless (check-parens) t)
+         (error nil))
+       (sp-region-ok-p (point-min) (point-max))))
+
+(defun gptelt--attempt-llm-balance (buffer)
+  (let* ((mj-mode (buffer-local-value 'major-mode buffer))
+         (res
+          (with-current-buffer buffer
+            (llm-balance-lisp-code
+             (buffer-string)
+             mj-mode))))
+    res))
+
 (defun gptelt--attempt-parinfer-balance (buffer)
   "Use parinfer-rust-mode to attempt to balance BUFFER.
 
@@ -136,12 +151,25 @@ Returns (BALANCED-P . ERROR-MESSAGE). Tries parinfer auto-repair if available."
              (fboundp 'sp-region-ok-p))
         (with-current-buffer buffer
           (condition-case err
-              (if (sp-region-ok-p (point-min) (point-max))
+              (if (+check-parens)
                   (cons t nil)
                 ;; Try parinfer auto-repair if unbalanced
                 ;; (gptelt--attempt-parinfer-balance buffer)
-                (error "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
-                       (symbol-name mj-mode)))
+                (let* ((llm-check (gptelt--attempt-llm-balance buffer))
+                       (balanced (plist-get llm-check :rst))
+                       (err (plist-get llm-check :err)))
+                  (if balanced
+                      (progn
+                        (erase-buffer)
+                        (insert balanced)
+                        (if (+check-parens)
+                            (cons t nil)
+                          (cons nil (error "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
+                                           (symbol-name mj-mode)))))
+                    (cons nil err)))
+                ;; (error "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
+                ;;        (symbol-name mj-mode))
+                )
             (error (cons nil (error-message-string err)))))
       (cons t nil)))) ; Non-Lisp modes always pass
 

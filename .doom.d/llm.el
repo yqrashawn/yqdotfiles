@@ -330,6 +330,23 @@
                       (funcall on-finish response)
                     (funcall on-error info))))))
 
+(defun simple-llm-req-sync (prompt &rest args)
+  (await-callback
+   (lambda (resolve reject)
+     (simple-llm-req
+      prompt
+      :backend (plist-get args :backend)
+      :model (plist-get args :model)
+      :temperature (plist-get args :temperature)
+      :system (plist-get args :system)
+      :max-token (plist-get args :max-token)
+      :cache (plist-get args :cache)
+      :cb (lambda (response)
+            (funcall resolve response))
+      :error (lambda (error)
+               (funcall reject error))))
+   (or (plist-get args :timeout) 60)))
+
 (defun get-gptel-org-title (&optional chat-content on-title on-error)
   (simple-llm-req
    (format "```\n%s```\n\nGenerate a file title for the above conversation with llm"
@@ -366,3 +383,61 @@ The user's chat will now follow. Generate the title."))
    :model 'google/gemini-2.5-flash
    :cb 'print
    :error 'print))
+
+;;; lisp balancer
+(setq llm-lisp-balancer-system-message
+      (with-file-contents!
+          (expand-file-name "~/Dropbox/sync/gptel-system-message/lisp-balancer.md")
+        (buffer-string)))
+
+(defun llm-balance-lisp-code--exrtract-md-fence (response)
+  (let ((rst) (err))
+    (when (string-match "^```\\(txt\\|[a-z]+\\)\n\\(\\(?:.\\|\n\\)*?\\)\n```" response)
+      (let ((fence-lang (match-string 1 response))
+            (fence-content (match-string 2 response)))
+        (if (string= fence-lang "txt")
+            (setq err fence-content)
+          (setq rst fence-content))
+        (list :rst rst :err err)))))
+
+(defun llm-balance-lisp-code (code lang-mode &optional on-ok on-error)
+  (let* ((async-p (and on-ok on-error))
+         (lang (cond
+                ((eq lang-mode 'emacs-lisp-mode) "elisp")
+                ((eq lang-mode 'clojure-mode) "clojure")
+                ((eq lang-mode 'clojurescript-mode) "clojure")
+                ((eq lang-mode 'common-lisp-mode) "lisp")
+                ((eq lang-mode 'scheme-mode) "scheme")
+                ((eq lang-mode 'racket-mode) "racket")
+                (t "lisp")))
+         (f (if async-p #'simple-llm-req #'simple-llm-req-sync))
+         (response
+          (funcall
+           f
+           (format "```%s\n%s\n```" lang code)
+           :backend gptel--gh-copilot-business
+           :model 'gpt-4.1
+           :temperature 0.5
+           :system llm-lisp-balancer-system-message
+           :timeout 60
+           :cb (lambda (response)
+                 (when on-ok
+                   (on-ok (llm-balance-lisp-code--exrtract-md-fence response))))
+           :error (or on-error 'print)))
+         (rst)
+         (err))
+    (when (and (not async-p)
+               (string-match "^```\\(txt\\|[a-z]+\\)\n\\(\\(?:.\\|\n\\)*?\\)\n```" response))
+      (let ((fence-lang (match-string 1 response))
+            (fence-content (match-string 2 response)))
+        (if (string= fence-lang "txt")
+            (setq err fence-content)
+          (setq rst fence-content))
+        (log/spy (list :rst rst :err err))))))
+
+(comment
+  (llm-balance-lisp-code
+   (with-file-contents!
+       (expand-file-name "~/Downloads/unbalancedexample")
+     (buffer-string))
+   'clojure-mode))

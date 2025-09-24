@@ -20,7 +20,7 @@
     "surge": "^0.24.6",
     "textlint": "^14.3.0",
     "textlint-rule-write-good": "^2.0.0",
-    "tree-sitter-cli": "^0.25.6",
+    "tree-sitter-cli": "^0.25.10",
     "turbo": "^2.2.3",
     "typescript-language-server": "^4.3.3",
     "vercel": "^42.3.0",

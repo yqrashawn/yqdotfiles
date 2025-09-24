@@ -281,7 +281,28 @@ Returns a string describing the result of the operation."
       (insert "old")
       (save-buffer)
       (gptelt-edit-edit-file f "old" "new")
-      (buffer-string))))
+      (buffer-string))
+    ;; fix balance
+    (with-current-buffer (find-file-noselect f)
+      (erase-buffer)
+      (clojure-mode)
+      (insert "(defn plus1 [n]\n (inc n))")
+      (save-buffer)
+      (gptelt-edit-edit-file
+       f
+       "(defn plus1 [n]\n (inc n))"
+       "(defn plus1 [n]\n (inc n")
+      (substring-no-properties (buffer-string)))
+    (with-current-buffer (find-file-noselect f)
+      (erase-buffer)
+      (clojure-mode)
+      (insert "(defn plus1 [n]\n (inc n))")
+      (save-buffer)
+      (gptelt-edit-edit-file
+       f
+       "(defn plus1 [n]\n (inc n))"
+       "(defn plus1 [n]\n}}}}}}}]] (inc n))")
+      (substring-no-properties (buffer-string)))))
 
 ;;; Tool registration
 (when (fboundp 'gptelt-make-tool)

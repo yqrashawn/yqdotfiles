@@ -69,8 +69,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       tree-sitter-cli:
-        specifier: ^0.25.6
-        version: 0.25.8
+        specifier: ^0.25.10
+        version: 0.25.10
       turbo:
         specifier: ^2.2.3
         version: 2.5.6
@@ -3767,8 +3767,8 @@ packages:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
 
-  tree-sitter-cli@0.25.8:
-    resolution: {integrity: sha512-avR7qo4qT+dNv2jj4M2e79vfc2etbWK6/umWcRsnEX1LTRhUL6p5AgGe6dP7+cV/RYFFk/VBz1rJuVCk+w5H2A==}
+  tree-sitter-cli@0.25.10:
+    resolution: {integrity: sha512-KoebQguKMCIghisEOdA372TIbrUl0kdnfZ9YQIBRAeOvNSKe85XbU4LuFW7hduRUwJj0rAG7pX5wo9sZhbBF1g==}
     engines: {node: '>=12.0.0'}
     hasBin: true
 
@@ -7154,7 +7154,7 @@ snapshots:
 
   micromark@2.11.4:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.3
       parse-entities: 2.0.0
     transitivePeerDependencies:
       - supports-color
@@ -8489,7 +8489,7 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  tree-sitter-cli@0.25.8: {}
+  tree-sitter-cli@0.25.10: {}
 
   trough@1.0.5: {}
 
