@@ -96,25 +96,31 @@ Returns the updated todo list."
           (error "Invalid todo priority: %s" priority))
         (let ((new-id (or id (gptelt-todo--make-id)))
               (new-item (list :id (or id (gptelt-todo--make-id)) :content content :status status :priority priority)))
-          (if id
-              ;; update existing
-              (setq gptelt-todo-list
-                    (mapcar (lambda (item)
-                              (if (equal (plist-get item :id) id)
-                                  new-item
-                                item))
-                            gptelt-todo-list))
-            ;; insert new
-            (push new-item gptelt-todo-list))))))
+          (let ((existing-item (seq-find (lambda (item)
+                                           (or (and id (equal (plist-get item :id) id))
+                                               (equal (plist-get item :content) content)))
+                                         gptelt-todo-list)))
+            (if existing-item
+                ;; update existing
+                (setq gptelt-todo-list
+                      (mapcar (lambda (item)
+                                (if (or (and id (equal (plist-get item :id) id))
+                                        (equal (plist-get item :content) content))
+                                    new-item
+                                  item))
+                              gptelt-todo-list))
+              ;; insert new
+              (push new-item gptelt-todo-list)))))))
   (gptelt-todo--save)
   (let ((unfinished-count (gptelt-todo--count-unfinished)))
     (message "[%d] todos updated" unfinished-count)
     (when (= unfinished-count 0)
       (gptel-todo-clear-all)))
-  gptelt-todo-list)
+  gptelt-todo-list
+  "Todos have been modified successfully. Ensure that you continue to use the todo list to track your progress. Please proceed with the current tasks if applicable")
 
 (comment
-  (gptelt-todo-write '((:content "test task" :status pending))))
+  (gptelt-todo-write '((:content "test task" :status "pending"))))
 
 ;;; API: todo_read
 (defun gptelt-todo-read ()
@@ -149,7 +155,7 @@ Returns the updated todo list."
   (gptelt-make-tool
    :name "todo_write"
    :function #'gptelt-todo-write
-   :description "Create or update todo entries from an array. Params: todos (array of objects with content, status, priority, id). Returns the updated todo list."
+   :description "Create or update todo entries from an array. Params: todos (array of objects with content, status, priority, id)."
    :args '((:name "todos"
             :type array
             :items
@@ -166,6 +172,10 @@ Returns the updated todo list."
               (:type string
                :optional t
                :description "Priority: high, medium, low")
+              :activeForm
+              (:type string
+               :optional t
+               :description "More info about current task")
               :id
               (:type string
                :optional t
