@@ -27,6 +27,7 @@
                    (+set-org-top-header new-title)
                    (insert "\n")
                    (+set-org-title new-title)
+                   (insert "\n")
                    (write-file
                     (expand-file-name
                      (format
@@ -99,8 +100,8 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
-  (gptel--apply-preset 'claude)
-  (gptel--apply-preset 'default))
+  (gptel--apply-preset 'default)
+  (gptel--apply-preset 'claude))
 
 (use-package! gptel
   :commands (gptel)
