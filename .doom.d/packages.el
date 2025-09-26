@@ -446,6 +446,10 @@
 (package! treesit-chunking
   :recipe (:host github :repo "yqrashawn/treesit-chunking" :branch "main"))
 
+(package! pext
+  :recipe `(:local-repo ,(expand-file-name "~/workspace/home/pext")
+            :files ("*.el")))
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:

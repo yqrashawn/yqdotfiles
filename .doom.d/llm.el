@@ -440,7 +440,7 @@ The user's chat will now follow. Generate the title."))
         (if (string= fence-lang "txt")
             (setq err fence-content)
           (setq rst fence-content))
-        (log/spy (list :rst rst :err err))))))
+        (list :rst rst :err err)))))
 
 (comment
   (llm-balance-lisp-code

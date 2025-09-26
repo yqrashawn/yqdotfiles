@@ -13,6 +13,7 @@
 (load! "gptel-tools/elisp.el")
 (load! "gptel-tools/clj.el")
 (load! "gptel-tools/cljs.el")
+(load! "gptel-tools/pext.el")
 
 (comment
   (+gptel-reload-tools)
