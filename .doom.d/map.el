@@ -171,10 +171,6 @@
               :desc "Reload all gptel tools" "R" #'+gptel-reload-tools
               :desc "Reload all gptel tools" "L" #'gptelt-log-check))))
  (:localleader
-  (:after cider
-          (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
-                "C" #'cider-connect-clj&cljs
-                "0" #'cider-connect-cljs))
   (:after js2-mode
           (:map js2-mode-map
            :n "jj" #'+jest-popup
@@ -669,6 +665,8 @@
  (:after cider
          (:localleader
           (:map (clojure-mode-map clojurescript-mode-map clojurec-mode-map)
+                "C" #'cider-connect-clj&cljs
+                "0" #'cider-connect-cljs
                 (:prefix ("r" . "repl")
                          "SPC" #'+cider-project-reload-exec
                          "S" #'cider-repl-set-ns

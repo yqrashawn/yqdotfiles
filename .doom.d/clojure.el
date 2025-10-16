@@ -550,3 +550,97 @@ creates a new one. Don't unnecessarily bother the user."
     (special-lispy-tab)
     (backward-char 2)
     (unless arg (lispy-newline-and-indent-plain))))
+
+(defun +cider-get-current-cljs-build-id ()
+  (let (cur-build-id)
+    (setq cur-build-id
+          (-> (cider-nrepl-sync-request:eval
+               "shadow.cljs.devtools.client.env/build-id"
+               (cider-current-repl 'cljs)
+               "cljs.core")
+              (nrepl-dict-get "value")
+              read))
+
+    (unless (stringp cur-build-id)
+      (user-error "shadow-cljs no active build"))
+
+    (intern (concat ":" cur-build-id))))
+
+(defun +cider-cljs->clj ()
+  (cider-nrepl-sync-request:eval
+   ":cljs/quit"
+   (cider-current-repl 'cljs)
+   "cljs.core"))
+
+;;;###autoload
+(defun +cider-cljs-repl-switch-runtime ()
+  (interactive)
+  (require 'cider)
+  (let ((clj-repl (cider-current-repl 'clj))
+        (cljs-repl (cider-current-repl 'cljs))
+        (cur-build-id)
+        (tmp-val))
+    (unless clj-repl
+      (user-error "no connected clj repl"))
+    (unless cljs-repl
+      (user-error "no connected cljs repl"))
+
+    (setq
+     tmp-val
+     (cider-nrepl-sync-request:eval
+      "(find-ns 'shadow.cljs.devtools.api)"
+      clj-repl
+      "clojure.core"))
+    (when (string= (nrepl-dict-get tmp-val "value") "nil")
+      (user-error "shadow-cljs not loaded in clj repl"))
+
+    (cider-load-buffer
+     (find-file-noselect "~/.nixpkgs/env/dev/cljs_helper.clj"))
+
+    (setq cur-build-id (+cider-get-current-cljs-build-id))
+
+    (unless cur-build-id
+      (user-error "shadow-cljs no active build"))
+
+    (setq
+     tmp-val
+     (cider-nrepl-sync-request:eval
+      "(get-shadow-cljs-info true)"
+      clj-repl
+      "cljs-helper"))
+    
+    (if-let ((shadow-info (nrepl-dict-get tmp-val "value")))
+        (setq tmp-val (gptel--json-read-string (read shadow-info)))
+      (user-error "can't get shadow-cljs info"))
+
+    (format! "%d %s %s")
+    (setq tmp-val
+          (-> tmp-val
+              (plist-get :builds)
+              (plist-get cur-build-id)
+              (plist-get :runtimes)
+              ))
+
+    (setq tmp-val
+          (completing-read "Runtime: "
+                           (seq-map
+                            (lambda (runtime)
+                              (let ((href (plist-get runtime :window.location.href))
+                                    (extra (plist-get runtime :extra-data))
+                                    (id (plist-get runtime :runtime-id)))
+                                `(,(format! "%d ▇ %s ▇ %s" id href extra) . ,id)))
+                            tmp-val)))
+
+    (unless (numberp (string-match "▇" tmp-val))
+      (user-error "invalid runtime-id"))
+    
+    (setq tmp-val (read (substring tmp-val 0 (- (string-match "▇" tmp-val) 1))))
+
+    (+cider-cljs->clj)
+    (nrepl-dict-get
+     (cider-nrepl-sync-request:eval
+      (format! "(shadow.cljs.devtools.api/repl %s {:runtime-id %d})"
+               cur-build-id tmp-val)
+      clj-repl
+      "clojure.core")
+     "value")))

@@ -62,6 +62,12 @@
       :clj-read-string-results
       first))
 
+(defn get-runtime-extra-data [build-id runtime-id]
+  (-> (cljs-eval
+       build-id runtime-id "js/shadow.cljs._extraData" "cljs.user")
+      :clj-read-string-results
+      first))
+
 (defn format-runtime [{:keys [build-id client-id] :as runtime}]
   (-> runtime
       (set/rename-keys {:client-id :runtime-id
@@ -70,7 +76,9 @@
       (select-keys #{:runtime-id :dom :connection-info
                      :alive-since :build-id :user-agent :host-type})
       (assoc :window.location.href
-             (get-runtime-href build-id client-id))))
+             (get-runtime-href build-id client-id))
+      (assoc :extra-data
+             (get-runtime-extra-data build-id client-id))))
 
 (defn get-build-state [build-id]
   (-> build-id
@@ -128,13 +136,24 @@
 ;;; get shadow-cljs info
 (defn get-shadow-cljs-info
   "get info llm cares about of the whole shadow-cljs runtime"
-  []
-  (let [active-builds (sdapi/active-builds)]
-    {:builds          (mapv format-build active-builds)
-     :active-builds   active-builds
-     :inactive-builds (->> (sdapi/get-build-ids)
-                           (remove active-builds)
-                           (into #{}))}))
+  ([] (get-shadow-cljs-info false))
+  ([json?]
+   (let [active-builds (sdapi/active-builds)
+         info
+         {:builds          (->> active-builds
+                                (mapv format-build)
+                                (mapv #(vector
+                                        (keyword (:build-id %))
+                                        %))
+                                (into {}))
+          :active-builds   active-builds
+          :inactive-builds (->> (sdapi/get-build-ids)
+                                (remove active-builds)
+                                (remove #(= :npm %))
+                                (into #{}))}]
+     (if json?
+       (json/write-str info)
+       info))))
 
 (comment
   (get-shadow-cljs-info))
@@ -254,6 +273,11 @@
       :cljs.analyzer/namespaces)
 
   (sdapi/watch-compile! :ground)
+
+  (cljs-eval
+   :ground
+   -1
+   "(+ 1 1)" "ground.core")
 
   (get-shadow-cljs-info)
   ;; => {:active-builds #{:app :ground}
