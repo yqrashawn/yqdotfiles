@@ -81,8 +81,8 @@
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
     :description "default preset"
-    :backend "CopilotB"
-    :model 'claude-3.7-sonnet
+    :backend "CopilotI"
+    :model 'claude-sonnet-4.5
     ;; :system (alist-get 'default gptel-directives)
     :system (alist-get 'claude gptel-directives)
     :temperature 0.8
@@ -93,6 +93,13 @@
          (seq-map 'car (alist-get category gptel--known-tools))))
      gptel--known-tools))
 
+  (gptel-make-preset 'cob
+    :description "preset"
+    :backend "CopilotB"
+    :parents '(default)
+    :model 'claude-3.7-sonnet
+    :system (alist-get 'claude gptel-directives))
+
   (gptel-make-preset 'claude
     :description "claude code"
     :backend "CCode"
@@ -100,8 +107,9 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
+  (gptel--apply-preset 'claude)
   (gptel--apply-preset 'default)
-  (gptel--apply-preset 'claude))
+  (gptel--apply-preset 'cob))
 
 (use-package! gptel
   :commands (gptel)
@@ -118,6 +126,7 @@
   :config
   (require 'gptel-context)
   (require 'pcre2el)
+  (require 'gptel-gh)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
   (set-popup-rule!
@@ -228,7 +237,9 @@
   (setq! gptel-backend gptel--gh-copilot-business)
   (setq! gptel-model 'gemini-2.5-pro)
   (setq! gptel-model 'claude-sonnet-4)
-  (setq! gptel-model 'gpt-4.1-2025-04-14)
+  (setq! gptel-model 'claude-sonnet-4.5)
+  (setq! gptel-model 'gpt-5-codex)
+  (setq! gptel-model 'gpt-4.1)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   ;; (add-hook! 'gptel-pre-response-hook 'my/claude-code-message-separator)
