@@ -551,6 +551,15 @@
            [[:h :k] :!TOSf17]
            ;; [[:h :l] :f17]
            [[:j :l] [:f19 ["in-alfred" 1]]]
+
+           ;; [[:left_shift :right_shift] :caps_lock]
+
+           ;; {:type :basic
+           ;;  :from
+           ;;  {:simultaneous [{:key_code "left_shift"} {:key_code "right_shift"}]
+           ;;   :modifiers    {:optional ["any"]}}
+           ;;  :to   [{:key_code "caps_lock"}]}
+
            ;; [[:m :l] [[:alf "winswitch" "ru.mandrigin.alfred.sww"]
            ;; ["in-alfred" 1]]]
            [[:m :l] :f18]]}
