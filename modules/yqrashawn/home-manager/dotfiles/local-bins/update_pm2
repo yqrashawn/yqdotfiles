@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+pnpm i -g pm2
+pm2 updatePM2
+pm2 startup

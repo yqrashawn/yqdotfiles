@@ -450,6 +450,10 @@
   :recipe `(:local-repo ,(expand-file-name "~/workspace/home/pext")
             :files ("*.el")))
 
+(package! rjsx-mode)
+(package! npm-mode)
+;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:
