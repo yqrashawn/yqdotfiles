@@ -1005,3 +1005,16 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
     (prefer-coding-system 'utf-8)
     (setq-local coding-system-for-read 'utf-8)
     (setq-local coding-system-for-write 'utf-8)))
+
+(defadvice! ++fold/open-all (orig-fn &optional level)
+  :after #'+fold/open-all
+  (save-excursion
+    (when (+fold--ensure-hideshow-mode)
+      (hs-life-goes-on
+       (if (integerp level)
+           (hs-hide-level-recursive level (point-min) (point-max))
+         (hs-show-all))))
+    (if (integerp level)
+        (outline-hide-sublevels (max 1 level))
+      (when (fboundp 'outline-show-all)
+        (outline-show-all)))))

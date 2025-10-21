@@ -1,9 +1,8 @@
 {
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.115",
-    "@openai/codex": "^0.34.0",
+    "@openai/codex": "^0.47.0",
     "bash-language-server": "^5.4.2",
-    "codex": "^0.2.3",
     "concurrently": "^9.1.2",
     "copilot-node-server": "^1.41.0",
     "create-cloudflare": "^2.30.1",
