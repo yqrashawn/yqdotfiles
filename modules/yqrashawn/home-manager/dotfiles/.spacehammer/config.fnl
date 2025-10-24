@@ -848,8 +848,8 @@
 
 (local brv "com.brave.Browser")
 (local vv "com.vivaldi.Vivaldi")
-;; (local ffd "org.mozilla.firefoxdeveloperedition")
-(local ffd "org.nixos.firefoxdeveloperedition")
+(local ffd "org.mozilla.firefoxdeveloperedition")
+;; (local ffd "org.nixos.firefoxdeveloperedition")
 (local orion "com.kagi.kagimacOS")
 (local edge "com.microsoft.edgemac.Beta")
 (local ff "org.mozilla.firefox")

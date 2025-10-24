@@ -69,7 +69,7 @@ in
     systemPackages =
       with pkgs;
       [
-        firefox-devedition
+        # firefox-devedition
         lzip
         clojure-lsp
         notmuch
