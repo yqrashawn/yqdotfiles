@@ -11,6 +11,9 @@ importers:
       '@anthropic-ai/claude-code':
         specifier: ^2.0.25
         version: 2.0.25
+      '@github/copilot':
+        specifier: ^0.0.350
+        version: 0.0.350
       '@openai/codex':
         specifier: ^0.47.0
         version: 0.47.0
@@ -414,6 +417,11 @@ packages:
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
+
+  '@github/copilot@0.0.350':
+    resolution: {integrity: sha512-+Zqt7g4F7lQoj12iE82namIU+ymUC39ahGX3KDWQdRgkjPKeyKIAsdtTaYBZLEbvc/truIJh3IjLd9PSKKI9Bw==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   '@graphql-tools/batch-execute@9.0.5':
     resolution: {integrity: sha512-wkHLqBNtprKuNk+6ZoOw/RthsnGDycIjtOo976K8f0IgbE7fRNO9SnyhjSziHaIWVDjOuP3XaJD5v/i3vQsa5Q==}
@@ -4546,6 +4554,8 @@ snapshots:
     optional: true
 
   '@fastify/busboy@2.1.1': {}
+
+  '@github/copilot@0.0.350': {}
 
   '@graphql-tools/batch-execute@9.0.5(graphql@16.9.0)':
     dependencies:

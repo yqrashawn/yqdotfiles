@@ -148,6 +148,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
              (+visible-buffers-list-buffer)
            (buffer-string)))))
 
+;;; clojure workspace
 (defun ++workspace-cljs? ()
   (-> (expand-file-name
        "shadow-cljs.edn"
@@ -193,6 +194,26 @@ Each file is opened (if not already) with `find-file-noselect` relative to
        (or (++workspace-cljs-repl-connected?)
            (++workspace-clj-repl-connected?))))
 
+;;; js workspace
+(defun ++workspace-npm? ()
+  (-> (expand-file-name
+       "package.json"
+       (++workspace-current-project-root))
+      (file-exists-p)))
+
+(defun ++workspace-nextjs? ()
+  (-> (expand-file-name
+       ".next"
+       (++workspace-current-project-root))
+      (file-exists-p)))
+
+(defun ++workspace-nextjs-live? ()
+  (-> (expand-file-name
+       ".next/dev/lock"
+       (++workspace-current-project-root))
+      (file-exists-p)))
+
+;;; workspace info buffer
 (defun +current-workspace-info-buffer ()
   (let ((b (get-buffer-create " *user-current-workspace-info*" t)))
     (with-current-buffer b
@@ -222,11 +243,18 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (if (++workspace-clj-repl-connected?)
             "connected, you can evaluate clj file/buffer/code"
           "not connected, you can't evaluate clj"))
+
        ((and (++workspace-clj?)
              "shadow-cljs nREPL is %s.\n")
         (if (++workspace-cljs-repl-connected?)
             "connected, you can evaluate cljs file/buffer/code"
           "not connected, you can't evaluate cljs"))
+
+       ((and (++workspace-npm?) (++workspace-nextjs?)
+             "This project is using Next.js, the Next.js dev server is %s.\n")
+        (if (++workspace-nextjs-live?)
+            "running"
+          "not running"))
        "</env>"))
     b))
 

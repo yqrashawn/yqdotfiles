@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.0.25",
+    "@github/copilot": "^0.0.350",
     "@openai/codex": "^0.47.0",
     "bash-language-server": "^5.4.2",
     "concurrently": "^9.1.2",
