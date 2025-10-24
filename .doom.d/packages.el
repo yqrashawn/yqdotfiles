@@ -453,6 +453,7 @@
 (package! rjsx-mode)
 (package! npm-mode)
 (package! kkp)
+(package! jtsx)
 ;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
 
 ;; Local Variables:

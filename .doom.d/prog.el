@@ -168,8 +168,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :hook ((go-mode
           rjsx-mode
           js2-mode
+          js-ts-mode
           typescript-mode
           tsx-ts-mode
+          jtsx-tsx-mode
+          jtsx-jsx-mode
           clojure-mode
           clojurescript-mode
           clojurec-mode) . copilot-mode)
@@ -185,7 +188,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
          )
   :config
   (pushnew! copilot-indentation-alist
-            '(tsx-ts-mode typescript-ts-mode-indent-offset)
+            '(jtsx-tsx-mode
+              jtsx-jsx-mode
+              tsx-ts-mode typescript-ts-mode-indent-offset)
             '(typescript-ts-mode typescript-ts-mode-indent-offset)))
 
 (use-package! copilot-chat

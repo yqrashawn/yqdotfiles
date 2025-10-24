@@ -108,8 +108,8 @@
     :parents '(default)
     :tools '())
   (gptel--apply-preset 'claude)
-  (gptel--apply-preset 'default)
-  (gptel--apply-preset 'cob))
+  (gptel--apply-preset 'cob)
+  (gptel--apply-preset 'default))
 
 (use-package! gptel
   :commands (gptel)
@@ -222,7 +222,7 @@
   ;; gptel one
   (setq! gptel--gh-copilot-individual
          (gptel-make-gh-copilot "CopilotI"
-           ;; :host "api.individual.githubcopilot.com"
+           :host "api.individual.githubcopilot.com"
            :curl-args (list "--insecure")))
   (setq! gptel--gh-copilot-business
          (gptel-make-gh-copilot "CopilotB"
@@ -233,8 +233,8 @@
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--claude-code)
   (setq! gptel-backend gptel--gh-copilot-local)
-  (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-backend gptel--gh-copilot-business)
+  (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-model 'gemini-2.5-pro)
   (setq! gptel-model 'claude-sonnet-4)
   (setq! gptel-model 'claude-sonnet-4.5)

@@ -111,6 +111,8 @@
 (add-hook! '(go-ts-mode-hook
              typescript-ts-mode-hook
              tsx-ts-mode-hook
+             jtsx-tsx-mode-hook
+             jtsx-jsx-mode-hook 
              nix-mode-hook)
            :append #'lsp)
 
@@ -221,7 +223,6 @@
         (funcall callback)))))
 
 (use-package treesit
-  :mode (("\\.tsx\\'" . tsx-ts-mode))
   :init
   (setq! +pair-chars (seq-map 'string-to-char '("(" ")" "<" ">" "{" "}" "[" "]")))
   :config
@@ -247,6 +248,8 @@
           yaml-pro-ts-mode
           typescript-ts-mode
           json-ts-mode
+          jtsx-tsx-mode
+          jtsx-jsx-mode
           tsx-ts-mode) . combobulate-mode)
   :config
   (transient-define-prefix combobulate ()
