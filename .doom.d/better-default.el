@@ -1006,6 +1006,13 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
     (setq-local coding-system-for-read 'utf-8)
     (setq-local coding-system-for-write 'utf-8)))
 
+(after! treesit-fold
+  (dolist (mode '(typescript-mode typescript-ts-mode tsx-ts-mode
+                  jtsx-typescript-mode jtsx-jsx-mode jtsx-tsx-mode))
+    (when-let* ((mode-ranges (alist-get mode treesit-fold-range-alist)))
+      (setf (alist-get mode treesit-fold-range-alist)
+            (append mode-ranges '((interface_body . treesit-fold-range-seq)))))))
+
 (defadvice! ++fold/open-all (orig-fn &optional level)
   :after #'+fold/open-all
   (save-excursion
@@ -1018,3 +1025,77 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
         (outline-hide-sublevels (max 1 level))
       (when (fboundp 'outline-show-all)
         (outline-show-all)))))
+
+;;;###autoload
+(defun +treesit-fold-hide-level (level)
+  "Hide all blocks ARG levels below this block.
+The hook `treesit-fold-on-fold-hook' is run; see `run-hooks'."
+  (interactive "p")
+  (if (not (treesit-fold-ready-p))
+      (user-error "Ignored, no tree-sitter parser in current buffer")
+    (save-excursion
+      (message "Hiding blocks ...")
+      (let* ((current-node (treesit-fold--foldable-node-at-pos (point)))
+             (minp (point-min))
+             (maxp (point-max)))
+        (when current-node
+          (when-let* ((fold-range (treesit-fold--get-fold-range current-node)))
+            (setq minp (car fold-range)))
+          (setq maxp (treesit-node-end current-node)))
+        (+treesit-fold-hide-level-recursive level minp maxp))
+      (message "Hiding blocks ... done"))
+    (run-hooks 'treesit-fold-on-fold-hook)))
+
+(defun +treesit-fold-hide-level-recursive (arg minp maxp)
+  "Recursively hide blocks ARG levels below point in region (MINP MAXP)."
+  (let* ((treesit-fold-indicators-mode)
+         (treesit-fold-on-fold-hook)
+         (node (treesit-buffer-root-node))
+         (mode-ranges (alist-get major-mode treesit-fold-range-alist))
+         (patterns (seq-mapcat (lambda (fold-range) `((,(car fold-range)) @name))
+                               mode-ranges)))
+    (when patterns
+      (let* ((query (treesit-query-compile (treesit-node-language node) patterns))
+             (all-nodes (treesit-query-capture node query)))
+        (setq all-nodes (cl-remove-if (lambda (captured-node)
+                                        (let ((n (cdr captured-node)))
+                                          (or (< (treesit-node-start n) minp)
+                                              (> (treesit-node-end n) maxp)
+                                              (treesit-fold--node-range-on-same-line n))))
+                                      all-nodes))
+        (dolist (captured-node all-nodes)
+          (let* ((n (cdr captured-node))
+                 (node-minp (treesit-node-start n))
+                 (node-maxp (treesit-node-end n)))
+            (when (and (>= node-minp minp) (<= node-maxp maxp))
+              (if (> arg 1)
+                  (+treesit-fold-hide-level-recursive (1- arg) node-minp node-maxp)
+                (goto-char (treesit-node-start n))
+                (treesit-fold-close n)))))))))
+
+;;;###autoload
+(defun ++fold/level (arg)
+  "Hide all blocks ARG levels below this block.
+Uses `+treesit-fold-hide-level' when available, falls back to `hs-hide-level'."
+  (interactive "p")
+  (cond ((+fold--treesit-fold-p)
+         (+treesit-fold-hide-level arg))
+        ((+fold--ensure-hideshow-mode)
+         (hs-hide-level arg))
+        (t
+         (user-error "No folding method available"))))
+
+;;;###autoload
+(defun ++fold/toggle ()
+  "Toggle the fold at point.
+
+Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
+  (interactive)
+  (save-excursion
+    (cond ((+fold--vimish-fold-p) (vimish-fold-toggle))
+          ((+fold--treesit-fold-p) (treesit-fold-toggle))
+          ((+fold--outline-fold-p)
+           (cl-letf (((symbol-function #'outline-hide-subtree)
+                      (symbol-function #'outline-hide-entry)))
+             (outline-toggle-children)))
+          ((+fold--hideshow-fold-p) (+fold-from-eol (hs-toggle-hiding))))))

@@ -112,7 +112,7 @@
              typescript-ts-mode-hook
              tsx-ts-mode-hook
              jtsx-tsx-mode-hook
-             jtsx-jsx-mode-hook 
+             jtsx-jsx-mode-hook
              nix-mode-hook)
            :append #'lsp)
 
@@ -304,3 +304,10 @@
 
 (use-package! yaml-pro
   :mode (("\\.yaml$" . yaml-pro-ts-mode)))
+
+(after! treesit-fold
+  (pushnew! treesit-fold-range-alist
+            `(jtsx-tsx-mode . ,(treesit-fold-parsers-typescript))
+            `(jtsx-typescript-mode . ,(treesit-fold-parsers-typescript))
+            `(jtsx-javascript-mode . ,(treesit-fold-parsers-javascript))
+            `(jtsx-jsx-mode . ,(treesit-fold-parsers-javascript))))

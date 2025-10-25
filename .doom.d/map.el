@@ -65,6 +65,8 @@
  ;; :g "C-'" #'+terminal-here
  :n "z=" #'jinx-correct-word
  [remap split-window-below] #'evil-window-split
+ [remap evil-toggle-fold]   #'++fold/toggle
+
  [remap split-window-right] #'evil-window-vsplit
  [remap xterm-paste] #'yank
  [remap eval-last-sexp] #'pp-eval-last-sexp
@@ -543,7 +545,8 @@
   :n "gy" #'yq/duplicate-line
   :n "gY" #'evilnc-copy-and-comment-lines
   :n "gn" #'evil-search-word-forward
-  :n "zl" #'hs-hide-level
+  ;; :n "zl" #'hs-hide-level
+  :n "zl" #'++fold/level
   :n "s" 'yq-s-map
   :n ">" #'evil-shift-right-line
   :n "<" #'evil-shift-left-line
@@ -571,7 +574,7 @@
                   #'yas-insert-snippet
                   (and (featurep! :editor fold)
                        (save-excursion (end-of-line) (invisible-p (point))))
-                  #'+fold/toggle
+                  #'++fold/toggle
                   outline-minor-mode
                   #'bicycle-cycle
 
