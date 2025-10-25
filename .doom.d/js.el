@@ -116,24 +116,10 @@
   )
 
 (use-package! typescript-ts-mode
+  :defer t
   :mode (("\\.cts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . typescript-ts-mode)
-         ("\\.ts\\'" . typescript-ts-mode))
-  :init
-  (after! apheleia
-    (set-formatter!
-      'prettier-typescript
-      (alist-get 'prettier-typescript apheleia-formatters)
-      :modes '(typescript-ts-mode
-               jtsx-tsx-mode
-               jtsx-jsx-mode
-               tsx-ts-mode typescript-mode))))
-
-(after! apheleia
-  (set-formatter!
-    'prettier-javascript
-    (alist-get 'prettier-javascript apheleia-formatters)
-    :modes '(rjsx-mode js-mode js2-mode js-ts-mode)))
+         ("\\.ts\\'" . typescript-ts-mode)))
 
 (add-hook! '+format-with-lsp-mode-hook
   (defun +turn-off-format-with-lsp-mode-for-modes ()
@@ -196,6 +182,13 @@
              clojurescript-mode))
     (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))
 
+(after! apheleia
+  (set-formatter!
+    'biome
+    (alist-get 'biome apheleia-formatters)
+    :modes '(typescript-ts-mode jtsx-tsx-mode jtsx-jsx-mode
+             tsx-ts-mode typescript-mode js-mode js2-mode rjsx-mode)))
+
 (use-package! jtsx
   :defer t
   :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
@@ -246,17 +239,16 @@
     (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
 
   (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
-  (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
+  (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map))
 
-
-  (after! evil-nerd-commenter
-    (setq-hook!
-        '(jtsx-tsx-mode-hook jtsx-jsx-mode-hook)
-      evilnc-comment-or-uncomment-region-function
-      (defun +jtsx-evilnc-comment-or-uncomment-region-function (start end)
-        (let ((comment-context (jtsx-comment-context-type start end)))
-          (pcase comment-context
-            ('jsx-attribute (jtsx-comment-jsx-attribute-dwim arg))
-            ('js-nested-in-jsx (jtsx-comment-js-nested-in-jsx-dwim arg))
-            ('jsx (jtsx-comment-jsx-dwim arg))
-            (_ (comment-dwim arg))))))))
+(after! evil-nerd-commenter
+  (setq-hook!
+      '(jtsx-tsx-mode-hook jtsx-jsx-mode-hook)
+    evilnc-comment-or-uncomment-region-function
+    (defun +jtsx-evilnc-comment-or-uncomment-region-function (start end)
+      (let ((comment-context (jtsx-comment-context-type start end)))
+        (pcase comment-context
+          ('jsx-attribute (jtsx-comment-jsx-attribute-dwim arg))
+          ('js-nested-in-jsx (jtsx-comment-js-nested-in-jsx-dwim arg))
+          ('jsx (jtsx-comment-jsx-dwim arg))
+          (_ (comment-dwim arg)))))))
