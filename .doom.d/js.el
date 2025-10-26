@@ -193,6 +193,7 @@
   :defer t
   :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
          ("\\.tsx\\'" . jtsx-tsx-mode)
+         ("\\.mts\\'" . jtsx-typescript-mode)
          ("\\.ts\\'" . jtsx-typescript-mode))
   :commands jtsx-install-treesit-language
   :hook ((jtsx-jsx-mode . hs-minor-mode)
