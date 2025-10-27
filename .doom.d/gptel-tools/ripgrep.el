@@ -105,6 +105,8 @@ Returns a list of search results with file paths, line numbers, and content."
     (push "--color=never" args)
     (push "--line-number" args)
     (push "--column" args)
+    (push "-g" args)
+    (push "'!/.git/'" args)
     (push "--no-heading" args)
     (push (format "--max-count=%d" limit) args)
     (when context-lines
@@ -143,7 +145,10 @@ Returns a list of search results with file paths, line numbers, and content."
   (gptelt-rg-tool-search-content pattern path include nil nil nil max-results))
 
 (comment
-  (gptelt-rg-tool-search-regex "defun.*gptelt" nil "*.el"))
+  (gptelt-rg-tool-search-regex "defun.*gptelt" nil "*.el")
+  (gptelt-rg-tool-search-regex "src/stores/global"
+                               "/Users/yqrashawn/workspace/office/perpdex/perpdex-nextjs"
+                               nil 20))
 
 ;;; Tool registration
 
