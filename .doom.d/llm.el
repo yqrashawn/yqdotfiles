@@ -177,7 +177,13 @@
     :before #'gptel-send
     (unless simple-llm-req-p
       (require 'gptel-context)
-      (gptel-context-remove-all nil)
+      ;; Remove only the specific context buffers we manage, not all context
+      (dolist (buf (list (+current-workspace-info-buffer)
+                         (+visible-buffers-list-buffer)
+                         (+magit-wip-diff-n-min-buffer 5)))
+        (setf (alist-get buf gptel-context nil 'remove) nil))
+      
+      ;; Re-add updated context
       (+gptel-context-add-buffer (+current-workspace-info-buffer))
       (+gptel-context-add-buffer (+visible-buffers-list-buffer))
       (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
@@ -237,9 +243,9 @@
   (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-model 'gemini-2.5-pro)
   (setq! gptel-model 'claude-sonnet-4)
-  (setq! gptel-model 'claude-sonnet-4.5)
   (setq! gptel-model 'gpt-5-codex)
   (setq! gptel-model 'gpt-4.1)
+  (setq! gptel-model 'claude-sonnet-4.5)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   ;; (add-hook! 'gptel-pre-response-hook 'my/claude-code-message-separator)
@@ -251,50 +257,50 @@
       (setq! gptel-log-level nil)))
   (setq! gptel-log-level 'nil)
 
-  (el-patch-defun gptel-context--insert-buffer-string (buffer contexts)
-    "Insert at point a context string from all CONTEXTS in BUFFER."
-    (let ((is-top-snippet t)
-          (previous-line 1))
-      (insert
-       (el-patch-swap
-         (format "In buffer `%s`:" (buffer-name buffer))
-         (format "In buffer `%s`%s:"
-                 (buffer-name buffer)
-                 (if-let ((buf-file (buffer-file-name buffer)))
-                     (format ", file `%s`" buf-file)
-                   "")))
-       "\n\n```" (gptel--strip-mode-suffix (buffer-local-value
-                                            'major-mode buffer))
-       "\n")
-      (dolist (context contexts)
-        (let* ((start (overlay-start context))
-               (end (overlay-end context))
-               content)
-          (let (lineno column)
-            (with-current-buffer buffer
-              (without-restriction
-                (setq lineno (line-number-at-pos start t)
-                      column (save-excursion (goto-char start)
-                                             (current-column))
-                      content (buffer-substring-no-properties start end))))
-            ;; We do not need to insert a line number indicator if we have two regions
-            ;; on the same line, because the previous region should have already put the
-            ;; indicator.
-            (unless (= previous-line lineno)
-              (unless (= lineno 1)
-                (unless is-top-snippet
-                  (insert "\n"))
-                (insert (format "... (Line %d)\n" lineno))))
-            (setq previous-line lineno)
-            (unless (zerop column) (insert " ..."))
-            (if is-top-snippet
-                (setq is-top-snippet nil)
-              (unless (= previous-line lineno) (insert "\n"))))
-          (insert content)))
-      (unless (>= (overlay-end (car (last contexts)))
-                  (point-max))
-        (insert "\n..."))
-      (insert "\n```")))
+  ;; (el-patch-defun gptel-context--insert-buffer-string (buffer contexts)
+  ;;   "Insert at point a context string from all CONTEXTS in BUFFER."
+  ;;   (let ((is-top-snippet t)
+  ;;         (previous-line 1))
+  ;;     (insert
+  ;;      (el-patch-swap
+  ;;        (format "In buffer `%s`:" (buffer-name buffer))
+  ;;        (format "In buffer `%s`%s:"
+  ;;                (buffer-name buffer)
+  ;;                (if-let ((buf-file (buffer-file-name buffer)))
+  ;;                    (format ", file `%s`" buf-file)
+  ;;                  "")))
+  ;;      "\n\n```" (gptel--strip-mode-suffix (buffer-local-value
+  ;;                                           'major-mode buffer))
+  ;;      "\n")
+  ;;     (dolist (context contexts)
+  ;;       (let* ((start (overlay-start context))
+  ;;              (end (overlay-end context))
+  ;;              content)
+  ;;         (let (lineno column)
+  ;;           (with-current-buffer buffer
+  ;;             (without-restriction
+  ;;               (setq lineno (line-number-at-pos start t)
+  ;;                     column (save-excursion (goto-char start)
+  ;;                                            (current-column))
+  ;;                     content (buffer-substring-no-properties start end))))
+  ;;           ;; We do not need to insert a line number indicator if we have two regions
+  ;;           ;; on the same line, because the previous region should have already put the
+  ;;           ;; indicator.
+  ;;           (unless (= previous-line lineno)
+  ;;             (unless (= lineno 1)
+  ;;               (unless is-top-snippet
+  ;;                 (insert "\n"))
+  ;;               (insert (format "... (Line %d)\n" lineno))))
+  ;;           (setq previous-line lineno)
+  ;;           (unless (zerop column) (insert " ..."))
+  ;;           (if is-top-snippet
+  ;;               (setq is-top-snippet nil)
+  ;;             (unless (= previous-line lineno) (insert "\n"))))
+  ;;         (insert content)))
+  ;;     (unless (>= (overlay-end (car (last contexts)))
+  ;;                 (point-max))
+  ;;       (insert "\n..."))
+  ;;     (insert "\n```")))
 
   (defadvice! +gptel-mcp--activate-tools (_)
     :after #'gptel-mcp--activate-tools
