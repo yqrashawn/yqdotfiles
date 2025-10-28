@@ -197,7 +197,7 @@
         (+gptel-context-add-buffer b))
       (when-let ((root (++workspace-current-project-root)))
         (dolist (f +llm-project-default-files)
-          (when-let ((b (get-file-buffer (format "%s/%s" root f))))
+          (when-let ((b (get-file-buffer (file-truename (format "%s/%s" root f)))))
             (+gptel-context-add-buffer b))))))
 
   (setq! gptel--openrouter

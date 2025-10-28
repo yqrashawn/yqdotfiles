@@ -232,7 +232,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
         (copilot-chat--add-buffer i b))
 
       (dolist (f +llm-project-default-files)
-        (when-let ((b (get-file-buffer (format "%s%s" root f))))
+        (when-let ((b (get-file-buffer (file-truename (format "%s%s" root f)))))
           (copilot-chat--add-buffer i b)))
 
       (dolist (b (+magit-wip-buffer-changed-within-n-min 5))
