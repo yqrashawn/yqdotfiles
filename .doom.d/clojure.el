@@ -244,7 +244,7 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
           (cider--no-repls-user-error type)
         repl)))
 
-  (defadvice! corgi/around-cider-repls (command &optional type ensure)
+  (defadvice! corgi/around-cider-repls (command &optional type ensure required-ops)
     "This essentially redefines cider-repls. The main thing it does is return all
   REPLs by using sesman-current-sessions (plural) instead of
   sesman-current-session. It also falls back to the babashka repl if no repls
@@ -358,10 +358,10 @@ creates a new one. Don't unnecessarily bother the user."
    "org.clojars.abhinav/snitch"
    "0.1.16")
 
-  (defadvice! +cider-repls (orig-fn &optional type ensure)
+  (defadvice! +cider-repls (orig-fn &optional type ensure required-ops)
     :around #'cider-repls
     (let ((proj-root (doom-project-root))
-          (repls (funcall orig-fn type ensure)))
+          (repls (funcall orig-fn type ensure required-ops)))
       (seq-filter
        (lambda (repl-buf)
          (when (bufferp repl-buf)
