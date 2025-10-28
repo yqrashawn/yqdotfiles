@@ -256,3 +256,20 @@
             ('js-nested-in-jsx (jtsx-comment-js-nested-in-jsx-dwim nil))
             ('jsx (jtsx-comment-jsx-dwim nil))
             (_ (evilnc-comment-or-uncomment-region-internal start end))))))))
+
+(use-package! lsp-biome
+  :init
+  (require 'rx)
+  (setq! lsp-biome-active-file-types
+         (list (rx "." (or "tsx" "jsx" "ts" "js" "mts" "mjs" "cts" "cjs"
+                           "json" "jsonc" "css")
+                   eos)))
+  (defun +lsp-biome-active-hook ()
+    (setq-local apheleia-formatter '(biome)))
+  
+  :config
+  (setq-hook!
+      '(lsp-biome-active-hook)
+    lsp-biome-active-hook
+    (defun +lsp-biome-active-hook ()
+      (setq-local apheleia-formatter '(biome)))))
