@@ -244,12 +244,15 @@
 
 (after! evil-nerd-commenter
   (setq-hook!
-      '(jtsx-tsx-mode-hook jtsx-jsx-mode-hook)
+      '(jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook)
     evilnc-comment-or-uncomment-region-function
     (defun +jtsx-evilnc-comment-or-uncomment-region-function (start end)
       (let ((comment-context (jtsx-comment-context-type start end)))
-        (pcase comment-context
-          ('jsx-attribute (jtsx-comment-jsx-attribute-dwim arg))
-          ('js-nested-in-jsx (jtsx-comment-js-nested-in-jsx-dwim arg))
-          ('jsx (jtsx-comment-jsx-dwim arg))
-          (_ (comment-dwim arg)))))))
+        (save-excursion
+          (goto-char start)
+          (push-mark end nil t)
+          (pcase (log/spy comment-context)
+            ('jsx-attribute (jtsx-comment-jsx-attribute-dwim nil))
+            ('js-nested-in-jsx (jtsx-comment-js-nested-in-jsx-dwim nil))
+            ('jsx (jtsx-comment-jsx-dwim nil))
+            (_ (evilnc-comment-or-uncomment-region-internal start end))))))))
