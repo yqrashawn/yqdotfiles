@@ -327,3 +327,17 @@ Example:
 (defun +kitty-get-window-last-cmd-output (window-id)
   (+kitty
    (format! "@ get-text --match id:%d --extent last_cmd_output" window-id)))
+
+(defun +force-save-buffer ()
+  "Save current buffer, answering yes to supersession/lock prompts; skip hooks."
+  (interactive)
+  (cl-letf (((symbol-function 'ask-user-about-supersession-threat) (lambda (&rest _) t))
+            ((symbol-function 'ask-user-about-lock) (lambda (&rest _) t))
+            ((symbol-function 'yes-or-no-p) (lambda (&rest _) t))
+            ((symbol-function 'y-or-n-p) (lambda (&rest _) t)))
+    (let ((before-save-hook nil)
+          (after-save-hook nil)
+          (write-contents-functions nil)
+          (write-file-functions nil)
+          (create-lockfiles nil))
+      (basic-save-buffer))))

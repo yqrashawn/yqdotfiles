@@ -135,7 +135,7 @@ Returns a message describing the result of the operation."
                 (setq replacement-count 1))
             (error "old_string not found in original content, CHECK CAREFULLY.")))
 
-        (save-buffer)
+        (+force-save-buffer)
         ;; Format the changed region if LSP is available
         (when (and (fboundp 'lsp-format-region)
                    (bound-and-true-p lsp-mode))
@@ -279,7 +279,7 @@ Returns a string describing the result of the operation."
     (with-current-buffer (find-file-noselect f)
       (erase-buffer)
       (insert "old")
-      (save-buffer)
+      (+force-save-buffer)
       (gptelt-edit-edit-file f "old" "new")
       (buffer-string))
     ;; fix balance
@@ -287,7 +287,7 @@ Returns a string describing the result of the operation."
       (erase-buffer)
       (clojure-mode)
       (insert "(defn plus1 [n]\n (inc n))")
-      (save-buffer)
+      (+force-save-buffer)
       (gptelt-edit-edit-file
        f
        "(defn plus1 [n]\n (inc n))"
@@ -297,7 +297,7 @@ Returns a string describing the result of the operation."
       (erase-buffer)
       (clojure-mode)
       (insert "(defn plus1 [n]\n (inc n))")
-      (save-buffer)
+      (+force-save-buffer)
       (gptelt-edit-edit-file
        f
        "(defn plus1 [n]\n (inc n))"
@@ -375,7 +375,7 @@ Supports :replace_all for each edit (default nil)."
         (gptelt-edit--edit-buffer-impl buffer old new replace-all)
         (setq applied-count (1+ applied-count))))
     (with-current-buffer buffer
-      (save-buffer))
+      (+force-save-buffer))
     (format "Successfully applied %d edits to buffer: %s" applied-count (buffer-name buffer))))
 
 
@@ -423,7 +423,7 @@ Returns a string describing the result."
     (with-current-buffer (find-file-noselect f)
       (erase-buffer)
       (insert "old1, old2")
-      (save-buffer)
+      (+force-save-buffer)
       (gptelt-edit-multi-edit-file
        f
        '((:old_string "old1"
