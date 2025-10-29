@@ -197,8 +197,9 @@
         (+gptel-context-add-buffer b))
       (when-let ((root (++workspace-current-project-root)))
         (dolist (f +llm-project-default-files)
-          (when-let ((b (get-file-buffer (file-truename (format "%s/%s" root f)))))
-            (+gptel-context-add-buffer b))))))
+          (when-let ((file (file-truename (format "%s/%s" root f))))
+            (when (f-exists-p file)
+              (+gptel-context-add-buffer (find-file-noselect file))))))))
 
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
