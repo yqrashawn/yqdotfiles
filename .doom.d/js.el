@@ -264,12 +264,15 @@
          (list (rx "." (or "tsx" "jsx" "ts" "js" "mts" "mjs" "cts" "cjs"
                            "json" "jsonc" "css")
                    eos)))
-  (defun +lsp-biome-active-hook ()
-    (setq-local apheleia-formatter '(biome)))
-  
   :config
   (setq-hook!
       '(lsp-biome-active-hook)
     lsp-biome-active-hook
     (defun +lsp-biome-active-hook ()
-      (setq-local apheleia-formatter '(biome)))))
+      (setq-local apheleia-formatter '(biome))))
+
+  (add-hook!
+   '(apheleia-post-format-hook)
+   (defun +lsp-biome-apheleia-sort-imports ()
+     (when (-contains? apheleia-formatter 'biome)
+       (lsp-biome-organize-imports)))))
