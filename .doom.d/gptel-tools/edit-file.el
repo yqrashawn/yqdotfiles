@@ -219,7 +219,7 @@ Returns a string describing the result of the operation."
              (if rst-buffer-string
                  (gptelt--replace-buffer-directly buffer rst-buffer-string)
                (gptelt-edit--apply-edit-directly buffer old-string new-string replace-all))))
-        (+gptel-context-add-buffer buffer)
+        ;; (+gptel-context-add-buffer buffer)
         rst-message))))
 
 ;;; Main edit functions
