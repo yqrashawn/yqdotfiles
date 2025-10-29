@@ -846,6 +846,13 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   (unless no-focus
     (call-process-shell-command "open -a kitty.app" nil 0)))
 
+(defun +kitty (cmd &optional no-focus)
+  (shell-command-to-string
+   (format!
+    "%s %s"
+    (executable-find "kitty")
+    cmd)))
+
 (setq! +buffer-terminator-buffer-file-name-kill-list
        '("^/private/tmp/emacsclient\."))
 

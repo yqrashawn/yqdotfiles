@@ -343,3 +343,22 @@ See `dwim-shell-command-execute-script' for all other params."
   (require 'consult-omni-sources)
   (require 'consult-omni-embark)
   (consult-omni-sources-load-modules))
+
+
+;;;###autoload
+(defun +kitty-yank-project-window ()
+  "List running commands in current project, let user select one and message its Kitty window id."
+  (interactive)
+  (let* ((windows (+kitty-get-project-windows))
+         (choices
+          (and windows
+               (mapcar (lambda (w)
+                         (let* ((title (a-get w "title"))
+                                (id (a-get w "id")))
+                           (cons (format "%s | id: %s" title id) id)))
+                       windows))))
+    (if (null choices)
+        (message "No kitty windows found for project: %s" project-root)
+      (let ((win-id (completing-read "Select Kitty window: " choices nil t)))
+        (kill-new
+         (+kitty-get-window-last-cmd-output (cdr (assoc win-id choices))))))))

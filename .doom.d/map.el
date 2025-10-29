@@ -47,7 +47,8 @@
  :g "s-k" #'bury-buffer
  :g "s-m" #'+popup/toggle
  :g "s-u" #'revert-buffer
- :g "s-i" #'+side-notes-toggle-daily-note
+ :g "s-'" #'+side-notes-toggle-daily-note
+ :g "s-i" #'gptel-context-add
  :g "s-j" #'gptel
  ;; :g "s-j" #'gptel-menu
  ;; :g "s-j" #'+whisper-run

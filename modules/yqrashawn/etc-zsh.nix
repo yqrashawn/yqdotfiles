@@ -18,6 +18,7 @@ let
     "$HOME/.config/.foundry/bin"
     "$HOME/.foundry/bin"
     "/Applications/Emacs.app/Contents/MacOS/bin"
+    "/Applications/kitty.app/Contents/MacOS/bin"
     "$HOME/.emacs.d/bin"
     "$HOME/local/bin/funcs"
     # for usc https://github.com/software-mansion/universal-sierra-compiler

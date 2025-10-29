@@ -312,3 +312,18 @@ Example:
       (setq quit-flag nil)
       (signal 'quit nil))
     (if err (signal (car err) (cdr err)) value)))
+
+(defun +kitty-get-project-windows ()
+  (let* ((project-root
+          (string-remove-suffix "/"
+                                (++workspace-current-project-root)))
+         (json (shell-command-to-string
+                (format
+                 (expand-file-name
+                  "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/kitty-ls-project-windows '%s'")
+                 project-root))))
+    (ignore-errors (json-parse-string json))))
+
+(defun +kitty-get-window-last-cmd-output (window-id)
+  (+kitty
+   (format! "@ get-text --match id:%d --extent last_cmd_output" window-id)))

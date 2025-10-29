@@ -1,0 +1,7 @@
+#!/bin/sh
+result=$(kitty @ ls | jq ".[] | .tabs[] | .windows[] | select(.last_reported_cmdline == \"$2\" and (.foreground_processes[-1].cwd == \"$1\"))")
+if [ "$3" = "--id" ]; then
+  echo "$result" | jq -r '.id'
+else
+  echo "$result"
+fi

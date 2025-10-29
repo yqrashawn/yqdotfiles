@@ -1,0 +1,2 @@
+#!/bin/sh
+/Applications/kitty.app/Contents/MacOS/kitty @ ls | jq '[.[] | .tabs[] | .windows[] | select(.foreground_processes[-1].cwd == "'"$1"'")]'
