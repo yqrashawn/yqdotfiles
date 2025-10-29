@@ -309,7 +309,13 @@
 
   (defadvice! +gptel-make-tool (&rest args)
     :after #'gptel-make-tool
-    (+gptel-make-my-presets)))
+    (+gptel-make-my-presets))
+
+  (add-hook! 'gptel-post-response-functions
+    (defun +gptel-notify-done (&rest args)
+      (when (> (or (current-idle-time) 0) 60)
+        (pushover-send
+         "GPTEL Done" "GPTEL Done" :sound "magic")))))
 
 ;;; mcp
 (use-package! mcp

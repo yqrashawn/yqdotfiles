@@ -1106,3 +1106,14 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
                       (symbol-function #'outline-hide-entry)))
              (outline-toggle-children)))
           ((+fold--hideshow-fold-p) (+fold-from-eol (hs-toggle-hiding))))))
+
+(use-package! pushover
+  :defer t)
+
+(comment
+  (pushover-send
+   "test"
+   "test message"
+   :url "http://example.com"
+   :url-title "example.com"
+   :sound "magic"))
