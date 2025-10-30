@@ -258,10 +258,6 @@ Each file is opened (if not already) with `find-file-noselect` relative to
        "</env>"))
     b))
 
-(defvar +llm-project-default-files '())
-(make-variable-buffer-local '+llm-project-default-files)
-(put '+llm-project-default-files 'safe-local-variable #'listp)
-
 (defun ++workspace-current-project-root ()
   (or (persp-parameter '+workspace-project (+workspace-current))
       (when (string= (+workspace-current-name) "main")

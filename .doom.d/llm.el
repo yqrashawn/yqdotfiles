@@ -111,6 +111,30 @@
   (gptel--apply-preset 'cob)
   (gptel--apply-preset 'default))
 
+;;;###autoload
+(defun +gptel (arg)
+  (interactive "P")
+  (cond
+   ((region-active-p) (call-interactively #'gptel-rewrite))
+   ((not arg) (call-interactively #'gptel))
+   ((eq arg 7) (call-interactively #'gptel-menu))
+   ((eq arg 6) (call-interactively #'gptel-context-add))))
+
+(defvar +llm-project-default-files '())
+(make-variable-buffer-local '+llm-project-default-files)
+(put '+llm-project-default-files 'safe-local-variable #'listp)
+(setq! +llm-global-project-default-files
+       '("CLAUDE.md" "AGENTS.md" "README.md" ".github/copilot-instructions.md" "llm.txt"
+         "llm.org" "deps.edn" "shadow-cljs.edn" "package.json"))
+(setq! +llm-project-default-files +llm-global-project-default-files)
+
+(defun +llm-get-project-default-files ()
+  "Return a list of default project files: merge buffer-local with global default files."
+  (delete-dups
+   (append
+    +llm-project-default-files
+    +llm-global-project-default-files)))
+
 (use-package! gptel
   :commands (gptel)
   :init
@@ -196,10 +220,17 @@
                   (mapcar 'window-buffer (window-list))))
         (+gptel-context-add-buffer b))
       (when-let ((root (++workspace-current-project-root)))
-        (dolist (f +llm-project-default-files)
+        (dolist (f (+llm-get-project-default-files))
           (when-let ((file (file-truename (format "%s/%s" root f))))
             (when (f-exists-p file)
               (+gptel-context-add-buffer (find-file-noselect file))))))))
+
+  (defadvice! +after-gptel-send (&optional args)
+    :after #'gptel-send
+    (when (and (bound-and-true-p gptel-mode)
+               (bound-and-true-p evil-local-mode)
+               (evil-insert-state-p))
+      (evil-normal-state)))
 
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"

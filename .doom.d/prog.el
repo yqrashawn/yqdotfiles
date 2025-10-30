@@ -231,7 +231,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
       (dolist (b (mapcar 'window-buffer (window-list)))
         (copilot-chat--add-buffer i b))
 
-      (dolist (f +llm-project-default-files)
+      (dolist (f (+llm-get-project-default-files))
         (when-let ((file (file-truename (format "%s%s" root f))))
           (when (file-exists-p file)
             (copilot-chat--add-buffer i (find-file-noselect file)))))
