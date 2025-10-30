@@ -337,3 +337,16 @@ Example:
           (write-file-functions nil)
           (create-lockfiles nil))
       (basic-save-buffer))))
+
+(defun +lsp-diagnostic-at-point-to-string ()
+  (mapconcat
+   (lambda (diag)
+     (lsp:diagnostic-message diag))
+   (lsp-cur-possition-diagnostics)
+   "\n"))
+
+(defun +lsp-kill-diagnostic-at-point ()
+  (interactive)
+  (kill-new
+   (format! "fix the below lsp diagnostics\n#+begin_src error\n%s\n#+end_src"
+            (+lsp-diagnostic-at-point-to-string))))
