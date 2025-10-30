@@ -1108,7 +1108,8 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
           ((+fold--hideshow-fold-p) (+fold-from-eol (hs-toggle-hiding))))))
 
 (use-package! pushover
-  :defer t)
+  :defer t
+  :commands (pushover-send))
 
 (comment
   (pushover-send

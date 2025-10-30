@@ -344,7 +344,7 @@
 
   (add-hook! 'gptel-post-response-functions
     (defun +gptel-notify-done (&rest args)
-      (when (> (or (current-idle-time) 0) 60)
+      (when (> (float-time (or (current-idle-time) 0)) 60)
         (pushover-send
          "GPTEL Done" "GPTEL Done" :sound "magic")))))
 
