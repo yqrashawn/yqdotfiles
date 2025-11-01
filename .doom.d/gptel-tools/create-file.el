@@ -18,10 +18,11 @@
 
 ;;; Create file buffer implementation
 
-(defun gptelt--create-file-buffer (file-path content-string)
+(defun gptelt--create-file-buffer (callback file-path content-string)
   "Create a new file buffer with FILE-PATH and CONTENT-STRING.
 
 FILE-PATH must be an absolute path.
+CALLBACK is called with the result string when done (async).
 
 This function:
 1. Ensures the file path is absolute
@@ -56,29 +57,32 @@ Returns a string describing the result of the operation."
 
         (set-visited-file-name resolved-path t)
 
-        (gptelt-edit--edit-buffer-impl buffer "" content-string)
+        (gptelt-edit--edit-buffer-impl
+         buffer "" content-string
+         (lambda (result)
+           ;; Determine and set major mode based on file extension
+           (with-current-buffer buffer
+             (let ((auto-mode-alist auto-mode-alist))
+               (set-auto-mode))
 
-        ;; Determine and set major mode based on file extension
-        (let ((auto-mode-alist auto-mode-alist))
-          (set-auto-mode))
+             (save-buffer)
 
-        (save-buffer)
+             ;; Format buffer if LSP is available
+             (when (and (fboundp 'lsp-format-buffer)
+                        (bound-and-true-p lsp-mode))
+               (condition-case err
+                   (progn (lsp-format-buffer)
+                          (save-buffer))
+                 (error (message "LSP formatting failed: %s" err))))
 
-        ;; Format buffer if LSP is available
-        (when (and (fboundp 'lsp-format-buffer)
-                   (bound-and-true-p lsp-mode))
-          (condition-case err
-              (progn (lsp-format-buffer)
-                     (save-buffer))
-            (error (message "LSP formatting failed: %s" err))))
-
-        ;; Buffer created but not displayed to user
-        (format "Successfully created file %s (resolved: %s) with %d characters (project: %s, mode: %s)"
-                file-path
-                resolved-path
-                (length content-string)
-                project-root
-                major-mode)))))
+             ;; Buffer created but not displayed to user
+             (funcall callback
+                      (format "Successfully created file %s (resolved: %s) with %d characters (project: %s, mode: %s)"
+                              file-path
+                              resolved-path
+                              (length content-string)
+                              project-root
+                              major-mode)))))))))
 
 (comment
   (let ((f (make-temp-file "gptelt-create-tool")))
@@ -92,6 +96,7 @@ Returns a string describing the result of the operation."
   (gptelt-make-tool
    :name "create_file_buffer"
    :function #'gptelt--create-file-buffer
+   :async t
    :description "Create a new file with specified content. Only accepts absolute file paths."
    :args '((:name "file_path"
             :type string
@@ -105,16 +110,20 @@ Returns a string describing the result of the operation."
 
 ;;; Create temp file buffer tool implementation
 
-(defun gptelt--create-temp-file-buffer (content-string &optional prefix suffix)
+(defun gptelt--create-temp-file-buffer (callback content-string &optional prefix suffix)
   "Create a temp file, open a buffer for it (not displayed), and return the file path.
 
+CALLBACK is called with the temp file path when done (async).
 PREFIX and SUFFIX are optional; default prefix is \"gptelt-\".
 Buffer is not switched to or displayed. File is created and saved to disk."
   (let* ((tmp-path (make-temp-file (or prefix "gptelt-") nil (or suffix "")))
          (buf (find-file-noselect tmp-path)))
-    (gptelt-edit--edit-buffer-impl buf "" content-string nil nil)
-    (with-current-buffer buf (save-buffer))
-    tmp-path))
+    (gptelt-edit--edit-buffer-impl
+     buf "" content-string
+     (lambda (result)
+       (with-current-buffer buf (save-buffer))
+       (funcall callback tmp-path))
+     nil nil)))
 
 (comment
   (gptelt--create-temp-file-buffer "(message \"temp hello\")" "test-" ".el")
@@ -128,6 +137,7 @@ Buffer is not switched to or displayed. File is created and saved to disk."
   (gptelt-make-tool
    :name "create_temp_file_buffer"
    :function #'gptelt--create-temp-file-buffer
+   :async t
    :description "Create a new temp file with specified content and return the temp file path."
    :args '((:name "content_string" :type string
             :description "The complete content to write to the new file")
