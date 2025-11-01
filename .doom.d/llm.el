@@ -143,7 +143,10 @@
          gptel-expert-commands t
          gptel-temperature 0.8
          gptel-org-branching-context t
-         gptel-track-media t)
+         gptel-track-media t
+         +gptel-disabled-tool-patterns
+         '("^show_api_key$" "^capture_screenshot" "^guess_datetime"))
+
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))
@@ -346,7 +349,18 @@
     (defun +gptel-notify-done (&rest args)
       (when (> (float-time (or (current-idle-time) 0)) 60)
         (pushover-send
-         "GPTEL Done" "GPTEL Done" :sound "magic")))))
+         "GPTEL Done" "GPTEL Done" :sound "magic"))))
+
+  (defadvice! +gptel-filter-tools-before-request (orig-fn &rest args)
+    :around #'gptel-request
+    (let ((gptel-tools
+           (cl-remove-if
+            (lambda (tool)
+              (cl-some (lambda (pattern)
+                         (string-match-p pattern (gptel-tool-name tool)))
+                       +gptel-disabled-tool-patterns))
+            gptel-tools)))
+      (apply orig-fn args))))
 
 ;;; mcp
 (use-package! mcp
