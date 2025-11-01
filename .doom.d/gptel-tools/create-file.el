@@ -112,7 +112,7 @@ PREFIX and SUFFIX are optional; default prefix is \"gptelt-\".
 Buffer is not switched to or displayed. File is created and saved to disk."
   (let* ((tmp-path (make-temp-file (or prefix "gptelt-") nil (or suffix "")))
          (buf (find-file-noselect tmp-path)))
-    (gptelt-edit--edit-buffer-impl buf "" content-string)
+    (gptelt-edit--edit-buffer-impl buf "" content-string nil nil)
     (with-current-buffer buf (save-buffer))
     tmp-path))
 

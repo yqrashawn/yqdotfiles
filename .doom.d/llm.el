@@ -273,7 +273,7 @@
            :stream t))
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--claude-code)
-  (setq! gptel-backend gptel--gh-copilot-local)
+  ;; (setq! gptel-backend gptel--gh-copilot-local)
   (setq! gptel-backend gptel--gh-copilot-business)
   (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-model 'gemini-2.5-pro)
@@ -487,8 +487,8 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
-           :backend gptel--gh-copilot-business
-           ;; :backend gptel--gh-copilot-individual
+           ;; :backend gptel--gh-copilot-business
+           :backend gptel--gh-copilot-individual
            :model 'gpt-4.1
            ;; :model 'gpt-4o
            ;; :model 'gpt-4o-mini
@@ -498,7 +498,8 @@ The user's chat will now follow. Generate the title."))
            :timeout 60
            :cb (lambda (response)
                  (when on-ok
-                   (on-ok (llm-balance-lisp-code--exrtract-md-fence response))))
+                   (funcall on-ok
+                            (llm-balance-lisp-code--exrtract-md-fence response))))
            :error (or on-error 'print)))
          (rst)
          (err))

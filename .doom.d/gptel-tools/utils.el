@@ -101,14 +101,18 @@
          (error nil))
        (sp-region-ok-p (point-min) (point-max))))
 
-(defun gptelt--attempt-llm-balance (buffer)
-  (let* ((mj-mode (buffer-local-value 'major-mode buffer))
-         (res
-          (with-current-buffer buffer
-            (llm-balance-lisp-code
-             (buffer-string)
-             mj-mode))))
-    res))
+(defun gptelt--attempt-llm-balance (buffer callback)
+  "Attempt to balance BUFFER using LLM asynchronously.
+CALLBACK is called with the result plist containing :rst and :err."
+  (let ((mj-mode (buffer-local-value 'major-mode buffer))
+        (code (with-current-buffer buffer (buffer-string))))
+    (llm-balance-lisp-code
+     code
+     mj-mode
+     (lambda (balanced-code)
+       (funcall callback (list :rst balanced-code :err nil)))
+     (lambda (error-msg)
+       (funcall callback (list :rst nil :err error-msg))))))
 
 (defun gptelt--attempt-parinfer-balance (buffer)
   "Use parinfer-rust-mode to attempt to balance BUFFER.
@@ -143,35 +147,40 @@ Does nothing if parinfer-rust-mode not available."
               (cons result error-msg))
           (error (cons nil (error-message-string err))))))))
 
-(defun gptelt--check-buffer-balanced-parens (buffer)
-  "Check if BUFFER has balanced parentheses for Lisp modes.
-Returns (BALANCED-P . ERROR-MESSAGE). Tries parinfer auto-repair if available."
+(defun gptelt--check-buffer-balanced-parens (buffer callback)
+  "Check if BUFFER has balanced parentheses for Lisp modes asynchronously.
+CALLBACK is called with (BALANCED-P . ERROR-MESSAGE).
+Tries LLM auto-repair if unbalanced."
   (let ((mj-mode (buffer-local-value 'major-mode buffer)))
     (if (and (gptelt--is-lisp-mode-p mj-mode)
              (fboundp 'sp-region-ok-p))
         (with-current-buffer buffer
           (condition-case err
               (if (+check-parens)
-                  (cons t nil)
-                ;; Try parinfer auto-repair if unbalanced
-                ;; (gptelt--attempt-parinfer-balance buffer)
-                (let* ((llm-check (gptelt--attempt-llm-balance buffer))
-                       (balanced (plist-get llm-check :rst))
-                       (err (plist-get llm-check :err)))
-                  (if balanced
-                      (progn
-                        (erase-buffer)
-                        (insert balanced)
-                        (if (+check-parens)
-                            (cons t nil)
-                          (cons nil (error "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
-                                           (symbol-name mj-mode)))))
-                    (cons nil err)))
-                ;; (error "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
-                ;;        (symbol-name mj-mode))
-                )
-            (error (cons nil (error-message-string err)))))
-      (cons t nil)))) ; Non-Lisp modes always pass
+                  (funcall callback (cons t nil))
+                ;; Try LLM auto-repair if unbalanced (async)
+                (gptelt--attempt-llm-balance
+                 buffer
+                 (lambda (llm-check)
+                   (let* ((result (if (and (listp llm-check) (plist-get llm-check :rst))
+                                      llm-check
+                                    (list :rst llm-check :err nil)))
+                          (balanced (plist-get result :rst))
+                          (err (plist-get result :err)))
+                     (if balanced
+                         (with-current-buffer buffer
+                           (erase-buffer)
+                           (insert balanced)
+                           (if (+check-parens)
+                               (funcall callback (cons t nil))
+                             (funcall callback
+                                      (cons nil
+                                            (format "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
+                                                    (symbol-name mj-mode))))))
+                       (funcall callback (cons nil err)))))))
+            (error (funcall callback (cons nil (error-message-string err))))))
+      ;; Non-Lisp modes always pass (sync)
+      (funcall callback (cons t nil)))))
 
 (defun gptelt--check-string-balanced-parens (string major-mode-symbol)
   "Check if STRING has balanced parentheses for Lisp MAJOR-MODE-SYMBOL.
@@ -186,7 +195,7 @@ Uses temp buffer."
     (cons t nil)))
 
 (defun gptelt--replace-buffer-directly (buffer result-string)
-  "Apply edit to BUFFER by directly replacing OLD-STRING with NEW-STRING.
+  "Apply edit to BUFFER by replacing entire buffer with RESULT-STRING.
 Returns a message describing the result of the operation."
   (let ((original-buffer buffer)
         (original-point (with-current-buffer buffer (point))))
@@ -196,12 +205,13 @@ Returns a message describing the result of the operation."
       (save-excursion
         (erase-buffer)
         (insert result-string)
-        (save-buffer)
-        (goto-char original-point)
+        (when (buffer-file-name)
+          (+force-save-buffer))
+        (goto-char (min original-point (point-max)))
         (when (and (fboundp 'lsp-format-region)
                    (bound-and-true-p lsp-mode))
           (condition-case err
-              (lsp-format-region replacement-start replacement-end)
+              (lsp-format-region (point-min) (point-max))
             (error (message "LSP formatting failed: %s" err))))))
 
     (format "Successfully replaced text in %s." (buffer-name original-buffer))))

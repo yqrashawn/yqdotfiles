@@ -4,10 +4,11 @@
 
 (defvar gptelt-todo-list nil
   "The current todo list as an elisp list of plists.
-Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY)")
+Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY :created-at TIMESTAMP :updated-at TIMESTAMP :completed-at TIMESTAMP :tags LIST)")
 
 (defun gptelt-todo--project-name ()
   "Get current project name for todo persistence."
+  ;; Use projectile to get project name
   (projectile-project-name (++workspace-current-project-root)))
 
 (defun gptelt-todo--todo-file ()
@@ -38,7 +39,9 @@ Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY
             (if (file-exists-p file)
                 (with-temp-buffer
                   (insert-file-contents file)
-                  (read (current-buffer)))
+                  (condition-case nil
+                      (read (current-buffer))
+                    (error nil)))
               nil)))))
 
 (defun gptelt-todo--ensure-loaded ()
@@ -47,7 +50,7 @@ Each todo is a plist: (:id ID :content CONTENT :status STATUS :priority PRIORITY
   (gptelt-todo--load))
 
 (defun gptelt-todo--make-id ()
-  "Generate a new unique todo id."
+  "Generate a new unique todo id based on timestamp."
   (let ((ts (format-time-string "%Y%m%d%H%M%S%N")))
     (substring ts 0 20)))
 
@@ -101,8 +104,25 @@ Returns the updated todo list."
           (error "Invalid todo status: %s" status))
         (unless (memq priority gptelt-todo-valid-priority)
           (error "Invalid todo priority: %s" priority))
-        (let ((new-id (or id (gptelt-todo--make-id)))
-              (new-item (list :id (or id (gptelt-todo--make-id)) :content content :status status :priority priority)))
+        (let* ((new-id (or id (gptelt-todo--make-id)))
+               (current-time (float-time))
+               (existing-item (seq-find (lambda (item)
+                                          (or (and id (equal (plist-get item :id) id))
+                                              (equal (plist-get item :content) content)))
+                                        gptelt-todo-list))
+               (tags (if (listp todo)
+                        (or (plist-get todo :tags) (cdr (assoc 'tags todo)))
+                      nil))
+               (new-item (list :id new-id
+                              :content content
+                              :status status
+                              :priority priority
+                              :created-at (or (and existing-item (plist-get existing-item :created-at)) current-time)
+                              :updated-at current-time
+                              :completed-at (and (eq status 'completed)
+                                                (or (and existing-item (plist-get existing-item :completed-at))
+                                                    current-time))
+                              :tags (or tags (and existing-item (plist-get existing-item :tags))))))
           (let ((existing-item (seq-find (lambda (item)
                                            (or (and id (equal (plist-get item :id) id))
                                                (equal (plist-get item :content) content)))
@@ -123,19 +143,66 @@ Returns the updated todo list."
     (message "[%d] todos updated" unfinished-count)
     (when (= unfinished-count 0)
       (gptel-todo-clear-all)))
-  gptelt-todo-list
   "Todos have been modified successfully. Ensure that you continue to use the todo list to track your progress. Please proceed with the current tasks if applicable")
 
 (comment
   (gptelt-todo-write '((:content "test task" :status "pending"))))
 
 ;;; API: todo_read
-(defun gptelt-todo-read ()
-  "Return the current todo list as a vector (each item is a plist)."
+(defun gptelt-todo-read (&optional status priority)
+  "Return the current todo list, optionally filtered.
+
+STATUS: Optional filter by status (pending, in_progress, completed)
+PRIORITY: Optional filter by priority (high, medium, low)
+
+Returns a formatted string with progress indicator and filtered todos."
   (gptelt-todo--ensure-loaded)
   (if (seq-empty-p gptelt-todo-list)
-      "No task"
-    (vconcat gptelt-todo-list)))
+      "No tasks"
+    (let* ((filtered-list
+            (seq-filter
+             (lambda (item)
+               (and (or (null status)
+                       (eq (plist-get item :status)
+                           (intern (downcase (format "%s" status)))))
+                    (or (null priority)
+                       (eq (plist-get item :priority)
+                           (intern (downcase (format "%s" priority)))))))
+             gptelt-todo-list))
+           (total-count (length gptelt-todo-list))
+           (completed-count (length (seq-filter
+                                     (lambda (item)
+                                       (eq (plist-get item :status) 'completed))
+                                     gptelt-todo-list)))
+           (filtered-count (length filtered-list)))
+      (if (seq-empty-p filtered-list)
+          (format "No tasks matching filters (status=%s, priority=%s)"
+                  (or status "any") (or priority "any"))
+        (concat
+         (format "# Todo List (%d/%d completed, showing %d)\n\n"
+                 completed-count total-count filtered-count)
+         (mapconcat
+          (lambda (item)
+            (let ((status (plist-get item :status))
+                  (priority (plist-get item :priority))
+                  (content (plist-get item :content))
+                  (tags (plist-get item :tags))
+                  (created (plist-get item :created-at))
+                  (completed (plist-get item :completed-at)))
+              (format "%s [%s] %s%s%s"
+                      (gptelt-todo--status-emoji status)
+                      (upcase (symbol-name priority))
+                      content
+                      (if tags (format " [%s]" (mapconcat 'identity tags ", ")) "")
+                      (if completed
+                          (format " (completed: %s)"
+                                  (format-time-string "%Y-%m-%d %H:%M" completed))
+                        (if created
+                            (format " (created: %s)"
+                                    (format-time-string "%Y-%m-%d %H:%M" created))
+                          "")))))
+          filtered-list
+          "\n"))))))
 
 (comment
   (gptelt-todo-read))
@@ -146,6 +213,23 @@ Returns the updated todo list."
   (setq gptelt-todo-list nil)
   (gptelt-todo--save)
   (message "All todos cleared"))
+
+(defun gptelt-todo-clear-completed ()
+  "Remove all completed todos from the list."
+  (gptelt-todo--ensure-loaded)
+  (let ((completed-count (length (seq-filter
+                                  (lambda (item)
+                                    (eq (plist-get item :status) 'completed))
+                                  gptelt-todo-list))))
+    (setq gptelt-todo-list
+          (seq-filter
+           (lambda (item)
+             (not (eq (plist-get item :status) 'completed)))
+           gptelt-todo-list))
+    (gptelt-todo--save)
+    (format "Cleared %d completed task%s"
+            completed-count
+            (if (= completed-count 1) "" "s"))))
 
 (comment
   (gptel-todo-clear-all))
@@ -183,6 +267,11 @@ Returns the updated todo list."
               (:type string
                :optional t
                :description "More info about current task")
+              :tags
+              (:type array
+               :items (:type string)
+               :optional t
+               :description "Array of tag strings for categorization")
               :id
               (:type string
                :optional t
@@ -196,7 +285,22 @@ Returns the updated todo list."
   (gptelt-make-tool
    :name "todo_read"
    :function #'gptelt-todo-read
-   :description "Read the current todo list."
+   :description "Read the current todo list with optional filtering. Returns formatted output with progress indicator."
+   :args '((:name "status"
+            :type string
+            :optional t
+            :description "Filter by status: pending, in_progress, or completed")
+           (:name "priority"
+            :type string
+            :optional t
+            :description "Filter by priority: high, medium, or low"))
+   :category "todo"
+   :confirm nil
+   :include t)
+  (gptelt-make-tool
+   :name "todo_clear_completed"
+   :function #'gptelt-todo-clear-completed
+   :description "Remove all completed todos from the list. Returns count of cleared tasks."
    :args '()
    :category "todo"
    :confirm nil
