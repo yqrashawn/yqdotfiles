@@ -99,7 +99,7 @@ Returns a string describing the result of the operation."
            (:name "content_string"
             :type string
             :description "The complete content to write to the new file"))
-   :category "emacs"
+   :category "create-file"
    :confirm nil
    :include t))
 
@@ -135,7 +135,7 @@ Buffer is not switched to or displayed. File is created and saved to disk."
             :description "prefix for temp file name (default: gptelt-)")
            (:name "suffix" :type "string" :optional t
             :description "file name suffix (e.g. .el, .py), default: none"))
-   :category "emacs"
+   :category "create-file"
    :confirm nil
    :include t))
 

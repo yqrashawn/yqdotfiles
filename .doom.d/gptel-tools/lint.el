@@ -95,7 +95,7 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
             :type integer
             :description "Number of diagnostics to return (default 50)"
             :optional t))
-   :category "emacs"
+   :category "lint"
    :confirm nil
    :include t)
   (gptelt-make-tool
@@ -113,6 +113,6 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
             :type integer
             :description "Number of diagnostics to return (default 50)"
             :optional t))
-   :category "emacs"
+   :category "lint"
    :confirm nil
    :include t))

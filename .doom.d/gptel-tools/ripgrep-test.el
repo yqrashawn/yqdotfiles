@@ -33,3 +33,16 @@
   (let* ((thisfile (expand-file-name "~/.nixpkgs/.doom.d/init.el"))
          (results (gptelt-rg-tool-search-regex "lexical-binding" (file-name-directory thisfile) "*.el" 10)))
     (should (seq-some (lambda (r) (string-match-p "lexical-binding" (plist-get r :content))) results))))
+
+(ert-deftest gptelt-rg-tool-glob-relative-dir-pattern-test ()
+  "Test glob with relative directory pattern like 'gptel-tools/*.el'."
+  (let ((results (gptelt-rg-tool-glob "gptel-tools/*.el")))
+    (should (and (listp results)
+                 results
+                 (seq-some (lambda (f) (string-match-p "gptel-tools/.*\\.el$" f)) results)))))
+
+(ert-deftest gptelt-rg-tool-glob-nested-dir-pattern-test ()
+  "Test glob with nested directory pattern like 'src/app/*.cljs'."
+  (let ((results (gptelt-rg-tool-glob "src/app/*.cljs")))
+    (should (or (not results) ;; OK if no such files exist
+                (seq-every-p (lambda (f) (string-match-p "src/app/.*\\.cljs$" f)) results)))))

@@ -328,7 +328,7 @@ Returns a string describing the result of the operation."
             :description "The new text to replace the old text with")
            (:name "replace_all" :type boolean
             :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
-   :category "emacs"
+   :category "edit"
    :confirm nil
    :include t))
 
@@ -358,7 +358,7 @@ Returns a string describing the result of the operation."
             :description "The new text to replace the old text with")
            (:name "replace_all" :type boolean
             :description "If true, replace all occurrences. If false or omitted, replace only the first occurrence." :optional t))
-   :category "emacs"
+   :category "edit"
    :confirm nil
    :include t))
 
@@ -480,7 +480,7 @@ Returns a string describing the result."
              :required ["old_string" "new_string"]
              :description "An object with old_string, new_string, and optional replace_all fields for each edit.")
             :description "List of edits: each element is an object with old_string, new_string, and optional replace_all fields, applied sequentially."))
-   :category "emacs"
+   :category "edit"
    :confirm nil
    :include t))
 
@@ -523,7 +523,7 @@ Returns a string describing the result."
              :required ["old_string" "new_string"]
              :description "An object with old_string, new_string, and optional replace_all fields for each edit.")
             :description "List of edits: each element is an object with old_string, new_string, and optional replace_all fields, applied sequentially."))
-   :category "emacs"
+   :category "edit"
    :confirm nil
    :include t))
 

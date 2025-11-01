@@ -131,7 +131,7 @@ The returned result includes a description line with the total lines in the file
             :description "The line number to start reading from. Only provide if the file is too large to read at once")
            (:name "limit" :type integer :optional t :minimum 300
             :description "The number of lines to read. Only provide if the file is too large to read at once. Min value is 300."))
-   :category "emacs"
+   :category "read"
    :confirm nil
    :include t)
 
@@ -148,7 +148,7 @@ The returned result includes a description line with the total lines in the buff
             :description "The line number to start reading from. Only provide if the buffer is too large to read at once")
            (:name "limit" :type integer :optional t :minimum 300
             :description "The number of lines to read. Only provide if the buffer is too large to read at once. Min value is 300."))
-   :category "emacs"
+   :category "read"
    :confirm nil
    :include t))
 

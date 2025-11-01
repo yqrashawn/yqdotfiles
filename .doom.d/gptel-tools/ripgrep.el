@@ -59,8 +59,19 @@ Returns a list of file paths relative to the project root."
             (error (setq results nil))))
       ;; Handle as glob pattern(s)
       (let* ((patterns (split-string pattern nil t))
-             (glob-args (mapconcat (lambda (p) (format "--glob='%s'" p)) patterns " "))
-             (rg-command (format "%s --hidden --files %s" (rg-executable) glob-args)))
+             ;; Normalize patterns: prepend ** for relative dir patterns to search recursively
+             (normalized-patterns
+              (mapcar (lambda (p)
+                        ;; If pattern has / but doesn't start with /, ., or **, prepend **/
+                        (if (and (not (string-prefix-p "/" p))
+                                 (not (string-prefix-p "." p))
+                                 (not (string-prefix-p "**" p))
+                                 (string-match-p "/" p))
+                            (concat "**/" p)
+                          p))
+                      patterns))
+             (glob-args (mapconcat (lambda (p) (format "--glob='%s'" p)) normalized-patterns " "))
+             (rg-command (format "%s --glob-case-insensitive --hidden --files %s" (rg-executable) glob-args)))
         (condition-case _
             (let ((output (shell-command-to-string rg-command)))
               (setq results (split-string output "\n" t)))
@@ -75,7 +86,8 @@ Returns a list of file paths relative to the project root."
         limited-results))))
 
 (comment
-  (gptelt-rg-tool-glob "**/*.clj"))
+  (gptelt-rg-tool-glob "**/*.clj")
+  (gptelt-rg-tool-glob "gptel-tools/*.el"))
 
 ;;; Content search functions
 (defun gptelt-rg-tool-search-content
@@ -145,6 +157,7 @@ Returns a list of search results with file paths, line numbers, and content."
   (gptelt-rg-tool-search-content pattern path include nil nil nil max-results))
 
 (comment
+  (gptelt-rg-tool-search-regex "TODO|regex")
   (gptelt-rg-tool-search-regex "defun.*gptelt" nil "*.el")
   (gptelt-rg-tool-search-regex "src/stores/global"
                                "/Users/yqrashawn/workspace/office/perpdex/perpdex-nextjs"
@@ -157,39 +170,50 @@ Returns a list of search results with file paths, line numbers, and content."
  :name "glob"
  :function #'gptelt-rg-tool-glob
  :description
- "Fast file pattern matching tool that works with any codebase size using ripgrep.Efficiently finds files by name patterns and file types.
+ "Find files by pattern using ripgrep. Fast and works with any codebase size.
 
-Supported pattern types:
-- Glob patterns: '*.el', '**/*.py', 'src/**/*.{js,ts}'
-- Ripgrep type aliases: 'elisp', 'python', 'javascript'
-- Multiple patterns: '*.js *.ts' (space-separated)
+PATTERN TYPES:
+1. Extensions: '*.py', '*.{js,ts,jsx,tsx}'
+2. Name patterns: 'test-*.clj', '*-config.json'
+3. Recursive: '**/*.py' (all subdirectories), 'src/**/*.ts' (under src/)
+4. Relative paths: 'gptel-tools/*.el', 'lib/utils/*.js' (relative to search directory)
+5. Absolute paths: '.doom.d/foo/*.el', '/absolute/path/*.py'
+6. Type aliases: 'elisp', 'python', 'javascript', 'typescript', 'rust', 'go'
+7. Multiple: '*.js *.json' (space-separated)
 
-Usage examples:
-- Find all Python files: glob('*.py')
-- Find TypeScript in src: glob('**/*.ts', 'src')
-- Use type alias: glob('elisp')
-- Limit results: glob('*.js', '/project', 20)
+EXAMPLES:
+glob('*.py')                        → Python files at root level
+glob('**/*.test.js')                → All test files recursively
+glob('gptel-tools/*.el')            → Files in gptel-tools/ directory (relative)
+glob('.doom.d/**/*-test.el')        → Test files in .doom.d/ tree
+glob('src/**/*.{ts,tsx}')           → TypeScript files under src/
+glob('elisp')                       → All Elisp files (type alias)
+glob('*-config.json', 'src')        → Config files in src/ directory
+glob('*.el', '.doom.d/gptel-tools') → Elisp in specific directory
 
-Path parameter supports:
-- 'project' (default): Search from project root
-- 'current': Search from current directory
-- Absolute paths: '/specific/directory'
-- Relative paths: Resolved against project root
+PATH PARAMETER (search root):
+- Omit/'project': Project root (default)
+- 'current': Current directory
+- Absolute: '/specific/directory'
+- Relative: 'src', 'lib' (resolved from project root)
 
-Returns file paths relative to project root when possible, making them easy to use with other tools."
+PERFORMANCE:
+- Respects .gitignore automatically
+- Searches hidden files/directories
+- Returns max 50 results by default (use max_results to change)
+- Extremely fast even on large codebases"
  :args '((:name "pattern"
           :type string
-          :description "The glob pattern to match files against")
+          :description "Glob pattern, type alias, or space-separated patterns to match files")
          (:name "path"
           :type string
           :optional t
-          :description
-          "The directory to search in. Defaults to the current project root.")
+          :description "Directory to search in. Defaults to project root. Can be 'project', 'current', absolute, or relative path.")
          (:name "max_results"
           :type integer
           :optional t
           :description "Maximum number of results to return (default: 50)"))
- :category "file-search"
+ :category "file"
  :confirm nil
  :include t)
 
@@ -197,26 +221,37 @@ Returns file paths relative to project root when possible, making them easy to u
  :name "grep"
  :function #'gptelt-rg-tool-search-regex
  :description
- "Fast content search tool that works with any codebase size using ripgrep. Searches file contents using powerful regular expressions with high performance.
+ "Search file contents using regular expressions with ripgrep. Fast and works with any codebase size.
 
-Regex capabilities:
-- Full regex syntax: 'log.*Error', 'function\\s+\\w+', '^class \\w+'
-- Case-sensitive and case-insensitive search
-- Literal string matching (non-regex) option
-- Context lines: Show N lines before/after matches
+REGEX PATTERNS:
+- Wildcards: 'defun.*gptelt' (any defun containing gptelt)
+- Word boundaries: '\\bfunction\\s+\\w+' (function followed by identifier)
+- Line anchors: '^class \\w+' (start), '\\.js$' (end of line)
+- Alternation: 'TODO|FIXME|HACK' (multiple keywords)
+- Character classes: '[A-Z][a-z]+Error' (CamelCase), '[^;]' (negated)
+- Quantifiers: '\\d+' (digits), '\\d{3,}' (3+ digits), '[A-Z]{2,}' (2+ uppercase)
+- Whitespace: '\\s+' (one or more spaces), '\\s*' (zero or more)
+- Case-insensitive: '(?i)todo|fixme' (ignore case flag)
 
-Usage examples:
-- Find function definitions: grep('function\\s+\\w+')
-- Search in specific files: grep('TODO', '/project', '*.py')
-- Case-sensitive search: grep('Error', '/project', '*.log', true)
-- With context: grep('import.*react', '/src', '*.js', false, false, 3)
+EXAMPLES:
+grep('TODO')                          → Find all TODO comments
+grep('defun gptelt', nil, '*.el')     → Functions in Elisp files
+grep('TODO|FIXME', nil, '*.{js,ts}')  → Multiple patterns in JS/TS
+grep('function\\s+\\w+')              → Function definitions (regex)
+grep('import.*react', nil, '*.jsx')   → React imports
+grep('\\bdefun\\b')                   → Word boundary (exact 'defun')
+grep('^\\s*;;')                       → Lines starting with comments
+grep('(?i)error|warning')             → Case-insensitive search
 
-File filtering options:
-- include parameter: '*.js', '*.{ts,tsx}', '**/*.py'
-- Searches hidden files by default
-- Respects .gitignore patterns
+FILTERING:
+- include: '*.js', '*.{ts,tsx}', '*-test.el'
+- path: Directory to search (default: project root)
+- Respects .gitignore automatically
+- Searches hidden files
 
-Returns structured results with file paths (relative to project root), line numbers, column positions, and matched content. Perfect for code analysis and refactoring tasks."
+RETURNS:
+List of matches with :file (relative path), :line, :column, :content
+Limited to 50 results by default (use max_results to change)"
 
  :args '((:name "pattern"
           :type string
@@ -233,6 +268,6 @@ Returns structured results with file paths (relative to project root), line numb
           :type integer
           :optional t
           :description "Maximum results (default: 50)"))
- :category "content-search"
+ :category "file"
  :confirm nil
  :include t)
