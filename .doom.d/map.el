@@ -149,30 +149,41 @@
    :desc "Resume vertico" "l" #'vertico-repeat)
   (:prefix-map ("fe" . "Edit srcs")
    :desc "Find library" "l" #'find-library
-   :desc "Edit .doom.d config" "d" (cmd! (let ((default-directory (expand-file-name "~/.doom.d/")))
-                                           (call-interactively #'find-file)))
-   :desc "Search in ~/.emacs.d" "m" (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
-                                            (call-interactively #'+default/search-project)))
-   :desc "Edit goku edn config" "k" (cmd!
-                                     ;; (let ((projectile-switch-project-action (cmd!)))
-                                     ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
-                                     (find-file-existing "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
-   :desc "Edit Surge config" "s" (cmd!
-                                  (if (f-exists-p "/Volumes/Surge Profiles/xxxsmart.conf")
-                                      (find-file-existing "/Volumes/Surge Profiles/xxxsmart.conf")
-                                    (find-file-existing "~/Dropbox/application/Surge/xxxsmart.conf")))
-   :desc "Edit nix config" "n" (cmd!
-                                ;; (projectile-switch-project-by-name "~/.nixpkgs/")
-                                (let ((default-directory (expand-file-name "~/.nixpkgs/")))
-                                  (call-interactively #'project-find-file)))
-   :desc "Edit hammerspoon config" "h" (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
-   :desc "Edit surge config" "S" (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
+   :desc "Edit .doom.d config" "d"
+   (cmd! (let ((default-directory (expand-file-name "~/.doom.d/")))
+           (call-interactively #'find-file)))
+   :desc "Search in ~/.emacs.d" "m"
+   (cmd! (let ((default-directory (expand-file-name "~/.emacs.d/")))
+           (call-interactively #'+default/search-project)))
+   :desc "Edit goku edn config" "k"
+   (cmd!
+    ;; (let ((projectile-switch-project-action (cmd!)))
+    ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
+    (find-file-existing
+     "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
+   :desc "Edit Surge config" "s"
+   (cmd!
+    (if (f-exists-p "/Volumes/Surge Profiles/xxxsmart.conf")
+        (find-file-existing "/Volumes/Surge Profiles/xxxsmart.conf")
+      (find-file-existing "~/Dropbox/application/Surge/xxxsmart.conf")))
+   :desc "Edit nix config" "n"
+   (cmd!
+    ;; (projectile-switch-project-by-name "~/.nixpkgs/")
+    (let ((default-directory (expand-file-name "~/.nixpkgs/")))
+      (call-interactively #'project-find-file)))
+   :desc "Edit hammerspoon config" "h"
+   (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
+   :desc "Edit surge config" "S"
+   (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
    :desc "Find library" "l" #'find-library)
-  (:prefix ("o" . "open")
-           (:when (modulep! :tools llm)
-             (:prefix ("l" . "llm")
-              :desc "Reload all gptel tools" "R" #'+gptel-reload-tools
-              :desc "Reload all gptel tools" "L" #'gptelt-log-check))))
+  (:prefix
+   ("o" . "open")
+   (:when (modulep! :tools llm)
+     (:prefix ("l" . "llm")
+      :desc "Reload all gptel tools" "R" #'+gptel-reload-tools
+      :desc "Compress gptel conversation to kill ring" "C"
+      #'llm-compress-buffer-conversation
+      :desc "Reload all gptel tools" "L" #'gptelt-log-check))))
  (:localleader
   (:after js2-mode
           (:map js2-mode-map

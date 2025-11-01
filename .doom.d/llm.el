@@ -512,6 +512,72 @@ The user's chat will now follow. Generate the title."))
           (setq rst fence-content))
         (list :rst rst :err err)))))
 
+;;;###autoload
+(defun llm-compress-buffer-conversation (&optional buffer async)
+  "Compress conversation in BUFFER (defaults to current buffer).
+Save compressed output to kill-ring.
+If ASYNC is non-nil, run asynchronously."
+  (interactive (list (current-buffer) current-prefix-arg))
+  (unless (buffer-live-p buffer)
+    (user-error "Buffer %s is not live" buffer))
+  
+  (with-current-buffer buffer
+    (unless gptel-mode
+      (user-error "Buffer must be in gptel-mode"))
+    
+    (let* ((conversation (gptel--parse-buffer gptel-backend))
+           (compression-prompt
+            "You are a precision compression engine. Convert the entire prior conversation into a concise \"Context Memo\" we can reuse without exceeding the context window.
+
+Hard rules:
+- No speculation or invention. Use only information stated in the chat. Mark unknowns as \"UNKNOWN\".
+- Normalize and deduplicate; collapse repeated ideas; keep canonical names/IDs/dates/URLs.
+- Preserve only what helps continue the task.
+
+Keep (in priority order):
+1) User goals/intents & success criteria
+2) Final decisions made + rationale in one short sentence each
+3) Active constraints (APIs, stack, versions, budgets, deadlines, formats)
+4) User preferences (style, tools, tone) that affect future replies
+5) Open questions/blockers
+6) Next actions/TODOs (who/what/when)
+7) Key facts/figures/IDs/links/artifacts (filenames, endpoints, env vars)
+8) Domain terms/acronyms defined in this chat
+
+Drop:
+- Pleasantries, verbose reasoning, dead ends unless they explain a decision.
+- Long code; keep only names, signatures, or file paths unless a snippet is absolutely essential (<=10 lines)."))
+      
+      (if async
+          (simple-llm-req
+           (format "%s\n\nConversation to compress:\n%s"
+                   compression-prompt
+                   (prin1-to-string conversation))
+           :backend gptel--gh-copilot-individual
+           :model 'gpt-4.1
+           :temperature 0.3
+           :cb (lambda (response)
+                 (kill-new response)
+                 (message "Compressed conversation saved to kill-ring"))
+           :error (lambda (err)
+                    (message "Compression failed: %S" err)))
+        
+        (let ((response
+               (simple-llm-req-sync
+                (format "%s\n\nConversation to compress:\n%s"
+                        compression-prompt
+                        (prin1-to-string conversation))
+                :backend gptel--openrouter
+                :model 'google/gemini-2.5-flash
+                :temperature 0.3)))
+          (kill-new response)
+          (message "Compressed conversation saved to kill-ring")
+          response)))))
+
+(comment
+  (with-current-buffer (current-buffer)
+    (gptel--parse-buffer gptel-backend)))
+
 (comment
   (llm-balance-lisp-code
    (with-file-contents!
