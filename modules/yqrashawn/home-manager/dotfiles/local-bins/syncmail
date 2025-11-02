@@ -27,20 +27,27 @@
        (catch Exception _e)))
 
 (defn new-unread? []
-  (if (pos? (-> (sh notmuch "count" (str "tag:inbox and tag:unread and date:5m.."))
+  (if (pos? (-> (sh notmuch "count"
+                    (str "tag:inbox and tag:unread and date:5m.."))
                 :out
                 s/trim-newline
                 Integer/parseInt))
-    (let [new (-> (sh notmuch "search" "--format" "sexp" "tag:inbox and tag:unread and date:5m..")
-                  :out
-                  edn/read-string)
+    (let [new
+          (->
+           (sh notmuch "search" "--format" "sexp" "tag:inbox and tag:unread and date:5m..")
+           :out
+           edn/read-string)
           new (map #(apply hash-map %) new)]
       (doseq [{:keys [authors subject]} new]
         (a/put! c [(str "New email from " authors) (str "📧" subject) "New email from Notmuch"]))
       (a/put! c :end))
     (a/put! c :end)))
 
-(sh "/run/current-system/sw/bin/bash" (str (System/getenv "HOME") "/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync"))
+(sh
+ "/run/current-system/sw/bin/bash"
+ (str
+  (System/getenv "HOME")
+  "/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync"))
 
 (try
   (sh mbsync "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))
