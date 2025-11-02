@@ -31,7 +31,7 @@
       "zoom"
       # "fleet"
       # "cursor"
-      "microsoft-edge@dev"
+      # "microsoft-edge@dev"
       # "macwhisper"
       # "gpg-suite-no-mail"
       # "steam"
