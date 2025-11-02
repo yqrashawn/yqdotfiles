@@ -167,7 +167,7 @@
        ;; https://codeberg.org/joostkremers/visual-fill-column/issues/4#issuecomment-416571
        visual-fill-column-width 90
        fill-column 80)
-(pushnew! +word-wrap-disabled-modes 'minibuffer-mode)
+(pushnew! +word-wrap-disabled-modes 'minibuffer-mode 'notmuch-search-mode)
 
 (+global-word-wrap-mode +1)
 
