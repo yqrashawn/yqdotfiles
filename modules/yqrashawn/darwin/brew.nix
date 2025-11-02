@@ -22,6 +22,7 @@
     taps = [
       "koekeishiya/formulae"
       "yqrashawn/goku"
+      "cloudentity/tap"
       "homebrew/bundle"
       # "homebrew/cask-fonts"
       # "homebrew/cask-drivers"
@@ -42,6 +43,7 @@
     brews = [
       # "alerter"
       "yqrashawn/goku/goku"
+      cloudentity/tap/oauth2c
       "flyctl"
       "percol"
       # "datalevin"
