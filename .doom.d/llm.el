@@ -469,8 +469,8 @@ The user's chat will now follow. Generate the title."))
             (fence-content (match-string 2 response)))
         (if (string= fence-lang "txt")
             (setq err fence-content)
-          (setq rst fence-content))
-        (list :rst rst :err err)))))
+          (setq rst fence-content))))
+    (list :rst rst :err err)))
 
 (defun llm-balance-lisp-code (code lang-mode &optional on-ok on-error)
   (let* ((async-p (and on-ok on-error))
@@ -577,10 +577,3 @@ Drop:
 (comment
   (with-current-buffer (current-buffer)
     (gptel--parse-buffer gptel-backend)))
-
-(comment
-  (llm-balance-lisp-code
-   (with-file-contents!
-       (expand-file-name "~/Downloads/unbalancedexample")
-     (buffer-string))
-   'clojure-mode))

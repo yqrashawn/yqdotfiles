@@ -110,7 +110,7 @@ CALLBACK is called with the result plist containing :rst and :err."
      code
      mj-mode
      (lambda (balanced-code)
-       (funcall callback (list :rst balanced-code :err nil)))
+       (funcall callback (list :rst (plist-get balanced-code :rst) :err nil)))
      (lambda (error-msg)
        (funcall callback (list :rst nil :err error-msg))))))
 
@@ -162,7 +162,8 @@ Tries LLM auto-repair if unbalanced."
                 (gptelt--attempt-llm-balance
                  buffer
                  (lambda (llm-check)
-                   (let* ((result (if (and (listp llm-check) (plist-get llm-check :rst))
+                   (let* ((result (if (and (listp llm-check)
+                                           (plist-get llm-check :rst))
                                       llm-check
                                     (list :rst llm-check :err nil)))
                           (balanced (plist-get result :rst))
