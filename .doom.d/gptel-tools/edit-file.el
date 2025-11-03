@@ -194,11 +194,12 @@ Please find the EXACT string from the file that matches what I'm trying to chang
 
 ;;; Direct edit application
 
-(defun gptelt-edit--apply-edit-directly (buffer old-string new-string callback &optional replace-all instruction)
+(defun gptelt-edit--apply-edit-directly (buffer old-string new-string callback &optional replace-all instruction skip-save)
   "Apply edit to BUFFER by directly replacing OLD-STRING with NEW-STRING.
 If REPLACE-ALL is non-nil, replace all occurrences. Otherwise, only the first.
 INSTRUCTION is optional natural language description of the change.
 CALLBACK is called with the result message when done (async if LLM correction needed).
+SKIP-SAVE if non-nil, skips saving the buffer (for multi-edit operations).
 
 Tries multiple matching strategies:
 1. Exact match
@@ -236,7 +237,7 @@ Tries multiple matching strategies:
                    (if (search-forward fixed-string nil t)
                        (gptelt-edit--do-replacement
                         original-buffer fixed-string new-string original-point
-                        replace-all callback)
+                        replace-all callback skip-save)
                      (funcall callback
                               (gptelt-edit--generate-error old-string)))))
              (funcall callback
@@ -245,16 +246,17 @@ Tries multiple matching strategies:
       (if match-found
           (gptelt-edit--do-replacement
            original-buffer corrected-old-string new-string original-point
-           replace-all callback)
+           replace-all callback skip-save)
         (funcall callback
                  (gptelt-edit--generate-error old-string))))))
 
-(defun gptelt-edit--do-replacement (buffer old-string new-string original-point replace-all callback)
+(defun gptelt-edit--do-replacement (buffer old-string new-string original-point replace-all callback &optional skip-save)
   "Helper function to perform the actual replacement in BUFFER.
 OLD-STRING is the text to replace, NEW-STRING is the replacement.
 ORIGINAL-POINT is the cursor position before edit.
 REPLACE-ALL determines if all occurrences should be replaced.
-CALLBACK is called with the result message."
+CALLBACK is called with the result message.
+SKIP-SAVE if non-nil, skips saving the buffer (for multi-edit operations)."
   (let ((replacement-count 0)
         (replacement-start nil)
         (replacement-end nil))
@@ -281,7 +283,8 @@ CALLBACK is called with the result message."
               (setq replacement-end (+ start (length new-string)))
               (setq replacement-count 1))))
         
-        (+force-save-buffer)
+        (unless skip-save
+          (+force-save-buffer))
         (when (and (fboundp 'lsp-format-region)
                    (bound-and-true-p lsp-mode))
           (condition-case err
@@ -311,10 +314,16 @@ CALLBACK is called with the result message."
 
 
 ;;; Shared edit logic
-(defun gptelt-edit--edit-buffer-impl (buffer old-string new-string callback &optional replace-all instruction)
+(defun gptelt-edit--edit-buffer-impl-skip-save (buffer old-string new-string callback &optional replace-all instruction)
+  "Wrapper for gptelt-edit--edit-buffer-impl that skips saving.
+Used in multi-edit operations where save is deferred to the end."
+  (gptelt-edit--edit-buffer-impl buffer old-string new-string callback replace-all instruction t))
+
+(defun gptelt-edit--edit-buffer-impl (buffer old-string new-string callback &optional replace-all instruction skip-save)
   "editing BUFFER by replacing OLD-STRING with NEW-STRING.
 If REPLACE-ALL is non-nil, replace all occurrences.
 INSTRUCTION is optional natural language description of the change.
+SKIP-SAVE if non-nil, skips saving the buffer (for multi-edit operations).
 CALLBACK is called with the result string when done (async if LLM correction needed)."
   (let ((mj-mode (buffer-local-value 'major-mode buffer))
         (buf-name (buffer-name buffer))
@@ -340,7 +349,7 @@ CALLBACK is called with the result string when done (async if LLM correction nee
     
     ;; Define the continuation function that does the actual edit
     (let ((do-edit
-           (lambda (final-old-string)
+           (lambda (final-old-string &optional skip-save)
              ;; For Lisp code, check balance in temp buffer (async)
              (if (gptelt-edit--is-lisp-mode-p mj-mode)
                  (let ((temp-buffer (generate-new-buffer " *gptelt-balance-check*")))
@@ -372,7 +381,7 @@ CALLBACK is called with the result string when done (async if LLM correction nee
                                                        (buffer-string))))
                                 (kill-buffer temp-buffer)
                                 (funcall callback
-                                         (gptelt--replace-buffer-directly buffer balanced-string)))
+                                         (gptelt--replace-buffer-directly buffer balanced-string skip-save)))
                             (kill-buffer temp-buffer)
                             (funcall callback
                                      (substring-no-properties
@@ -381,7 +390,7 @@ CALLBACK is called with the result string when done (async if LLM correction nee
                                                   (symbol-name mj-mode)))))))))))
                ;; Non-Lisp mode, proceed directly
                (gptelt-edit--apply-edit-directly
-                buffer final-old-string new-string callback replace-all instruction)))))
+                buffer final-old-string new-string callback replace-all instruction skip-save)))))
       
       ;; If match found or no instruction, proceed synchronously
       (if (or match-found (not instruction))
@@ -567,31 +576,34 @@ CALLBACK is called with the final result message when all edits are done."
   (when (vectorp edits)
     (setq edits (append edits nil)))
   (let ((applied-count 0)
-        (total-edits (length edits)))
+        (total-edits (length edits))
+        (save-needed nil))
     (cl-labels
         ((process-next-edit
-          (remaining-edits)
-          (if (null remaining-edits)
-              ;; All edits done
-              (progn
-                (with-current-buffer buffer
-                  (+force-save-buffer))
-                (funcall callback
-                         (format "Successfully applied %d edits to buffer: %s"
-                                 applied-count (buffer-name buffer))))
-            ;; Process next edit
-            (let* ((oe (car remaining-edits))
-                   (old (plist-get oe :old_string))
-                   (new (plist-get oe :new_string))
-                   (replace-all (plist-get oe :replace_all))
-                   (instruction (plist-get oe :instruction)))
-              (gptelt-edit--edit-buffer-impl
-               buffer old new
-               (lambda (result)
-                 ;; Edit completed, move to next
-                 (setq applied-count (1+ applied-count))
-                 (process-next-edit (cdr remaining-edits)))
-               replace-all instruction)))))
+           (remaining-edits)
+           (if (null remaining-edits)
+               ;; All edits done - save once at the end
+               (progn
+                 (when save-needed
+                   (with-current-buffer buffer
+                     (+force-save-buffer)))
+                 (funcall callback
+                          (format "Successfully applied %d edits to buffer: %s"
+                                  applied-count (buffer-name buffer))))
+             ;; Process next edit
+             (let* ((oe (car remaining-edits))
+                    (old (plist-get oe :old_string))
+                    (new (plist-get oe :new_string))
+                    (replace-all (plist-get oe :replace_all))
+                    (instruction (plist-get oe :instruction)))
+               (gptelt-edit--edit-buffer-impl
+                buffer old new
+                (lambda (result)
+                  ;; Edit completed, mark that we need to save
+                  (setq save-needed t)
+                  (setq applied-count (1+ applied-count))
+                  (process-next-edit (cdr remaining-edits)))
+                replace-all instruction)))))
       (process-next-edit edits))))
 
 

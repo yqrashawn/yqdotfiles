@@ -1160,3 +1160,13 @@ Returns evaluation result if confirmed, otherwise returns rejection message."
     (when-let ((window (get-buffer-window help-window-name)))
       (quit-window t window))
     result))
+
+;;;###autoload
+(defun +lsp-kill-eldoc-at-point ()
+  "Copy LSP eldoc/hover content at point to kill ring."
+  (interactive)
+  (if-let ((msg lsp--eldoc-saved-message))
+      (progn
+        (kill-new msg)
+        (message "Copied eldoc content"))
+    (message "No eldoc content available")))

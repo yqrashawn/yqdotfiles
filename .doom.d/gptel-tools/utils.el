@@ -195,8 +195,9 @@ Uses temp buffer."
         (gptelt--check-buffer-balanced-parens (current-buffer)))
     (cons t nil)))
 
-(defun gptelt--replace-buffer-directly (buffer result-string)
+(defun gptelt--replace-buffer-directly (buffer result-string &optional skip-save)
   "Apply edit to BUFFER by replacing entire buffer with RESULT-STRING.
+SKIP-SAVE if non-nil, skips saving the buffer (for multi-edit operations).
 Returns a message describing the result of the operation."
   (let ((original-buffer buffer)
         (original-point (with-current-buffer buffer (point))))
@@ -206,7 +207,7 @@ Returns a message describing the result of the operation."
       (save-excursion
         (erase-buffer)
         (insert result-string)
-        (when (buffer-file-name)
+        (when (and (buffer-file-name) (not skip-save))
           (+force-save-buffer))
         (goto-char (min original-point (point-max)))
         (when (and (fboundp 'lsp-format-region)

@@ -327,17 +327,10 @@ Example:
 (defun +force-save-buffer ()
   "Save current buffer, answering yes to supersession/lock prompts; skip hooks."
   (interactive)
-  (cl-letf (((symbol-function 'ask-user-about-supersession-threat) (lambda (&rest _) t))
-            ((symbol-function 'ask-user-about-lock) (lambda (&rest _) t))
-            ((symbol-function 'yes-or-no-p) (lambda (&rest _) t))
+  (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest _) t))
             ((symbol-function 'y-or-n-p) (lambda (&rest _) t))
             ((symbol-function 'message) (lambda (&rest _) nil)))
-    (let ((before-save-hook nil)
-          (after-save-hook nil)
-          (write-contents-functions nil)
-          (write-file-functions nil)
-          (create-lockfiles nil))
-      (basic-save-buffer))))
+    (basic-save-buffer)))
 
 (defun +lsp-diagnostic-at-point-to-string ()
   (mapconcat

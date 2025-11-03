@@ -578,3 +578,8 @@ Drop:
 (comment
   (with-current-buffer (current-buffer)
     (gptel--parse-buffer gptel-backend)))
+
+(use-package! gptel-magit
+  :defer t
+  (setq! gptel-magit-model 'gpt-4.1
+         gptel-magit-backend gptel--gh-copilot-individual))
