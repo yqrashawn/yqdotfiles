@@ -49,9 +49,11 @@
   (System/getenv "HOME")
   "/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/notmuch-hooks/pre-sync"))
 
-(try
-  (sh mbsync "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))
-  (catch Exception _e))
+(let [result (sh mbsync "-a" :dir (str (System/getenv "HOME") "/mail/namy.19@gmail.com"))]
+  (when (not= 0 (:exit result))
+    (binding [*out* *err*]
+      (println "mbsync failed with exit code:" (:exit result))
+      (println "stderr:" (:err result)))))
 
 (sh notmuch "new")
 (let [unread-count (-> (sh notmuch "count" "tag:inbox and tag:unread")
