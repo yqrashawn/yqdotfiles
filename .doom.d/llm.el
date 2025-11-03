@@ -118,7 +118,9 @@
    ((region-active-p) (call-interactively #'gptel-rewrite))
    ((not arg) (call-interactively #'gptel))
    ((eq arg 7) (call-interactively #'gptel-menu))
-   ((eq arg 90) (funcall #'gptel-context-remove-all))
+   ((eq arg 90)
+    (progn (funcall #'gptel-context-remove-all)
+           (message "gptel context removed!")))
    ((eq arg 6) (call-interactively #'gptel-context-add))))
 
 (defvar +llm-project-default-files '())
