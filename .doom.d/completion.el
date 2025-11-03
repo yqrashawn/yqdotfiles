@@ -135,10 +135,11 @@
          +preserve-recency-tmp-minibuffer-completion-styles nil)))))
 
 (after! cape
-  (setq! cape-dict-file (list
-                         (expand-file-name "~/Dropbox/sync/personal_dict")
-                         (expand-file-name "~/Dropbox/sync/gh_username_dict")
-                         "/usr/share/dict/words")))
+  (setq! cape-dict-file
+         (list
+          (expand-file-name "~/Dropbox/sync/personal_dict")
+          (expand-file-name "~/Dropbox/sync/gh_username_dict")
+          "/usr/share/dict/words")))
 
 (after! yasnippet-capf
   (add-hook! 'yas-minor-mode-hook :append

@@ -157,8 +157,6 @@
            (call-interactively #'+default/search-project)))
    :desc "Edit goku edn config" "k"
    (cmd!
-    ;; (let ((projectile-switch-project-action (cmd!)))
-    ;;   (projectile-switch-project-by-name "~/.nixpkgs/"))
     (find-file-existing
      "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn"))
    :desc "Edit Surge config" "s"
@@ -168,13 +166,18 @@
       (find-file-existing "~/Dropbox/application/Surge/xxxsmart.conf")))
    :desc "Edit nix config" "n"
    (cmd!
-    ;; (projectile-switch-project-by-name "~/.nixpkgs/")
     (let ((default-directory (expand-file-name "~/.nixpkgs/")))
       (call-interactively #'project-find-file)))
+   :desc "Find gptel file" "a"
+   (cmd!
+    (let ((completion-styles '(orderless fussy basic))
+          (consult-async-split-style nil)
+          (default-directory
+           (file-truename
+            (expand-file-name "~/Dropbox/sync/gptel"))))
+      (consult-fd default-directory)))
    :desc "Edit hammerspoon config" "h"
    (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
-   :desc "Edit surge config" "S"
-   (cmd! (find-file-existing "~/Dropbox/sync/surge/D.conf"))
    :desc "Find library" "l" #'find-library)
   (:prefix
    ("o" . "open")
