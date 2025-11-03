@@ -583,5 +583,50 @@ Drop:
 
 (use-package! gptel-magit
   :defer t
-  (setq! gptel-magit-model 'gpt-4.1
-         gptel-magit-backend gptel--gh-copilot-individual))
+  :config
+  (setq!
+   gptel-magit-model 'gpt-4.1
+   gptel-magit-backend gptel--gh-copilot-individual
+   gptel-magit-commit-prompt
+   "You are an expert at writing Git commits compliant with @commitlint/config-conventional.
+
+STRUCTURE:
+<type>(<optional scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+
+REQUIRED RULES (errors):
+1. type: MUST be one of: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
+2. type: MUST be lowercase
+3. type: MUST NOT be empty
+4. description: MUST NOT be empty
+5. description: MUST start with lowercase (never sentence-case, start-case, pascal-case, or upper-case)
+6. description: MUST NOT end with a period
+7. header (type + scope + description): MUST be 100 characters or less
+8. body: each line MUST be 100 characters or less
+9. footer: each line MUST be 100 characters or less
+
+WARNINGS (should follow):
+- body: MUST have a leading blank line before it
+- footer: MUST have a leading blank line before it
+
+CONVENTIONS:
+- Use imperative mood (\"add feature\" not \"added feature\")
+- scope: optional, describes codebase section, e.g., fix(parser):
+- body: provide additional context, wrap at 100 chars per line
+- footer: use for BREAKING CHANGE or issue references
+
+EXAMPLES:
+feat(api): add user authentication endpoint
+
+fix: resolve memory leak in cache manager
+
+docs(readme): update installation instructions
+
+refactor(core): simplify error handling logic
+
+This improves maintainability and reduces complexity.
+
+BREAKING CHANGE: the error format has changed"))
