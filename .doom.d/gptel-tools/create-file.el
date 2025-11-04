@@ -154,4 +154,4 @@ Buffer is not switched to or displayed. File is created and saved to disk."
 
 (provide 'create-file-buffer-tool)
 
-;;; create-file-buffer-tool.el ends here
+;;; create-file-tool.el ends here

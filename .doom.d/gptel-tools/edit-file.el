@@ -312,13 +312,7 @@ SKIP-SAVE if non-nil, skips saving the buffer (for multi-edit operations)."
                 (format "\n\nFound similar text nearby:\n%s" similar-text)
               ""))))
 
-
 ;;; Shared edit logic
-(defun gptelt-edit--edit-buffer-impl-skip-save (buffer old-string new-string callback &optional replace-all instruction)
-  "Wrapper for gptelt-edit--edit-buffer-impl that skips saving.
-Used in multi-edit operations where save is deferred to the end."
-  (gptelt-edit--edit-buffer-impl buffer old-string new-string callback replace-all instruction t))
-
 (defun gptelt-edit--edit-buffer-impl (buffer old-string new-string callback &optional replace-all instruction skip-save)
   "editing BUFFER by replacing OLD-STRING with NEW-STRING.
 If REPLACE-ALL is non-nil, replace all occurrences.
@@ -429,6 +423,7 @@ This function:
   (let ((buffer (get-buffer buffer-name)))
     (unless buffer
       (error "Buffer not found: %s" buffer-name))
+    (+gptel-tool-revert-to-be-edited-buffer buffer)
     (gptelt-edit--edit-buffer-impl buffer old-string new-string callback replace-all instruction)))
 
 (comment
@@ -436,7 +431,9 @@ This function:
     (with-current-buffer (find-file-noselect f)
       (erase-buffer)
       (insert "old")
-      (gptelt-edit-edit-buffer (current-buffer) "old" "new")
+      (gptelt-edit-edit-buffer
+       'ignore
+       (current-buffer)"old" "new")
       (buffer-string))))
 
 (defun gptelt-edit-edit-file (callback file-path old-string new-string &optional replace-all instruction)
@@ -617,6 +614,7 @@ CALLBACK is called with the result string when all edits are done."
   (let ((buffer (get-buffer buffer-name)))
     (unless buffer
       (error "Buffer not found: %s" buffer-name))
+    (+gptel-tool-revert-to-be-edited-buffer buffer)
     (gptelt-edit--multi-edit-buffer-impl buffer edits callback)))
 
 (comment
@@ -766,4 +764,4 @@ CALLBACK is called with the result string when all edits are done."
    :include t))
 
 
-;;; gptel-edit-tool.el ends here
+;;; edit-file.el ends here
