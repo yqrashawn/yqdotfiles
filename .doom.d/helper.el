@@ -329,7 +329,8 @@ Example:
   (interactive)
   (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest _) t))
             ((symbol-function 'y-or-n-p) (lambda (&rest _) t))
-            ((symbol-function 'message) (lambda (&rest _) nil)))
+            ((symbol-function 'message) (lambda (&rest _) nil))
+            ((symbol-function 'ask-user-about-supersession-threat) (lambda (&rest _) nil)))
     (basic-save-buffer)))
 
 (defun +lsp-diagnostic-at-point-to-string ()
