@@ -101,7 +101,9 @@
   (defun +preserve-recency-for-short-queries ()
     "Use basic completion for very short queries to preserve recency order."
     (when (and (minibufferp)
-               (memq 'fussy completion-styles))
+               (or
+                (memq 'fussy +preserve-recency-tmp-minibuffer-completion-styles)
+                (memq 'fussy completion-styles)))
       (when (memq (completion-metadata-get
                    (ignore-errors
                      (completion-metadata
@@ -167,7 +169,8 @@
     (dolist (buf (mapcar #'window-buffer (window-list)))
       (with-current-buffer buf
         (when pabbrev-mode
-          (let ((inhibit-message t))
+          (cl-letf
+              (((symbol-function 'message) (lambda (&rest _) nil)))
             (pabbrev-scavenge-buffer-fast))))))
 
 
