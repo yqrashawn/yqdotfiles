@@ -365,7 +365,17 @@ A plist has an even number of elements and alternates between keywords and value
 (defun gptelt-make-tool (&rest args)
   ;; (when (null (plist-get args :args))
   ;;   (error ":args must be a list"))
-  (let ((tool (apply #'gptel-make-tool args)))
+  (let* ((is-async (plist-get args :async))
+         (original-fn (plist-get args :function))
+         (wrapped-fn
+          (if is-async
+              ;; Wrap async functions to catch errors and pass to callback
+              (lambda (callback &rest fn-args)
+                (condition-case err
+                    (apply original-fn callback fn-args)
+                  (error (funcall callback (format "Error: %s" (error-message-string err))))))
+            original-fn))
+         (tool (apply #'gptel-make-tool (plist-put args :function wrapped-fn))))
     (gptelt-mcp-register-one-gptel-tool tool)
     tool
     ;; nil
