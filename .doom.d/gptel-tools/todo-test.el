@@ -232,3 +232,5 @@
               (should (> (plist-get updated-todo :updated-at) updated-at))
               (should (null (plist-get updated-todo :completed-at)))))))
     (gptelt-todo-test-teardown)))
+
+;;; todo-test.el ends here

@@ -29,3 +29,5 @@
 (ert-deftest gptelt-visible-buffers-test ()
   "Test visible-buffers returns all currently visible tool buffers."
   (should (not (seq-empty-p (gptelt-visible-buffers)))))
+
+;;; buffer-test.el ends here

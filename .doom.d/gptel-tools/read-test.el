@@ -38,3 +38,5 @@
           (should (string-match-p "␂ReadBufferTest123" result))
           (should (string-match-p "foobar\n␃" result)))
       (kill-buffer buf))))
+
+;;; read-test.el ends here

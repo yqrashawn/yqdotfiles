@@ -111,18 +111,18 @@ Returns the updated todo list."
                                               (equal (plist-get item :content) content)))
                                         gptelt-todo-list))
                (tags (if (listp todo)
-                        (or (plist-get todo :tags) (cdr (assoc 'tags todo)))
-                      nil))
+                         (or (plist-get todo :tags) (cdr (assoc 'tags todo)))
+                       nil))
                (new-item (list :id new-id
-                              :content content
-                              :status status
-                              :priority priority
-                              :created-at (or (and existing-item (plist-get existing-item :created-at)) current-time)
-                              :updated-at current-time
-                              :completed-at (and (eq status 'completed)
-                                                (or (and existing-item (plist-get existing-item :completed-at))
-                                                    current-time))
-                              :tags (or tags (and existing-item (plist-get existing-item :tags))))))
+                               :content content
+                               :status status
+                               :priority priority
+                               :created-at (or (and existing-item (plist-get existing-item :created-at)) current-time)
+                               :updated-at current-time
+                               :completed-at (and (eq status 'completed)
+                                                  (or (and existing-item (plist-get existing-item :completed-at))
+                                                      current-time))
+                               :tags (or tags (and existing-item (plist-get existing-item :tags))))))
           (let ((existing-item (seq-find (lambda (item)
                                            (or (and id (equal (plist-get item :id) id))
                                                (equal (plist-get item :content) content)))
@@ -163,11 +163,11 @@ Returns a formatted string with progress indicator and filtered todos."
             (seq-filter
              (lambda (item)
                (and (or (null status)
-                       (eq (plist-get item :status)
-                           (intern (downcase (format "%s" status)))))
+                        (eq (plist-get item :status)
+                            (intern (downcase (format "%s" status)))))
                     (or (null priority)
-                       (eq (plist-get item :priority)
-                           (intern (downcase (format "%s" priority)))))))
+                        (eq (plist-get item :priority)
+                            (intern (downcase (format "%s" priority)))))))
              gptelt-todo-list))
            (total-count (length gptelt-todo-list))
            (completed-count (length (seq-filter
@@ -231,7 +231,62 @@ Returns a formatted string with progress indicator and filtered todos."
             completed-count
             (if (= completed-count 1) "" "s"))))
 
+(defun gptelt-todo-clear-all-completed ()
+  "Check all persisted .todo.el files and clear completed tasks in them."
+  (interactive)
+  (let ((todo-dir (expand-file-name "gptelt-todo" user-emacs-directory))
+        (total-cleared 0))
+    (unless (file-directory-p todo-dir)
+      (error "Todo directory does not exist: %s" todo-dir))
+    (dolist (file (directory-files todo-dir t "\\.todo\\.el$"))
+      (let ((todo-list (with-temp-buffer
+                         (insert-file-contents file)
+                         (condition-case nil
+                             (read (current-buffer))
+                           (error nil)))))
+        (when todo-list
+          (let* ((completed-count (length (seq-filter
+                                           (lambda (item)
+                                             (eq (plist-get item :status) 'completed))
+                                           todo-list)))
+                 (filtered-list (seq-filter
+                                 (lambda (item)
+                                   (not (eq (plist-get item :status) 'completed)))
+                                 todo-list)))
+            (when (> completed-count 0)
+              (with-current-buffer (find-file-noselect file)
+                (erase-buffer)
+                (prin1 filtered-list (current-buffer))
+                (let ((inhibit-message t)) (save-buffer)))
+              (setq total-cleared (+ total-cleared completed-count)))))))
+    ;; (message "Cleared %d completed task%s from all todo files"
+    ;;          total-cleared
+    ;;          (if (= total-cleared 1) "" "s"))
+    ))
+
+(defvar gptelt-todo--idle-timer nil
+  "Timer for auto-clearing completed todos.")
+
+(defun gptelt-todo-setup-auto-clear ()
+  "Setup idle timer to auto-clear completed todos after 30 minutes of idle time."
+  (when gptelt-todo--idle-timer
+    (cancel-timer gptelt-todo--idle-timer))
+  (setq gptelt-todo--idle-timer
+        (run-with-idle-timer (* 30 60) t #'gptelt-todo-clear-all-completed)))
+
+(after! gptel
+  (gptelt-todo-setup-auto-clear))
+
+(defun gptelt-todo-cancel-auto-clear ()
+  "Cancel the auto-clear idle timer."
+  (interactive)
+  (when gptelt-todo--idle-timer
+    (cancel-timer gptelt-todo--idle-timer)
+    (setq gptelt-todo--idle-timer nil)
+    (message "Auto-clear completed todos disabled")))
+
 (comment
+  (gptelt-todo-clear-completed)
   (gptel-todo-clear-all))
 
 (comment
@@ -305,3 +360,5 @@ Returns a formatted string with progress indicator and filtered todos."
    :category "todo"
    :confirm nil
    :include t))
+
+;;; todo.el ends here

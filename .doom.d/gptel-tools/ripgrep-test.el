@@ -46,3 +46,5 @@
   (let ((results (gptelt-rg-tool-glob "src/app/*.cljs")))
     (should (or (not results) ;; OK if no such files exist
                 (seq-every-p (lambda (f) (string-match-p "src/app/.*\\.cljs$" f)) results)))))
+
+;;; ripgrep-test.el ends here

@@ -218,3 +218,5 @@
   :around #'consult--find
   (let ((completion-styles '(orderless partial-completion basic)))
     (funcall orig-fn prompt builder initial)))
+
+;;; completion.el ends here

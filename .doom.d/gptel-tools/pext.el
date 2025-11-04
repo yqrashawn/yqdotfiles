@@ -21,3 +21,5 @@
    :category "browser"
    :confirm nil
    :include t))
+
+;;; pext.el ends here

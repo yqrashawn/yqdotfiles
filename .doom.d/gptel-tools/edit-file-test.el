@@ -83,3 +83,5 @@
               (should (string-match-p "theta" b2-content)))))
       (when (file-exists-p temp1-path) (delete-file temp1-path))
       (when (file-exists-p temp2-path) (delete-file temp2-path)))))
+
+;;; edit-file-test.el ends here

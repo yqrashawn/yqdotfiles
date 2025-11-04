@@ -271,3 +271,5 @@ Limited to 50 results by default (use max_results to change)"
  :category "file"
  :confirm nil
  :include t)
+
+;;; ripgrep.el ends here

@@ -283,3 +283,5 @@ Returns the source code string if available, or an error if not found."
    :category "clojure"
    :confirm nil
    :include t))
+
+;;; cljs.el ends here

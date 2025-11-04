@@ -12,7 +12,16 @@
 
 ;;; Tool: Lint Buffer (gathers diagnostics/warnings/errors for a buffer)
 (defun gptelt-lint-buffer (buffer-name &optional offset limit)
-  "Get lint diagnostics for BUFFER-NAME as a structured list. Supports LSP, Flycheck, Flymake, and package-lint for elisp. (Docstring limited to 80 chars width.)
+  "Get all linter diagnostics configured by user for BUFFER-NAME.
+
+Returns diagnostics from user's chosen linters (LSP, Flycheck, Flymake, package-lint).
+These are type errors, lint errors, and warnings configured per-file-type:
+- Elisp: elisp-lint, package-lint
+- TypeScript/TSX: TypeScript type checker, ESLint/Biome
+- Python: mypy/pyright, ruff/flake8
+- etc.
+
+Use this AFTER making changes to verify code correctness.
 Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
   (let* ((buf (get-buffer buffer-name))
          (mode (and buf (buffer-local-value 'major-mode buf)))
@@ -47,8 +56,6 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
             (apply #'append
                    (mapcar
                     (lambda (item)
-                      (setq jjjitem item)
-                      (setq item jjjitem)
                       (let ((src (plist-get item :source))
                             (diags (plist-get item :diagnostics)))
                         (ht-map (lambda (k diag)
@@ -66,7 +73,10 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
 
 ;;; lint file
 (defun gptelt-lint-file (file-path &optional offset limit)
-  "Get lint diagnostics for FILE-PATH. Opens the file if not already loaded and reuses `gptelt-lint-buffer`.
+  "Get all linter diagnostics configured by user for FILE-PATH.
+
+Opens file if needed, then returns diagnostics from user's chosen linters.
+Use this AFTER making changes to verify code correctness.
 Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
   (let* ((file-path (expand-file-name file-path))
          (buf (or (get-file-buffer file-path)
@@ -83,7 +93,16 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
   (gptelt-make-tool
    :name "lint_buffer"
    :function #'gptelt-lint-buffer
-   :description "Lint a file (by name) and return all available diagnostics from various linters."
+   :description "Get all diagnostics from user-configured linters for a buffer (Flycheck/Flymake/LSP/package-lint).
+
+Returns type errors, lint errors, and warnings based on user's per-file-type linter setup:
+- Elisp: elisp-lint, package-lint
+- TypeScript/TSX/JavaScript: TypeScript compiler, ESLint/Biome
+- Python: mypy/pyright, ruff/flake8
+- Other languages: LSP diagnostics, language-specific linters
+
+IMPORTANT: Use this tool AFTER completing file modifications to verify correctness.
+Check this at the end of each task to ensure no errors were introduced."
    :args '((:name "buffer_name"
             :type string
             :description "The name of the buffer to lint.")
@@ -101,7 +120,13 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
   (gptelt-make-tool
    :name "lint_file"
    :function #'gptelt-lint-file
-   :description "Lint a file (by absolute path) and return all available diagnostics from various linters."
+   :description "Get all diagnostics from user-configured linters for a file by absolute path.
+
+Returns type errors, lint errors, and warnings based on user's per-file-type linter setup.
+Opens file if not already loaded.
+
+IMPORTANT: Use this tool AFTER completing file modifications to verify correctness.
+Check this at the end of each task to ensure no errors were introduced."
    :args '((:name "file_path"
             :type string
             :description "Absolute path to the file to lint.")
@@ -116,3 +141,5 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
    :category "lint"
    :confirm nil
    :include t))
+
+;;; lint.el ends here

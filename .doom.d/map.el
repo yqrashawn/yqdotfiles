@@ -863,3 +863,5 @@
           :gn "S" #'mcp-hub-start-server
           :gn "x" #'mcp-hub-close-server
           :gn "X" #'mcp-hub-close-all-server)))
+
+;;; map.el ends here

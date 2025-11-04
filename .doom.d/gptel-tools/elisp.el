@@ -26,7 +26,7 @@
     (setq win (unless shown-before (display-buffer buf)))
     (when (or
            shown-before
-           (y-or-n-p (format "Evaluate buffer %s? " buffer-name)))
+           (or t (y-or-n-p (format "Evaluate buffer %s? " buffer-name))))
       (setq eval-err
             (condition-case err
                 (progn
@@ -335,3 +335,5 @@
    :category "elisp"
    :confirm nil
    :include t))
+
+;;; elisp.el ends here

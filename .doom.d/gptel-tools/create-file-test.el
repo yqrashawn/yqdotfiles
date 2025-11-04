@@ -11,3 +11,5 @@
           (should (and (file-exists-p fname)
                        (string-match-p "foo-bar" (gptelt-read-file fname 0 2000)))))
       (when (file-exists-p fname) (delete-file fname)))))
+
+;;; create-file-test.el ends here

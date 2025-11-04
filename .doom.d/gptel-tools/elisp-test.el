@@ -98,3 +98,5 @@
       (setq result (gptelt-evaluate-elisp-string elisp-string)))
     (should (and (stringp result)
                  (string-match-p "Error evaluating elisp string" result)))))
+
+;;; elisp-test.el ends here

@@ -165,17 +165,7 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 ;; accept completion from copilot and fallback to company
 (use-package! copilot
-  :hook ((go-mode
-          rjsx-mode
-          js2-mode
-          js-ts-mode
-          typescript-mode
-          tsx-ts-mode
-          jtsx-tsx-mode
-          jtsx-jsx-mode
-          clojure-mode
-          clojurescript-mode
-          clojurec-mode) . copilot-mode)
+  :hook ((prog-mode) . copilot-mode)
   :init
   (setq! copilot-max-char -1
          copilot-idle-delay 10
@@ -328,3 +318,5 @@ This can be added to `completion-at-point-functions`."
     (if (and params (assq :engine params))
         (funcall orig-fun body params)
       (funcall orig-fn orig-fun body params))))
+
+;;; prog.el ends here

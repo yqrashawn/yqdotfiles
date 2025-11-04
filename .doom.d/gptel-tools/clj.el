@@ -485,3 +485,5 @@ shows buffer if not visible, asks for user permission, and evaluates it."
    :category "clojure"
    :confirm nil
    :include t))
+
+;;; clj.el ends here

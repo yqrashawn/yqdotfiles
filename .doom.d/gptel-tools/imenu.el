@@ -18,3 +18,5 @@ Signals an error if the buffer doesn't support imenu."
 
 (comment
   (get-buffer-imenu-symbols (current-buffer)))
+
+;;; imenu.el ends here

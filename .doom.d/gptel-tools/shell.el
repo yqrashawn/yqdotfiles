@@ -247,3 +247,5 @@ If ACTIVE-ONLY is non-nil, only list active sessions."
    :category "shell"
    :confirm nil
    :include t))
+
+;;; shell.el ends here

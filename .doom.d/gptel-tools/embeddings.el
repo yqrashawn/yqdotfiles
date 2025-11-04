@@ -122,3 +122,5 @@ use the default Jina AI endpoint."
   ;; list of 2 vector
   (setq jkjk (+llm-jina-code-embeddings '("foo" "bar")))
   (setq jkjkj (+llm-jina-query-embeddings '("foo" "bar"))))
+
+;;; embeddings.el ends here
