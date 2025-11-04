@@ -170,12 +170,12 @@
       (call-interactively #'project-find-file)))
    :desc "Find gptel file" "a"
    (cmd!
-    (let ((completion-styles '(orderless fussy basic))
-          (consult-async-split-style nil)
-          (default-directory
-           (file-truename
-            (expand-file-name "~/Dropbox/sync/gptel"))))
-      (consult-fd default-directory)))
+    (let ((buf (+vertico/consult-fd-or-find
+                (file-truename
+                 (expand-file-name "~/Dropbox/sync/gptel")))))
+      (with-current-buffer buf
+        (gptel-mode +1))
+      buf))
    :desc "Edit hammerspoon config" "h"
    (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
    :desc "Find library" "l" #'find-library)

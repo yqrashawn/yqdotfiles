@@ -100,30 +100,30 @@
   ;; Preserve chronological order for short queries in file completion
   (defun +preserve-recency-for-short-queries ()
     "Use basic completion for very short queries to preserve recency order."
-    (when (and
-           (minibufferp)
-           (memq (completion-metadata-get
-                  (ignore-errors
-                    (completion-metadata
-                     ""
-                     minibuffer-completion-table
-                     minibuffer-completion-predicate))
-                  'category)
-                 '(file project-file buffer)))
-      (if (<= (- (point-max) (minibuffer-prompt-end)) 4)
+    (when (and (minibufferp)
+               (memq 'fussy completion-styles))
+      (when (memq (completion-metadata-get
+                   (ignore-errors
+                     (completion-metadata
+                      ""
+                      minibuffer-completion-table
+                      minibuffer-completion-predicate))
+                   'category)
+                  '(file project-file buffer))
+        (if (<= (- (point-max) (minibuffer-prompt-end)) 4)
+            (progn
+              (when (null +preserve-recency-tmp-minibuffer-completion-styles)
+                (setq-local
+                 +preserve-recency-tmp-minibuffer-completion-styles
+                 completion-styles))
+              (setq-local completion-styles '(orderless partial-completion)))
           (progn
-            (when (null +preserve-recency-tmp-minibuffer-completion-styles)
-              (setq-local
-               +preserve-recency-tmp-minibuffer-completion-styles
-               completion-styles))
-            (setq-local completion-styles '(orderless partial-completion)))
-        (progn
-          (setq-local
-           completion-styles
-           (or +preserve-recency-tmp-minibuffer-completion-styles
-               '(orderless hotfuzz fussy partial-completion)))
-          (setq-local
-           +preserve-recency-tmp-minibuffer-completion-styles nil)))))
+            (setq-local
+             completion-styles
+             (or +preserve-recency-tmp-minibuffer-completion-styles
+                 '(orderless hotfuzz fussy partial-completion)))
+            (setq-local
+             +preserve-recency-tmp-minibuffer-completion-styles nil))))))
 
   (add-hook! 'minibuffer-setup-hook
     (defun +preserve-recency-for-short-queries-h ()
@@ -200,3 +200,9 @@
   ;;   (with-ivy-window
   ;;     (swiper--isearch-function str)))
   )
+
+
+(defadvice! +consult--find (orig-fn prompt builder initial)
+  :around #'consult--find
+  (let ((completion-styles '(orderless partial-completion basic)))
+    (funcall orig-fn prompt builder initial)))
