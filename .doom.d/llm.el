@@ -385,7 +385,11 @@
 
      (setq-default gptel--preset 'default)))
   (setq! mcp-log-level 'debug)
-  (setq! mcp-log-level 'info))
+  (setq! mcp-log-level 'info)
+
+  (defadvice! +mcp-make-text-tool (orig-fn name tool-name &optional asyncp)
+    :around #'mcp-make-text-tool
+    (plist-put (funcall orig-fn name tool-name asyncp) :include t)))
 
 (defvar simple-llm-req-p nil)
 
@@ -603,7 +607,7 @@ STRUCTURE:
 
 [optional footer(s)]
 
-REQUIRED RULES (errors):
+IMPORTANT REQUIRED RULES (errors):
 1. type: MUST be one of: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
 2. type: MUST be lowercase
 3. type: MUST NOT be empty
