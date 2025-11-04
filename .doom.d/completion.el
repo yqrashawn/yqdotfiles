@@ -156,8 +156,20 @@
   :hook (doom-first-file . global-pabbrev-mode)
   :init
   (require 'cape)
-  (setq! pabbrev-use-built-in-completion nil
-         pabbrev-idle-timer-verbose nil)
+  (setq!
+   pabbrev-use-built-in-completion nil
+   pabbrev-scavenge-some-chunk-size 200
+   pabbrev-idle-timer-verbose nil
+   pabbrev-global-mode-buffer-size-limit 240000)
+
+  (defun +pabbrev-scavenge-all-visible-buffers ()
+    (interactive)
+    (dolist (buf (mapcar #'window-buffer (window-list)))
+      (with-current-buffer buf
+        (when pabbrev-mode
+          (let ((inhibit-message t))
+            (pabbrev-scavenge-buffer-fast))))))
+
 
   ;; (setq-local completion-at-point-functions (list))
   (add-hook! 'pabbrev-mode-hook

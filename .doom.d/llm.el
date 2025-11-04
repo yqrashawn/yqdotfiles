@@ -363,7 +363,13 @@
                          (string-match-p pattern (gptel-tool-name tool)))
                        +gptel-disabled-tool-patterns))
             gptel-tools)))
-      (apply orig-fn args))))
+      (apply orig-fn args)))
+
+  (after! pabbrev
+    (add-hook! 'buffer-list-update-hook
+      (defun +pabbrev-scavenge-all-visible-buffers-for-gptel ()
+        (when (bound-and-true-p gptel-mode)
+          (+pabbrev-scavenge-all-visible-buffers))))))
 
 ;;; mcp
 (use-package! mcp
