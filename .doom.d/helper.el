@@ -258,10 +258,12 @@ Each file is opened (if not already) with `find-file-noselect` relative to
        "</env>"))
     b))
 
+(setq! ++fake-project-root
+       (file-truename "~/Library/CloudStorage/Dropbox/sync/fake-workspace/"))
+
 (defun ++workspace-current-project-root ()
-  (or (persp-parameter '+workspace-project (+workspace-current))
-      (when (string= (+workspace-current-name) "main")
-        (expand-file-name "~/.nixpkgs"))))
+  (or (persp-parameter '++workspace-project-root)
+      ++fake-project-root))
 
 ;;;###autoload
 (defun ++workspace-set-project-to-current-buffer-project ()
@@ -272,7 +274,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (unless (doom-project-root)
     (user-error "No project root"))
   (set-persp-parameter
-   '+workspace-project (doom-project-root) (+workspace-current)))
+   '++workspace-project-root (doom-project-root) (+workspace-current)))
 
 (defun +tmp-file-p (file-path)
   (or

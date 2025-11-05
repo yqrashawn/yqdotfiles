@@ -365,3 +365,25 @@ See `dwim-shell-command-execute-script' for all other params."
       (let ((win-id (completing-read "Select Kitty window: " choices nil t)))
         (kill-new
          (+kitty-get-window-last-cmd-output (cdr (assoc win-id choices))))))))
+
+;; make sure every workspace has a ++workspace-project-root param
+(add-hook!
+ 'persp-created-functions
+ (defun ++auto-set-persp-project-root (p _phash)
+   (cond
+    ((string= (persp-name p) +workspaces-main)
+     (set-persp-parameter
+      '++workspace-project-root
+      (expand-file-name "~/.nixpkgs") p)))))
+
+(defadvice! ++workspaces-switch-to-project-auto-set-persp-project-root-h ()
+  :after #'+workspaces-switch-to-project-h
+  (set-persp-parameter
+   '++workspace-project-root
+   (doom-project-root)
+   (if (string-match-p
+        "^\\*.*\\*$"
+        (+workspace-current-name))
+       ++fake-project-root
+     (doom-project-root))
+   (+workspace-current)))
