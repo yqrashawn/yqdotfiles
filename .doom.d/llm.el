@@ -643,3 +643,14 @@ refactor(core): simplify error handling logic
 This improves maintainability and reduces complexity.
 
 BREAKING CHANGE: the error format has changed"))
+
+(after! gptel
+  ;; Store gptel-context when switching away
+  (add-hook! 'persp-before-deactivate-functions
+    (defun +gptel-store-context-in-persp (_)
+      (set-persp-parameter 'gptel-context gptel-context)))
+
+  ;; Restore gptel-context when switching to a perspective
+  (add-hook! 'persp-activated-functions
+    (defun +gptel-restore-context-from-persp (_)
+      (setq gptel-context (persp-parameter 'gptel-context)))))

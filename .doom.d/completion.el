@@ -171,7 +171,9 @@
         (when pabbrev-mode
           (cl-letf
               (((symbol-function 'message) (lambda (&rest _) nil)))
-            (pabbrev-scavenge-buffer-fast))))))
+            ;; (pabbrev-scavenge-buffer)
+            (pabbrev-scavenge-buffer-fast)
+            )))))
 
 
   ;; (setq-local completion-at-point-functions (list))
