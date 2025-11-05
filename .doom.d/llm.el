@@ -583,11 +583,14 @@ Drop:
                 :backend gptel--openrouter
                 :model 'google/gemini-2.5-flash
                 :temperature 0.3)))
-          (kill-new response)
+          (kill-new (gptel--convert-markdown->org response))
           (message "Compressed conversation saved to kill-ring")
           response)))))
 
 (comment
+  (kill-new "abc")
+  (let ((str) (gptel--convert-markdown->org (buffer-string)))
+    str)
   (with-current-buffer (current-buffer)
     (gptel--parse-buffer gptel-backend)))
 
