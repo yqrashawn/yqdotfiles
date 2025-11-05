@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: context drawer
+# key: ctx
+# uuid: ctx
+# --
+#+begin_context
+`%`$0
+#+end_context

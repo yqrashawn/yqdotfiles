@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: memo drawer
+# key: memo
+# uuid: memo
+# --
+#+begin_memo
+`%`$0
+#+end_memo
