@@ -445,7 +445,7 @@ A plist has an even number of elements and alternates between keywords and value
                 context formatted-error)))))
       (funcall orig-fn id params method-metrics))))
 
-(defun +gptel-tool-revert-to-be-edited-buffer (buf)
+(defun +gptel-tool-revert-to-be-visited-buffer (buf)
   (let ((buf (or buf (current-buffer)))
         (buf-name (buffer-file-name buf)))
     (when (and buf-name
@@ -453,6 +453,6 @@ A plist has an even number of elements and alternates between keywords and value
                (file-exists-p buf-name)
                (not (verify-visited-file-modtime buf)))
       (with-current-buffer buf
-        (revert-buffer :ignore-auto :noconfirm)))))
+        (revert-buffer :ignore-auto :noconfirm t)))))
 
 ;;; utils.el ends here

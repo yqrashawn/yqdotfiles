@@ -423,7 +423,7 @@ This function:
   (let ((buffer (get-buffer buffer-name)))
     (unless buffer
       (error "Buffer not found: %s" buffer-name))
-    (+gptel-tool-revert-to-be-edited-buffer buffer)
+    (+gptel-tool-revert-to-be-visited-buffer buffer)
     (gptelt-edit--edit-buffer-impl buffer old-string new-string callback replace-all instruction)))
 
 (comment
@@ -614,7 +614,7 @@ CALLBACK is called with the result string when all edits are done."
   (let ((buffer (get-buffer buffer-name)))
     (unless buffer
       (error "Buffer not found: %s" buffer-name))
-    (+gptel-tool-revert-to-be-edited-buffer buffer)
+    (+gptel-tool-revert-to-be-visited-buffer buffer)
     (gptelt-edit--multi-edit-buffer-impl buffer edits callback)))
 
 (comment

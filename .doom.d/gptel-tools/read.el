@@ -63,8 +63,8 @@
             (let ((start (point)))
               (forward-line max-lines)
               (let ((content (buffer-substring-no-properties start (point))))
-                (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[File path: %s]\n"
-                                total-lines start-line end-line file_path)
+                (concat (format "[File path: %s]\n[Total lines: %d]\n[Content lines: %d-%d]\n"
+                                file_path total-lines start-line end-line)
                         "\n␂" content "␃")))))))))
 
 (comment
@@ -74,10 +74,14 @@
    (expand-file-name "~/Library/CloudStorage/Dropbox/Screenshots/CleanShot 2025-09-16 at 08.45.48@2x.png")))
 
 (defun gptelt-read-buffer (buffer_name &optional offset limit)
-  "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Nil if not exists. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the buffer and the start/end line numbers of the wrapped content. For image files, returns the base64-encoded content without any wrappers or descriptions."
-  (when-let ((b (get-buffer buffer_name)))
+  "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Errors if buffer not exists. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the buffer and the start/end line numbers of the wrapped content. For image files, returns the base64-encoded content without any wrappers or descriptions."
+  (let ((b (get-buffer buffer_name)))
+    (unless b
+      (error "Buffer not found: %s" buffer_name))
     (with-current-buffer b
-      (when (llm-danger-buffer-p) (error "User denied the read request"))
+      (when (buffer-file-name b)
+        (+gptel-tool-revert-to-be-visited-buffer b))
+      (when (llm-danger-buffer-p b) (error "User denied the read request"))
       (if-let ((file-name (buffer-file-name b)))
           (if (gptelt--image-file-p file-name)
               ;; Handle image files: return direct base64 without wrapping
@@ -150,9 +154,152 @@ The returned result includes a description line with the total lines in the buff
             :description "The number of lines to read. Only provide if the buffer is too large to read at once. Min value is 300."))
    :category "read"
    :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "read_multiple_files"
+   :function #'gptelt-read-multiple-files
+   :description
+   "Read multiple files in one call with per-file offset and limit control. Returns a list where each element is either a successful read (with :file-path and :content) or a failed read (with :file-path and :error). This is more efficient than calling read_file multiple times when you need to read several files.
+
+Each result in the returned list is a plist with:
+- :file-path - The file path that was attempted
+- :content - The file content (if successful, same format as read_file)
+- :error - Error message (if failed, e.g., file not found, not readable, permission denied)"
+   :args
+   '((:name "file_requests"
+      :type array
+      :items (:type object
+              :properties
+              (:file_path
+               (:type string
+                :description "Absolute path to the file to read")
+               :offset
+               (:type integer
+                :optional t
+                :minimum 0
+                :description "Line number to start reading from")
+               :limit
+               (:type integer
+                :optional t
+                :minimum 300
+                :description "Number of lines to read"))
+              :required ["file_path"]
+              :description "File request object with file_path (required), offset (optional), and limit (optional)")
+      :description "List of file requests to read"))
+   :category "read"
+   :confirm nil
    :include t))
+
+(defun gptelt-read-multiple-files (file_requests)
+  "Read multiple files and return their contents or errors.
+FILE_REQUESTS is a list or vector where each element is a plist with:
+  - :file-path (required) - absolute file path
+  - :offset (optional) - line number to start reading from
+  - :limit (optional) - number of lines to read
+Returns a list of plists, each containing either:
+  - :file-path, :content (successful read)
+  - :file-path, :error (failed read with error message)"
+  ;; Convert vector to list if needed
+  (when (vectorp file_requests)
+    (setq file_requests (append file_requests nil)))
+  (unless (listp file_requests)
+    (error "file_requests must be a list or vector"))
+  (mapcar
+   (lambda (req)
+     (let* ((file-path (or (plist-get req :file_path)
+                           (plist-get req :file-path)))
+            (offset (or (plist-get req :offset)
+                        (plist-get req :offset)))
+            (limit (or (plist-get req :limit)
+                       (plist-get req :limit))))
+       (condition-case err
+           (let ((content (gptelt-read-file file-path offset limit)))
+             (if content
+                 (list :file-path file-path :content content)
+               (list :file-path file-path :error "File not readable")))
+         (error (list :file-path file-path :error (error-message-string err))))))
+   file_requests))
+
+(comment
+  (gptelt-read-multiple-files
+   (list (list :file-path (expand-file-name "deps.edn" "~/.nixpkgs"))
+         (list :file-path (expand-file-name "shadow-cljs.edn" "~/.nixpkgs")
+               :offset 0
+               :limit 10)
+         (list :file-path (expand-file-name "nonexistent.txt" "~/.nixpkgs")))))
 
 (comment
   (gptelt-read-buffer "read.el"))
+
+(when (fboundp 'gptelt-make-tool)
+  (gptelt-make-tool
+   :name "read_multiple_buffers"
+   :function #'gptelt-read-multiple-buffers
+   :description
+   "Read multiple buffers in one call with per-buffer offset and limit control. Returns a list where each element is either a successful read (with :buffer-name and :content) or a failed read (with :buffer-name and :error). This is more efficient than calling read_buffer multiple times when you need to read several buffers.
+
+Each result in the returned list is a plist with:
+- :buffer-name - The buffer name that was attempted
+- :content - The buffer content (if successful, same format as read_buffer)
+- :error - Error message (if failed, e.g., buffer not found)"
+   :args
+   '((:name "buffer_requests"
+      :type array
+      :items (:type object
+              :properties (:buffer_name (:type string
+                                         :description "The buffer name to read")
+                                        :offset (:type integer
+                                                 :optional t
+                                                 :minimum 0
+                                                 :description "Line number to start reading from")
+                                        :limit (:type integer
+                                                :optional t
+                                                :minimum 300
+                                                :description "Number of lines to read"))
+              :required ["buffer_name"]
+              :description "Buffer request object with buffer_name (required), offset (optional), and limit (optional)")
+      :description "List of buffer requests to read"))
+   :category "read"
+   :confirm nil
+   :include t))
+
+(defun gptelt-read-multiple-buffers (buffer_requests)
+  "Read multiple buffers and return their contents or errors.
+BUFFER_REQUESTS is a list or vector where each element is a plist with:
+  - :buffer-name (required) - buffer name
+  - :offset (optional) - line number to start reading from
+  - :limit (optional) - number of lines to read
+Returns a list of plists, each containing either:
+  - :buffer-name, :content (successful read)
+  - :buffer-name, :error (failed read with error message)"
+  ;; Convert vector to list if needed
+  (when (vectorp buffer_requests)
+    (setq buffer_requests (append buffer_requests nil)))
+  (unless (listp buffer_requests)
+    (error "buffer_requests must be a list or vector"))
+  (mapcar
+   (lambda (req)
+     (let* ((buffer-name (or (plist-get req :buffer_name)
+                             (plist-get req :buffer-name)))
+            (offset (or (plist-get req :offset)
+                        (plist-get req :offset)))
+            (limit (or (plist-get req :limit)
+                       (plist-get req :limit))))
+       (condition-case err
+           (let ((content (gptelt-read-buffer buffer-name offset limit)))
+             (if content
+                 (list :buffer-name buffer-name :content content)
+               (list :buffer-name buffer-name :error "Buffer not found")))
+         (error (list :buffer-name buffer-name :error (error-message-string err))))))
+   buffer_requests))
+
+(comment
+  (gptelt-read-multiple-buffers
+   (list (list :buffer-name "read.el")
+         (list :buffer-name "edit-file.el"
+               :offset 0
+               :limit 50)
+         (list :buffer-name "nonexistent-buffer"))))
 
 ;;; read.el ends here
