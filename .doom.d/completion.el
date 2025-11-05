@@ -137,11 +137,13 @@
          +preserve-recency-tmp-minibuffer-completion-styles nil)))))
 
 (after! cape
-  (setq! cape-dict-file
-         (list
-          (expand-file-name "~/Dropbox/sync/personal_dict")
-          (expand-file-name "~/Dropbox/sync/gh_username_dict")
-          "/usr/share/dict/words")))
+  (setq!
+   cape-dabbrev-buffer-function '+visible-buffers
+   cape-dict-file
+   (list
+    (expand-file-name "~/Dropbox/sync/personal_dict")
+    (expand-file-name "~/Dropbox/sync/gh_username_dict")
+    "/usr/share/dict/words")))
 
 (after! yasnippet-capf
   (add-hook! 'yas-minor-mode-hook :append
@@ -162,7 +164,19 @@
    pabbrev-use-built-in-completion nil
    pabbrev-scavenge-some-chunk-size 200
    pabbrev-idle-timer-verbose nil
-   pabbrev-global-mode-buffer-size-limit 240000)
+   pabbrev-global-mode-buffer-size-limit 240000
+   my-pabbrev-shared-usage-hash (make-hash-table :test 'equal)
+   my-pabbrev-shared-prefix-hash (make-hash-table :test 'equal))
+
+  (defun my-pabbrev-use-shared-hash ()
+    "Use shared hash tables for prog-mode and text-mode derived modes."
+    (when (and (or (derived-mode-p 'prog-mode)
+                   (derived-mode-p 'text-mode))
+               (not (get major-mode 'pabbrev-usage-hash)))
+      (put major-mode 'pabbrev-usage-hash my-pabbrev-shared-usage-hash)
+      (put major-mode 'pabbrev-prefix-hash my-pabbrev-shared-prefix-hash)))
+  
+  (add-hook! 'after-change-major-mode-hook #'my-pabbrev-use-shared-hash)
 
   (defun +pabbrev-scavenge-all-visible-buffers ()
     (interactive)
