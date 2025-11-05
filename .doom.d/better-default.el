@@ -916,8 +916,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 ;; quote “
 ;; quote ”
 
-(after! persp-mode
-  (setq persp-auto-save-opt 0))
+;; (after! persp-mode
+;;   (setq persp-auto-save-opt 1))
 
 (use-package aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))

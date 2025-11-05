@@ -274,7 +274,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (unless (doom-project-root)
     (user-error "No project root"))
   (set-persp-parameter
-   '++workspace-project-root (doom-project-root) (+workspace-current)))
+   '++workspace-project-root (doom-project-root)))
 
 (defun +tmp-file-p (file-path)
   (or
