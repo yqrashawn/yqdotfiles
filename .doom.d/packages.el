@@ -456,6 +456,7 @@
 (package! jtsx)
 (package! lsp-biome :recipe (:host github :repo "cxa/lsp-biome"))
 (package! pushover)
+(package! acp)
 ;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
 
 ;; Local Variables:

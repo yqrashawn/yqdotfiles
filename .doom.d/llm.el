@@ -654,3 +654,43 @@ BREAKING CHANGE: the error format has changed"))
   (add-hook! 'persp-activated-functions
     (defun +gptel-restore-context-from-persp (_)
       (setq gptel-context (persp-parameter 'gptel-context)))))
+
+
+(comment
+  (require 'acp)
+  (load! "~/workspace/home/gptelacp/gptelacp.el")
+  ;; Test function to verify ACP backend is detected
+  (defun gptel-acp-test ()
+    "Test if ACP backend is being detected and custom FSM is created."
+    (interactive)
+    (let ((is-acp (gptel-acp-p gptel-backend))
+          (fsm (gptel-acp--make-fsm))
+          (wait-handlers (alist-get 'WAIT (gptel-fsm-handlers (gptel-acp--make-fsm)))))
+      (message "Is ACP backend: %s\nWAIT handlers: %S\nFirst handler: %s"
+               is-acp
+               wait-handlers
+               (car wait-handlers))))
+
+  (gptel-acp-test)
+
+  (progn
+    (call-interactively 'balance-windows)
+    (unload-feature 'gptelacp t)        ; Force unload
+    (load! "~/workspace/home/gptelacp/gptelacp.el")
+    (setq! gptel--claude-code-acp
+           (gptel-make-acp "claude-code-acp"
+             :command (executable-find "claude-code-acp")
+             :models '(claude-sonnet-4-5)
+             :host "claude code via acp"))
+    (setq! gptel-backend gptel--claude-code-acp)
+    (setq! gptel-model 'claude-sonnet-4-5)
+    (gptel-acp-test))
+
+  (condition-case err
+      (simple-llm-req-sync
+       "what's your name"
+       :backend gptel--claude-code-acp
+       :model 'claude-sonnet-4-5)
+    (message
+     "ERROR:%s"
+     (error-message-string err))))
