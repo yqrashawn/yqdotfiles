@@ -179,7 +179,7 @@
     (let* ((buffer (window-buffer win))
            (buf-file (or (buffer-file-name buffer)
                          (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                           (buffer-file-name base-buffer)))))
+                             (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -410,10 +410,13 @@
         (on-error (clj/get args :error 'clj/identity)))
     (gptel-request prompt
       :stream nil
-      :callback (lambda (response info)
-                  (if response
-                      (funcall on-finish response)
-                    (funcall on-error info))))))
+      :callback
+      (lambda (response info)
+        (if response
+            (funcall on-finish (log/spy response))
+          (progn
+            (message "ERRR")
+            (funcall on-error (log/spy info))))))))
 
 (defun simple-llm-req-sync (prompt &rest args)
   (await-callback
@@ -657,27 +660,8 @@ BREAKING CHANGE: the error format has changed"))
 
 
 (comment
-  (require 'acp)
-  (load! "~/workspace/home/gptelacp/gptelacp.el")
-  ;; Test function to verify ACP backend is detected
-  (defun gptel-acp-test ()
-    "Test if ACP backend is being detected and custom FSM is created."
-    (interactive)
-    (let ((is-acp (gptel-acp-p gptel-backend))
-          (fsm (gptel-acp--make-fsm))
-          (wait-handlers (alist-get 'WAIT
-                                    (gptel-fsm-handlers (gptel-acp--make-fsm)))))
-      (message "Is ACP backend: %s\nWAIT handlers: %S\nFirst handler: %s"
-               is-acp
-               wait-handlers
-               (car wait-handlers))))
-
-  (gptel-acp-test)
-
   (progn
-    (call-interactively 'balance-windows)
-    (unload-feature 'gptelacp t)        ; Force unload
-    (load! "~/workspace/home/gptelacp/gptelacp.el")
+    (require 'acp)
     (setq! gptel--claude-code-acp
            (gptel-make-acp "claude-code-acp"
              :command (executable-find "claude-code-acp")
@@ -691,26 +675,10 @@ BREAKING CHANGE: the error format has changed"))
                          "--stop-function=elisp-dev-mcp-disable"])
                 (env . [((name . "EMACS_MCP_DEBUG_LOG")
                          (value . "/Users/yqrashawn/mcp-lib.log"))])))))
-    (setq! gptel-backend gptel--claude-code-acp)
-    (setq! gptel-model 'claude-sonnet-4-5))
-
-  (progn
-    (call-interactively 'balance-windows)
-    (setq! gptel--codex
-           (gptel-make-openai "Codex"
-             :host "localhost:18683"
-             :endpoint "/v1/chat/completions"
-             :stream t
-             :key "no-key"
-             :models gptel--codex-models))
-    (setq! gptel-backend gptel--codex)
-    (setq! gptel-model 'gpt-5-codex))
-
-  (condition-case err
-      (simple-llm-req-sync
-       "what's your name"
-       :backend gptel--claude-code-acp
-       :model 'claude-sonnet-4-5)
-    (message
-     "ERROR:%s"
-     (error-message-string err))))
+    (simple-llm-req
+     "hi"
+     :backend gptel--claude-code-acp
+     :model 'claude-sonnet-4-5
+     :cb 'message           
+     :error 'message)
+    nil))
