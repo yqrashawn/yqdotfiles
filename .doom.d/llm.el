@@ -81,7 +81,7 @@
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
     :description "default preset"
-    :backend "CopilotI"
+    :backend "CopilotB"
     :model 'claude-sonnet-4.5
     ;; :system (alist-get 'default gptel-directives)
     :system (alist-get 'claude gptel-directives)
@@ -179,7 +179,7 @@
     (let* ((buffer (window-buffer win))
            (buf-file (or (buffer-file-name buffer)
                          (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                             (buffer-file-name base-buffer)))))
+                           (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -271,8 +271,8 @@
   (setq! gptel--gh-copilot-business
          (gptel-make-gh-copilot "CopilotB"
            :host "api.business.githubcopilot.com"
-           :models gptel--gh-copilot-business-models
            :curl-args (list "--insecure")
+           :models gptel--gh-b-models
            :stream t))
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--claude-code)
@@ -501,7 +501,7 @@ The user's chat will now follow. Generate the title."))
            f
            (format "```%s\n%s\n```" lang code)
            ;; :backend gptel--gh-copilot-business
-           :backend gptel--gh-copilot-individual
+           :backend gptel--gh-copilot-business
            :model 'gpt-4.1
            ;; :model 'gpt-4o
            ;; :model 'gpt-4o-mini
@@ -566,7 +566,7 @@ Drop:
            (format "%s\n\nConversation to compress:\n%s"
                    compression-prompt
                    (prin1-to-string conversation))
-           :backend gptel--gh-copilot-individual
+           :backend gptel--gh-copilot-business
            :model 'gpt-4.1
            :temperature 0.3
            :cb (lambda (response)
@@ -599,7 +599,7 @@ Drop:
   :config
   (setq!
    gptel-magit-model 'gpt-4.1
-   gptel-magit-backend gptel--gh-copilot-individual
+   gptel-magit-backend gptel--gh-copilot-business
    gptel-magit-commit-prompt
    "You are an expert at writing Git commits compliant with @commitlint/config-conventional.
 
@@ -665,7 +665,8 @@ BREAKING CHANGE: the error format has changed"))
     (interactive)
     (let ((is-acp (gptel-acp-p gptel-backend))
           (fsm (gptel-acp--make-fsm))
-          (wait-handlers (alist-get 'WAIT (gptel-fsm-handlers (gptel-acp--make-fsm)))))
+          (wait-handlers (alist-get 'WAIT
+                                    (gptel-fsm-handlers (gptel-acp--make-fsm)))))
       (message "Is ACP backend: %s\nWAIT handlers: %S\nFirst handler: %s"
                is-acp
                wait-handlers
@@ -681,10 +682,29 @@ BREAKING CHANGE: the error format has changed"))
            (gptel-make-acp "claude-code-acp"
              :command (executable-find "claude-code-acp")
              :models '(claude-sonnet-4-5)
-             :host "claude code via acp"))
+             :host "claude code via acp"
+             :mcp-servers
+             '(((name . "emacs")
+                (command .
+                         "~/.emacs.d/.local/cache/emacs-mcp-stdio.sh")
+                (args . ["--init-function=elisp-dev-mcp-enable"
+                         "--stop-function=elisp-dev-mcp-disable"])
+                (env . [((name . "EMACS_MCP_DEBUG_LOG")
+                         (value . "/Users/yqrashawn/mcp-lib.log"))])))))
     (setq! gptel-backend gptel--claude-code-acp)
-    (setq! gptel-model 'claude-sonnet-4-5)
-    (gptel-acp-test))
+    (setq! gptel-model 'claude-sonnet-4-5))
+
+  (progn
+    (call-interactively 'balance-windows)
+    (setq! gptel--codex
+           (gptel-make-openai "Codex"
+             :host "localhost:18683"
+             :endpoint "/v1/chat/completions"
+             :stream t
+             :key "no-key"
+             :models gptel--codex-models))
+    (setq! gptel-backend gptel--codex)
+    (setq! gptel-model 'gpt-5-codex))
 
   (condition-case err
       (simple-llm-req-sync

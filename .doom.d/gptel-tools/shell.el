@@ -30,7 +30,7 @@ For longer-running commands, returns just the session ID."
              (let* ((_state (detached-session-state updated-session))
                     (status (detached-session-status updated-session))
                     (exit-code (detached-session-exit-code updated-session))
-                    (output (detached-session-output updated-session))
+                    (output (+safe-detached-session-output updated-session))
                     (duration (detached-session-duration updated-session)))
                (funcall callback
                         (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
@@ -90,7 +90,8 @@ Output File: %s"
                            output-file)))
         (funcall callback info)))))
 
-(defun gptelt-shell-get-shell-command-session-output (callback session-id &optional lines)
+(defun gptelt-shell-get-shell-command-session-output
+    (callback session-id &optional lines)
   "Get output from SESSION-ID.
 CALLBACK is called with the output string.
 If LINES is provided, return only the last N lines."
@@ -99,7 +100,7 @@ If LINES is provided, return only the last N lines."
     (if (not session)
         (funcall callback
                  (format "Session not found: %s" session-id))
-      (let ((output (detached-session-output session)))
+      (let ((output (+safe-detached-session-output session)))
         (if lines
             (let* ((lines-list (split-string output "\n"))
                    (total-lines (length lines-list))
@@ -107,6 +108,11 @@ If LINES is provided, return only the last N lines."
                    (last-n-lines (seq-subseq lines-list start)))
               (funcall callback (string-join last-n-lines "\n")))
           (funcall callback output))))))
+
+(comment
+  (gptelt-shell-get-shell-command-session-output
+   'message
+   "43f3532b4ecb931ddd928b45ec7e1a84"))
 
 (defun gptelt-shell-kill-shell-command-session (callback session-id)
   "Kill the detached session with SESSION-ID.

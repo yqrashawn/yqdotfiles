@@ -347,3 +347,7 @@ Example:
   (kill-new
    (format! "fix the below lsp diagnostics\n#+begin_src error\n%s\n#+end_src"
             (+lsp-diagnostic-at-point-to-string))))
+
+(defun +safe-detached-session-output (session)
+  (or (ignore-errors (detached-session-output session))
+      ""))
