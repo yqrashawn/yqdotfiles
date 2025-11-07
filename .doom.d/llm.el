@@ -210,7 +210,8 @@
       ;; Remove only the specific context buffers we manage, not all context
       (dolist (buf (list (+current-workspace-info-buffer)
                          (+visible-buffers-list-buffer)
-                         (+magit-wip-diff-n-min-buffer 5)))
+                         (+magit-wip-diff-n-min-buffer 5)
+                         (+current-workspace-lints-buffer)))
         (setf (alist-get buf gptel-context nil 'remove) nil))
       
       ;; Re-add updated context
@@ -664,17 +665,17 @@ BREAKING CHANGE: the error format has changed"))
     (require 'acp)
     (setq! gptel--claude-code-acp
            (gptel-make-acp "claude-code-acp"
-             :command (executable-find "claude-code-acp")
-             :models '(claude-sonnet-4-5)
-             :host "claude code via acp"
-             :mcp-servers
-             '(((name . "emacs")
-                (command .
-                         "~/.emacs.d/.local/cache/emacs-mcp-stdio.sh")
-                (args . ["--init-function=elisp-dev-mcp-enable"
-                         "--stop-function=elisp-dev-mcp-disable"])
-                (env . [((name . "EMACS_MCP_DEBUG_LOG")
-                         (value . "/Users/yqrashawn/mcp-lib.log"))])))))
+                           :command (executable-find "claude-code-acp")
+                           :models '(claude-sonnet-4-5)
+                           :host "claude code via acp"
+                           :mcp-servers
+                           '(((name . "emacs")
+                              (command .
+                                       "~/.emacs.d/.local/cache/emacs-mcp-stdio.sh")
+                              (args . ["--init-function=elisp-dev-mcp-enable"
+                                       "--stop-function=elisp-dev-mcp-disable"])
+                              (env . [((name . "EMACS_MCP_DEBUG_LOG")
+                                       (value . "/Users/yqrashawn/mcp-lib.log"))])))))
     (simple-llm-req
      "hi"
      :backend gptel--claude-code-acp

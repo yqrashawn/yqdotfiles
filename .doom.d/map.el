@@ -806,7 +806,8 @@
           :n "C-k" #'gptel-context-previous))
  (:after gptel
          (:map gptel-mode-map
-          :g "C-3" (cmd! ())))
+          :g "C-3" (cmd! ())
+          :nv "RET" nil))
  (:after copilot-chat
          (:map copilot-chat-prompt-mode-map
           :g "C-3" (cmd! ()
