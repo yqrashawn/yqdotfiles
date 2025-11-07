@@ -261,8 +261,15 @@ Each file is opened (if not already) with `find-file-noselect` relative to
 (setq! ++fake-project-root
        (file-truename "~/Library/CloudStorage/Dropbox/sync/fake-workspace/"))
 
+(defvar ++gptel-request-workspace nil
+  "The workspace that initiated the current gptel request.
+Used to maintain workspace context during async LLM operations.")
+
 (defun ++workspace-current-project-root ()
-  (or (persp-parameter '++workspace-project-root)
+  "Get project root for current workspace or gptel request workspace."
+  (or (when ++gptel-request-workspace
+        (persp-parameter '++workspace-project-root ++gptel-request-workspace))
+      (persp-parameter '++workspace-project-root)
       ++fake-project-root))
 
 ;;;###autoload

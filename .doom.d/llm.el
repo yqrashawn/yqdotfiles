@@ -207,6 +207,9 @@
     :before #'gptel-send
     (unless simple-llm-req-p
       (require 'gptel-context)
+      ;; Capture current workspace for this gptel request
+      (setq-local ++gptel-request-workspace (get-current-persp))
+      
       ;; Remove only the specific context buffers we manage, not all context
       (dolist (buf (list (+current-workspace-info-buffer)
                          (+visible-buffers-list-buffer)
@@ -648,6 +651,8 @@ This improves maintainability and reduces complexity.
 
 BREAKING CHANGE: the error format has changed"))
 
+;;; Workspace persistence and isolation
+;; Store and restore gptel-context per workspace
 (after! gptel
   ;; Store gptel-context when switching away
   (add-hook! 'persp-before-deactivate-functions
@@ -659,6 +664,39 @@ BREAKING CHANGE: the error format has changed"))
     (defun +gptel-restore-context-from-persp (_)
       (setq gptel-context (persp-parameter 'gptel-context)))))
 
+;; Workspace isolation during LLM requests
+;; The ++gptel-request-workspace variable is captured when gptel-send is called
+;; and persists throughout the async tool execution. This allows:
+;; 1. User to freely switch workspaces while LLM is working
+;; 2. All tool calls use the original workspace's project root and settings
+;; 3. Context buffers (lints, git diffs, etc.) are generated from the correct workspace
+;;
+;; Implementation:
+;; 1. +gptel-request-capture-workspace: Captures workspace when gptel-request is called,
+;;    stores it in the FSM INFO plist (:workspace key)
+;; 2. +gptel--handle-tool-use-with-workspace: Binds ++gptel-request-workspace dynamically
+;;    during tool execution (both sync and async tools)
+;; 3. +mcp-server-lib--call-gptel-tool: Preserves workspace binding for MCP server tools
+;; 4. ++workspace-current-project-root: Checks ++gptel-request-workspace first before
+;;    falling back to current workspace
+
+;; Capture workspace in gptel request INFO plist
+(defadvice! +gptel-request-capture-workspace (orig-fn &rest args)
+  "Capture current workspace in the request INFO plist."
+  :around #'gptel-request
+  (let* ((result (apply orig-fn args))
+         (info (gptel-fsm-info result)))
+    (plist-put info :workspace (get-current-persp))
+    result))
+
+
+;; Advice gptel's tool execution to bind the captured workspace
+(defadvice! +gptel--handle-tool-use-with-workspace (orig-fn fsm)
+  "Wrap tool execution to use the captured workspace from FSM's info."
+  :around #'gptel--handle-tool-use
+  (let* ((info (gptel-fsm-info fsm))
+         (++gptel-request-workspace (plist-get info :workspace)))
+    (funcall orig-fn fsm)))
 
 (comment
   (progn

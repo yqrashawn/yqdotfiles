@@ -393,7 +393,10 @@ A plist has an even number of elements and alternates between keywords and value
 
 
 (defun +mcp-server-lib--call-gptel-tool (tool args)
+  "Call TOOL with ARGS, binding workspace context from request."
   (let ((default-directory (++workspace-current-project-root))
+        ;; Preserve workspace binding from the gptel request
+        (++gptel-request-workspace ++gptel-request-workspace)
         (arg-values))
     (setq arg-values
           (mapcar
