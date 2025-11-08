@@ -339,7 +339,6 @@
 (package! expreg)
 (package! jarchive)
 (package! pinentry)
-(package! llm :recipe (:host github :repo "ahyatt/llm"))
 ;; (package! org-ai)
 (unpin! nim-mode)
 (package! whisper :recipe (:host github :repo "natrys/whisper.el"))
@@ -457,6 +456,9 @@
 (package! lsp-biome :recipe (:host github :repo "cxa/lsp-biome"))
 (package! pushover)
 (package! acp)
+(package! pg)
+(package! vecdb :recipe (:host github :repo "ahyatt/vecdb"))
+(package! llm :recipe (:host github :repo "ahyatt/llm"))
 ;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
 
 ;; Local Variables:
