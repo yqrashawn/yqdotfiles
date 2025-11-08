@@ -91,28 +91,30 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
 
 Returns diagnostics from user's chosen linters across all project files.
 Use this to get an overview of all issues in the project.
-Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
+Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50).
+
+When called interactively, also displays the diagnostics list."
+  (interactive)
   (let ((results '())
         (default-directory (++workspace-current-project-root)))
-    (cond
-     ;; LSP: Get project-wide diagnostics
-     ((and (bound-and-true-p lsp-mode)
-           (fboundp 'lsp-diagnostics))
+    ;; LSP: Get project-wide diagnostics
+    (when (and (bound-and-true-p lsp-mode)
+               (fboundp 'lsp-diagnostics))
       (let ((lsp-diags (ignore-errors (lsp-diagnostics t))))
         (when lsp-diags
           (setq results
                 (append results
                         (list (list :source "lsp" :diagnostics lsp-diags)))))))
-     ;; Flymake: Get project-wide diagnostics
-     ((and (featurep 'flymake)
-           (fboundp 'flymake--project-diagnostics))
+    ;; Flymake: Get project-wide diagnostics
+    (when (and (featurep 'flymake)
+               (fboundp 'flymake--project-diagnostics))
       (when-let ((project (project-current)))
         (let ((diags (ignore-errors (flymake--project-diagnostics project))))
           (when diags
             (setq results (append results
                                   (list (list :source "flymake" :diagnostics diags))))))))
-     ;; Flycheck: Collect from all project buffers
-     ((featurep 'flycheck)
+    ;; Flycheck: Collect from all project buffers
+    (when (featurep 'flycheck)
       (when-let ((project (project-current)))
         (let ((all-errs '()))
           (dolist (buf (buffer-list))
@@ -126,7 +128,7 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
                 (setq all-errs (append all-errs flycheck-current-errors)))))
           (when all-errs
             (setq results (append results
-                                  (list (list :source "flycheck" :diagnostics all-errs)))))))))
+                                  (list (list :source "flycheck" :diagnostics all-errs))))))))
     ;; Flatten and page results
     (let* ((flat-list
             (apply #'append
@@ -151,8 +153,12 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
            (total (length flat-list))
            (start (or offset 0))
            (lim (or limit 50))
-           (paged (seq-subseq flat-list start (min total (+ start lim)))))
-      (list :total total :offset start :limit lim :diagnostics paged))))
+           (paged (seq-subseq flat-list start (min total (+ start lim))))
+           (result (list :total total :offset start :limit lim :diagnostics paged)))
+      (when (called-interactively-p 'any)
+        (kill-new (format "%s" result))
+        (message "%s" result))
+      result)))
 
 (comment
   (gptelt-lint-project))

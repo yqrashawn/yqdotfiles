@@ -251,7 +251,7 @@
         (save-excursion
           (goto-char start)
           (push-mark end nil t)
-          (pcase (log/spy comment-context)
+          (pcase comment-context
             ('jsx-attribute (jtsx-comment-jsx-attribute-dwim nil))
             ('js-nested-in-jsx (jtsx-comment-js-nested-in-jsx-dwim nil))
             ('jsx (jtsx-comment-jsx-dwim nil))

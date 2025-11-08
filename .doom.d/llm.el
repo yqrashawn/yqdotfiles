@@ -417,10 +417,10 @@
       :callback
       (lambda (response info)
         (if response
-            (funcall on-finish (log/spy response))
+            (funcall on-finish response)
           (progn
             (message "ERRR")
-            (funcall on-error (log/spy info))))))))
+            (funcall on-error info)))))))
 
 (defun simple-llm-req-sync (prompt &rest args)
   (await-callback
