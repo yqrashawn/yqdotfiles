@@ -115,6 +115,7 @@ Returns a list of search results with file paths, line numbers, and content."
     ;; Build ripgrep arguments
     (push "--hidden" args)
     (push "--color=never" args)
+    (push "--engine=auto" args)
     (push "--line-number" args)
     (push "--column" args)
     (push "-g" args)
@@ -158,7 +159,10 @@ Returns a list of search results with file paths, line numbers, and content."
 
 (comment
   (gptelt-rg-tool-search-regex "TODO|regex")
-  (gptelt-rg-tool-search-regex "defun.*gptelt" nil "*.el")
+  (gptelt-rg-tool-search-regex
+   "^\\(defun.*gptel"
+   "~/.emacs.d/.local/straight/repos/gptel"
+   "*.el")
   (gptelt-rg-tool-search-regex "src/stores/global"
                                "/Users/yqrashawn/workspace/office/perpdex/perpdex-nextjs"
                                nil 20))
@@ -176,10 +180,15 @@ PATTERN TYPES:
 1. Extensions: '*.py', '*.{js,ts,jsx,tsx}'
 2. Name patterns: 'test-*.clj', '*-config.json'
 3. Recursive: '**/*.py' (all subdirectories), 'src/**/*.ts' (under src/)
-4. Relative paths: 'gptel-tools/*.el', 'lib/utils/*.js' (relative to search directory)
-5. Absolute paths: '.doom.d/foo/*.el', '/absolute/path/*.py'
+4. Relative paths: 'src/*.ts', 'lib/utils/*.js' (relative to search directory)
+5. Absolute paths: '.nixpkgs/.doom.d/*.el', '/absolute/path/*.py'
 6. Type aliases: 'elisp', 'python', 'javascript', 'typescript', 'rust', 'go'
 7. Multiple: '*.js *.json' (space-separated)
+
+IMPORTANT: Relative directory patterns are automatically made recursive.
+- 'src/*.ts' becomes '**/src/*.ts' (searches all subdirectories)
+- To search ONLY at root level, use '*.ts' (no directory prefix)
+- To search specific subdirectory recursively, use 'src/**/*.js'
 
 EXAMPLES:
 glob('*.py')                        → Python files at root level
@@ -223,25 +232,33 @@ PERFORMANCE:
  :description
  "Search file contents using regular expressions with ripgrep. Fast and works with any codebase size.
 
+IMPORTANT: ripgrep is called with '--engine=auto'
+IMPORTANT: Uses Rust regex syntax (similar to PCRE), NOT Emacs Lisp regex syntax.
+- Parentheses for grouping: (pattern1|pattern2) - no backslash needed
+- Alternation: use | not \|
+- Special chars: \d \w \s work as expected (no double backslash)
+- This is standard regex, NOT Emacs regex where \( \) are grouping
+
 REGEX PATTERNS:
-- Wildcards: 'defun.*gptelt' (any defun containing gptelt)
-- Word boundaries: '\\bfunction\\s+\\w+' (function followed by identifier)
-- Line anchors: '^class \\w+' (start), '\\.js$' (end of line)
-- Alternation: 'TODO|FIXME|HACK' (multiple keywords)
+- Wildcards: 'defun.*gptel' (any defun containing gptel)
+- Word boundaries: '\bfunction\s+\w+' (function followed by identifier)
+- Line anchors: '^class \w+' (start), '\.js$' (end of line)
+- Alternation: 'TODO|FIXME|HACK' or '(foo|bar)' (NOT \| or \(\))
 - Character classes: '[A-Z][a-z]+Error' (CamelCase), '[^;]' (negated)
-- Quantifiers: '\\d+' (digits), '\\d{3,}' (3+ digits), '[A-Z]{2,}' (2+ uppercase)
-- Whitespace: '\\s+' (one or more spaces), '\\s*' (zero or more)
+- Quantifiers: '\d+' (digits), '\d{3,}' (3+ digits), '[A-Z]{2,}' (2+ uppercase)
+- Whitespace: '\s+' (one or more spaces), '\s*' (zero or more)
 - Case-insensitive: '(?i)todo|fixme' (ignore case flag)
 
 EXAMPLES:
 grep('TODO')                          → Find all TODO comments
 grep('defun gptelt', nil, '*.el')     → Functions in Elisp files
 grep('TODO|FIXME', nil, '*.{js,ts}')  → Multiple patterns in JS/TS
-grep('function\\s+\\w+')              → Function definitions (regex)
+grep('function\s+\w+')              → Function definitions (regex)
 grep('import.*react', nil, '*.jsx')   → React imports
-grep('\\bdefun\\b')                   → Word boundary (exact 'defun')
-grep('^\\s*;;')                       → Lines starting with comments
+grep('\bdefun\b')                   → Word boundary (exact 'defun')
+grep('^\s*;;')                       → Lines starting with comments
 grep('(?i)error|warning')             → Case-insensitive search
+grep('^\((defun|cl-defmethod) gptel.*get.*response', '~/.emacs.d/.local/straight/repos/gptel', '*.el') → gptel get response fns/methods 
 
 FILTERING:
 - include: '*.js', '*.{ts,tsx}', '*-test.el'
