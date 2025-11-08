@@ -22,7 +22,8 @@
       (when-let ((project (project-current)))
         (if (fboundp 'project-root)
             (project-root project)
-          (car (project-roots project)))))))
+          (when (fboundp 'project-roots)
+            (car (project-roots project))))))))
 
 (defun gptelt-edit--resolve-file-path (file-path)
   "Resolve FILE-PATH to absolute path.

@@ -4,11 +4,10 @@
 (load! "models.el")
 
 ;;; helper fns
-(defun +gptel-save-buffer (&rest args)
+(defun +gptel-save-buffer (&rest _args)
   (interactive)
   (when-let ((buf (current-buffer)))
     (with-current-buffer buf
-      ;; (gptel-context-remove-all nil)
       (if buffer-file-name
           (save-buffer)
         (progn
@@ -16,6 +15,7 @@
            (buffer-string)
            (lambda (title)
              (let* ((new-title (string-replace "\n" "_" title))
+                    (new-title (string-replace "\." "_" new-title))
                     (new-title (string-replace "```" "" new-title)))
                (with-current-buffer buf
                  (let ((dir (format
@@ -134,7 +134,8 @@
 (setq! +llm-project-default-files +llm-global-project-default-files)
 
 (defun +llm-get-project-default-files ()
-  "Return a list of default project files: merge buffer-local with global default files."
+  "Return a list of default project files.
+Merge buffer-local with global default files."
   (delete-dups
    (append
     +llm-project-default-files
@@ -205,7 +206,7 @@
       (with-current-buffer b
         (gptel-context--add-region b (point-min) (point-max) t))))
 
-  (defadvice! +before-gptel-make-fsm (&optional args)
+  (defadvice! +before-gptel-make-fsm (&optional _args)
     :before #'gptel-send
     (unless simple-llm-req-p
       (require 'gptel-context)
@@ -237,7 +238,7 @@
             (when (f-exists-p file)
               (+gptel-context-add-buffer (find-file-noselect file))))))))
 
-  (defadvice! +after-gptel-send (&optional args)
+  (defadvice! +after-gptel-send (&optional _args)
     :after #'gptel-send
     (when (and (bound-and-true-p gptel-mode)
                (bound-and-true-p evil-local-mode)
@@ -348,12 +349,12 @@
     :after #'gptel-mcp--activate-tools
     (+gptel-make-my-presets))
 
-  (defadvice! +gptel-make-tool (&rest args)
+  (defadvice! +gptel-make-tool (&rest _args)
     :after #'gptel-make-tool
     (+gptel-make-my-presets))
 
   (add-hook! 'gptel-post-response-functions
-    (defun +gptel-notify-done (&rest args)
+    (defun +gptel-notify-done (&rest _args)
       (when (> (float-time (or (current-idle-time) 0)) 60)
         (pushover-send
          "GPTEL Done" "GPTEL Done" :sound "magic"))))
@@ -368,6 +369,28 @@
                        +gptel-disabled-tool-patterns))
             gptel-tools)))
       (apply orig-fn args)))
+
+  (defadvice! +gptel-add-request-timeout (orig-fn &rest args)
+    :around #'gptel-request
+    (let* ((fsm (apply orig-fn args))
+           (timeout-seconds 600)
+           (timer (run-with-timer
+                   timeout-seconds nil
+                   (lambda (fsm)
+                     (when-let* ((proc (cl-find-if
+                                        (lambda (entry)
+                                          (eq (cadr entry) fsm))
+                                        gptel--request-alist
+                                        :key #'car)))
+                       (message "gptel request timed out after %d seconds" timeout-seconds)
+                       (gptel-abort (plist-get (gptel-fsm-info fsm) :buffer))))
+                   fsm)))
+      (add-hook 'gptel-post-response-functions
+                (lambda (&rest _)
+                  (when (timerp timer)
+                    (cancel-timer timer)))
+                nil t)
+      fsm))
 
   (after! pabbrev
     (add-hook! 'buffer-list-update-hook
@@ -721,3 +744,40 @@ BREAKING CHANGE: the error format has changed"))
      :cb 'message           
      :error 'message)
     nil))
+
+(defadvice! +gptel-handle-invalid-tool-calls (orig-fn fsm)
+  "Send error message to LLM when it calls non-existent tools."
+  :around #'gptel--handle-tool-use
+  (let* ((info (gptel-fsm-info fsm))
+         (backend (plist-get info :backend))
+         (tool-use (cl-remove-if (lambda (tc) (plist-get tc :result))
+                                 (plist-get info :tool-use)))
+         (invalid-tools
+          (cl-remove-if-not
+           (lambda (tool-call)
+             (let ((name (plist-get tool-call :name)))
+               (and (not (equal name gptel--ersatz-json-tool))
+                    (null (cl-find-if
+                           (lambda (ts) (equal (gptel-tool-name ts) name))
+                           (plist-get info :tools))))))
+           tool-use)))
+    (when invalid-tools
+      ;; Handle invalid tool calls
+      (with-current-buffer (plist-get info :buffer)
+        (dolist (tool-call invalid-tools)
+          (let ((error-msg (format "Error: Tool '%s' does not exist. Please check the tool name CAREFULLY against the list of available tools and try again with the correct tool name."
+                                   (plist-get tool-call :name))))
+            (plist-put tool-call :result error-msg)
+            (message "Invalid tool call: %s" (plist-get tool-call :name))))
+        ;; Mark at least one tool as successful to trigger state transition
+        (plist-put info :tool-success t)
+        ;; Inject error messages back to LLM
+        (gptel--inject-prompt
+         backend (plist-get info :data)
+         (gptel--parse-tool-results backend (plist-get info :tool-use)))
+        (funcall (plist-get info :callback)
+                 (cons 'tool-error invalid-tools) info)
+        (gptel--fsm-transition fsm)))
+    ;; Always call original function to handle valid tool calls
+    (funcall orig-fn fsm)))
+
