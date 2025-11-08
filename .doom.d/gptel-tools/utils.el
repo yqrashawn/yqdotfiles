@@ -195,9 +195,9 @@ Uses temp buffer."
         (gptelt--check-buffer-balanced-parens (current-buffer)))
     (cons t nil)))
 
-(defun gptelt--replace-buffer-directly (buffer result-string &optional skip-save)
+(defun gptelt--replace-buffer-directly (buffer result-string)
   "Apply edit to BUFFER by replacing entire buffer with RESULT-STRING.
-SKIP-SAVE if non-nil, skips saving the buffer (for multi-edit operations).
+
 Returns a message describing the result of the operation."
   (let ((original-buffer buffer)
         (original-point (with-current-buffer buffer (point))))
@@ -207,7 +207,7 @@ Returns a message describing the result of the operation."
       (save-excursion
         (erase-buffer)
         (insert result-string)
-        (when (and (buffer-file-name) (not skip-save))
+        (when (buffer-file-name)
           (+force-save-buffer))
         (goto-char (min original-point (point-max)))
         (when (and (fboundp 'lsp-format-region)
@@ -449,10 +449,11 @@ A plist has an even number of elements and alternates between keywords and value
       (funcall orig-fn id params method-metrics))))
 
 (defun +gptel-tool-revert-to-be-visited-buffer (buf)
+  "Revert buffer BUF if its file has been modified on disk.
+Reverts both visible and non-visible buffers to ensure consistency after tool edits."
   (let ((buf (or buf (current-buffer)))
         (buf-name (buffer-file-name buf)))
     (when (and buf-name
-               (not (doom-visible-buffer-p buf))
                (file-exists-p buf-name)
                (not (verify-visited-file-modtime buf)))
       (with-current-buffer buf

@@ -36,7 +36,9 @@
                       (format-time-string "%H_%M")
                       new-title)
                      dir))))))
-           (lambda (e) (user-error "Error setting gptel org title: %s" e)))
+           (lambda (e) (user-error
+                        "Error setting gptel org title: %s"
+                        (error-message-string e))))
           t)))))
 
 (defun +gptel-kill-default-buffer ()
@@ -270,12 +272,10 @@
   ;; gptel one
   (setq! gptel--gh-copilot-individual
          (gptel-make-gh-copilot "CopilotI"
-           :host "api.individual.githubcopilot.com"
-           :curl-args (list "--insecure")))
+           :host "api.individual.githubcopilot.com"))
   (setq! gptel--gh-copilot-business
          (gptel-make-gh-copilot "CopilotB"
            :host "api.business.githubcopilot.com"
-           :curl-args (list "--insecure")
            :models gptel--gh-b-models
            :stream t))
   (setq! gptel-backend gptel--openrouter)

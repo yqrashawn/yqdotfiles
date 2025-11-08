@@ -95,19 +95,24 @@
 
 (defconst gptel--gh-b-models
   '((gpt-4o
-     :description
-     "Advanced model for complex tasks; cheaper & faster than GPT-Turbo"
+     :description "Advanced model for complex tasks; cheaper & faster than GPT-Turbo"
      :capabilities (media tool-use json url)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-     :context-window 128 :input-cost 2.5 :output-cost 10 :cutoff-date "2023-10")
+     :mime-types ("image/jpeg"
+                  "image/png"
+                  "image/gif"
+                  "image/webp")
+     :context-window 128
+     :input-cost 2.5
+     :output-cost 10
+     :cutoff-date "2024-11")
     (gpt-4.1
      :description "Flagship model for complex tasks"
      :capabilities (media tool-use json url)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp")
-     :context-window 200
+     :context-window 128
      :input-cost 2.0
      :output-cost 8.0
-     :cutoff-date "2024-05")
+     :cutoff-date "2025-04")
     (gpt-5-mini
      :description "Faster, more cost-efficient version of GPT-5"
      :capabilities (media tool-use json url)
@@ -119,7 +124,7 @@
     (claude-sonnet-4
      :description "High-performance model with exceptional reasoning and efficiency"
      :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :mime-types ("image/jpeg" "image/png" "image/webp")
      :context-window 216
      :input-cost 3
      :output-cost 15
@@ -127,15 +132,16 @@
     (claude-sonnet-4.5
      :description "High-performance model with exceptional reasoning and efficiency"
      :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :mime-types ("image/jpeg" "image/png" "image/webp")
      :context-window 144
      :input-cost 3
      :output-cost 15
-     :cutoff-date "2025-07")
+     :cutoff-date "2025-07"
+     :request-params (:parallel_tool_calls t))
     (claude-haiku-4.5
      :description "Near-frontier intelligence at blazing speeds with extended thinking"
      :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :mime-types ("image/jpeg" "image/png" "image/webp")
      :context-window 144
      :input-cost 1
      :output-cost 5

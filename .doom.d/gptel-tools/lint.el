@@ -92,7 +92,8 @@ Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
 Returns diagnostics from user's chosen linters across all project files.
 Use this to get an overview of all issues in the project.
 Optional OFFSET and LIMIT for paging diagnostics (default offset=0, limit=50)."
-  (let ((results '()))
+  (let ((results '())
+        (default-directory (++workspace-current-project-root)))
     (cond
      ;; LSP: Get project-wide diagnostics
      ((and (bound-and-true-p lsp-mode)
