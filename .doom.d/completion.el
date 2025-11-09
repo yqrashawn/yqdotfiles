@@ -80,12 +80,15 @@
      (lsp-capf (styles fussy))))
 
   (after! corfu
+    (setq! corfu-separator (string-to-char ","))
+    (pushnew! corfu-auto-commands #'lispy-delete-backward)
     (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
-    (add-hook 'corfu-mode-hook
-              (lambda ()
-                (setq-local fussy-max-candidate-limit 5000
-                            fussy-default-regex-fn 'fussy-pattern-first-letter
-                            fussy-prefer-prefix nil))))
+    (add-hook! 'corfu-mode-hook
+      (defun +fussy-setup-corfu ()
+        (setq-local fussy-max-candidate-limit 5000
+                    fussy-default-regex-fn #'fussy-pattern-first-letter
+                    ;; fussy-default-regex-fn #'fussy-pattern-flex-2
+                    fussy-prefer-prefix nil))))
 
   (defadvice! +read-extended-command (orig-fn &optional prompt)
     :around #'read-extended-command

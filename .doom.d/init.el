@@ -129,6 +129,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
        :completion
        ;; (company +childframe) ; the ultimate code completion backend
        (corfu +orderless +icons +dabbrev) ; complete with cap(f), cape and a flying feather!
+       custom-capfs
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy +fuzzy)     ; a search engine for love and life
