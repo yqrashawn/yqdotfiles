@@ -4,6 +4,14 @@
 (load! "models.el")
 
 ;;; helper fns
+(defun +gptel-sanitize-filename (str)
+  "Clean STR for use as a filename."
+  (thread-last str
+               (string-trim)
+               (replace-regexp-in-string "```[a-z]*" "")
+               (replace-regexp-in-string "[^[:alnum:][:space:]-]" "_")
+               (replace-regexp-in-string "[[:space:]]+" "_")))
+
 (defun +gptel-save-buffer (&rest _args)
   (interactive)
   (when-let ((buf (current-buffer)))
@@ -14,9 +22,7 @@
           (get-gptel-org-title
            (buffer-string)
            (lambda (title)
-             (let* ((new-title (string-replace "\n" "_" title))
-                    (new-title (string-replace "\." "_" new-title))
-                    (new-title (string-replace "```" "" new-title)))
+             (let ((new-title (+gptel-sanitize-filename title)))
                (with-current-buffer buf
                  (let ((dir (format
                              "~/Dropbox/sync/gptel/%s/%s"
@@ -224,14 +230,16 @@ Merge buffer-local with global default files."
       (+gptel-context-add-buffer (+current-workspace-info-buffer))
       (+gptel-context-add-buffer (+visible-buffers-list-buffer))
       (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
-      (dolist (b (seq-filter
-                  (lambda (b)
-                    (and
-                     (not (string= (buffer-name b) "*Messages*"))
-                     (with-current-buffer b
-                       (not gptel-mode))))
-                  (mapcar 'window-buffer (window-list))))
-        (+gptel-context-add-buffer b))
+      ;; ;; add visible buffers to context
+      ;; ;; let llm decides based on the visible buffer list
+      ;; (dolist (b (seq-filter
+      ;;             (lambda (b)
+      ;;               (and
+      ;;                (not (string= (buffer-name b) "*Messages*"))
+      ;;                (with-current-buffer b
+      ;;                  (not gptel-mode))))
+      ;;             (mapcar 'window-buffer (window-list))))
+      ;;   (+gptel-context-add-buffer b))
       (when-let ((root (++workspace-current-project-root)))
         (dolist (f (+llm-get-project-default-files))
           (when-let ((file (file-truename (format "%s/%s" root f))))
@@ -489,6 +497,45 @@ EXAMPLES:
 - User asks \"What were the main causes of World War 1?\" -> Title: Main Causes of WWI
 
 The user's chat will now follow. Generate the title."))
+
+;;;###autoload
+(defun +gptel-format-known-tools-to-markdown ()
+  "Format gptel--known-tools to human-readable markdown and copy to kill-ring."
+  (interactive)
+  (let ((md-output (with-temp-buffer
+                     (insert "# Available GPTEL Tools\n\n")
+                     (dolist (category gptel--known-tools)
+                       (let ((category-name (car category))
+                             (tools (cdr category)))
+                         (insert (format "## %s\n\n" category-name))
+                         (dolist (tool-entry tools)
+                           (let* ((tool-name (car tool-entry))
+                                  (tool (cdr tool-entry))
+                                  (description (gptel-tool-description tool))
+                                  (args (gptel-tool-args tool)))
+                             (insert (format "### %s\n\n" tool-name))
+                             (when description
+                               (insert (format "%s\n\n" description)))
+                             (when args
+                               (insert "**Parameters:**\n\n")
+                               (dolist (arg args)
+                                 (let ((arg-name (plist-get arg :name))
+                                       (arg-type (plist-get arg :type))
+                                       (arg-desc (plist-get arg :description))
+                                       (arg-optional (plist-get arg :optional)))
+                                   (insert (format "- `%s` (%s)%s: %s\n"
+                                                   arg-name
+                                                   arg-type
+                                                   (if arg-optional " *optional*" "")
+                                                   (or arg-desc "No description")))))))
+                           (insert "\n"))))
+                     (buffer-string))))
+    (if (called-interactively-p 'any)
+        (progn
+          (kill-new md-output)
+          (message "Formatted %d tool categories to kill-ring"
+                   (length gptel--known-tools)))
+      md-output)))
 
 (comment
   (get-gptel-org-title)
@@ -781,3 +828,17 @@ BREAKING CHANGE: the error format has changed"))
     ;; Always call original function to handle valid tool calls
     (funcall orig-fn fsm)))
 
+
+(defun +gptel-markdown-to-org (&optional input-string)
+  "Convert markdown to org-mode format using gptel's converter.
+When called interactively, converts the latest kill ring entry and puts
+the result back into the kill ring.
+When called non-interactively with INPUT-STRING, converts and returns
+the result."
+  (interactive)
+  (if (called-interactively-p 'any)
+      (let* ((markdown-input (current-kill 0))
+             (org-output (gptel--convert-markdown->org markdown-input)))
+        (kill-new org-output)
+        (message "Converted markdown to org and saved to kill ring"))
+    (gptel--convert-markdown->org input-string)))

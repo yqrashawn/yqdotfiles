@@ -123,14 +123,27 @@ Each file is opened (if not already) with `find-file-noselect` relative to
      (with-current-buffer b (not gptel-mode)))
    (mapcar 'window-buffer (window-list))))
 
+(defun +doom-file-buffers ()
+  (seq-filter
+   (lambda (b)
+     (with-current-buffer b
+       (when-let ((file (buffer-file-name b)))
+         (and (not
+               (string-prefix-p
+                (file-truename "~/Dropbox/sync/gptel")
+                (file-truename file)))
+              (not (string= "not-secret.el"
+                            (file-name-nondirectory file)))))))
+   (doom-buffer-list)))
+
 (defun +visible-buffers-list-buffer ()
-  (let ((buf-list (+visible-buffers))
+  (let ((buf-list (+doom-file-buffers))
         (b (get-buffer-create " *visible-buffers-list*" t)))
     (with-current-buffer b
       (erase-buffer)
       (insert! "# These are the buffers currently visible to the user.\n")
       (seq-doseq
-          (b (+visible-buffers))
+          (b buf-list)
         (insert! ("Buffer name: `%s`" (buffer-name b)))
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
@@ -139,6 +152,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
+    ;; (switch-to-buffer b)
     b))
 
 (comment
