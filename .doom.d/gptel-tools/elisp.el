@@ -253,7 +253,8 @@
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
-   :name "evaluate_elisp_buffer"
+   :name "exec_elisp_buffer"
+   ;; :name "evaluate_elisp_buffer"
    :function #'gptelt-evaluate-elisp-buffer
    :description "Evaluate emacs-lisp-mode a buffer by buffer name."
    :args '((:name "buffer_name" :type string :description "The name of the buffer to evaluate"))
@@ -262,7 +263,8 @@
    :include t)
 
   (gptelt-make-tool
-   :name "evaluate_elisp_file"
+   :name "exec_elisp_file"
+   ;; :name "evaluate_elisp_file"
    :function #'gptelt-evaluate-elisp-file
    :description "Evaluate a \".el\" file by loading it as a buffer and evaluating."
    :args '((:name "file_path"
@@ -282,7 +284,8 @@
    :include t)
 
   (gptelt-make-tool
-   :name "evaluate_elisp_string"
+   ;; :name "evaluate_elisp_string"
+   :name "exec_elisp_code"
    :function #'gptelt-evaluate-elisp-string
    :description "Evaluate emacs-lisp code from a string in a temp buffer, after user confirmation. Returns the result string."
    :args '((:name "elisp_string" :type string :description "The elisp code string to evaluate."))

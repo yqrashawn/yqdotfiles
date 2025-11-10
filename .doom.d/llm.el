@@ -90,7 +90,8 @@
   (gptel-make-preset 'default
     :description "default preset"
     :backend "cpb"
-    :model 'claude-sonnet-4.5
+    ;; :model 'claude-sonnet-4.5
+    :model 'gpt-4.1
     ;; :system (alist-get 'default gptel-directives)
     :system (alist-get 'claude gptel-directives)
     :temperature 0.8
@@ -126,6 +127,10 @@
    ((region-active-p) (call-interactively #'gptel-rewrite))
    ((not arg) (call-interactively #'gptel))
    ((eq arg 7) (call-interactively #'gptel-menu))
+   ((eq arg 8)
+    (if (eq gptel-model 'gpt-4.1)
+        (setq gptel-model 'claude-sonnet-4.5)
+      (setq gptel-model 'gpt-4.1)))
    ((eq arg 90)
     (progn (funcall #'gptel-context-remove-all)
            (message "gptel context removed!")))
@@ -148,7 +153,7 @@ Merge buffer-local with global default files."
     +llm-global-project-default-files)))
 
 (use-package! gptel
-  :commands (gptel)
+  :commands (gptel gptel-context-add)
   :init
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
@@ -369,13 +374,22 @@ Merge buffer-local with global default files."
 
   (defadvice! +gptel-filter-tools-before-request (orig-fn &rest args)
     :around #'gptel-request
-    (let ((gptel-tools
-           (cl-remove-if
-            (lambda (tool)
-              (cl-some (lambda (pattern)
-                         (string-match-p pattern (gptel-tool-name tool)))
-                       +gptel-disabled-tool-patterns))
-            gptel-tools)))
+    (let* ((clj-workspace? (++workspace-clojure?))
+           (proj-root (++workspace-current-project-root))
+           (dot-proj? (string-suffix-p ".nixpkgs" proj-root))
+           (gptel-tools
+            (cl-remove-if
+             (lambda (tool)
+               (let ((tool-name (gptel-tool-name tool)))
+                 (or (cl-some (lambda (pattern)
+                                (string-match-p pattern tool-name))
+                              +gptel-disabled-tool-patterns)
+                     (and (not clj-workspace?)
+                          (string-match-p "^cljs?_" tool-name))
+                     (and (not dot-proj?)
+                          (or (string-match-p "^elisp?_" tool-name)
+                              (string-match-p "^run_ert" tool-name))))))
+             gptel-tools)))
       (apply orig-fn args)))
 
   (defadvice! +gptel-add-request-timeout (orig-fn &rest args)
