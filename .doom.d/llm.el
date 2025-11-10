@@ -111,13 +111,22 @@
 
   (gptel-make-preset 'claude
     :description "claude code"
-    :backend "CCode"
+    :backend "cc"
     :model 'sonnet
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+
+  (gptel-make-preset 'codex
+    :description "codex"
+    :backend "cc"
+    :model 'gpt-5-codex
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
   (gptel--apply-preset 'claude)
   (gptel--apply-preset 'cob)
+  (gptel--apply-preset 'codex)
   (gptel--apply-preset 'default))
 
 ;;;###autoload
@@ -267,7 +276,7 @@ Merge buffer-local with global default files."
            :models gptel--openrouter-models))
   ;; self host claude code
   (setq! gptel--claude-code
-         (gptel-make-openai "CCode"
+         (gptel-make-openai "cc"
            :protocol "http"
            :host "localhost:14141"
            :endpoint "/v1/chat/completions"
@@ -283,6 +292,16 @@ Merge buffer-local with global default files."
            :stream t
            :key "no-key-required"
            :models gptel--gh-models))
+
+  (setq! gptel--codex
+         (gptel-make-openai "codex"
+           :protocol "http"
+           :host "localhost:18683"
+           :endpoint "/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--codex-models))
+
   ;; gptel one
   (setq! gptel--gh-copilot-individual
          (gptel-make-gh-copilot "cpi"
@@ -293,6 +312,7 @@ Merge buffer-local with global default files."
            :models gptel--gh-b-models
            :stream t))
   (setq! gptel-backend gptel--openrouter)
+  (setq! gptel-backend gptel--codex)
   (setq! gptel-backend gptel--claude-code)
   ;; (setq! gptel-backend gptel--gh-copilot-local)
   (setq! gptel-backend gptel--gh-copilot-business)
