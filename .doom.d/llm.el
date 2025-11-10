@@ -89,7 +89,7 @@
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
     :description "default preset"
-    :backend "CopilotB"
+    :backend "cpb"
     :model 'claude-sonnet-4.5
     ;; :system (alist-get 'default gptel-directives)
     :system (alist-get 'claude gptel-directives)
@@ -103,7 +103,7 @@
 
   (gptel-make-preset 'cob
     :description "preset"
-    :backend "CopilotB"
+    :backend "cpb"
     :parents '(default)
     :model 'claude-3.7-sonnet
     :system (alist-get 'claude gptel-directives))
@@ -280,10 +280,10 @@ Merge buffer-local with global default files."
            :models gptel--gh-models))
   ;; gptel one
   (setq! gptel--gh-copilot-individual
-         (gptel-make-gh-copilot "CopilotI"
+         (gptel-make-gh-copilot "cpi"
            :host "api.individual.githubcopilot.com"))
   (setq! gptel--gh-copilot-business
-         (gptel-make-gh-copilot "CopilotB"
+         (gptel-make-gh-copilot "cpb"
            :host "api.business.githubcopilot.com"
            :models gptel--gh-b-models
            :stream t))
