@@ -196,9 +196,13 @@
   ;; (setq-local completion-at-point-functions (list))
   (add-hook! 'pabbrev-mode-hook
     (defun +corfu-add-pabbrev-capf-h ()
-      (add-hook 'completion-at-point-functions #'pabbrev-capf 1 t)
-      (add-hook 'completion-at-point-functions #'cape-abbrev 1 t)
-      (add-hook 'completion-at-point-functions #'cape-keyword 1 t)
+      (remove-hook!
+        'completion-at-point-functions
+        #'cape-dabbrev #'cape-abbrev #'cape-keyword #'pabbrev-capf)
+      (add-hook 'completion-at-point-functions #'pabbrev-capf 1000 t)
+      (add-hook 'completion-at-point-functions #'cape-abbrev 1000 t)
+      (add-hook 'completion-at-point-functions #'cape-dabbrev 1000 t)
+      (add-hook 'completion-at-point-functions #'cape-keyword 1000 t)
       ;; (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 1 t)
       ))
   :config

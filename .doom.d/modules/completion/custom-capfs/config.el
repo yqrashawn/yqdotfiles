@@ -69,6 +69,8 @@ Wraps candidates with =...= if current buffer is org-mode."
 
 (add-hook! 'gptel-mode-hook
   (defun +custom-capf-setup-org-mode ()
+    (remove-hook! 'completion-at-point-functions
+      :local #'pabbrev-capf)
     (add-hook! 'completion-at-point-functions
                :append :local 
-               #'+doom-buffer-capf #'+doom-buffer-files-capf)))
+               #'pabbrev-capf #'+doom-buffer-capf #'+doom-buffer-files-capf)))
