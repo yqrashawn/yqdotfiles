@@ -422,9 +422,9 @@ Merge buffer-local with global default files."
                    (lambda (fsm)
                      (when-let* ((proc (cl-find-if
                                         (lambda (entry)
-                                          (eq (cadr entry) fsm))
+                                          (eq (car entry) nil))
                                         gptel--request-alist
-                                        :key #'car)))
+                                        :key #'cdr)))
                        (message "gptel request timed out after %d seconds" timeout-seconds)
                        (gptel-abort (plist-get (gptel-fsm-info fsm) :buffer))))
                    fsm)))

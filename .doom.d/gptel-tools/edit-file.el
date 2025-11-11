@@ -124,6 +124,7 @@ Strips leading/trailing whitespace per line and normalizes internal whitespace."
   "Try to find OLD-STRING with flexible whitespace matching.
 Returns (START . END) cons cell if found, nil otherwise."
   (let ((normalized-old (gptelt-edit--normalize-whitespace old-string)))
+    ;; (setq lll normalized-old)
     (save-excursion
       (goto-char (point-min))
       (catch 'found
@@ -132,9 +133,11 @@ Returns (START . END) cons cell if found, nil otherwise."
                  (region-end (min (+ region-start (* 2 (length old-string)))
                                   (point-max))))
             (when (> region-end region-start)
-              (let ((region-text (buffer-substring-no-properties region-start region-end)))
-                (when (string= normalized-old
-                               (gptelt-edit--normalize-whitespace region-text))
+              (let ((region-text
+                     (buffer-substring-no-properties region-start region-end)))
+                (when (string=
+                       normalized-old
+                       (gptelt-edit--normalize-whitespace region-text))
                   (throw 'found (cons region-start region-end)))))
             (forward-line 1)))
         nil))))
@@ -181,7 +184,7 @@ Please find the EXACT string from the file that matches what I'm trying to chang
                          (or instruction "replace this text"))))
     (simple-llm-req
      prompt
-     :backend gptel--gh-copilot-individual
+     :backend gptel--gh-copilot-business
      :model 'gpt-4.1
      :temperature 0.3
      :system "You are a precise text matching assistant. Your job is to find exact string matches in files. Always return the EXACT text from the file, preserving all whitespace, indentation, and formatting. If you can't find a match, return ERROR."
@@ -191,7 +194,7 @@ Please find the EXACT string from the file that matches what I'm trying to chang
                         nil
                       (string-trim response))))
      :error (lambda (_error)
-              (funcall callback nil)))))
+              (funcall callback "ERROR: failed to call LLM to fix the old string")))))
 
 ;;; Direct edit application
 
@@ -289,7 +292,9 @@ CALLBACK is called with the result message."
               (setq replacement-end (+ start (length new-string)))
               (setq replacement-count 1))))
         
+        ;; (log/spy (buffer-modified-p buffer))
         (+force-save-buffer)
+
         (when (and (fboundp 'lsp-format-region)
                    (bound-and-true-p lsp-mode))
           (condition-case err
@@ -301,11 +306,6 @@ CALLBACK is called with the result message."
         (if (and replacement-start (> original-point replacement-start))
             (goto-char (+ original-point (* point-adjustment replacement-count)))
           (goto-char original-point))))
-
-    ;; Ensure buffer is saved before calling callback
-    (when (buffer-modified-p buffer)
-      (with-current-buffer buffer
-        (+force-save-buffer)))
     
     (funcall callback
              (format "Successfully replaced %d occurrence(s) of text in %s."
@@ -577,6 +577,7 @@ This function:
   "Apply multiple edits to BUFFER sequentially. Each edit is a plist or cons cell.
 Supports :replace_all and :instruction for each edit (default nil).
 CALLBACK is called with the final result message when all edits are done."
+  ;; (setq jjj (list buffer edits callback))
   ;; Convert vector to list if needed
   (when (vectorp edits)
     (setq edits (append edits nil)))
@@ -609,7 +610,6 @@ CALLBACK is called with the final result message when all edits are done."
                   (process-next-edit (cdr remaining-edits)))
                 replace-all instruction)))))
       (process-next-edit edits))))
-
 
 ;;; Public multi-edit entrypoints
 

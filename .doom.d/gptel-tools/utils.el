@@ -407,38 +407,38 @@ A plist has an even number of elements and alternates between keywords and value
          (tool (gethash tool-name mcp-server-lib--tools))
          (tool-args (alist-get 'arguments params)))
     (if-let ((one-gptel-tool (and tool (plist-get tool :gptel-tool))))
-      (let ((context (list :id id)))
-        (condition-case err
-            (let*
-                ((result
-                  (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
-                 (result-text
-                  (cond
-                   ((null result) "")
-                   (t (gptel--to-string result))))
-                 ;; Wrap the handler result in the MCP format
-                 (formatted-result
-                  `((content
-                     .
-                     ,(vector
-                       `((type . "text") (text . ,result-text))))
-                    (isError . :json-false))))
-              (gptelt-log-mcp-tool
-               tool-name tool-args formatted-result)
-              (mcp-server-lib-metrics--track-tool-call tool-name)
-              (mcp-server-lib--respond-with-result
-               context formatted-result))
-          (error
-           (mcp-server-lib-metrics--track-tool-call tool-name t)
-           (cl-incf (mcp-server-lib-metrics-errors method-metrics))
-           (let ((formatted-error
-                  `((content
-                     .
-                     ,(vector
-                       `((type . "text") (text . ,(gptel--to-string err)))))
-                    (isError . t))))
-             (mcp-server-lib--respond-with-result
-              context formatted-error)))))
+        (let ((context (list :id id)))
+          (condition-case err
+              (let*
+                  ((result
+                    (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
+                   (result-text
+                    (cond
+                     ((null result) "")
+                     (t (gptel--to-string result))))
+                   ;; Wrap the handler result in the MCP format
+                   (formatted-result
+                    `((content
+                       .
+                       ,(vector
+                         `((type . "text") (text . ,result-text))))
+                      (isError . :json-false))))
+                (gptelt-log-mcp-tool
+                 tool-name tool-args formatted-result)
+                (mcp-server-lib-metrics--track-tool-call tool-name)
+                (mcp-server-lib--respond-with-result
+                 context formatted-result))
+            (error
+             (mcp-server-lib-metrics--track-tool-call tool-name t)
+             (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+             (let ((formatted-error
+                    `((content
+                       .
+                       ,(vector
+                         `((type . "text") (text . ,(gptel--to-string err)))))
+                      (isError . t))))
+               (mcp-server-lib--respond-with-result
+                context formatted-error)))))
       (funcall orig-fn id params method-metrics))))
 
 (defun +gptel-tool-revert-to-be-visited-buffer (buf)
@@ -456,6 +456,6 @@ Reverts both visible and non-visible buffers to ensure consistency after tool ed
   ;; Put this in *scratch* and C-j on each line, or eval it:
   (setq debug-on-error nil)
   (setq debug-on-message
-        (rx "function definition is void" (* nonl) "\\,"))
+        "^Error running timer: (wrong-type-argument listp #<process gptel-curl")
   (setq debug-on-message nil))
 ;;; utils.el ends here
