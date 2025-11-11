@@ -338,7 +338,7 @@ A plist has an even number of elements and alternates between keywords and value
                              gptel--openai
                              (list one-gptel-tool)))
                            :function)))
-      (let ((id (plist-get tool :name))
+      (let ((id (format! "emacs_%s" (plist-get tool :name)))
             (description (plist-get tool :description))
             (schema (plist-get tool :parameters)))
         (mcp-server-lib--ref-counted-unregister
@@ -359,6 +359,7 @@ A plist has an even number of elements and alternates between keywords and value
 (defun gptelt-make-tool (&rest args)
   ;; (when (null (plist-get args :args))
   ;;   (error ":args must be a list"))
+  
   (let* ((is-async (plist-get args :async))
          (original-fn (plist-get args :function))
          (wrapped-fn
@@ -407,10 +408,9 @@ A plist has an even number of elements and alternates between keywords and value
          (tool (gethash tool-name mcp-server-lib--tools))
          (tool-args (alist-get 'arguments params)))
     (if-let ((one-gptel-tool (and tool (plist-get tool :gptel-tool))))
-        (let ((context (list :id id)))
-          (condition-case err
-              (let*
-                  ((result
+      (let ((context (list :id id)))
+        (condition-case err
+            (let* ((result
                     (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
                    (result-text
                     (cond
@@ -423,22 +423,22 @@ A plist has an even number of elements and alternates between keywords and value
                        ,(vector
                          `((type . "text") (text . ,result-text))))
                       (isError . :json-false))))
-                (gptelt-log-mcp-tool
-                 tool-name tool-args formatted-result)
-                (mcp-server-lib-metrics--track-tool-call tool-name)
-                (mcp-server-lib--respond-with-result
-                 context formatted-result))
-            (error
-             (mcp-server-lib-metrics--track-tool-call tool-name t)
-             (cl-incf (mcp-server-lib-metrics-errors method-metrics))
-             (let ((formatted-error
-                    `((content
-                       .
-                       ,(vector
-                         `((type . "text") (text . ,(gptel--to-string err)))))
-                      (isError . t))))
-               (mcp-server-lib--respond-with-result
-                context formatted-error)))))
+              (gptelt-log-mcp-tool
+               tool-name tool-args formatted-result)
+              (mcp-server-lib-metrics--track-tool-call tool-name)
+              (mcp-server-lib--respond-with-result
+               context formatted-result))
+          (error
+           (mcp-server-lib-metrics--track-tool-call tool-name t)
+           (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+           (let ((formatted-error
+                  `((content
+                     .
+                     ,(vector
+                       `((type . "text") (text . ,(gptel--to-string err)))))
+                    (isError . t))))
+             (mcp-server-lib--respond-with-result
+              context formatted-error)))))
       (funcall orig-fn id params method-metrics))))
 
 (defun +gptel-tool-revert-to-be-visited-buffer (buf)

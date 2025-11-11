@@ -110,7 +110,8 @@ Returns a string describing the result of the operation."
 
 ;;; Create temp file buffer tool implementation
 
-(defun gptelt--create-temp-file-buffer (callback content-string &optional prefix suffix)
+(defun gptelt--create-temp-file-buffer
+    (callback content-string &optional prefix suffix)
   "Create a temp file, open a buffer for it (not displayed), and return the file path.
 
 CALLBACK is called with the temp file path when done (async).
@@ -152,6 +153,5 @@ Buffer is not switched to or displayed. File is created and saved to disk."
 (comment
   (gptelt--create-temp-file-buffer "(comment)" nil ".el"))
 
-(provide 'create-file-buffer-tool)
-
-;;; create-file-tool.el ends here
+(provide 'create-file)
+;;; create-file.el ends here

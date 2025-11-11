@@ -100,7 +100,10 @@
     (cl-mapcan
      (lambda (x)
        (let ((category (car x)))
-         (seq-map 'car (alist-get category gptel--known-tools))))
+         (seq-filter
+          (lambda (tool-name)
+            (not (string-prefix-p "emacs_" tool-name)))
+          (seq-map 'car (alist-get category gptel--known-tools)))))
      gptel--known-tools))
 
   (gptel-make-preset 'cob
@@ -123,8 +126,7 @@
     :backend "cc"
     :model 'gpt-5-codex
     :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(default))
   (gptel--apply-preset 'claude)
   (gptel--apply-preset 'cob)
   (gptel--apply-preset 'codex)
@@ -203,7 +205,7 @@ Merge buffer-local with global default files."
     (let* ((buffer (window-buffer win))
            (buf-file (or (buffer-file-name buffer)
                          (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                             (buffer-file-name base-buffer)))))
+                           (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -941,12 +943,13 @@ the result."
       "mcp-remote"
       "http://localhost:18682/mcp")))
 
-   ;; ("emacs" .
-   ;;  (:command ,(concat (expand-file-name user-emacs-directory)
-   ;;                     "emacs-mcp-stdio.sh")
-   ;;   ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
-   ;;   :args ("--init-function=elisp-dev-mcp-enable"
-   ;;          "--stop-function=elisp-dev-mcp-disable")))
+   ("emacs" .
+    (:command ,(concat
+                (expand-file-name user-emacs-directory)
+                "emacs-mcp-stdio.sh")
+     ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
+     :args ("--init-function=elisp-dev-mcp-enable"
+            "--stop-function=elisp-dev-mcp-disable")))
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))

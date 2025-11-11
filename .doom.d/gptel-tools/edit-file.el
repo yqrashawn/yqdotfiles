@@ -411,7 +411,8 @@ CALLBACK is called with the result string when done (async if LLM correction nee
              (funcall callback (gptelt-edit--generate-error old-string)))))))))
 
 ;;; Main edit functions
-(defun gptelt-edit-edit-buffer (callback buffer-name old-string new-string &optional replace-all instruction)
+(defun gptelt-edit-edit-buffer
+    (callback buffer-name old-string new-string &optional replace-all instruction)
   "Edit buffer by replacing OLD-STRING with NEW-STRING in BUFFER-NAME.
 If REPLACE-ALL is non-nil, replaces all occurrences.
 INSTRUCTION is optional natural language description of the change.

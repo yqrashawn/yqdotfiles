@@ -67,6 +67,7 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+;; (setq debug-on-message "Wrong type argument: listp")
 (load! "clj-elisp.el")
 (load! "helper.el")
 (load! "not-secret.el" (expand-file-name "~/Dropbox/sync/") t)
