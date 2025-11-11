@@ -895,3 +895,97 @@ the result."
                        (plist-get err :error)
                        (plist-get err :http-status)
                        (plist-get err :status))))))
+
+(setq!
+ mcp-hub-servers
+ `(
+   ;; ("palywright" .
+   ;;   (:command "npx"
+   ;;     :args
+   ;;     ("@playwright/mcp@latest"
+   ;;       "--storage-state=/Users/yqrashawn/.cache/playwrite-mcp/storage.json")))
+
+   ("context7" .
+    (:command "bunx"
+     :args
+     ("@upstash/context7-mcp"
+      "--api-key"
+      ,+context-7-api-key)))
+
+   ;; ("nextjs-devtools" .
+   ;;   (:command "bunx"
+   ;;     :args
+   ;;     ("next-devtools-mcp@latest")))
+
+   ("exa" .
+    (:command "bun"
+     :args ("run"
+            ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
+                 file-truename))))
+
+   ;; ("perplexity" .
+   ;;  (:command "npx"
+   ;;   :args ("-y" "perplexity-mcp")
+   ;;   :env
+   ;;   (:PERPLEXITY_API_KEY ,+perplexity-api-key
+   ;;    :PERPLEXITY_TIMEOUT_MS "600000")))
+
+   ;; ("jina_search" .
+   ;;  (:url "http://localhost:18682/mcp"))
+
+   ("jina_search" .
+    (:command "npx"
+     :args
+     ("-y"
+      "mcp-remote"
+      "http://localhost:18682/mcp")))
+
+   ("emacs" .
+    (:command ,(concat (expand-file-name user-emacs-directory)
+                       "emacs-mcp-stdio.sh")
+     ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
+     :args ("--init-function=elisp-dev-mcp-enable"
+            "--stop-function=elisp-dev-mcp-disable")))
+
+   ;; ("desktop-commander" . (:command "bunx"
+   ;;                         :args ("@wonderwhy-er/desktop-commander")))
+   ;; ("clojure-mcp-miniser" . (:command "clojure-mcp"
+   ;;                           :args ("--port" "8002")))
+   ;; ("fetch" .
+   ;;  (:command "uvx" :args ("mcp-server-fetch")))
+
+   ;; ("ramcp-macmini" .
+   ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
+
+   ;; ("ramcp-local" .
+   ;;  (:url "http://localhost:7999/api/mcp/sse"))
+
+   ;; ("mcp-filesystem-server" .
+   ;;  (:command "mcp-filesystem-server"
+   ;;   :args ("/Users/yqrashawn/")))
+
+   ;; ("markitdown" .
+   ;;   (:command "uvx"
+   ;;     :args ("markitdown-mcp")))
+
+   ;; ("figma" .
+   ;;   (:command "npx"
+   ;;     :args ("-y"
+   ;;             "figma-developer-mcp"
+   ;;             ,(concat "--figma-api-key=" +figma-access-token)
+   ;;             "--stdio")))
+   ))
+
+(setq! gptel-log-level 'debug)
+(setq! gptel-log-level nil)
+(setq! mcp-log-level 'debug)
+(setq! mcp-log-level 'info)
+(setq! mcp-server-lib-log-io nil)
+(setq! mcp-server-lib-log-io t)
+
+(after! docker
+  (when (-> "hostname"
+            shell-command-to-string
+            s-trim
+            (string= "studio.local"))
+    (setenv "DOCKER_HOST" "tcp://macmini.local:2375")))
