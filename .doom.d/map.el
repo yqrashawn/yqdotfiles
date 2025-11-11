@@ -96,7 +96,7 @@
   ;; :desc "turbo log print" "cll" #'turbo-log-print-immediately
   :desc "Local Leader" "m" (general-simulate-key ",")
   :desc "M-x" "SPC" #'execute-extended-command
-  :desc "Reveal in finder" "bf" #'reveal-in-osx-finder
+  :desc "Reveal in finder" "bf" #'+macos/reveal-in-finder
   :desc "Open scratch buffer" "bs" #'doom/switch-to-scratch-buffer
   :desc "Open scratch project buffer" "bS" #'doom/switch-to-project-scratch-buffer
   :desc "Toggle popup" "bm" #'++popup-messages
@@ -181,6 +181,8 @@
    :desc "Find library" "l" #'find-library)
   (:prefix
    ("o" . "open")
+   (:when (modulep! :tools llm)
+     :desc "Open gptel menu" "o" #'gptel-menu)
    (:when (modulep! :tools llm)
      (:prefix ("l" . "llm")
       :desc "Reload all gptel tools" "R" #'+gptel-reload-tools

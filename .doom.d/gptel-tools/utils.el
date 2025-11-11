@@ -356,12 +356,6 @@ A plist has an even number of elements and alternates between keywords and value
             (gptel-parse-tool-schema-ensure-required-array (plist-to-alist schema))))
          mcp-server-lib--tools)))))
 
-(defun gptelt-mcp-register-all-gptel-tools ()
-  (let ((tools gptel-tools))
-    (seq-doseq (tool tools)
-      (gptelt-mcp-register-one-gptel-tool
-       (gptel-tool-name tool)))))
-
 (defun gptelt-make-tool (&rest args)
   ;; (when (null (plist-get args :args))
   ;;   (error ":args must be a list"))
@@ -391,7 +385,6 @@ A plist has an even number of elements and alternates between keywords and value
   (setq mcp-server-lib-log-io t)
   mcp-server-lib--tools)
 
-
 (defun +mcp-server-lib--call-gptel-tool (tool args)
   "Call TOOL with ARGS, binding workspace context from request."
   (let ((default-directory (++workspace-current-project-root))
@@ -414,38 +407,38 @@ A plist has an even number of elements and alternates between keywords and value
          (tool (gethash tool-name mcp-server-lib--tools))
          (tool-args (alist-get 'arguments params)))
     (if-let ((one-gptel-tool (and tool (plist-get tool :gptel-tool))))
-        (let ((context (list :id id)))
-          (condition-case err
-              (let*
-                  ((result
-                    (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
-                   (result-text
-                    (cond
-                     ((null result) "")
-                     (t (gptel--to-string result))))
-                   ;; Wrap the handler result in the MCP format
-                   (formatted-result
-                    `((content
-                       .
-                       ,(vector
-                         `((type . "text") (text . ,result-text))))
-                      (isError . :json-false))))
-                (gptelt-log-mcp-tool
-                 tool-name tool-args formatted-result)
-                (mcp-server-lib-metrics--track-tool-call tool-name)
-                (mcp-server-lib--respond-with-result
-                 context formatted-result))
-            (error
-             (mcp-server-lib-metrics--track-tool-call tool-name t)
-             (cl-incf (mcp-server-lib-metrics-errors method-metrics))
-             (let ((formatted-error
-                    `((content
-                       .
-                       ,(vector
-                         `((type . "text") (text . ,(gptel--to-string err)))))
-                      (isError . t))))
-               (mcp-server-lib--respond-with-result
-                context formatted-error)))))
+      (let ((context (list :id id)))
+        (condition-case err
+            (let*
+                ((result
+                  (+mcp-server-lib--call-gptel-tool one-gptel-tool tool-args))
+                 (result-text
+                  (cond
+                   ((null result) "")
+                   (t (gptel--to-string result))))
+                 ;; Wrap the handler result in the MCP format
+                 (formatted-result
+                  `((content
+                     .
+                     ,(vector
+                       `((type . "text") (text . ,result-text))))
+                    (isError . :json-false))))
+              (gptelt-log-mcp-tool
+               tool-name tool-args formatted-result)
+              (mcp-server-lib-metrics--track-tool-call tool-name)
+              (mcp-server-lib--respond-with-result
+               context formatted-result))
+          (error
+           (mcp-server-lib-metrics--track-tool-call tool-name t)
+           (cl-incf (mcp-server-lib-metrics-errors method-metrics))
+           (let ((formatted-error
+                  `((content
+                     .
+                     ,(vector
+                       `((type . "text") (text . ,(gptel--to-string err)))))
+                    (isError . t))))
+             (mcp-server-lib--respond-with-result
+              context formatted-error)))))
       (funcall orig-fn id params method-metrics))))
 
 (defun +gptel-tool-revert-to-be-visited-buffer (buf)
@@ -459,4 +452,10 @@ Reverts both visible and non-visible buffers to ensure consistency after tool ed
       (with-current-buffer buf
         (revert-buffer :ignore-auto :noconfirm t)))))
 
+(comment
+  ;; Put this in *scratch* and C-j on each line, or eval it:
+  (setq debug-on-error nil)
+  (setq debug-on-message
+        (rx "function definition is void" (* nonl) "\\,"))
+  (setq debug-on-message nil))
 ;;; utils.el ends here

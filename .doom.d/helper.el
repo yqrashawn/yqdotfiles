@@ -97,11 +97,12 @@
   "Return a list of buffers for FILE-LIST, where FILE-LIST is a list of relative file paths.
 Each file is opened (if not already) with `find-file-noselect` relative to
  the current project root."
-  (let ((project-root (doom-project-root))
+  (let ((project-root (++workspace-current-project-root))
         buffers)
-    (setq buffers (mapcar (lambda (file)
-                            (find-file-noselect (expand-file-name file project-root)))
-                          file-list))
+    (setq buffers (mapcar
+                   (lambda (file)
+                     (find-file-noselect (expand-file-name file project-root)))
+                   file-list))
     buffers))
 
 (defun +magit-wip-buffer-changed-within-n-min (n)
@@ -285,6 +286,24 @@ Used to maintain workspace context during async LLM operations.")
         (persp-parameter '++workspace-project-root ++gptel-request-workspace))
       (persp-parameter '++workspace-project-root)
       ++fake-project-root))
+
+(defun ++workspace-current-project-buffers ()
+  "Return all file buffers in current workspace whose file belongs to current workspace project root."
+  (let ((project-root (++workspace-current-project-root))
+        (buffers (+doom-file-buffers)))
+    (seq-filter
+     (lambda (b)
+       (and
+        (when-let ((file (buffer-file-name b)))
+          (string-prefix-p (file-truename project-root)
+                           (file-truename file)))
+        (not (with-current-buffer b (derived-mode-p 'text-mode)))))
+     buffers)))
+
+(defun ++random-one-in-list (l)
+  "Pick a random item from list L and return it."
+  (when (and l (listp l))
+    (nth (random (length l)) l)))
 
 ;;;###autoload
 (defun ++workspace-set-project-to-current-buffer-project ()

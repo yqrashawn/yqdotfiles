@@ -432,7 +432,7 @@
 ;;             :host github
 ;;             :repo "steveyegge/efrit"))
 (package! smudge)
-(package! mcp-server-lib)
+(package! mcp-server-lib :pin "94756e29812928861b7d2089f25801f56fa5bde5")
 
 (package! elisp-dev-mcp)
 (package! list-utils)

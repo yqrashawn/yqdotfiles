@@ -167,7 +167,7 @@ Merge buffer-local with global default files."
   (setq! gptel-api-key +open-ai-api-key
          gptel-default-mode 'org-mode
          gptel-expert-commands t
-         gptel-temperature 0.8
+         gptel-temperature 1.0
          gptel-org-branching-context t
          gptel-track-media t
          +gptel-disabled-tool-patterns
@@ -483,9 +483,7 @@ Merge buffer-local with global default files."
       (lambda (response info)
         (if response
             (funcall on-finish response)
-          (progn
-            (message "ERRR")
-            (funcall on-error info)))))))
+          (funcall on-error info))))))
 
 (defun simple-llm-req-sync (prompt &rest args)
   (await-callback
@@ -876,3 +874,24 @@ the result."
         (kill-new org-output)
         (message "Converted markdown to org and saved to kill ring"))
     (gptel--convert-markdown->org input-string)))
+
+(comment
+  (setq gptel--tmp-backend
+        (gptel-make-openai "tmp"
+          :host "localhost:11434"
+          :endpoint "/v1/chat/completions"
+          :stream t
+          :key "no key"
+          :models gptel--claude-code-models))
+
+  (simple-llm-req
+   "hi"
+   :backend gptel--tmp-backend
+   :model 'sonnet
+   :cb (lambda (data) (message "DATA: %s" data)) 
+   :error (lambda (err)
+            (when (plist-p err)
+              (message "ERROR: %s\nHTTP-STATUS: %s\nSTATUS: %s"
+                       (plist-get err :error)
+                       (plist-get err :http-status)
+                       (plist-get err :status))))))
