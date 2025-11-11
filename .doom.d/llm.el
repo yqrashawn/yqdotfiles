@@ -941,12 +941,12 @@ the result."
       "mcp-remote"
       "http://localhost:18682/mcp")))
 
-   ("emacs" .
-    (:command ,(concat (expand-file-name user-emacs-directory)
-                       "emacs-mcp-stdio.sh")
-     ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
-     :args ("--init-function=elisp-dev-mcp-enable"
-            "--stop-function=elisp-dev-mcp-disable")))
+   ;; ("emacs" .
+   ;;  (:command ,(concat (expand-file-name user-emacs-directory)
+   ;;                     "emacs-mcp-stdio.sh")
+   ;;   ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
+   ;;   :args ("--init-function=elisp-dev-mcp-enable"
+   ;;          "--stop-function=elisp-dev-mcp-disable")))
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))
