@@ -91,9 +91,10 @@
     :description "default preset"
     :backend "cpb"
     ;; :model 'claude-sonnet-4.5
+    ;; :system (alist-get 'claude gptel-directives)
     :model 'gpt-4.1
+    :system (alist-get 'gpt41 gptel-directives)
     ;; :system (alist-get 'default gptel-directives)
-    :system (alist-get 'claude gptel-directives)
     :temperature 0.8
     :tools
     (cl-mapcan

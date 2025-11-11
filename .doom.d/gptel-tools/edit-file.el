@@ -441,7 +441,8 @@ This function:
        (current-buffer)"old" "new")
       (buffer-string))))
 
-(defun gptelt-edit-edit-file (callback file-path old-string new-string &optional replace-all instruction)
+(defun gptelt-edit-edit-file
+    (callback file-path old-string new-string &optional replace-all instruction)
   "Edit file by replacing OLD-STRING with NEW-STRING in FILE-PATH.
 If REPLACE-ALL is non-nil, replaces all occurrences.
 INSTRUCTION is optional natural language description of the change.
@@ -473,7 +474,7 @@ This function:
       (erase-buffer)
       (insert "old")
       (+force-save-buffer)
-      (gptelt-edit-edit-file f "old" "new")
+      (gptelt-edit-edit-file 'message f "old" "new")
       (buffer-string))
     ;; fix balance
     (with-current-buffer (find-file-noselect f)
@@ -482,6 +483,7 @@ This function:
       (insert "(defn plus1 [n]\n (inc n))")
       (+force-save-buffer)
       (gptelt-edit-edit-file
+       'message
        f
        "(defn plus1 [n]\n (inc n))"
        "(defn plus1 [n]\n (inc n")
@@ -492,6 +494,7 @@ This function:
       (insert "(defn plus1 [n]\n (inc n))")
       (+force-save-buffer)
       (gptelt-edit-edit-file
+       'message
        f
        "(defn plus1 [n]\n (inc n))"
        "(defn plus1 [n]\n}}}}}}}]] (inc n))")
