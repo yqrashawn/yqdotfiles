@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd ~/.emacs.d
+fd -uuu -e eln | xargs /bin/rm -rf || true
+fd -uuu -e elc | xargs /bin/rm -rf || true
+rm ~/.emacs.d/.local/etc/@ || true
+rm ~/.emacs.d/.local/straight/build-* || true
+rm ~/.emacs.d/.local/straight/modified || true
+
+ddd "$@"
