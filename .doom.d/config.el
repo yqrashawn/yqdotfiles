@@ -39,7 +39,10 @@
 (setq doom-theme
       ;; (if (string-prefix-p "Dark" (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle"))
       ;;   'modus-vivendi 'modus-operandi)
-      (if (string-prefix-p "Dark" (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle"))
+      (if (and
+           (eq system-type 'darwin)
+           (string-prefix-p "Dark"
+                            (shell-command-to-string "defaults read -globalDomain AppleInterfaceStyle")))
           'ef-cherie 'ef-day))
 
 ;; If you use `org' and don't want your org files in the default location below,
