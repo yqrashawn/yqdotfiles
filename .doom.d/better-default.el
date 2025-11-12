@@ -799,11 +799,13 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
                     (string-trim "\"" "\"")
                     (string-trim))))
   (setq! whisper-use-threads
-         (thread-first "sysctl -n hw.ncpu"
-                       (shell-command-to-string)
-                       (string-trim)
-                       (cl-parse-integer)
-                       (- 2)))
+         (if (eq system-type 'darwin)
+             (thread-first "sysctl -n hw.ncpu"
+                           (shell-command-to-string)
+                           (string-trim)
+                           (cl-parse-integer)
+                           (- 2))
+           (max 2 (- (num-processors) 2))))
   (defadvice! +whisper--ffmpeg-input-device (&optional arg)
     :before #'whisper-run
     (unless whisper--ffmpeg-input-device
