@@ -49,7 +49,8 @@
                    (point))))))
 
 (use-package! mcp-server-lib
-  :defer t
+  :commands (mcp-server-lib-register-gptel-tool)
+  :after gptel
   :init
   (unless (file-exists-p
            (concat (expand-file-name user-emacs-directory)

@@ -16,8 +16,9 @@
 
 (defun gptelt--get-buffer-file-path (buf-name)
   "Return the file path for buffer BUF-NAME."
-  (when-let ((b (get-buffer buf-name)))
-    (buffer-file-name b)))
+  (if-let ((b (get-buffer buf-name)))
+    (buffer-file-name b)
+    (error "Buffer not found: %s" buf-name)))
 
 (comment
   (gptelt--get-buffer-file-path "buffer.el"))

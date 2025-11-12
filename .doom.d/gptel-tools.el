@@ -28,8 +28,10 @@
   (interactive)
   (setq mcp-server-lib--tools (make-hash-table :test 'equal))
   (setq gptel--known-tools nil)
-  (mcp-stop-server "emacs")
-  (mcp-server-lib-stop)
+  (when (mcp--server-running-p "emacs")
+    (mcp-stop-server "emacs"))
+  (when mcp-server-lib--running
+    (mcp-server-lib-stop))
   (load! "gptel-tools.el")
   (mcp-server-lib-start)
   (mcp-hub--start-server
