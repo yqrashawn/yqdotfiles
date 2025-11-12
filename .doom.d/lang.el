@@ -2,7 +2,7 @@
 
 (use-package! jq-mode :mode (("\\.jq$" . jq-mode)))
 ;; (use-package! jenkinsfile-mode :mode ("\\Jenkinsfile\\'" . jenkinsfile-mode))
-(use-package! adoc-mode :mode ("\\\.adoc\\\'" . adoc-mode))
+(use-package! adoc-mode :mode ("\\.adoc\\'" . adoc-mode))
 (use-package! nginx-mode
   :mode
   (("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)
@@ -10,17 +10,17 @@
   ;; :config
   ;; (set-company-backend! 'nginx-mode #'company-nginx)
   )
-(use-package! dotenv-mode :mode (("\\\.env\\..*\\\'" . dotenv-mode)))
+(use-package! dotenv-mode :mode (("\\.env\\..*\\'" . dotenv-mode)))
 ;; (use-package! company-nginx :defer t)
 (pushnew! auto-mode-alist
           '("\\.aspell\\.en\\.pws\\'" . conf-mode)
           '("\\.meta\\'" . conf-mode)
-          '("\\manifest.webapp\\'" . json-mode)
+          '("manifest\\.webapp\\'" . json-mode)
           '("\\.eslintrc\\'" . json-mode)
           '("\\.swcrc\\'" . json-mode)
           '("\\.babelrc\\'" . json-mode))
 (use-package! crontab-mode :defer t)
-(use-package! jsonnet-mode :mode "\.jsonnet\'")
+(use-package! jsonnet-mode :mode "\\.jsonnet\\'")
 
 (setq! lsp-use-plists t)
 
