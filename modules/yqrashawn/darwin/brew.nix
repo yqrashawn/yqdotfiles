@@ -43,7 +43,7 @@
     brews = [
       # "alerter"
       "yqrashawn/goku/goku"
-      cloudentity/tap/oauth2c
+      "cloudentity/tap/oauth2c"
       "flyctl"
       "percol"
       # "datalevin"

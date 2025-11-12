@@ -46,7 +46,7 @@
       # "android-studio"
       # "docker"
       # "flipper"
-      "microsoft-edge"
+      # "microsoft-edge"
       # "playcover-community"
       # "spectacle"
       # "wechat"

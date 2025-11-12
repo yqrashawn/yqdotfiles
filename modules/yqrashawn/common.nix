@@ -69,6 +69,7 @@ in
     systemPackages =
       with pkgs;
       [
+        eask-cli
         # firefox-devedition
         lzip
         clojure-lsp
