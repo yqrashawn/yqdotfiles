@@ -83,42 +83,43 @@
         (+gptel-tool-revert-to-be-visited-buffer b))
       (when (llm-danger-buffer-p b) (error "User denied the read request"))
       (if-let ((file-name (buffer-file-name b)))
-          (if (gptelt--image-file-p file-name)
-              ;; Handle image files: return direct base64 without wrapping
-              (gptelt--file-to-base64 file-name)
-            ;; Handle regular files
-            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                  (line-offset (or offset 0)))
-              (save-excursion
-                (let* ((total-lines (count-lines (point-min) (point-max)))
-                       (start-line (1+ line-offset))
-                       (end-line (min total-lines (+ line-offset max-lines))))
-                  (goto-char (point-min))
-                  (forward-line line-offset)
-                  (let ((start (point)))
-                    (forward-line max-lines)
-                    (let ((content (buffer-substring-no-properties start (point))))
-                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
-                                      total-lines start-line end-line buffer_name file-name)
-                              "\n␂" content "␃"))))))
-            ;; Buffer without associated file
-            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                  (line-offset (or offset 0)))
-              (save-excursion
-                (let* ((total-lines (count-lines (point-min) (point-max)))
-                       (start-line (1+ line-offset))
-                       (end-line (min total-lines (+ line-offset max-lines))))
-                  (goto-char (point-min))
-                  (forward-line line-offset)
-                  (let ((start (point)))
-                    (forward-line max-lines)
-                    (let ((content (buffer-substring-no-properties start (point))))
-                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
-                                      total-lines start-line end-line buffer_name)
-                              "\n␂" content "␃")))))))))))
+        (if (gptelt--image-file-p file-name)
+            ;; Handle image files: return direct base64 without wrapping
+            (gptelt--file-to-base64 file-name)
+          ;; Handle regular files
+          (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+                (line-offset (or offset 0)))
+            (save-excursion
+              (let* ((total-lines (count-lines (point-min) (point-max)))
+                     (start-line (1+ line-offset))
+                     (end-line (min total-lines (+ line-offset max-lines))))
+                (goto-char (point-min))
+                (forward-line line-offset)
+                (let ((start (point)))
+                  (forward-line max-lines)
+                  (let ((content (buffer-substring-no-properties start (point))))
+                    (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
+                                    total-lines start-line end-line buffer_name file-name)
+                            "\n␂" content "␃"))))))
+          ;; Buffer without associated file
+          (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+                (line-offset (or offset 0)))
+            (save-excursion
+              (let* ((total-lines (count-lines (point-min) (point-max)))
+                     (start-line (1+ line-offset))
+                     (end-line (min total-lines (+ line-offset max-lines))))
+                (goto-char (point-min))
+                (forward-line line-offset)
+                (let ((start (point)))
+                  (forward-line max-lines)
+                  (let ((content (buffer-substring-no-properties start (point))))
+                    (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
+                                    total-lines start-line end-line buffer_name)
+                            "\n␂" content "␃")))))))))))
 
 (comment
-  (gptelt-read-buffer (current-buffer)))
+  (gptelt-read-buffer (current-buffer))
+  )
 
 ;; Register the file and buffer reading tools with gptel
 (when (fboundp 'gptelt-make-tool)

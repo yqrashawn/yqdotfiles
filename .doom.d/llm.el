@@ -463,6 +463,19 @@ Merge buffer-local with global default files."
     :around #'mcp-make-text-tool
     (plist-put (funcall orig-fn name tool-name asyncp) :include t)))
 
+(use-package! mcp-server-lib
+  :defer t
+  :init
+  (unless (file-exists-p
+           (concat (expand-file-name user-emacs-directory)
+                   "emacs-mcp-stdio.sh"))
+    (mcp-server-lib-install))
+  :config
+  (comment
+    (mcp-server-lib-stop))
+  (unless (and (boundp 'mcp-server-lib--running) mcp-server-lib--running)
+    (mcp-server-lib-start)))
+
 (defvar simple-llm-req-p nil)
 
 (defun simple-llm-req (prompt &rest args)

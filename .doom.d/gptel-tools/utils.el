@@ -221,6 +221,7 @@ Returns a message describing the result of the operation."
     tool-or-name))
 
 (defun gptelt-make-tool (&rest args)
+  (require 'mcp-server-lib)
   ;; (when (null (plist-get args :args))
   ;;   (error ":args must be a list"))
   

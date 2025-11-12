@@ -48,19 +48,6 @@
                    (end-of-defun)
                    (point))))))
 
-(use-package! mcp-server-lib
-  :commands (mcp-server-lib-register-gptel-tool)
-  :after gptel
-  :init
-  (unless (file-exists-p
-           (concat (expand-file-name user-emacs-directory)
-                   "emacs-mcp-stdio.sh"))
-    (mcp-server-lib-install))
-  (comment
-    (mcp-server-lib-stop))
-  (unless (and (boundp 'mcp-server-lib--running) mcp-server-lib--running)
-    (mcp-server-lib-start)))
-
 (use-package! elisp-dev-mcp
   :defer t)
 
