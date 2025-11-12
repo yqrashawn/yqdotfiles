@@ -123,9 +123,9 @@
 
   (gptel-make-preset 'codex
     :description "codex"
-    :backend "cc"
+    :backend "codex"
     :model 'gpt-5-codex
-    :system (alist-get 'claude gptel-directives)
+    :system (alist-get 'default gptel-directives)
     :parents '(default))
   (gptel--apply-preset 'claude)
   (gptel--apply-preset 'cob)
