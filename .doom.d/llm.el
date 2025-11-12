@@ -984,8 +984,8 @@ the result."
 (setq! gptel-log-level nil)
 (setq! mcp-log-level 'debug)
 (setq! mcp-log-level 'info)
-(setq! mcp-server-lib-log-io nil)
 (setq! mcp-server-lib-log-io t)
+(setq! mcp-server-lib-log-io nil)
 
 (after! docker
   (when (-> "hostname"

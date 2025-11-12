@@ -319,6 +319,16 @@ A plist has an even number of elements and alternates between keywords and value
       (clj/assoc schema "required" [])
     schema))
 
+
+(defun ensure-properties-is-object (alist)
+  "Ensure 'properties' key in ALIST is present and is an empty alist if missing or nil.
+Returns a new alist with (\"properties\" . ()) when necessary."
+  (let ((props (alist-get "properties" alist nil nil #'string=)))
+    (if (or (null (log/spy props)) (eq props :null))
+        (clj/assoc alist "properties" '{})
+      alist)))
+
+
 (defun gptelt-parse-tool-schema (tool-or-name)
   (when-let ((one-gptel-tool (gptelt-get-tool tool-or-name)))
     (let* ((tool (plist-get (clj/first
@@ -328,8 +338,11 @@ A plist has an even number of elements and alternates between keywords and value
                             :function))
            (schema (plist-get tool :parameters)))
       (if (eq schema :null)
-          '((type . "object"))
-        (gptel-parse-tool-schema-ensure-required-array (plist-to-alist schema))))))
+          '((type . "object")
+            (properties . ())) ;; always provide empty object
+        (let* ((alist-schema
+                (ensure-properties-is-object (plist-to-alist schema))))
+          (gptel-parse-tool-schema-ensure-required-array alist-schema))))))
 
 (defun gptelt-mcp-register-one-gptel-tool (tool-or-name)
   (when-let ((one-gptel-tool (gptelt-get-tool tool-or-name)))
@@ -351,9 +364,7 @@ A plist has an even number of elements and alternates between keywords and value
           :gptel-tool one-gptel-tool
           :description description
           :schema
-          (if (eq schema :null)
-              '((type . "object"))
-            (gptel-parse-tool-schema-ensure-required-array (plist-to-alist schema))))
+          (gptelt-parse-tool-schema (plist-get tool :name)))
          mcp-server-lib--tools)))))
 
 (defun gptelt-make-tool (&rest args)
@@ -377,10 +388,18 @@ A plist has an even number of elements and alternates between keywords and value
     ))
 
 (comment
+  (ensure-properties-is-object '(("type" . "object")))
+  
   (gptelt-parse-tool-schema "glob")
   (gptelt-parse-tool-schema "clj_list_ns")
   (type-of (gptel-tool-function (gptelt-get-tool "visible_buffers")))
   (gptelt-get-tool "visible_buffers")
+
+  (ensure-properties-is-object '(("type" . "object")))
+  (json-encode-alist (gptelt-parse-tool-schema "visible_buffers"))
+  ;; => (("properties")
+  ;;   ("type" . "object")
+  ;;   ("properties"))
 
 
   (setq mcp-server-lib-log-io t)

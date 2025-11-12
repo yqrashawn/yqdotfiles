@@ -455,10 +455,12 @@
 (package! jtsx)
 (package! lsp-biome :recipe (:host github :repo "cxa/lsp-biome"))
 (package! pushover)
-(package! acp)
 (package! pg)
 (package! vecdb :recipe (:host github :repo "ahyatt/vecdb"))
 (package! llm :recipe (:host github :repo "ahyatt/llm"))
+(package! shell-maker)
+(package! acp)
+(package! agent-shell)
 ;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
 
 ;; Local Variables:

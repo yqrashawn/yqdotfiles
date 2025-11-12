@@ -4539,7 +4539,7 @@ snapshots:
 
   '@agentclientprotocol/sdk@0.5.1':
     dependencies:
-      zod: 3.22.4
+      zod: 3.25.76
 
   '@ampproject/remapping@2.3.0':
     dependencies:
