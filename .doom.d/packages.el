@@ -465,6 +465,10 @@
 (package! shell-maker)
 (package! acp)
 (package! agent-shell)
+(package! agent-shell-sidebar
+  :recipe (:host github :repo "cmacrae/agent-shell-sidebar"))
+(package! agent-shell-manager
+  :recipe (:host github :repo "jethrokuan/agent-shell-manager"))
 ;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
 
 ;; Local Variables:

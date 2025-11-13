@@ -1007,3 +1007,8 @@ the result."
             s-trim
             (string= "studio.local"))
     (setenv "DOCKER_HOST" "tcp://macmini.local:2375")))
+
+(use-package! agent-shell-sidebar
+  :after agent-shell)
+(use-package! agent-shell-manager
+  :after agent-shell)

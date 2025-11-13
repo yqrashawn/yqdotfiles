@@ -50,6 +50,7 @@
  :g "s-'" #'+side-notes-toggle-daily-note
  :g "s-i" #'gptel-context-add
  :g "s-j" #'+gptel
+ :g "s-o" #'agent-shell-sidebar-toggle
  ;; :g "s-j" #'gptel-menu
  ;; :g "s-j" #'+whisper-run
  ;; :g "s-j" #'+chat-with-ai
@@ -805,11 +806,15 @@
           :n "DEL" #'gptel-context-flag-deletion
           :n "C-j" #'gptel-context-next
           :n "q" #'quit-window
-          :n "C-k" #'gptel-context-previous))
- (:after gptel
+          :n "C-k" #'gptel-context-previous)
          (:map gptel-mode-map
           :g "C-3" (cmd! ())
           :nv "RET" nil))
+ (:after agent-shell
+         (:map agent-shell-mode-map
+          :g "C-r" #'agent-shell-search-history
+          :g "C-p" #'agent-shell-previous-input
+          :g "C-p" #'agent-shell-next-input))
  (:after copilot-chat
          (:map copilot-chat-prompt-mode-map
           :g "C-3" (cmd! ()
