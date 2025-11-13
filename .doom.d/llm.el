@@ -127,10 +127,10 @@
     :model 'gpt-5-codex
     :system (alist-get 'default gptel-directives)
     :parents '(default))
-  (gptel--apply-preset 'claude)
   (gptel--apply-preset 'cob)
   (gptel--apply-preset 'codex)
-  (gptel--apply-preset 'default))
+  (gptel--apply-preset 'default)
+  (gptel--apply-preset 'claude))
 
 ;;;###autoload
 (defun +gptel (arg)
