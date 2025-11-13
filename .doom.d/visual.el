@@ -30,61 +30,62 @@
 ;;     :around #'ivy-shrink-after-dispatching
 ;;     (unless mini-frame-mode (apply f a))))
 
-(use-package! elcord
-  :hook (doom-first-file . elcord-mode)
-  :init
-  (defun +elcord-local-time ()
-    (let ((hour (nth 2 (decode-time (current-time)))))
-      (if (> hour 12)
-          (format "%sPM" (- hour 12))
-        (format "%sAM" hour))))
-  (setq! elcord-quiet t
-         elcord-use-major-mode-as-main-icon t
-         elcord-display-buffer-details nil)
-  :config
-  (defadvice! +elcord--start-idle (orig-fn)
-    :around #'elcord--start-idle
-    "Set presence to idle, pause update and timer."
-    (unless elcord--idle-status
-      (unless elcord-quiet
-        (message (format "elcord: %s" elcord-idle-message)))
+;; (use-package! elcord
+;;   :hook (doom-first-file . elcord-mode)
+;;   :init
+;;   (defun +elcord-local-time ()
+;;     (let ((hour (nth 2 (decode-time (current-time)))))
+;;       (if (> hour 12)
+;;           (format "%sPM" (- hour 12))
+;;         (format "%sAM" hour))))
+;;   (setq! elcord-quiet t
+;;          elcord-use-major-mode-as-main-icon t
+;;          elcord-display-buffer-details nil)
+;;   :config
+;;   (defadvice! +elcord--start-idle (orig-fn)
+;;     :around #'elcord--start-idle
+;;     "Set presence to idle, pause update and timer."
+;;     (unless elcord--idle-status
+;;       (unless elcord-quiet
+;;         (message (format "elcord: %s" elcord-idle-message)))
 
-      ;;hacky way to stop updates and store elapsed time
-      (cancel-timer elcord--update-presence-timer)
-      (setq elcord--startup-time (string-to-number (format-time-string "%s" (time-subtract nil elcord--startup-time)))
+;;       ;;hacky way to stop updates and store elapsed time
+;;       (cancel-timer elcord--update-presence-timer)
+;;       (setq elcord--startup-time (string-to-number (format-time-string "%s" (time-subtract nil elcord--startup-time)))
 
-            elcord--idle-status t)
+;;             elcord--idle-status t)
 
-      (let* ((local-time (+elcord-local-time))
-             (activity
-              `(("assets" . (,@(elcord--mode-icon-and-text)))
-                ("timestamps" ("start" ,@(string-to-number (format-time-string "%s" (current-time)))))
-                ("details" . ,local-time) ("state" . ,elcord-idle-message)))
-             (nonce (format-time-string "%s%N"))
-             (presence
-              `(("cmd" . "SET_ACTIVITY")
-                ("args" . (("activity" . ,activity)
-                           ("pid" . ,(emacs-pid))))
-                ("nonce" . ,nonce))))
-        (elcord--send-packet 1 presence))
-      (add-hook 'pre-command-hook 'elcord--cancel-idle)))
+;;       (let* ((local-time (+elcord-local-time))
+;;              (activity
+;;               `(("assets" . (,@(elcord--mode-icon-and-text)))
+;;                 ("timestamps" ("start" ,@(string-to-number (format-time-string "%s" (current-time)))))
+;;                 ("details" . ,local-time) ("state" . ,elcord-idle-message)))
+;;              (nonce (format-time-string "%s%N"))
+;;              (presence
+;;               `(("cmd" . "SET_ACTIVITY")
+;;                 ("args" . (("activity" . ,activity)
+;;                            ("pid" . ,(emacs-pid))))
+;;                 ("nonce" . ,nonce))))
+;;         (elcord--send-packet 1 presence))
+;;       (add-hook 'pre-command-hook 'elcord--cancel-idle)))
 
-  (defadvice! +elcord--details-and-state (orig-fn)
-    :around #'elcord--details-and-state
-    (let ((activity (if elcord-display-buffer-details
-                        (list
-                         (cons "details" (funcall elcord-buffer-details-format-function))
-                         (cons "state" (format "Line %s of %S"
-                                               (format-mode-line "%l")
-                                               (+ 1 (count-lines (point-min) (point-max))))))
-                      (list
-                       (cons "details" (+elcord-local-time))
-                       (cons "state" (elcord--mode-text))))))
-      (when elcord-display-elapsed
-        (push (list "timestamps" (cons "start" elcord--startup-time)) activity))
-      activity))
+;;   (defadvice! +elcord--details-and-state (orig-fn)
+;;     :around #'elcord--details-and-state
+;;     (let ((activity (if elcord-display-buffer-details
+;;                         (list
+;;                          (cons "details" (funcall elcord-buffer-details-format-function))
+;;                          (cons "state" (format "Line %s of %S"
+;;                                                (format-mode-line "%l")
+;;                                                (+ 1 (count-lines (point-min) (point-max))))))
+;;                       (list
+;;                        (cons "details" (+elcord-local-time))
+;;                        (cons "state" (elcord--mode-text))))))
+;;       (when elcord-display-elapsed
+;;         (push (list "timestamps" (cons "start" elcord--startup-time)) activity))
+;;       activity))
 
-  (pushnew! elcord-boring-buffers-regexp-list "scratch\\*"))
+;;   (pushnew! elcord-boring-buffers-regexp-list "scratch\\*"))
+
 (use-package! idle-highlight-mode :hook (doom-first-file))
 (add-hook! 'doom-first-file-hook #'global-display-fill-column-indicator-mode)
 

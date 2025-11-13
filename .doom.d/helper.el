@@ -149,7 +149,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-              (insert! (",File project root: `%s`" buf-proj-root))
+            (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -433,3 +433,22 @@ Example:
             (insert (+format-diagnostic diag))))))
     ;; (switch-to-buffer b)
     b))
+
+
+(defun +pabbrev-export-usage-hash->file ()
+  "Write org-mode pabbrev usage-hash KEYS to a temp file, one per line.
+Return the file path as a Lisp string."
+  (let* ((file (make-temp-file "pabbrev-keys-" nil ".txt"))
+         (coding-system-for-write 'utf-8-unix)
+         (keys (hash-table-keys (get 'org-mode 'pabbrev-usage-hash))))
+    (with-temp-file file
+      ;; Keep it pure UTF-8; don’t pretty-print
+      (dolist (k keys)
+        (let ((s (cond
+                  ((symbolp k) (symbol-name k))
+                  ((stringp k) k)
+                  (t (format "%s" k)))))
+          (insert s)
+          (insert "\n"))))
+    ;; Return the path as a string; emacsclient --eval will print it quoted.
+    file))

@@ -174,7 +174,7 @@
   (:host github :repo "corgi-emacs/corgi-packages"
    :files ("corgi-emacs-lisp/*.el")))
 
-(package! elcord)
+;; (package! elcord)
 (package! parinfer-rust-mode)
 (package! idle-highlight-mode)
 (package! symex :recipe (:host github :repo "countvajhula/symex.el"))
