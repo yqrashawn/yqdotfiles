@@ -205,7 +205,7 @@ Merge buffer-local with global default files."
     (let* ((buffer (window-buffer win))
            (buf-file (or (buffer-file-name buffer)
                          (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                             (buffer-file-name base-buffer)))))
+                           (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -470,7 +470,10 @@ Merge buffer-local with global default files."
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
     (mcp-server-lib-install))
+  ;; at http://localhost:18684/mcp/v1/messages
+  (mcp-server-lib-http-start :port 18684)
   :config
+  ;; (mcp-server-lib-http-stop)
   (comment
     (mcp-server-lib-stop))
   (unless (and (boundp 'mcp-server-lib--running) mcp-server-lib--running)
@@ -957,13 +960,15 @@ the result."
       "http://localhost:18682/mcp")))
 
    ("emacs" .
+    ;; (:url "http://localhost:18684/mcp/v1/messages")
     (:command ,(concat
                 (expand-file-name user-emacs-directory)
                 "emacs-mcp-stdio.sh")
               ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
               ;; :args ("--init-function=elisp-dev-mcp-enable"
               ;;        "--stop-function=elisp-dev-mcp-disable")
-              ))
+              )
+    )
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))
