@@ -12,6 +12,8 @@ For longer-running commands, returns just the session ID."
   (let* ((default-directory (or cwd default-directory))
          (detached-session-origin 'gptel)
          (detached-session-mode 'detached)
+         ;; Disable notifications for MCP shell commands
+         (detached-notification-function #'ignore)
          (detached-session-action
           `(:attach detached-shell-command-attach-session
             :view detached-view-dwim
@@ -57,51 +59,34 @@ as it only returns results after the command completes."
   (let* ((default-directory (or cwd default-directory))
          (detached-session-origin 'gptel)
          (detached-session-mode 'detached)
+         ;; Disable notifications for MCP shell commands
+         (detached-notification-function #'ignore)
+         (session-callback
+          (lambda (session)
+            (let* ((session-id (detached-session-id session))
+                   (status (detached-session-status session))
+                   (exit-code (detached-session-exit-code session))
+                   (output (+safe-detached-session-output session))
+                   (duration (detached-session-duration session)))
+              (funcall callback
+                       (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
+                               duration
+                               (symbol-name session-id)
+                               status
+                               exit-code
+                               output)))))
          (detached-session-action
           `(:attach detached-shell-command-attach-session
             :view detached-view-dwim
-            :run detached-start-shell-command-session))
-         (session (detached-create-session command))
-         (session-id (detached-session-id session))
-         (poll-interval 0.5)
-         (max-wait-time 3600))
-    (detached-start-session session)
-    
-    ;; Poll until command completes or timeout
-    (let ((start-time (time-to-seconds (current-time)))
-          (timer nil))
-      (setq timer
-            (run-with-timer
-             poll-interval poll-interval
-             (lambda ()
-               (let ((updated-session (detached--db-get-session session-id))
-                     (elapsed (- (time-to-seconds (current-time)) start-time)))
-                 (cond
-                  ;; Command completed
-                  ((and updated-session (detached-session-inactive-p updated-session))
-                   (cancel-timer timer)
-                   (let* ((status (detached-session-status updated-session))
-                          (exit-code (detached-session-exit-code updated-session))
-                          (output (+safe-detached-session-output updated-session))
-                          (duration (detached-session-duration updated-session)))
-                     (funcall callback
-                              (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
-                                      duration
-                                      (symbol-name session-id)
-                                      status
-                                      exit-code
-                                      output))))
-                  ;; Timeout
-                  ((> elapsed max-wait-time)
-                   (cancel-timer timer)
-                   (funcall callback
-                            (format "Command timeout after %d seconds\nSession ID: %s\nUse get_shell_command_session_info to check status"
-                                    max-wait-time
-                                    (symbol-name session-id))))))))))))
+            :run detached-start-shell-command-session
+            :callback ,session-callback))
+         (session (detached-create-session command)))
+    (detached-start-session session)))
 
 (comment
   (gptelt-shell-run-command-sync 'message "date")
-  (gptelt-shell-run-command-sync 'message "sleep 2 && echo done"))
+  (gptelt-shell-run-command-sync 'message "sleep 2 && echo done")
+  (gptelt-shell-run-command-sync 'message "cd ~/workspace/office/perpdex-nextjs && bunx tsc --noEmit"))
 
 (defun gptelt-shell-get-shell-command-session-info (callback session-id)
   "Get information about a detached SESSION-ID.
