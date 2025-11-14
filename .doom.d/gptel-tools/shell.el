@@ -47,6 +47,62 @@ For longer-running commands, returns just the session ID."
 (comment
   (gptelt-shell-run-command 'message "date"))
 
+(defun gptelt-shell-run-command-sync (callback command &optional cwd)
+  "Run COMMAND synchronously using detached.el, waiting for completion.
+CALLBACK is called with full session info and output when command finishes.
+If CWD is provided, run command in that directory.
+
+This is an async tool (non-blocking for Emacs) but synchronous in behavior
+as it only returns results after the command completes."
+  (let* ((default-directory (or cwd default-directory))
+         (detached-session-origin 'gptel)
+         (detached-session-mode 'detached)
+         (detached-session-action
+          `(:attach detached-shell-command-attach-session
+            :view detached-view-dwim
+            :run detached-start-shell-command-session))
+         (session (detached-create-session command))
+         (session-id (detached-session-id session))
+         (poll-interval 0.5)
+         (max-wait-time 3600))
+    (detached-start-session session)
+    
+    ;; Poll until command completes or timeout
+    (let ((start-time (time-to-seconds (current-time)))
+          (timer nil))
+      (setq timer
+            (run-with-timer
+             poll-interval poll-interval
+             (lambda ()
+               (let ((updated-session (detached--db-get-session session-id))
+                     (elapsed (- (time-to-seconds (current-time)) start-time)))
+                 (cond
+                  ;; Command completed
+                  ((and updated-session (detached-session-inactive-p updated-session))
+                   (cancel-timer timer)
+                   (let* ((status (detached-session-status updated-session))
+                          (exit-code (detached-session-exit-code updated-session))
+                          (output (+safe-detached-session-output updated-session))
+                          (duration (detached-session-duration updated-session)))
+                     (funcall callback
+                              (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
+                                      duration
+                                      (symbol-name session-id)
+                                      status
+                                      exit-code
+                                      output))))
+                  ;; Timeout
+                  ((> elapsed max-wait-time)
+                   (cancel-timer timer)
+                   (funcall callback
+                            (format "Command timeout after %d seconds\nSession ID: %s\nUse get_shell_command_session_info to check status"
+                                    max-wait-time
+                                    (symbol-name session-id))))))))))))
+
+(comment
+  (gptelt-shell-run-command-sync 'message "date")
+  (gptelt-shell-run-command-sync 'message "sleep 2 && echo done"))
+
 (defun gptelt-shell-get-shell-command-session-info (callback session-id)
   "Get information about a detached SESSION-ID.
 CALLBACK is called with a property list containing session info."
@@ -160,6 +216,32 @@ If ACTIVE-ONLY is non-nil, only list active sessions."
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "run_shell_command"
+   :function #'gptelt-shell-run-command-sync
+   :async t
+   :description (concat "Run a shell command and wait for completion using detached.el. "
+                        "This tool is async (non-blocking for Emacs) but synchronous in behavior - "
+                        "it waits for the command to finish before returning results.\n\n"
+                        "Returns complete session info including:\n"
+                        "- Exit status (success/failure)\n"
+                        "- Exit code\n"
+                        "- Full command output\n"
+                        "- Execution duration\n"
+                        "- Session ID for reference\n\n"
+                        "Use this for:\n"
+                        "- Commands where you need the output before proceeding\n"
+                        "- Short to medium duration tasks (up to 1 hour)\n"
+                        "- Build commands, tests, file operations\n\n"
+                        "For fire-and-forget long-running tasks, use run_shell_command_async instead.")
+   :args '((:name "command" :type string
+            :description "The shell command to run")
+           (:name "cwd" :type string :optional t
+            :description "Working directory for the command (defaults to current directory)"))
+   :category "shell"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "run_shell_command_async"
    :function #'gptelt-shell-run-command
    :async t
    :description (concat "Run a shell command asynchronously using detached.el. "
