@@ -94,7 +94,8 @@ NEW-STRING is the replacement text."
             (when (and (fboundp 'lsp-format-region)
                        (bound-and-true-p lsp-mode))
               (condition-case err
-                  (lsp-format-region start (+ start (length new-string)))
+                  (progn (lsp-format-region start (+ start (length new-string)))
+                         (+force-save-buffer))
                 (error (message "LSP formatting failed: %s" err)))))
         (error "old_string not found in the original content, CHECK CAREFULLY.")))
     newbuf))
@@ -298,8 +299,9 @@ CALLBACK is called with the result message."
         (when (and (fboundp 'lsp-format-region)
                    (bound-and-true-p lsp-mode))
           (condition-case err
-              (lsp-format-region (or replacement-start (point-min)) 
-                                 (or replacement-end (point-max)))
+              (progn (lsp-format-region (or replacement-start (point-min)) 
+                                        (or replacement-end (point-max)))
+                     (+force-save-buffer))
             (error (message "LSP formatting failed: %s" err)))))
 
       (let ((point-adjustment (- (length new-string) (length old-string))))

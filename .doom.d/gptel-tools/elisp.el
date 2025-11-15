@@ -305,8 +305,10 @@
   (gptelt-make-tool
    :name "elisp_get_function_source_code"
    :function #'gptelt-get-function-source-code
-   :description "Get source code for an Emacs Lisp function. IMPORTANT: Use this tool when working with Elisp code to understand implementation details, check function definitions, and learn from existing code patterns. Reading source code is often more informative than just reading documentation."
-   :args '((:name "function_name" :type string :description "The name of the function to get source code for"))
+   :description "Get source code for an Emacs Lisp function by function name. CRITICAL: This is the PRIMARY tool for examining Elisp function implementations - use this FIRST before grep/search when you need to understand how a function works. This tool directly retrieves the complete source code definition from Emacs' symbol table, which is faster and more reliable than text search. Use grep only when you need to find WHERE functions are defined or when searching for patterns across multiple files. Examples: checking implementation details, understanding function behavior, verifying function definitions, learning code patterns."
+   :args '((:name "function_name"
+            :type string
+            :description "The name of the function to get source code for"))
    :category "elisp"
    :confirm nil
    :include t)

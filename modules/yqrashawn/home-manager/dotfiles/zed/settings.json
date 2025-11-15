@@ -7,6 +7,27 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "context_servers": {
+    "emacs": {
+      "source": "custom",
+      "enabled": true,
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:18684/mcp/v1/messages"]
+    },
+    "exa_search": {
+      "source": "custom",
+      "enabled": true,
+      "command": "bun",
+      "args": ["run", "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"]
+    },
+    },
+    "jina_search": {
+      "source": "custom",
+      "enabled": true,
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:18682/mcp"]
+    }
+  },
   "features": {
     "edit_prediction_provider": "copilot"
   },
