@@ -43,54 +43,96 @@
   {
     "context": "vim_mode == normal || EmptyPane || SharedScreen",
     "bindings": {
-      // ========== CORE COMMANDS ==========
-      "space space": "command_palette::Toggle", // M-x / execute-extended-command
+      // ========== CORE COMMANDS (Doom Emacs defaults) ==========
+      "space space": "file_finder::Toggle", // SPC SPC - open file in project (Doom default)
+      "space :": "command_palette::Toggle", // SPC : - execute command (M-x)
 
       // ========== FILE OPERATIONS (space f) ==========
       "space f f": "file_finder::Toggle", // find-file
+      "space f s": "workspace::Save", // save current file
+      "space f r": "recent_projects::OpenRecent", // recently visited files
       "space f j": "project_panel::ToggleFocus", // dired-jump
+      "space f shift-d": "workspace::DeleteFile", // delete file
       "space f e d": "zed::OpenSettings", // edit doom config
       "space f e shift-k": "zed::OpenKeymap", // edit keymap
       "space f e n": "workspace::Open", // edit nix config (open workspace)
 
       // ========== BUFFER OPERATIONS (space b) ==========
+      "space b b": "tab_switcher::Toggle", // switch buffer
+      "space b shift-b": "tab_switcher::Toggle", // view all buffers
+      "space comma": "tab_switcher::Toggle", // switch buffers (alias)
       "space b s": "workspace::NewCenterTerminal", // scratch buffer (terminal as scratch)
+      "space b shift-x": "workspace::NewCenterTerminal", // create scratch buffer
       "space b f": "workspace::RevealInFinder", // reveal in finder
       "space b m": "notifications::ToggleNotifications", // toggle popup/messages
+      "space b d": "pane::CloseActiveItem", // close/kill buffer
+      "space b k": "pane::CloseActiveItem", // kill buffer (alias)
 
       // ========== GIT OPERATIONS (space g) ==========
-      "space g s": "git_panel::ToggleFocus", // magit-status
+      "space g g": "git_panel::ToggleFocus", // magit-status (Doom default: SPC g g)
+      "space g s": "git_panel::ToggleFocus", // magit-status (alias)
       "space g t": "editor::OpenExcerpts", // git-timemachine (excerpts as similar)
-      "space g g": "editor::ToggleGitBlame", // git-gutter (closest match)
+      "space g b": "editor::ToggleGitBlame", // git blame
       "space k g g": "editor::CopyPermalinkToLine", // git-link
       "space k g c": "editor::CopyPermalinkToLine", // git-link-commit
 
       // ========== SEARCH OPERATIONS (space s) ==========
-      "space s f": "project_search::ToggleFocus", // search-other-directory
+      "space s s": "buffer_search::Deploy", // search buffer
+      "space s f": "project_search::ToggleFocus", // search in files
       "space s p": "project_search::ToggleFocus", // search-project
+
+      // ========== PROJECT OPERATIONS (space p) ==========
+      "space p p": "projects::OpenRecent", // open project
+      "space p r": "recent_projects::OpenRecent", // recent project files
+      "space p f": "file_finder::Toggle", // find file in project
 
       // ========== TOGGLE/OPTIONS (space t) ==========
       "space t l": "editor::ToggleLineNumbers", // toggle line numbers
+      "space t z": "workspace::ToggleCenteredLayout", // zen mode
+      "space t s": "editor::ToggleInlayHints", // toggle spell check (inlay hints as substitute)
 
       // ========== OPEN/LAUNCH (space o) ==========
+      "space o p": "project_panel::ToggleFocus", // file explorer
+      "space o e": "terminal_panel::ToggleFocus", // shell popup
+      "space o shift-e": "workspace::NewTerminal", // shell fullscreen
       "space o t": "terminal_panel::ToggleFocus", // toggle terminal
 
       // ========== HELP (space h) ==========
       "space h k": "dev::OpenKeyContextView", // describe-key
+      "space h w": "command_palette::Toggle", // find shortcuts
+      "space h b b": "zed::OpenKeymap", // list all keybindings
 
       // ========== WORKSPACE/WINDOW (space w) ==========
+      "space w w": "pane::ActivateNextItem", // switch windows
+      "space w q": "pane::CloseActiveItem", // close window
       "space w d": "pane::CloseActiveItem", // delete-window
       "space w s": "pane::SplitDown", // split-window-below
       "space w v": "pane::SplitRight", // split-window-right
+      "space w h": "pane::ActivatePrevItem", // previous window
+      "space w l": "pane::ActivateNextItem", // next window
 
-      // ========== COMPILE/RUN (space c) ==========
-      "space c c": "task::Spawn", // compile
+      // ========== WORKSPACE/TABS (space TAB) ==========
+      "space tab n": "workspace::NewTab", // new workspace
+      "space tab [": "pane::ActivatePrevItem", // previous workspace
+      "space tab ]": "pane::ActivateNextItem", // next workspace
+
+      // ========== CODE/LSP OPERATIONS (space c) ==========
+      "space c c": "task::Spawn", // compile/run
+      "space c d": "editor::GoToDefinition", // jump to definitions
+      "space c shift-d": "editor::FindAllReferences", // see references
+      "space c r": "editor::Rename", // rename symbol
+      "space c a": "editor::ToggleCodeActions", // code actions
+      "space c x": "diagnostics::Deploy", // view diagnostics
+      "space c f": "editor::Format", // format code
 
       // ========== EDIT OPERATIONS (space e) ==========
       "space e r": "editor::Revert", // reload
 
       // ========== JUMP (space j) ==========
       "space j =": "editor::Format", // indent-region-or-buffer
+
+      // ========== QUIT (space q) ==========
+      "space q q": "zed::Quit", // quit/close Emacs
 
       // ========== MISC/RESUME (space r) ==========
       "space r l": "pane::ActivatePrevItem", // resume/last
@@ -129,7 +171,7 @@
       "s shift-k": "project::CloseAll", // project-kill-buffers
 
       // ========================================================================
-      // VIM NAVIGATION & EDITING
+      // VIM NAVIGATION & EDITING (Doom Emacs Evil defaults)
       // ========================================================================
       // Visual line movement (already default in Zed vim)
       "j": "vim::Down",
@@ -141,9 +183,21 @@
       "g y": "editor::DuplicateLineDown", // duplicate-line
       "g shift-y": "editor::DuplicateLineDown", // copy-and-comment (closest match)
 
-      // Folding
+      // Comment operations (gc - evil-nerd-commenter)
+      "g c": "editor::ToggleComments", // comment/uncomment (gc motion)
+      "g c c": "editor::ToggleComments", // comment/uncomment line
+
+      // Yank to end of line (Doom default)
+      "shift-y": "vim::YankToEndOfLine", // Y yanks to EOL (like C and D)
+
+      // Folding (za - toggle fold)
+      "z a": "editor::Fold", // toggle fold
+      "z c": "editor::Fold", // close fold
+      "z o": "editor::UnfoldLines", // open fold
+      "z shift-a": "editor::UnfoldAll", // toggle all folds
+      "z shift-m": "editor::FoldAll", // close all folds
+      "z shift-r": "editor::UnfoldAll", // open all folds
       "z l": "editor::Fold", // fold-level
-      "ctrl-k": "editor::Fold", // toggle-fold (conflicts with menu, keeping menu)
 
       // Indentation
       ">": "editor::Indent",
@@ -151,9 +205,21 @@
 
       // Search
       "g n": "vim::MoveToNextWordStart", // evil-search-word-forward
+      ";": "vim::FindNext", // next find (after f/t)
+      "comma": "vim::FindPrev", // previous find (after f/t)
+
+      // Easy motion / Jump to word (gs SPC - avy)
+      "g s space": "vim::MoveToNext", // jump to word (avy equivalent)
 
       // Text objects (r prefix in Emacs for thing-edit)
       // Note: Zed doesn't have direct equivalent, using closest matches
+
+      // Multiple cursors (M-d in Doom)
+      "alt-d": "editor::AddSelectionToNextMatch", // select word (evil-multiedit)
+
+      // Surround in normal mode (ys - evil-surround)
+      // Note: Zed handles surround differently, using vim operator pending mode
+      // Users can select text and use 's' in visual mode instead
 
       // ========================================================================
       // WINDOW MOVEMENT (C-M-s-7 / windmove in Emacs)
@@ -162,6 +228,15 @@
       "ctrl-cmd-alt-7 j": "vim::WindowDown",
       "ctrl-cmd-alt-7 k": "vim::WindowUp",
       "ctrl-cmd-alt-7 l": "vim::WindowRight",
+
+      // Window movement (Doom default: C-w h/j/k/l)
+      "ctrl-w h": "vim::WindowLeft",
+      "ctrl-w j": "vim::WindowDown",
+      "ctrl-w k": "vim::WindowUp",
+      "ctrl-w l": "vim::WindowRight",
+      "ctrl-w v": "pane::SplitRight",
+      "ctrl-w s": "pane::SplitDown",
+      "ctrl-w q": "pane::CloseActiveItem",
 
       // ========================================================================
       // BUFFER CYCLING (C-M-s-j/k in Emacs)
@@ -172,13 +247,17 @@
   },
 
   // ============================================================================
-  // VIM VISUAL MODE
+  // VIM VISUAL MODE (Doom Emacs Evil defaults)
   // ============================================================================
   {
     "context": "vim_mode == visual",
     "bindings": {
-      // Surround in visual mode
+      // Surround in visual mode (S - evil-surround)
       "s": ["vim::PushAddSurrounds", {}],
+      "shift-s": ["vim::PushAddSurrounds", {}],
+
+      // Comment in visual mode (gc)
+      "g c": "editor::ToggleComments",
 
       // Indent and reselect (from Emacs evil-shift with gv)
       ">": "editor::Indent",
@@ -186,7 +265,10 @@
 
       // Expand region
       "v": "editor::SelectLargerSyntaxNode", // evil-multiedit-match-all
-      "shift-v": "editor::SelectSmallerSyntaxNode" // expand-region contract
+      "shift-v": "editor::SelectSmallerSyntaxNode", // expand-region contract
+
+      // Multiple cursors in visual mode
+      "alt-d": "editor::AddSelectionToNextMatch" // select next match
     }
   },
 
@@ -196,17 +278,17 @@
   {
     "context": "vim_mode == insert && Editor",
     "bindings": {
-      // Line movement in insert mode
+      // Line movement in insert mode (Emacs-style)
       "ctrl-a": "editor::MoveToBeginningOfLine",
       "ctrl-e": "editor::MoveToEndOfLine",
 
       // Paste in insert mode
       "ctrl-y": "editor::Paste",
 
-      // Completion (from Emacs ,)
-      "comma": "editor::ShowCompletions", // trigger completion on comma
+      // Word deletion (Emacs-style)
+      "ctrl-w": "editor::DeleteToPreviousWordStart",
 
-      // Hippie expand / autocomplete
+      // Hippie expand / autocomplete (from Emacs)
       "ctrl-l": "editor::ShowCompletions" // hippie-expand
     }
   },
