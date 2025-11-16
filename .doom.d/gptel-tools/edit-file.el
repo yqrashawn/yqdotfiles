@@ -100,8 +100,9 @@ NEW-STRING is the replacement text."
         (error "old_string not found in the original content, CHECK CAREFULLY.")))
     newbuf))
 
-;;; Flexible matching utilities
+;;; Matching strategies module
 
+;; Whitespace normalization
 (defun gptelt-edit--normalize-whitespace (text)
   "Normalize whitespace in TEXT for flexible matching.
 Strips leading/trailing whitespace per line and normalizes internal whitespace."
@@ -121,11 +122,20 @@ Strips leading/trailing whitespace per line and normalizes internal whitespace."
         (forward-line 1)))
     (buffer-string)))
 
-(defun gptelt-edit--flexible-search (old-string)
+;; Strategy 1: Exact match
+(defun gptelt-edit--try-exact-match (old-string)
+  "Try to find exact match for OLD-STRING.
+Returns (START . END) cons cell if found, nil otherwise."
+  (save-excursion
+    (goto-char (point-min))
+    (when (search-forward old-string nil t)
+      (cons (match-beginning 0) (match-end 0)))))
+
+;; Strategy 2: Flexible whitespace match
+(defun gptelt-edit--try-flexible-match (old-string)
   "Try to find OLD-STRING with flexible whitespace matching.
 Returns (START . END) cons cell if found, nil otherwise."
   (let ((normalized-old (gptelt-edit--normalize-whitespace old-string)))
-    ;; (setq lll normalized-old)
     (save-excursion
       (goto-char (point-min))
       (catch 'found
@@ -143,6 +153,23 @@ Returns (START . END) cons cell if found, nil otherwise."
             (forward-line 1)))
         nil))))
 
+;; Strategy pipeline
+(defun gptelt-edit--find-match (buffer old-string)
+  "Find OLD-STRING in BUFFER using multiple strategies.
+Returns plist with :match-pos (cons cell) and :corrected-string.
+Returns nil if no match found."
+  (with-current-buffer buffer
+    (or
+     ;; Strategy 1: Exact match
+     (when-let ((pos (gptelt-edit--try-exact-match old-string)))
+       (list :match-pos pos :corrected-string old-string))
+     ;; Strategy 2: Flexible whitespace match
+     (when-let ((pos (gptelt-edit--try-flexible-match old-string)))
+       (list :match-pos pos
+             :corrected-string (buffer-substring-no-properties
+                                (car pos) (cdr pos)))))))
+
+;; Helper for error messages
 (defun gptelt-edit--find-similar-text (old-string)
   "Find text similar to OLD-STRING for error reporting.
 Returns a snippet of nearby text that might have been intended."
@@ -158,7 +185,19 @@ Returns a snippet of nearby text that might have been intended."
                  (context-end (min (point-max) (+ line-start 200))))
             (buffer-substring-no-properties context-start context-end)))))))
 
-;;; LLM self-correction
+;;; Error handling module
+
+(defun gptelt-edit--generate-error (old-string)
+  "Generate error message for failed match of OLD-STRING."
+  (let ((similar-text (gptelt-edit--find-similar-text old-string)))
+    (format "old_string not found. %s\n\nSearched for:\n%s%s"
+            "CHECK CAREFULLY - try including more context lines."
+            old-string
+            (if similar-text
+                (format "\n\nFound similar text nearby:\n%s" similar-text)
+              ""))))
+
+;;; LLM self-correction (Strategy 3)
 (defun gptelt-edit--llm-fix-old-string (buffer old-string instruction callback)
   "Use LLM to find the correct old_string in BUFFER asynchronously.
 OLD-STRING is the failed match attempt.
@@ -197,11 +236,30 @@ Please find the EXACT string from the file that matches what I'm trying to chang
      :error (lambda (_error)
               (funcall callback "ERROR: failed to call LLM to fix the old string")))))
 
-;;; Direct edit application
+;;; Edit application module
+
+(defun gptelt-edit--apply-match-with-llm (buffer old-string instruction callback new-string original-point replace-all)
+  "Try LLM correction for failed match and apply edit.
+CALLBACK is called with the result message."
+  (gptelt-edit--llm-fix-old-string
+   buffer old-string instruction
+   (lambda (fixed-string)
+     (if fixed-string
+         (with-current-buffer buffer
+           (save-excursion
+             (goto-char (point-min))
+             (if (search-forward fixed-string nil t)
+                 (gptelt-edit--do-replacement
+                  buffer fixed-string new-string original-point
+                  replace-all callback)
+               (funcall callback
+                        (gptelt-edit--generate-error old-string)))))
+       (funcall callback
+                (gptelt-edit--generate-error old-string))))))
 
 (defun gptelt-edit--apply-edit-directly
     (buffer old-string new-string callback &optional replace-all instruction)
-  "Apply edit to BUFFER by directly replacing OLD-STRING with NEW-STRING.
+  "Apply edit to BUFFER by replacing OLD-STRING with NEW-STRING.
 If REPLACE-ALL is non-nil, replace all occurrences. Otherwise, only the first.
 INSTRUCTION is optional natural language description of the change.
 CALLBACK is called with the result message when done (async if LLM correction needed).
@@ -212,53 +270,27 @@ Tries multiple matching strategies:
 3. LLM self-correction (if instruction provided)
 
 IMPORTANT: Reverts buffer first to ensure we're working with disk state."
-  (let* ((original-buffer buffer)
-         (original-point (with-current-buffer original-buffer (point)))
-         (match-found nil)
-         (corrected-old-string old-string))
-
+  (let* ((original-point (with-current-buffer buffer (point))))
     ;; Revert buffer first to ensure we're editing the actual disk state
-    (+gptel-tool-revert-to-be-visited-buffer original-buffer)
+    (+gptel-tool-revert-to-be-visited-buffer buffer)
 
-    (with-current-buffer original-buffer
-      (save-excursion
-        (goto-char (point-min))
-        
-        ;; Strategy 1: Try exact match
-        (setq match-found (search-forward old-string nil t))
-        
-        ;; Strategy 2: Try flexible whitespace match
-        (unless match-found
-          (when-let ((pos (gptelt-edit--flexible-search old-string)))
-            (setq corrected-old-string 
-                  (buffer-substring-no-properties (car pos) (cdr pos)))
-            (goto-char (car pos))
-            (setq match-found t)))))
-    
-    ;; Strategy 3: Try LLM self-correction (async)
-    (if (and (not match-found) instruction)
-        (gptelt-edit--llm-fix-old-string
-         buffer old-string instruction
-         (lambda (fixed-string)
-           (if fixed-string
-               (with-current-buffer original-buffer
-                 (save-excursion
-                   (goto-char (point-min))
-                   (if (search-forward fixed-string nil t)
-                       (gptelt-edit--do-replacement
-                        original-buffer fixed-string new-string original-point
-                        replace-all callback)
-                     (funcall callback
-                              (gptelt-edit--generate-error old-string)))))
-             (funcall callback
-                      (gptelt-edit--generate-error old-string)))))
-      ;; Sync path: either match found or no instruction for LLM
-      (if match-found
-          (gptelt-edit--do-replacement
-           original-buffer corrected-old-string new-string original-point
-           replace-all callback)
-        (funcall callback
-                 (gptelt-edit--generate-error old-string))))))
+    ;; Try to find match using strategy pipeline
+    (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
+        ;; Match found - apply replacement
+        (gptelt-edit--do-replacement
+         buffer
+         (plist-get match-result :corrected-string)
+         new-string
+         original-point
+         replace-all
+         callback)
+      ;; No match - try LLM correction if instruction provided
+      (if instruction
+          (gptelt-edit--apply-match-with-llm
+           buffer old-string instruction callback
+           new-string original-point replace-all)
+        ;; No instruction and no match - error
+        (funcall callback (gptelt-edit--generate-error old-string))))))
 
 (defun gptelt-edit--do-replacement
     (buffer old-string new-string original-point replace-all callback)
@@ -314,17 +346,7 @@ CALLBACK is called with the result message."
                      replacement-count
                      (buffer-name buffer)))))
 
-(defun gptelt-edit--generate-error (old-string)
-  "Generate error message for failed match of OLD-STRING."
-  (let ((similar-text (gptelt-edit--find-similar-text old-string)))
-    (format "old_string not found. %s\n\nSearched for:\n%s%s"
-            "CHECK CAREFULLY - try including more context lines."
-            old-string
-            (if similar-text
-                (format "\n\nFound similar text nearby:\n%s" similar-text)
-              ""))))
-
-;;; Shared edit logic
+;;; Balance checking and edit logic
 (defun gptelt-edit--edit-buffer-impl
     (buffer old-string new-string callback &optional replace-all instruction)
   "editing BUFFER by replacing OLD-STRING with NEW-STRING.

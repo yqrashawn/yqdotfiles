@@ -15,7 +15,7 @@
             (insert ";; new temp file\ndata: test123\ndata: test123"))
           
           ;; edit-file with replace_all=nil (only first)
-          (gptelt-edit-edit-file temp-el-path "(foo 1)" "(foo 42)")
+          (gptelt-edit-edit-file 'ignore temp-el-path "(foo 1)" "(foo 42)")
           (with-temp-buffer
             (insert-file-contents temp-el-path)
             (let ((content (buffer-string)))
@@ -23,7 +23,7 @@
               (should (string-match-p "(foo 1)" content))))
           
           ;; edit-file with replace_all=t (replace all)
-          (gptelt-edit-edit-file temp-el-path "(foo 1)" "(foo 77)" t)
+          (gptelt-edit-edit-file 'ignore temp-el-path "(foo 1)" "(foo 77)" t)
           (with-temp-buffer
             (insert-file-contents temp-el-path)
             (let ((content (buffer-string)))
@@ -31,7 +31,7 @@
               (should (string-match-p "(foo 77)" content))))
 
           ;; Edit temp .txt file and verify replace_all=t
-          (gptelt-edit-edit-file temp-txt-path "test123" "xyz789" t)
+          (gptelt-edit-edit-file 'ignore temp-txt-path "test123" "xyz789" t)
           (with-temp-buffer
             (insert-file-contents temp-txt-path)
             (let ((content (buffer-string)))
@@ -42,7 +42,7 @@
           (let* ((buf (find-file-noselect temp-el-path))
                  (old "(bar 2)")
                  (new "(bar 99)"))
-            (gptelt-edit-edit-buffer (buffer-name buf) old new)
+            (gptelt-edit-edit-buffer 'ignore (buffer-name buf) old new)
             (let ((new-content (with-current-buffer buf (buffer-string))))
               (should (string-match-p "(bar 99)" new-content)))))
       (when (file-exists-p temp-el-path) (delete-file temp-el-path))
@@ -70,8 +70,8 @@
             (should (>= (cl-count ?f (with-current-buffer buf1 (buffer-string))) 2))
             (should (>= (cl-count ?a (with-current-buffer buf2 (buffer-string))) 2))
 
-            (gptelt-edit-multi-edit-buffer (buffer-name buf1) edits1)
-            (gptelt-edit-multi-edit-buffer (buffer-name buf2) edits2)
+            (gptelt-edit-multi-edit-buffer 'ignore (buffer-name buf1) edits1)
+            (gptelt-edit-multi-edit-buffer 'ignore (buffer-name buf2) edits2)
 
             (let ((b1-content (with-current-buffer buf1 (buffer-string)))
                   (b2-content (with-current-buffer buf2 (buffer-string))))
