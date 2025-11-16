@@ -203,9 +203,10 @@ Merge buffer-local with global default files."
   (defadvice! ++popup--delete-window (win)
     :before #'+popup--delete-window
     (let* ((buffer (window-buffer win))
-           (buf-file (or (buffer-file-name buffer)
-                         (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                           (buffer-file-name base-buffer)))))
+           (buf-file
+            (or (buffer-file-name buffer)
+                (if-let* ((base-buffer (buffer-base-buffer buffer)))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -454,6 +455,9 @@ Merge buffer-local with global default files."
    (lambda ()
      (gptel-mcp-connect)
      (+gptel-make-my-presets)
+     ;; at http://localhost:18684/mcp/v1/messages
+     (mcp-server-lib-http-start :port 18684)
+
 
      (setq-default gptel--preset 'default)))
   (setq! mcp-log-level 'debug)
@@ -470,8 +474,6 @@ Merge buffer-local with global default files."
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
     (mcp-server-lib-install))
-  ;; at http://localhost:18684/mcp/v1/messages
-  (mcp-server-lib-http-start :port 18684)
   :config
   ;; (mcp-server-lib-http-stop)
   (comment
