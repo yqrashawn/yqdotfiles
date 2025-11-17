@@ -14,17 +14,6 @@
 
 
 ;;; Utility functions
-(defun gptelt-edit--get-project-root ()
-  "Get project root for current context."
-  (if (fboundp '++workspace-current-project-root)
-      (++workspace-current-project-root)
-    (when (fboundp 'project-current)
-      (when-let ((project (project-current)))
-        (if (fboundp 'project-root)
-            (project-root project)
-          (when (fboundp 'project-roots)
-            (car (project-roots project))))))))
-
 (defun gptelt-edit--resolve-file-path (file-path)
   "Resolve FILE-PATH to absolute path.
 If FILE-PATH is relative, resolve it against the current project root."
@@ -39,7 +28,7 @@ If FILE-PATH is relative, resolve it against the current project root."
          (buffer (or (get-file-buffer resolved-path)
                      (when (file-exists-p resolved-path)
                        (find-file-noselect resolved-path))))
-         (project-root (gptelt-edit--get-project-root))
+         (project-root (gptelt--get-project-root))
          (major-mode (when buffer (buffer-local-value 'major-mode buffer)))
          (minor-modes (when buffer
                         (buffer-local-value 'minor-mode-list buffer))))

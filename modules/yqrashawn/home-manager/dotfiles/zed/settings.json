@@ -20,7 +20,6 @@
       "command": "bun",
       "args": ["run", "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"]
     },
-    },
     "jina_search": {
       "source": "custom",
       "enabled": true,

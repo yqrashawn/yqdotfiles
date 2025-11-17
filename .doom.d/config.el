@@ -96,7 +96,6 @@
 (load! "visual.el")
 (load! "read.el")
 (load! "mail.el")
-(load! "gpt.el")
 (load! "orun.el")
 ;; tmp fix for +fold--ensure-hideshow-mode not defined err
 (load! "~/.emacs.d/modules/editor/fold/autoload/fold.el")

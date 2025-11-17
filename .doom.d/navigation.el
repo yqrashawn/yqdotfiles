@@ -164,19 +164,22 @@ See `dwim-shell-command-execute-script' for all other params."
   (add-hook! occur-mode
     (double-saber-mode 1)
     (setq-local double-saber-start-line 5))
-  (defadvice ivy-wgrep-change-to-wgrep-mode (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
+  (defadvice! +ivy-wgrep-change-to-wgrep-mode ()
     "disable `double-saber-mode' when enter wgrep mode"
+    :after #'ivy-wgrep-change-to-wgrep-mode
     (interactive)
     (double-saber-mode -1))
 
-  (defadvice wgrep-finish-edit (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
+  (defadvice! +wgrep-finish-edit ()
     "enable `double-saber-mode' when leave wgrep mode"
+    :after #'wgrep-finish-edit 
     (interactive)
     (with-current-buffer (current-buffer)
       (double-saber-mode 1)))
 
-  (defadvice wgrep-abort-changes (after ivy-wgrep-change-to-wgrep-mode-double-sabber-advice activate)
+  (defadvice! +wgrep-abort-changes ()
     "enable `double-saber-mode' when leave wgrep mode"
+    :after #'wgrep-abort-changes 
     (interactive)
     (with-current-buffer (current-buffer)
       (double-saber-mode 1))))

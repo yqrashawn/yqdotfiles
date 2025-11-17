@@ -62,7 +62,10 @@
 (package! evil-iedit-state)
 ;; (package! evil-textobj-anyblock :disable t)
 (unpin! evil-textobj-anyblock)
-(package! evil-textobj-anyblock :recipe (:host github :repo "noctuid/evil-textobj-anyblock" :branch "master"))
+(package! evil-textobj-anyblock
+  :recipe (:host github
+            :repo "noctuid/evil-textobj-anyblock"
+            :branch "master"))
 (package! string-inflection)
 (package! side-notes)
 (package! explain-pause-mode :recipe (:type git :host github :repo "lastquestion/explain-pause-mode"))
@@ -181,7 +184,6 @@
 ;; (package! rigpa :recipe (:host github :repo "countvajhula/rigpa"))
 (package! proced-narrow)
 (package! capf-autosuggest)
-(package! adoc-mode)
 (package! sly-quicklisp)
 (package! sly-asdf)
 (package! string-edit-at-point)

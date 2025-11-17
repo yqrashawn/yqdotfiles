@@ -70,14 +70,15 @@
 
 ;;; Project/file path
 (defun gptelt--get-project-root ()
-  "Get project root for current context."
-  (if (fboundp '++workspace-current-project-root)
-      (++workspace-current-project-root)
-    (when (fboundp 'project-current)
-      (when-let ((project (project-current)))
-        (if (fboundp 'project-root)
-            (project-root project)
-          (car (project-roots project)))))))
+  "Get the current project root directory."
+  (or (when (fboundp '++workspace-current-project-root)
+        (++workspace-current-project-root))
+      (when (fboundp 'project-current)
+        (when-let ((project (project-current)))
+          (if (fboundp 'project-root)
+              (project-root project)
+            (car (project-roots project)))))
+      default-directory))
 
 (defun gptelt--resolve-file-path (file-path)
   "Resolve FILE-PATH to absolute path. Only accepts absolute paths."

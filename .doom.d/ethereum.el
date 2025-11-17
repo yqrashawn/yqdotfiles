@@ -2,7 +2,7 @@
 
 (defun +ethereum-request (chain method cb &rest params)
   (require 'request)
-  (let ((url (assoc-default chain +alchemy-end-point))
+  (let ((url (alist-get chain +alchemy-end-point))
         (params (if params
                     (seq-into params 'vector)
                   [])))

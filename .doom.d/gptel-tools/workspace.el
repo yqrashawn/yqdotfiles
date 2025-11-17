@@ -16,17 +16,6 @@
 
 ;;; Project Detection and Basic Info
 
-(defun gptelt--get-project-root ()
-  "Get the current project root directory."
-  (or (when (fboundp '++workspace-current-project-root)
-        (++workspace-current-project-root))
-      (when (fboundp 'project-current)
-        (when-let ((project (project-current)))
-          (if (fboundp 'project-root)
-              (project-root project)
-            (car (project-roots project)))))
-      default-directory))
-
 (defun gptelt--detect-project-type (root-dir)
   "Detect project type based on files in ROOT-DIR."
   (let ((files (directory-files root-dir))

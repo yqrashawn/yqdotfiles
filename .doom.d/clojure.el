@@ -224,9 +224,9 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   ;; status h/deftest-sub
   (setq! +cider-test-defining-forms '("deftest" "defspec" "deftest-sub"))
 
-  (defadvice cider-find-var (before add-evil-jump activate)
+  (defadvice! +cider-find-var (&optional arg var line)
+    :before #'cider-find-var
     (evil-set-jump))
-
 
   (defadvice! corgi/around-cider-current-repl (command &optional type ensure)
     "When asking for a \"matching\" REPL (clj/cljs), and no matching REPL is found,

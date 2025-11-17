@@ -80,18 +80,19 @@
 
 (after! evil-terminal-cursor-changer
   (setq! etcc-use-color t)
-  (defadvice evil-set-cursor-color (after etcc--evil-set-cursor (arg) activate)
+  (defadvice! +evil-set-cursor-color (&optional color)
+    :after #'evil-set-cursor-color
     (unless (display-graphic-p)
-      (etcc--evil-set-cursor-color arg)))
+      (etcc--evil-set-cursor-color color)))
 
-  (defadvice evil-set-cursor (after etcc--evil-set-cursor (arg) activate)
+  (defadvice! +evil-set-cursor (specs)
+    :after #'evil-set-cursor
     (unless (display-graphic-p)
       (etcc--evil-set-cursor)))
   (defun etcc--in-xterm? () t))
 
 (after! evil-org
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
-
 
 (use-package evil-owl
   :hook (doom-first-buffer . evil-owl-mode)
