@@ -271,6 +271,13 @@ Merge buffer-local with global default files."
                (evil-insert-state-p))
       (evil-normal-state)))
 
+  (setq! gptel--tmp
+         (gptel-make-openai "tmp"
+           :host "localhost:8080"
+           :endpoint "/v1/chat/completions"
+           :stream t
+           :key "no-key"
+           :models gptel--claude-code-models))
   (setq! gptel--openrouter
          (gptel-make-openai "OpenRouter"
            :host "openrouter.ai"
@@ -1019,3 +1026,8 @@ the result."
   :after agent-shell)
 (use-package! agent-shell-manager
   :after agent-shell)
+
+(comment
+  (simple-llm-req-sync
+   "hi"
+   :backend gptel--tmp))
