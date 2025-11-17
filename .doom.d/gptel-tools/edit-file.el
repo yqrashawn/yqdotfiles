@@ -342,22 +342,8 @@ CALLBACK is called with the result message."
 If REPLACE-ALL is non-nil, replace all occurrences.
 INSTRUCTION is optional natural language description of the change.
 CALLBACK is called with the result string when done (async if LLM correction needed)."
-  (let ((mj-mode (buffer-local-value 'major-mode buffer))
-        (corrected-old-string old-string)
-        (match-found nil))
-    
-    ;; Try to find old-string with multiple strategies (sync only)
-    (with-current-buffer buffer
-      (save-excursion
-        (goto-char (point-min))
-        (setq match-found (search-forward old-string nil t))
-        
-        (unless match-found
-          ;; Try flexible whitespace match
-          (when-let ((pos (gptelt-edit--flexible-search old-string)))
-            (setq corrected-old-string 
-                  (buffer-substring-no-properties (car pos) (cdr pos)))
-            (setq match-found t)))))
+  (let* ((mj-mode (buffer-local-value 'major-mode buffer))
+         (match-result (gptelt-edit--find-match buffer old-string)))
     
     ;; Define the continuation function that does the actual edit
     (let ((do-edit
@@ -405,9 +391,9 @@ CALLBACK is called with the result string when done (async if LLM correction nee
                 buffer final-old-string new-string callback replace-all instruction)))))
       
       ;; If match found or no instruction, proceed synchronously
-      (if (or match-found (not instruction))
-          (if match-found
-              (funcall do-edit corrected-old-string)
+      (if (or match-result (not instruction))
+          (if match-result
+              (funcall do-edit (plist-get match-result :corrected-string))
             ;; No match and no instruction - error
             (funcall callback (gptelt-edit--generate-error old-string)))
         ;; No match but have instruction - try LLM correction (async)
