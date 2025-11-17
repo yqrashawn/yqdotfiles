@@ -1,72 +1,371 @@
 [
+  // ============================================================================
+  // GLOBAL KEYBINDINGS
+  // ============================================================================
   {
     "use_key_equivalents": true,
     "bindings": {
+      // Menu navigation (from Emacs C-j/C-k pattern)
       "ctrl-j": "menu::SelectNext",
       "ctrl-k": "menu::SelectPrevious",
       "ctrl-l": "menu::Confirm",
-      "ctrl-s": "vim::Search"
+      "ctrl-s": "vim::Search",
+
+      // Global shortcuts (from Emacs map.el)
+      "ctrl-;": "editor::ShowAssist", // Similar to embark-act
+      "cmd-k": "pane::CloseActiveItem", // bury-buffer
+      "cmd-u": "editor::Revert" // revert-buffer
     }
   },
+
+  // ============================================================================
+  // EDITOR KEYBINDINGS (All modes)
+  // ============================================================================
   {
     "context": "Editor",
     "use_key_equivalents": true,
     "bindings": {
+      // Line movement (from Emacs mwim)
       "ctrl-e": "editor::MoveToEndOfLine",
-      "ctrl-a": "editor::MoveToBeginningOfLine"
+      "ctrl-a": "editor::MoveToBeginningOfLine",
+
+      // Search (from Emacs C-s)
+      "ctrl-s": "buffer_search::Deploy",
+
+      // Yank/paste (from Emacs C-y)
+      "ctrl-y": "editor::Paste"
     }
   },
+
+  // ============================================================================
+  // VIM NORMAL MODE - SPACE LEADER BINDINGS
+  // ============================================================================
   {
-    // "context": "!VimControl || vim_mode == normal",
-    // "context": "(!VimControl && mode!=single_line) || vim_mode == normal",
-    // "context": "vim_mode == normal",
     "context": "vim_mode == normal || EmptyPane || SharedScreen",
     "bindings": {
-      "space space": "command_palette::Toggle",
+      // ========== CORE COMMANDS (Doom Emacs defaults) ==========
+      "space space": "file_finder::Toggle", // SPC SPC - open file in project (Doom default)
+      "space :": "command_palette::Toggle", // SPC : - execute command (M-x)
 
-      "space k g g": "editor::CopyPermalinkToLine",
-      "space g s": "git_panel::ToggleFocus",
+      // ========== FILE OPERATIONS (space f) ==========
+      "space f f": "file_finder::Toggle", // find-file
+      "space f s": "workspace::Save", // save current file
+      "space f r": "recent_projects::OpenRecent", // recently visited files
+      "space f j": "project_panel::ToggleFocus", // dired-jump
+      "space f shift-d": "workspace::DeleteFile", // delete file
+      "space f e d": "zed::OpenSettings", // edit doom config
+      "space f e shift-k": "zed::OpenKeymap", // edit keymap
+      "space f e n": "workspace::Open", // edit nix config (open workspace)
 
-      "space f e shift-k": "zed::OpenKeymap",
+      // ========== BUFFER OPERATIONS (space b) ==========
+      "space b b": "tab_switcher::Toggle", // switch buffer
+      "space b shift-b": "tab_switcher::Toggle", // view all buffers
+      "space comma": "tab_switcher::Toggle", // switch buffers (alias)
+      "space b s": "workspace::NewCenterTerminal", // scratch buffer (terminal as scratch)
+      "space b shift-x": "workspace::NewCenterTerminal", // create scratch buffer
+      "space b f": "workspace::RevealInFinder", // reveal in finder
+      "space b m": "notifications::ToggleNotifications", // toggle popup/messages
+      "space b d": "pane::CloseActiveItem", // close/kill buffer
+      "space b k": "pane::CloseActiveItem", // kill buffer (alias)
 
-      // describe-key
-      "space h k": "dev::OpenKeyContextView",
+      // ========== GIT OPERATIONS (space g) ==========
+      "space g g": "git_panel::ToggleFocus", // magit-status (Doom default: SPC g g)
+      "space g s": "git_panel::ToggleFocus", // magit-status (alias)
+      "space g t": "editor::OpenExcerpts", // git-timemachine (excerpts as similar)
+      "space g b": "editor::ToggleGitBlame", // git blame
+      "space k g g": "editor::CopyPermalinkToLine", // git-link
+      "space k g c": "editor::CopyPermalinkToLine", // git-link-commit
 
-      // disable vim::Substitude
+      // ========== SEARCH OPERATIONS (space s) ==========
+      "space s s": "buffer_search::Deploy", // search buffer
+      "space s f": "project_search::ToggleFocus", // search in files
+      "space s p": "project_search::ToggleFocus", // search-project
+
+      // ========== PROJECT OPERATIONS (space p) ==========
+      "space p p": "projects::OpenRecent", // open project
+      "space p r": "recent_projects::OpenRecent", // recent project files
+      "space p f": "file_finder::Toggle", // find file in project
+
+      // ========== TOGGLE/OPTIONS (space t) ==========
+      "space t l": "editor::ToggleLineNumbers", // toggle line numbers
+      "space t z": "workspace::ToggleCenteredLayout", // zen mode
+      "space t s": "editor::ToggleInlayHints", // toggle spell check (inlay hints as substitute)
+
+      // ========== OPEN/LAUNCH (space o) ==========
+      "space o p": "project_panel::ToggleFocus", // file explorer
+      "space o e": "terminal_panel::ToggleFocus", // shell popup
+      "space o shift-e": "workspace::NewTerminal", // shell fullscreen
+      "space o t": "terminal_panel::ToggleFocus", // toggle terminal
+
+      // ========== HELP (space h) ==========
+      "space h k": "dev::OpenKeyContextView", // describe-key
+      "space h w": "command_palette::Toggle", // find shortcuts
+      "space h b b": "zed::OpenKeymap", // list all keybindings
+
+      // ========== WORKSPACE/WINDOW (space w) ==========
+      "space w w": "pane::ActivateNextItem", // switch windows
+      "space w q": "pane::CloseActiveItem", // close window
+      "space w d": "pane::CloseActiveItem", // delete-window
+      "space w s": "pane::SplitDown", // split-window-below
+      "space w v": "pane::SplitRight", // split-window-right
+      "space w h": "pane::ActivatePreviousItem", // previous window
+      "space w l": "pane::ActivateNextItem", // next window
+
+      // ========== WORKSPACE/TABS (space TAB) ==========
+      "space tab n": "workspace::NewTab", // new workspace
+      "space tab [": "pane::ActivatePreviousItem", // previous workspace
+      "space tab ]": "pane::ActivateNextItem", // next workspace
+
+      // ========== CODE/LSP OPERATIONS (space c) ==========
+      "space c c": "task::Spawn", // compile/run
+      "space c d": "editor::GoToDefinition", // jump to definitions
+      "space c shift-d": "editor::FindAllReferences", // see references
+      "space c r": "editor::Rename", // rename symbol
+      "space c a": "editor::ToggleCodeActions", // code actions
+      "space c x": "diagnostics::Deploy", // view diagnostics
+      "space c f": "editor::Format", // format code
+
+      // ========== EDIT OPERATIONS (space e) ==========
+      "space e r": "editor::Revert", // reload
+
+      // ========== JUMP (space j) ==========
+      "space j =": "editor::Format", // indent-region-or-buffer
+
+      // ========== QUIT (space q) ==========
+      "space q q": "zed::Quit", // quit/close Emacs
+
+      // ========== MISC/RESUME (space r) ==========
+      "space r l": "pane::ActivatePreviousItem", // resume/last
+
+      // ========================================================================
+      // VIM S-PREFIX MAP (like yq-s-map in Emacs)
+      // ========================================================================
+      // Disable default vim substitute
       "s": null,
-      "s h": "workspace::Save",
-      "s m": "file_finder::Toggle",
-      "s j": "file_finder::Toggle",
-      "s c": "pane::CloseAllItems",
-      "s k": "pane::CloseActiveItem",
-      "s f": "pane::DeploySearch"
+
+      // File/Project operations
+      "s h": "workspace::Save", // save-buffer
+      "s m": "file_finder::Toggle", // projectile-find-file
+      "s j": "recent_projects::OpenRecent", // projectile-recentf / recentf
+      "s p": "projects::OpenRecent", // projectile-switch-project
+      "s o": "project_panel::ToggleFocus", // dired-jump
+
+      // Buffer operations
+      "s k": "pane::CloseActiveItem", // bury-buffer
+      "s c": "pane::CloseAllItems", // delete-window
+      "s b": "tab_switcher::Toggle", // switch-to-buffer
+
+      // Search operations
+      "s f": "pane::DeploySearch", // search-project
+      "s shift-f": "project_search::SearchInNew", // search-project-for-symbol-at-point
+      "s /": "file_finder::Toggle", // consult-fd-or-find
+
+      // Navigation
+      "s n": "vim::MoveToNext", // avy-goto-char-timer
+      "s l": "outline::Toggle", // imenu
+
+      // Other
+      "s v": "editor::SelectLargerSyntaxNode", // expand-region
+      "s d": "editor::Delete", // sp-kill-sexp
+      "s y": "projects::OpenRecent", // consult-dir
+      "s shift-k": "project::CloseAll", // project-kill-buffers
+
+      // ========================================================================
+      // VIM NAVIGATION & EDITING (Doom Emacs Evil defaults)
+      // ========================================================================
+      // Visual line movement (already default in Zed vim)
+      "j": "vim::Down",
+      "k": "vim::Up",
+      "g j": "vim::Down",
+      "g k": "vim::Up",
+
+      // Line operations
+      "g y": "editor::DuplicateLineDown", // duplicate-line
+      "g shift-y": "editor::DuplicateLineDown", // copy-and-comment (closest match)
+
+      // Comment operations (gc - evil-nerd-commenter)
+      "g c": "editor::ToggleComments", // comment/uncomment (gc motion)
+      "g c c": "editor::ToggleComments", // comment/uncomment line
+
+      // Yank to end of line (Doom default)
+      "shift-y": "vim::YankToEndOfLine", // Y yanks to EOL (like C and D)
+
+      // Folding (za - toggle fold)
+      "z a": "editor::Fold", // toggle fold
+      "z c": "editor::Fold", // close fold
+      "z o": "editor::UnfoldLines", // open fold
+      "z shift-a": "editor::UnfoldAll", // toggle all folds
+      "z shift-m": "editor::FoldAll", // close all folds
+      "z shift-r": "editor::UnfoldAll", // open all folds
+      "z l": "editor::Fold", // fold-level
+
+      // Indentation
+      ">": "editor::Indent",
+      "<": "editor::Outdent",
+
+      // Search
+      "g n": "vim::MoveToNextWordStart", // evil-search-word-forward
+      ";": "vim::FindNext", // next find (after f/t)
+      "comma": "vim::FindPrev", // previous find (after f/t)
+
+      // Easy motion / Jump to word (gs SPC - avy)
+      "g s space": "vim::MoveToNext", // jump to word (avy equivalent)
+
+      // Text objects (r prefix in Emacs for thing-edit)
+      // Note: Zed doesn't have direct equivalent, using closest matches
+
+      // Multiple cursors (M-d in Doom)
+      "alt-d": "editor::AddSelectionToNextMatch", // select word (evil-multiedit)
+
+      // Surround in normal mode (ys - evil-surround)
+      // Note: Zed handles surround differently, using vim operator pending mode
+      // Users can select text and use 's' in visual mode instead
+
+      // ========================================================================
+      // WINDOW MOVEMENT (C-M-s-7 / windmove in Emacs)
+      // ========================================================================
+      "ctrl-cmd-alt-7 h": "vim::WindowLeft",
+      "ctrl-cmd-alt-7 j": "vim::WindowDown",
+      "ctrl-cmd-alt-7 k": "vim::WindowUp",
+      "ctrl-cmd-alt-7 l": "vim::WindowRight",
+
+      // Window movement (Doom default: C-w h/j/k/l)
+      "ctrl-w h": "vim::WindowLeft",
+      "ctrl-w j": "vim::WindowDown",
+      "ctrl-w k": "vim::WindowUp",
+      "ctrl-w l": "vim::WindowRight",
+      "ctrl-w v": "pane::SplitRight",
+      "ctrl-w s": "pane::SplitDown",
+      "ctrl-w q": "pane::CloseActiveItem",
+
+      // ========================================================================
+      // BUFFER CYCLING (C-M-s-j/k in Emacs)
+      // ========================================================================
+      "ctrl-cmd-alt-j": "pane::ActivateNextItem",
+      "ctrl-cmd-alt-k": "pane::ActivatePreviousItem"
     }
   },
+
+  // ============================================================================
+  // VIM VISUAL MODE (Doom Emacs Evil defaults)
+  // ============================================================================
   {
     "context": "vim_mode == visual",
     "bindings": {
-      "s": ["vim::PushAddSurrounds", {}]
+      // Surround in visual mode (S - evil-surround)
+      "s": ["vim::PushAddSurrounds", {}],
+      "shift-s": ["vim::PushAddSurrounds", {}],
+
+      // Comment in visual mode (gc)
+      "g c": "editor::ToggleComments",
+
+      // Indent and reselect (from Emacs evil-shift with gv)
+      ">": "editor::Indent",
+      "<": "editor::Outdent",
+
+      // Expand region
+      "v": "editor::SelectLargerSyntaxNode", // evil-multiedit-match-all
+      "shift-v": "editor::SelectSmallerSyntaxNode", // expand-region contract
+
+      // Multiple cursors in visual mode
+      "alt-d": "editor::AddSelectionToNextMatch" // select next match
     }
   },
-  { "context": "GitPanel && !Editor", "bindings": { "q": "git_panel::Close" } },
+
+  // ============================================================================
+  // VIM INSERT MODE
+  // ============================================================================
+  {
+    "context": "vim_mode == insert && Editor",
+    "bindings": {
+      // Line movement in insert mode (Emacs-style)
+      "ctrl-a": "editor::MoveToBeginningOfLine",
+      "ctrl-e": "editor::MoveToEndOfLine",
+
+      // Paste in insert mode
+      "ctrl-y": "editor::Paste",
+
+      // Word deletion (Emacs-style)
+      "ctrl-w": "editor::DeleteToPreviousWordStart",
+
+      // Hippie expand / autocomplete (from Emacs)
+      "ctrl-l": "editor::ShowCompletions" // hippie-expand
+    }
+  },
+
+  // ============================================================================
+  // GIT PANEL
+  // ============================================================================
+  {
+    "context": "GitPanel && !Editor",
+    "bindings": {
+      "q": "git_panel::Close",
+      "g r": "git_panel::Refresh"
+    }
+  },
+
+  // ============================================================================
+  // GIT DIFF (Editor context)
+  // ============================================================================
   {
     "context": "GitDiff > Editor && vim_mode == normal",
     "bindings": {
       "x": "git::Restore",
       "u": "git::UnstageAndNext",
-      "U": "git::UnstageFile",
+      "shift-u": "git::UnstageFile",
       "s": "git::StageAndNext",
-      "S": "git::StageFile",
+      "shift-s": "git::StageFile",
       "ctrl-j": "editor::GoToHunk",
       "ctrl-k": "editor::GoToPreviousHunk"
     }
   },
+
+  // ============================================================================
+  // PROJECT PANEL
+  // ============================================================================
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "l": "project_panel::Open", // dired-find-file
+      "h": "project_panel::CollapseSelectedEntry", // dired-up-directory
+      "q": "project_panel::ToggleFocus"
+    }
+  },
+
+  // ============================================================================
+  // TERMINAL
+  // ============================================================================
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-y": "editor::Paste", // vterm-yank
+      "ctrl-a": "terminal::SendText", // vterm-send-C-a
+      "ctrl-e": "terminal::SendText" // vterm-send-C-e
+    }
+  },
+
+  // ============================================================================
+  // COMPLETIONS/CODE ACTIONS
+  // ============================================================================
   {
     "context": "Editor && (showing_code_actions || showing_completions)",
     "use_key_equivalents": true,
     "bindings": {
       "ctrl-k": "editor::ContextMenuPrevious",
-      "ctrl-j": "editor::ContextMenuNext"
+      "ctrl-j": "editor::ContextMenuNext",
+      "ctrl-l": "editor::ConfirmCompletion", // complete-selection
+      "escape": "editor::Cancel" // company-abort
+    }
+  },
+
+  // ============================================================================
+  // OUTLINE/SYMBOLS
+  // ============================================================================
+  {
+    "context": "OutlinePanel",
+    "bindings": {
+      "q": "outline::ToggleFocus",
+      "l": "outline::Open"
     }
   }
 ]
