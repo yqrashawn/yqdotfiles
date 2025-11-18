@@ -181,18 +181,6 @@ Tries LLM auto-repair if unbalanced."
       ;; Non-Lisp modes always pass (sync)
       (funcall callback (cons t nil)))))
 
-(defun gptelt--check-string-balanced-parens (string major-mode-symbol)
-  "Check if STRING has balanced parentheses for Lisp MAJOR-MODE-SYMBOL.
-
-Uses temp buffer."
-  (if (and (gptelt--is-lisp-mode-p major-mode-symbol)
-           (fboundp 'sp-region-ok-p))
-      (with-temp-buffer
-        (funcall major-mode-symbol)
-        (insert string)
-        (gptelt--check-buffer-balanced-parens (current-buffer)))
-    (cons t nil)))
-
 (defun gptelt--replace-buffer-directly (buffer result-string)
   "Apply edit to BUFFER by replacing entire buffer with RESULT-STRING.
 
@@ -246,13 +234,13 @@ Returns a message describing the result of the operation."
 (defun +gptel-tool-revert-to-be-visited-buffer (buf)
   "Revert buffer BUF if its file has been modified on disk.
 Reverts both visible and non-visible buffers to ensure consistency after tool edits."
-  (let ((buf (or buf (current-buffer)))
-        (buf-name (buffer-file-name buf)))
-    (when (and buf-name
-               (file-exists-p buf-name)
-               (not (verify-visited-file-modtime buf)))
-      (with-current-buffer buf
-        (revert-buffer :ignore-auto :noconfirm t)))))
+  (when (bufferp buf)
+    (let ((buf-name (buffer-file-name buf)))
+      (when (and buf-name
+                 (file-exists-p buf-name)
+                 (not (verify-visited-file-modtime buf)))
+        (with-current-buffer buf
+          (revert-buffer :ignore-auto :noconfirm t))))))
 
 (comment
   ;; Put this in *scratch* and C-j on each line, or eval it:

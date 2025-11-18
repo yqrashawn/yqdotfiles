@@ -46,49 +46,6 @@ If FILE-PATH is relative, resolve it against the current project root."
                clojurescript-mode clojurec-mode common-lisp-mode
                lisp-interaction-mode)))
 
-(defun gptelt-edit--prepare-edit-buffer (buffer old-string new-string)
-  "Prepare new buffer with edit applied and return it.
-
-BUFFER is the original buffer.
-OLD-STRING is the text to be replaced.
-NEW-STRING is the replacement text."
-  (let* ((original-buffer buffer)
-         (original-file-name (buffer-file-name original-buffer))
-         (newbuf-name (format "*gptelt-edit-%s*" (buffer-name original-buffer)))
-         (newbuf (get-buffer-create newbuf-name))
-         (inhibit-read-only t)
-         (inhibit-message t))
-
-    ;; Track temp buffer for cleanup
-    (push newbuf gptelt-edit--temp-buffers)
-
-    ;; Copy original buffer content to new buffer
-    (with-current-buffer newbuf
-      (erase-buffer)
-      (insert-buffer-substring original-buffer)
-      (when original-file-name
-        (set-visited-file-name original-file-name t))
-      (set-auto-mode)
-
-      ;; Apply the edit: replace old-string with new-string
-      (goto-char (point-min))
-      (if (search-forward old-string nil t)
-          (let ((start (match-beginning 0))
-                (end (match-end 0)))
-            (goto-char start)
-            (delete-region start end)
-            (insert new-string)
-
-            ;; Format the changed region if LSP is available
-            (when (and (fboundp 'lsp-format-region)
-                       (bound-and-true-p lsp-mode))
-              (condition-case err
-                  (progn (lsp-format-region start (+ start (length new-string)))
-                         (+force-save-buffer))
-                (error (message "LSP formatting failed: %s" err)))))
-        (error "old_string not found in the original content, CHECK CAREFULLY.")))
-    newbuf))
-
 ;;; Matching strategies module
 
 ;; Whitespace normalization
@@ -155,8 +112,9 @@ Returns nil if no match found."
      ;; Strategy 2: Flexible whitespace match
      (when-let ((pos (gptelt-edit--try-flexible-match old-string)))
        (list :match-pos pos
-             :corrected-string (buffer-substring-no-properties
-                                (car pos) (cdr pos)))))))
+             :corrected-string
+             (buffer-substring-no-properties
+              (car pos) (cdr pos)))))))
 
 ;; Helper for error messages
 (defun gptelt-edit--find-similar-text (old-string)
@@ -265,14 +223,14 @@ IMPORTANT: Reverts buffer first to ensure we're working with disk state."
 
     ;; Try to find match using strategy pipeline
     (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
-        ;; Match found - apply replacement
-        (gptelt-edit--do-replacement
-         buffer
-         (plist-get match-result :corrected-string)
-         new-string
-         original-point
-         replace-all
-         callback)
+      ;; Match found - apply replacement
+      (gptelt-edit--do-replacement
+       buffer
+       (plist-get match-result :corrected-string)
+       new-string
+       original-point
+       replace-all
+       callback)
       ;; No match - try LLM correction if instruction provided
       (if instruction
           (gptelt-edit--apply-match-with-llm
@@ -314,7 +272,6 @@ CALLBACK is called with the result message."
               (setq replacement-end (+ start (length new-string)))
               (setq replacement-count 1))))
         
-        ;; (log/spy (buffer-modified-p buffer))
         (+force-save-buffer)
 
         (when (and (fboundp 'lsp-format-region)
@@ -379,7 +336,8 @@ CALLBACK is called with the result string when done (async if LLM correction nee
                                                        (buffer-string))))
                                 (kill-buffer temp-buffer)
                                 (funcall callback
-                                         (gptelt--replace-buffer-directly buffer balanced-string)))
+                                         (gptelt--replace-buffer-directly
+                                          buffer balanced-string)))
                             (kill-buffer temp-buffer)
                             (funcall callback
                                      (substring-no-properties
@@ -438,7 +396,7 @@ This function:
       (insert "old")
       (gptelt-edit-edit-buffer
        'ignore
-       (current-buffer)"old" "new")
+       (current-buffer) "old" "new")
       (buffer-string))))
 
 (defun gptelt-edit-edit-file
@@ -577,24 +535,17 @@ This function:
   "Apply multiple edits to BUFFER sequentially. Each edit is a plist or cons cell.
 Supports :replace_all and :instruction for each edit (default nil).
 CALLBACK is called with the final result message when all edits are done."
-  ;; (setq jjj (list buffer edits callback))
   ;; Convert vector to list if needed
   (when (vectorp edits)
     (setq edits (append edits nil)))
-  (let ((applied-count 0)
-        (save-needed nil))
+  (let ((applied-count 0))
     (cl-labels
         ((process-next-edit (remaining-edits)
            (if (null remaining-edits)
-               ;; All edits done - save once at the end
-               (progn
-                 (when save-needed
-                   (with-current-buffer buffer
-                     (+force-save-buffer)))
-                 (funcall
-                  callback
-                  (format "Successfully applied %d edits to buffer: %s"
-                          applied-count (buffer-name buffer))))
+               (funcall
+                callback
+                (format "Successfully applied %d edits to buffer: %s"
+                        applied-count (buffer-name buffer)))
              ;; Process next edit
              (let* ((oe (car remaining-edits))
                     (old (plist-get oe :old_string))
@@ -604,10 +555,26 @@ CALLBACK is called with the final result message when all edits are done."
                (gptelt-edit--edit-buffer-impl
                 buffer old new
                 (lambda (result)
-                  ;; Edit completed, mark that we need to save
-                  (setq save-needed t)
-                  (setq applied-count (1+ applied-count))
-                  (process-next-edit (cdr remaining-edits)))
+                  ;; Check if the edit failed
+                  (if (string-match-p "old_string not found\\|ERROR:" result)
+                      ;; Edit failed - stop processing and report error
+                      (let ((status-lines
+                             (cl-loop for i from 1 to (length edits)
+                                      collect
+                                      (cond
+                                       ((< i (1+ applied-count))
+                                        (format "- Edit %d/%d: SUCCESS" i (length edits)))
+                                       ((= i (1+ applied-count))
+                                        (format "- Edit %d/%d: FAILED" i (length edits)))
+                                       (t
+                                        (format "- Edit %d/%d: SKIPPED (not applied)" i (length edits)))))))
+                        (funcall callback
+                                 (format "Multi-edit failed:\n%s\n\nError from failed edit:\n%s"
+                                         (string-join status-lines "\n")
+                                         result)))
+                    ;; Edit succeeded - continue with next edit
+                    (setq applied-count (1+ applied-count))
+                    (process-next-edit (cdr remaining-edits))))
                 replace-all instruction)))))
       (process-next-edit edits))))
 
@@ -625,11 +592,26 @@ CALLBACK is called with the result string when all edits are done."
     (gptelt-edit--multi-edit-buffer-impl buffer edits callback)))
 
 (comment
+  (gptelt-edit-multi-edit-buffer
+   'message
+   "a.txt"
+   '((:old_string "a"
+      :new_string "aa")
+     (:old_string "a"
+      :new_string "aa")
+     (:old_string "b"
+      :new_string "aa")
+     (:old_string "a"
+      :new_string "aa")
+     (:old_string "a"
+      :new_string "aa")))
+
   (let ((f (make-temp-file "test-gptelt-edit")))
     (with-current-buffer (find-file-noselect f)
       (erase-buffer)
       (insert "old1, old2")
       (gptelt-edit-multi-edit-buffer
+       'ignore
        (current-buffer)
        '((:old_string "old1"
           :new_string "new1")

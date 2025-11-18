@@ -33,7 +33,7 @@
                    (+set-org-top-header new-title)
                    (insert "\n")
                    (+set-org-title new-title)
-                   (insert "\n")
+                   ;; (insert "\n")
                    (write-file
                     (expand-file-name
                      (format
@@ -206,7 +206,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -976,8 +976,7 @@ the result."
               ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
               ;; :args ("--init-function=elisp-dev-mcp-enable"
               ;;        "--stop-function=elisp-dev-mcp-disable")
-              )
-    )
+              ))
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))

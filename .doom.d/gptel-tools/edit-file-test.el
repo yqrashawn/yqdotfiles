@@ -84,4 +84,47 @@
       (when (file-exists-p temp1-path) (delete-file temp1-path))
       (when (file-exists-p temp2-path) (delete-file temp2-path)))))
 
+(ert-deftest gptelt-edit-multi-edit-buffer-error-handling-test ()
+  "Test that multi_edit_buffer stops on first error and reports it correctly."
+  (let* ((temp-path (make-temp-file "gptelt-test-" nil ".txt"))
+         (result-msg nil))
+    (unwind-protect
+        (progn
+          ;; Create initial file with content
+          (with-temp-file temp-path
+            (insert "line1\nline2\nline3\n"))
+          
+          (let* ((buf (find-file-noselect temp-path))
+                 ;; First edit will succeed, second will fail (no "nonexistent" in buffer)
+                 (edits `[,(list :old_string "line1" :new_string "changed1")
+                          ,(list :old_string "nonexistent" :new_string "should-not-appear")
+                          ,(list :old_string "line3" :new_string "should-not-appear-either")]))
+            
+            ;; Capture the callback result
+            (gptelt-edit-multi-edit-buffer
+             (lambda (result)
+               (setq result-msg result))
+             (buffer-name buf)
+             edits)
+            
+            ;; Wait a bit for async callback to complete
+            (sleep-for 0.1)
+            
+            ;; Verify error message indicates failure at edit 2
+            (should result-msg)
+            (should (string-match-p "Multi-edit failed" result-msg))
+            (should (string-match-p "Edit 1/3: SUCCESS" result-msg))
+            (should (string-match-p "Edit 2/3: FAILED" result-msg))
+            (should (string-match-p "Edit 3/3: SKIPPED" result-msg))
+            (should (string-match-p "old_string not found" result-msg))
+            
+            ;; Verify buffer state: first edit applied, others not
+            (let ((content (with-current-buffer buf (buffer-string))))
+              (should (string-match-p "changed1" content))
+              (should (not (string-match-p "line1" content)))
+              (should (string-match-p "line2" content))  ; unchanged
+              (should (string-match-p "line3" content))  ; unchanged
+              (should (not (string-match-p "should-not-appear" content))))))
+      (when (file-exists-p temp-path) (delete-file temp-path)))))
+
 ;;; edit-file-test.el ends here
