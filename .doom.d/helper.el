@@ -127,14 +127,16 @@ Each file is opened (if not already) with `find-file-noselect` relative to
 (defun +doom-file-buffers ()
   (seq-filter
    (lambda (b)
-     (with-current-buffer b
-       (when-let ((file (buffer-file-name b)))
-         (and (not
-               (string-prefix-p
-                (file-truename "~/Dropbox/sync/gptel")
-                (file-truename file)))
-              (not (string= "not-secret.el"
-                            (file-name-nondirectory file)))))))
+     (when (buffer-live-p b)
+       (with-current-buffer b
+         (when-let ((file (buffer-file-name b)))
+           (and
+            (not
+             (string-prefix-p
+              (file-truename "~/Dropbox/sync/gptel")
+              (file-truename file)))
+            (not (string= "not-secret.el"
+                          (file-name-nondirectory file))))))))
    (doom-buffer-list)))
 
 (defun +visible-buffers-list-buffer ()
