@@ -424,17 +424,18 @@ Example:
          (buf-name (format " *workspace-%s-lints*" ws-name))
          (b (get-buffer-create buf-name t))
          (lint-result (gptelt-lint-project)))
-    (with-current-buffer b
-      (erase-buffer)
-      (insert! "# Workspace Project Lint Diagnostics\n\n")
-      (insert! ("Total diagnostics: %d\n\n" (plist-get lint-result :total)))
-      (if (zerop (plist-get lint-result :total))
-          (insert! "No diagnostics found.\n")
-        (let ((diags (plist-get lint-result :diagnostics)))
-          (dolist (diag diags)
-            (insert (+format-diagnostic diag))))))
-    ;; (switch-to-buffer b)
-    b))
+    (when lint-result
+      (with-current-buffer b
+        (erase-buffer)
+        (insert! "# Workspace Project Lint Diagnostics\n\n")
+        (insert! ("Total diagnostics: %d\n\n" (plist-get lint-result :total)))
+        (if (zerop (plist-get lint-result :total))
+            (insert! "No diagnostics found.\n")
+          (let ((diags (plist-get lint-result :diagnostics)))
+            (dolist (diag diags)
+              (insert (+format-diagnostic diag))))))
+      ;; (switch-to-buffer b)
+      b)))
 
 
 (defun +pabbrev-export-usage-hash->file ()

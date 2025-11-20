@@ -99,69 +99,70 @@ When called interactively, also displays the diagnostics list."
         (default-directory (++workspace-current-project-root))
         (random-proj-buf
          (++random-one-in-list (++workspace-current-project-buffers))))
-    (with-current-buffer random-proj-buf
-      ;; LSP: Get project-wide diagnostics
-      (when (and (bound-and-true-p lsp-mode)
-                 (fboundp 'lsp-diagnostics))
-        (let ((lsp-diags (ignore-errors (lsp-diagnostics t))))
-          (when lsp-diags
-            (setq results
-                  (append results
-                          (list (list :source "lsp" :diagnostics lsp-diags)))))))
-      ;; Flymake: Get project-wide diagnostics
-      (when (and (featurep 'flymake)
-                 (fboundp 'flymake--project-diagnostics))
-        (when-let ((project (project-current)))
-          (let ((diags (ignore-errors (flymake--project-diagnostics project))))
-            (when diags
-              (setq results (append results
-                                    (list (list :source "flymake" :diagnostics diags))))))))
-      ;; Flycheck: Collect from all project buffers
-      (when (featurep 'flycheck)
-        (when-let ((project (project-current)))
-          (let ((all-errs '()))
-            (dolist (buf (buffer-list))
-              (with-current-buffer buf
-                (when (and (bound-and-true-p flycheck-mode)
-                           (boundp 'flycheck-current-errors)
-                           flycheck-current-errors
-                           (project-current)
-                           (equal (project-root (project-current))
-                                  (project-root project)))
-                  (setq all-errs (append all-errs flycheck-current-errors)))))
-            (when all-errs
-              (setq results (append results
-                                    (list (list :source "flycheck" :diagnostics all-errs))))))))
-      ;; Flatten and page results
-      (let* ((flat-list
-              (apply #'append
-                     (mapcar
-                      (lambda (item)
-                        (let ((src (plist-get item :source))
-                              (diags (plist-get item :diagnostics)))
-                          (if (hash-table-p diags)
-                              ;; lsp-diagnostics returns hash table with all files
-                              (let ((file-diags '()))
-                                (maphash (lambda (_file diag-list)
-                                           (setq file-diags (append file-diags diag-list)))
-                                         diags)
-                                (mapcar (lambda (diag)
-                                          (cons :source (cons src diag)))
-                                        file-diags))
-                            ;; other sources return list directly
-                            (mapcar (lambda (diag)
-                                      (cons :source (cons src diag)))
-                                    diags))))
-                      results)))
-             (total (length flat-list))
-             (start (or offset 0))
-             (lim (or limit 50))
-             (paged (seq-subseq flat-list start (min total (+ start lim))))
-             (result (list :total total :offset start :limit lim :diagnostics paged)))
-        (when (called-interactively-p 'any)
-          (kill-new (format "%s" result))
-          (message "%s" result))
-        result))))
+    (when (buffer-live-p random-proj-buf)
+      (with-current-buffer random-proj-buf
+        ;; LSP: Get project-wide diagnostics
+        (when (and (bound-and-true-p lsp-mode)
+                   (fboundp 'lsp-diagnostics))
+          (let ((lsp-diags (ignore-errors (lsp-diagnostics t))))
+            (when lsp-diags
+              (setq results
+                    (append results
+                            (list (list :source "lsp" :diagnostics lsp-diags)))))))
+        ;; Flymake: Get project-wide diagnostics
+        (when (and (featurep 'flymake)
+                   (fboundp 'flymake--project-diagnostics))
+          (when-let ((project (project-current)))
+            (let ((diags (ignore-errors (flymake--project-diagnostics project))))
+              (when diags
+                (setq results (append results
+                                      (list (list :source "flymake" :diagnostics diags))))))))
+        ;; Flycheck: Collect from all project buffers
+        (when (featurep 'flycheck)
+          (when-let ((project (project-current)))
+            (let ((all-errs '()))
+              (dolist (buf (buffer-list))
+                (with-current-buffer buf
+                  (when (and (bound-and-true-p flycheck-mode)
+                             (boundp 'flycheck-current-errors)
+                             flycheck-current-errors
+                             (project-current)
+                             (equal (project-root (project-current))
+                                    (project-root project)))
+                    (setq all-errs (append all-errs flycheck-current-errors)))))
+              (when all-errs
+                (setq results (append results
+                                      (list (list :source "flycheck" :diagnostics all-errs))))))))
+        ;; Flatten and page results
+        (let* ((flat-list
+                (apply #'append
+                       (mapcar
+                        (lambda (item)
+                          (let ((src (plist-get item :source))
+                                (diags (plist-get item :diagnostics)))
+                            (if (hash-table-p diags)
+                                ;; lsp-diagnostics returns hash table with all files
+                                (let ((file-diags '()))
+                                  (maphash (lambda (_file diag-list)
+                                             (setq file-diags (append file-diags diag-list)))
+                                           diags)
+                                  (mapcar (lambda (diag)
+                                            (cons :source (cons src diag)))
+                                          file-diags))
+                              ;; other sources return list directly
+                              (mapcar (lambda (diag)
+                                        (cons :source (cons src diag)))
+                                      diags))))
+                        results)))
+               (total (length flat-list))
+               (start (or offset 0))
+               (lim (or limit 50))
+               (paged (seq-subseq flat-list start (min total (+ start lim))))
+               (result (list :total total :offset start :limit lim :diagnostics paged)))
+          (when (called-interactively-p 'any)
+            (kill-new (format "%s" result))
+            (message "%s" result))
+          result)))))
 
 (comment
   (gptelt-lint-project))
