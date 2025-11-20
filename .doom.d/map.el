@@ -319,6 +319,7 @@
   :g "," #'sp-copy-sexp
   :g "y" #'consult-dir
   :g "v" #'er/expand-region
+  [remap er/expand-region] #'expreg-expand
   ;; :g "v" #'expreg-expand
   :g "c" #'delete-window
   :g "K" #'project-kill-buffers

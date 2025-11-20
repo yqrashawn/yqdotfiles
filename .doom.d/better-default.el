@@ -513,7 +513,7 @@ This function could be in the list `comint-output-filter-functions'."
                      (font (doom-normalize-font original-font))
                      (dfont (or (if-let* ((remap-font (alist-get var font-alist))
                                           (remap-xlfd (doom-normalize-font remap-font)))
-                                    remap-xlfd
+                                  remap-xlfd
                                   (purecopy font))
                                 (error "Could not decompose %s font" var))))
                 (let* ((step      (if fixed-size-p 0 (* increment doom-font-increment)))
@@ -1020,7 +1020,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
                   jtsx-typescript-mode jtsx-jsx-mode jtsx-tsx-mode))
     (when-let* ((mode-ranges (alist-get mode treesit-fold-range-alist)))
       (setf (alist-get mode treesit-fold-range-alist)
-            (append mode-ranges '((interface_body . treesit-fold-range-seq)))))))
+            (append mode-ranges '((interface_declaration . treesit-fold-range-seq)
+                                  (interface_body . treesit-fold-range-seq)))))))
 
 (defadvice! ++fold/open-all (orig-fn &optional level)
   :after #'+fold/open-all
@@ -1070,7 +1071,9 @@ The hook `treesit-fold-on-fold-hook' is run; see `run-hooks'."
                                         (let ((n (cdr captured-node)))
                                           (or (< (treesit-node-start n) minp)
                                               (> (treesit-node-end n) maxp)
-                                              (treesit-fold--node-range-on-same-line n))))
+                                              ;; Only filter if the entire node (not just fold range) is on same line
+                                              (= (line-number-at-pos (treesit-node-start n))
+                                                 (line-number-at-pos (treesit-node-end n))))))
                                       all-nodes))
         (dolist (captured-node all-nodes)
           (let* ((n (cdr captured-node))
@@ -1120,3 +1123,6 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
    :url "http://example.com"
    :url-title "example.com"
    :sound "magic"))
+
+(use-package! expreg
+  :commands (expreg-expand))
