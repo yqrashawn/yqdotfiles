@@ -52,11 +52,11 @@ Returns a list of file paths relative to the project root."
       (error "Directory does not exist: %s" dir))
     ;; Check if pattern is a type alias
     (if-let ((alias-entry (assoc pattern type-aliases)))
-        (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
-          (condition-case _
-              (let ((output (shell-command-to-string rg-command)))
-                (setq results (split-string output "\n" t)))
-            (error (setq results nil))))
+      (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
+        (condition-case _
+            (let ((output (shell-command-to-string rg-command)))
+              (setq results (split-string output "\n" t)))
+          (error (setq results nil))))
       ;; Handle as glob pattern(s)
       (let* ((patterns (split-string pattern nil t))
              ;; Normalize patterns: prepend ** for relative dir patterns to search recursively
@@ -238,6 +238,7 @@ IMPORTANT: Uses Rust regex syntax (similar to PCRE), NOT Emacs Lisp regex syntax
 - Alternation: use | not \|
 - Special chars: \d \w \s work as expected (no double backslash)
 - This is standard regex, NOT Emacs regex where \( \) are grouping
+- There is NO 'output_mode' or '-C' params
 
 REGEX PATTERNS:
 - Wildcards: 'defun.*gptel' (any defun containing gptel)
