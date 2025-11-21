@@ -258,20 +258,19 @@
      ["Linear / Explicit"
       ("b" "Logical prev" combobulate-navigate-logical-previous :transient t)
       ("e" "Logical next" combobulate-navigate-logical-next :transient t)
-      ;; ("C-M-f" "Forward sexp" forward-sexp :transient t)
-      ;; ("C-M-b" "Backward sexp" backward-sexp :transient t)
-      ;; ("M-p" "Previous sequent" combobulate-navigate-sequence-previous :transient t)
-      ;; ("M-n" "Next sequent" combobulate-navigate-sequence-next :transient t)
-      ]
+      ("j" "Forward sexp" forward-sexp :transient t)
+      ("k" "Backward sexp" backward-sexp :transient t)
+      ("M-p" "Previous sequent" combobulate-navigate-sequence-previous :transient t)
+      ("M-n" "Next sequent" combobulate-navigate-sequence-next :transient t)]
      ["Hierarchical"
       ("h" "Up into list" combobulate-navigate-up :transient t)
       ("f" "Down into list" combobulate-navigate-down :transient t)
-      ("k" "Backward sibling" combobulate-navigate-previous :transient t)
-      ("j" "Forward sibling" combobulate-navigate-next :transient t)]
-     ;; ["Querying"
-     ;;  ("B" "Query Builder …" combobulate-query)
-     ;;  ("x" "Xref …" combobulate-xref)
-     ;;  ("h" "Highlight …" combobulate-highlight)]
+      ("C-M-p" "Backward sibling" combobulate-navigate-previous :transient t)
+      ("C-M-n" "Forward sibling" combobulate-navigate-next :transient t)]
+     ["Querying"
+      ("B" "Query Builder …" combobulate-query)
+      ("x" "Xref …" combobulate-xref)
+      ("H" "Highlight …" combobulate-highlight)]
      [:description (lambda () (concat
                                (propertize "Defun " 'face 'transient-heading)
                                (format "(to: %s)"
@@ -281,24 +280,23 @@
                                         'font-lock-doc-face))))
                    ("C-M-a" "Beginning of defun" combobulate-navigate-beginning-of-defun :transient t)
                    ("C-M-e" "End of defun" combobulate-navigate-end-of-defun :transient t)]]
-    ;; ["Editing and Marking"
-    ;;  ["Marking"
-    ;;   ("C-M-h" "Mark defun" combobulate-mark-defun :transient t)
-    ;;   ("M-h" "Expand region" combobulate-mark-node-dwim :transient t)]
-    ;;  ["Editing"
-    ;;   ("M-k" "Kill node DWIM" combobulate-kill-node-dwim :transient t)
-    ;;   ("t" "Edit …" combobulate-edit)
-    ;;   ("c" "Clone node DWIM" combobulate-clone-node-dwim)
-    ;;   ("C-M-t" "Transpose sexp" combobulate-transpose-sexps)
-    ;;   ("e" "Envelop …" combobulate-envelop)
-    ;;   ("M-P" "Drag node up" combobulate-drag-up :transient t)
-    ;;   ("M-N" "Drag node down" combobulate-drag-down :transient t)]
-    ;;  ["Splicing"
-    ;;   ("M-<up>" "Elevate before and out" combobulate-splice-up :transient t)
-    ;;   ("M-<down>" "Elevate after and out" combobulate-splice-down :transient t)
-    ;;   ("M-<left>" "Elevate self and out" combobulate-splice-self :transient t)
-    ;;   ("M-<right>" "Elevate all and out" combobulate-splice-parent)]]
-    )
+    ["Editing and Marking"
+     ["Marking"
+      ("C-M-h" "Mark defun" combobulate-mark-defun :transient t)
+      ("M-h" "Expand region" combobulate-mark-node-dwim :transient t)]
+     ["Editing"
+      ("M-k" "Kill node DWIM" combobulate-kill-node-dwim :transient t)
+      ("t" "Edit …" combobulate-edit)
+      ("c" "Clone node DWIM" combobulate-clone-node-dwim)
+      ("C-M-t" "Transpose sexp" combobulate-transpose-sexps)
+      ("C-M-e" "Envelop …" combobulate-envelop)
+      ("M-P" "Drag node up" combobulate-drag-up :transient t)
+      ("M-N" "Drag node down" combobulate-drag-down :transient t)]
+     ["Splicing"
+      ("M-<up>" "Elevate before and out" combobulate-splice-up :transient t)
+      ("M-<down>" "Elevate after and out" combobulate-splice-down :transient t)
+      ("M-<left>" "Elevate self and out" combobulate-splice-self :transient t)
+      ("M-<right>" "Elevate all and out" combobulate-splice-parent)]])
   ;; (assq-delete-all 'combobulate-mode minor-mode-map-alist)
   )
 

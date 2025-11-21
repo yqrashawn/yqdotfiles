@@ -173,14 +173,19 @@ Instead keep them, with a newline after each comment."
     (lispyville-mode -1))
   (defun +symex-state-exit ()
     (lispy-mode 1))
+
   (add-hook! 'evil-symex-state-entry-hook '+symex-mode-interface)
   (add-hook! 'evil-symex-state-exit-hook '+symex-state-exit)
 
   (remove-hook! 'evil-symex-state-exit-hook #'symex-disable-editing-minor-mode)
+
   (defadvice! +evil-force-normal-state (orig)
     :around #'evil-force-normal-state
-    (if (and (not (evil-symex-state-p)) lispy-mode)
-        (symex-mode-interface)))
+    (cond
+     ((and (not (evil-symex-state-p)) lispy-mode)
+      (symex-mode-interface))
+     ((and (not (evil-symex-state-p)) (not lispy-mode))
+      (call-interactively #'combobulate))))
 
   (symex-initialize)
 
