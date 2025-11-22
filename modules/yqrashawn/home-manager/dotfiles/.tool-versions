@@ -1,5 +1,5 @@
 # clojure latest
-clojure 1.12.1.1550
+clojure 1.12.3.1577
 java oracle-graalvm-24
 # java zulu-musl-23.30.13
 # java adoptopenjdk-21.0.1+12.0.LTS
