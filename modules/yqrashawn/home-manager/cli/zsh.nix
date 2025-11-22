@@ -32,6 +32,9 @@ let
   '';
   functions = builtins.readFile ./functions.sh;
   aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+    duct = "clojure -M:duct";
+    ductt = "clojure -M:duct:test --test";
+    ductr = "clojure -M:duct --nrepl --cider";
     # darwin specific aliases
     ibrew = "arch -x86_64 brew";
     abrew = "arch -arm64 brew";

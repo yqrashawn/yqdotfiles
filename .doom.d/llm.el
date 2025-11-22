@@ -152,8 +152,8 @@
 (make-variable-buffer-local '+llm-project-default-files)
 (put '+llm-project-default-files 'safe-local-variable #'listp)
 (setq! +llm-global-project-default-files
-       '("CLAUDE.md" "AGENTS.md" "README.md" ".github/copilot-instructions.md" "llm.txt"
-         "llm.org" "deps.edn" "shadow-cljs.edn" "package.json"))
+       '("CLAUDE.md" "AGENTS.md" "README.md" "README.org" ".github/copilot-instructions.md" "llm.txt"
+         "llm.org" "deps.edn" "duct.edn" "shadow-cljs.edn" "package.json"))
 (setq! +llm-project-default-files +llm-global-project-default-files)
 
 (defun +llm-get-project-default-files ()
