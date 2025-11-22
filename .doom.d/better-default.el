@@ -233,13 +233,14 @@
 ;; these fns are used for impl things that triggerd or passed under double C-g/ESC
 (defun +doom/escape-just-called-cancel ()
   (setq +doom/escape-just-called nil))
+
 (+doom/escape-just-called-cancel)
 
 (defadvice! +doom/escape (orig-fn &optional interactive)
   :around #'doom/escape
   (unless +doom/escape-just-called
     (setq +doom/escape-just-called t)
-    (run-at-time 0.4 #'+doom/escape-just-called-cancel))
+    (run-at-time 0.4 nil #'+doom/escape-just-called-cancel))
   (funcall orig-fn interactive))
 
 ;; double C-g
@@ -513,7 +514,7 @@ This function could be in the list `comint-output-filter-functions'."
                      (font (doom-normalize-font original-font))
                      (dfont (or (if-let* ((remap-font (alist-get var font-alist))
                                           (remap-xlfd (doom-normalize-font remap-font)))
-                                  remap-xlfd
+                                    remap-xlfd
                                   (purecopy font))
                                 (error "Could not decompose %s font" var))))
                 (let* ((step      (if fixed-size-p 0 (* increment doom-font-increment)))

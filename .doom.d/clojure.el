@@ -644,3 +644,19 @@ creates a new one. Don't unnecessarily bother the user."
       clj-repl
       "clojure.core")
      "value")))
+
+;; given xxx replace -M:foo:bar:cider/nrepl to -M:foo:bar:xxx
+(defvar +cider-custom-clojure-cli-main-alias nil)
+(make-variable-buffer-local '+cider-custom-clojure-cli-main-alias)
+(put '+cider-custom-clojure-cli-main-alias 'safe-local-variable #'stringp)
+
+(defadvice! +cider-clojure-cli-jack-in-dependencies
+  (orig-fn global-options params dependencies &optional command)
+  :around #'cider-clojure-cli-jack-in-dependencies
+  (let ((cmd-params (funcall orig-fn global-options params dependencies command)))
+    (if (stringp +cider-custom-clojure-cli-main-alias)
+        (log/spy (string-replace
+                  ":cider/nrepl"
+                  (concat ":" +cider-custom-clojure-cli-main-alias)
+                  cmd-params))
+      cmd-params)))
