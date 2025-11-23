@@ -1127,3 +1127,19 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
 
 (use-package! expreg
   :commands (expreg-expand))
+
+(use-package! inheritenv
+  :init
+  (add-hook! 'doom-first-input-hook
+    (defun +setup-inheritenv ()
+      (require 'inheritenv)
+      (inheritenv-add-advice #'shell-command-to-string)
+      (inheritenv-add-advice #'shell-command)
+      (inheritenv-add-advice #'process-lines)
+      (inheritenv-add-advice #'make-comint)
+      (inheritenv-add-advice #'make-comint-in-buffer)
+      (inheritenv-add-advice #'comile)
+      (inheritenv-add-advice #'async-shell-command)
+      (inheritenv-add-advice #'call-process)
+      (inheritenv-add-advice #'detached-shell-command)
+      (inheritenv-add-advice #'detached-compile))))

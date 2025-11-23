@@ -390,7 +390,6 @@
 (package! leetcode)
 (package! minuet :recipe (:host github :repo "milanglacier/minuet-ai.el"))
 (package! polymode)
-(package! claude-code :recipe (:host github :repo "stevemolitor/claude-code.el"))
 (package! ts-refactor :recipe (:host github :repo "yqrashawn/ts-refactor.el"))
 (package! logview)
 (package! aidermacs)
@@ -472,6 +471,11 @@
 (package! agent-shell-manager
   :recipe (:host github :repo "jethrokuan/agent-shell-manager"))
 ;; (package! alabaster :recipe (:host github :repo "uzhne/alabaster-emacs"))
+(package! claude-code :recipe
+  (:host github :repo "stevemolitor/claude-code.el" :branch "main" :depth 1
+    :files ("*.el" (:exclude "images/*"))))
+
+(package! inheritenv)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
