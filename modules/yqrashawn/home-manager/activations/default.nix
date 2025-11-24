@@ -125,5 +125,13 @@
         echo 'link gitleaks config'
         ln -s ~/Dropbox/sync/gitleaks.toml ~/.config/.gitleaks.toml
     fi
+    if [ -e ~/Dropbox/sync/atuin.toml ] && [ ! -e ~/.config/atuin/config.toml ]; then
+        echo 'link atuin'
+        ln -s ~/Dropbox/sync/atuin.toml ~/.config/atuin/config.toml
+    fi
+    if [ -e ~/Dropbox/sync/atuin-server.toml ] && [ ! -e ~/.config/atuin/server.toml ]; then
+        echo 'link atuin server'
+        ln -s ~/Dropbox/sync/atuin-server.toml ~/.config/atuin/server.toml
+    fi
   '';
 }

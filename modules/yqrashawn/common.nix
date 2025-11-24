@@ -82,7 +82,7 @@ in
         # curl
         k6
         xcodes
-        atuin
+        inputs.atuin.packages.${pkgs.system}.default
         # ntfy
         # postgresql
         # rtx

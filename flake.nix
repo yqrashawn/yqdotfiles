@@ -42,7 +42,7 @@
       flake = false;
     };
     atuin = {
-      url = "github:atuinsh/atuin";
+      url = "github:atuinsh/atuin/v18.10.0";
       flake = true;
     };
     comma = {

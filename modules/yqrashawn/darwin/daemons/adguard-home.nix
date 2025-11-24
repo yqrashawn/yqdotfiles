@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   launchd.daemons.adguardhome = {
@@ -15,7 +20,7 @@
       ProgramArguments = [
         "/bin/sh"
         "-c"
-        "/bin/wait4path ${pkgs.adguardhome} &amp;&amp; ${pkgs.adguardhome}/bin/adguardhome --no-check-update --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
+        "/bin/wait4path ${pkgs.adguardhome} && ${pkgs.adguardhome}/bin/adguardhome --no-check-update --config /Users/${config.user.name}/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/AdguardHome.yaml"
       ];
       RunAtLoad = true;
       KeepAlive = true;

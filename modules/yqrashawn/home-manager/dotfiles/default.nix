@@ -1,4 +1,11 @@
-{ inputs, config, pkgs, lib, ... }: {
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   home.file = {
     hammerspoon = {
       source = inputs.spacehammer;
@@ -292,28 +299,28 @@
   xdg.enable = true;
   xdg.configFile = {
     "nixpkgs/config.nix".source = ../../config.nix;
-    atuin = {
-      source = ./atuin.toml;
-      target = "atuin/config.toml";
-    };
+    # atuin = {
+    #   source = ./atuin.toml;
+    #   target = "atuin/config.toml";
+    # };
+    # atuin-server = {
+    #   source = ./atuin-server.toml;
+    #   target = "atuin/server.toml";
+    # };
     kitty-light = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
       target = "kitty/light.conf";
     };
     kitty-light2 = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
       target = "kitty/light2.conf";
     };
     kitty-dark = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
       target = "kitty/dark.conf";
     };
     kitty-dark2 = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
       target = "kitty/dark2.conf";
     };
     topgrade = {
@@ -340,8 +347,12 @@
       source = ./.zsh.d;
       recursive = true;
     };
-    "broot/conf.hjson" = { source = ./broot.hjson; };
-    ".lsp/config.edn" = { source = ./lsp.edn; };
+    "broot/conf.hjson" = {
+      source = ./broot.hjson;
+    };
+    ".lsp/config.edn" = {
+      source = ./lsp.edn;
+    };
     alacritty = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./alacritty;
       recursive = true;
@@ -355,7 +366,9 @@
       source = ./clojure_lsp.edn;
       target = "./clojure-lsp/config.edn";
     };
-    "mpv/mpv.conf" = { source = ./mpv.conf; };
+    "mpv/mpv.conf" = {
+      source = ./mpv.conf;
+    };
     # yarn-global = {
     #   source = ./package.json;
     #   target = "./yarn/global/package.json";
