@@ -194,6 +194,7 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
 
 (after! cider
   (setq!
+   cider-edit-jack-in-command t
    cider-auto-select-test-report-buffer nil
    cider-repl-buffer-size-limit 1048576
    ;; Regular expression too big
@@ -645,18 +646,49 @@ creates a new one. Don't unnecessarily bother the user."
       "clojure.core")
      "value")))
 
-;; given xxx replace -M:foo:bar:cider/nrepl to -M:foo:bar:xxx
-(defvar +cider-custom-clojure-cli-main-alias nil)
-(make-variable-buffer-local '+cider-custom-clojure-cli-main-alias)
-(put '+cider-custom-clojure-cli-main-alias 'safe-local-variable #'stringp)
 
-(defadvice! +cider-clojure-cli-jack-in-dependencies
-  (orig-fn global-options params dependencies &optional command)
-  :around #'cider-clojure-cli-jack-in-dependencies
-  (let ((cmd-params (funcall orig-fn global-options params dependencies command)))
-    (if (stringp +cider-custom-clojure-cli-main-alias)
-        (log/spy (string-replace
-                  ":cider/nrepl"
-                  (concat ":" +cider-custom-clojure-cli-main-alias)
-                  cmd-params))
-      cmd-params)))
+(after! cider
+  (defun +++cider-clojure-cli-jack-in-dependencies (dependencies &optional command)
+    (let* ((all-deps (thread-last dependencies
+                                  (append (cider--jack-in-required-dependencies))
+                                  ;; Duplicates are never OK since they would result in
+                                  ;; `java.lang.IllegalArgumentException: Duplicate key [...]`:
+                                  (cider--dedupe-deps)
+                                  (seq-map (lambda (dep)
+                                             (if (listp (cadr dep))
+                                                 (format "%s {%s}"
+                                                         (car dep)
+                                                         (seq-reduce
+                                                          (lambda (acc v)
+                                                            (concat acc (format " :%s \"%s\" " (car v) (cdr v))))
+                                                          (cadr dep)
+                                                          ""))
+                                               (format "%s {:mvn/version \"%s\"}" (car dep) (cadr dep)))))))
+           (deps (format "{:deps {%s}}"
+                         (string-join all-deps " ")))
+           (deps-quoted (cider--shell-quote-argument deps command)))
+      (format "-Sdeps %s" deps-quoted))))
+
+(defadvice! +cider--update-jack-in-cmd (orig-fn params)
+  :around #'cider--update-jack-in-cmd
+  "Replace =DEPS= placeholder in cider-jack-in-cmd with actual dependency injection.
+This allows using a template jack-in command with =DEPS= that gets replaced
+with the full dependency string from cider-clojure-cli-jack-in-dependencies."
+  (if (and (boundp 'cider-jack-in-cmd)
+           (stringp cider-jack-in-cmd)
+           (string-match-p "=DEPS=" cider-jack-in-cmd))
+      (let ((cider-jack-in-cmd
+             (string-replace
+              "=DEPS="
+              (+++cider-clojure-cli-jack-in-dependencies
+               (cider-add-clojure-dependencies-maybe cider-jack-in-dependencies))
+              cider-jack-in-cmd)))
+        (funcall orig-fn params))
+    (funcall orig-fn params)))
+
+(comment
+  (string-replace
+   "-M:cider/nrepl"
+   "-M:cider/nrepl:duct"
+   (format "clojure %s"
+           (cider-clojure-cli-jack-in-dependencies nil nil (cider-add-clojure-dependencies-maybe cider-jack-in-dependencies)))))

@@ -474,8 +474,10 @@
 (package! claude-code :recipe
   (:host github :repo "stevemolitor/claude-code.el" :branch "main" :depth 1
     :files ("*.el" (:exclude "images/*"))))
-
 (package! inheritenv)
+(package! kirigami
+  :recipe
+  (:host github :repo "jamescherti/kirigami.el"))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
