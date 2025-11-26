@@ -120,7 +120,7 @@
   :hook (doom-first-file . global-treesit-auto-mode)
   :init
   (setq!
-   treesit-auto-langs '(tsx javascript typescript json yaml html)
+   treesit-auto-langs '(tsx javascript typescript yaml html)
    treesit-auto-install t
    treesit-language-source-alist
    '(;; (bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -159,7 +159,7 @@
      ;; (xml . ("https://github.com/ObserverOfTime/tree-sitter-xml" "master" "tree-sitter-xml/src"))
      ;; (python "https://github.com/tree-sitter/tree-sitter-python")
      (hlsl "https://github.com/theHamsta/tree-sitter-hlsl")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
+     ;; (json "https://github.com/tree-sitter/tree-sitter-json")
      (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
      (html "https://github.com/tree-sitter/tree-sitter-html")

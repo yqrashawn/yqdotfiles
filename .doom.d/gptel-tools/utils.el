@@ -46,8 +46,8 @@
             (lgr-debug
                 gpteltl
               (if is-error?
-                  ":%s:error:\n#+begin_src json-ts\n"
-                ":%s:\n#+begin_src json-ts\n")
+                  ":%s:error:\n#+begin_src json\n"
+                ":%s:\n#+begin_src json\n")
               tool-name
               :args tool-args
               :rst tool-result))))

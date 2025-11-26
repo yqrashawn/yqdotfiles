@@ -31,7 +31,7 @@ Opposed to word boundaries, sexp's work with `subword-mode' enabled."
          org-agenda-dim-blocked-tasks nil
          org-agenda-inhibit-startup t)
   ;; Use json-ts-mode for JSON code blocks
-  (pushnew! org-src-lang-modes '("json" . json-ts))
+  ;; (pushnew! org-src-lang-modes '("json" . json-ts))
   (pushnew! org-tags-exclude-from-inheritance "project")
   (pushnew! org-agenda-files (concat org-roam-directory org-roam-dailies-directory))
   (defadvice! +org-agenda--quit (&rest _)
