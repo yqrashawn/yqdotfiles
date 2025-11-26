@@ -58,6 +58,14 @@
      :input-cost 3
      :output-cost 15
      :cutoff-date "2025-03")
+    (opusplan
+     :description "Most capable model for complex reasoning and advanced coding"
+     :capabilities (tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 15
+     :output-cost 75
+     :cutoff-date "2025-03")
     (opus
      :description "Most capable model for complex reasoning and advanced coding"
      :capabilities (tool-use cache)

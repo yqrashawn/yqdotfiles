@@ -116,7 +116,7 @@
   (gptel-make-preset 'claude
     :description "claude code"
     :backend "cc"
-    :model 'sonnet
+    :model 'opusplan
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
@@ -768,6 +768,24 @@ CONVENTIONS:
 - body: provide additional context, wrap at 100 chars per line
 - footer: use for BREAKING CHANGE or issue references
 
+TYPE DEFINITIONS:
+- build: Changes to build system or dependencies (example scopes: gulp, broccoli, npm)
+- chore: Other changes that don't modify src or test files
+- ci: Changes to CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+- docs: Documentation only changes
+- feat: A new feature
+- fix: A bug fix
+- perf: A code change that improves performance
+- refactor: A code change that neither fixes a bug nor adds a feature
+- revert: Reverts a previous commit
+- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- test: Adding missing tests or correcting existing tests
+
+BREAKING CHANGES:
+- Mark breaking changes with ! before the colon: feat!: remove deprecated API
+- OR include BREAKING CHANGE: in footer with description
+- When both are used, they MUST be consistent (either both present or both absent)
+
 EXAMPLES:
 feat(api): add user authentication endpoint
 
@@ -779,7 +797,16 @@ refactor(core): simplify error handling logic
 
 This improves maintainability and reduces complexity.
 
-BREAKING CHANGE: the error format has changed"))
+feat!: remove support for Node 12
+
+BREAKING CHANGE: Node 12 is no longer supported
+
+fix(parser): handle edge case with empty strings
+
+Previously, empty strings would cause a crash. This commit adds
+proper validation and returns early with a default value.
+
+Closes #123"))
 
 ;;; Workspace persistence and isolation
 ;; Store and restore gptel-context per workspace
@@ -915,7 +942,7 @@ the result."
   (simple-llm-req
    "hi"
    :backend gptel--tmp-backend
-   :model 'sonnet
+   :model 'opusplan
    :cb (lambda (data) (message "DATA: %s" data)) 
    :error (lambda (err)
             (when (plist-p err)
