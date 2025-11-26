@@ -82,6 +82,7 @@ in
         # curl
         k6
         xcodes
+        jsonnet
         inputs.atuin.packages.${pkgs.system}.default
         # ntfy
         # postgresql

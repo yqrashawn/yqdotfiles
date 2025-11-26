@@ -280,7 +280,7 @@
 
 ;; crash when open json file
 ;; (package! jsonian :recipe (:host github :repo "iwahbe/jsonian"))
-(disable-packages! json-mode)
+;; (disable-packages! json-mode)
 (disable-packages! highlight-indent-guides)
 (package! magit-delta)
 (package! todoist)

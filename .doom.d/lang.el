@@ -169,7 +169,7 @@
 (after! js-json-mode
   (set-formatter! 'prettier-json
     (alist-get 'prettier-json apheleia-formatters)
-    :modes '(js-json-mode json-mode json-ts-mode)))
+    :modes '(js-json-mode json-mode json-ts-mode jsonnet-mode)))
 
 (after! sql-mode
   (set-formatter! 'pg-fluff
