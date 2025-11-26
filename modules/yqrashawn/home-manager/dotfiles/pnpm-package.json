@@ -2,7 +2,7 @@
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.0.54",
     "@github/copilot": "^0.0.350",
-    "@openai/codex": "^0.47.0",
+    "@openai/codex": "^0.63.0",
     "@tailwindcss/language-server": "^0.14.29",
     "@zed-industries/claude-code-acp": "^0.10.0",
     "bash-language-server": "^5.4.2",

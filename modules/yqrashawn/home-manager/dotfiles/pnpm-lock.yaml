@@ -15,8 +15,8 @@ importers:
         specifier: ^0.0.350
         version: 0.0.350
       '@openai/codex':
-        specifier: ^0.47.0
-        version: 0.47.0
+        specifier: ^0.63.0
+        version: 0.63.0
       '@tailwindcss/language-server':
         specifier: ^0.14.29
         version: 0.14.29
@@ -736,8 +736,8 @@ packages:
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
 
-  '@openai/codex@0.47.0':
-    resolution: {integrity: sha512-v0K5fDRhftqvE9oo1W3lD1DD2BhN9j4bLbw08V0Ikp3ur7fJnGEIEIM8jvom27orofOF7Es1ez0ML8N45aQWvA==}
+  '@openai/codex@0.63.0':
+    resolution: {integrity: sha512-PyE6WdF4tLLtrtFkj4RsCV6TD6W42G1lCyT5vIHQSZNxgfbXJdXYjwW3TepjoCraJGtXhxwjcPILksBUn34s1g==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -5492,7 +5492,7 @@ snapshots:
 
   '@one-ini/wasm@0.1.1': {}
 
-  '@openai/codex@0.47.0': {}
+  '@openai/codex@0.63.0': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
