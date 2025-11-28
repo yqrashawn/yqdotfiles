@@ -1,14 +1,23 @@
-{ config, lib, pkgs, ... }: {
-  home.packages = with pkgs;
-    [
-      # cacert
-      # earthly
-      # vault-bin
-      # helmfile
-      # awscli2
-      # kubectl
-      # kubernetes-helm
-    ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  email = "namy.19@gmail.com";
+  username = "yqrashawn";
+in
+{
+  home.packages = with pkgs; [
+    # cacert
+    # earthly
+    # vault-bin
+    # helmfile
+    # awscli2
+    # kubectl
+    # kubernetes-helm
+  ];
   home.sessionVariables = rec {
     NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
     SSL_CERT_FILE = NIX_SSL_CERT_FILE;
@@ -21,9 +30,11 @@
     enable = true;
     lfs.enable = true;
     package = pkgs.git;
-    userEmail = "namy.19@gmail.com";
-    userName = config.user.name;
-    extraConfig = {
+    settings = {
+      user = {
+        email = email;
+        name = username;
+      };
       http.sslVerify = true;
       http.sslCAInfo = "/etc/ssl/certs/ca-certificates.crt";
     };

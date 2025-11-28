@@ -1,23 +1,25 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   home.packages = [ pkgs.github-cli ];
   programs.git = {
     enable = true;
-    aliases = {
-      ignore =
-        "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
-      prettylog = "...";
-      fix = "commit --amend --no-edit";
-      oops = "reset HEAD~1";
-      sub = "submodule update --init --recursive";
-    };
-    extraConfig = {
+    settings = {
       core = {
         editor = "emacsclient";
         excludesfile = "~/.gitignore_global";
         precomposeUnicode = true;
         ignorecase = false;
       };
-      add = { interactive = { useBuiltin = false; }; };
+      add = {
+        interactive = {
+          useBuiltin = false;
+        };
+      };
       # http = {
       #   proxy = "http://127.0.0.1:6152";
       #   sslVerify = true;
@@ -26,15 +28,20 @@
       #   proxy = "http://127.0.0.1:6152";
       #   sslVerify = true;
       # };
-      include = { path = "~/.gitconfig.local"; };
+      include = {
+        path = "~/.gitconfig.local";
+      };
       alias = {
         fetch = "git fetch --tags";
         # ---- git-submodule-update-checker
-        submodule-updates = ''
-          "!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f"'';
+        submodule-updates = ''"!f(){ git submodule foreach 'git fetch origin master &> /dev/null; git --no-pager log --oneline HEAD..origin/master'; }; f"'';
         # ---- DWIM abort rebase, merge or cherry-pick
-        abort = ''
-          "!f() { local command=$(git status | grep -o "git \w* --abort"); echo $command; $($command); }; f"'';
+        abort = ''"!f() { local command=$(git status | grep -o "git \w* --abort"); echo $command; $($command); }; f"'';
+        ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
+        prettylog = "...";
+        fix = "commit --amend --no-edit";
+        oops = "reset HEAD~1";
+        sub = "submodule update --init --recursive";
       };
       filter = {
         lfs = {
@@ -44,7 +51,9 @@
           required = true;
         };
       };
-      merge = { conflictStyle = "zdiff3"; };
+      merge = {
+        conflictStyle = "zdiff3";
+      };
       branch = {
         autoSetupRebase = "always";
         autoSetupMerge = "always";
@@ -58,18 +67,17 @@
         ff = "only";
         rebase = true;
       };
-      init = { defaultBranch = "main"; };
+      init = {
+        defaultBranch = "main";
+      };
 
-      credential.helper = if pkgs.stdenvNoCC.isDarwin then
-        "osxkeychain"
-      else
-        "cache --timeout=1000000000";
+      credential.helper =
+        if pkgs.stdenvNoCC.isDarwin then "osxkeychain" else "cache --timeout=1000000000";
       commit.verbose = true;
       fetch.prune = true;
 
       diff = {
-        external =
-          "${pkgs.difftastic}/bin/difft --color auto --background $(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo dark || echo light) --display side-by-side";
+        external = "${pkgs.difftastic}/bin/difft --color auto --background $(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo dark || echo light) --display side-by-side";
       };
       # url."git@github.com:".insteadOf = "https://github.com/";
     };

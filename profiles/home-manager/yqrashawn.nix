@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   email = "namy.19@gmail.com";
   username = "yqrashawn";
-in {
+in
+{
   home.sessionVariables = rec {
     NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
     SSL_CERT_FILE = NIX_SSL_CERT_FILE;
@@ -12,13 +18,17 @@ in {
     # NODE_EXTRA_CA_CERTS = NIX_SSL_CERT_FILE;
   };
   programs.git = {
-    userEmail = email;
-    userName = username;
+    settings = {
+      user = {
+        email = email;
+        name = username;
+      };
+      github.user = username;
+      url."git@github.com:".insteadOf = "https://github.com/";
+    };
     signing = {
       key = email;
       signByDefault = true;
     };
-    extraConfig.github.user = username;
-    extraConfig.url."git@github.com:".insteadOf = "https://github.com/";
   };
 }

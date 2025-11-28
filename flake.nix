@@ -3,17 +3,14 @@
 
   nixConfig = {
     substituters = [
-      "https://rashawn.cachix.org"
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
     ];
     trusted-substituters = [
-      "https://rashawn.cachix.org"
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
     ];
     trusted-public-keys = [
-      "rashawn.cachix.org-1:7IFMjxmyIGgqR6v7iqpziOvPQ784z6+2EeW6bI46DIs="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
@@ -23,7 +20,7 @@
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
+    darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
     stable.url = "github:nixos/nixpkgs/nixos-23.05";
     own.url = "github:yqrashawn/nixpkgs/master";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
@@ -59,7 +56,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     clojure-deps-edn = {

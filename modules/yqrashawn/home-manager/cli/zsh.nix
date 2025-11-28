@@ -152,17 +152,13 @@ in
         TERM = "xterm-256color";
       };
       shellAliases = aliases;
-      initExtraBeforeCompInit = ''
+      initContent = ''
+        # initExtraBeforeCompInit
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/site-functions
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/$ZSH_VERSION/functions
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/vendor-completions
-      '';
-      loginExtra = ''
-        # https://github.com/alacritty/alacritty/issues/2950
-        # disable alacritty icon bouncing
-        printf "\e[?1042l"
-      '';
-      initExtra = ''
+
+        # init extra
         eval "$(${pkgs.atuin}/bin/atuin init zsh)"
 
         ### TRAMP
@@ -186,6 +182,12 @@ in
         # eat
         [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
           source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
+      '';
+      loginExtra = ''
+        # https://github.com/alacritty/alacritty/issues/2950
+        # disable alacritty icon bouncing
+        printf "\e[?1042l"
       '';
       envExtra = envExtra;
       profileExtra = zshProfileExtra;

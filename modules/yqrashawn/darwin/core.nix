@@ -1,4 +1,9 @@
-{ inputs, config, pkgs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 let
   home = builtins.getEnv "HOME";
   prefix = "/run/current-system/sw/bin";
@@ -18,17 +23,27 @@ let
     serviceConfig.RunAtLoad = true;
     serviceConfig.KeepAlive = true;
   };
-in {
+in
+{
   imports = [
     ./daemons
     ./user-agents # ./network.nix
   ];
 
-  security.pki.certificateFiles = [
-    "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-    "/etc/ssl/cert.pem"
-    # "${config.user.home}/Dropbox/sync/cert.pem"
-  ];
+  security.pki.certificateFiles =
+    [
+      "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+      "/etc/ssl/cert.pem"
+    ]
+    ++ (
+      let
+        certDir = "${config.user.home}/.nixpkgs/certs";
+      in
+      if builtins.pathExists certDir then
+        builtins.map (f: "${certDir}/${f}") (builtins.attrNames (builtins.readDir certDir))
+      else
+        [ ]
+    );
 
   # environment setup
   environment = {
@@ -42,7 +57,9 @@ in {
     # backupFileExtension = "backup";
     etc = {
       darwin.source = "${inputs.darwin}";
-      profile = { source = ./root-profile; };
+      profile = {
+        source = ./root-profile;
+      };
     };
     variables = {
       EDITOR = "emacsclient";
@@ -62,7 +79,10 @@ in {
     # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
 
     # packages installed in system profile
-    systemPackages = with pkgs; [ nix-doc sops ];
+    systemPackages = with pkgs; [
+      nix-doc
+      sops
+    ];
   };
 
   nix.enable = true;

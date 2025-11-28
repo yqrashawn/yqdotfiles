@@ -151,7 +151,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-            (insert! (",File project root: `%s`" buf-proj-root))
+              (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -394,7 +394,6 @@ Example:
   (or (ignore-errors (detached-session-output session))
       ""))
 
-
 (defun +format-diagnostic (diag)
   (let* ((source (plist-get diag :source))
          (message (plist-get diag :message))
@@ -436,7 +435,6 @@ Example:
               (insert (+format-diagnostic diag))))))
       ;; (switch-to-buffer b)
       b)))
-
 
 (defun +pabbrev-export-usage-hash->file ()
   "Write org-mode pabbrev usage-hash KEYS to a temp file, one per line.
