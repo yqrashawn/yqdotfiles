@@ -3,17 +3,43 @@
 (require 'detached)
 
 (defun gptelt-shell-run-command (callback command &optional cwd)
-  "Run COMMAND asynchronously using detached.el.
-CALLBACK is called with session-id when command starts.
-If CWD is provided, run command in that directory.
+  "Run COMMAND asynchronously using detached.el with smart timing detection.
 
-For commands that complete within 300ms, returns full session info and output.
-For longer-running commands, returns just the session ID."
+CALLBACK is called with results based on command completion timing:
+  - Commands finishing < 300ms: Returns full results immediately
+  - Commands finishing 300ms-1.2s: Returns full results after socket creation
+  - Commands taking > 1.2s: Returns session ID for manual polling
+
+Optional CWD sets the working directory for the command.
+
+DESIGN RATIONALE:
+This hybrid approach optimizes for UX:
+- Fast commands feel synchronous (no polling needed)
+- Medium-speed commands are caught after dtach socket creation (~1.0s)
+- Long-running commands return immediately with session ID for async polling
+
+TIMING WINDOWS:
+  0ms ────────────────────────────────────> time
+       ↓                    ↓               ↓
+    instant              socket          still running
+    (<300ms)           creation          (>1.2s)
+                       (~1.0s)
+
+  Timer1 (300ms):  Catches instant completions
+  Timer2 (1.2s):   Catches post-socket completions OR returns session ID
+
+IMPORTANT:
+- This function is ASYNC for Emacs (non-blocking, returns immediately)
+- The CALLBACK is invoked when timing checks complete
+- Dual-timer prevents race conditions with dtach socket creation
+- already-responded flag prevents duplicate callbacks"
   (let* ((default-directory (or cwd default-directory))
          (detached-session-origin 'gptel)
          (detached-session-mode 'detached)
          ;; Disable notifications for MCP shell commands
          (detached-notification-function #'ignore)
+         ;; Flag to prevent duplicate callbacks from dual-timer approach
+         (already-responded nil)
          (detached-session-action
           `(:attach detached-shell-command-attach-session
             :view detached-view-dwim
@@ -21,30 +47,70 @@ For longer-running commands, returns just the session ID."
          (session (detached-create-session command))
          (session-id (detached-session-id session)))
     (detached-start-session session)
-    
-    ;; Wait to see if command completes quickly
+
+    ;; TIMER 1 (300ms): Check for instant command completion
+    ;; Catches commands that finish before dtach socket is created
+    ;; Uses when-let for safe session access (may not exist yet)
     (run-with-timer
      0.3 nil
      (lambda ()
-       (let ((updated-session (detached--db-get-session session-id)))
-         (if (and updated-session (detached-session-inactive-p updated-session))
-             ;; Quick command - return full info
-             (let* ((_state (detached-session-state updated-session))
-                    (status (detached-session-status updated-session))
-                    (exit-code (detached-session-exit-code updated-session))
-                    (output (+safe-detached-session-output updated-session))
-                    (duration (detached-session-duration updated-session)))
-               (funcall callback
-                        (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
-                                duration
-                                (symbol-name session-id)
-                                status
-                                exit-code
-                                output)))
-           ;; Long-running command or session not yet initialized - return just session ID
-           (funcall callback
-                    (format "Command started with session ID: %s"
-                            (symbol-name session-id)))))))))
+       (when-let ((updated-session (detached--db-get-session session-id)))
+         ;; Verify session is both validated AND inactive before reading results
+         (when (and (detached-session-validated-p updated-session)
+                    (detached-session-inactive-p updated-session))
+           (setq already-responded t)  ; Prevent Timer 2 from firing
+           (let* ((status (detached-session-status updated-session))
+                  (exit-code (detached-session-exit-code updated-session))
+                  (output (+safe-detached-session-output updated-session))
+                  (duration (detached-session-duration updated-session)))
+             (funcall callback
+                      (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
+                              duration
+                              (symbol-name session-id)
+                              status
+                              exit-code
+                              output)))))))
+
+    ;; TIMER 2 (1.2s): Check after dtach socket creation window
+    ;; This catches commands that:
+    ;;   1. Finish between 300ms-1.2s (after socket created)
+    ;;   2. Are still running (return session ID for polling)
+    ;; 
+    ;; TIMING RATIONALE:
+    ;;   - detached-dtach-socket-creation-delay = 1.0s (default)
+    ;;   - Add 0.2s margin for file-notify to trigger
+    ;;   - Total: 1.2s ensures socket exists and state is updated
+    (run-with-timer
+     1.2 nil
+     (lambda ()
+       (unless already-responded  ; Only execute if Timer 1 didn't respond
+         (setq already-responded t)  ; Mark as responded regardless of outcome
+         (let ((updated-session (detached--db-get-session session-id)))
+           ;; Check if command completed in the 300ms-1.2s window
+           (if (and updated-session
+                    (detached-session-validated-p updated-session)
+                    (detached-session-inactive-p updated-session))
+               ;; SUCCESS PATH: Command finished in the 300ms-1.2s window
+               ;; Return full results (exit code, output, duration)
+               (let* ((status (detached-session-status updated-session))
+                      (exit-code (detached-session-exit-code updated-session))
+                      (output (+safe-detached-session-output updated-session))
+                      (duration (detached-session-duration updated-session)))
+                 (funcall callback
+                          (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
+                                  duration
+                                  (symbol-name session-id)
+                                  status
+                                  exit-code
+                                  output)))
+             ;; ASYNC PATH: Command is still running after 1.2s
+             ;; Return session ID for manual polling via other tools:
+             ;;   - get_shell_command_session_info (check status)
+             ;;   - get_shell_command_session_output (get output)
+             ;;   - kill_shell_command_session (terminate)
+             (funcall callback
+                      (format "Command started with session ID: %s"
+                              (symbol-name session-id))))))))))
 
 (comment
   (gptelt-shell-run-command 'message "date"))
@@ -63,18 +129,24 @@ as it only returns results after the command completes."
          (detached-notification-function #'ignore)
          (session-callback
           (lambda (session)
-            (let* ((session-id (detached-session-id session))
-                   (status (detached-session-status session))
-                   (exit-code (detached-session-exit-code session))
-                   (output (+safe-detached-session-output session))
-                   (duration (detached-session-duration session)))
-              (funcall callback
-                       (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
-                               duration
-                               (symbol-name session-id)
-                               status
-                               exit-code
-                               output)))))
+            (condition-case err
+                (let* ((session-id (detached-session-id session))
+                       (status (detached-session-status session))
+                       (exit-code (detached-session-exit-code session))
+                       (output (+safe-detached-session-output session))
+                       (duration (detached-session-duration session)))
+                  (funcall callback
+                           (format "Command completed in %.2fs\nSession ID: %s\nStatus: %s\nExit Code: %s\n\nOutput:\n%s"
+                                   duration
+                                   (symbol-name session-id)
+                                   status
+                                   exit-code
+                                   output)))
+              (error
+               (funcall callback
+                        (format "Error in callback: %s\nSession ID: %s"
+                                (error-message-string err)
+                                (symbol-name (detached-session-id session))))))))
          (detached-session-action
           `(:attach detached-shell-command-attach-session
             :view detached-view-dwim
@@ -203,20 +275,21 @@ If ACTIVE-ONLY is non-nil, only list active sessions."
    :name "run_shell_command"
    :function #'gptelt-shell-run-command-sync
    :async t
-   :description (concat "Run a shell command and wait for completion using detached.el. "
-                        "This tool is async (non-blocking for Emacs) but synchronous in behavior - "
-                        "it waits for the command to finish before returning results.\n\n"
-                        "Returns complete session info including:\n"
-                        "- Exit status (success/failure)\n"
-                        "- Exit code\n"
-                        "- Full command output\n"
-                        "- Execution duration\n"
-                        "- Session ID for reference\n\n"
-                        "Use this for:\n"
-                        "- Commands where you need the output before proceeding\n"
-                        "- Short to medium duration tasks (up to 1 hour)\n"
-                        "- Build commands, tests, file operations\n\n"
-                        "For fire-and-forget long-running tasks, use run_shell_command_async instead.")
+   :description 
+   "Run a shell command and wait for completion.
+
+Returns complete session info including:
+- Exit status (success/failure)
+- Exit code
+- Full command output
+- Execution duration
+
+Use this for:
+- Commands where you need the output before proceeding
+- Short to medium duration tasks (up to 1 hour)
+- Build commands, tests, file operations
+
+For fire-and-forget long-running tasks, use run_shell_command_async instead."
    :args '((:name "command" :type string
             :description "The shell command to run")
            (:name "cwd" :type string :optional t
@@ -229,20 +302,23 @@ If ACTIVE-ONLY is non-nil, only list active sessions."
    :name "run_shell_command_async"
    :function #'gptelt-shell-run-command
    :async t
-   :description (concat "Run a shell command asynchronously using detached.el. "
-                        "The command runs in a detached session that persists even if Emacs is closed. "
-                        "\n\nFor quick commands (completing within 300ms):\n"
-                        "- Returns complete session info and output immediately\n"
-                        "- No need to call additional tools\n\n"
-                        "For longer-running commands:\n"
-                        "- Returns session ID only\n"
-                        "- Use get_shell_command_session_info to check status\n"
-                        "- Use get_shell_command_session_output to retrieve output\n\n"
-                        "Use this to:\n"
-                        "- Run long-running commands\n"
-                        "- Execute background tasks\n"
-                        "- Start build processes\n"
-                        "- Launch development servers")
+   :description 
+   "Run a shell command asynchronously.
+
+For quick commands (completing within 1.2s):
+- Returns complete session info and output immediately
+- No need to call additional tools
+
+For longer-running commands:
+- Returns session ID only
+- Use get_shell_command_session_info to check status
+- Use get_shell_command_session_output to retrieve output
+
+Use this to:
+- Run long-running commands
+- Execute background tasks
+- Start build processes
+- Launch development servers"
    :args '((:name "command" :type string
             :description "The shell command to run")
            (:name "cwd" :type string :optional t

@@ -151,7 +151,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-              (insert! (",File project root: `%s`" buf-proj-root))
+            (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -391,8 +391,17 @@ Example:
             (+lsp-diagnostic-at-point-to-string))))
 
 (defun +safe-detached-session-output (session)
-  (or (ignore-errors (detached-session-output session))
-      ""))
+  "Safely get output from SESSION with proper error handling.
+Returns output string on success, or descriptive error message on failure."
+  (condition-case err
+      (detached-session-output session)
+    (file-missing 
+     (format "[Error: Log file not found for session %s]" 
+             (symbol-name (detached-session-id session))))
+    (file-error 
+     (format "[Error reading log: %s]" (error-message-string err)))
+    (error 
+     (format "[Error: %s]" (error-message-string err)))))
 
 (defun +format-diagnostic (diag)
   (let* ((source (plist-get diag :source))
