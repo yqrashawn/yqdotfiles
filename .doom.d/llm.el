@@ -754,9 +754,9 @@ IMPORTANT REQUIRED RULES (errors):
 4. description: MUST NOT be empty
 5. description: MUST start with lowercase (never sentence-case, start-case, pascal-case, or upper-case)
 6. description: MUST NOT end with a period
-7. header (type + scope + description): MUST be 100 characters or less
-8. body: each line MUST be 100 characters or less
-9. footer: each line MUST be 100 characters or less
+7. header (type + scope + description): MUST be 80 characters or less
+8. body: each line MUST be 80 characters or less
+9. footer: each line MUST be 80 characters or less
 
 WARNINGS (should follow):
 - body: MUST have a leading blank line before it
@@ -765,7 +765,7 @@ WARNINGS (should follow):
 CONVENTIONS:
 - Use imperative mood (\"add feature\" not \"added feature\")
 - scope: optional, describes codebase section, e.g., fix(parser):
-- body: provide additional context, wrap at 100 chars per line
+- body: provide additional context, wrap at 80 chars per line
 - footer: use for BREAKING CHANGE or issue references
 
 TYPE DEFINITIONS:
