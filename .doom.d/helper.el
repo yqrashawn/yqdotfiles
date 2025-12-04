@@ -151,7 +151,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-            (insert! (",File project root: `%s`" buf-proj-root))
+              (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -237,6 +237,8 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       (erase-buffer)
       (insert!
        "# User Current Workspace Info\n"
+       "IMPORTANT: use workspace root as \"default working dir\" or \"root dir\""
+       "IMPORTANT: ALWAYS list concerns and questions for me when making a plan. ALWAYS check if there're any concerns or questions for me before implement a plan."
        "<env>\n"
        ("Today's date: `%s`\n" (format-time-string "%Y-%m-%d"))
        ("workspace name: `%s`\n" (+workspace-current-name))
