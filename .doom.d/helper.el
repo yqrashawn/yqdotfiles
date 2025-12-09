@@ -395,15 +395,21 @@ Example:
 (defun +safe-detached-session-output (session)
   "Safely get output from SESSION with proper error handling.
 Returns output string on success, or descriptive error message on failure."
-  (condition-case err
-      (detached-session-output session)
-    (file-missing 
-     (format "[Error: Log file not found for session %s]" 
-             (symbol-name (detached-session-id session))))
-    (file-error 
-     (format "[Error reading log: %s]" (error-message-string err)))
-    (error 
-     (format "[Error: %s]" (error-message-string err)))))
+  (when (detached-valid-session session)
+    (condition-case err
+        (let ((session-log-file (detached--session-file session 'log)))
+          (if (and session-log-file
+                   (file-exists-p session-log-file)
+                   (eq 0 (f-size session-log-file)))
+              ""
+            (detached-session-output session)))
+      (file-missing
+       (format "[Error: Log file not found for session %s]" 
+               (symbol-name (detached-session-id session))))
+      (file-error
+       (format "[Error reading log: %s]" (error-message-string err)))
+      (error
+       (format "[Error: %s]" (error-message-string err))))))
 
 (defun +format-diagnostic (diag)
   (let* ((source (plist-get diag :source))

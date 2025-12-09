@@ -113,7 +113,7 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
 (defun gptelt-eval-clj-string (clj-string &optional namespace)
   "Evaluate CLJ-STRING in NAMESPACE (defaults to 'user') and return result or error.
 Checks if clj nREPL is connected and namespace is available before evaluation."
-  (gptelt-eval--clj-string clj-string namespace))
+  (gptelt-eval--clj-string clj-string namespace t))
 
 (comment
   (gptelt-eval-clj-string "+" "clojure.core")
@@ -220,7 +220,8 @@ Ensures clj workspace and nREPL connection before proceeding."
     (error (error "Error getting symbol documentation: %s" (error-message-string err)))))
 
 (comment
-  (gptelt-clj-get-doc-for-symbol "defn"))
+  (gptelt-clj-get-doc-for-symbol "defn")
+  (gptelt-clj-get-doc-for-symbol "log!" "taoensso.telemere"))
 
 ;;; get symbol source code
 (defun gptelt-clj-get-symbol-source-code (symbol &optional namespace)
@@ -244,7 +245,8 @@ Ensures clj workspace and nREPL connection before proceeding."
     (error (error "Error getting symbol source code: %s" (error-message-string err)))))
 
 (comment
-  (gptelt-clj-get-symbol-source-code "when"))
+  (gptelt-clj-get-symbol-source-code "when")
+  (gptelt-clj-get-symbol-source-code "log!" "taoensso.telemere"))
 
 ;;; evaluate buffer
 (defun gptelt-cider--eval-buffer
@@ -292,7 +294,7 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
   "Evaluate a Clojure buffer by BUFFER-NAME.
 
 Ensures the buffer exists, its file is in the current project, and evaluates it."
-  (gptelt-cider--eval-buffer 'clj buffer-name))
+  (gptelt-cider--eval-buffer 'clj buffer-name t))
 
 (comment
   (gptelt-clj-eval-buffer "shadow-cljs-helpers.get-running-builds <.nixpkgs>")
@@ -437,7 +439,7 @@ shows buffer if not visible, asks for user permission, and evaluates it."
   (gptelt-make-tool
    :name "clj_get_symbol_doc"
    :function #'gptelt-clj-get-doc-for-symbol
-   :description "Get documentation for a Clojure symbol (function, macro, var, namespace, etc.). Returns formatted documentation including arglists, type, and docstring."
+   :description "Use this whenever you want to check the documentation of a Clojure symbol (function, macro, var, namespace, etc.). Returns formatted documentation including arglists, type, and docstring."
    :args '((:name "symbol"
             :type string
             :description "The Clojure symbol to get documentation for (e.g., 'map', 'reduce', 'defn')")
@@ -452,7 +454,7 @@ shows buffer if not visible, asks for user permission, and evaluates it."
   (gptelt-make-tool
    :name "clj_get_symbol_source_code"
    :function #'gptelt-clj-get-symbol-source-code
-   :description "Get source code for a Clojure symbol (function, macro, var, etc.). Returns the complete source code definition."
+   :description "Use this whenever you want to check the source code of a Clojure symbol (function, macro, var, etc.). Returns the complete source code definition."
    :args '((:name "symbol"
             :type string
             :description "The Clojure symbol to get source code for (e.g., 'map', 'reduce', 'when')")

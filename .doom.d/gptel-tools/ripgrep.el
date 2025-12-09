@@ -52,11 +52,11 @@ Returns a list of file paths relative to the project root."
       (error "Directory does not exist: %s" dir))
     ;; Check if pattern is a type alias
     (if-let ((alias-entry (assoc pattern type-aliases)))
-      (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
-        (condition-case _
-            (let ((output (shell-command-to-string rg-command)))
-              (setq results (split-string output "\n" t)))
-          (error (setq results nil))))
+        (let* ((rg-command (concat (rg-executable) " --files --hidden --type=" pattern)))
+          (condition-case _
+              (let ((output (shell-command-to-string rg-command)))
+                (setq results (split-string output "\n" t)))
+            (error (setq results nil))))
       ;; Handle as glob pattern(s)
       (let* ((patterns (split-string pattern nil t))
              ;; Normalize patterns: prepend ** for relative dir patterns to search recursively
@@ -153,9 +153,22 @@ Returns a list of search results with file paths, line numbers, and content."
   (gptelt-rg-tool-search-content "defun" nil "*.el"))
 
 (defun gptelt-rg-tool-search-regex
-    (pattern &optional path include max-results)
+    (pattern &optional path include max-results1 max-results2)
   "Search file contents using regular expressions."
-  (gptelt-rg-tool-search-content pattern path include nil nil nil max-results))
+  ;; claude code sometimes pass
+  ;; arg 4 as output_mode: "content"
+  ;; and arg 5 -C: 3
+  (gptelt-rg-tool-search-content
+   pattern
+   path
+   include
+   nil
+   nil
+   nil
+   (cond
+    ((numberp max-results1) max-results1)
+    ((numberp max-results2) max-results2)
+    (t nil))))
 
 (comment
   (gptelt-rg-tool-search-regex "TODO|regex")
