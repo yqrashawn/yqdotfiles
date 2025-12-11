@@ -5,7 +5,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-    '((cider-shadow-watched-builds . ":app")
+    '((cider-clojure-cli-aliases . ":dev")
+       (cider-preferred-build-tool . clojure-cli)
+       (cider-shadow-watched-builds . ":app")
        (cider-jack-in-cmd . "clojure =DEPS= -M:duct --nrepl --cider")
        (cider-repl-init-code "(ns user)")
        (cider-ns-refresh-after-fn . "integrant.repl/resume")

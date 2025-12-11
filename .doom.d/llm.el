@@ -152,7 +152,7 @@
 (make-variable-buffer-local '+llm-project-default-files)
 (put '+llm-project-default-files 'safe-local-variable #'listp)
 (setq! +llm-global-project-default-files
-       '("CLAUDE.md" "AGENTS.md" "README.md" "README.org" ".github/copilot-instructions.md" "llm.txt"
+       '("CLAUDE.md" "AGENTS.md" "README.md" "README.org" ".github/copilot-instructions.md" "llm.txt" "llm.md"
          "llm.org" "deps.edn" "duct.edn" "shadow-cljs.edn" "package.json"))
 (setq! +llm-project-default-files +llm-global-project-default-files)
 
@@ -179,6 +179,13 @@ Merge buffer-local with global default files."
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
   ;;   (+gptel-kill-default-buffer))
+  (defun +gptel-buffer? (&optional b)
+    (let ((b (if b (get-buffer b) (current-buffer))))
+      (and (null gptel-display-buffer-action)
+           (or (buffer-local-value 'gptel-mode b)
+               (and (buffer-file-name b)
+                    (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
+                                    (buffer-file-name b)))))))
   :config
   (require 'gptel-context)
   (require 'pcre2el)
@@ -186,19 +193,36 @@ Merge buffer-local with global default files."
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
   (set-popup-rule!
-    (lambda (bname _action)
-      (let ((b (get-buffer bname)))
-        (and (null gptel-display-buffer-action)
-             (or (buffer-local-value 'gptel-mode b)
-                 (and (buffer-file-name b)
-                      (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
-                                      (buffer-file-name b)))))))
+    (lambda (bname _action) (+gptel-buffer? bname))
     :autosave t
     :select t
     :side 'right
     :size 0.35
     :quit t
     :ttl nil)
+
+  ;; Dynamic slot assignment for stacking multiple gptel popup windows
+  (defun +gptel-popup-windows ()
+    "Return list of popup windows displaying gptel buffers."
+    (cl-remove-if-not
+     (lambda (w)
+       (and (+gptel-buffer? (window-buffer w))
+            (window-parameter w 'popup)))
+     (window-list)))
+
+  (defadvice! +gptel-popup-assign-dynamic-slot (orig-fn buffer alist)
+    "Assign unique slot to gptel buffers for vertical stacking."
+    :around #'+popup-buffer
+    (when (and buffer (+gptel-buffer? buffer))
+      (let ((existing-slots
+             (mapcar (lambda (w) (or (window-parameter w 'window-slot) 0))
+                     (+gptel-popup-windows))))
+        ;; Find the next available slot
+        (setf (alist-get 'slot alist)
+              (if existing-slots
+                  (1+ (apply #'max existing-slots))
+                0))))
+    (funcall orig-fn buffer alist))
 
   (defadvice! ++popup--delete-window (win)
     :before #'+popup--delete-window
