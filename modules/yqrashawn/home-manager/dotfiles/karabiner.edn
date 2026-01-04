@@ -470,6 +470,7 @@
            [:return_or_enter :same_wind_app :Safari]
            [:l [:op "/Applications/Firefox Developer Edition.app"] :!Firefoxes]
            [:l :same_wind_app :Firefoxes]
+           ;; [:l [:op "/Applications/Safari.app"] :!Firefoxes]
            ;; [:return_or_enter [:op "/System/Applications/iPhone Mirroring.app"]]
            [:h [:op "/Applications/Roam Research.app"]]
            ;; [:return_or_enter :!OS8]
