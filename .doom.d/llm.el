@@ -487,7 +487,7 @@ Merge buffer-local with global default files."
      (gptel-mcp-connect)
      (+gptel-make-my-presets)
      ;; at http://localhost:18684/mcp/v1/messages
-     (mcp-server-lib-http-start :port 18684)
+     (mcp-server-lib-http-start)
 
 
      (setq-default gptel--preset 'default)))
@@ -501,6 +501,7 @@ Merge buffer-local with global default files."
 (use-package! mcp-server-lib
   :defer t
   :init
+  (setq! mcp-server-lib-http-port 18684)
   (unless (file-exists-p
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
@@ -1021,11 +1022,11 @@ the result."
    ("github" .
     (:command "npx"
      :args
-     "-y"
-     "mcp-remote"
-     "https://api.githubcopilot.com/mcp"
-     "--header"
-     (format! "'Authorization:Bearer %s'" +gh-mcp-server-token)))
+     ("-y"
+      "mcp-remote"
+      "https://api.githubcopilot.com/mcp"
+      "--header"
+      (format! "'Authorization:Bearer %s'" +gh-mcp-server-token))))
 
    ("emacs" .
     ;; (:url "http://localhost:18684/mcp/v1/messages")
