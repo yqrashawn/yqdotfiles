@@ -1018,6 +1018,14 @@ the result."
      ("-y"
       "mcp-remote"
       "http://localhost:18682/mcp")))
+   ("github" .
+    (:command "npx"
+     :args
+     "-y"
+     "mcp-remote"
+     "https://api.githubcopilot.com/mcp"
+     "--header"
+     (format! "'Authorization:Bearer %s'" +gh-mcp-server-token)))
 
    ("emacs" .
     ;; (:url "http://localhost:18684/mcp/v1/messages")

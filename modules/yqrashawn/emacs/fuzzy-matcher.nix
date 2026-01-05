@@ -18,8 +18,6 @@ rustPlatform.buildRustPackage {
     rm -r $out/lib/
   '';
 
-  useFetchCargoVendor = true;
-
   cargoLock = {
     lockFile = ./fuzzy-matcher/Cargo.lock;
     outputHashes = {

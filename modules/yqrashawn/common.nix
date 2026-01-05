@@ -151,7 +151,7 @@ in
         entr
         # proxychains # build failed
         # proxychains-ng # no m1 support
-        du-dust
+        dust
         man
         duf # du
         yq

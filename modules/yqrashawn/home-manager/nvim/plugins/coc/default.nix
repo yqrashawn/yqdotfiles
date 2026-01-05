@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   # link coc-settings to the right location
   xdg.configFile."nvim/coc-settings.json".source = ./coc-settings.json;
 
@@ -29,12 +35,11 @@
         coc-prettier
         coc-pyright
         coc-r-lsp
-        coc-rls
+        coc-rust-analyzer
         coc-smartf
         coc-snippets
         coc-solargraph
         coc-tsserver
-        coc-vetur
         coc-vimlsp
         coc-vimtex
         coc-yaml

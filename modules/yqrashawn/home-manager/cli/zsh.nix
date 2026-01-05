@@ -127,6 +127,7 @@ in
       enable = true;
       autocd = true;
       enableCompletion = true;
+      dotDir = config.home.homeDirectory;
       autosuggestion = {
         enable = true;
       };
