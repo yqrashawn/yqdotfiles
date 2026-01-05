@@ -230,7 +230,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -487,7 +487,7 @@ Merge buffer-local with global default files."
      (gptel-mcp-connect)
      (+gptel-make-my-presets)
      ;; at http://localhost:18684/mcp/v1/messages
-     (mcp-server-lib-http-start :port 18684)
+     (mcp-server-lib-http-start)
 
 
      (setq-default gptel--preset 'default)))
@@ -501,6 +501,7 @@ Merge buffer-local with global default files."
 (use-package! mcp-server-lib
   :defer t
   :init
+  (setq! mcp-server-lib-http-port 18684)
   (unless (file-exists-p
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
