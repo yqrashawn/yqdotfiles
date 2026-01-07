@@ -599,15 +599,16 @@ used in the POST request made to the LanguageTool server."
    languagetool-server-port 443
    languagetool-mother-tongue "zh-CN"))
 
+;; (require 'emacs-everywhere)
 (after! emacs-everywhere
-  (setq! emacs-everywhere-paste-command
-         (pcase emacs-everywhere--display-server
-           ('quartz (list "osascript" "-e" "delay 0.3 \n tell application \"System Events\" to keystroke \"v\" using command down"))
-           ('x11 (list "xdotool" "key" "--clearmodifiers" "Shift+Insert"))
-           ((or 'wayland 'unknown)
-            (list "notify-send"
-                  "No paste command defined for emacs-everywhere"
-                  "-a" "Emacs" "-i" "emacs"))))
+  ;; (setq! emacs-everywhere-paste-command
+  ;;        (pcase emacs-everywhere--display-server
+  ;;          ('quartz (list "osascript" "-e" "delay 0.3 \n tell application \"System Events\" to keystroke \"v\" using command down"))
+  ;;          ('x11 (list "xdotool" "key" "--clearmodifiers" "Shift+Insert"))
+  ;;          ((or 'wayland 'unknown)
+  ;;           (list "notify-send"
+  ;;                 "No paste command defined for emacs-everywhere"
+  ;;                 "-a" "Emacs" "-i" "emacs"))))
   (defadvice! +emacs-everywhere-app-info-osx (orig-fn)
     :around #'emacs-everywhere-app-info-osx
     "Return information on the active window, on osx."
