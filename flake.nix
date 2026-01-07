@@ -83,6 +83,10 @@
       url = "github:ianthehenry/zsh-autoquoter";
       flake = false;
     };
+    asdf-trivy = {
+      url = "github.com/zufardhiyaulhaq/asdf-trivy";
+      flake = false;
+    };
     asdf-java = {
       url = "github:halcyon/asdf-java";
       flake = false;

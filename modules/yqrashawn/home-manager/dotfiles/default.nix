@@ -148,6 +148,11 @@
       source = ./.phoenix.js;
       target = ".phoenix.js";
     };
+    asdf-trivy = {
+      source = inputs.asdf-trivy;
+      target = "./.asdf/plugins/trivy";
+      recursive = true;
+    };
     asdf-java = {
       source = inputs.asdf-java;
       target = "./.asdf/plugins/java";

@@ -400,6 +400,18 @@
         "type": "github"
       }
     },
+    "asdf-trivy": {
+      "flake": false,
+      "locked": {
+        "path": "github.com/zufardhiyaulhaq/asdf-trivy",
+        "type": "path"
+      },
+      "original": {
+        "path": "github.com/zufardhiyaulhaq/asdf-trivy",
+        "type": "path"
+      },
+      "parent": []
+    },
     "asdf-uv": {
       "flake": false,
       "locked": {
@@ -1167,6 +1179,7 @@
         "asdf-sbcl": "asdf-sbcl",
         "asdf-scala": "asdf-scala",
         "asdf-solidity": "asdf-solidity",
+        "asdf-trivy": "asdf-trivy",
         "asdf-uv": "asdf-uv",
         "asdf-v": "asdf-v",
         "asdf-yarn": "asdf-yarn",
