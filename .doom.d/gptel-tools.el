@@ -31,9 +31,11 @@
   (when (mcp--server-running-p "emacs")
     (mcp-stop-server "emacs"))
   (when mcp-server-lib--running
+    (mcp-server-lib-http-stop)
     (mcp-server-lib-stop))
   (load! "gptel-tools.el")
   (mcp-server-lib-start)
+  (mcp-server-lib-http-start)
   (mcp-hub--start-server
    (cl-find "emacs" mcp-hub-servers :key #'car :test #'equal)
    nil t)

@@ -230,7 +230,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -1026,7 +1026,7 @@ the result."
       "mcp-remote"
       "https://api.githubcopilot.com/mcp"
       "--header"
-      (format! "'Authorization:Bearer %s'" +gh-mcp-server-token))))
+      ,(format! "Authorization:Bearer %s" +gh-mcp-server-token))))
 
    ("emacs" .
     ;; (:url "http://localhost:18684/mcp/v1/messages")
