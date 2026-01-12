@@ -230,7 +230,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -350,7 +350,7 @@ Merge buffer-local with global default files."
   (setq! gptel-backend gptel--codex)
   (setq! gptel-backend gptel--claude-code)
   ;; (setq! gptel-backend gptel--gh-copilot-local)
-  (setq! gptel-backend gptel--gh-copilot-business)
+  ;; (setq! gptel-backend gptel--gh-copilot-business)
   (setq! gptel-backend gptel--gh-copilot-individual)
   (setq! gptel-model 'gemini-2.5-pro)
   (setq! gptel-model 'claude-sonnet-4)
@@ -662,8 +662,8 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
+           :backend gptel--gh-copilot-individual
            ;; :backend gptel--gh-copilot-business
-           :backend gptel--gh-copilot-business
            :model 'gpt-4.1
            ;; :model 'gpt-4o
            ;; :model 'gpt-4o-mini
@@ -728,7 +728,8 @@ Drop:
            (format "%s\n\nConversation to compress:\n%s"
                    compression-prompt
                    (prin1-to-string conversation))
-           :backend gptel--gh-copilot-business
+           ;; :backend gptel--gh-copilot-business
+           :backend gptel--gh-copilot-individual
            :model 'gpt-4.1
            :temperature 0.3
            :cb (lambda (response)
@@ -761,7 +762,8 @@ Drop:
   :config
   (setq!
    gptel-magit-model 'gpt-4.1
-   gptel-magit-backend gptel--gh-copilot-business
+   ;; gptel-magit-backend gptel--gh-copilot-business
+   gptel-magit-backend gptel--gh-copilot-individual
    gptel-magit-commit-prompt
    "You are an expert at writing Git commits compliant with @commitlint/config-conventional.
 
