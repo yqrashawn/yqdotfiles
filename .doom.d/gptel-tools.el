@@ -14,7 +14,7 @@
 (load! "gptel-tools/clj.el")
 (load! "gptel-tools/cljs.el")
 (load! "gptel-tools/pext.el")
-;; (load! "gptel-tools/shell.el")
+(load! "gptel-tools/shell.el")
 (load! "gptel-tools/workspace.el")
 
 (comment
