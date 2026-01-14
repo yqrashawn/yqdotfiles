@@ -327,7 +327,14 @@ Merge buffer-local with global default files."
            :stream t
            :key "no-key-required"
            :models gptel--gh-models))
-
+  (setq! gptel--ccl
+         (gptel-make-openai "ccl"
+           :protocol "http"
+           :host "studio.local:8003"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
   (setq! gptel--codex
          (gptel-make-openai "codex"
            :protocol "http"
@@ -348,6 +355,7 @@ Merge buffer-local with global default files."
            :stream t))
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--codex)
+  (setq! gptel-backend gptel--ccl)
   (setq! gptel-backend gptel--claude-code)
   ;; (setq! gptel-backend gptel--gh-copilot-local)
   ;; (setq! gptel-backend gptel--gh-copilot-business)
