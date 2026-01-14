@@ -1029,14 +1029,19 @@ the result."
      ("-y"
       "mcp-remote"
       "http://localhost:18682/mcp")))
+   ;; ("github" .
+   ;;  (:command "npx"
+   ;;   :args
+   ;;   ("-y"
+   ;;    "mcp-remote"
+   ;;    "https://api.githubcopilot.com/mcp"
+   ;;    "--header"
+   ;;    ,(format! "Authorization:Bearer %s" +gh-mcp-server-token))))
    ("github" .
-    (:command "npx"
+    (:command "gh"
+     ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
      :args
-     ("-y"
-      "mcp-remote"
-      "https://api.githubcopilot.com/mcp"
-      "--header"
-      ,(format! "Authorization:Bearer %s" +gh-mcp-server-token))))
+     ("mcp")))
 
    ("emacs" .
     ;; (:url "http://localhost:18684/mcp/v1/messages")
