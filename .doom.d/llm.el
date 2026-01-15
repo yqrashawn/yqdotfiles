@@ -80,11 +80,6 @@
             (insert ?\n))))))
   (funcall f response info raw))
 
-(defun my/claude-code-message-separator ()
-  (when (eq gptel-backend gptel--claude-code)
-    (unless (eq (char-before) ?\n)
-      (call-interactively '+org/return))))
-
 ;;; gptel
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
@@ -115,8 +110,9 @@
 
   (gptel-make-preset 'claude
     :description "claude code"
-    :backend "cc"
-    :model 'opusplan
+    ;; :backend "cc"
+    :backend "ccl"
+    :model 'sonnet
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
@@ -355,8 +351,8 @@ Merge buffer-local with global default files."
            :stream t))
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--codex)
-  (setq! gptel-backend gptel--ccl)
   (setq! gptel-backend gptel--claude-code)
+  (setq! gptel-backend gptel--ccl)
   ;; (setq! gptel-backend gptel--gh-copilot-local)
   ;; (setq! gptel-backend gptel--gh-copilot-business)
   (setq! gptel-backend gptel--gh-copilot-individual)
@@ -367,7 +363,6 @@ Merge buffer-local with global default files."
   (setq! gptel-model 'gpt-4.1)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
-  ;; (add-hook! 'gptel-pre-response-hook 'my/claude-code-message-separator)
   (setq! gptel-log-level 'debug)
   (defun +gptel-toggle-debug ()
     (interactive)
@@ -637,7 +632,14 @@ The user's chat will now follow. Generate the title."))
    :backend gptel--openrouter
    :model 'google/gemini-2.5-flash
    :cb 'print
-   :error 'print))
+   :error 'print)
+
+  (simple-llm-req
+   "hi"
+   :backend gptel--ccl
+   :model 'haiku
+   :cb 'message
+   :error 'message))
 
 ;;; lisp balancer
 (setq llm-lisp-balancer-system-message

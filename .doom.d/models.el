@@ -50,7 +50,15 @@
      :cutoff-date "2025-01")))
 
 (defconst gptel--claude-code-models
-  '((sonnet
+  '((haiku
+     :description "High-performance model with exceptional reasoning and efficiency"
+     :capabilities (tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-03")
+    (sonnet
      :description "High-performance model with exceptional reasoning and efficiency"
      :capabilities (tool-use cache)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")

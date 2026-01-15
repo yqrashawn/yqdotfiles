@@ -685,7 +685,7 @@ _b_ranch _j_next _k_prev _h_up
            (pedestal? (+cljr-project-has-dep? "pedestal.log"))
            (tools-logging? (+cljr-project-has-dep? "tools.logging"))
            (f (apply-partially '+cljr--log-spy
-                               pedestal?
+                               (or pedestal? telemere?)
                                (cond
                                 (squint? :squint)
                                 ((and telemere?
