@@ -988,6 +988,77 @@ the result."
                        (plist-get err :http-status)
                        (plist-get err :status))))))
 
+(defun +gen-mcp-json-conf ()
+  "Generate MCP JSON config from `mcp-hub-servers'.
+
+Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.claude.json."
+  (interactive)
+  (require 'json)
+  (let* ((output-file (expand-file-name "~/Downloads/mcp.json"))
+         (claude-json-file (expand-file-name "~/.claude.json"))
+         (servers-json
+          (mapcar
+           (lambda (entry)
+             (let* ((name (car entry))
+                    (cfg (cdr entry))
+                    (command (plist-get cfg :command))
+                    (args (plist-get cfg :args))
+                    (url (plist-get cfg :url))
+                    (type (plist-get cfg :type))
+                    (env (plist-get cfg :env))
+                    (env-alist
+                     (cond
+                      ((and (listp env) (keywordp (car env)))
+                       (cl-loop for (k v) on env by #'cddr
+                                when v
+                                collect (cons (substring (symbol-name k) 1) v)))
+                      ((and (listp env) (consp (car env)))
+                       (mapcar (lambda (pair)
+                                 (cons (if (keywordp (car pair))
+                                           (substring (symbol-name (car pair)) 1)
+                                         (format "%s" (car pair)))
+                                       (cdr pair)))
+                               env))
+                      (t nil)))
+                    (server-alist nil))
+               (when command
+                 (push (cons "command" command) server-alist))
+               (when args
+                 (push (cons "args"
+                             (cond
+                              ((vectorp args) args)
+                              ((listp args) (vconcat args))
+                              (t args)))
+                       server-alist))
+               (when url (push (cons "url" url) server-alist))
+               (when type (push (cons "type" type) server-alist))
+               (when env-alist (push (cons "env" env-alist) server-alist))
+               (cons name (nreverse server-alist))))
+           mcp-hub-servers))
+         (json-object-type 'alist)
+         (json-array-type 'vector)
+         (json-key-type 'string)
+         (json-encoding-pretty-print t))
+    (make-directory (file-name-directory output-file) t)
+    (with-temp-file output-file
+      (insert (json-encode `(("mcpServers" . ,servers-json)))))
+    (let ((claude-conf
+           (if (file-exists-p claude-json-file)
+               (with-temp-buffer
+                 (insert-file-contents claude-json-file)
+                 (goto-char (point-min))
+                 (json-parse-buffer
+                  :object-type 'alist
+                  :array-type 'array
+                  :null-object nil
+                  :false-object :json-false))
+             (list (cons "mcpServers" nil)))))
+      (setf (alist-get "mcpServers" claude-conf nil nil #'string=) servers-json)
+      (with-temp-file claude-json-file
+        (insert (json-encode claude-conf)))
+      (message "Wrote MCP config to %s and updated %s"
+               output-file claude-json-file)))))
+
 (setq!
  mcp-hub-servers
  `(
@@ -1100,6 +1171,17 @@ the result."
             (string= "studio.local"))
     (setenv "DOCKER_HOST" "tcp://macmini.local:2375")))
 
+(use-package agent-shell
+  :defer t
+  :ensure-system-package
+  ((claude-code-acp . "pnpm install -g @zed-industries/claude-code-acp")
+   (codex-acp . "pnpm install -g @zed-industries/codex-acp"))
+  :init
+  (setq!
+   agent-shell-anthropic-claude-environment
+   (agent-shell-make-environment-variables :inherit-env t)
+   agent-shell-anthropic-authentication
+   (agent-shell-anthropic-make-authentication :login t)))
 (use-package! agent-shell-sidebar
   :after agent-shell)
 (use-package! agent-shell-manager

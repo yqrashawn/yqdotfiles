@@ -26,3 +26,4 @@ __pycache__/
 /resources/public/js/
 /resources/public/app/js/
 /resources/public/ground/js
+/.agent-shell/
