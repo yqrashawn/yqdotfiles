@@ -871,6 +871,10 @@
           :gn "r" #'mcp-hub-restart-server
           :gn "S" #'mcp-hub-start-server
           :gn "x" #'mcp-hub-close-server
-          :gn "X" #'mcp-hub-close-all-server)))
+          :gn "X" #'mcp-hub-close-all-server))
+ (:after magit
+         (:map magit-hunk-section-map
+          [remap magit-visit-thing] #'magit-diff-visit-worktree-file
+          :gn "C-RET" #'magit-diff-visit-file)))
 
 ;;; map.el ends here

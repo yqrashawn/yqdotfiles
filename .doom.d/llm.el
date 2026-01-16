@@ -1044,6 +1044,8 @@ the result."
      ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
      :args
      ("mcp")))
+   ("rlm" .
+    (:command "rlm-mcp"))
 
    ("emacs" .
     ;; (:url "http://localhost:18684/mcp/v1/messages")
