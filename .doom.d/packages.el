@@ -479,6 +479,7 @@
 (package! kirigami
   :recipe
   (:host github :repo "jamescherti/kirigami.el"))
+(package! iedit)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
