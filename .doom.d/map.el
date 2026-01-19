@@ -875,6 +875,6 @@
  (:after magit
          (:map magit-hunk-section-map
           [remap magit-visit-thing] #'magit-diff-visit-worktree-file
-          :gn "C-RET" #'magit-diff-visit-file)))
+          :gn "C-<return>" #'magit-diff-visit-file)))
 
 ;;; map.el ends here
