@@ -83,46 +83,46 @@
 ;;; gptel
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
-                     :description "default preset"
-                     :backend "cpb"
-                     ;; :model 'claude-sonnet-4.5
-                     ;; :system (alist-get 'claude gptel-directives)
-                     :model 'gpt-4.1
-                     :system (alist-get 'gpt41 gptel-directives)
-                     ;; :system (alist-get 'default gptel-directives)
-                     :temperature 0.8
-                     :tools
-                     (cl-mapcan
-                      (lambda (x)
-                        (let ((category (car x)))
-                          (seq-filter
-                           (lambda (tool-name)
-                             (not (string-prefix-p "emacs_" tool-name)))
-                           (seq-map 'car (alist-get category gptel--known-tools)))))
-                      gptel--known-tools))
+    :description "default preset"
+    :backend "cpb"
+    ;; :model 'claude-sonnet-4.5
+    ;; :system (alist-get 'claude gptel-directives)
+    :model 'gpt-4.1
+    :system (alist-get 'gpt41 gptel-directives)
+    ;; :system (alist-get 'default gptel-directives)
+    :temperature 0.8
+    :tools
+    (cl-mapcan
+     (lambda (x)
+       (let ((category (car x)))
+         (seq-filter
+          (lambda (tool-name)
+            (not (string-prefix-p "emacs_" tool-name)))
+          (seq-map 'car (alist-get category gptel--known-tools)))))
+     gptel--known-tools))
 
   (gptel-make-preset 'cob
-                     :description "preset"
-                     :backend "cpb"
-                     :parents '(default)
-                     :model 'claude-3.7-sonnet
-                     :system (alist-get 'claude gptel-directives))
+    :description "preset"
+    :backend "cpb"
+    :parents '(default)
+    :model 'claude-3.7-sonnet
+    :system (alist-get 'claude gptel-directives))
 
   (gptel-make-preset 'claude
-                     :description "claude code"
-                     ;; :backend "cc"
-                     :backend "ccl"
-                     :model 'sonnet
-                     :system (alist-get 'claude gptel-directives)
-                     :parents '(default)
-                     :tools '())
+    :description "claude code"
+    ;; :backend "cc"
+    :backend "ccl"
+    :model 'sonnet
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
 
   (gptel-make-preset 'codex
-                     :description "codex"
-                     :backend "codex"
-                     :model 'gpt-5-codex
-                     :system (alist-get 'default gptel-directives)
-                     :parents '(default))
+    :description "codex"
+    :backend "codex"
+    :model 'gpt-5-codex
+    :system (alist-get 'default gptel-directives)
+    :parents '(default))
   (gptel--apply-preset 'cob)
   (gptel--apply-preset 'codex)
   (gptel--apply-preset 'default)
@@ -326,7 +326,7 @@ Merge buffer-local with global default files."
   (setq! gptel--ccl
          (gptel-make-openai "ccl"
            :protocol "http"
-           :host "studio.local:8003"
+           :host "localhost:8003"
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key "no-key-required"
@@ -534,12 +534,12 @@ Merge buffer-local with global default files."
         (on-finish (clj/get args :cb 'clj/identity))
         (on-error (clj/get args :error 'clj/identity)))
     (gptel-request prompt
-                   :stream nil
-                   :callback
-                   (lambda (response info)
-                     (if response
-                         (funcall on-finish response)
-                       (funcall on-error info))))))
+      :stream nil
+      :callback
+      (lambda (response info)
+        (if response
+            (funcall on-finish response)
+          (funcall on-error info))))))
 
 (defun simple-llm-req-sync (prompt &rest args)
   (await-callback
