@@ -170,7 +170,9 @@ Merge buffer-local with global default files."
          gptel-org-branching-context t
          gptel-track-media t
          +gptel-disabled-tool-patterns
-         '("^show_api_key$" "^capture_screenshot" "^guess_datetime"))
+         '("^show_api_key$" "^capture_screenshot" "^guess_datetime")
+         gptel-display-buffer-action
+         `(display-buffer-same-window . nil))
 
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
@@ -181,21 +183,23 @@ Merge buffer-local with global default files."
            (or (buffer-local-value 'gptel-mode b)
                (and (buffer-file-name b)
                     (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
-                                    (buffer-file-name b)))))))
+                                    (buffer-file-name b))))))
+    nil)
   :config
   (require 'gptel-context)
   (require 'pcre2el)
   (require 'gptel-gh)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
-  (set-popup-rule!
-    (lambda (bname _action) (+gptel-buffer? bname))
-    :autosave t
-    :select t
-    :side 'right
-    :size 0.35
-    :quit t
-    :ttl nil)
+  (comment
+    (set-popup-rule!
+      (lambda (bname _action) (+gptel-buffer? bname))
+      :autosave t
+      :select t
+      :side 'right
+      :size 0.35
+      :quit nil
+      :ttl nil))
 
   ;; Dynamic slot assignment for stacking multiple gptel popup windows
   (defun +gptel-popup-windows ()
@@ -326,7 +330,10 @@ Merge buffer-local with global default files."
   (setq! gptel--ccl
          (gptel-make-openai "ccl"
            :protocol "http"
+           ;; :host "localhost:8033"
            :host "localhost:8003"
+           ;; :host "studio.local:8003"
+           ;; :host "mbp.local:8003"
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key "no-key-required"
@@ -370,51 +377,6 @@ Merge buffer-local with global default files."
         (setq! gptel-log-level 'debug)
       (setq! gptel-log-level nil)))
   (setq! gptel-log-level 'nil)
-
-  ;; (el-patch-defun gptel-context--insert-buffer-string (buffer contexts)
-  ;;   "Insert at point a context string from all CONTEXTS in BUFFER."
-  ;;   (let ((is-top-snippet t)
-  ;;         (previous-line 1))
-  ;;     (insert
-  ;;      (el-patch-swap
-  ;;        (format "In buffer `%s`:" (buffer-name buffer))
-  ;;        (format "In buffer `%s`%s:"
-  ;;                (buffer-name buffer)
-  ;;                (if-let ((buf-file (buffer-file-name buffer)))
-  ;;                    (format ", file `%s`" buf-file)
-  ;;                  "")))
-  ;;      "\n\n```" (gptel--strip-mode-suffix (buffer-local-value
-  ;;                                           'major-mode buffer))
-  ;;      "\n")
-  ;;     (dolist (context contexts)
-  ;;       (let* ((start (overlay-start context))
-  ;;              (end (overlay-end context))
-  ;;              content)
-  ;;         (let (lineno column)
-  ;;           (with-current-buffer buffer
-  ;;             (without-restriction
-  ;;               (setq lineno (line-number-at-pos start t)
-  ;;                     column (save-excursion (goto-char start)
-  ;;                                            (current-column))
-  ;;                     content (buffer-substring-no-properties start end))))
-  ;;           ;; We do not need to insert a line number indicator if we have two regions
-  ;;           ;; on the same line, because the previous region should have already put the
-  ;;           ;; indicator.
-  ;;           (unless (= previous-line lineno)
-  ;;             (unless (= lineno 1)
-  ;;               (unless is-top-snippet
-  ;;                 (insert "\n"))
-  ;;               (insert (format "... (Line %d)\n" lineno))))
-  ;;           (setq previous-line lineno)
-  ;;           (unless (zerop column) (insert " ..."))
-  ;;           (if is-top-snippet
-  ;;               (setq is-top-snippet nil)
-  ;;             (unless (= previous-line lineno) (insert "\n"))))
-  ;;         (insert content)))
-  ;;     (unless (>= (overlay-end (car (last contexts)))
-  ;;                 (point-max))
-  ;;       (insert "\n..."))
-  ;;     (insert "\n```")))
 
   (defadvice! +gptel-mcp--activate-tools (_)
     :after #'gptel-mcp--activate-tools
@@ -1208,3 +1170,5 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
   
   (monet-mode 1)
   (claude-code-mode))
+
+(load! "gptel-extra.el")
