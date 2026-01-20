@@ -184,8 +184,9 @@ Instead keep them, with a newline after each comment."
     (cond
      ((and (not (evil-symex-state-p)) lispy-mode)
       (symex-mode-interface))
-     ((and (not (evil-symex-state-p)) (not lispy-mode))
-      (call-interactively #'combobulate))))
+     ;; ((and (not (evil-symex-state-p)) (not lispy-mode))
+     ;;  (call-interactively #'combobulate))
+     ))
 
   (symex-initialize)
 

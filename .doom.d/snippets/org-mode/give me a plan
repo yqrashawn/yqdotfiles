@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: give me a plan
+# key: gmp
+# --
+give me an implementation plan, list your concerns and questions after the plan
