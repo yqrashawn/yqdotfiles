@@ -170,9 +170,7 @@ Merge buffer-local with global default files."
          gptel-org-branching-context t
          gptel-track-media t
          +gptel-disabled-tool-patterns
-         '("^show_api_key$" "^capture_screenshot" "^guess_datetime")
-         gptel-display-buffer-action
-         `(display-buffer-same-window . nil))
+         '("^show_api_key$" "^capture_screenshot" "^guess_datetime"))
 
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
@@ -191,6 +189,8 @@ Merge buffer-local with global default files."
   (require 'gptel-gh)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
+  (setq! gptel-display-buffer-action
+         `(display-buffer-same-window . nil))
   (comment
     (set-popup-rule!
       (lambda (bname _action) (+gptel-buffer? bname))
