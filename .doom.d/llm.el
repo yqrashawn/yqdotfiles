@@ -992,7 +992,8 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                               ((listp args) (vconcat args))
                               (t args)))
                        server-alist))
-               (when url (push (cons "url" url) server-alist))
+               (when url (push (cons "url" url) server-alist)
+                     (push (cons "type" "http") server-alist))
                (when type (push (cons "type" type) server-alist))
                (when env-alist (push (cons "env" env-alist) server-alist))
                (cons name (nreverse server-alist))))
@@ -1080,15 +1081,17 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    ("rlm" .
     (:command "rlm-mcp"))
 
+   ;; ("emacs" .
+   ;;   ;; (:url "http://localhost:18684/mcp/v1/messages")
+   ;;   (:command ,(concat
+   ;;                (expand-file-name user-emacs-directory)
+   ;;                "emacs-mcp-stdio.sh")
+   ;;     ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
+   ;;     ;; :args ("--init-function=elisp-dev-mcp-enable"
+   ;;     ;;        "--stop-function=elisp-dev-mcp-disable")
+   ;;     ))
    ("emacs" .
-    ;; (:url "http://localhost:18684/mcp/v1/messages")
-    (:command ,(concat
-                (expand-file-name user-emacs-directory)
-                "emacs-mcp-stdio.sh")
-              ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
-              ;; :args ("--init-function=elisp-dev-mcp-enable"
-              ;;        "--stop-function=elisp-dev-mcp-disable")
-              ))
+    (:url "http://localhost:18684/mcp/v1/messages"))
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))
@@ -1117,7 +1120,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    ;;             "figma-developer-mcp"
    ;;             ,(concat "--figma-api-key=" +figma-access-token)
    ;;             "--stdio")))
-   ))
+
+   ("core-memory" .
+    (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))))
 
 (setq! gptel-log-level 'debug)
 (setq! gptel-log-level nil)
