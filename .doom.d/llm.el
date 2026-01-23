@@ -338,6 +338,7 @@ Merge buffer-local with global default files."
            :stream t
            :key "no-key-required"
            :models gptel--claude-code-models))
+  (comment (setq! gptel-backend gptel--ccl))
   (setq! gptel--codex
          (gptel-make-openai "codex"
            :protocol "http"
