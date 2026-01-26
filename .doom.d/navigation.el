@@ -70,6 +70,7 @@
 
 (after! projectile
   (setq! projectile-verbose nil
+         projectile-auto-cleanup-known-projects t
          projectile-sort-order 'recentf
          projectile-enable-idle-timer t
          projectile-idle-timer-hook '(projectile-discover-projects-in-search-path)
