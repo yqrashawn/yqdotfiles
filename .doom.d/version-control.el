@@ -47,6 +47,8 @@
                                                ("origin/sepolia" . ("/" "feat" "fix" "ci" "chore")))
    magit-published-branches '("origin/master" "origin/main" "origin/dev" "origin/develop" "origin/mainnet" "origin/sepolia")
    magit-clone-set-remote.pushDefault t)
+  (load! "forgeghp.el")
+  (forgeghp-setup)
   (pushnew! magit-no-confirm 'stage-all-changes)
   (add-hook! 'magit-process-mode-hook #'++doom-apply-ansi-color-to-compilation-buffer-h)
   (transient-define-argument magit-merge:--strategy-option ()

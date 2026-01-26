@@ -43,9 +43,6 @@
        mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
        mouse-wheel-scroll-amount-horizontal 2
        confirm-kill-emacs nil
-       ;; url-proxy-services
-       ;; '(("http" . "127.0.0.1:6152")
-       ;;   ("https" . "127.0.0.1:6153"))
        url-proxy-services nil
        blink-matching-paren t
        ;; blink-matching-paren 'jump
@@ -1144,3 +1141,18 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
       (inheritenv-add-advice #'call-process)
       (inheritenv-add-advice #'detached-shell-command)
       (inheritenv-add-advice #'detached-compile))))
+
+(comment
+  (progn
+    (setq !url-proxy-services
+          '(("http" . "127.0.0.1:6152")
+            ("https" . "127.0.0.1:6153")))
+    (setenv "HTTP_PROXY" "http://127.0.0.1:6152")
+    (setenv "HTTPS_PROXY" "http://127.0.0.1:6153"))
+
+  (progn
+    (setq !url-proxy-services
+          '(("http" . "127.0.0.1:9090")
+            ("https" . "127.0.0.1:9090")))
+    (setenv "HTTP_PROXY" "http://127.0.0.1:9090")
+    (setenv "HTTPS_PROXY" "http://127.0.0.1:9090")))

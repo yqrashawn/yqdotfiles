@@ -84,7 +84,7 @@
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
     :description "default preset"
-    :backend "cpb"
+    :backend "cpi"
     ;; :model 'claude-sonnet-4.5
     ;; :system (alist-get 'claude gptel-directives)
     :model 'gpt-4.1
@@ -103,9 +103,9 @@
 
   (gptel-make-preset 'cob
     :description "preset"
-    :backend "cpb"
+    :backend "cpi"
     :parents '(default)
-    :model 'claude-3.7-sonnet
+    :model 'claude-sonnet-4.5
     :system (alist-get 'claude gptel-directives))
 
   (gptel-make-preset 'claude
@@ -1082,17 +1082,17 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    ("rlm" .
     (:command "rlm-mcp"))
 
-   ;; ("emacs" .
-   ;;   ;; (:url "http://localhost:18684/mcp/v1/messages")
-   ;;   (:command ,(concat
-   ;;                (expand-file-name user-emacs-directory)
-   ;;                "emacs-mcp-stdio.sh")
-   ;;     ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
-   ;;     ;; :args ("--init-function=elisp-dev-mcp-enable"
-   ;;     ;;        "--stop-function=elisp-dev-mcp-disable")
-   ;;     ))
    ("emacs" .
-    (:url "http://localhost:18684/mcp/v1/messages"))
+    ;; (:url "http://localhost:18684/mcp/v1/messages")
+    (:command ,(concat
+                (expand-file-name user-emacs-directory)
+                "emacs-mcp-stdio.sh")
+              ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
+              ;; :args ("--init-function=elisp-dev-mcp-enable"
+              ;;        "--stop-function=elisp-dev-mcp-disable")
+              ))
+   ;; ("emacs" .
+   ;;  (:url "http://localhost:18684/mcp/v1/messages"))
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))

@@ -152,8 +152,7 @@ SHELL is the shell executable (defaults to `gptelt-shell-command-default-shell')
  :description "Run a shell command and return the combined stdout/stderr output. Use this for executing system commands, build tools, scripts, etc. The command runs in a zsh subshell and returns when complete or when timeout is reached."
  :args '((:name "command"
           :type "string"
-          :description "The shell command to execute"
-          :required t)
+          :description "The shell command to execute")
          (:name "directory"
           :type "string"
           :optional t
