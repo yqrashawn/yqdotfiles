@@ -50,6 +50,9 @@
         ;; Handle image files: return direct base64 without wrapping
         (gptelt--file-to-base64 file_path)
       ;; Handle regular files
+      ;; Convert string numbers to integers
+      (when (stringp offset) (setq offset (string-to-number offset)))
+      (when (stringp limit) (setq limit (string-to-number limit)))
       (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
             (line-offset (or offset 0)))
         (with-temp-buffer
@@ -75,6 +78,9 @@
 
 (defun gptelt-read-buffer (buffer_name &optional offset limit)
   "Return up to LIMIT lines (default 2000) from BUFFER_NAME, starting at OFFSET (default 0). Errors if buffer not exists. The returned content is wrapped with ␂ at the start and ␃ at the end. Before the wrapped content, a description is included with the total lines in the buffer and the start/end line numbers of the wrapped content. For image files, returns the base64-encoded content without any wrappers or descriptions."
+  ;; Convert string numbers to integers
+  (when (stringp offset) (setq offset (string-to-number offset)))
+  (when (stringp limit) (setq limit (string-to-number limit)))
   (let ((b (get-buffer buffer_name)))
     (unless b
       (error "Buffer not found: %s" buffer_name))
@@ -83,39 +89,39 @@
         (+gptel-tool-revert-to-be-visited-buffer b))
       (when (llm-danger-buffer-p b) (error "User denied the read request"))
       (if-let ((file-name (buffer-file-name b)))
-        (if (gptelt--image-file-p file-name)
-            ;; Handle image files: return direct base64 without wrapping
-            (gptelt--file-to-base64 file-name)
-          ;; Handle regular files
-          (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                (line-offset (or offset 0)))
-            (save-excursion
-              (let* ((total-lines (count-lines (point-min) (point-max)))
-                     (start-line (1+ line-offset))
-                     (end-line (min total-lines (+ line-offset max-lines))))
-                (goto-char (point-min))
-                (forward-line line-offset)
-                (let ((start (point)))
-                  (forward-line max-lines)
-                  (let ((content (buffer-substring-no-properties start (point))))
-                    (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
-                                    total-lines start-line end-line buffer_name file-name)
-                            "\n␂" content "␃"))))))
-          ;; Buffer without associated file
-          (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                (line-offset (or offset 0)))
-            (save-excursion
-              (let* ((total-lines (count-lines (point-min) (point-max)))
-                     (start-line (1+ line-offset))
-                     (end-line (min total-lines (+ line-offset max-lines))))
-                (goto-char (point-min))
-                (forward-line line-offset)
-                (let ((start (point)))
-                  (forward-line max-lines)
-                  (let ((content (buffer-substring-no-properties start (point))))
-                    (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
-                                    total-lines start-line end-line buffer_name)
-                            "\n␂" content "␃")))))))))))
+          (if (gptelt--image-file-p file-name)
+              ;; Handle image files: return direct base64 without wrapping
+              (gptelt--file-to-base64 file-name)
+            ;; Handle regular files
+            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+                  (line-offset (or offset 0)))
+              (save-excursion
+                (let* ((total-lines (count-lines (point-min) (point-max)))
+                       (start-line (1+ line-offset))
+                       (end-line (min total-lines (+ line-offset max-lines))))
+                  (goto-char (point-min))
+                  (forward-line line-offset)
+                  (let ((start (point)))
+                    (forward-line max-lines)
+                    (let ((content (buffer-substring-no-properties start (point))))
+                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
+                                      total-lines start-line end-line buffer_name file-name)
+                              "\n␂" content "␃"))))))
+            ;; Buffer without associated file
+            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+                  (line-offset (or offset 0)))
+              (save-excursion
+                (let* ((total-lines (count-lines (point-min) (point-max)))
+                       (start-line (1+ line-offset))
+                       (end-line (min total-lines (+ line-offset max-lines))))
+                  (goto-char (point-min))
+                  (forward-line line-offset)
+                  (let ((start (point)))
+                    (forward-line max-lines)
+                    (let ((content (buffer-substring-no-properties start (point))))
+                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
+                                      total-lines start-line end-line buffer_name)
+                              "\n␂" content "␃")))))))))))
 
 (comment
   (gptelt-read-buffer (current-buffer))

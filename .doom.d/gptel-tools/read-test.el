@@ -39,4 +39,36 @@
           (should (string-match-p "foobar\n␃" result)))
       (kill-buffer buf))))
 
+(ert-deftest gptelt-test-read-file-string-numbers ()
+  "Test gptelt-read-file accepts string numbers for offset and limit."
+  (let* ((fname (make-temp-file "gptelt-read-file-string-test" nil ".txt"))
+         (content "line1\nline2\nline3\nline4\nline5\n")
+         (_ (with-temp-file fname (insert content)))
+         (result (gptelt-read-file fname "1" "400")))
+    (unwind-protect
+        (progn
+          (should (string-match-p "\\[Total lines: 5\\]" result))
+          (should (string-match-p "\\[Content lines: 2-5\\]" result))
+          (should (string-match-p "␂line2" result))
+          (should (string-match-p "line5\n␃" result))
+          (should-not (string-match-p "line1" result)))
+      (when (file-exists-p fname) (delete-file fname)))))
+
+(ert-deftest gptelt-test-read-buffer-string-numbers ()
+  "Test gptelt-read-buffer accepts string numbers for offset and limit."
+  (let* ((fname (make-temp-file "gptelt-read-buffer-string-test" nil ".txt"))
+         (buf (find-file-noselect fname))
+         result)
+    (unwind-protect
+        (progn
+          (with-current-buffer buf
+            (insert "line1\nline2\nline3\nline4\nline5\n"))
+          (setq result (gptelt-read-buffer (buffer-name buf) "1" "400"))
+          (should (string-match-p "\\[Total lines: 5\\]" result))
+          (should (string-match-p "\\[Content lines: 2-5\\]" result))
+          (should (string-match-p "␂line2" result))
+          (should (string-match-p "line5\n␃" result))
+          (should-not (string-match-p "line1" result)))
+      (kill-buffer buf))))
+
 ;;; read-test.el ends here

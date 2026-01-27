@@ -1079,6 +1079,11 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
      :args
      ("mcp")))
+   ("shacdn" .
+    (:command "npx"
+     :args
+     ("shadcn@latest"
+      "mcp")))
    ("rlm" .
     (:command "rlm-mcp"))
 
