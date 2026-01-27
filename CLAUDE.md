@@ -11,7 +11,7 @@ The `.doom.d/` directory contains a comprehensive Doom Emacs configuration with 
 - whenever working on emacs lisp buffer `foo.el`, evaluate the buffer after changes made, check `foo-test.el` at the same directory see if corresponding test is missing or outdated
 
 ### Run Tests
-- use `run_ert_test` or `mcp__emacs__run_ert_test` tool to run elisp ert tests
+- use run ert test tool to run elisp ert tests
 - evaluate test file before run the test, test files are not loaded by default
 
 ### Core Files
