@@ -416,46 +416,48 @@ If SEPARATE is non-nil, insert a space before the first badge.
 Returns t if any badges were inserted, nil otherwise."
   (when (forgeghp-repo-linked-p)
     (let ((inserted nil))
-      ;; Fetch data asynchronously, but we need to return synchronously
       ;; Check if we have cached data first
-      (when-let ((cached-items (forgeghp--cache-get 'items))
-                 (cached-fields (forgeghp--cache-get 'fields))
-                 (item (forgeghp--find-item-in-list cached-items (oref topic number))))
-        ;; Insert status badge
-        (when-let ((status (alist-get 'status item)))
-          (when (or separate (not inserted))
-            (insert " ")
-            (setq inserted t))
-          (let ((start (point)))
-            (insert status)
-            (let ((o (make-overlay start (point))))
-              (overlay-put o 'priority 2)
-              (overlay-put o 'evaporate t)
-              (overlay-put o 'font-lock-face
-                           '((:background "#6e7681" :foreground "#ffffff")
-                             forge-topic-label))
-              (overlay-put o 'help-echo "GitHub Project Status"))))
+      (if-let ((cached-items (forgeghp--cache-get 'items))
+               (cached-fields (forgeghp--cache-get 'fields))
+               (item (forgeghp--find-item-in-list cached-items (oref topic number))))
+          (progn
+            ;; Insert status badge
+            (when-let ((status (alist-get 'status item)))
+              (when (or separate (not inserted))
+                (insert " ")
+                (setq inserted t))
+              (let ((start (point)))
+                (insert status)
+                (let ((o (make-overlay start (point))))
+                  (overlay-put o 'priority 2)
+                  (overlay-put o 'evaporate t)
+                  (overlay-put o 'font-lock-face
+                               '((:background "#6e7681" :foreground "#ffffff")
+                                 forge-topic-label))
+                  (overlay-put o 'help-echo "GitHub Project Status"))))
+            
+            ;; Insert priority badge
+            (when-let* ((priority-id (alist-get 'priority item))
+                        (priority-name (forgeghp--get-field-option-name
+                                        cached-fields "Priority" priority-id)))
+              (when (or separate (not inserted))
+                (insert " ")
+                (setq inserted t))
+              (let ((start (point)))
+                (insert priority-name)
+                (let ((o (make-overlay start (point))))
+                  (overlay-put o 'priority 2)
+                  (overlay-put o 'evaporate t)
+                  (overlay-put o 'font-lock-face
+                               '((:background "#8b5cf6" :foreground "#ffffff")
+                                 forge-topic-label))
+                  (overlay-put o 'help-echo "GitHub Project Priority")))))
         
-        ;; Insert priority badge
-        (when-let* ((priority-id (alist-get 'priority item))
-                    (priority-name (forgeghp--get-field-option-name
-                                    cached-fields "Priority" priority-id)))
-          (when (or separate (not inserted))
-            (insert " ")
-            (setq inserted t))
-          (let ((start (point)))
-            (insert priority-name)
-            (let ((o (make-overlay start (point))))
-              (overlay-put o 'priority 2)
-              (overlay-put o 'evaporate t)
-              (overlay-put o 'font-lock-face
-                           '((:background "#8b5cf6" :foreground "#ffffff")
-                             forge-topic-label))
-              (overlay-put o 'help-echo "GitHub Project Priority")))))
-      
-      ;; If no cached data, trigger async fetch (will be available on next refresh)
-      (unless inserted
-        (forgeghp-fetch-item-data topic (lambda (_item) nil)))
+        ;; No cached data - trigger async fetch for next refresh
+        (unless (forgeghp--cache-get 'items)
+          (forgeghp-fetch-item-data topic (lambda (_item) nil)))
+        (unless (forgeghp--cache-get 'fields)
+          (forgeghp-get-field-definitions (lambda (_fields) nil))))
       
       inserted)))
 

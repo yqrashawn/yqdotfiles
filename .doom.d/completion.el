@@ -168,6 +168,7 @@
    pabbrev-scavenge-some-chunk-size 200
    pabbrev-idle-timer-verbose nil
    pabbrev-global-mode-buffer-size-limit 240000
+   pabbrev-thing-at-point-constituent 'word
    my-pabbrev-shared-usage-hash (make-hash-table :test 'equal)
    my-pabbrev-shared-prefix-hash (make-hash-table :test 'equal))
 
@@ -189,22 +190,18 @@
           (cl-letf
               (((symbol-function 'message) (lambda (&rest _) nil)))
             ;; (pabbrev-scavenge-buffer)
-            (pabbrev-scavenge-buffer-fast)
-            )))))
+            (pabbrev-scavenge-buffer-fast))))))
 
 
-  ;; (setq-local completion-at-point-functions (list))
-  (add-hook! 'pabbrev-mode-hook
+  (add-hook! '(gptel-mode-hook agent-shell-mode-hook pabbrev-mode-hook)
     (defun +corfu-add-pabbrev-capf-h ()
       (remove-hook!
-        'completion-at-point-functions
-        #'cape-dabbrev #'cape-abbrev #'cape-keyword #'pabbrev-capf)
-      (add-hook 'completion-at-point-functions #'pabbrev-capf 1000 t)
-      (add-hook 'completion-at-point-functions #'cape-abbrev 1000 t)
-      (add-hook 'completion-at-point-functions #'cape-dabbrev 1000 t)
-      (add-hook 'completion-at-point-functions #'cape-keyword 1000 t)
-      ;; (add-hook 'completion-at-point-functions #'tabnine-completion-at-point 1 t)
-      ))
+        'completion-at-point-functions :local
+        #'yasnippet-capf #'ispell-completion-at-point #'cape-dabbrev
+        #'cape-abbrev #'cape-keyword #'pabbrev-capf)
+      (add-hook! 'completion-at-point-functions :append :local
+                 #'ispell-completion-at-point #'cape-keyword #'cape-abbrev
+                 #'yasnippet-capf #'cape-dabbrev)))
   :config
   (add-to-list 'hippie-expand-try-functions-list #'pabbrev-expand-maybe)
 

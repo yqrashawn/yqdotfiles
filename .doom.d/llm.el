@@ -101,18 +101,34 @@
           (seq-map 'car (alist-get category gptel--known-tools)))))
      gptel--known-tools))
 
-  (gptel-make-preset 'cob
+  (gptel-make-preset 'ghsonnet
     :description "preset"
     :backend "cpi"
     :parents '(default)
     :model 'claude-sonnet-4.5
     :system (alist-get 'claude gptel-directives))
 
-  (gptel-make-preset 'claude
+  (gptel-make-preset 'sonnet
     :description "claude code"
     ;; :backend "cc"
     :backend "ccl"
     :model 'sonnet
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'opus
+    :description "claude code"
+    ;; :backend "cc"
+    :backend "ccl"
+    :model 'haiku
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'haiku
+    :description "claude code"
+    ;; :backend "cc"
+    :backend "ccl"
+    :model 'opus
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
@@ -123,10 +139,10 @@
     :model 'gpt-5-codex
     :system (alist-get 'default gptel-directives)
     :parents '(default))
-  (gptel--apply-preset 'cob)
-  (gptel--apply-preset 'codex)
-  (gptel--apply-preset 'default)
-  (gptel--apply-preset 'claude))
+  ;; (gptel--apply-preset 'ghsonnet)
+  ;; (gptel--apply-preset 'codex)
+  ;; (gptel--apply-preset 'default)
+  (gptel--apply-preset 'sonnet))
 
 ;;;###autoload
 (defun +gptel (arg)
@@ -135,10 +151,9 @@
    ((region-active-p) (call-interactively #'gptel-rewrite))
    ((not arg) (call-interactively #'gptel))
    ((eq arg 7) (call-interactively #'gptel-menu))
-   ((eq arg 8)
-    (if (eq gptel-model 'gpt-4.1)
-        (setq gptel-model 'claude-sonnet-4.5)
-      (setq gptel-model 'gpt-4.1)))
+   ((eq arg 88) (setq gptel-model 'opus))
+   ((eq arg 88) (setq gptel-model 'haiku))
+   ((eq arg 89) (setq gptel-model 'sonnet))
    ((eq arg 90)
     (progn (funcall #'gptel-context-remove-all)
            (message "gptel context removed!")))
@@ -1079,25 +1094,24 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
      :args
      ("mcp")))
-   ("shacdn" .
-    (:command "npx"
-     :args
-     ("shadcn@latest"
-      "mcp")))
-   ("rlm" .
-    (:command "rlm-mcp"))
+   ;; ("shadcn" .
+   ;;  (:command "npx"
+   ;;   :args
+   ;;   ("-y"
+   ;;    "shadcn@latest"
+   ;;    "mcp")))
+   ("lattice" .
+    (:command "lattice-mcp"))
 
    ("emacs" .
     ;; (:url "http://localhost:18684/mcp/v1/messages")
     (:command ,(concat
                 (expand-file-name user-emacs-directory)
-                "emacs-mcp-stdio.sh")
-              ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
-              ;; :args ("--init-function=elisp-dev-mcp-enable"
-              ;;        "--stop-function=elisp-dev-mcp-disable")
-              ))
+                "emacs-mcp-stdio.sh")))
+   
    ;; ("emacs" .
    ;;  (:url "http://localhost:18684/mcp/v1/messages"))
+   
 
    ;; ("desktop-commander" . (:command "bunx"
    ;;                         :args ("@wonderwhy-er/desktop-commander")))
@@ -1127,8 +1141,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    ;;             ,(concat "--figma-api-key=" +figma-access-token)
    ;;             "--stdio")))
 
-   ("core-memory" .
-    (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))))
+   ;; ("core-memory" .
+   ;;  (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))
+   ))
 
 (setq! gptel-log-level 'debug)
 (setq! gptel-log-level nil)

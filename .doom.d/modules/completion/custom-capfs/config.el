@@ -30,9 +30,11 @@ Wraps candidates with =...= if current buffer is org-mode."
                    files)
                 files)))
         (list beg end
-              (if (derived-mode-p 'org-mode)
-                  (mapcar (lambda (s) (concat "=" s "=")) filtered)
-                filtered)
+              (cond ((derived-mode-p 'org-mode)
+                     (mapcar (lambda (s) (concat "=" s "=")) filtered))
+                    ((eq major-mode 'agent-shell-mode)
+                     (mapcar (lambda (s) (concat "`" s "`")) filtered))
+                    filtered)
               :exclusive 'no
               :annotation-function (lambda (s) " BufferFile")
               :company-kind (lambda (_) 'file)
@@ -59,18 +61,20 @@ Wraps candidates with =...= if current buffer is org-mode."
                             names)
                          names)))
         (list beg end
-              (if (derived-mode-p 'org-mode)
-                  (mapcar (lambda (s) (concat "=" s "=")) filtered)
-                filtered)
+              (cond ((derived-mode-p 'org-mode)
+                     (mapcar (lambda (s) (concat "=" s "=")) filtered))
+                    ((eq major-mode 'agent-shell-mode)
+                     (mapcar (lambda (s) (concat "`" s "`")) filtered))
+                    (t
+                     filtered))
               :exclusive 'no
               :annotation-function (lambda (s) " BufferName")
               :company-kind (lambda (_) 'buffer)
               :category 'doom-buffer-name)))))
 
-(add-hook! 'gptel-mode-hook
-  (defun +custom-capf-setup-org-mode ()
-    (remove-hook! 'completion-at-point-functions
-      :local #'pabbrev-capf)
-    (add-hook! 'completion-at-point-functions
-               :append :local 
-               #'pabbrev-capf #'+doom-buffer-capf #'+doom-buffer-files-capf)))
+(add-hook!
+ '(gptel-mode-hook agent-shell-mode-hook)
+ (defun +custom-capf-setup-org-mode ()
+   (add-hook 'completion-at-point-functions 
+             #'+doom-buffer-capf 1000 t)
+   (add-hook 'completion-at-point-functions #'+doom-buffer-files-capf 1000 t)))

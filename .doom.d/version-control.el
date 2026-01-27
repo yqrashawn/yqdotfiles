@@ -282,7 +282,7 @@ ORIG, STATUS, MODES, RENAME, HEADER, BINARY and LONG-STATUS are arguments of the
           (with-current-buffer diff-buf
             (write-region (point-min) (point-max) out-file nil 'silent)))))))
 
-(after! magit
-  (defadvice! +magit-wip-commit-buffer-file (&optional msg)
-    :after #'magit-wip-commit-buffer-file
-    (+write-magit-wip-diffs-on-save)))
+;; (after! magit
+;;   (defadvice! +magit-wip-commit-buffer-file (&optional msg)
+;;     :after #'magit-wip-commit-buffer-file
+;;     (+write-magit-wip-diffs-on-save)))

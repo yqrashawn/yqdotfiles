@@ -43,3 +43,8 @@ flycheck_*
 /.ai-chats/
 
 /.magit-wip-*.diff
+
+# ignore subdirectory CLAUDE.md files
+# (keep root CLAUDE.md for project-level instructions)
+**/CLAUDE.md
+!/CLAUDE.md

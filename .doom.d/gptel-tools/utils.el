@@ -16,19 +16,29 @@
 (require 'smartparens nil t)
 (require 'lgr)
 
-(setq gpteltl (lgr-get-logger "gptelt"))
+(defun gptelt--get-daily-log-file ()
+  "Generate the daily log file path with current date.
+Returns path like ~/Dropbox/sync/gptelt-2026-01-27.log"
+  (expand-file-name
+   (format "~/Dropbox/sync/gptelt-%s.log"
+           (format-time-string "%Y-%m-%d"))))
 
-(progn
+(defun gptelt--init-logger ()
+  "Initialize or reinitialize the gptelt logger with daily log file."
+  (setq gpteltl (lgr-get-logger "gptelt"))
   (lgr-reset-appenders gpteltl)
   (-> gpteltl
       (lgr-add-appender
        (-> (lgr-appender-file
-            :file (expand-file-name "~/Dropbox/sync/gptelt.log"))
+            :file (gptelt--get-daily-log-file))
            (lgr-set-layout
             (lgr-layout-format
              :format "** [%t] :%L: %m %j\n#+end_src"
              :timestamp-format "%Y-%m-%d %a %H:%M %z"))))
       (lgr-set-threshold lgr-level-debug)))
+
+;; Initialize the logger
+(gptelt--init-logger)
 
 ;; Note: JSON serialization with :json-false/:null is now handled by
 ;; mcp-server-lib--json-encode, no need for custom advice
@@ -54,9 +64,9 @@
     (-const nil)))
 
 (defun gptelt-log-check ()
+  "Open the current daily log file."
   (interactive)
-  (-> "~/Dropbox/sync/gptelt.log"
-      (expand-file-name)
+  (-> (gptelt--get-daily-log-file)
       (find-file-noselect)
       (pop-to-buffer)))
 
@@ -67,6 +77,13 @@
   (if gptelt-log-persist-all-log
       (message "Now persist all log")
     (message "Now persist error log")))
+
+(defun gptelt-log-refresh ()
+  "Refresh the logger to use a new daily log file.
+Useful when the day changes and you want to start logging to a new file."
+  (interactive)
+  (gptelt--init-logger)
+  (message "Logger refreshed. Now logging to: %s" (gptelt--get-daily-log-file)))
 
 ;;; Project/file path
 (defun gptelt--get-project-root ()
