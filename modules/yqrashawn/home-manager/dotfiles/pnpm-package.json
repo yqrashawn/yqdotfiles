@@ -7,6 +7,7 @@
     "@zed-industries/claude-code-acp": "^0.13.1",
     "@zed-industries/codex-acp": "^0.9.0",
     "bash-language-server": "^5.6.0",
+    "clawdbot": "2026.1.24-3",
     "concurrently": "^9.2.1",
     "copilot-node-server": "^1.41.0",
     "create-cloudflare": "^2.62.3",

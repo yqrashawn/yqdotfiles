@@ -19,7 +19,7 @@
 (defun gptelt--get-daily-log-file ()
   "Generate the daily log file path with current date.
 Returns path like ~/Dropbox/sync/gptelt-2026-01-27.log"
-  (expand-file-name
+  (file-truename
    (format "~/Dropbox/sync/gptelt-%s.log"
            (format-time-string "%Y-%m-%d"))))
 
@@ -43,25 +43,32 @@ Returns path like ~/Dropbox/sync/gptelt-2026-01-27.log"
 ;; Note: JSON serialization with :json-false/:null is now handled by
 ;; mcp-server-lib--json-encode, no need for custom advice
 
-(defvar gptelt-log-persist-all-log t)
+;; Hook into MCP tool call logging using the built-in after-tool-call hook
+(defun +gptelt--log-tool-call-hook (tool-name tool-args result is-error)
+  "Hook function to log MCP tool calls.
+  TOOL-NAME: name of the tool called
+  TOOL-ARGS: arguments passed to the tool
+  RESULT: the tool result
+  IS-ERROR: whether the result is an error"
+  (condition-case err
+      (when (or gptelt-log-persist-all-log is-error)
+        (let ((buffer-file-coding-system 'utf-8-unix)
+              (coding-system-for-read 'utf-8-unix)
+              (coding-system-for-write 'utf-8-unix))
+          (lgr-debug
+              gpteltl
+            (if is-error
+                ":%s:error:\n#+begin_src json\n"
+              ":%s:\n#+begin_src json\n")
+            tool-name
+            :args tool-args
+            :result result
+            :is-error is-error)))
+    (error (message "Error in gptelt logging: %s" (error-message-string err)))))
 
-(defun gptelt-log-mcp-tool (tool-name tool-args tool-result)
-  ;; Use mcp-server-lib--json-encode which already handles :json-false/:null correctly
-  (condition-case nil
-      (let ((is-error? (not (eq (alist-get 'isError tool-result) :json-false))))
-        (when (or gptelt-log-persist-all-log is-error?)
-          (let ((buffer-file-coding-system 'utf-8-unix)
-                (coding-system-for-read 'utf-8-unix)
-                (coding-system-for-write 'utf-8-unix))
-            (lgr-debug
-                gpteltl
-              (if is-error?
-                  ":%s:error:\n#+begin_src json\n"
-                ":%s:\n#+begin_src json\n")
-              tool-name
-              :args tool-args
-              :rst tool-result))))
-    (-const nil)))
+(add-hook 'mcp-server-lib-after-tool-call-functions #'+gptelt--log-tool-call-hook)
+
+(defvar gptelt-log-persist-all-log t)
 
 (defun gptelt-log-check ()
   "Open the current daily log file."
