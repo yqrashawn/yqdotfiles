@@ -10,6 +10,9 @@
 ;;
 ;;; Code:
 
+;;; Debug Configuration
+(defvar gptelt-buffer-debug nil
+  "When non-nil, log buffer tool operations for debugging.")
 
 
 ;;; Get buffer file path utilities
@@ -17,7 +20,7 @@
 (defun gptelt--get-buffer-file-path (buf-name)
   "Return the file path for buffer BUF-NAME."
   (if-let ((b (get-buffer buf-name)))
-    (buffer-file-name b)
+      (buffer-file-name b)
     (error "Buffer not found: %s" buf-name)))
 
 (comment
@@ -93,7 +96,8 @@
 (gptelt-make-tool
  :name "list_buffers"
  :function #'gptelt-list-buffers
- :description "Return a list of all visible buffer names (strings)."
+ :description (concat "Return a list of all buffer names currently open in Emacs. "
+                      "Returns array of strings (buffer names). Use this to discover available buffers before reading them.")
  :args '()
  :category "buffer"
  :confirm nil
@@ -101,7 +105,13 @@
 (gptelt-make-tool
  :name "filter_buffers_regex"
  :function #'gptelt-filter-buffers-regex
- :description "Return a list of buffer names matching given pattern (regex string)."
+ :description (concat "Filter buffers by regex pattern. Returns array of buffer names matching the pattern. "
+                      "Supports PCRE regex if pcre2el is available, otherwise uses Emacs regex."
+                      "\n\nPARAMETER STRUCTURE:\n"
+                      "{\n"
+                      "  \"pattern\": \"string\" (required) - Regex pattern to match buffer names\n"
+                      "}\n\n"
+                      "Example: filter_buffers_regex('.*\\.el$') returns all Emacs Lisp buffers")
  :args '((:name "pattern" :type string :description "regex pattern to match buffer names"))
  :category "buffer"
  :confirm nil
@@ -109,7 +119,9 @@
 (gptelt-make-tool
  :name "visible_buffers"
  :function #'gptelt-visible-buffers
- :description "Return a list of buffer names that are currently visible in windows to the user, user usually want to change these buffers."
+ :description (concat "Return buffer names currently visible in windows (i.e., on screen). "
+                      "These are buffers the user is likely working with. Returns array of buffer names. "
+                      "Useful for identifying which buffers to read or edit.")
  :args '()
  :category "buffer"
  :confirm nil

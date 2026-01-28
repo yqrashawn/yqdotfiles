@@ -6,6 +6,10 @@
 
 ;;; Code:
 
+;;; Debug Configuration
+(defvar gptelt-auq-debug nil
+  "When non-nil, log ask-user-question tool operations for debugging.")
+
 ;;; Constants
 (defconst gptelt-auq-max-questions 5
   "Maximum number of questions per tool call.")
@@ -18,6 +22,50 @@
 
 (defconst gptelt-auq-max-attempts 3
   "Maximum number of attempts (initial + 2 retries).")
+
+;;; Parameter Validation
+
+(defun gptelt-auq--validate-input-parameters (questions-input)
+  "Validate top-level QUESTIONS-INPUT parameter.
+Returns (valid-questions . error-message) where error-message is nil on success."
+  (when gptelt-auq-debug
+    (message "[ASK-USER-DEBUG] Validating input: type=%s, length=%s" 
+             (type-of questions-input)
+             (if (or (listp questions-input) (vectorp questions-input))
+                 (length questions-input)
+               "N/A")))
+  
+  (cond
+   ((null questions-input)
+    (cons nil "Error: Parameter 'questions' is required and must be a non-empty array"))
+   
+   ((not (or (listp questions-input) (vectorp questions-input)))
+    (cons nil (format "Error: Parameter 'questions' must be an array, got: %S" 
+                      (type-of questions-input))))
+   
+   (t
+    ;; Convert vector to list if needed
+    (let ((questions (if (vectorp questions-input)
+                         (append questions-input nil)
+                       questions-input)))
+      
+      (when (zerop (length questions))
+        (setq questions nil))
+      
+      (cond
+       ((null questions)
+        (cons nil "Error: Parameter 'questions' must contain at least one question"))
+       
+       ((< (length questions) 1)
+        (cons nil "Error: No questions provided"))
+       
+       ((> (length questions) gptelt-auq-max-questions)
+        (cons nil (format "Error: Too many questions: %d (maximum %d)" 
+                          (length questions) gptelt-auq-max-questions)))
+       
+       ;; All validation passed
+       (t
+        (cons questions nil)))))))
 
 ;;; Validation Helpers
 
@@ -208,47 +256,71 @@ QUESTIONS-INPUT should be a list of question plists/alists.
 
 Returns JSON string with answers or error information.
 This is the main entry point called by the LLM."
-  (condition-case err
-      (let* ((questions (if (vectorp questions-input)
-                            (append questions-input nil)
-                          questions-input))
-             (num-questions (length questions)))
-        
-        ;; Validate number of questions
-        (when (< num-questions 1)
-          (error "No questions provided"))
-        
-        (when (> num-questions gptelt-auq-max-questions)
-          (error "Too many questions: %d (maximum %d)" 
-                 num-questions gptelt-auq-max-questions))
-        
-        ;; Ask questions and collect answers
-        (let* ((results (gptelt-auq--ask-multiple-questions questions))
-               (has-errors (seq-some (lambda (pair)
-                                       (string-match-p "error\\|cancelled" 
-                                                       (cdr pair)))
-                                     results)))
-          
-          (if has-errors
-              ;; Return error JSON
-              (json-encode 
-               `((isError . t)
-                 (content . [((type . "text")
-                              (text . ,(format "Errors occurred: %S" results)))])))
-            
-            ;; Return success - convert results to JSON-friendly format
-            (json-encode 
-             `((answers . ,(mapcar (lambda (pair)
-                                     (cons (car pair) (cdr pair)))
-                                   results)))))))
+  (when gptelt-auq-debug
+    (message "[ASK-USER-DEBUG] Called with %d question(s)" 
+             (if (or (listp questions-input) (vectorp questions-input))
+                 (length questions-input)
+               0)))
+  
+  ;; Validate input parameters first
+  (let* ((validation (gptelt-auq--validate-input-parameters questions-input))
+         (questions (car validation))
+         (error-msg (cdr validation)))
     
-    (error
-     ;; Top-level error handling
-     (json-encode 
-      `((isError . t)
-        (content . [((type . "text")
-                     (text . ,(format "Error: %s" 
-                                      (error-message-string err))))]))))))
+    (if error-msg
+        ;; Return parameter validation error
+        (progn
+          (when gptelt-auq-debug
+            (message "[ASK-USER-DEBUG] Validation failed: %s" error-msg))
+          (json-encode 
+           `((isError . t)
+             (content . [((type . "text")
+                          (text . ,error-msg))]))))
+      
+      ;; Parameters valid - proceed with asking questions
+      (condition-case err
+          (let ((num-questions (length questions)))
+            (when gptelt-auq-debug
+              (message "[ASK-USER-DEBUG] Asking %d validated question(s)" num-questions))
+            
+            ;; Ask questions and collect answers
+            (let* ((results (gptelt-auq--ask-multiple-questions questions))
+                   (has-errors (seq-some (lambda (pair)
+                                           (string-match-p "error\\|cancelled" 
+                                                           (cdr pair)))
+                                         results)))
+              
+              (when gptelt-auq-debug
+                (message "[ASK-USER-DEBUG] Collected %d answer(s), has-errors: %s" 
+                         (length results) has-errors))
+              
+              (if has-errors
+                  ;; Return error JSON
+                  (progn
+                    (when gptelt-auq-debug
+                      (message "[ASK-USER-DEBUG] Returning error results"))
+                    (json-encode 
+                     `((isError . t)
+                       (content . [((type . "text")
+                                    (text . ,(format "Errors occurred: %S" results)))]))))
+                
+                ;; Return success - convert results to JSON-friendly format
+                (when gptelt-auq-debug
+                  (message "[ASK-USER-DEBUG] Returning success results"))
+                (json-encode 
+                 `((answers . ,(mapcar (lambda (pair)
+                                         (cons (car pair) (cdr pair)))
+                                       results)))))))
+        
+        (error
+         ;; Top-level error handling
+         (when gptelt-auq-debug
+           (message "[ASK-USER-DEBUG] Caught error: %s" (error-message-string err)))
+         (json-encode 
+          `((isError . t)
+            (content . [((type . "text")
+                         (text . ,(format "Error: %s" 
+                                          (error-message-string err))))])))))))) 
 
 ;;; Tool Registration
 
@@ -257,54 +329,63 @@ This is the main entry point called by the LLM."
    :name "ask_user_question"
    :function #'gptelt-auq-ask-user-question
    :description
-   "Ask user structured questions interactively via Emacs completion UI.
-Supports single-select and multi-select questions with 2-4 options each.
-Maximum 4 questions per call. User can provide custom 'Other' responses.
-
-IMPORTANT CONSTRAINTS:
-- 1-4 questions per call
-- 2-4 options per question
-- No emojis in text (breaks TTY)
-- Cannot be used by subagents (main thread only)
-- Blocks execution until user responds
-
-QUESTION FORMAT:
-{
-  \"question\": \"What type of task is this?\",
-  \"header\": \"Task Type\",  // optional
-  \"options\": [
-    {\"label\": \"Build Feature\", \"description\": \"Create new functionality\"},
-    {\"label\": \"Fix Bug\", \"description\": \"Debug and resolve issue\"}
-  ],
-  \"multiSelect\": false  // true for multiple selections
-}
-
-RETURNS:
-{
-  \"answers\": {
-    \"What type of task is this?\": \"Build Feature\"
-  }
-}
-
-ERROR FORMAT:
-{
-  \"isError\": true,
-  \"content\": [{\"type\": \"text\", \"text\": \"Error message\"}]
-}
-
-EXAMPLES:
-1. Single question, single-select:
-   [{\"question\": \"Auth method?\", 
-     \"options\": [{\"label\": \"JWT\"}, {\"label\": \"OAuth\"}]}]
-
-2. Multiple questions:
-   [{\"question\": \"Task type?\", ...}, 
-    {\"question\": \"Output format?\", ...}]
-
-3. Multi-select:
-   [{\"question\": \"Features?\", 
-     \"multiSelect\": true,
-     \"options\": [...]}]"
+   (concat "Ask user structured questions interactively via Emacs completion UI. "
+           "Supports single-select and multi-select questions with 2-4 options each. "
+           "Maximum 4 questions per call. User can provide custom 'Other' responses."
+           "\n\nPARAMETER STRUCTURE:\n"
+           "{\n"
+           "  \"questions\": array (required) - Array of 1-4 question objects\n"
+           "}\n\n"
+           "QUESTION OBJECT STRUCTURE:\n"
+           "{\n"
+           "  \"question\": \"string\" (required) - The question text to display\n"
+           "  \"header\": \"string\" (optional) - Header text shown before question\n"
+           "  \"options\": array (required) - Array of 2-4 option objects\n"
+           "  \"multiSelect\": boolean (optional, default: false) - Allow multiple selections\n"
+           "}\n\n"
+           "OPTION OBJECT STRUCTURE:\n"
+           "{\n"
+           "  \"label\": \"string\" (required) - The option label shown to user\n"
+           "  \"description\": \"string\" (optional) - Additional description of the option\n"
+           "}\n\n"
+           "IMPORTANT CONSTRAINTS:\n"
+           "- 1-4 questions per call\n"
+           "- 2-4 options per question\n"
+           "- No emojis in text (breaks TTY)\n"
+           "- Cannot be used by subagents (main thread only)\n"
+           "- Blocks execution until user responds\n\n"
+           "QUESTION FORMAT EXAMPLE:\n"
+           "{\n"
+           "  \"question\": \"What type of task is this?\",\n"
+           "  \"header\": \"Task Type\",  // optional\n"
+           "  \"options\": [\n"
+           "    {\"label\": \"Build Feature\", \"description\": \"Create new functionality\"},\n"
+           "    {\"label\": \"Fix Bug\", \"description\": \"Debug and resolve issue\"}\n"
+           "  ],\n"
+           "  \"multiSelect\": false  // true for multiple selections\n"
+           "}\n\n"
+           "SUCCESS RESPONSE FORMAT:\n"
+           "{\n"
+           "  \"answers\": {\n"
+           "    \"What type of task is this?\": \"Build Feature\"\n"
+           "  }\n"
+           "}\n\n"
+           "ERROR RESPONSE FORMAT:\n"
+           "{\n"
+           "  \"isError\": true,\n"
+           "  \"content\": [{\"type\": \"text\", \"text\": \"Error message\"}]\n"
+           "}\n\n"
+           "USAGE EXAMPLES:\n"
+           "1. Single question, single-select:\n"
+           "   [{\"question\": \"Auth method?\", \n"
+           "     \"options\": [{\"label\": \"JWT\"}, {\"label\": \"OAuth\"}]}]\n\n"
+           "2. Multiple questions:\n"
+           "   [{\"question\": \"Task type?\", ...}, \n"
+           "    {\"question\": \"Output format?\", ...}]\n\n"
+           "3. Multi-select:\n"
+           "   [{\"question\": \"Features?\", \n"
+           "     \"multiSelect\": true,\n"
+           "     \"options\": [...]}]")
    
    :args '((:name "questions"
             :type array

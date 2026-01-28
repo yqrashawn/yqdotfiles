@@ -246,7 +246,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -368,6 +368,7 @@ Merge buffer-local with global default files."
   (setq! gptel--gh-copilot-individual
          (gptel-make-gh-copilot "cpi"
            :host "api.individual.githubcopilot.com"))
+  (setq! +gptel-free-backend gptel--gh-copilot-individual)
   (setq! gptel--gh-copilot-business
          (gptel-make-gh-copilot "cpb"
            :host "api.business.githubcopilot.com"
@@ -651,7 +652,7 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
-           :backend gptel--gh-copilot-individual
+           :backend +gptel-free-backend
            ;; :backend gptel--gh-copilot-business
            :model 'gpt-4.1
            ;; :model 'gpt-4o
@@ -718,7 +719,7 @@ Drop:
                    compression-prompt
                    (prin1-to-string conversation))
            ;; :backend gptel--gh-copilot-business
-           :backend gptel--gh-copilot-individual
+           :backend +gptel-free-backend
            :model 'gpt-4.1
            :temperature 0.3
            :cb (lambda (response)
@@ -752,7 +753,7 @@ Drop:
   (setq!
    gptel-magit-model 'gpt-4.1
    ;; gptel-magit-backend gptel--gh-copilot-business
-   gptel-magit-backend gptel--gh-copilot-individual
+   gptel-magit-backend +gptel-free-backend
    gptel-magit-commit-prompt
    "You are an expert at writing Git commits compliant with @commitlint/config-conventional.
 

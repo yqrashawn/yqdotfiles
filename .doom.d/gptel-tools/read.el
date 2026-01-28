@@ -16,6 +16,11 @@
 ;;  - Read a buffer's content by buffer name.
 
 ;;; Code:
+
+;;; Debug Configuration
+(defvar gptelt-read-debug nil
+  "When non-nil, log read tool operations for debugging.")
+
 (defun gptelt--image-file-p (file-path)
   "Check if FILE-PATH is an image file based on extension."
   (when (stringp file-path)
@@ -138,9 +143,16 @@
    :name "read_file"
    :function #'gptelt-read-file
    :description
-   "Read a file from the local filesystem. The file_path parameter must be an absolute path, not a relative path. By default, it reads up to 2000 lines starting from the beginning of the file. You can optionally specify a line offset and limit (especially handy for long files), but it's recommended to read the whole file by not providing these parameters. Any lines longer than 2000 characters will be truncated. IMPORTANT: Use this tool for reading specific file paths. For reading currently open Emacs buffers, use read_buffer instead as it's faster and doesn't require the full path.
-
-The returned result includes a description line with the total lines in the file, and the start/end line numbers of the wrapped content. The content is wrapped with ␂ at the start and ␃ at the end."
+   (concat "Read a file from the local filesystem. The file_path parameter must be an absolute path. "
+           "By default, reads up to 2000 lines from the beginning. For long files, use offset and limit parameters. "
+           "IMPORTANT: For reading currently open Emacs buffers, use read_buffer instead (faster, no full path needed)."
+           "\n\nPARAMETER STRUCTURE:\n"
+           "{\n"
+           "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
+           "  \"offset\": integer (optional, default: 0) - Line number to start reading from\n"
+           "  \"limit\": integer (optional, default: 2000, min: 300) - Number of lines to read\n"
+           "}\n\n"
+           "The returned result includes metadata (total lines, content range) followed by content wrapped with ␂ and ␃.")
    :args '((:name "file_path" :type string
             :description "The absolute path to the file to read (must be absolute, not relative)")
            (:name "offset" :type integer :optional t :minimum 0
@@ -155,9 +167,17 @@ The returned result includes a description line with the total lines in the file
    :name "read_buffer"
    :function #'gptelt-read-buffer
    :description
-   "Read a buffer by buffer name. Reads up to 2000 lines starting from the beginning by default. Optional: offset (line number to start at), limit (number of lines). This tool is optimized for reading currently open files in Emacs without needing the full file path. Use this instead of read_file when you know the buffer name, as it's faster and more convenient. To see available buffers, you can use the buffer management tools.
-
-The returned result includes a description line with the total lines in the buffer, and the start/end line numbers of the wrapped content. The content is wrapped with ␂ at the start and ␃ at the end. For image files, returns the base64-encoded content without any wrappers or descriptions."
+   (concat "Read a buffer by buffer name. Optimized for reading currently open files in Emacs without needing full file path. "
+           "Faster and more convenient than read_file when you know the buffer name. "
+           "Use buffer management tools to see available buffers."
+           "\n\nPARAMETER STRUCTURE:\n"
+           "{\n"
+           "  \"buffer_name\": \"string\" (required) - Name of the buffer to read\n"
+           "  \"offset\": integer (optional, default: 0) - Line number to start reading from\n"
+           "  \"limit\": integer (optional, default: 2000, min: 300) - Number of lines to read\n"
+           "}\n\n"
+           "Returns content wrapped with ␂ and ␃, with metadata (total lines, content range). "
+           "For image files, returns base64-encoded content without wrappers.")
    :args '((:name "buffer_name" :type string
             :description "The buffer name to read")
            (:name "offset" :type integer :optional t :minimum 0

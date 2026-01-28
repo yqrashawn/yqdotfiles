@@ -204,6 +204,12 @@ Tries LLM auto-repair if unbalanced."
             (error (funcall callback (cons nil (error-message-string err))))))
       ;; Non-Lisp modes always pass (sync)
       (funcall callback (cons t nil)))))
+(comment
+  (progn
+    (gptelt--check-buffer-balanced-parens
+     (get-buffer "bbbb")
+     'print)
+    nil))
 
 (defun gptelt--replace-buffer-directly (buffer result-string)
   "Apply edit to BUFFER by replacing entire buffer with RESULT-STRING.

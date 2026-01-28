@@ -16,6 +16,10 @@
 
 (declare-function sp-region-ok-p "smartparens")
 
+;;; Debug Configuration
+(defvar gptelt-create-debug nil
+  "When non-nil, log create-file tool operations for debugging.")
+
 ;;; Create file buffer implementation
 
 (defun gptelt--create-file-buffer (callback file-path content-string)
@@ -42,6 +46,9 @@ Returns a string describing the result of the operation."
          (existing-buffer (get-file-buffer resolved-path))
          (project-root (gptelt--get-project-root)))
 
+    (when gptelt-create-debug
+      (message "[CREATE-DEBUG] Creating directory if needed: %s" dir))
+    
     ;; Create directory if it doesn't exist
     (unless (file-directory-p dir)
       (make-directory dir t))
@@ -67,6 +74,9 @@ Returns a string describing the result of the operation."
 
              (save-buffer)
 
+             (when gptelt-create-debug
+               (message "[CREATE-DEBUG] File saved with mode: %s" major-mode))
+             
              ;; Format buffer if LSP is available
              (when (and (fboundp 'lsp-format-buffer)
                         (bound-and-true-p lsp-mode))
@@ -97,7 +107,22 @@ Returns a string describing the result of the operation."
    :name "create_file_buffer"
    :function #'gptelt--create-file-buffer
    :async t
-   :description "Create a new file with specified content. Only accepts absolute file paths."
+   :description (concat "Create a new file with specified content at an absolute file path. "
+                        "Creates parent directories if they don't exist. Sets major mode based on file extension. "
+                        "For Lisp code, validates parentheses balance and applies LSP formatting if available."
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{\n"
+                        "  \"file_path\": \"string\" (required) - Absolute path where file should be created\n"
+                        "  \"content_string\": \"string\" (required) - Complete content to write to the file\n"
+                        "}\n\n"
+                        "IMPORTANT:\n"
+                        "- file_path MUST be an absolute path (e.g., /path/to/file.txt)\n"
+                        "- Relative paths and ~/ expansion are NOT supported\n"
+                        "- Parent directories will be created automatically\n"
+                        "- Major mode is set automatically based on file extension\n"
+                        "- LSP formatting applied if available\n\n"
+                        "Usage example:\n"
+                        "create_file_buffer('/tmp/test.py', 'def hello():\\n    print(\"Hello\")')")
    :args '((:name "file_path"
             :type string
             :description "Absolute path where the new file should be created (must be absolute, not relative)")
@@ -117,12 +142,20 @@ Returns a string describing the result of the operation."
 CALLBACK is called with the temp file path when done (async).
 PREFIX and SUFFIX are optional; default prefix is \"gptelt-\".
 Buffer is not switched to or displayed. File is created and saved to disk."
+  (when gptelt-create-debug
+    (message "[CREATE-DEBUG] create_temp_file_buffer: prefix=%s, suffix=%s, content-length=%d" 
+             (or prefix "gptelt-")
+             (or suffix "")
+             (if content-string (length content-string) 0)))
+  
   (let* ((tmp-path (make-temp-file (or prefix "gptelt-") nil (or suffix "")))
          (buf (find-file-noselect tmp-path)))
     (gptelt-edit--edit-buffer-impl
      buf "" content-string
      (lambda (result)
        (with-current-buffer buf (save-buffer))
+       (when gptelt-create-debug
+         (message "[CREATE-DEBUG] Temp file created: %s" tmp-path))
        (funcall callback tmp-path))
      nil nil)))
 
@@ -139,7 +172,17 @@ Buffer is not switched to or displayed. File is created and saved to disk."
    :name "create_temp_file_buffer"
    :function #'gptelt--create-temp-file-buffer
    :async t
-   :description "Create a new temp file with specified content and return the temp file path."
+   :description (concat "Create a new temporary file with specified content and return the file path. "
+                        "Useful for creating scratch files or intermediate outputs."
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{\n"
+                        "  \"content_string\": \"string\" (required) - Complete content to write to the temp file\n"
+                        "  \"prefix\": \"string\" (optional, default: \"gptelt-\") - Prefix for temp file name\n"
+                        "  \"suffix\": \"string\" (optional, default: \"\") - File extension (e.g., \".el\", \".py\")\n"
+                        "}\n\n"
+                        "Usage examples:\n"
+                        "- create_temp_file_buffer('(message \"test\")', 'test-', '.el')\n"
+                        "- create_temp_file_buffer('console.log(\"test\")', null, '.js')")
    :args '((:name "content_string" :type string
             :description "The complete content to write to the new file")
            (:name "prefix" :type "string" :optional t

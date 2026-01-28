@@ -301,7 +301,20 @@ Returns a formatted string with progress indicator and filtered todos."
   (gptelt-make-tool
    :name "todo_write"
    :function #'gptelt-todo-write
-   :description "Create or update todo entries from an array. Params: todos (array of objects with content, status, priority, id)."
+   :description (concat "Create or update todo entries from an array. Persists todos per project."
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{\n"
+                        "  \"todos\": array (required) - Array of todo objects\n"
+                        "}\n\n"
+                        "TODO OBJECT STRUCTURE:\n"
+                        "{\n"
+                        "  \"content\": \"string\" (required) - Todo description\n"
+                        "  \"status\": \"string\" (optional, default: \"pending\") - One of: pending, in_progress, completed\n"
+                        "  \"priority\": \"string\" (optional, default: \"medium\") - One of: high, medium, low\n"
+                        "  \"activeForm\": \"string\" (optional) - Present continuous form (e.g., \"Running tests\")\n"
+                        "  \"tags\": array of strings (optional) - Categorization tags\n"
+                        "  \"id\": \"string\" (optional) - Todo ID for updating existing todo\n"
+                        "}")
    :args '((:name "todos"
             :type array
             :items

@@ -171,7 +171,7 @@ Please find the EXACT string from the file that matches what I'm trying to chang
                          (or instruction "replace this text"))))
     (simple-llm-req
      prompt
-     :backend gptel--gh-copilot-business
+     :backend +gptel-free-backend
      :model 'gpt-4.1
      :temperature 0.3
      :system "You are a precise text matching assistant. Your job is to find exact string matches in files. Always return the EXACT text from the file, preserving all whitespace, indentation, and formatting. If you can't find a match, return ERROR."
@@ -222,14 +222,14 @@ IMPORTANT: Reverts buffer first to ensure we're working with disk state."
 
     ;; Try to find match using strategy pipeline
     (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
-        ;; Match found - apply replacement
-        (gptelt-edit--do-replacement
-         buffer
-         (plist-get match-result :corrected-string)
-         new-string
-         original-point
-         replace-all
-         callback)
+      ;; Match found - apply replacement
+      (gptelt-edit--do-replacement
+       buffer
+       (plist-get match-result :corrected-string)
+       new-string
+       original-point
+       replace-all
+       callback)
       ;; No match - try LLM correction if instruction provided
       (if instruction
           (gptelt-edit--apply-match-with-llm
