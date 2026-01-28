@@ -142,7 +142,8 @@
   ;; (gptel--apply-preset 'ghsonnet)
   ;; (gptel--apply-preset 'codex)
   ;; (gptel--apply-preset 'default)
-  (gptel--apply-preset 'sonnet))
+  (gptel--apply-preset 'sonnet)
+  (gptel--apply-preset 'opus))
 
 ;;;###autoload
 (defun +gptel (arg)
