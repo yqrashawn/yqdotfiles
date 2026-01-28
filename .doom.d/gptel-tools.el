@@ -16,6 +16,7 @@
 (load! "gptel-tools/pext.el")
 (load! "gptel-tools/shell.el")
 (load! "gptel-tools/workspace.el")
+(load! "gptel-tools/ask-user-question.el")
 
 (comment
   (+gptel-reload-tools)
