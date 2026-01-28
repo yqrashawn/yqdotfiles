@@ -81,16 +81,18 @@ Returns (valid-questions . error-message) where error-message is nil on success.
       (nreverse result))))
 
 (defun gptelt-auq--normalize-question (q)
-  "Normalize question Q to alist format from plist or alist."
-  (cond
-   ;; Already an alist
-   ((and (listp q) (consp (car q)))
-    q)
-   ;; Plist format
-   ((and (listp q) (keywordp (car q)))
-    (gptelt-auq--plist-to-alist q))
-   (t
-    (error "Invalid question format: %S" q))))
+  "Normalize question Q to alist format from plist, alist, or vector.
+  Handles JSON arrays (vectors) by converting them to lists first."
+  (let ((q-as-list (if (vectorp q) (append q nil) q)))
+    (cond
+     ;; Already an alist
+     ((and (listp q-as-list) (consp (car q-as-list)))
+      q-as-list)
+     ;; Plist format
+     ((and (listp q-as-list) (keywordp (car q-as-list)))
+      (gptelt-auq--plist-to-alist q-as-list))
+     (t
+      (error "Invalid question format: %S" q)))))
 
 (defun gptelt-auq--get-prop (alist key &optional default)
   "Get property KEY from ALIST, return DEFAULT if not found."
@@ -111,8 +113,8 @@ Returns (normalized-question . error-message) where error-message is nil on succ
         (unless (and question-text (stringp question-text) (> (length question-text) 0))
           (error "Missing or invalid question text"))
         
-        ;; Validate options
-        (unless (and options (listp options))
+        ;; Validate options - accept both lists and vectors (JSON arrays)
+        (unless (and options (or (listp options) (vectorp options)))
           (error "Missing or invalid options list"))
         
         (when (< num-options gptelt-auq-min-options)
