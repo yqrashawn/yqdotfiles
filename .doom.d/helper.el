@@ -291,6 +291,20 @@ Used to maintain workspace context during async LLM operations.")
       (persp-parameter '++workspace-project-root)
       ++fake-project-root))
 
+(defun ++workspace-current-project-buffers-names ()
+  (seq-map 'buffer-name (++workspace-current-project-buffers)))
+
+(defun ++workspace-current-project-buffers-files ()
+  (seq-map 'buffer-file-name (++workspace-current-project-buffers)))
+
+(defun ++workspace-current-project-buffers-info ()
+  (->> (++workspace-current-project-buffers)
+       (seq-map
+        (lambda (b) (format! "Buffer name: `%s`, buffer file: `%s`."
+                             (buffer-name b)
+                             (buffer-file-name b))))
+       (s-join "\n")))
+
 (defun ++workspace-current-project-buffers ()
   "Return all file buffers in current workspace whose file belongs to current workspace project root."
   (let ((project-root (++workspace-current-project-root))

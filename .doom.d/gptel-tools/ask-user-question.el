@@ -202,11 +202,11 @@ Retries failed questions up to max attempts. Returns list of results."
 
 ;;; Main Tool Function
 
-(defun gptelt-auq-ask-user-question (questions-input callback)
-  "Ask user QUESTIONS-INPUT interactively and call CALLBACK with results.
+(defun gptelt-auq-ask-user-question (questions-input)
+  "Ask user QUESTIONS-INPUT interactively and return results.
 QUESTIONS-INPUT should be a list of question plists/alists.
-CALLBACK is called with the result alist or error JSON.
 
+Returns JSON string with answers or error information.
 This is the main entry point called by the LLM."
   (condition-case err
       (let* ((questions (if (vectorp questions-input)
@@ -231,27 +231,24 @@ This is the main entry point called by the LLM."
           
           (if has-errors
               ;; Return error JSON
-              (funcall callback 
-                       (json-encode 
-                        `((isError . t)
-                          (content . [((type . "text")
-                                       (text . ,(format "Errors occurred: %S" results)))]))))
-            
-            ;; Return success - convert results to JSON-friendly format
-            (funcall callback 
-                     (json-encode 
-                      `((answers . ,(mapcar (lambda (pair)
-                                              (cons (car pair) (cdr pair)))
-                                            results))))))))
-    
-    (error
-     ;; Top-level error handling
-     (funcall callback 
               (json-encode 
                `((isError . t)
                  (content . [((type . "text")
-                              (text . ,(format "Error: %s" 
-                                               (error-message-string err))))])))))))
+                              (text . ,(format "Errors occurred: %S" results)))])))
+            
+            ;; Return success - convert results to JSON-friendly format
+            (json-encode 
+             `((answers . ,(mapcar (lambda (pair)
+                                     (cons (car pair) (cdr pair)))
+                                   results)))))))
+    
+    (error
+     ;; Top-level error handling
+     (json-encode 
+      `((isError . t)
+        (content . [((type . "text")
+                     (text . ,(format "Error: %s" 
+                                      (error-message-string err))))]))))))
 
 ;;; Tool Registration
 

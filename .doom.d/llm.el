@@ -120,7 +120,7 @@
     :description "claude code"
     ;; :backend "cc"
     :backend "ccl"
-    :model 'haiku
+    :model 'opus
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())

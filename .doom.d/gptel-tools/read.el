@@ -83,7 +83,12 @@
   (when (stringp limit) (setq limit (string-to-number limit)))
   (let ((b (get-buffer buffer_name)))
     (unless b
-      (error "Buffer not found: %s" buffer_name))
+      ;; Return helpful error with available buffers instead of throwing internal error
+      (let ((available-buffers (when (fboundp '++workspace-current-project-buffers-info)
+                                 (++workspace-current-project-buffers-info))))
+        (error "Buffer `%s` not found.\n\nAvailable buffers in current project:\n%s"
+               buffer_name
+               (or available-buffers "No buffers found"))))
     (with-current-buffer b
       (when (buffer-file-name b)
         (+gptel-tool-revert-to-be-visited-buffer b))
@@ -125,7 +130,7 @@
 
 (comment
   (gptelt-read-buffer (current-buffer))
-  )
+  (gptelt-read-buffer "none-existing-buffer"))
 
 ;; Register the file and buffer reading tools with gptel
 (when (fboundp 'gptelt-make-tool)
