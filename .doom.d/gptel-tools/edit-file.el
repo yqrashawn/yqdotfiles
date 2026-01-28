@@ -184,7 +184,6 @@ Please find the EXACT string from the file that matches what I'm trying to chang
               (funcall callback "ERROR: failed to call LLM to fix the old string")))))
 
 ;;; Edit application module
-
 (defun gptelt-edit--apply-match-with-llm (buffer old-string instruction callback new-string original-point replace-all)
   "Try LLM correction for failed match and apply edit.
 CALLBACK is called with the result message."
@@ -223,14 +222,14 @@ IMPORTANT: Reverts buffer first to ensure we're working with disk state."
 
     ;; Try to find match using strategy pipeline
     (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
-      ;; Match found - apply replacement
-      (gptelt-edit--do-replacement
-       buffer
-       (plist-get match-result :corrected-string)
-       new-string
-       original-point
-       replace-all
-       callback)
+        ;; Match found - apply replacement
+        (gptelt-edit--do-replacement
+         buffer
+         (plist-get match-result :corrected-string)
+         new-string
+         original-point
+         replace-all
+         callback)
       ;; No match - try LLM correction if instruction provided
       (if instruction
           (gptelt-edit--apply-match-with-llm
@@ -458,15 +457,146 @@ This function:
        "(defn plus1 [n]\n}}}}}}}]] (inc n))")
       (substring-no-properties (buffer-string)))))
 
+;;; MCP Parameter Translation Wrappers
+
+(defvar gptelt-edit-debug nil
+  "When non-nil, log edit tool parameter translation for debugging.")
+
+(defun gptelt-edit-edit-file-mcp (callback file-path old-string new-string &optional replace-all instruction)
+  "MCP wrapper for edit-file that matches :args specification.
+CALLBACK is first, then individual parameters as defined in :args.
+
+Validates all required parameters and provides clear error messages."
+  (when gptelt-edit-debug
+    (message "[EDIT-DEBUG] edit_file: path=%s old=%s new=%s replace_all=%s instruction=%s" 
+             file-path 
+             (substring old-string 0 (min 20 (length old-string)))
+             (substring new-string 0 (min 20 (length new-string)))
+             replace-all
+             (if instruction "provided" "nil")))
+  
+  ;; Validate required parameters
+  (cond
+   ((or (null file-path) (not (stringp file-path)) (string-empty-p file-path))
+    (funcall callback "Error: Parameter 'file_path' is required and must be a non-empty string"))
+   ((or (null old-string) (not (stringp old-string)))
+    (funcall callback "Error: Parameter 'old_string' is required and must be a string"))
+   ((or (null new-string) (not (stringp new-string)))
+    (funcall callback "Error: Parameter 'new_string' is required and must be a string"))
+   ((and replace-all (not (booleanp replace-all)))
+    (funcall callback (format "Error: Parameter 'replace_all' must be a boolean (true/false), got: %S" replace-all)))
+   ((and instruction (not (stringp instruction)))
+    (funcall callback (format "Error: Parameter 'instruction' must be a string, got: %S" instruction)))
+   (t
+    ;; All validation passed - proceed with edit
+    (gptelt-edit-edit-file
+     callback file-path old-string new-string replace-all instruction))))
+
+(defun gptelt-edit-edit-buffer-mcp (callback buffer-name old-string new-string &optional replace-all instruction)
+  "MCP wrapper for edit-buffer that matches :args specification.
+CALLBACK is first, then individual parameters as defined in :args.
+
+Validates all required parameters and provides clear error messages."
+  (when gptelt-edit-debug
+    (message "[EDIT-DEBUG] edit_buffer: buf=%s old=%s new=%s replace_all=%s instruction=%s" 
+             buffer-name 
+             (substring old-string 0 (min 20 (length old-string)))
+             (substring new-string 0 (min 20 (length new-string)))
+             replace-all
+             (if instruction "provided" "nil")))
+  
+  ;; Validate required parameters
+  (cond
+   ((or (null buffer-name) (not (stringp buffer-name)) (string-empty-p buffer-name))
+    (funcall callback "Error: Parameter 'buffer_name' is required and must be a non-empty string"))
+   ((or (null old-string) (not (stringp old-string)))
+    (funcall callback "Error: Parameter 'old_string' is required and must be a string"))
+   ((or (null new-string) (not (stringp new-string)))
+    (funcall callback "Error: Parameter 'new_string' is required and must be a string"))
+   ((and replace-all (not (booleanp replace-all)))
+    (funcall callback (format "Error: Parameter 'replace_all' must be a boolean (true/false), got: %S" replace-all)))
+   ((and instruction (not (stringp instruction)))
+    (funcall callback (format "Error: Parameter 'instruction' must be a string, got: %S" instruction)))
+   (t
+    ;; All validation passed - proceed with edit
+    (gptelt-edit-edit-buffer
+     callback buffer-name old-string new-string replace-all instruction))))
+
+(defun gptelt-edit-multi-edit-file-mcp (callback file-path edits)
+  "MCP wrapper for multi-edit-file that matches :args specification.
+CALLBACK is first, then file-path, then edits list/vector.
+
+Validates all required parameters and provides clear error messages.
+Automatically converts vector to list if needed."
+  (when gptelt-edit-debug
+    (message "[EDIT-DEBUG] multi_edit_file: path=%s edits=%S (type=%s)" 
+             file-path edits (type-of edits)))
+  
+  ;; Validate required parameters
+  (cond
+   ((or (null file-path) (not (stringp file-path)) (string-empty-p file-path))
+    (funcall callback "Error: Parameter 'file_path' is required and must be a non-empty string"))
+   ((null edits)
+    (funcall callback "Error: Parameter 'edits' is required and must be a list or array"))
+   ((not (or (listp edits) (vectorp edits)))
+    (funcall callback (format "Error: Parameter 'edits' must be a list or array, got: %S" (type-of edits))))
+   (t
+    ;; Convert vector to list if needed
+    (when (vectorp edits)
+      (setq edits (append edits nil)))
+    
+    ;; Validate edits list is not empty
+    (if (zerop (length edits))
+        (funcall callback "Error: Parameter 'edits' must contain at least one edit")
+      ;; All validation passed - proceed with multi-edit
+      (gptelt-edit-multi-edit-file callback file-path edits)))))
+
+(defun gptelt-edit-multi-edit-buffer-mcp (callback buffer-name edits)
+  "MCP wrapper for multi-edit-buffer that matches :args specification.
+CALLBACK is first, then buffer-name, then edits list/vector.
+
+Validates all required parameters and provides clear error messages.
+Automatically converts vector to list if needed."
+  (when gptelt-edit-debug
+    (message "[EDIT-DEBUG] multi_edit_buffer: buf=%s edits=%S (type=%s)" 
+             buffer-name edits (type-of edits)))
+  
+  ;; Validate required parameters
+  (cond
+   ((or (null buffer-name) (not (stringp buffer-name)) (string-empty-p buffer-name))
+    (funcall callback "Error: Parameter 'buffer_name' is required and must be a non-empty string"))
+   ((null edits)
+    (funcall callback "Error: Parameter 'edits' is required and must be a list or array"))
+   ((not (or (listp edits) (vectorp edits)))
+    (funcall callback (format "Error: Parameter 'edits' must be a list or array, got: %S" (type-of edits))))
+   (t
+    ;; Convert vector to list if needed
+    (when (vectorp edits)
+      (setq edits (append edits nil)))
+    
+    ;; Validate edits list is not empty
+    (if (zerop (length edits))
+        (funcall callback "Error: Parameter 'edits' must contain at least one edit")
+      ;; All validation passed - proceed with multi-edit
+      (gptelt-edit-multi-edit-buffer callback buffer-name edits)))))
+
 ;;; Tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "edit_buffer"
-   :function #'gptelt-edit-edit-buffer
+   :function #'gptelt-edit-edit-buffer-mcp  ; Use MCP wrapper
    :async t
    :description (concat "Performs string replacements in buffers with intelligent matching. "
                         "This tool edits already open Emacs buffers by replacing old_string with new_string. "
-                        "\n\nMATCHING STRATEGIES (tried in order):\n"
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{"
+                        "  \"buffer_name\": \"string\" (required) - Name of the buffer to edit\n"
+                        "  \"old_string\": \"string\" (required) - Text to be replaced\n"
+                        "  \"new_string\": \"string\" (required) - Replacement text\n"
+                        "  \"replace_all\": boolean (optional, default: false) - Replace all occurrences\n"
+                        "  \"instruction\": \"string\" (optional) - Natural language hint for self-correction\n"
+                        "}\n\n"
+                        "MATCHING STRATEGIES (tried in order):\n"
                         "1. Exact string match\n"
                         "2. Flexible whitespace match (normalizes spaces/tabs/indentation)\n"
                         "3. LLM self-correction (if 'instruction' parameter provided)\n\n"
@@ -496,12 +626,20 @@ This function:
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "edit_file"
-   :function #'gptelt-edit-edit-file
+   :function #'gptelt-edit-edit-file-mcp  ; Use MCP wrapper
    :async t
    :description (concat "Performs string replacements in files with intelligent matching. "
                         "This tool edits files by replacing old_string with new_string. The file will be opened "
                         "if not already loaded, and automatically saved after the edit. "
-                        "\n\nMATCHING STRATEGIES (tried in order):\n"
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{"
+                        "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
+                        "  \"old_string\": \"string\" (required) - Text to be replaced\n"
+                        "  \"new_string\": \"string\" (required) - Replacement text\n"
+                        "  \"replace_all\": boolean (optional, default: false) - Replace all occurrences\n"
+                        "  \"instruction\": \"string\" (optional) - Natural language hint for self-correction\n"
+                        "}\n\n"
+                        "MATCHING STRATEGIES (tried in order):\n"
                         "1. Exact string match\n"
                         "2. Flexible whitespace match (normalizes spaces/tabs/indentation)\n"
                         "3. LLM self-correction (if 'instruction' parameter provided)\n\n"
@@ -658,11 +796,23 @@ CALLBACK is called with the result string when all edits are done."
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "multi_edit_buffer"
-   :function #'gptelt-edit-multi-edit-buffer
+   :function #'gptelt-edit-multi-edit-buffer-mcp  ; Use MCP wrapper
    :async t
    :description (concat "Apply multiple edits to a buffer with intelligent matching. "
                         "Each edit is applied in order to the result of the previous edit. "
-                        "\n\nAdvantages over single edits:\n"
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{"
+                        "  \"buffer_name\": \"string\" (required) - Name of the buffer to edit\n"
+                        "  \"edits\": array (required) - List of edit objects, applied sequentially\n"
+                        "}\n\n"
+                        "EDIT OBJECT STRUCTURE:\n"
+                        "{"
+                        "  \"old_string\": \"string\" (required) - Text to be replaced\n"
+                        "  \"new_string\": \"string\" (required) - Replacement text\n"
+                        "  \"replace_all\": boolean (optional, default: false) - Replace all occurrences\n"
+                        "  \"instruction\": \"string\" (optional) - Natural language hint for self-correction\n"
+                        "}\n\n"
+                        "Advantages over single edits:\n"
                         "- More efficient for multiple changes to the same buffer\n"
                         "- Maintains context between related changes\n"
                         "- Single save operation after all changes\n"
@@ -672,11 +822,6 @@ CALLBACK is called with the result string when all edits are done."
                         "  {\"old_string\": \"debug = False\", \"new_string\": \"debug = True\", \"instruction\": \"enable debug mode\"},\n"
                         "  {\"old_string\": \"version = '1.0'\", \"new_string\": \"version = '1.1'\", \"instruction\": \"bump version\"}\n"
                         "])\n\n"
-                        "Each edit object supports:\n"
-                        "- old_string: Text to replace (required, flexible matching)\n"
-                        "- new_string: Replacement text (required)\n"
-                        "- replace_all: Replace all occurrences (optional, default false)\n"
-                        "- instruction: Natural language description (optional, helps with self-correction)\n\n"
                         "For Lisp code, validates parentheses balance after each edit.")
    :args '((:name "buffer_name" :type string
             :description "The name of the buffer to edit")
@@ -709,12 +854,24 @@ CALLBACK is called with the result string when all edits are done."
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "multi_edit_file"
-   :function #'gptelt-edit-multi-edit-file
+   :function #'gptelt-edit-multi-edit-file-mcp  ; Use MCP wrapper
    :async t
    :description (concat "Apply multiple edits to a single file with intelligent matching. "
                         "Each edit operates on the result of the previous edit. The file is opened if not already loaded, "
                         "all edits are applied in order, and automatically saved. "
-                        "\n\nBest practices:\n"
+                        "\n\nPARAMETER STRUCTURE:\n"
+                        "{"
+                        "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
+                        "  \"edits\": array (required) - List of edit objects, applied sequentially\n"
+                        "}\n\n"
+                        "EDIT OBJECT STRUCTURE:\n"
+                        "{"
+                        "  \"old_string\": \"string\" (required) - Text to be replaced\n"
+                        "  \"new_string\": \"string\" (required) - Replacement text\n"
+                        "  \"replace_all\": boolean (optional, default: false) - Replace all occurrences\n"
+                        "  \"instruction\": \"string\" (optional) - Natural language hint for self-correction\n"
+                        "}\n\n"
+                        "Best practices:\n"
                         "- Use for related changes that should be applied together\n"
                         "- Ensure old_string patterns account for previous edits in the sequence\n"
                         "- More efficient than multiple separate edit_file calls\n"
@@ -724,11 +881,6 @@ CALLBACK is called with the result string when all edits are done."
                         "  {\"old_string\": \"port: 3000\", \"new_string\": \"port: 8080\", \"instruction\": \"update port\"},\n"
                         "  {\"old_string\": \"env: 'dev'\", \"new_string\": \"env: 'prod'\", \"instruction\": \"switch to production\"}\n"
                         "])\n\n"
-                        "Each edit object supports:\n"
-                        "- old_string: Text to replace (required, flexible matching)\n"
-                        "- new_string: Replacement text (required)\n"
-                        "- replace_all: Replace all occurrences (optional, default false)\n"
-                        "- instruction: Natural language description (optional, helps with self-correction)\n\n"
                         "For Lisp code, validates parentheses balance after each edit. "
                         "Supports both absolute paths and paths relative to project root (~/ expansion supported).")
    :args '((:name "file_path" :type string
