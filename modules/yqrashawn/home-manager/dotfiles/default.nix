@@ -128,10 +128,6 @@
     #   source = ./gitignore_global;
     #   target = ".gitignore_global";
     # };
-    husky = {
-      source = ./.huskyrc;
-      target = ".huskyrc";
-    };
     mailcap = {
       source = ./.mailcap;
       target = ".mailcap";
@@ -373,6 +369,9 @@
     };
     "mpv/mpv.conf" = {
       source = ./mpv.conf;
+    };
+    "husky/init.sh" = {
+      source = ./.huskyrc;
     };
     # yarn-global = {
     #   source = ./package.json;
