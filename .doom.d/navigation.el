@@ -390,3 +390,6 @@ See `dwim-shell-command-execute-script' for all other params."
         (+workspace-current-name))
        ++fake-project-root
      (doom-project-root))))
+
+(use-package! avy-flash
+  :commands (avy-flash-jump))

@@ -326,7 +326,8 @@
   :g "a" #'loccur-current
   ;; :g "/" #'evil-avy-goto-char-2
   :g "/" #'+vertico/consult-fd-or-find
-  :g "n" #'evil-avy-goto-char-timer
+  ;; :g "n" #'evil-avy-goto-char-timer
+  :g "n" #'avy-flash-jump
   :g "k" #'bury-buffer
   ;; :g "m" #'+ivy/projectile-find-file
   :g "m" #'projectile-find-file

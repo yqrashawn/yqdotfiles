@@ -480,6 +480,7 @@
   :recipe
   (:host github :repo "jamescherti/kirigami.el"))
 (package! iedit)
+(package! avy-flash :recipe (:host github :repo "ZenScriptor/avy-flash"))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
