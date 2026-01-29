@@ -974,70 +974,70 @@ the result."
 
 Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.claude.json."
   (interactive)
-  (require 'json)
   (let* ((output-file (expand-file-name "~/Downloads/mcp.json"))
          (claude-json-file (expand-file-name "~/.claude.json"))
-         (servers-json
-          (mapcar
-           (lambda (entry)
-             (let* ((name (car entry))
-                    (cfg (cdr entry))
-                    (command (plist-get cfg :command))
-                    (args (plist-get cfg :args))
-                    (url (plist-get cfg :url))
-                    (type (plist-get cfg :type))
-                    (env (plist-get cfg :env))
-                    (env-alist
-                     (cond
-                      ((and (listp env) (keywordp (car env)))
-                       (cl-loop for (k v) on env by #'cddr
-                                when v
-                                collect (cons (substring (symbol-name k) 1) v)))
-                      ((and (listp env) (consp (car env)))
-                       (mapcar (lambda (pair)
-                                 (cons (if (keywordp (car pair))
-                                           (substring (symbol-name (car pair)) 1)
-                                         (format "%s" (car pair)))
-                                       (cdr pair)))
-                               env))
-                      (t nil)))
-                    (server-alist nil))
-               (when command
-                 (push (cons "command" command) server-alist))
-               (when args
-                 (push (cons "args"
-                             (cond
-                              ((vectorp args) args)
-                              ((listp args) (vconcat args))
-                              (t args)))
-                       server-alist))
-               (when url (push (cons "url" url) server-alist)
-                     (push (cons "type" "http") server-alist))
-               (when type (push (cons "type" type) server-alist))
-               (when env-alist (push (cons "env" env-alist) server-alist))
-               (cons name (nreverse server-alist))))
-           mcp-hub-servers))
-         (json-object-type 'alist)
-         (json-array-type 'vector)
-         (json-key-type 'string)
-         (json-encoding-pretty-print t))
+         (servers-plist
+          (cl-loop for (name . cfg) in mcp-hub-servers
+                   append
+                   (list
+                    (intern name)  ; Convert string name to symbol for plist key
+                    (let* ((command (plist-get cfg :command))
+                           (args (plist-get cfg :args))
+                           (url (plist-get cfg :url))
+                           (type (plist-get cfg :type))
+                           (env (plist-get cfg :env))
+                           (env-plist
+                            (when env
+                              (cond
+                               ((and (listp env) (keywordp (car env)))
+                                (cl-loop for (k v) on env by #'cddr
+                                         when v
+                                         append (list (intern (substring (symbol-name k) 1)) v)))
+                               ((and (listp env) (consp (car env)))
+                                (cl-loop for (k . v) in env
+                                         append (list (intern (if (keywordp k)
+                                                                  (substring (symbol-name k) 1)
+                                                                (format "%s" k)))
+                                                      v)))
+                               (t nil))))
+                           (server-plist nil))
+                      (when command
+                        (plist-put server-plist :command command))
+                      (when args
+                        (plist-put server-plist :args
+                                   (cond
+                                    ((vectorp args) args)
+                                    ((listp args) (vconcat args))
+                                    (t args))))
+                      (when url
+                        (plist-put server-plist :url url)
+                        (plist-put server-plist :type "http"))
+                      (when type
+                        (plist-put server-plist :type type))
+                      (when env-plist
+                        (plist-put server-plist :env env-plist))
+                      server-plist)))))
     (make-directory (file-name-directory output-file) t)
     (with-temp-file output-file
-      (insert (json-encode `(("mcpServers" . ,servers-json)))))
+      (insert (json-serialize (list :mcpServers servers-plist)
+                              :null-object :null
+                              :false-object :json-false)))
     (let ((claude-conf
            (if (file-exists-p claude-json-file)
                (with-temp-buffer
                  (insert-file-contents claude-json-file)
                  (goto-char (point-min))
                  (json-parse-buffer
-                  :object-type 'alist
-                  :array-type 'array
-                  :null-object nil
+                  :object-type 'plist
+                  :null-object :null
                   :false-object :json-false))
-             (list (cons "mcpServers" nil)))))
-      (setf (alist-get "mcpServers" claude-conf nil nil #'string=) servers-json)
+             (list :mcpServers nil))))
+      (plist-put claude-conf :mcpServers servers-plist)
       (with-temp-file claude-json-file
-        (insert (json-encode claude-conf)))
+        (insert (json-serialize claude-conf
+                                :null-object :null
+                                :false-object :json-false))
+        (json-pretty-print-buffer))
       (message "Wrote MCP config to %s and updated %s"
                output-file claude-json-file))))
 
