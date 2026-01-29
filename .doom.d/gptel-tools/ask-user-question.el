@@ -391,7 +391,37 @@ This is the main entry point called by the LLM."
    
    :args '((:name "questions"
             :type array
-            :description "Array of question objects (1-4 questions, 2-4 options each)"))
+            :description "Array of question objects (1-4 questions, 2-4 options each)"
+            :items
+            ((:type object
+              :description "A question object"
+              :required ["question" "options"]
+              :properties
+              ((:name "question"
+                :type string
+                :description "The question text to display")
+               (:name "header"
+                :type string
+                :description "Header text shown before question")
+               (:name "options"
+                :type array
+                :description "Array of 2-4 option objects"
+                :minItems 2
+                :maxItems 4
+                :items
+                ((:type object
+                  :description "Option object"
+                  :required ["label"]
+                  :properties
+                  ((:name "label"
+                    :type string
+                    :description "The option label shown to user")
+                   (:name "description"
+                    :type string
+                    :description "Option description")))))
+               (:name "multiSelect"
+                :type boolean
+                :description "Allow multiple selections"))))))
    :category "interaction"
    :confirm nil
    :include t))
