@@ -1084,6 +1084,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ("-y"
       "mcp-remote"
       "http://localhost:18682/mcp")))
+
    ;; ("github" .
    ;;  (:command "npx"
    ;;   :args
@@ -1092,17 +1093,20 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    ;;    "https://api.githubcopilot.com/mcp"
    ;;    "--header"
    ;;    ,(format! "Authorization:Bearer %s" +gh-mcp-server-token))))
-   ("github" .
-    (:command "gh"
-     ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
-     :args
-     ("mcp")))
+
+   ;; ("github" .
+   ;;  (:command "gh"
+   ;;   ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
+   ;;   :args
+   ;;   ("mcp")))
+   
    ;; ("shadcn" .
    ;;  (:command "npx"
    ;;   :args
    ;;   ("-y"
    ;;    "shadcn@latest"
    ;;    "mcp")))
+
    ("lattice" .
     (:command "lattice-mcp"))
 
