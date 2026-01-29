@@ -246,7 +246,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -770,10 +770,11 @@ IMPORTANT REQUIRED RULES (errors):
 3. type: MUST NOT be empty
 4. description: MUST NOT be empty
 5. description: MUST start with lowercase (never sentence-case, start-case, pascal-case, or upper-case)
-6. description: MUST NOT end with a period
-7. header (type + scope + description): MUST be 80 characters or less
-8. body: each line MUST be 80 characters or less
-9. footer: each line MUST be 80 characters or less
+6. description: MUST be bullet points
+7. description: MUST cover all changes among the commit
+8. header (type + scope + description): MUST be 80 characters or less
+9. body: each line MUST be 80 characters or less
+10. footer: each line MUST be 80 characters or less
 
 WARNINGS (should follow):
 - body: MUST have a leading blank line before it
