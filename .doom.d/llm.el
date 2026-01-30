@@ -1002,20 +1002,21 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                                (t nil))))
                            (server-plist nil))
                       (when command
-                        (plist-put server-plist :command command))
+                        (setq server-plist (plist-put server-plist :command command)))
                       (when args
-                        (plist-put server-plist :args
-                                   (cond
-                                    ((vectorp args) args)
-                                    ((listp args) (vconcat args))
-                                    (t args))))
+                        (setq server-plist
+                              (plist-put server-plist :args
+                                         (cond
+                                          ((vectorp args) args)
+                                          ((listp args) (vconcat args))
+                                          (t args)))))
                       (when url
-                        (plist-put server-plist :url url)
-                        (plist-put server-plist :type "http"))
+                        (setq server-plist (plist-put server-plist :url url))
+                        (setq server-plist (plist-put server-plist :type "http")))
                       (when type
-                        (plist-put server-plist :type type))
+                        (setq server-plist (plist-put server-plist :type type)))
                       (when env-plist
-                        (plist-put server-plist :env env-plist))
+                        (setq server-plist (plist-put server-plist :env env-plist)))
                       server-plist)))))
     (make-directory (file-name-directory output-file) t)
     (with-temp-file output-file

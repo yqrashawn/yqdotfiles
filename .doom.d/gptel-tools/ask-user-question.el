@@ -326,105 +326,104 @@ This is the main entry point called by the LLM."
 
 ;;; Tool Registration
 
-(when (fboundp 'gptelt-make-tool)
-  (gptelt-make-tool
-   :name "ask_user_question"
-   :function #'gptelt-auq-ask-user-question
-   :description
-   (concat "Ask user structured questions interactively via Emacs completion UI. "
-           "Supports single-select and multi-select questions with 2-4 options each. "
-           "Maximum 4 questions per call. User can provide custom 'Other' responses."
-           "\n\nPARAMETER STRUCTURE:\n"
-           "{\n"
-           "  \"questions\": array (required) - Array of 1-4 question objects\n"
-           "}\n\n"
-           "QUESTION OBJECT STRUCTURE:\n"
-           "{\n"
-           "  \"question\": \"string\" (required) - The question text to display\n"
-           "  \"header\": \"string\" (optional) - Header text shown before question\n"
-           "  \"options\": array (required) - Array of 2-4 option objects\n"
-           "  \"multiSelect\": boolean (optional, default: false) - Allow multiple selections\n"
-           "}\n\n"
-           "OPTION OBJECT STRUCTURE:\n"
-           "{\n"
-           "  \"label\": \"string\" (required) - The option label shown to user\n"
-           "  \"description\": \"string\" (optional) - Additional description of the option\n"
-           "}\n\n"
-           "IMPORTANT CONSTRAINTS:\n"
-           "- 1-4 questions per call\n"
-           "- 2-4 options per question\n"
-           "- No emojis in text (breaks TTY)\n"
-           "- Cannot be used by subagents (main thread only)\n"
-           "- Blocks execution until user responds\n\n"
-           "QUESTION FORMAT EXAMPLE:\n"
-           "{\n"
-           "  \"question\": \"What type of task is this?\",\n"
-           "  \"header\": \"Task Type\",  // optional\n"
-           "  \"options\": [\n"
-           "    {\"label\": \"Build Feature\", \"description\": \"Create new functionality\"},\n"
-           "    {\"label\": \"Fix Bug\", \"description\": \"Debug and resolve issue\"}\n"
-           "  ],\n"
-           "  \"multiSelect\": false  // true for multiple selections\n"
-           "}\n\n"
-           "SUCCESS RESPONSE FORMAT:\n"
-           "{\n"
-           "  \"answers\": {\n"
-           "    \"What type of task is this?\": \"Build Feature\"\n"
-           "  }\n"
-           "}\n\n"
-           "ERROR RESPONSE FORMAT:\n"
-           "{\n"
-           "  \"isError\": true,\n"
-           "  \"content\": [{\"type\": \"text\", \"text\": \"Error message\"}]\n"
-           "}\n\n"
-           "USAGE EXAMPLES:\n"
-           "1. Single question, single-select:\n"
-           "   [{\"question\": \"Auth method?\", \n"
-           "     \"options\": [{\"label\": \"JWT\"}, {\"label\": \"OAuth\"}]}]\n\n"
-           "2. Multiple questions:\n"
-           "   [{\"question\": \"Task type?\", ...}, \n"
-           "    {\"question\": \"Output format?\", ...}]\n\n"
-           "3. Multi-select:\n"
-           "   [{\"question\": \"Features?\", \n"
-           "     \"multiSelect\": true,\n"
-           "     \"options\": [...]}]")
-   
-   :args '((:name "questions"
-            :type array
-            :description "Array of question objects (1-4 questions, 2-4 options each)"
-            :items
-            ((:type object
-              :description "A question object"
-              :required ["question" "options"]
-              :properties
-              ((:name "question"
-                :type string
-                :description "The question text to display")
-               (:name "header"
-                :type string
-                :description "Header text shown before question")
-               (:name "options"
-                :type array
-                :description "Array of 2-4 option objects"
-                :minItems 2
-                :maxItems 4
-                :items
-                ((:type object
-                  :description "Option object"
-                  :required ["label"]
-                  :properties
-                  ((:name "label"
-                    :type string
-                    :description "The option label shown to user")
-                   (:name "description"
-                    :type string
-                    :description "Option description")))))
-               (:name "multiSelect"
-                :type boolean
-                :description "Allow multiple selections"))))))
-   :category "interaction"
-   :confirm nil
-   :include t))
+(gptelt-make-tool
+ :name "ask_user_question"
+ :function #'gptelt-auq-ask-user-question
+ :description
+ (concat "Ask user structured questions interactively via Emacs completion UI. "
+         "Supports single-select and multi-select questions with 2-4 options each. "
+         "Maximum 4 questions per call. User can provide custom 'Other' responses."
+         "\n\nPARAMETER STRUCTURE:\n"
+         "{\n"
+         "  \"questions\": array (required) - Array of 1-4 question objects\n"
+         "}\n\n"
+         "QUESTION OBJECT STRUCTURE:\n"
+         "{\n"
+         "  \"question\": \"string\" (required) - The question text to display\n"
+         "  \"header\": \"string\" (optional) - Header text shown before question\n"
+         "  \"options\": array (required) - Array of 2-4 option objects\n"
+         "  \"multiSelect\": boolean (optional, default: false) - Allow multiple selections\n"
+         "}\n\n"
+         "OPTION OBJECT STRUCTURE:\n"
+         "{\n"
+         "  \"label\": \"string\" (required) - The option label shown to user\n"
+         "  \"description\": \"string\" (optional) - Additional description of the option\n"
+         "}\n\n"
+         "IMPORTANT CONSTRAINTS:\n"
+         "- 1-4 questions per call\n"
+         "- 2-4 options per question\n"
+         "- No emojis in text (breaks TTY)\n"
+         "- Cannot be used by subagents (main thread only)\n"
+         "- Blocks execution until user responds\n\n"
+         "QUESTION FORMAT EXAMPLE:\n"
+         "{\n"
+         "  \"question\": \"What type of task is this?\",\n"
+         "  \"header\": \"Task Type\",  // optional\n"
+         "  \"options\": [\n"
+         "    {\"label\": \"Build Feature\", \"description\": \"Create new functionality\"},\n"
+         "    {\"label\": \"Fix Bug\", \"description\": \"Debug and resolve issue\"}\n"
+         "  ],\n"
+         "  \"multiSelect\": false  // true for multiple selections\n"
+         "}\n\n"
+         "SUCCESS RESPONSE FORMAT:\n"
+         "{\n"
+         "  \"answers\": {\n"
+         "    \"What type of task is this?\": \"Build Feature\"\n"
+         "  }\n"
+         "}\n\n"
+         "ERROR RESPONSE FORMAT:\n"
+         "{\n"
+         "  \"isError\": true,\n"
+         "  \"content\": [{\"type\": \"text\", \"text\": \"Error message\"}]\n"
+         "}\n\n"
+         "USAGE EXAMPLES:\n"
+         "1. Single question, single-select:\n"
+         "   [{\"question\": \"Auth method?\", \n"
+         "     \"options\": [{\"label\": \"JWT\"}, {\"label\": \"OAuth\"}]}]\n\n"
+         "2. Multiple questions:\n"
+         "   [{\"question\": \"Task type?\", ...}, \n"
+         "    {\"question\": \"Output format?\", ...}]\n\n"
+         "3. Multi-select:\n"
+         "   [{\"question\": \"Features?\", \n"
+         "     \"multiSelect\": true,\n"
+         "     \"options\": [...]}]")
+ 
+ :args '((:name "questions"
+          :type array
+          :description "Array of question objects (1-4 questions, 2-4 options each)"
+          :items
+          ((:type object
+            :description "A question object"
+            :required ["question" "options"]
+            :properties
+            ((:name "question"
+              :type string
+              :description "The question text to display")
+             (:name "header"
+              :type string
+              :description "Header text shown before question")
+             (:name "options"
+              :type array
+              :description "Array of 2-4 option objects"
+              :minItems 2
+              :maxItems 4
+              :items
+              ((:type object
+                :description "Option object"
+                :required ["label"]
+                :properties
+                ((:name "label"
+                  :type string
+                  :description "The option label shown to user")
+                 (:name "description"
+                  :type string
+                  :description "Option description")))))
+             (:name "multiSelect"
+              :type boolean
+              :description "Allow multiple selections"))))))
+ :category "interaction"
+ :confirm nil
+ :include t)
 
 ;;; Test Examples
 
