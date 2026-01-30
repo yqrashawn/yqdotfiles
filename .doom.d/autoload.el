@@ -1170,3 +1170,28 @@ Returns evaluation result if confirmed, otherwise returns rejection message."
         (kill-new msg)
         (message "Copied eldoc content"))
     (message "No eldoc content available")))
+
+;;;###autoload
+(defun +cleanup-claude-code-debug-log ()
+  "Interactively delete files in ~/.claude/debug older than one hour."
+  (interactive)
+
+  (let* ((debug-dir (expand-file-name "~/.claude/debug"))
+         (now (float-time (current-time)))
+         (one-hour (* 60 60))
+         (files (when (file-directory-p debug-dir)
+                  (directory-files debug-dir t "^\\([^.]\\|\\.[^.]\\|\\.\\..\\)"))))
+    (unless (file-directory-p debug-dir)
+      (user-error "Debug directory %s does not exist" debug-dir))
+    (let ((old-files (seq-filter
+                      (lambda (f)
+                        (and (file-regular-p f)
+                             (> (- now (float-time (file-attribute-modification-time (file-attributes f))))
+                                one-hour)))
+                      files)))
+      (if (null old-files)
+          (message "No debug log files older than one hour in %s" debug-dir)
+        (dolist (file old-files)
+          (delete-file file))
+        (message "Deleted %d debug log file(s) older than one hour from %s"
+                 (length old-files) debug-dir)))))
