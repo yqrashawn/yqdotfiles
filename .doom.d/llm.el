@@ -1116,6 +1116,13 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
     (:command ,(concat
                 (expand-file-name user-emacs-directory)
                 "emacs-mcp-stdio.sh")))
+   ("0g-code" .
+    (:command "node"
+     :args
+     (,(expand-file-name "~/workspace/office/webai-mcp-server/dist/index.js"))
+     :env
+     (:ZEROG_NETWORK "testnet",
+      :ZEROG_PRIVATE_KEY ,+zerog-ai-pk)))
    
    ;; ("emacs" .
    ;;  (:url "http://localhost:18684/mcp/v1/messages"))
