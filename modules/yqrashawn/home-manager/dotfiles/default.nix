@@ -154,6 +154,11 @@
       target = "./.asdf/plugins/java";
       recursive = true;
     };
+    asdf-poetry = {
+      source = inputs.asdf-poetry;
+      target = "./.asdf/plugins/poetry";
+      recursive = true;
+    };
     asdf-clojure = {
       source = inputs.asdf-clojure;
       target = "./.asdf/plugins/clojure";

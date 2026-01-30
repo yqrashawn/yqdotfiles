@@ -304,6 +304,22 @@
         "type": "github"
       }
     },
+    "asdf-poetry": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761274593,
+        "narHash": "sha256-+BQOHCH8cEKtNaQgoVvV9WN/qkAcMMtVD/WgEB6yIi4=",
+        "owner": "asdf-community",
+        "repo": "asdf-poetry",
+        "rev": "5207a9ede4e77b4de2443d86fb1a5744f6222059",
+        "type": "github"
+      },
+      "original": {
+        "owner": "asdf-community",
+        "repo": "asdf-poetry",
+        "type": "github"
+      }
+    },
     "asdf-python": {
       "flake": false,
       "locked": {
@@ -403,14 +419,18 @@
     "asdf-trivy": {
       "flake": false,
       "locked": {
-        "path": "github.com/zufardhiyaulhaq/asdf-trivy",
-        "type": "path"
+        "lastModified": 1738385037,
+        "narHash": "sha256-wBkpeq13Kn+GrBW3cpfUQRBb1TkgdjndAaXV1pPRYnI=",
+        "owner": "zufardhiyaulhaq",
+        "repo": "asdf-trivy",
+        "rev": "b5c7961a1d38b6a1b7291cd90af8ccc03b23e319",
+        "type": "github"
       },
       "original": {
-        "path": "github.com/zufardhiyaulhaq/asdf-trivy",
-        "type": "path"
-      },
-      "parent": []
+        "owner": "zufardhiyaulhaq",
+        "repo": "asdf-trivy",
+        "type": "github"
+      }
     },
     "asdf-uv": {
       "flake": false,
@@ -1173,6 +1193,7 @@
         "asdf-nodejs": "asdf-nodejs",
         "asdf-ocaml": "asdf-ocaml",
         "asdf-pnpm": "asdf-pnpm",
+        "asdf-poetry": "asdf-poetry",
         "asdf-python": "asdf-python",
         "asdf-racket": "asdf-racket",
         "asdf-ruby": "asdf-ruby",
