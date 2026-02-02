@@ -722,7 +722,8 @@
  (:after eat
          (:map eat-mode-map
           :i "C-y" #'eat-yank
-          :i "C-s" #'swiper
+          :in "C-s" #'swiper
+          :n "C-l" #'recenter-top-bottom
           :g "C-c DEL" #'+workspace/close-window-or-workspace))
  (:after copilot
          (:map copilot-completion-map
