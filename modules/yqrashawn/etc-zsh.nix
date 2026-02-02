@@ -45,6 +45,9 @@ in
     # enableFzfGit = true;
     interactiveShellInit = ''
       export PATH="${builtins.concatStringsSep ":" paths}:$PATH"
+      export NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1
+      export NODE_TLS_REJECT_UNAUTHORIZED=0
+      export NODE_OPTIONS="--dns-result-order=ipv4first"
     '';
   };
 }

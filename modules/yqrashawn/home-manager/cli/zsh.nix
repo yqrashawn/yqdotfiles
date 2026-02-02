@@ -15,9 +15,6 @@ let
       fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
     fi
     export PNPM_HOME="$HOME/.local/share/pnpm"
-    export NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1
-    export NODE_TLS_REJECT_UNAUTHORIZED=0
-    export NODE_OPTIONS="--dns-result-order=ipv4first"
   '';
   zshProfileExtra = ''
     fpath=($HOME/.zfunc $fpath)
