@@ -1195,3 +1195,37 @@ Returns evaluation result if confirmed, otherwise returns rejection message."
           (delete-file file))
         (message "Deleted %d debug log file(s) older than one hour from %s"
                  (length old-files) debug-dir)))))
+
+;;;###autoload
+(defun +dired-do-reverse-symlink (&optional arg)
+  "Move marked files to target, then create symlinks from original locations.
+
+This is the reverse of `dired-do-symlink': instead of creating symlinks
+pointing to the originals, this moves the original files to a new location
+and creates symlinks at the original locations pointing to the moved files.
+
+With prefix ARG, prompt for the number of files to operate on.
+
+For each marked file A:
+1. Move A to target directory B, resulting in B/A
+2. Create symlink at original location A pointing to B/A"
+  (interactive "P")
+  (let* ((files (dired-get-marked-files nil arg))
+         (target-dir (dired-dwim-target-directory))
+         (target (read-directory-name
+                  "Move to directory (symlinks will point here): "
+                  target-dir target-dir t)))
+    (unless (file-directory-p target)
+      (user-error "Target must be an existing directory"))
+    (dolist (file files)
+      (let* ((filename (file-name-nondirectory file))
+             (new-location (expand-file-name filename target)))
+        ;; Check if target already exists
+        (when (file-exists-p new-location)
+          (user-error "Target file already exists: %s" new-location))
+        ;; Move file to target
+        (rename-file file new-location)
+        ;; Create symlink at original location pointing to new location
+        (make-symbolic-link new-location file)))
+    (revert-buffer)
+    (message "Moved %d file(s) and created symlinks" (length files))))

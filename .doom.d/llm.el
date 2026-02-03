@@ -33,7 +33,6 @@
                    (+set-org-top-header new-title)
                    (insert "\n")
                    (+set-org-title new-title)
-                   ;; (insert "\n")
                    (write-file
                     (expand-file-name
                      (format
@@ -64,21 +63,22 @@
         (skip-chars-backward " \t\r")
         (insert-and-inherit "*")))))
 
-(defadvice! +gptel-curl--stream-insert-response
-  (f response info &optional raw)
-  :around #'gptel-curl--stream-insert-response
-  (let* ((start-marker (plist-get info :position))
-         (tracking-marker (plist-get info :tracking-marker))
-         (cur-marker (or tracking-marker start-marker)))
-    (with-current-buffer (marker-buffer cur-marker)
-      (when (eq gptel-backend gptel--claude-code)
-        (save-excursion
-          (goto-char cur-marker)
-          (when (or (eq (char-before) ?:)
-                    (eq (char-before) ?.))
-            (insert ?\n)
-            (insert ?\n))))))
-  (funcall f response info raw))
+(comment
+  (defadvice! +gptel-curl--stream-insert-response
+    (f response info &optional raw)
+    :around #'gptel-curl--stream-insert-response
+    (let* ((start-marker (plist-get info :position))
+           (tracking-marker (plist-get info :tracking-marker))
+           (cur-marker (or tracking-marker start-marker)))
+      (with-current-buffer (marker-buffer cur-marker)
+        (when (eq gptel-backend gptel--claude-code)
+          (save-excursion
+            (goto-char cur-marker)
+            (when (or (eq (char-before) ?:)
+                      (eq (char-before) ?.))
+              (insert ?\n)
+              (insert ?\n))))))
+    (funcall f response info raw)))
 
 ;;; gptel
 (defun +gptel-make-my-presets ()
@@ -105,8 +105,7 @@
     :description "preset"
     :backend "cpi"
     :parents '(default)
-    :model 'claude-sonnet-4.5
-    :system (alist-get 'claude gptel-directives))
+    :model 'claude-sonnet-4.5)
 
   (gptel-make-preset 'sonnet
     :description "claude code"
@@ -246,7 +245,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
