@@ -61,7 +61,7 @@ in
     extraSpecialArgs = { inherit inputs; };
     useGlobalPkgs = true;
     useUserPackages = true;
-    # backupFileExtension = "backup";
+    backupFileExtension = "backup";
   };
 
   # environment setup
@@ -85,7 +85,7 @@ in
         jsonnet
         inputs.atuin.packages.${pkgs.system}.default
         # ntfy
-        # postgresql
+        postgresql
         # rtx
         imagemagick
         yt-dlp

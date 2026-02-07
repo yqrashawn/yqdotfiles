@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   imports = [
     ./dark-light.nix
     ./syncmail.nix
@@ -6,5 +12,7 @@
     ./grafana.nix
     ./loki.nix
     ./alloy.nix
+    ./postgresql.nix
+    ./redis.nix
   ];
 }
