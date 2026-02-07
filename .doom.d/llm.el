@@ -1203,11 +1203,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
   ;; :bind
   ;; (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
   :init
-  (setq! claude-code-display-window-fn #'display-buffer-same-window)
+  (setq! claude-code-display-window-fn #'display-buffer)
   :config
   ;; optional IDE integration with Monet
   (add-hook! 'claude-code-process-environment-functions #'monet-start-server-function)
-  
   (monet-mode 1)
   (claude-code-mode))
 
