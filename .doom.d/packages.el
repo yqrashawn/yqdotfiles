@@ -444,7 +444,8 @@
 (package! list-utils)
 (package! pcre2el)
 (package! lgr)
-(package! claude-code-ide)
+(package! claude-code-ide
+  :recipe (:host github :repo "manzaltu/claude-code-ide.el" :branch "main"))
 
 (package! gitleaks
   :recipe (:host github :repo "yqrashawn/gitleaks.el" :branch "main"))

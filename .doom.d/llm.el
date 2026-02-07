@@ -345,8 +345,8 @@ Merge buffer-local with global default files."
   (setq! gptel--ccl
          (gptel-make-openai "ccl"
            :protocol "http"
-           ;; :host "localhost:8033"
-           :host "localhost:8003"
+           :host "localhost:8033"
+           ;; :host "localhost:8003"
            ;; :host "studio.local:8003"
            ;; :host "mbp.local:8003"
            :endpoint "/api/v1/chat/completions"
@@ -1212,3 +1212,11 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
   (claude-code-mode))
 
 (load! "gptel-extra.el")
+
+(use-package! claude-code-ide
+  :defer t
+  :init
+  (setq! claude-code-ide-terminal-backend 'eat
+         claude-code-ide-use-side-window nil)
+  :config
+  (claude-code-ide-emacs-tools-setup))

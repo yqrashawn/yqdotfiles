@@ -89,6 +89,7 @@ let
 
     brewh = "brew home";
     brewss = "brew services start";
+    brewsl = "brew services list";
     brewsr = "brew services restart";
     brewsx = "brew services stop";
     ssh = "kitty +kitten ssh";

@@ -345,45 +345,51 @@ _g_  gfm      _o_ org        _m_ markdown
 ;;;###autoload
 (defun +company-complete (&optional args)
   (interactive)
-  (if (eq major-mode 'vterm-mode)
-      (vterm--self-insert)
-    (if (and (modulep! :editor evil)
-             (modulep! :completion company)
-             company-mode
-             (eq (preceding-char) ?,))
-        (progn (delete-char -1 nil)
-               (+company/complete))
-      (call-interactively #'self-insert-command))))
+  (cond
+   ((eq major-mode 'vterm-mode)
+    (vterm--self-insert))
+   ((eq major-mode 'eat-mode)
+    (call-interactively 'eat-self-input))
+   ((and (modulep! :editor evil)
+         (modulep! :completion company)
+         company-mode
+         (eq (preceding-char) ?,))
+    (delete-char -1 nil)
+    (+company/complete))
+   (t
+    (call-interactively #'self-insert-command))))
 
 ;;;###autoload
 (defun +complete-at-point (&optional args)
   "use ,, to trigger +complete-at-point, use ,. to complete with copilot"
   (interactive)
-  (if (eq major-mode 'vterm-mode)
-      (vterm--self-insert)
-    (cond
-     ;; ((and (eq (preceding-char) ?,) (boundp 'pabbrev-marker) pabbrev-marker)
-     ;;  (progn (delete-char -1 nil)
-     ;;         (call-interactively #'pabbrev-expand-maybe)
-     ;;         (pabbrev-delete-last-suggestion)))
+  (cond
+   ((eq major-mode 'vterm-mode)
+    (vterm--self-insert))
+   ((eq major-mode 'eat-mode)
+    (call-interactively 'eat-self-input))
 
-     ((and
-       (eq (preceding-char) ?,)
-       (modulep! :editor evil)
-       (modulep! :completion corfu)
-       corfu-mode)
-      (progn (delete-char -1 nil)
-             (call-interactively #'completion-at-point)))
+   ;; ((and (eq (preceding-char) ?,) (boundp 'pabbrev-marker) pabbrev-marker)
+   ;;  (progn (delete-char -1 nil)
+   ;;         (call-interactively #'pabbrev-expand-maybe)
+   ;;         (pabbrev-delete-last-suggestion)))
 
-     ((and
-       (eq (preceding-char) ?.)
-       (bound-and-true-p copilot-mode)
-       (not (copilot--overlay-visible)))
-      (progn
-        (delete-char -1 nil)
-        (call-interactively #'copilot-complete)))
+   ((and
+     (eq (preceding-char) ?,)
+     (modulep! :editor evil)
+     (modulep! :completion corfu)
+     corfu-mode)
+    (delete-char -1 nil)
+    (call-interactively #'completion-at-point))
 
-     (t (call-interactively #'self-insert-command)))))
+   ((and
+     (eq (preceding-char) ?.)
+     (bound-and-true-p copilot-mode)
+     (not (copilot--overlay-visible)))
+    (delete-char -1 nil)
+    (call-interactively #'copilot-complete))
+
+   (t (call-interactively #'self-insert-command))))
 
 ;;;###autoload
 (defun +yas-expand-when-inserting-dot (&optional args)

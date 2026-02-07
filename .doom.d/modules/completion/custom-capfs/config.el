@@ -73,7 +73,7 @@ Wraps candidates with =...= if current buffer is org-mode."
               :category 'doom-buffer-name)))))
 
 (add-hook!
- '(gptel-mode-hook agent-shell-mode-hook)
+ '(gptel-mode-hook agent-shell-mode-hook eat-mode-hook)
  (defun +custom-capf-setup-org-mode ()
    (add-hook 'completion-at-point-functions 
              #'+doom-buffer-capf 1000 t)
