@@ -27,7 +27,7 @@
     "surge": "^0.24.6",
     "textlint": "^15.5.1",
     "textlint-rule-write-good": "^2.0.0",
-    "tree-sitter-cli": "^0.26.3",
+    "tree-sitter-cli": "^0.26.5",
     "turbo": "^2.7.6",
     "typescript-language-server": "^5.1.3",
     "vercel": "^50.6.1",
@@ -37,7 +37,19 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@anthropic-ai/claude-code"
+      "better-sqlite3",
+      "esbuild",
+      "sharp",
+      "tree-sitter-cli",
+      "workerd"
+    ],
+    "ignoredBuiltDependencies": [
+      "@whiskeysockets/baileys",
+      "clawdbot",
+      "core-js",
+      "node-llama-cpp",
+      "opencode-ai",
+      "protobufjs"
     ]
   }
 }

@@ -1115,6 +1115,18 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
     (:command ,(concat
                 (expand-file-name user-emacs-directory)
                 "emacs-mcp-stdio.sh")))
+   
+   ("daisyui-blueprint" .
+    (:command "npx"
+     :args ("-y" "daisyui-blueprint@latest")
+     :env
+     (:LICENSE ,+daisyui-license
+      :EMAIL ,+daisyui-email)))
+
+   ("flyonui" .
+    (:command "npx"
+     :args ("-y" "flyonui-mcp")))
+
    ;; ("0g-code" .
    ;;  (:command "node"
    ;;   :args
