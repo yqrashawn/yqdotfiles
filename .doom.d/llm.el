@@ -719,7 +719,8 @@ Drop:
                    (prin1-to-string conversation))
            ;; :backend gptel--gh-copilot-business
            :backend +gptel-free-backend
-           :model 'gpt-4.1
+           ;; :model 'gpt-4.1
+           :model 'gemini-3-pro-preview
            :temperature 0.3
            :cb (lambda (response)
                  (kill-new response)
