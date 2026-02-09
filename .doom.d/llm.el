@@ -245,7 +245,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -1116,6 +1116,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
     (:command ,(concat
                 (expand-file-name user-emacs-directory)
                 "emacs-mcp-stdio.sh")))
+   ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
    
    ("daisyui-blueprint" .
     (:command "npx"

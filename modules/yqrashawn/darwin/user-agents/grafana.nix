@@ -1,11 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   homeDir = "/Users/${config.user.name}";
-  configFile =
-    "${homeDir}/Library/CloudStorage/Dropbox/sync/local-grafana/grafana/grafana.ini";
-in {
+  configFile = "${homeDir}/Library/CloudStorage/Dropbox/sync/local-grafana/grafana/grafana.ini";
+in
+{
   launchd.user.agents.grafana = {
+    # port 3021
+    # uname/pwd admin/admin
     serviceConfig = {
       Label = "com.yqrashawn.grafana";
       ProgramArguments = [

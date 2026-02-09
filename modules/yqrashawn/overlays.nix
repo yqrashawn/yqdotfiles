@@ -14,6 +14,7 @@ in
     overlays
     inputs.zed.overlays.default
     inputs.emacs-lsp-booster.overlays.default
+    inputs.nix-openclaw.overlays.default
     inputs.clojure-lsp.overlays.default
     inputs.emacs-overlay.overlays.default
     (final: prev: {

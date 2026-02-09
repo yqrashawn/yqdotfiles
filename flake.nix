@@ -209,6 +209,11 @@
       flake = false;
     };
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     hexrgb = {
       type = "github";
       owner = "emacsmirror";
