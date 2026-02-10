@@ -12,6 +12,6 @@
     ./darwin/user-agents/restart-miniser-container.nix
     ./darwin/user-agents/bind-nextdns-ip.nix
     ./darwin/user-agents/atuin-server.nix
-    ./darwin/openclaw.nix
+    # ./darwin/openclaw.nix
   ];
 }
