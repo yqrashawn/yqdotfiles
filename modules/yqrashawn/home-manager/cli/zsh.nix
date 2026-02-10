@@ -53,7 +53,7 @@ let
     cleanup = "find . -type f -name '*.DS_Store' -ls -delete";
     reload = "exec $SHELL -l";
     rreload = "trash ~/.cache/prezto/zcompdump || true && exec $SHELL -l";
-    cd = "z";
+    # cd = "z"; # moved to initContent/initExtra, conditional on not being in Claude Code
     j = "z";
 
     l = "eza -al";
@@ -105,6 +105,8 @@ in
   programs.bash.enable = true;
   programs.bash.shellAliases = aliases;
   programs.bash.initExtra = ''
+    # alias cd to zoxide only outside Claude Code sessions
+    [[ -z "$CLAUDECODE" ]] && alias cd=z
     ${functions}
     # eat
     [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
@@ -155,6 +157,9 @@ in
       };
       shellAliases = aliases;
       initContent = ''
+        # alias cd to zoxide only outside Claude Code sessions
+        [[ -z "$CLAUDECODE" ]] && alias cd=z
+
         # initExtraBeforeCompInit
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/site-functions
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/$ZSH_VERSION/functions

@@ -873,7 +873,8 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
     (cond
      ((memq major-mode
             '(copilot-chat-prompt-mode
-              copilot-chat-mode)) :keep)
+              copilot-chat-mode
+              gptel-mode)) :keep)
      ((memq major-mode '(dired-mode)) :kill)
      ((and
        bfile

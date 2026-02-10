@@ -12,6 +12,7 @@
     ./grafana.nix
     ./loki.nix
     ./alloy.nix
+    ./prometheus.nix
     ./postgresql.nix
     ./redis.nix
   ];
