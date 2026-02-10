@@ -117,19 +117,15 @@
     :tools '())
   (gptel-make-preset 'opus
     :description "claude code"
-    ;; :backend "cc"
     :backend "ccl"
     :model 'opus
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
+    :parents '(sonnet)
     :tools '())
   (gptel-make-preset 'haiku
     :description "claude code"
-    ;; :backend "cc"
     :backend "ccl"
     :model 'haiku
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
+    :parents '(sonnet)
     :tools '())
 
   (gptel-make-preset 'codex

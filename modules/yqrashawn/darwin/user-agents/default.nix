@@ -13,6 +13,7 @@
     ./loki.nix
     ./alloy.nix
     ./prometheus.nix
+    ./tempo.nix
     ./postgresql.nix
     ./redis.nix
   ];
