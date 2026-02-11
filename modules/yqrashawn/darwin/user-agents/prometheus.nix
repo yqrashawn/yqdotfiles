@@ -19,6 +19,7 @@ in
         "--config.file=${configFile}"
         "--storage.tsdb.path=${homeDir}/.local/share/prometheus"
         "--web.listen-address=0.0.0.0:9090"
+        "--web.enable-remote-write-receiver"
       ];
       RunAtLoad = true;
       KeepAlive = true;
