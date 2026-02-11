@@ -147,12 +147,14 @@
    ((region-active-p) (call-interactively #'gptel-rewrite))
    ((not arg) (call-interactively #'gptel))
    ((eq arg 7) (call-interactively #'gptel-menu))
-   ((eq arg 88) (setq gptel-model 'opus))
-   ((eq arg 88) (setq gptel-model 'haiku))
-   ((eq arg 89) (setq gptel-model 'sonnet))
    ((eq arg 90)
     (progn (funcall #'gptel-context-remove-all)
            (message "gptel context removed!")))
+   ((eq arg 99)
+    (when (require 'gptel nil t)
+      (if (s-contains? "8033" (gptel-backend-host gptel-backend))
+          (+gptel-cc-dev)
+        (+gptel-cc-prod))))
    ((eq arg 6) (call-interactively #'gptel-context-add))))
 
 (defvar +llm-project-default-files '())
@@ -170,6 +172,36 @@ Merge buffer-local with global default files."
    (append
     +llm-project-default-files
     +llm-global-project-default-files)))
+
+(defun +gptel-cc-dev ()
+  (setq! gptel--ccl
+         (gptel-make-openai "ccl"
+           :protocol "http"
+           ;; :host "localhost:8033"
+           :host "localhost:8003"
+           ;; :host "studio.local:8003"
+           ;; :host "mbp.local:8003"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+  (setq! gptel-backend gptel--ccl)
+  (message "ccl dev"))
+
+(defun +gptel-cc-prod ()
+  (setq! gptel--ccl
+         (gptel-make-openai "ccl"
+           :protocol "http"
+           :host "localhost:8033"
+           ;; :host "localhost:8003"
+           ;; :host "studio.local:8003"
+           ;; :host "mbp.local:8003"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+  (setq! gptel-backend gptel--ccl)
+  (message "ccl prod"))
 
 (use-package! gptel
   :commands (gptel gptel-context-add)
@@ -241,7 +273,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -338,18 +370,8 @@ Merge buffer-local with global default files."
            :stream t
            :key "no-key-required"
            :models gptel--gh-models))
-  (setq! gptel--ccl
-         (gptel-make-openai "ccl"
-           :protocol "http"
-           :host "localhost:8033"
-           ;; :host "localhost:8003"
-           ;; :host "studio.local:8003"
-           ;; :host "mbp.local:8003"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
-  (comment (setq! gptel-backend gptel--ccl))
+  (+gptel-cc-dev)
+  (+gptel-cc-prod)
   (setq! gptel--codex
          (gptel-make-openai "codex"
            :protocol "http"
