@@ -1143,9 +1143,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      (:LICENSE ,+daisyui-license
       :EMAIL ,+daisyui-email)))
 
-   ("flyonui" .
-    (:command "npx"
-     :args ("-y" "flyonui-mcp")))
+   ;; ("flyonui" .
+   ;;  (:command "npx"
+   ;;   :args ("-y" "flyonui-mcp")))
 
    ;; ("0g-code" .
    ;;  (:command "node"
@@ -1163,8 +1163,16 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    ;;                         :args ("@wonderwhy-er/desktop-commander")))
    ;; ("clojure-mcp-miniser" . (:command "clojure-mcp"
    ;;                           :args ("--port" "8002")))
+   
    ;; ("fetch" .
-   ;;  (:command "uvx" :args ("mcp-server-fetch")))
+   ;;   (:command "uvx" :args ("mcp-server-fetch")))
+   
+   ("dash-api" .
+    (:command "uvx"
+     :args
+     ("--from"
+      "git+https://github.com/Kapeli/dash-mcp-server.git"
+      "dash-mcp-server")))
 
    ;; ("ramcp-macmini" .
    ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
