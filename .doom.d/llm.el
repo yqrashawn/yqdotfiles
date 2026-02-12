@@ -422,10 +422,14 @@ Merge buffer-local with global default files."
     (+gptel-make-my-presets))
 
   (add-hook! 'gptel-post-response-functions
-    (defun +gptel-notify-done (&rest _args)
+    (defun +gptel-notify-done (beg end)
       (when (> (float-time (or (current-idle-time) 0)) 60)
-        (pushover-send
-         "GPTEL Done" "GPTEL Done" :sound "magic"))))
+        (let* ((response-text (string-trim (buffer-substring-no-properties beg end)))
+               (truncated (if (> (length response-text) 500)
+                              (concat (substring response-text 0 500) "...")
+                            response-text)))
+          (pushover-send
+           "GPTEL Done" truncated :sound "magic")))))
 
   (defadvice! +gptel-filter-tools-before-request (orig-fn &rest args)
     :around #'gptel-request

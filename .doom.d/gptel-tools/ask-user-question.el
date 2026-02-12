@@ -284,7 +284,21 @@ This is the main entry point called by the LLM."
           (let ((num-questions (length questions)))
             (when gptelt-auq-debug
               (message "[ASK-USER-DEBUG] Asking %d validated question(s)" num-questions))
-            
+
+            ;; Notify via pushover
+            (ignore-errors
+              (let ((msg (mapconcat
+                          (lambda (q)
+                            (let* ((norm-q (gptelt-auq--normalize-question q))
+                                   (question-text (gptelt-auq--get-prop norm-q "question"))
+                                   (options (gptelt-auq--get-prop norm-q "options"))
+                                   (opts-str (mapconcat #'gptelt-auq--format-option
+                                                        options "\n  ")))
+                              (format "Q: %s\n  %s" question-text opts-str)))
+                          questions
+                          "\n\n")))
+                (pushover-send "GPTEL Question" msg :sound "magic")))
+
             ;; Ask questions and collect answers
             (let* ((results (gptelt-auq--ask-multiple-questions questions))
                    (has-errors (seq-some (lambda (pair)
