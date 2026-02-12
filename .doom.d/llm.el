@@ -1060,144 +1060,153 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
       (message "Wrote MCP config to %s and updated %s"
                output-file claude-json-file))))
 
-(setq!
- mcp-hub-servers
- `(
-   ;; ("palywright" .
-   ;;   (:command "npx"
-   ;;     :args
-   ;;     ("@playwright/mcp@latest"
-   ;;       "--storage-state=/Users/yqrashawn/.cache/playwrite-mcp/storage.json")))
+(progn
+  (setq!
+   mcp-hub-servers
+   `(
+     ;; ("palywright" .
+     ;;   (:command "npx"
+     ;;     :args
+     ;;     ("@playwright/mcp@latest"
+     ;;       "--storage-state=/Users/yqrashawn/.cache/playwrite-mcp/storage.json")))
 
-   ("context7" .
-    (:command "bunx"
-     :args
-     ("@upstash/context7-mcp"
-      "--api-key"
-      ,+context-7-api-key)))
+     ("context7" .
+      (:command "bunx"
+       :args
+       ("@upstash/context7-mcp"
+        "--api-key"
+        ,+context-7-api-key)))
 
-   ;; ("nextjs-devtools" .
-   ;;   (:command "bunx"
-   ;;     :args
-   ;;     ("next-devtools-mcp@latest")))
+     ;; ("nextjs-devtools" .
+     ;;   (:command "bunx"
+     ;;     :args
+     ;;     ("next-devtools-mcp@latest")))
 
-   ("exa" .
-    (:command "bun"
-     :args ("run"
-            ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
-                 file-truename))))
+     ("exa" .
+      (:command "bun"
+       :args ("run"
+              ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
+                   file-truename))))
 
-   ;; ("perplexity" .
-   ;;  (:command "npx"
-   ;;   :args ("-y" "perplexity-mcp")
-   ;;   :env
-   ;;   (:PERPLEXITY_API_KEY ,+perplexity-api-key
-   ;;    :PERPLEXITY_TIMEOUT_MS "600000")))
+     ;; ("perplexity" .
+     ;;  (:command "npx"
+     ;;   :args ("-y" "perplexity-mcp")
+     ;;   :env
+     ;;   (:PERPLEXITY_API_KEY ,+perplexity-api-key
+     ;;    :PERPLEXITY_TIMEOUT_MS "600000")))
 
-   ;; ("jina_search" .
-   ;;  (:url "http://localhost:18682/mcp"))
+     ;; ("jina_search" .
+     ;;  (:url "http://localhost:18682/mcp"))
 
-   ("jina_search" .
-    (:command "npx"
-     :args
-     ("-y"
-      "mcp-remote"
-      "http://localhost:18682/mcp")))
+     ("jina_search" .
+      (:command "npx"
+       :args
+       ("-y"
+        "mcp-remote"
+        "http://localhost:18682/mcp")))
 
-   ;; ("github" .
-   ;;  (:command "npx"
-   ;;   :args
-   ;;   ("-y"
-   ;;    "mcp-remote"
-   ;;    "https://api.githubcopilot.com/mcp"
-   ;;    "--header"
-   ;;    ,(format! "Authorization:Bearer %s" +gh-mcp-server-token))))
+     ;; ("github" .
+     ;;  (:command "npx"
+     ;;   :args
+     ;;   ("-y"
+     ;;    "mcp-remote"
+     ;;    "https://api.githubcopilot.com/mcp"
+     ;;    "--header"
+     ;;    ,(format! "Authorization:Bearer %s" +gh-mcp-server-token))))
 
-   ;; ("github" .
-   ;;  (:command "gh"
-   ;;   ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
-   ;;   :args
-   ;;   ("mcp")))
-   
-   ;; ("shadcn" .
-   ;;  (:command "npx"
-   ;;   :args
-   ;;   ("-y"
-   ;;    "shadcn@latest"
-   ;;    "mcp")))
+     ;; ("github" .
+     ;;  (:command "gh"
+     ;;   ;; :env ("GITHUB_DYNAMIC_TOOLSETS" "1")
+     ;;   :args
+     ;;   ("mcp")))
+     
+     ("shadcn" .
+      (:command "bunx"
+       :args
+       ("shadcn@latest"
+        "mcp")))
 
-   ("lattice" .
-    (:command "lattice-mcp"))
+     ("clojure-mcp" .
+      (:command "clojure"
+       :args
+       ("-Tmcp"
+        "start"
+        ":config-profile"
+        ":cli-assit")))
 
-   ("emacs" .
-    ;; (:url "http://localhost:18684/mcp/v1/messages")
-    (:command ,(concat
-                (expand-file-name user-emacs-directory)
-                "emacs-mcp-stdio.sh")))
-   ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
-   
-   ("daisyui-blueprint" .
-    (:command "npx"
-     :args ("-y" "daisyui-blueprint@latest")
-     :env
-     (:LICENSE ,+daisyui-license
-      :EMAIL ,+daisyui-email)))
+     ("lattice" .
+      (:command "lattice-mcp"))
 
-   ;; ("flyonui" .
-   ;;  (:command "npx"
-   ;;   :args ("-y" "flyonui-mcp")))
+     ("emacs" .
+      ;; (:url "http://localhost:18684/mcp/v1/messages")
+      (:command ,(concat
+                  (expand-file-name user-emacs-directory)
+                  "emacs-mcp-stdio.sh")))
+     ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
+     
+     ("daisyui-blueprint" .
+      (:command "npx"
+       :args ("-y" "daisyui-blueprint@latest")
+       :env
+       (:LICENSE ,+daisyui-license
+        :EMAIL ,+daisyui-email)))
 
-   ;; ("0g-code" .
-   ;;  (:command "node"
-   ;;   :args
-   ;;   (,(expand-file-name "~/workspace/office/webai-mcp-server/dist/index.js"))
-   ;;   :env
-   ;;   (:ZEROG_NETWORK "testnet",
-   ;;    :ZEROG_PRIVATE_KEY ,+zerog-ai-pk)))
-   
-   ;; ("emacs" .
-   ;;  (:url "http://localhost:18684/mcp/v1/messages"))
-   
+     ;; ("flyonui" .
+     ;;  (:command "npx"
+     ;;   :args ("-y" "flyonui-mcp")))
 
-   ;; ("desktop-commander" . (:command "bunx"
-   ;;                         :args ("@wonderwhy-er/desktop-commander")))
-   ;; ("clojure-mcp-miniser" . (:command "clojure-mcp"
-   ;;                           :args ("--port" "8002")))
-   
-   ;; ("fetch" .
-   ;;   (:command "uvx" :args ("mcp-server-fetch")))
-   
-   ("dash-api" .
-    (:command "uvx"
-     :args
-     ("--from"
-      "git+https://github.com/Kapeli/dash-mcp-server.git"
-      "dash-mcp-server")))
+     ;; ("0g-code" .
+     ;;  (:command "node"
+     ;;   :args
+     ;;   (,(expand-file-name "~/workspace/office/webai-mcp-server/dist/index.js"))
+     ;;   :env
+     ;;   (:ZEROG_NETWORK "testnet",
+     ;;    :ZEROG_PRIVATE_KEY ,+zerog-ai-pk)))
+     
+     ;; ("emacs" .
+     ;;  (:url "http://localhost:18684/mcp/v1/messages"))
+     
 
-   ;; ("ramcp-macmini" .
-   ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
+     ;; ("desktop-commander" . (:command "bunx"
+     ;;                         :args ("@wonderwhy-er/desktop-commander")))
+     ;; ("clojure-mcp-miniser" . (:command "clojure-mcp"
+     ;;                           :args ("--port" "8002")))
+     
+     ;; ("fetch" .
+     ;;   (:command "uvx" :args ("mcp-server-fetch")))
+     
+     ("dash-api" .
+      (:command "uvx"
+       :args
+       ("--from"
+        "git+https://github.com/Kapeli/dash-mcp-server.git"
+        "dash-mcp-server")))
 
-   ;; ("ramcp-local" .
-   ;;  (:url "http://localhost:7999/api/mcp/sse"))
+     ;; ("ramcp-macmini" .
+     ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
 
-   ;; ("mcp-filesystem-server" .
-   ;;  (:command "mcp-filesystem-server"
-   ;;   :args ("/Users/yqrashawn/")))
+     ;; ("ramcp-local" .
+     ;;  (:url "http://localhost:7999/api/mcp/sse"))
 
-   ;; ("markitdown" .
-   ;;   (:command "uvx"
-   ;;     :args ("markitdown-mcp")))
+     ;; ("mcp-filesystem-server" .
+     ;;  (:command "mcp-filesystem-server"
+     ;;   :args ("/Users/yqrashawn/")))
 
-   ;; ("figma" .
-   ;;   (:command "npx"
-   ;;     :args ("-y"
-   ;;             "figma-developer-mcp"
-   ;;             ,(concat "--figma-api-key=" +figma-access-token)
-   ;;             "--stdio")))
+     ;; ("markitdown" .
+     ;;   (:command "uvx"
+     ;;     :args ("markitdown-mcp")))
 
-   ;; ("core-memory" .
-   ;;  (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))
-   ))
+     ;; ("figma" .
+     ;;   (:command "npx"
+     ;;     :args ("-y"
+     ;;             "figma-developer-mcp"
+     ;;             ,(concat "--figma-api-key=" +figma-access-token)
+     ;;             "--stdio")))
+
+     ;; ("core-memory" .
+     ;;  (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))
+     ))
+  (+gen-mcp-json-conf))
 
 (setq! gptel-log-level 'debug)
 (setq! gptel-log-level nil)
