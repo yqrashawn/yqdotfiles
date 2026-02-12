@@ -21,7 +21,10 @@
   (setq-hook!
       '(clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook)
     evil-shift-width 1
+    lsp-eldoc-enable-hover nil
     lsp-lens-enable nil
+    ;; https://github.com/emacs-lsp/lsp-mode/issues/2600
+    lsp-enable-indentation nil
     lsp-ui-sideline-show-code-actions nil
     lsp-ui-sideline-show-diagnostics nil)
   ;; letsubs in status-mobile defview
