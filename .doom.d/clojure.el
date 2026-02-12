@@ -431,8 +431,8 @@ creates a new one. Don't unnecessarily bother the user."
      ("walk" . "clojure.walk")
      ("zip" . "clojure.zip")
      ("mustache" . "cljstache.core"))
-   cljr-clojure-test-declaration "[clojure.test :as t :refer [deftest testing is]]"
-   cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t :refer [deftest testing is]]
+   cljr-clojure-test-declaration "[clojure.test :as t]"
+   cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t]
 :cljs [cljs.test :as t :include-macros])"))
 
 (defvar +local-cljr-magic-require-namespaces '())
