@@ -102,10 +102,25 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
     (if allow?
         ;; Evaluate the code
         (condition-case err
-            (let ((result
-                   (cider-nrepl-sync-request:eval clj-string nil ns)))
-              (or (nrepl-dict-get result "value")
-                  (nrepl-dict-get result "err")
+            (let* ((result
+                    (cider-nrepl-sync-request:eval clj-string nil ns))
+                   (out (nrepl-dict-get result "out"))
+                   (value (nrepl-dict-get result "value"))
+                   (err-out (nrepl-dict-get result "err"))
+                   (repl-buf (cider-current-repl)))
+              (when (and repl-buf (buffer-live-p repl-buf))
+                (with-current-buffer repl-buf
+                  (cider-repl--replace-input (format! "%s\n" clj-string))
+                  (when (or out value err-out)
+                    (cider-repl-reset-markers))
+                  (when out
+                    (cider-repl-emit-stdout repl-buf out))
+                  (when value
+                    (cider-repl-emit-result repl-buf value t t))
+                  (when err-out
+                    (cider-repl-emit-stderr repl-buf err-out))
+                  (cider-repl-emit-prompt repl-buf)))
+              (or value err-out
                   (error "Unexpected evaluation result")))
           (error (format "Error evaluating clj code: %s" (error-message-string err))))
       "User rejected the eval request")))
@@ -117,6 +132,7 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
 
 (comment
   (gptelt-eval-clj-string "+" "clojure.core")
+  (gptelt-eval-clj-string "(prn 1)" "clojure.core")
   (gptelt-eval-clj-string "+" "cljs.core")
   (gptelt-eval-clj-string "(name :abc)" "clojure.core"))
 
@@ -285,6 +301,13 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
               (condition-case err
                   (progn
                     (cider-load-buffer buffer)
+                    (when-let ((repl-buf (cider-current-repl)))
+                      (with-current-buffer repl-buf
+                        (cider-repl-reset-markers)
+                        (cider-repl-emit-stdout
+                         repl-buf (format ";; eval %s" buffer))
+                        (cider-repl-reset-markers)
+                        (cider-repl-emit-prompt repl-buf)))
                     (format "Successfully evaluated buffer '%s'" buffer-name))
                 (error (format "Error evaluating buffer '%s': %s" buffer-name (error-message-string err))))
             (when (and win (window-live-p win))
