@@ -484,6 +484,8 @@
 (package! avy-flash :recipe (:host github :repo "ZenScriptor/avy-flash"))
 (package! monet
   :recipe (:host github :repo "stevemolitor/monet"))
+(package! slack
+  :recipe (:host github :repo "emacs-slack/emacs-slack"))
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)

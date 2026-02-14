@@ -1093,10 +1093,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
         "--api-key"
         ,+context-7-api-key)))
 
-     ;; ("nextjs-devtools" .
-     ;;   (:command "bunx"
-     ;;     :args
-     ;;     ("next-devtools-mcp@latest")))
+     ("nextjs-devtools" .
+      (:command "npx"
+       :args
+       ("-y" "next-devtools-mcp@latest")))
 
      ("exa" .
       (:command "bun"
