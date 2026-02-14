@@ -109,7 +109,6 @@
 
   (gptel-make-preset 'sonnet
     :description "claude code"
-    ;; :backend "cc"
     :backend "ccl"
     :model 'sonnet
     :system (alist-get 'claude gptel-directives)
@@ -124,6 +123,25 @@
   (gptel-make-preset 'haiku
     :description "claude code"
     :backend "ccl"
+    :model 'haiku
+    :parents '(sonnet)
+    :tools '())
+  (gptel-make-preset 'sonnetd
+    :description "claude code"
+    :backend "ccld"
+    :model 'sonnet
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'opusd
+    :description "claude code"
+    :backend "ccld"
+    :model 'opus
+    :parents '(sonnet)
+    :tools '())
+  (gptel-make-preset 'haikud
+    :description "claude code"
+    :backend "ccld"
     :model 'haiku
     :parents '(sonnet)
     :tools '())
@@ -174,18 +192,15 @@ Merge buffer-local with global default files."
     +llm-global-project-default-files)))
 
 (defun +gptel-cc-dev ()
-  (setq! gptel--ccl
-         (gptel-make-openai "ccl"
+  (setq! gptel--ccld
+         (gptel-make-openai "ccld"
            :protocol "http"
-           ;; :host "localhost:8033"
            :host "localhost:8003"
-           ;; :host "studio.local:8003"
-           ;; :host "mbp.local:8003"
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key "no-key-required"
            :models gptel--claude-code-models))
-  (setq! gptel-backend gptel--ccl)
+  (setq! gptel-backend gptel--ccld)
   (message "ccl dev"))
 
 (defun +gptel-cc-prod ()
@@ -193,9 +208,6 @@ Merge buffer-local with global default files."
          (gptel-make-openai "ccl"
            :protocol "http"
            :host "localhost:8033"
-           ;; :host "localhost:8003"
-           ;; :host "studio.local:8003"
-           ;; :host "mbp.local:8003"
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key "no-key-required"
