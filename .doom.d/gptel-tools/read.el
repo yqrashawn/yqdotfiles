@@ -139,29 +139,29 @@
 
 ;; Register the file and buffer reading tools with gptel
 (when (fboundp 'gptelt-make-tool)
-  (gptelt-make-tool
-   :name "read_file"
-   :function #'gptelt-read-file
-   :description
-   (concat "Read a file from the local filesystem. The file_path parameter must be an absolute path. "
-           "By default, reads up to 2000 lines from the beginning. For long files, use offset and limit parameters. "
-           "IMPORTANT: For reading currently open Emacs buffers, use read_buffer instead (faster, no full path needed)."
-           "\n\nPARAMETER STRUCTURE:\n"
-           "{\n"
-           "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
-           "  \"offset\": integer (optional, default: 0) - Line number to start reading from\n"
-           "  \"limit\": integer (optional, default: 2000, min: 300) - Number of lines to read\n"
-           "}\n\n"
-           "The returned result includes metadata (total lines, content range) followed by content wrapped with ␂ and ␃.")
-   :args '((:name "file_path" :type string
-            :description "The absolute path to the file to read (must be absolute, not relative)")
-           (:name "offset" :type integer :optional t :minimum 0
-            :description "The line number to start reading from. Only provide if the file is too large to read at once")
-           (:name "limit" :type integer :optional t :minimum 300
-            :description "The number of lines to read. Only provide if the file is too large to read at once. Min value is 300."))
-   :category "read"
-   :confirm nil
-   :include t)
+  ;; (gptelt-make-tool
+  ;;  :name "read_file"
+  ;;  :function #'gptelt-read-file
+  ;;  :description
+  ;;  (concat "Read a file from the local filesystem. The file_path parameter must be an absolute path. "
+  ;;          "By default, reads up to 2000 lines from the beginning. For long files, use offset and limit parameters. "
+  ;;          "IMPORTANT: For reading currently open Emacs buffers, use read_buffer instead (faster, no full path needed)."
+  ;;          "\n\nPARAMETER STRUCTURE:\n"
+  ;;          "{\n"
+  ;;          "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
+  ;;          "  \"offset\": integer (optional, default: 0) - Line number to start reading from\n"
+  ;;          "  \"limit\": integer (optional, default: 2000, min: 300) - Number of lines to read\n"
+  ;;          "}\n\n"
+  ;;          "The returned result includes metadata (total lines, content range) followed by content wrapped with ␂ and ␃.")
+  ;;  :args '((:name "file_path" :type string
+  ;;           :description "The absolute path to the file to read (must be absolute, not relative)")
+  ;;          (:name "offset" :type integer :optional t :minimum 0
+  ;;           :description "The line number to start reading from. Only provide if the file is too large to read at once")
+  ;;          (:name "limit" :type integer :optional t :minimum 300
+  ;;           :description "The number of lines to read. Only provide if the file is too large to read at once. Min value is 300."))
+  ;;  :category "read"
+  ;;  :confirm nil
+  ;;  :include t)
 
   (gptelt-make-tool
    :name "read_buffer"
@@ -188,40 +188,41 @@
    :confirm nil
    :include t)
 
-  (gptelt-make-tool
-   :name "read_multiple_files"
-   :function #'gptelt-read-multiple-files
-   :description
-   "Read multiple files in one call with per-file offset and limit control. Returns a list where each element is either a successful read (with :file-path and :content) or a failed read (with :file-path and :error). This is more efficient than calling read_file multiple times when you need to read several files.
+  ;; (gptelt-make-tool
+  ;;    :name "read_multiple_files"
+  ;;    :function #'gptelt-read-multiple-files
+  ;;    :description
+  ;;    "Read multiple files in one call with per-file offset and limit control. Returns a list where each element is either a successful read (with :file-path and :content) or a failed read (with :file-path and :error). This is more efficient than calling read_file multiple times when you need to read several files.
 
-Each result in the returned list is a plist with:
-- :file-path - The file path that was attempted
-- :content - The file content (if successful, same format as read_file)
-- :error - Error message (if failed, e.g., file not found, not readable, permission denied)"
-   :args
-   '((:name "file_requests"
-      :type array
-      :items (:type object
-              :properties
-              (:file_path
-               (:type string
-                :description "Absolute path to the file to read")
-               :offset
-               (:type integer
-                :optional t
-                :minimum 0
-                :description "Line number to start reading from")
-               :limit
-               (:type integer
-                :optional t
-                :minimum 300
-                :description "Number of lines to read"))
-              :required ["file_path"]
-              :description "File request object with file_path (required), offset (optional), and limit (optional)")
-      :description "List of file requests to read"))
-   :category "read"
-   :confirm nil
-   :include t))
+  ;; Each result in the returned list is a plist with:
+  ;; - :file-path - The file path that was attempted
+  ;; - :content - The file content (if successful, same format as read_file)
+  ;; - :error - Error message (if failed, e.g., file not found, not readable, permission denied)"
+  ;;    :args
+  ;;    '((:name "file_requests"
+  ;;       :type array
+  ;;       :items (:type object
+  ;;               :properties
+  ;;               (:file_path
+  ;;                (:type string
+  ;;                 :description "Absolute path to the file to read")
+  ;;                :offset
+  ;;                (:type integer
+  ;;                 :optional t
+  ;;                 :minimum 0
+  ;;                 :description "Line number to start reading from")
+  ;;                :limit
+  ;;                (:type integer
+  ;;                 :optional t
+  ;;                 :minimum 300
+  ;;                 :description "Number of lines to read"))
+  ;;               :required ["file_path"]
+  ;;               :description "File request object with file_path (required), offset (optional), and limit (optional)")
+  ;;       :description "List of file requests to read"))
+  ;;    :category "read"
+  ;;    :confirm nil
+  ;;    :include t)
+  )
 
 (defun gptelt-read-multiple-files (file_requests)
   "Read multiple files and return their contents or errors.

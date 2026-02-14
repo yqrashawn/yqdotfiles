@@ -165,17 +165,17 @@ in
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/$ZSH_VERSION/functions
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/vendor-completions
 
-        # init extra
-        eval "$(${pkgs.atuin}/bin/atuin init zsh)"
-
         ### TRAMP
         # Stop TRAMP (in Emacs) from hanging or term/shell from echoing back commands
-        #if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then
-        #  unsetopt zle prompt_cr prompt_subst
-        #  whence -w precmd >/dev/null && unfunction precmd
-        #  whence -w preexec >/dev/null && unfunction preexec
-        #  PS1='$ '
-        #fi
+        if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then
+          unsetopt zle prompt_cr prompt_subst
+          whence -w precmd >/dev/null && unfunction precmd
+          whence -w preexec >/dev/null && unfunction preexec
+          PS1='$ '
+        else
+          # init extra - only run these in interactive shells, not TRAMP
+          eval "$(${pkgs.atuin}/bin/atuin init zsh)"
+        fi
 
         ${functions}
         ${lib.optionalString pkgs.stdenvNoCC.isDarwin ''
