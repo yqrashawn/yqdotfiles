@@ -285,7 +285,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -517,7 +517,8 @@ Merge buffer-local with global default files."
 (use-package! mcp-server-lib
   :defer t
   :init
-  (setq! mcp-server-lib-http-port 18684)
+  (setq! mcp-server-lib-http-port 18684
+         mcp-server-lib-async-timeout 600)
   (unless (file-exists-p
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
