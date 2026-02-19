@@ -50,7 +50,7 @@
      :cutoff-date "2025-01")))
 
 (defconst gptel--claude-code-models
-  '((haiku
+  `((haiku
      :description "Near-frontier intelligence at blazing speeds with extended thinking"
      :capabilities (media tool-use cache)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
@@ -66,11 +66,27 @@
      :input-cost 3
      :output-cost 15
      :cutoff-date "2025-07")
+    (,(intern "sonnet[1m]")
+     :description "High-performance model with exceptional reasoning and efficiency"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07")
     (opus
      :description "Most capable model for complex reasoning and advanced coding"
      :capabilities (media tool-use cache)
      :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
      :context-window 200
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03")
+    (,(intern "opus[1m]")
+     :description "Most capable model for complex reasoning and advanced coding"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
      :input-cost 5
      :output-cost 25
      :cutoff-date "2025-03")))

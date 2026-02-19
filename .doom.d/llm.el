@@ -114,6 +114,19 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
+  (gptel-make-preset 'sonnetm
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "sonnet[1m]")
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'opus
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "opus[1m]")
+    :parents '(sonnet)
+    :tools '())
   (gptel-make-preset 'opus
     :description "claude code"
     :backend "ccl"
@@ -518,7 +531,7 @@ Merge buffer-local with global default files."
   :defer t
   :init
   (setq! mcp-server-lib-http-port 18684
-         mcp-server-lib-async-timeout 600)
+         mcp-server-lib-async-timeout 1200)
   (unless (file-exists-p
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
