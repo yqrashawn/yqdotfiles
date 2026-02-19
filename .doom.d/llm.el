@@ -587,7 +587,7 @@ Merge buffer-local with global default files."
   :defer t
   :init
   (setq! mcp-server-lib-http-port 18684
-         mcp-server-lib-async-timeout 1200)
+         mcp-server-lib-async-timeout 3600)
   (unless (file-exists-p
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
