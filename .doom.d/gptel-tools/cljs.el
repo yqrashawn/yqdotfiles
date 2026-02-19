@@ -1,5 +1,26 @@
 ;;; .nixpkgs/.doom.d/gptel-tools/cljs.el -*- lexical-binding: t; -*-
 
+(defun gptelt-clj-eval-cljs-in-clj-repl (clj-str)
+  (let ((random-cljs-buffer (++workspace-get-random-cljs-buffer)))
+    (with-current-buffer random-cljs-buffer
+      (let ((repl (cider-current-repl 'cljs)))
+        (cider-nrepl-sync-request:eval ":cljs/quit" repl nil)
+        (let ((rst (cider-nrepl-sync-request:eval clj-str repl nil)))
+          (cider-nrepl-sync-request:eval "(shadow.cljs.devtools.api/repl :app)" repl nil)
+          (nrepl-dict-get rst "status"))))))
+
+(comment
+  (cider-nrepl-sync-request:eval "(js/console.log 'aaa)" jjj nil)
+  (cider-nrepl-sync-request:eval (format "(shadow.cljs.devtools.api/repl :app)") jjj nil)
+  (gptelt-clj-eval-cljs-in-clj-repl "System")
+  (gptelt-clj-eval-cljs-in-clj-repl "(System/getenv \"DOMAIN\"")
+  (gptelt-clj-eval-cljs-in-clj-repl "System")
+  (gptelt-clj-eval-cljs-in-clj-repl "js/location.href")
+  (gptelt-clj-eval-cljs-in-clj-repl "(prn 1)")
+  (gptelt-clj-eval-cljs-in-clj-repl
+   (with-current-buffer (find-file-noselect"~/.nixpkgs/env/dev/cljs_helper.clj")
+     (buffer-substring (point-min) (point-max)))))
+
 (defun gptelt-cljs-ensure-helper-loaded ()
   (gptelt-cider--eval-buffer
    'clj
@@ -36,12 +57,13 @@
 
 ;;; eval cljs string
 (defun gptel-cljs-eval-string (build-id runtime-id cljs-code &optional ns)
+  (gptelt-cljs-ensure-helper-loaded)
   (gptelt-eval--clj-string
-   (format "(cljs-eval %s %d \"%s\" %s)" build-id runtime-id cljs-code ns)
+   (format "(cljs-eval %s %d %s %s)" build-id runtime-id (prin1-to-string cljs-code) ns)
    "cljs-helper" t))
 
 (comment
-  (gptel-cljs-eval-string :ground 10 "js/location.href")
+  (gptel-cljs-eval-string :app 7 "js/location.href")
   (gptel-cljs-eval-string :ground 10 "js/document.body")
   (gptel-cljs-eval-string :ground 10 "js/location.hreff.f"))
 

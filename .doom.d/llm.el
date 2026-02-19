@@ -121,7 +121,7 @@
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
-  (gptel-make-preset 'opus
+  (gptel-make-preset 'opusm
     :description "claude code"
     :backend "ccl"
     :model (intern "opus[1m]")
@@ -238,7 +238,21 @@ Merge buffer-local with global default files."
          gptel-org-branching-context t
          gptel-track-media t
          +gptel-disabled-tool-patterns
-         '("^show_api_key$" "^capture_screenshot" "^guess_datetime"))
+         '("^show_api_key$" "^capture_screenshot" "^guess_datetime")
+         gptel-curl-extra-args
+         (split-string
+          (mapconcat
+           'identity
+           '("--http1.1"
+             ;; "--fail-with-body"
+             "--no-buffer"   ;flush chunks ASAP so Emacs sees tokens as they arrive.
+             ;; "--retry 3" "--retry-delay 1"
+             "--connect-timeout 10"
+             "--max-time 7200"
+             "--no-alpn"                    ;tsl
+             "-4"                           ;force ipv4
+             "--insecure")
+           " ")))
 
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
@@ -298,7 +312,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -479,7 +493,7 @@ Merge buffer-local with global default files."
   (defadvice! +gptel-add-request-timeout (orig-fn &rest args)
     :around #'gptel-request
     (let* ((fsm (apply orig-fn args))
-           (timeout-seconds 600)
+           (timeout-seconds 7200)
            (timer (run-with-timer
                    timeout-seconds nil
                    (lambda (fsm)

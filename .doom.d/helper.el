@@ -182,16 +182,17 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (or (++workspace-clj?)
       (++workspace-cljs?)))
 
+(defun ++workspace-get-random-cljs-buffer ()
+  (-> (clj/filter
+       (clj/partial 'string-suffix-p ".cljs")
+       (projectile-project-files (++workspace-current-project-root)))
+      (clj/first)
+      (find-file-noselect)))
+
 (defun ++workspace-cljs-repl-connected? ()
   (when (and (++workspace-cljs?)
              (fboundp 'cider-connected-p))
-    (let ((cljs-buf
-           (-> (clj/filter
-                (clj/comp
-                 (clj/partial 'string-suffix-p ".cljs")
-                 'buffer-file-name)
-                (+workspace-buffer-list))
-               (clj/first))))
+    (let ((cljs-buf (++workspace-get-random-cljs-buffer)))
       (when (buffer-live-p cljs-buf)
         (with-current-buffer cljs-buf
           (cider-connected-p))))))

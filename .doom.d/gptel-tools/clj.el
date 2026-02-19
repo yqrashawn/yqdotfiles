@@ -107,7 +107,7 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
                    (out (nrepl-dict-get result "out"))
                    (value (nrepl-dict-get result "value"))
                    (err-out (nrepl-dict-get result "err"))
-                   (repl-buf (cider-current-repl)))
+                   (repl-buf (cider-current-repl 'clj)))
               (when (and repl-buf (buffer-live-p repl-buf))
                 (with-current-buffer repl-buf
                   (cider-repl--replace-input (format! "%s\n" clj-string))
@@ -301,7 +301,7 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
               (condition-case err
                   (progn
                     (cider-load-buffer buffer)
-                    (when-let ((repl-buf (cider-current-repl)))
+                    (when-let ((repl-buf (cider-current-repl type)))
                       (with-current-buffer repl-buf
                         (cider-repl-reset-markers)
                         (cider-repl-emit-stdout
