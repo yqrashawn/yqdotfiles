@@ -315,7 +315,7 @@
     # };
     kitty-light = {
       source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
-      target = "kitty/light.conf";
+      target = "kitty/light-theme.auto.conf";
     };
     kitty-light2 = {
       source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
@@ -323,7 +323,7 @@
     };
     kitty-dark = {
       source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
-      target = "kitty/dark.conf";
+      target = "kitty/dark-theme.auto.conf";
     };
     kitty-dark2 = {
       source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";

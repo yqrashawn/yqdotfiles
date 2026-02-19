@@ -63,6 +63,47 @@
         (skip-chars-backward " \t\r")
         (insert-and-inherit "*")))))
 
+(defun +gptel-collapse-blank-lines (_beg _end)
+  "Collapse blank lines in gptel org buffers.
+Around @assistant and @user markers: max 1 blank line.
+Everywhere else: max 2 consecutive blank lines."
+  (when (derived-mode-p 'org-mode)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^@\\(assistant\\|user\\)$" nil t)
+        (let ((marker-line-start (line-beginning-position)))
+          ;; Collapse blank lines above: keep at most 1
+          (save-excursion
+            (goto-char marker-line-start)
+            (forward-line -1)
+            (while (and (not (bobp))
+                        (looking-at-p "^[ \t]*$"))
+              (forward-line -1))
+            ;; Now point is on the last non-blank line above (or bob)
+            (unless (looking-at-p "^[ \t]*$") (forward-line 1))
+            (let ((blank-start (point)))
+              (goto-char marker-line-start)
+              (when (> (count-lines blank-start marker-line-start) 1)
+                (delete-region blank-start marker-line-start)
+                (insert "\n"))))
+          ;; Collapse blank lines below: keep at most 1
+          (save-excursion
+            (goto-char (line-beginning-position))
+            ;; re-find since deletions above may have shifted point
+            (when (re-search-forward "^@\\(assistant\\|user\\)$" (line-end-position) t)
+              (forward-line 1)
+              (let ((after-marker (point)))
+                (while (and (not (eobp))
+                            (looking-at-p "^[ \t]*$"))
+                  (forward-line 1))
+                (when (> (count-lines after-marker (point)) 1)
+                  (delete-region after-marker (point))
+                  (insert "\n")))))))
+      ;; Pass 2: collapse 3+ consecutive blank lines to max 2 everywhere
+      (goto-char (point-min))
+      (while (re-search-forward "\n\\(\n[ \t]*\\)\\{3,\\}" nil t)
+        (replace-match "\n\n\n")))))
+
 (comment
   (defadvice! +gptel-curl--stream-insert-response
     (f response info &optional raw)
@@ -444,6 +485,7 @@ Merge buffer-local with global default files."
   (setq! gptel-model 'gpt-4.1)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
+  (add-hook! 'gptel-post-response-functions #'+gptel-collapse-blank-lines)
   (setq! gptel-log-level 'debug)
   (defun +gptel-toggle-debug ()
     (interactive)
