@@ -24,6 +24,11 @@
 (defconst gptelt-auq-min-options 2
   "Minimum number of options per question.")
 
+(defvar gptelt-auq-defer-by-default t
+  "When non-nil, show question buffer but don't prompt immediately.
+The user can review files and call `gptelt-auq-resume' when ready.
+When nil, immediately open `completing-read' (original behavior).")
+
 ;;; Parameter Validation
 
 (defun gptelt-auq--validate-input-parameters (questions-input)
@@ -147,6 +152,36 @@ Returns a cons of (label . description) for use with annotation."
          (desc (gptelt-auq--get-prop norm-opt "description" "")))
     (cons label desc)))
 
+;;; Request Queue (for concurrent MCP agents)
+
+(defvar gptelt-auq--active-p nil
+  "Non-nil when a question session is currently active.
+This includes both interactive prompts and deferred (C-g) states.")
+
+(defvar gptelt-auq--in-recursive-edit nil
+  "Non-nil when inside a recursive-edit for deferred question answering.
+Used to prevent nested recursive-edits when handling multiple questions.")
+
+(defvar gptelt-auq--queue nil
+  "FIFO queue of pending question requests.
+Each entry is a cons of (CALLBACK . QUESTIONS-INPUT).
+New requests are appended; the head is processed next.")
+
+(defun gptelt-auq--process-queue ()
+  "Process the next queued question request, if any.
+Called after the current question session finishes (completion, error,
+or resumed-and-completed).  Sets `gptelt-auq--active-p' to nil first,
+then pops the next request and calls the main entry point."
+  (setq gptelt-auq--active-p nil)
+  (when gptelt-auq--queue
+    (let* ((next (pop gptelt-auq--queue))
+           (callback (car next))
+           (questions-input (cdr next)))
+      (when gptelt-auq-debug
+        (message "[ASK-USER-DEBUG] Processing queued request (%d remaining)"
+                 (length gptelt-auq--queue)))
+      (gptelt-auq-ask-user-question callback questions-input))))
+
 ;;; Deferred/Resumable Question State
 
 (defvar gptelt-auq--pending nil
@@ -223,9 +258,47 @@ bring back the selection prompt."
             (if remaining-questions
                 (gptelt-auq--ask-remaining-questions
                  remaining-questions all-results callback)
-              (gptelt-auq--finish-with-results all-results callback))))
+              (gptelt-auq--finish-with-results all-results callback)
+              ;; All questions answered — exit recursive-edit to return
+              ;; control to the MCP handler.  exit-recursive-edit throws
+              ;; (non-local exit), so this must be the last form.
+              (when gptelt-auq--in-recursive-edit
+                (exit-recursive-edit)))))
       (quit
        (message "Dismissed again. Use M-x gptelt-auq-resume to answer later.")))))
+
+(defun gptelt-auq-skip ()
+  "Skip the currently deferred question and process next in queue.
+Returns an error to the waiting agent's callback."
+  (interactive)
+  (unless gptelt-auq--pending
+    (user-error "No pending question to skip"))
+  (let ((callback (plist-get gptelt-auq--pending :callback))
+        (question-text (plist-get gptelt-auq--pending :question-text)))
+    (setq gptelt-auq--pending nil)
+    (gptelt-auq--cleanup-help-buffer)
+    (funcall callback
+             (json-encode
+              `((isError . t)
+                (content . [((type . "text")
+                             (text . ,(format "Question skipped by user: %s"
+                                              question-text)))]))))
+    (message "Question skipped.")
+    (if gptelt-auq--in-recursive-edit
+        (progn
+          (run-at-time 0 nil #'gptelt-auq--process-queue)
+          (exit-recursive-edit))
+      (gptelt-auq--process-queue))))
+
+(defun gptelt-auq-queue-status ()
+  "Display and return the current question queue status string."
+  (interactive)
+  (let ((status (format "AUQ: active=%s, pending=%s, queued=%d"
+                        (if gptelt-auq--active-p "yes" "no")
+                        (if gptelt-auq--pending "yes" "no")
+                        (length gptelt-auq--queue))))
+    (message "%s" status)
+    status))
 
 ;;; Single Question UI
 
@@ -313,6 +386,33 @@ keeps Emacs responsive in the meantime."
     ;; Show help buffer with full question and descriptions
     (gptelt-auq--show-help-buffer question-text header option-pairs)
 
+    (if gptelt-auq-defer-by-default
+        ;; Defer immediately — show buffer, store state, let user resume when ready.
+        ;; Enter recursive-edit so the MCP server's accept-process-output polling
+        ;; loop doesn't block Emacs.  recursive-edit starts a nested command loop,
+        ;; letting the user freely browse files and call M-x gptelt-auq-resume.
+        (progn
+          (setq gptelt-auq--pending
+                (list :all-numbered all-numbered
+                      :numbered-to-orig numbered-to-orig
+                      :prompt prompt
+                      :multi-select multi-select
+                      :question-text question-text
+                      :option-pairs option-pairs
+                      :header header
+                      :callback callback
+                      :remaining-questions remaining-questions
+                      :results-so-far results-so-far))
+          (message "Question ready. Review files, then M-x gptelt-auq-resume to answer.")
+          ;; Only enter recursive-edit at the top level to avoid nesting.
+          ;; For subsequent questions (remaining-questions), we're already
+          ;; inside a recursive-edit, so just store state and return.
+          (unless gptelt-auq--in-recursive-edit
+            (setq gptelt-auq--in-recursive-edit t)
+            (unwind-protect
+                (recursive-edit)
+              (setq gptelt-auq--in-recursive-edit nil))))
+
     (condition-case _err
         (progn
           (setq result
@@ -380,13 +480,14 @@ keeps Emacs responsive in the meantime."
       (error
        (gptelt-auq--cleanup-help-buffer)
        (message "Question failed: %s" (error-message-string _err))
-       ;; On error, call callback with error result
+       ;; On error, call callback with error result, then drain queue
        (funcall callback
                 (json-encode
                  `((isError . t)
                    (content . [((type . "text")
                                 (text . ,(format "Error: %s"
-                                                 (error-message-string _err))))]))))))))
+                                                 (error-message-string _err))))]))))
+       (gptelt-auq--process-queue))))))
 
 ;;; Result Helpers
 
@@ -409,10 +510,19 @@ RESULTS is a list of (question-text . answer) pairs."
 
 (defun gptelt-auq--finish-with-results (results callback)
   "Finalize RESULTS and call CALLBACK with JSON response.
-RESULTS is a list of (question-text . answer) pairs."
+RESULTS is a list of (question-text . answer) pairs.
+After calling CALLBACK, drains the request queue.
+When inside recursive-edit, queue processing is deferred to a timer
+so it runs after exit-recursive-edit returns control to the MCP handler."
   (when gptelt-auq-debug
     (message "[ASK-USER-DEBUG] Finishing with %d result(s)" (length results)))
-  (funcall callback (gptelt-auq--build-result-json results)))
+  (funcall callback (gptelt-auq--build-result-json results))
+  (if gptelt-auq--in-recursive-edit
+      ;; Defer queue processing until after recursive-edit exits,
+      ;; otherwise process-queue would start a new session inside
+      ;; the current recursive-edit context.
+      (run-at-time 0 nil #'gptelt-auq--process-queue)
+    (gptelt-auq--process-queue)))
 
 (defun gptelt-auq--ask-remaining-questions (questions results-so-far callback)
   "Ask QUESTIONS sequentially, accumulating RESULTS-SO-FAR.
@@ -446,6 +556,9 @@ later from `gptelt-auq-resume'."
 CALLBACK is the MCP async callback (first arg due to :async t).
 QUESTIONS-INPUT should be a list of question plists/alists.
 
+When another question session is already active, the request is queued
+and will be processed after the current session completes.
+
 Calls CALLBACK with JSON string containing answers or error information.
 This is the main entry point called by the LLM."
   (when gptelt-auq-debug
@@ -454,13 +567,29 @@ This is the main entry point called by the LLM."
                  (length questions-input)
                0)))
 
+  ;; If a question session is already active, enqueue this request.
+  ;; The callback will be called later when it's this request's turn.
+  (if gptelt-auq--active-p
+      (progn
+        (when gptelt-auq-debug
+          (message "[ASK-USER-DEBUG] Session active, queuing request (queue size: %d)"
+                   (1+ (length gptelt-auq--queue))))
+        (setq gptelt-auq--queue
+              (append gptelt-auq--queue
+                      (list (cons callback questions-input))))
+        (message "Question queued (%d in queue). Will prompt after current question."
+                 (length gptelt-auq--queue)))
+
+  ;; No active session — mark as active and proceed.
+  (setq gptelt-auq--active-p t)
+
   ;; Validate input parameters first
   (let* ((validation (gptelt-auq--validate-input-parameters questions-input))
          (questions (car validation))
          (error-msg (cdr validation)))
 
     (if error-msg
-        ;; Return parameter validation error immediately
+        ;; Return parameter validation error immediately, then drain queue
         (progn
           (when gptelt-auq-debug
             (message "[ASK-USER-DEBUG] Validation failed: %s" error-msg))
@@ -468,7 +597,8 @@ This is the main entry point called by the LLM."
                    (json-encode
                     `((isError . t)
                       (content . [((type . "text")
-                                   (text . ,error-msg))])))))
+                                   (text . ,error-msg))]))))
+          (gptelt-auq--process-queue))
 
       ;; Parameters valid - proceed with asking questions
       (condition-case err
@@ -503,7 +633,7 @@ This is the main entry point called by the LLM."
             (gptelt-auq--ask-remaining-questions questions nil callback))
 
         (error
-         ;; Top-level error handling
+         ;; Top-level error handling — drain queue after error
          (when gptelt-auq-debug
            (message "[ASK-USER-DEBUG] Caught error: %s" (error-message-string err)))
          (funcall callback
@@ -511,7 +641,8 @@ This is the main entry point called by the LLM."
                    `((isError . t)
                      (content . [((type . "text")
                                   (text . ,(format "Error: %s"
-                                                   (error-message-string err))))])))))))))
+                                                   (error-message-string err))))]))))
+         (gptelt-auq--process-queue)))))))
 
 ;;; Tool Registration
 

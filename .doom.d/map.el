@@ -49,6 +49,7 @@
  :g "s-u" #'revert-buffer
  :g "s-'" #'+side-notes-toggle-daily-note
  :g "s-i" #'gptel-context-add
+ :g "s-p" #'gptelt-auq-resume
  :g "s-j" #'+gptel
  :g "s-o" #'agent-shell-sidebar-toggle
  ;; :g "s-j" #'gptel-menu
