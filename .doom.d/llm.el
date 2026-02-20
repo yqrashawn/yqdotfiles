@@ -485,7 +485,7 @@ Merge buffer-local with global default files."
   (setq! gptel-model 'gpt-4.1)
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
-  (add-hook! 'gptel-post-response-functions #'+gptel-collapse-blank-lines)
+  ;; (add-hook! 'gptel-post-response-functions #'+gptel-collapse-blank-lines)
   (setq! gptel-log-level 'debug)
   (defun +gptel-toggle-debug ()
     (interactive)

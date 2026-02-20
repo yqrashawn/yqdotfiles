@@ -1,13 +1,25 @@
 ;;; .nixpkgs/.doom.d/gptel-tools/cljs.el -*- lexical-binding: t; -*-
 
+(defun gptelt-cljs--get-cljs-repl ()
+  "Get the CLJS REPL for the current workspace, safely.
+Resolves from a known CLJS project buffer to ensure correct sesman session."
+  (let ((cljs-buf (++workspace-get-random-cljs-buffer)))
+    (if cljs-buf
+        (with-current-buffer cljs-buf
+          (or (cider-current-repl 'cljs)
+              (error "ClojureScript nREPL is not connected")))
+      (error "No ClojureScript buffer found in workspace"))))
+
 (defun gptelt-clj-eval-cljs-in-clj-repl (clj-str)
-  (let ((random-cljs-buffer (++workspace-get-random-cljs-buffer)))
-    (with-current-buffer random-cljs-buffer
-      (let ((repl (cider-current-repl 'cljs)))
-        (cider-nrepl-sync-request:eval ":cljs/quit" repl nil)
-        (let ((rst (cider-nrepl-sync-request:eval clj-str repl nil)))
-          (cider-nrepl-sync-request:eval "(shadow.cljs.devtools.api/repl :app)" repl nil)
-          (nrepl-dict-get rst "status"))))))
+  "Evaluate CLJ-STR in the CLJ side of the CLJS REPL connection.
+WARNING: Not concurrency-safe — temporarily exits CLJS mode via :cljs/quit,
+evaluates CLJ code, then re-enters shadow-cljs REPL. Overlapping calls will
+corrupt the REPL state."
+  (let ((repl (gptelt-cljs--get-cljs-repl)))
+    (cider-nrepl-sync-request:eval ":cljs/quit" repl nil)
+    (let ((rst (cider-nrepl-sync-request:eval clj-str repl nil)))
+      (cider-nrepl-sync-request:eval "(shadow.cljs.devtools.api/repl :app)" repl nil)
+      (nrepl-dict-get rst "status"))))
 
 (comment
   (cider-nrepl-sync-request:eval "(js/console.log 'aaa)" jjj nil)
@@ -22,10 +34,15 @@
      (buffer-substring (point-min) (point-max)))))
 
 (defun gptelt-cljs-ensure-helper-loaded ()
-  (gptelt-cider--eval-buffer
-   'clj
-   (find-file-noselect"~/.nixpkgs/env/dev/cljs_helper.clj")
-   t t))
+  "Load cljs_helper.clj into the CLJ REPL via load-file.
+Uses gptelt-clj--get-clj-repl for workspace-safe REPL resolution."
+  (let* ((clj-repl (gptelt-clj--get-clj-repl))
+         (helper-path (expand-file-name "~/.nixpkgs/env/dev/cljs_helper.clj"))
+         (result (cider-nrepl-sync-request:eval
+                  (format "(load-file \"%s\")" helper-path)
+                  clj-repl "user")))
+    (when-let ((err (nrepl-dict-get result "err")))
+      (error "Failed to load cljs-helper: %s" err))))
 
 (comment
   (gptelt-cljs-ensure-helper-loaded))
@@ -159,6 +176,22 @@ Returns the source code string if available, or an error if not found."
   (gptelt-cljs-read-file-url (gptelt-cljs-get-ns-file-url"shadow.json"))
   (gptelt-cljs-read-file-url "foo"))
 
+;;; get shadow-cljs build status
+(defun gptelt-cljs-get-build-status (&optional build-id)
+  "Get the last build status, build logs, and error logs from shadow-cljs.
+If BUILD-ID is provided, returns status for that build only.
+Otherwise returns status for all active builds."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string
+   (if build-id
+       (format "(get-build-status %s)" build-id)
+     "(get-build-status)")
+   "cljs-helper" t))
+
+(comment
+  (gptelt-cljs-get-build-status)
+  (gptelt-cljs-get-build-status ":app"))
+
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
@@ -185,6 +218,17 @@ Returns the source code string if available, or an error if not found."
    :function #'gptelt-cljs-get-project-states
    :description "Get current shadow-cljs project states including active builds, runtimes, and build information, you MUST call this before calling other cljs tools."
    :args '()
+   :category "clojurescript"
+   :confirm nil
+   :include t)
+  (gptelt-make-tool
+   :name "get_shadow-cljs_build_status"
+   :function #'gptelt-cljs-get-build-status
+   :description "Get the last build status, build logs, and error logs of shadow-cljs. Returns compilation status (:completed/:failed/:compiling), duration, compiled file count, warnings (with file/line/message), and error reports. Useful for checking if a build succeeded or diagnosing compilation errors."
+   :args '((:name "build_id"
+            :type string
+            :optional t
+            :description "Optional build ID (e.g. ':app'). If omitted, returns status for all active builds."))
    :category "clojurescript"
    :confirm nil
    :include t)

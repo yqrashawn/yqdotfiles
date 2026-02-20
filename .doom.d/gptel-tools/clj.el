@@ -3,11 +3,34 @@
 (require 'cider)
 
 ;;; utilities
+
+(defun gptelt-clj--get-clj-repl ()
+  "Get the CLJ REPL for the current workspace, safely.
+Resolves from a known project buffer to ensure CIDER's sesman picks the correct
+session, regardless of what the current buffer is (could be CLJS, chat, scratch, etc.)."
+  (let* ((proj-root (++workspace-current-project-root))
+         (proj-buf (or (++workspace-get-random-clj-buffer)
+                       (let ((deps (expand-file-name "deps.edn" proj-root)))
+                         (when (file-exists-p deps)
+                           (find-file-noselect deps))))))
+    (if proj-buf
+        (with-current-buffer proj-buf
+          (or (cider-current-repl 'clj)
+              (error "Clojure nREPL is not connected")))
+      (or (cider-current-repl 'clj)
+          (error "Clojure nREPL is not connected")))))
+
 (defun gptelt-clj-ensure-helper-loaded ()
-  (gptelt-cider--eval-buffer
-   'clj
-   (find-file-noselect"~/.nixpkgs/env/dev/clj_helper.clj")
-   t t))
+  "Load clj_helper.clj into the CLJ REPL via load-file.
+Uses explicit CLJ REPL connection to avoid CIDER sesman session mismatch
+when the helper file is outside the current project."
+  (let* ((clj-repl (gptelt-clj--get-clj-repl))
+         (helper-path (expand-file-name "~/.nixpkgs/env/dev/clj_helper.clj"))
+         (result (cider-nrepl-sync-request:eval
+                  (format "(load-file \"%s\")" helper-path)
+                  clj-repl "user")))
+    (when-let ((err (nrepl-dict-get result "err")))
+      (error "Failed to load clj-helper: %s" err))))
 
 (defun gptelt-clojure--ensure-workspace (type &optional ns)
   (when (eq type 'cljs)
@@ -23,8 +46,16 @@
     (unless (++workspace-clj-repl-connected?)
       (error "Clojure nREPL is not connected"))
     (when ns
-      (unless (member ns (cider-sync-request:ns-list))
-        (error "Namespace '%s' is not available" ns)))))
+      ;; Use find-ns via direct eval on the CLJ REPL to check namespace.
+      ;; cider-sync-request:ns-list is unreliable for dynamically loaded
+      ;; namespaces (e.g. helper files outside the project).
+      (let* ((clj-repl (gptelt-clj--get-clj-repl))
+             (result (cider-nrepl-sync-request:eval
+                      (format "(some? (find-ns '%s))" ns)
+                      clj-repl "user"))
+             (value (nrepl-dict-get result "value")))
+        (unless (and value (string= value "true"))
+          (error "Namespace '%s' is not available" ns))))))
 
 (defun gptel-clojure--resolve-file-path (file-path)
   (let* ((proj-root (++workspace-current-project-root))
@@ -47,7 +78,8 @@
   "List all loaded namespaces in clj nREPL connection.
 Optional FILTER-REGEX filters the namespace list before returning."
   (gptelt-clojure--ensure-workspace 'clj)
-  (let ((ns-list (cider-sync-request:ns-list)))
+  (let ((ns-list (with-current-buffer (gptelt-clj--get-clj-repl)
+                   (cider-sync-request:ns-list))))
     (if filter-regex
         (seq-filter
          (lambda (ns)
@@ -67,7 +99,8 @@ Optional FILTER-REGEX filters the namespace list before returning."
   "List all classpath entries in clj nREPL connection.
 Optional FILTER-REGEX filters the classpath list before returning."
   (gptelt-clojure--ensure-workspace 'clj)
-  (let ((classpath-list (cider-classpath-entries)))
+  (let ((classpath-list (with-current-buffer (gptelt-clj--get-clj-repl)
+                          (cider-classpath-entries))))
     (if filter-regex
         (seq-filter
          (lambda (classpath)
@@ -83,11 +116,14 @@ Optional FILTER-REGEX filters the classpath list before returning."
 ;;; eval clj string
 (defun gptelt-eval--clj-string (clj-string &optional namespace no-confirm)
   "Evaluate CLJ-STRING in NAMESPACE (defaults to 'user') and return result or error.
-Checks if clj nREPL is connected and namespace is available before evaluation."
+Checks if clj nREPL is connected and namespace is available before evaluation.
+Explicitly uses the CLJ REPL connection so this works even when called from a CLJS buffer."
   (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
-  (let ((ns (or namespace "user"))
-        allow?)
-    (gptelt-clojure--ensure-workspace 'clj ns)
+
+  (let* ((clj-repl (gptelt-clj--get-clj-repl))
+         (ns (or namespace "user"))
+         (no-confirm t)
+         allow?)
 
     (with-temp-buffer
       (insert clj-string)
@@ -100,26 +136,25 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
         (unless no-confirm (quit-restore-window win 'bury))))
 
     (if allow?
-        ;; Evaluate the code
+        ;; Evaluate the code using explicit CLJ connection
         (condition-case err
             (let* ((result
-                    (cider-nrepl-sync-request:eval clj-string nil ns))
+                    (cider-nrepl-sync-request:eval clj-string clj-repl ns))
                    (out (nrepl-dict-get result "out"))
                    (value (nrepl-dict-get result "value"))
-                   (err-out (nrepl-dict-get result "err"))
-                   (repl-buf (cider-current-repl 'clj)))
-              (when (and repl-buf (buffer-live-p repl-buf))
-                (with-current-buffer repl-buf
+                   (err-out (nrepl-dict-get result "err")))
+              (when (buffer-live-p clj-repl)
+                (with-current-buffer clj-repl
                   (cider-repl--replace-input (format! "%s\n" clj-string))
                   (when (or out value err-out)
                     (cider-repl-reset-markers))
                   (when out
-                    (cider-repl-emit-stdout repl-buf out))
+                    (cider-repl-emit-stdout clj-repl out))
                   (when value
-                    (cider-repl-emit-result repl-buf value t t))
+                    (cider-repl-emit-result clj-repl value t t))
                   (when err-out
-                    (cider-repl-emit-stderr repl-buf err-out))
-                  (cider-repl-emit-prompt repl-buf)))
+                    (cider-repl-emit-stderr clj-repl err-out))
+                  (cider-repl-emit-prompt clj-repl)))
               (or value err-out
                   (error "Unexpected evaluation result")))
           (error (format "Error evaluating clj code: %s" (error-message-string err))))
@@ -194,7 +229,8 @@ Returns a list with: (file-path file-exists-p total-lines).
 Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clojure--ensure-workspace 'clj namespace)
   (condition-case err
-      (let* ((file-path (cider-sync-request:ns-path namespace t)))
+      (let* ((file-path (with-current-buffer (gptelt-clj--get-clj-repl)
+                          (cider-sync-request:ns-path namespace t))))
         (if (string= file-path "")
             (error "File for ns %s does not exist, this usually means this namespace is not loaded" namespace)
           file-path))
@@ -215,7 +251,8 @@ Ensures clj workspace and nREPL connection before proceeding."
       (let* ((qualified-symbol (if namespace
                                    (format "%s/%s" namespace symbol)
                                  symbol))
-             (info (cider-var-info qualified-symbol)))
+             (info (with-current-buffer (gptelt-clj--get-clj-repl)
+                     (cider-var-info qualified-symbol))))
         (if info
             (let ((doc (nrepl-dict-get info "doc"))
                   (name (nrepl-dict-get info "name"))
@@ -251,7 +288,7 @@ Ensures clj workspace and nREPL connection before proceeding."
                                  symbol))
              (source-code (cider-nrepl-sync-request:eval
                            (format "(with-out-str (clojure.repl/source %s))" qualified-symbol)
-                           nil "user")))
+                           (gptelt-clj--get-clj-repl) "user")))
         (if source-code
             (let ((code (nrepl-dict-get source-code "value")))
               (if (and code (not (string= code "nil")))

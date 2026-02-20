@@ -6,7 +6,8 @@
    [clojure.set :as set]
    [clojure.string :as string]
    [shadow.build.data]
-   [shadow.cljs.devtools.api :as sdapi]))
+   [shadow.cljs.devtools.api :as sdapi]
+   [shadow.cljs.devtools.server.runtime :as runtime]))
 
 (declare get-build-runtimes cljs-eval get-build-default-runtime-id
          resolve-runtime)
@@ -235,6 +236,65 @@
   (get-symbol-doc :ground -1 "defn" "cljs.user")
   (get-symbol-doc :ground -1 "init" "ground.core")
   (get-symbol-doc :ground -1 "initt" "ground.core"))
+
+;;; get build status
+(defn- format-warning [{:keys [resource-name msg line column warning]}]
+  (cond-> {:message msg}
+    resource-name (assoc :file resource-name)
+    line          (assoc :line line)
+    column        (assoc :column column)
+    warning       (assoc :type (name warning))))
+
+(defn get-build-status
+  "Get the last build status for a shadow-cljs build.
+   Returns status, duration, compiled count, warnings, and error report."
+  ([] (get-build-status nil))
+  ([build-id]
+   (let [bh (:build-history @runtime/instance-ref)]
+     (when-not bh
+       (throw (ex-info "shadow-cljs server not running" {})))
+     (let [all-statuses @(:state-ref bh)]
+       (if build-id
+         (let [build-kw (if (keyword? build-id) build-id (keyword build-id))
+               status (get all-statuses build-kw)]
+           (if-not status
+             (format "No build status for %s. Active builds: %s"
+                     build-kw (keys all-statuses))
+             (cond-> {:build-id build-kw
+                      :status   (:status status)}
+               (:duration status)
+               (assoc :duration-seconds (:duration status))
+               (:compiled status)
+               (assoc :compiled (:compiled status))
+               (:resources status)
+               (assoc :total-resources (:resources status))
+               (seq (:warnings status))
+               (assoc :warnings (mapv format-warning (:warnings status)))
+               (:report status)
+               (assoc :error-report (:report status))
+               (seq (:log status))
+               (assoc :build-log (:log status)))))
+         ;; Return all builds
+         (into {}
+               (map (fn [[bid status]]
+                      [bid (cond-> {:status (:status status)}
+                             (:duration status)
+                             (assoc :duration-seconds (:duration status))
+                             (:compiled status)
+                             (assoc :compiled (:compiled status))
+                             (:resources status)
+                             (assoc :total-resources (:resources status))
+                             (seq (:warnings status))
+                             (assoc :warnings (mapv format-warning (:warnings status)))
+                             (:report status)
+                             (assoc :error-report (:report status))
+                             (seq (:log status))
+                             (assoc :build-log (:log status)))]))
+               all-statuses))))))
+
+(comment
+  (get-build-status)
+  (get-build-status :app))
 
 (comment
   (-> (cljs-eval
