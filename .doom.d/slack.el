@@ -1,9 +1,14 @@
 ;;; slack.el -*- lexical-binding: t; -*-
 
+(defun +defer-start-slack ()
+  "Start slack after Emacs has been idle for 1 minute."
+  (run-with-idle-timer 60 nil #'slack-start))
+
 (use-package! slack
   :defer t
   :commands (slack-start slack-stop slack-select-rooms slack-select-unread-rooms
                          slack-channel-select slack-im-select slack-search-from-messages)
+  :hook (doom-first-buffer . +defer-start-slack)
   :init
   (setq
    slack-buffer-emojify t
