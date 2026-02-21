@@ -310,8 +310,8 @@ Merge buffer-local with global default files."
   (require 'gptel-context)
   (require 'pcre2el)
   (require 'gptel-gh)
-  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
-  (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user: ")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant: ")
   (setq! gptel-display-buffer-action
          `(display-buffer-same-window . nil))
   (comment

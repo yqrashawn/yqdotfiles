@@ -1235,3 +1235,31 @@ For each marked file A:
         (make-symbolic-link new-location file)))
     (revert-buffer)
     (message "Moved %d file(s) and created symlinks" (length files))))
+
+;;;###autoload
+(defun +kill-latest-screenshot-path (arg)
+  "Put the file path of the last modified file in ~/Dropbox/Screenshots/ to the kill ring.
+With prefix ARG 1 (C-u), insert path at point.
+With prefix ARG 2 (C-u 2), insert path wrapped in equal signs at point. "
+  (interactive "P")
+  (let* ((dir (expand-file-name "~/Dropbox/Screenshots/"))
+         (files (directory-files dir t "^[^.]"))
+         (files-with-mtime
+          (seq-map (lambda (f)
+                     (list f (float-time (file-attribute-modification-time (file-attributes f)))))
+                   (seq-filter #'file-regular-p files)))
+         (latest (car (seq-sort (lambda (a b) (> (cadr a) (cadr b))) files-with-mtime))))
+    (if latest
+        (let* ((path (car latest))
+               (numeric-arg (prefix-numeric-value arg)))
+          (cond
+           ((eq numeric-arg 1)
+            (insert path)
+            (message "Inserted: %s" path))
+           ((eq numeric-arg 2)
+            (insert (format "=%s=" path))
+            (message "Inserted: =%s=" path))
+           (t
+            (kill-new path)
+            (message "Killed: %s" path))))
+      (message "No screenshots found in %s" dir))))
