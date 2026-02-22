@@ -214,7 +214,11 @@
            :n "," 'yq-cljr-map))
   (:after todoist
           (:map todoist-mode-map
-           :g "," #'todoist-task-menu)))
+           :g "," #'todoist-task-menu))
+  (:after slack
+          (:map slack-message-buffer-mode-map
+           :n "yy" #'slack-message-copy-link
+           :n "yb" #'slack-buffer-copy-link)))
  (:after org
          (:map org-mode-map
           :g "C-c r" verb-command-map))
