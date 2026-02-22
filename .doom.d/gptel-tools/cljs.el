@@ -76,11 +76,11 @@ Uses gptelt-clj--get-clj-repl for workspace-safe REPL resolution."
 (defun gptel-cljs-eval-string (build-id runtime-id cljs-code &optional ns)
   (gptelt-cljs-ensure-helper-loaded)
   (gptelt-eval--clj-string
-   (format "(cljs-eval %s %d %s %s)" build-id runtime-id (prin1-to-string cljs-code) ns)
+   (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
    "cljs-helper" t))
 
 (comment
-  (gptel-cljs-eval-string :app 7 "js/location.href")
+  (gptel-cljs-eval-string :app 1 "js/location.href" 'debug-helper)
   (gptel-cljs-eval-string :ground 10 "js/document.body")
   (gptel-cljs-eval-string :ground 10 "js/location.hreff.f"))
 

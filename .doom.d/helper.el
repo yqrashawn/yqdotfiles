@@ -205,20 +205,27 @@ Each file is opened (if not already) with `find-file-noselect` relative to
 (defun ++workspace-cljs-repl-connected? ()
   (when (and (++workspace-cljs?)
              (fboundp 'cider-connected-p))
-    (let ((cljs-buf (++workspace-get-random-cljs-buffer)))
-      (when (buffer-live-p cljs-buf)
-        (with-current-buffer cljs-buf
-          (cider-connected-p))))))
+    (let* ((cljs-buf (++workspace-get-random-cljs-buffer))
+           (connected
+            (when (buffer-live-p cljs-buf)
+              (with-current-buffer cljs-buf
+                (cider-connected-p)))))
+      (unless connected
+        (message "Connect the CLJS REPL"))
+      connected)))
 
 (defun ++workspace-clj-repl-connected? ()
   (when (and (++workspace-clj?)
              (fboundp 'cider-connected-p))
-    (with-current-buffer
-        (-> (expand-file-name
-             "deps.edn"
-             (++workspace-current-project-root))
-            (find-file-noselect))
-      (cider-connected-p))))
+    (let ((connected (with-current-buffer
+                         (-> (expand-file-name
+                              "deps.edn"
+                              (++workspace-current-project-root))
+                             (find-file-noselect))
+                       (cider-connected-p))))
+      (unless connected
+        (message "Connect the CLJ REPL"))
+      connected)))
 
 (defun ++workspace-cider-connected-p ()
   (and (++workspace-clojure?)
@@ -277,7 +284,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
             "connected, you can evaluate clj file/buffer/code"
           "not connected, you can't evaluate clj"))
 
-       ((and (++workspace-clj?)
+       ((and (++workspace-cljs?)
              "shadow-cljs nREPL is %s.\n")
         (if (++workspace-cljs-repl-connected?)
             "connected, you can evaluate cljs file/buffer/code"
