@@ -10,18 +10,21 @@
    [shadow.cljs.devtools.server.runtime :as runtime]))
 
 (declare get-build-runtimes cljs-eval get-build-default-runtime-id
-         resolve-runtime)
+         resolve-runtime get-shadow-cljs-info-basic)
 
 ;;; utilities
 ;;;; checks
 (defn ensure-build [build-id]
-  (let [all-builds (into #{} (sdapi/get-build-ids))]
+  (let [all-builds (into #{} (sdapi/get-build-ids))
+        active-builds (sdapi/active-builds)]
     (when-not (all-builds build-id)
-      (throw (ex-info (format "build %s is not valid" build-id)
+      (throw (ex-info (format "build %s is not valid. valid-builds: %s, active-builds: %s"
+                              build-id (pr-str all-builds) (pr-str active-builds))
                       {:valid-builds all-builds})))
     (when-not (sdapi/worker-running? build-id)
-      (throw (ex-info (format "build %s is inactive" build-id)
-                      {:active-builds (sdapi/active-builds)})))))
+      (throw (ex-info (format "build %s is inactive. active-builds: %s, all-builds: %s"
+                              build-id (pr-str active-builds) (pr-str all-builds))
+                      {:active-builds active-builds})))))
 
 (defn runtime-active? [runtime]
   (get-in runtime [:connection-info :websocket]))
@@ -36,14 +39,18 @@
             deref)
         runtime (get runtimes runtime-id)]
     (when-not runtime
-      (throw (ex-info (format "runtime %s is not valid" runtime-id)
-                      {:build-id           build-id
+      (throw (ex-info (format "runtime %s is not valid for build %s. project-states: %s"
+                              runtime-id build-id
+                              (pr-str (get-shadow-cljs-info-basic)))
+                      {:build-id build-id
                        :default-runtime-id default-runtime-id
                        :valid-runtimes
                        (->> runtimes vals (into #{}))})))
     (when-not (runtime-active? runtime)
-      (throw (ex-info (format "runtime %s is inactive" runtime-id)
-                      {:build-id           build-id
+      (throw (ex-info (format "runtime %s is inactive for build %s. project-states: %s"
+                              runtime-id build-id
+                              (pr-str (get-shadow-cljs-info-basic)))
+                      {:build-id build-id
                        :default-runtime-id default-runtime-id
                        :active-runtimes
                        (->> runtimes
@@ -72,8 +79,8 @@
 (defn format-runtime [{:keys [build-id client-id] :as runtime}]
   (-> runtime
       (set/rename-keys {:client-id :runtime-id
-                        :since     :alive-since
-                        :host      :host-type})
+                        :since :alive-since
+                        :host :host-type})
       (select-keys #{:runtime-id :dom :connection-info
                      :alive-since :build-id :user-agent :host-type})
       (assoc :window.location.href
@@ -121,7 +128,7 @@
          (sdapi/cljs-eval
           build-id code
           {:runtime-id runtime-id
-           :ns         (symbol (or ns "cljs.user"))})]
+           :ns (symbol (or ns "cljs.user"))})]
      (-> rst
          (assoc :clj-read-string-results
                 (mapv
@@ -135,19 +142,54 @@
   (cljs-eval :ground 10 "js/location.href" nil))
 
 ;;; get shadow-cljs info
+(defn- format-runtime-basic
+  "Format runtime without cljs-eval calls (avoids circular dependency with ensure-runtime)."
+  [runtime]
+  (-> runtime
+      (set/rename-keys {:client-id :runtime-id
+                        :since :alive-since
+                        :host :host-type})
+      (select-keys #{:runtime-id :dom :connection-info
+                     :alive-since :build-id :user-agent :host-type})))
+
+(defn- format-build-basic
+  "Format build without cljs-eval calls (avoids circular dependency with ensure-runtime)."
+  [build-id]
+  (let [build-state (get-build-state build-id)]
+    (-> build-state
+        (select-keys #{:autobuild :runtimes :build-id})
+        (set/rename-keys {:autobuild :auto-build-on-file-change})
+        (update :runtimes
+                #(->> % vals (mapv format-runtime-basic))))))
+
+(defn get-shadow-cljs-info-basic
+  "Like get-shadow-cljs-info but without cljs-eval calls.
+  Safe to call from ensure-runtime without circular dependency."
+  []
+  (let [active-builds (sdapi/active-builds)]
+    {:builds (->> active-builds
+                  (mapv format-build-basic)
+                  (mapv #(vector (keyword (:build-id %)) %))
+                  (into {}))
+     :active-builds active-builds
+     :inactive-builds (->> (sdapi/get-build-ids)
+                           (remove active-builds)
+                           (remove #(= :npm %))
+                           (into #{}))}))
+
 (defn get-shadow-cljs-info
   "get info llm cares about of the whole shadow-cljs runtime"
   ([] (get-shadow-cljs-info false))
   ([json?]
    (let [active-builds (sdapi/active-builds)
          info
-         {:builds          (->> active-builds
-                                (mapv format-build)
-                                (mapv #(vector
-                                        (keyword (:build-id %))
-                                        %))
-                                (into {}))
-          :active-builds   active-builds
+         {:builds (->> active-builds
+                       (mapv format-build)
+                       (mapv #(vector
+                               (keyword (:build-id %))
+                               %))
+                       (into {}))
+          :active-builds active-builds
           :inactive-builds (->> (sdapi/get-build-ids)
                                 (remove active-builds)
                                 (remove #(= :npm %))
@@ -241,9 +283,9 @@
 (defn- format-warning [{:keys [resource-name msg line column warning]}]
   (cond-> {:message msg}
     resource-name (assoc :file resource-name)
-    line          (assoc :line line)
-    column        (assoc :column column)
-    warning       (assoc :type (name warning))))
+    line (assoc :line line)
+    column (assoc :column column)
+    warning (assoc :type (name warning))))
 
 (defn get-build-status
   "Get the last build status for a shadow-cljs build.
@@ -261,7 +303,7 @@
              (format "No build status for %s. Active builds: %s"
                      build-kw (keys all-statuses))
              (cond-> {:build-id build-kw
-                      :status   (:status status)}
+                      :status (:status status)}
                (:duration status)
                (assoc :duration-seconds (:duration status))
                (:compiled status)

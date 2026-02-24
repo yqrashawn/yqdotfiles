@@ -436,7 +436,9 @@ creates a new one. Don't unnecessarily bother the user."
 :cljs [cljs.test :as t :include-macros])"))
 
 (defvar +local-cljr-magic-require-namespaces '())
+(defvar +cider-project-reload-exec-cmd-clj nil)
 (make-variable-buffer-local '+local-cljr-magic-require-namespaces)
+(make-variable-buffer-local '+cider-project-reload-exec-cmd-clj)
 (put '+local-cljr-magic-require-namespaces 'safe-local-variable #'listp)
 (put '+cider-project-reload-exec-cmd-clj 'safe-local-variable #'stringp)
 
