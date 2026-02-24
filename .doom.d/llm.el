@@ -1230,9 +1230,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                   "emacs-mcp-stdio.sh")))
      ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
      
-     ("qmd" .
-      (:command "npx"
-       :args ("-y" "@tobilu/qmd" "mcp")))
+     ;; ("qmd" .
+     ;;  (:command "npx"
+     ;;   :args ("-y" "@tobilu/qmd" "mcp")))
      
      ;; ("daisyui-blueprint" .
      ;;   (:command "npx"
@@ -1265,12 +1265,12 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;; ("fetch" .
      ;;   (:command "uvx" :args ("mcp-server-fetch")))
      
-     ("dash-api" .
-      (:command "uvx"
-       :args
-       ("--from"
-        "git+https://github.com/Kapeli/dash-mcp-server.git"
-        "dash-mcp-server")))
+     ;; ("dash-api" .
+     ;;  (:command "uvx"
+     ;;   :args
+     ;;   ("--from"
+     ;;    "git+https://github.com/Kapeli/dash-mcp-server.git"
+     ;;    "dash-mcp-server")))
 
      ;; ("ramcp-macmini" .
      ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
