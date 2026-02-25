@@ -486,6 +486,7 @@
   :recipe (:host github :repo "stevemolitor/monet"))
 (package! slack
   :recipe (:host github :repo "emacs-slack/emacs-slack"))
+(package! compile-angel)
 
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
