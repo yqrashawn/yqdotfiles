@@ -68,6 +68,13 @@
         t
       nil)))
 
+(add-hook!
+ '(clojure-mode-hook
+   clojurescript-mode-hook
+   clojurec-mode-hook
+   clojure-ts-mode-hook)
+ 'cider-mode)
+
 (use-package! lispy
   :defer t
   :diminish lispy " ʪ"
