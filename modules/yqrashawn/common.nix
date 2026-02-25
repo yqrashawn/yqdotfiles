@@ -69,6 +69,7 @@ in
     systemPackages =
       with pkgs;
       [
+        git-filter-repo
         eask-cli
         # firefox-devedition
         lzip
