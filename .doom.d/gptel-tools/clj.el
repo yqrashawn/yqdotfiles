@@ -119,6 +119,7 @@ Optional FILTER-REGEX filters the classpath list before returning."
 Checks if clj nREPL is connected and namespace is available before evaluation.
 Explicitly uses the CLJ REPL connection so this works even when called from a CLJS buffer."
   (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
+  (gptelt-clj-ensure-helper-loaded)
 
   (let* ((clj-repl (gptelt-clj--get-clj-repl))
          (ns (or namespace "user"))
@@ -370,6 +371,7 @@ Ensures the file exists, is in the current project, loads it into buffer,
 shows buffer if not visible, asks for user permission, and evaluates it."
   (gptelt-clojure--ensure-workspace 'clj)
   (gptel-clojure--ensure-current-project-file file-path)
+  (gptelt-clj-ensure-helper-loaded)
   (let* ((abs-path (gptel-clojure--resolve-file-path file-path))
          (buffer (find-file-noselect abs-path)))
     (gptelt-clj-eval-buffer buffer)))

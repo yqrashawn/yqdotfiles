@@ -3,6 +3,8 @@
    [clojure.java.io :as io]
    [clojure.string :as string]))
 
+(try (require 'shadow.cljs.devtools.api) (catch Exception _))
+
 (defn read-file-url
   ([file-url] (read-file-url file-url {}))
   ([file-url {:keys [limit offset] :or {limit 2000 offset 0}}]
