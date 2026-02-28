@@ -325,7 +325,6 @@ the buffer from a thread context."
 ;; tool is available before Claude Code tries to use it.
 
 (gptel-claude-code-mcp-register-tools)
-(add-hook 'gptel-mode-hook 'gptel-claude-code-mcp-register-tools)
 
 (provide 'gptel-claude-code-mcp)
 ;;; gptel-claude-code-mcp.el ends here

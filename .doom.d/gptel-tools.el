@@ -35,6 +35,8 @@
     (mcp-server-lib-http-stop)
     (mcp-server-lib-stop))
   (load! "gptel-tools.el")
+  (when (fboundp 'gptel-claude-code-mcp-register-tools)
+    (gptel-claude-code-mcp-register-tools))
   (mcp-server-lib-start)
   (mcp-server-lib-http-start)
   (mcp-hub--start-server
