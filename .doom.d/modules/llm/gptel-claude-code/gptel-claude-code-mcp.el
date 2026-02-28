@@ -6,12 +6,16 @@
 ;;; Commentary:
 
 ;; Provides:
-;; 1. Session-aware MCP HTTP routing so Claude Code's MCP tool calls
-;;    are routed to the correct gptel buffer.
+;; 1. Session map (session-id → buffer) and session-cwd lookup.
 ;; 2. A permission_prompt MCP tool that shows a popup buffer when
 ;;    Claude Code asks the user a question.
 ;; 3. MCP config JSON builder for --mcp-config and --permission-prompt-tool
 ;;    CLI args.
+;; 4. Session-aware default-directory function for MCP tool calls.
+;;
+;; The session-scoped HTTP endpoint (/mcp/v1/sessions/{id}/messages) lives
+;; in mcp-server-lib-http.el.  This module provides the session-id → cwd
+;; resolution via `mcp-server-lib-default-directory-function'.
 
 ;;; Code:
 
@@ -19,21 +23,13 @@
 (require 'json)
 (require 'mcp-server-lib)
 (require 'mcp-server-lib-http)
-(require 'simple-httpd)
 
 ;; Forward declarations
-(declare-function mcp-server-lib-http--log "mcp-server-lib-http")
-(declare-function mcp-server-lib-http--send-error "mcp-server-lib-http")
-(declare-function mcp-server-lib-http--send-response "mcp-server-lib-http")
-(declare-function mcp-server-lib-process-jsonrpc "mcp-server-lib")
 (declare-function mcp-server-lib-register-tool "mcp-server-lib")
 (defvar json-encoding-pretty-print)
 
 
-;;; ---- Session Routing ----
-
-(defvar gptel-claude-code--current-session nil
-  "Dynamic variable holding the current MCP session ID during tool dispatch.")
+;;; ---- Session Map ----
 
 (defvar gptel-claude-code--session-map (make-hash-table :test 'equal)
   "Hash-table mapping session-id to gptel buffer.")
@@ -47,48 +43,13 @@
   "Return the gptel buffer for SESSION-ID, or nil."
   (gethash session-id gptel-claude-code--session-map))
 
-;;; Session-aware HTTP route
-
-(defun httpd/mcp/v1/sessions (proc uri-path _uri-query request)
-  "Handle MCP requests with session routing.
-Matches /mcp/v1/sessions/{session-id}/messages.
-Extracts the session-id from URI-PATH, binds it dynamically,
-then delegates to the standard MCP JSON-RPC processor."
-  ;; parts: ("" "mcp" "v1" "sessions" "SESSION-ID" "messages")
-  (let* ((parts (split-string uri-path "/"))
-         (session-id (nth 4 parts)))
-    (mcp-server-lib-http--log "Session MCP request for session: %s" session-id)
-    (let* ((method (caar request))
-           (content (cadr (assoc "Content" request)))
-           (body (or content "")))
-      (mcp-server-lib-http--log "Session MCP request for \nsession: %s\nbody:\n %s" session-id body)
-      (cond
-       ((string= method "OPTIONS")
-        (with-temp-buffer
-          (httpd-send-header proc "text/plain" 204
-                             :Access-Control-Allow-Origin "*")))
-       ((string= method "POST")
-        (if (string-empty-p body)
-            (mcp-server-lib-http--send-error proc 400 "Empty request body")
-          ;; Schedule on main thread — same reason as mcp-server-lib-http.el:
-          ;; async tools use `recursive-edit' which needs the main thread.
-          (let ((sid session-id))
-            (run-at-time
-             0 nil
-             (lambda ()
-               (let ((gptel-claude-code--current-session sid))
-                 (condition-case err
-                     (let ((response (mcp-server-lib-process-jsonrpc body)))
-                       (if response
-                           (mcp-server-lib-http--send-response proc response)
-                         (with-temp-buffer
-                           (httpd-send-header proc "text/plain" 204
-                                              :Access-Control-Allow-Origin "*"))))
-                   (error
-                    (mcp-server-lib-http--send-error
-                     proc 500 (format "Internal error: %s"
-                                      (error-message-string err)))))))))))
-       (t (mcp-server-lib-http--send-error proc 405 "Method not allowed"))))))
+(defun gptel-claude-code--session-cwd (session-id)
+  "Return the working directory for SESSION-ID, or nil.
+Looks up the buffer associated with SESSION-ID and returns
+its buffer-local `gptel-claude-code--team-cwd' value."
+  (when-let* ((buf (gptel-claude-code--session-buffer session-id)))
+    (when (buffer-live-p buf)
+      (buffer-local-value 'gptel-claude-code--team-cwd buf))))
 
 ;;; ---- MCP Config JSON Builder ----
 
@@ -324,12 +285,26 @@ the buffer from a thread context."
                  :description "Suggested permission options"
                  :optional t))))
 
+;;; ---- Session-aware default-directory ----
+
+(defun gptel-claude-code--mcp-default-directory (session-id)
+  "Return the working directory for SESSION-ID, or nil.
+Intended as the value of `mcp-server-lib-default-directory-function'.
+SESSION-ID is passed by `mcp-server-lib--handle-tools-call-apply'
+from `mcp-server-lib--request-session-id'."
+  (when session-id
+    (gptel-claude-code--session-cwd session-id)))
+
 ;;; ---- Auto-register on load ----
 
 ;; Register MCP tools when this module is loaded, so the permission_prompt
 ;; tool is available before Claude Code tries to use it.
 
 (gptel-claude-code-mcp-register-tools)
+
+;; Example: Set session-aware default-directory for MCP tool calls
+;; (setq mcp-server-lib-default-directory-function
+;;       #'gptel-claude-code--mcp-default-directory)
 
 (provide 'gptel-claude-code-mcp)
 ;;; gptel-claude-code-mcp.el ends here

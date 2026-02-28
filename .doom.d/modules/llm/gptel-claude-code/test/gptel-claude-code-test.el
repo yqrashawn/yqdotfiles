@@ -177,6 +177,73 @@
       (let ((tool-entry (car (plist-get info :claude-code-tools))))
         (should (plist-get tool-entry :input))))))
 
+(ert-deftest gptel-claude-code-test-parallel-tool-result-not-nested ()
+  "Test that tool results arriving during an open tool_use block are queued.
+When Claude Code calls multiple tools in parallel, tool 1's result can
+arrive while tool 2 is still streaming.  The result must NOT be inserted
+inside tool 2's #+begin_tool/#+end_tool block."
+  (let ((info (list :buffer nil
+                    :claude-code-current-block "tool_use"
+                    :claude-code-tools (list (list :id "tool-2" :name "Grep")
+                                             (list :id "tool-1" :name "Grep")))))
+    ;; Simulate tool 1 result arriving while tool 2 block is open
+    (let ((result (gptel-claude-code--handle-user
+                   (list :type "user"
+                         :message
+                         (list :content
+                               (vector
+                                (list :type "tool_result"
+                                      :tool_use_id "tool-1"
+                                      :content "file.el:10:match"))))
+                   info)))
+      ;; Should return nil (queued, not inserted immediately)
+      (should (null result))
+      ;; Should be queued in :claude-code-pending-results
+      (should (stringp (plist-get info :claude-code-pending-results)))
+      (should (string-match-p "begin_result Grep :id tool-1"
+                              (plist-get info :claude-code-pending-results)))
+      (should (string-match-p "file\\.el:10:match"
+                              (plist-get info :claude-code-pending-results))))))
+
+(ert-deftest gptel-claude-code-test-parallel-tool-result-flushed-on-block-stop ()
+  "Test that queued tool results are flushed when a tool_use block closes."
+  (let* ((pending-result "\n#+begin_result Grep :id tool-1\nfile.el:10:match\n#+end_result\n")
+         (info (list :buffer nil
+                     :claude-code-current-block "tool_use"
+                     :partial_json (list "ern\": \"foo\"}" "{\"patt")
+                     :claude-code-tools (list (list :id "tool-2" :name "Grep"))
+                     :claude-code-pending-results pending-result)))
+    (let ((result (gptel-claude-code--handle-stream-event
+                   (list :type "stream_event"
+                         :event (list :type "content_block_stop"))
+                   info)))
+      ;; Should include both the tool footer AND the flushed pending result
+      (should (stringp result))
+      (should (string-match-p "end_tool" result))
+      (should (string-match-p "begin_result Grep :id tool-1" result))
+      ;; Pending results should be cleared
+      (should (null (plist-get info :claude-code-pending-results))))))
+
+(ert-deftest gptel-claude-code-test-tool-result-not-queued-when-no-open-block ()
+  "Test that tool results are returned immediately when no tool block is open."
+  (let ((info (list :buffer nil
+                    :claude-code-current-block nil
+                    :claude-code-tools (list (list :id "tool-1" :name "Read")))))
+    (let ((result (gptel-claude-code--handle-user
+                   (list :type "user"
+                         :message
+                         (list :content
+                               (vector
+                                (list :type "tool_result"
+                                      :tool_use_id "tool-1"
+                                      :content "file contents"))))
+                   info)))
+      ;; Should return the result immediately (not queued)
+      (should (stringp result))
+      (should (string-match-p "begin_result Read :id tool-1" result))
+      ;; No pending results
+      (should (null (plist-get info :claude-code-pending-results))))))
+
 (ert-deftest gptel-claude-code-test-content-block-stop-thinking ()
   "Test content_block_stop for thinking block marks reasoning done."
   (let ((info (list :buffer nil
@@ -833,6 +900,78 @@ build-args must use `with-current-buffer' to access chat buffer state."
     (gptel-claude-code--register-session nil (current-buffer))
     (should (= 0 (hash-table-count gptel-claude-code--session-map)))))
 
+(ert-deftest gptel-claude-code-test-session-cwd ()
+  "Test querying cwd by session ID."
+  (let ((gptel-claude-code--session-map (make-hash-table :test 'equal))
+        (buf (generate-new-buffer " *test-session-cwd*")))
+    (unwind-protect
+        (progn
+          ;; Set cwd in the buffer
+          (with-current-buffer buf
+            (setq-local gptel-claude-code--team-cwd "/tmp/test-project"))
+          ;; Register session
+          (gptel-claude-code--register-session "sess-cwd-001" buf)
+          ;; Should return the cwd
+          (should (equal (gptel-claude-code--session-cwd "sess-cwd-001")
+                         "/tmp/test-project"))
+          ;; Unknown session should return nil
+          (should (null (gptel-claude-code--session-cwd "unknown"))))
+      (kill-buffer buf))))
+
+(ert-deftest gptel-claude-code-test-session-cwd-nil ()
+  "Test session-cwd returns nil when cwd not set."
+  (let ((gptel-claude-code--session-map (make-hash-table :test 'equal))
+        (buf (generate-new-buffer " *test-session-cwd-nil*")))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--register-session "sess-cwd-002" buf)
+          ;; cwd not set, should return nil
+          (should (null (gptel-claude-code--session-cwd "sess-cwd-002"))))
+      (kill-buffer buf))))
+
+(ert-deftest gptel-claude-code-test-session-cwd-dead-buffer ()
+  "Test session-cwd returns nil when buffer is dead."
+  (let ((gptel-claude-code--session-map (make-hash-table :test 'equal))
+        (buf (generate-new-buffer " *test-session-cwd-dead*")))
+    (with-current-buffer buf
+      (setq-local gptel-claude-code--team-cwd "/tmp/dead"))
+    (gptel-claude-code--register-session "sess-cwd-003" buf)
+    (kill-buffer buf)
+    ;; Buffer is dead, should return nil
+    (should (null (gptel-claude-code--session-cwd "sess-cwd-003")))))
+
+;;; ============================================================
+;;; MCP default-directory function tests
+;;; ============================================================
+
+(ert-deftest gptel-claude-code-test-mcp-default-directory ()
+  "Test mcp-default-directory returns session cwd for given session-id."
+  (let ((gptel-claude-code--session-map (make-hash-table :test 'equal))
+        (buf (generate-new-buffer " *test-mcp-dir*")))
+    (unwind-protect
+        (progn
+          (with-current-buffer buf
+            (setq-local gptel-claude-code--team-cwd "/tmp/project-a"))
+          (gptel-claude-code--register-session "sess-dir-001" buf)
+          (should (equal "/tmp/project-a"
+                         (gptel-claude-code--mcp-default-directory "sess-dir-001"))))
+      (when (buffer-live-p buf) (kill-buffer buf)))))
+
+(ert-deftest gptel-claude-code-test-mcp-default-directory-no-session ()
+  "Test mcp-default-directory returns nil when session-id is nil."
+  (should (null (gptel-claude-code--mcp-default-directory nil))))
+
+(ert-deftest gptel-claude-code-test-mcp-default-directory-no-cwd ()
+  "Test mcp-default-directory returns nil when session has no cwd."
+  (let ((gptel-claude-code--session-map (make-hash-table :test 'equal))
+        (buf (generate-new-buffer " *test-mcp-dir-nocwd*")))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--register-session "sess-dir-002" buf)
+          ;; No cwd set on buffer
+          (should (null (gptel-claude-code--mcp-default-directory "sess-dir-002"))))
+      (when (buffer-live-p buf) (kill-buffer buf)))))
+
 ;;; ============================================================
 ;;; Effective session-id tests
 ;;; ============================================================
@@ -1353,6 +1492,90 @@ persisting forever."
     (should (= 0 (length gptel--request-alist)))
     (should-not (buffer-live-p proc-buf))
     (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+;;; ============================================================
+;;; Block folding tests
+;;; ============================================================
+
+(ert-deftest gptel-claude-code-test-fold-tool-block ()
+  "Test that fold-blocks-in-region folds #+begin_tool blocks."
+  (with-temp-buffer
+    (org-mode)
+    (insert "#+begin_tool Bash\n$ ls -la\n#+end_tool\n")
+    (let* ((marker (copy-marker (point)))
+           (info (list :buffer (current-buffer)
+                       :tracking-marker marker)))
+      (gptel-claude-code--fold-blocks-in-region info (point-min))
+      ;; After folding, the block content should be invisible
+      (goto-char (point-min))
+      (forward-line 1)
+      (should (invisible-p (point))))))
+
+(ert-deftest gptel-claude-code-test-fold-result-block ()
+  "Test that fold-blocks-in-region folds #+begin_result blocks."
+  (with-temp-buffer
+    (org-mode)
+    (insert "#+begin_result Read\nfile contents here\n#+end_result\n")
+    (let* ((marker (copy-marker (point)))
+           (info (list :buffer (current-buffer)
+                       :tracking-marker marker)))
+      (gptel-claude-code--fold-blocks-in-region info (point-min))
+      (goto-char (point-min))
+      (forward-line 1)
+      (should (invisible-p (point))))))
+
+(ert-deftest gptel-claude-code-test-fold-multiple-blocks ()
+  "Test that fold-blocks-in-region folds multiple blocks."
+  (with-temp-buffer
+    (org-mode)
+    (insert "#+begin_tool Bash\n$ ls\n#+end_tool\n")
+    (insert "#+begin_result Bash\noutput\n#+end_result\n")
+    (let* ((marker (copy-marker (point)))
+           (info (list :buffer (current-buffer)
+                       :tracking-marker marker)))
+      (gptel-claude-code--fold-blocks-in-region info (point-min))
+      ;; Both blocks should be folded
+      (goto-char (point-min))
+      (forward-line 1)
+      (should (invisible-p (point)))
+      (goto-char (point-min))
+      (search-forward "#+begin_result")
+      (forward-line 1)
+      (should (invisible-p (point))))))
+
+(ert-deftest gptel-claude-code-test-fold-respects-start-boundary ()
+  "Test that fold only affects blocks after START position."
+  (with-temp-buffer
+    (org-mode)
+    (insert "#+begin_tool Read\nold block\n#+end_tool\n")
+    (let ((mid (point)))
+      (insert "#+begin_tool Bash\nnew block\n#+end_tool\n")
+      (let* ((marker (copy-marker (point)))
+             (info (list :buffer (current-buffer)
+                         :tracking-marker marker)))
+        (gptel-claude-code--fold-blocks-in-region info mid)
+        ;; First block should NOT be folded (before start)
+        (goto-char (point-min))
+        (forward-line 1)
+        (should-not (invisible-p (point)))
+        ;; Second block SHOULD be folded
+        (goto-char mid)
+        (search-forward "#+begin_tool")
+        (forward-line 1)
+        (should (invisible-p (point)))))))
+
+(ert-deftest gptel-claude-code-test-fold-skips-non-org ()
+  "Test that fold is a no-op in non-org-mode buffers."
+  (with-temp-buffer
+    (insert "#+begin_tool Bash\n$ ls\n#+end_tool\n")
+    (let* ((marker (copy-marker (point)))
+           (info (list :buffer (current-buffer)
+                       :tracking-marker marker)))
+      (gptel-claude-code--fold-blocks-in-region info (point-min))
+      ;; Should not error and content should remain visible
+      (goto-char (point-min))
+      (forward-line 1)
+      (should-not (invisible-p (point))))))
 
 (provide 'gptel-claude-code-test)
 ;;; gptel-claude-code-test.el ends here

@@ -23,8 +23,9 @@ metadata from the previous response."
        (list
         :metadata
         (append
-         (list :workspace_root (or (++workspace-current-project-root) default-directory)
-               :working_dir default-directory)
+         (list
+          :workspace_root (or (++workspace-current-project-root) default-directory)
+          :working_dir default-directory)
          (when session-id
            (list :session_id session-id))
          (when-let ((root (++workspace-current-project-root)))

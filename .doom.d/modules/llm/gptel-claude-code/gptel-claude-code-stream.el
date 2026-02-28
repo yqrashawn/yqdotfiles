@@ -178,6 +178,11 @@ Dispatches on event type to extract text deltas and reasoning."
              (plist-put info :reasoning-block t))))
 
          (plist-put info :claude-code-current-block nil)
+         ;; Flush any pending tool results that were queued while
+         ;; a tool_use block was open (parallel tool call interleaving).
+         (when-let* ((pending (plist-get info :claude-code-pending-results)))
+           (setq display-str (concat (or display-str "") pending))
+           (plist-put info :claude-code-pending-results nil))
          display-str))
 
       ;; message_start, message_delta, message_stop: ignore
@@ -243,10 +248,20 @@ Also detects teammate spawn events from toolUseResult fields."
         (when result-parts
           (setq tool-str (apply #'concat (nreverse result-parts))))))
     ;; Combine spawn notification with tool results
-    (cond
-     ((and spawn-str tool-str) (concat spawn-str tool-str))
-     (spawn-str spawn-str)
-     (tool-str tool-str))))
+    (let ((combined (cond
+                     ((and spawn-str tool-str) (concat spawn-str tool-str))
+                     (spawn-str spawn-str)
+                     (tool-str tool-str))))
+      (if (and combined
+               (equal (plist-get info :claude-code-current-block) "tool_use"))
+          ;; A tool_use block is currently being streamed.  Queue this result
+          ;; so it gets inserted AFTER the #+end_tool line, not inside it.
+          (progn
+            (plist-put info :claude-code-pending-results
+                       (concat (or (plist-get info :claude-code-pending-results) "")
+                               combined))
+            nil)
+        combined))))
 
 (defun gptel-claude-code--handle-result (msg info)
   "Handle a result-type message MSG with request INFO.
@@ -310,6 +325,29 @@ that the sentinel can properly advance the FSM to ERRS."
     ("result"       . gptel-claude-code--handle-result))
   "Alist mapping Claude Code message type strings to handler functions.
 Each handler takes (MSG INFO) and returns a string to display, or nil.")
+
+;;; Block folding
+
+(defun gptel-claude-code--fold-blocks-in-region (info start)
+  "Fold tool/result org blocks inserted after buffer position START.
+INFO is the request info plist containing :buffer and :tracking-marker.
+Searches for #+end_tool and #+end_result lines between START and
+the tracking marker, folding each with `org-cycle'."
+  (when-let* ((buf (plist-get info :buffer))
+              (tracking-marker (plist-get info :tracking-marker)))
+    (when (buffer-live-p buf)
+      (with-current-buffer buf
+        (when (derived-mode-p 'org-mode)
+          (ignore-errors
+            (save-excursion
+              (goto-char start)
+              (while (re-search-forward
+                      "^#\\+end_\\(tool\\|result\\)"
+                      tracking-marker t)
+                (let ((resume-pos (point)))
+                  (forward-line 0)
+                  (org-cycle)
+                  (goto-char resume-pos))))))))))
 
 ;;; Stream filter
 
@@ -376,7 +414,15 @@ deltas are forwarded to the gptel callback for display."
                               (plist-put proc-info :partial_text
                                          (cons response
                                                (plist-get proc-info :partial_text)))
-                              (funcall callback response proc-info)))))
+                              (let ((pre-pos
+                                     (if-let* ((tm (plist-get proc-info :tracking-marker)))
+                                         (marker-position tm)
+                                       (marker-position (plist-get proc-info :position)))))
+                                (funcall callback response proc-info)
+                                ;; Auto-fold completed tool/result blocks
+                                (when (string-match-p "#\\+end_\\(tool\\|result\\)" response)
+                                  (gptel-claude-code--fold-blocks-in-region
+                                   proc-info pre-pos)))))))
                     (error
                      (when (eq gptel-log-level 'debug)
                        (gptel--log (format "Claude Code parse error: %S\nLine: %s"

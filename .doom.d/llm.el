@@ -511,10 +511,10 @@ Merge buffer-local with global default files."
   (defun +gptel-toggle-debug ()
     (interactive)
     (if gptel-log-level
-        (setq! gptel-log-level 'debug
-               mcp-server-lib-http-log-requests t)
-      (setq! gptel-log-level nil
-             mcp-server-lib-http-log-requests nil)))
+        (setq! gptel-log-level nil
+               mcp-server-lib-http-log-requests nil)
+      (setq! gptel-log-level 'debug
+             mcp-server-lib-http-log-requests t)))
   (setq! gptel-log-level 'nil)
 
   (defadvice! +gptel-mcp--activate-tools (_)
@@ -840,6 +840,15 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                    "emacs-mcp-stdio.sh"))
     (mcp-server-lib-install))
   :config
+  (setq! mcp-server-lib-default-directory-function
+         (defun +mcp-server-lib-default-directory-function (session-id)
+           (or
+            mcp-server-lib--request-cwd
+            (when (fboundp 'gptel-claude-code--mcp-default-directory)
+              (gptel-claude-code--mcp-default-directory session-id))
+            (when (fboundp '++workspace-current-project-root)
+              (++workspace-current-project-root)))))
+
   ;; (mcp-server-lib-http-stop)
   (comment
     (mcp-server-lib-stop))
