@@ -95,17 +95,17 @@ Dispatches on event type to extract text deltas and reasoning."
          (plist-put info :claude-code-current-block block-type)
          (pcase block-type
            ("tool_use"
-            (let ((name (plist-get cblock :name)))
+            (let ((name (plist-get cblock :name))
+                  (id (plist-get cblock :id)))
               ;; Push new tool-use entry onto :claude-code-tools list
               ;; NOTE: We use :claude-code-tools (not :tool-use) to avoid
               ;; triggering gptel's built-in tool execution FSM.  Claude Code
               ;; handles all tool execution internally.
               (plist-put info :claude-code-tools
-                         (cons (list :id (plist-get cblock :id)
-                                     :name name)
+                         (cons (list :id id :name name)
                                (plist-get info :claude-code-tools)))
-              ;; Return tool header for display
-              (gptel-claude-code--format-tool-use-header name)))
+              ;; Return tool header for display (include tool_use_id)
+              (gptel-claude-code--format-tool-use-header name id)))
            ("thinking"
             ;; Mark reasoning block as active; initial thinking text
             ;; (if any) will arrive via thinking_delta events
@@ -238,7 +238,7 @@ Also detects teammate spawn events from toolUseResult fields."
                                   result-content "\n"))
                                 (t ""))))
                          (push (gptel-claude-code--format-tool-result
-                                name result-text is-error)
+                                name result-text is-error tool-use-id)
                                result-parts)))))
         (when result-parts
           (setq tool-str (apply #'concat (nreverse result-parts))))))
@@ -266,7 +266,7 @@ that the sentinel can properly advance the FSM to ERRS."
   (when (eq (plist-get msg :is_error) t)
     (let* ((errors (plist-get msg :errors))
            (error-msg (if (and errors (> (length errors) 0))
-                          (mapconcat #'identity (append errors nil) "; ")
+                          (mapconcat #'identity (append errors nil) "\n")
                         (or (plist-get msg :subtype) "Unknown error"))))
       (plist-put info :error error-msg)
       ;; Set :status for gptel--handle-error which uses it for display
@@ -280,7 +280,26 @@ that the sentinel can properly advance the FSM to ERRS."
         (when-let* ((process (plist-get info :claude-code-process))
                     (entry (alist-get process gptel--request-alist))
                     (fsm (car entry)))
-          (gptel--fsm-transition fsm)))))
+          (gptel--fsm-transition fsm)))
+      ;; Insert error into buffer wrapped in #+begin_error/#+end_error
+      (let ((callback (or (plist-get info :callback)
+                          #'gptel-curl--stream-insert-response))
+            (buf (plist-get info :buffer)))
+        (when (and callback buf (buffer-live-p buf))
+          (let ((error-block
+                 (with-current-buffer buf
+                   (concat
+                    (if (derived-mode-p 'org-mode)
+                        "\n#+begin_error\n" "\n``` error\n")
+                    error-msg
+                    (if (derived-mode-p 'org-mode)
+                        "\n#+end_error" "\n```")))))
+            ;; Mark entire block as gptel ignore so it's not sent to LLM
+            (add-text-properties 0 (length error-block)
+                                 '(gptel ignore front-sticky (gptel))
+                                 error-block)
+            ;; Use raw=t to preserve our properties (skip gptel response tagging)
+            (funcall callback error-block info t))))))
   nil)
 
 (defvar gptel-claude-code--message-handlers

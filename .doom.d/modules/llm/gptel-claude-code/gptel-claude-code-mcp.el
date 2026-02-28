@@ -59,6 +59,7 @@ then delegates to the standard MCP JSON-RPC processor."
     (let* ((method (caar request))
            (content (cadr (assoc "Content" request)))
            (body (or content "")))
+      (mcp-server-lib-http--log "Session MCP request for \nsession: %s\nbody:\n %s" session-id body)
       (cond
        ((string= method "OPTIONS")
         (with-temp-buffer

@@ -107,25 +107,29 @@ to JSON encoding."
 
 ;;; Block formatting
 
-(defun gptel-claude-code--format-tool-use (name input)
+(defun gptel-claude-code--format-tool-use (name input &optional id)
   "Format a tool_use block as an org drawer.
 
 NAME is the tool name (e.g. \"Bash\", \"Read\").
 INPUT is the parsed tool input plist, or nil if not yet available.
+ID is the optional tool_use_id string.
 
 Returns a string with org markup."
   (let ((formatted-input (gptel-claude-code--format-tool-input name input)))
-    (concat "\n#+begin_tool " name "\n"
+    (concat "\n#+begin_tool " name
+            (when id (concat " :id " id))
+            "\n"
             (unless (string-empty-p formatted-input)
               (concat formatted-input "\n"))
             "#+end_tool\n")))
 
-(defun gptel-claude-code--format-tool-result (name content is-error)
+(defun gptel-claude-code--format-tool-result (name content is-error &optional id)
   "Format a tool result block as an org drawer.
 
 NAME is the tool name.
 CONTENT is the result text.
 IS-ERROR is non-nil if the result represents an error.
+ID is the optional tool_use_id string.
 
 Returns a string with org markup."
   (let ((display-content (or content "")))
@@ -136,17 +140,22 @@ Returns a string with org markup."
       (setq display-content
             (concat (substring display-content 0 2000)
                     "\n... (truncated)")))
-    (concat "\n#+begin_result " name "\n"
+    (concat "\n#+begin_result " name
+            (when id (concat " :id " id))
+            "\n"
             display-content
             (unless (string-suffix-p "\n" display-content) "\n")
             "#+end_result\n")))
 
-(defun gptel-claude-code--format-tool-use-header (name)
+(defun gptel-claude-code--format-tool-use-header (name &optional id)
   "Return the opening line for a tool_use org block with NAME.
 
+When ID is non-nil, include the tool_use_id as a property.
 Used during streaming when the tool block starts but input
 is not yet available."
-  (concat "\n#+begin_tool " name "\n"))
+  (concat "\n#+begin_tool " name
+          (when id (concat " :id " id))
+          "\n"))
 
 (defun gptel-claude-code--format-tool-use-footer ()
   "Return the closing line for a tool_use org block."

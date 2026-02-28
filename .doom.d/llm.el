@@ -511,8 +511,10 @@ Merge buffer-local with global default files."
   (defun +gptel-toggle-debug ()
     (interactive)
     (if gptel-log-level
-        (setq! gptel-log-level 'debug)
-      (setq! gptel-log-level nil)))
+        (setq! gptel-log-level 'debug
+               mcp-server-lib-http-log-requests t)
+      (setq! gptel-log-level nil
+             mcp-server-lib-http-log-requests t)))
   (setq! gptel-log-level 'nil)
 
   (defadvice! +gptel-mcp--activate-tools (_)

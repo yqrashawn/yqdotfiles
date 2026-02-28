@@ -138,9 +138,9 @@
                                                      :id "tool-1"
                                                      :name "Bash")))))
     (let ((result (gptel-claude-code--handle-stream-event msg info)))
-      ;; Should return a tool header string
+      ;; Should return a tool header string with id
       (should (stringp result))
-      (should (string-match-p "begin_tool Bash" result))
+      (should (string-match-p "begin_tool Bash :id tool-1" result))
       ;; Should have pushed to :claude-code-tools (not :tool-use)
       (should (= 1 (length (plist-get info :claude-code-tools))))
       (should (equal (plist-get (car (plist-get info :claude-code-tools)) :name) "Bash"))
@@ -242,6 +242,53 @@
     (gptel-claude-code--handle-result msg info)
     ;; Should use subtype as error message when errors array is absent
     (should (equal (plist-get info :error) "error_during_execution"))))
+
+(ert-deftest gptel-claude-code-test-handle-result-error-inserts-block ()
+  "Test result handler inserts #+begin_error block in org-mode buffer."
+  (with-temp-buffer
+    (org-mode)
+    (insert "@user: test\n\n")
+    (let* ((start-marker (point-marker))
+           (info (list :buffer (current-buffer)
+                       :position start-marker
+                       :stream t
+                       :callback #'gptel-curl--stream-insert-response))
+           (msg (list :type "result"
+                      :subtype "error_during_execution"
+                      :is_error t
+                      :errors ["No conversation found with session ID: abc-123"]
+                      :usage (list :input_tokens 0
+                                   :output_tokens 0))))
+      (gptel-claude-code--handle-result msg info)
+      ;; Error block should be inserted
+      (let ((content (buffer-substring-no-properties (point-min) (point-max))))
+        (should (cl-search "#+begin_error" content))
+        (should (cl-search "No conversation found" content))
+        (should (cl-search "#+end_error" content)))
+      ;; Text should have gptel ignore property
+      (goto-char (point-min))
+      (search-forward "#+begin_error")
+      (should (eq (get-text-property (point) 'gptel) 'ignore)))))
+
+(ert-deftest gptel-claude-code-test-handle-result-error-block-multiple-errors ()
+  "Test error block with multiple errors uses newline separator."
+  (with-temp-buffer
+    (org-mode)
+    (insert "@user: test\n\n")
+    (let* ((start-marker (point-marker))
+           (info (list :buffer (current-buffer)
+                       :position start-marker
+                       :stream t
+                       :callback #'gptel-curl--stream-insert-response))
+           (msg (list :type "result"
+                      :subtype "error_during_execution"
+                      :is_error t
+                      :errors ["Error one" "Error two"]
+                      :usage (list :input_tokens 0
+                                   :output_tokens 0))))
+      (gptel-claude-code--handle-result msg info)
+      (let ((content (buffer-substring-no-properties (point-min) (point-max))))
+        (should (cl-search "Error one\nError two" content))))))
 
 (ert-deftest gptel-claude-code-test-handle-assistant-no-tool-use ()
   "Test assistant handler does NOT populate :tool-use (Claude Code handles tools)."
@@ -423,6 +470,14 @@ to avoid duplicate --model flags."
     (should (string-match-p "output text" result))
     (should (string-match-p "end_result" result))))
 
+(ert-deftest gptel-claude-code-test-format-tool-result-with-id ()
+  "Test tool result formatting includes tool_use_id when provided."
+  (let ((result (gptel-claude-code--format-tool-result
+                 "Bash" "output text" nil "toolu_abc123")))
+    (should (string-match-p "begin_result Bash :id toolu_abc123" result))
+    (should (string-match-p "output text" result))
+    (should (string-match-p "end_result" result))))
+
 (ert-deftest gptel-claude-code-test-format-tool-result-error ()
   "Test tool result formatting with error."
   (let ((result (gptel-claude-code--format-tool-result
@@ -443,6 +498,11 @@ to avoid duplicate --model flags."
   "Test tool use header formatting."
   (let ((result (gptel-claude-code--format-tool-use-header "Read")))
     (should (string-match-p "begin_tool Read" result))))
+
+(ert-deftest gptel-claude-code-test-format-tool-use-header-with-id ()
+  "Test tool use header includes tool_use_id when provided."
+  (let ((result (gptel-claude-code--format-tool-use-header "Read" "toolu_xyz789")))
+    (should (string-match-p "begin_tool Read :id toolu_xyz789" result))))
 
 (ert-deftest gptel-claude-code-test-format-tool-use-footer ()
   "Test tool use footer formatting."
