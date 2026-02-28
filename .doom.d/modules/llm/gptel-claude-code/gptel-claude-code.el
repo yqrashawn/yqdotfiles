@@ -113,15 +113,16 @@ Called each time a process is spawned."))
   "Return a suitable working directory for Claude Code.
 
 Tries, in order:
-1. `doom-modeline--project-root' (if available)
+1. doom workspace project root
 2. `project-root' of current project (if available)
 3. `default-directory' as fallback."
-  (or (and (boundp 'doom-modeline--project-root)
-           (symbol-value 'doom-modeline--project-root))
-      (and (fboundp 'project-root)
-           (when-let* ((proj (project-current)))
-             (project-root proj)))
-      default-directory))
+  (or
+   (and (fboundp 'persp-parameter)
+        (persp-parameter '++workspace-project-root))
+   (and (fboundp 'project-root)
+        (when-let* ((proj (project-current)))
+          (project-root proj)))
+   default-directory))
 
 ;;; Factory function
 
@@ -336,7 +337,7 @@ Content can be:
                                             (ext (or (and mime (cadr (split-string mime "/")))
                                                      "bin"))
                                             (tmp (make-temp-file "gptel-media-" nil
-                                                                  (concat "." ext)))
+                                                                 (concat "." ext)))
                                             (b64-start (+ (string-search "," url) 1))
                                             (b64-data (substring url b64-start)))
                                        (with-temp-file tmp
