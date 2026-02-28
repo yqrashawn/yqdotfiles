@@ -50,9 +50,7 @@
   (gptel-make-claude-code "Claude Code"
     :models gptel--claude-code-models
     :stream t
-    :mcp-port (if (boundp 'mcp-server-lib-http-port)
-                  mcp-server-lib-http-port
-                8080)))
+    :mcp-port 18684))
 
 (comment
   (setf (gptel-claude-code-permission-mode (alist-get "Claude Code" gptel--known-backends nil nil #'equal)) "default"))

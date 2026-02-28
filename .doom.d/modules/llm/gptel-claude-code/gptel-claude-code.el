@@ -94,7 +94,7 @@ One of \"default\", \"acceptEdits\", or \"bypassPermissions\".")
   (extra-args nil
               :documentation
               "User-configurable extra CLI arguments (list of strings).")
-  (mcp-port 8080
+  (mcp-port 18684
             :documentation "Port for MCP session routing.")
   (cwd-fn #'gptel-claude-code--default-cwd
           :documentation
@@ -154,7 +154,7 @@ to the Claude Code process.
 EXTRA-ARGS (optional) is a list of additional CLI arguments.
 
 MCP-PORT (optional) is the port for MCP session routing.
-Defaults to 8080.
+Defaults to 18684.
 
 CWD-FN (optional) is a zero-argument function returning
 the working directory for spawned Claude Code processes."
@@ -174,7 +174,7 @@ the working directory for spawned Claude Code processes."
                                        "--verbose" "--chrome"
                                        "--include-partial-messages"))
                   :extra-args extra-args
-                  :mcp-port (or mcp-port 8080)
+                  :mcp-port (or mcp-port 18684)
                   :cwd-fn (or cwd-fn #'gptel-claude-code--default-cwd))))
     (prog1 backend
       (setf (alist-get name gptel--known-backends
@@ -289,10 +289,16 @@ than base64-encoding content."
 ;;; Request data method
 
 (cl-defmethod gptel--request-data ((_backend gptel-claude-code) prompts)
-  "Return the prompt text for Claude Code CLI.
+  "Return a plist with prompt text and system message for Claude Code CLI.
 
 PROMPTS is a list of plists like (:role \"user\" :content \"text\").
 We extract the last user message's content as plain text.
+
+Returns a plist (:prompt TEXT :system-message MSG) so that the
+augmented system message (with gptel context injected) is preserved.
+This method runs inside the data buffer where `gptel--system-message'
+has been modified by `gptel-context--wrap-in-buffer', so we capture
+it here before the data buffer is killed.
 
 Content can be:
 - A string (normal text, possibly with file references already injected)
@@ -300,68 +306,74 @@ Content can be:
   (let* ((last-user-msg
           (cl-find-if (lambda (msg) (equal (plist-get msg :role) "user"))
                       (reverse prompts)))
-         (content (or (plist-get last-user-msg :content) "")))
+         (content (or (plist-get last-user-msg :content) ""))
+         ;; Capture the augmented system message from data buffer.
+         ;; gptel-context--wrap-in-buffer may have prepended context to it.
+         (system-msg gptel--system-message))
     ;; Content should already be a string from our gptel--parse-buffer
     ;; and gptel--inject-media, but handle vector gracefully as a safeguard
-    (if (stringp content)
-        content
-      ;; Vector content (shouldn't happen with our parse-buffer, but be safe)
-      (if (vectorp content)
-          (let ((text-parts nil)
-                (file-parts nil))
-            (cl-loop for part across content
-                     do (cond
-                         ((equal (plist-get part :type) "text")
-                          (push (plist-get part :text) text-parts))
-                         ((equal (plist-get part :type) "image_url")
-                          (when-let* ((url (plist-get
-                                            (plist-get part :image_url) :url)))
-                            (cond
-                             ((string-prefix-p "file://" url)
-                              (push (substring url 7) file-parts))
-                             ((string-prefix-p "data:" url)
-                              ;; Base64 data URI -- write to temp file
-                              (let* ((mime-end (string-search ";" url))
-                                     (mime (and mime-end (substring url 5 mime-end)))
-                                     (ext (or (and mime (cadr (split-string mime "/")))
-                                              "bin"))
-                                     (tmp (make-temp-file "gptel-media-" nil
-                                                          (concat "." ext)))
-                                     (b64-start (+ (string-search "," url) 1))
-                                     (b64-data (substring url b64-start)))
-                                (with-temp-file tmp
-                                  (insert (base64-decode-string b64-data)))
-                                (push tmp file-parts)))
-                             (t (push url file-parts)))))
-                         ;; Anthropic-style document
-                         ((equal (plist-get part :type) "document")
-                          (when-let* ((source (plist-get part :source))
-                                      (data (plist-get source :data)))
-                            (let* ((media-type (plist-get source :media_type))
-                                   (ext (or (and media-type
-                                                 (cadr (split-string media-type "/")))
-                                            "bin"))
-                                   (tmp (make-temp-file "gptel-media-" nil
-                                                        (concat "." ext))))
-                              (with-temp-file tmp
-                                (insert (base64-decode-string data)))
-                              (push tmp file-parts))))))
-            ;; Build final prompt
-            (let ((refs (and file-parts
-                             (mapconcat
-                              (lambda (f)
-                                (format "[Attached file: %s]" f))
-                              (nreverse file-parts) "\n")))
-                  (text (and text-parts
-                             (mapconcat #'identity
-                                        (nreverse text-parts) "\n"))))
-              (cond
-               ((and refs text) (concat refs "\n\n" text))
-               (refs refs)
-               (text text)
-               (t ""))))
-        ;; Unknown content type, coerce to string
-        (format "%s" content)))))
+    (let ((prompt-text
+           (if (stringp content)
+               content
+             ;; Vector content (shouldn't happen with our parse-buffer, but be safe)
+             (if (vectorp content)
+                 (let ((text-parts nil)
+                       (file-parts nil))
+                   (cl-loop for part across content
+                            do (cond
+                                ((equal (plist-get part :type) "text")
+                                 (push (plist-get part :text) text-parts))
+                                ((equal (plist-get part :type) "image_url")
+                                 (when-let* ((url (plist-get
+                                                   (plist-get part :image_url) :url)))
+                                   (cond
+                                    ((string-prefix-p "file://" url)
+                                     (push (substring url 7) file-parts))
+                                    ((string-prefix-p "data:" url)
+                                     ;; Base64 data URI -- write to temp file
+                                     (let* ((mime-end (string-search ";" url))
+                                            (mime (and mime-end (substring url 5 mime-end)))
+                                            (ext (or (and mime (cadr (split-string mime "/")))
+                                                     "bin"))
+                                            (tmp (make-temp-file "gptel-media-" nil
+                                                                  (concat "." ext)))
+                                            (b64-start (+ (string-search "," url) 1))
+                                            (b64-data (substring url b64-start)))
+                                       (with-temp-file tmp
+                                         (insert (base64-decode-string b64-data)))
+                                       (push tmp file-parts)))
+                                    (t (push url file-parts)))))
+                                ;; Anthropic-style document
+                                ((equal (plist-get part :type) "document")
+                                 (when-let* ((source (plist-get part :source))
+                                             (data (plist-get source :data)))
+                                   (let* ((media-type (plist-get source :media_type))
+                                          (ext (or (and media-type
+                                                        (cadr (split-string media-type "/")))
+                                                   "bin"))
+                                          (tmp (make-temp-file "gptel-media-" nil
+                                                               (concat "." ext))))
+                                     (with-temp-file tmp
+                                       (insert (base64-decode-string data)))
+                                     (push tmp file-parts))))))
+                   ;; Build final prompt
+                   (let ((refs (and file-parts
+                                    (mapconcat
+                                     (lambda (f)
+                                       (format "[Attached file: %s]" f))
+                                     (nreverse file-parts) "\n")))
+                         (text (and text-parts
+                                    (mapconcat #'identity
+                                               (nreverse text-parts) "\n"))))
+                     (cond
+                      ((and refs text) (concat refs "\n\n" text))
+                      (refs refs)
+                      (text text)
+                      (t ""))))
+               ;; Unknown content type, coerce to string
+               (format "%s" content)))))
+      ;; Return plist with prompt and augmented system message
+      (list :prompt prompt-text :system-message system-msg))))
 
 ;;; CLI args builder
 
@@ -399,10 +411,15 @@ We use `with-current-buffer' to ensure correct context."
     ;; --dangerously-skip-permissions
     (when gptel-claude-code-skip-permissions
       (setq args (append args (list "--dangerously-skip-permissions"))))
-    ;; --append-system-prompt (buffer-local, must read from chat buffer)
-    (let ((system-msg (if (and chat-buf (buffer-live-p chat-buf))
-                          (buffer-local-value 'gptel--system-message chat-buf)
-                        gptel--system-message)))
+    ;; --append-system-prompt
+    ;; Prefer the augmented system message from info :data (which includes
+    ;; gptel context injected by gptel-context--wrap-in-buffer).  Fall back
+    ;; to the chat buffer's buffer-local value if :data doesn't carry it.
+    (let* ((data (plist-get info :data))
+           (system-msg (or (and (listp data) (plist-get data :system-message))
+                           (if (and chat-buf (buffer-live-p chat-buf))
+                               (buffer-local-value 'gptel--system-message chat-buf)
+                             gptel--system-message))))
       (when (and system-msg
                  (stringp system-msg)
                  (not (string-empty-p system-msg)))
@@ -462,7 +479,10 @@ equivalent of `gptel-curl-get-response'."
          (buf (gptel--temp-buffer " *gptel-claude-code*")))
     ;; Append prompt text as positional argument (Claude Code reads prompt
     ;; from CLI args, not stdin, in --print mode)
-    (let ((prompt-text (plist-get info :data)))
+    (let* ((data (plist-get info :data))
+           (prompt-text (if (and (listp data) (plist-get data :prompt))
+                            (plist-get data :prompt)
+                          data)))
       (when (and prompt-text (stringp prompt-text) (not (string-empty-p prompt-text)))
         (setq args (append args (list prompt-text)))))
     (condition-case err

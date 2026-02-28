@@ -374,7 +374,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -514,7 +514,7 @@ Merge buffer-local with global default files."
         (setq! gptel-log-level 'debug
                mcp-server-lib-http-log-requests t)
       (setq! gptel-log-level nil
-             mcp-server-lib-http-log-requests t)))
+             mcp-server-lib-http-log-requests nil)))
   (setq! gptel-log-level 'nil)
 
   (defadvice! +gptel-mcp--activate-tools (_)

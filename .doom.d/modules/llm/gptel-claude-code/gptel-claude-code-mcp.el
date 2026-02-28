@@ -125,6 +125,11 @@ Used to prevent nested recursive-edits.")
    ((and (member tool-name '("Write" "Read" "Edit"))
          (plist-get tool-input :file_path))
     (plist-get tool-input :file_path))
+   ((and (equal tool-name "Agent")
+         (plist-get tool-input :description))
+    (format "[%s] %s"
+            (or (plist-get tool-input :subagent_type) "agent")
+            (plist-get tool-input :description)))
    (tool-input
     (let ((json-encoding-pretty-print t))
       (condition-case nil

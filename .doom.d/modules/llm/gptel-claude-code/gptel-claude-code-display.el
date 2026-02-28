@@ -96,6 +96,21 @@ to JSON encoding."
      (let ((query (plist-get input :query)))
        (or query "")))
 
+    ("Agent"
+     (let ((type (plist-get input :subagent_type))
+           (desc (plist-get input :description))
+           (prompt (plist-get input :prompt))
+           (model (plist-get input :model))
+           (name (plist-get input :name))
+           (resume (plist-get input :resume)))
+       (concat
+        (when type (format "subagent_type: %s" type))
+        (when desc (format "\ndescription: %s" desc))
+        (when model (format "\nmodel: %s" model))
+        (when name (format "\nname: %s" name))
+        (when resume (format "\nresume: %s" resume))
+        (when prompt (format "\nprompt: %s" prompt)))))
+
     (_
      ;; Default: JSON-encode the input
      (if input

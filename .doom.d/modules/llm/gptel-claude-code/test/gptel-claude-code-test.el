@@ -463,6 +463,32 @@ to avoid duplicate --model flags."
   "Test nil tool input returns empty string."
   (should (equal (gptel-claude-code--format-tool-input "Bash" nil) "")))
 
+(ert-deftest gptel-claude-code-test-format-tool-input-agent ()
+  "Test Agent tool input renders as key-value pairs, not JSON."
+  (let ((result (gptel-claude-code--format-tool-input
+                 "Agent"
+                 (list :subagent_type "general-purpose"
+                       :description "Answer math question"
+                       :prompt "What is 2+2?"))))
+    (should (string-match-p "subagent_type: general-purpose" result))
+    (should (string-match-p "description: Answer math question" result))
+    (should (string-match-p "prompt: What is 2\\+2\\?" result))
+    ;; Should NOT look like JSON
+    (should-not (string-match-p "{" result))))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-agent-with-optional ()
+  "Test Agent tool input includes optional fields when present."
+  (let ((result (gptel-claude-code--format-tool-input
+                 "Agent"
+                 (list :subagent_type "Explore"
+                       :description "Find files"
+                       :prompt "Search for tests"
+                       :model "haiku"
+                       :name "researcher"))))
+    (should (string-match-p "subagent_type: Explore" result))
+    (should (string-match-p "model: haiku" result))
+    (should (string-match-p "name: researcher" result))))
+
 (ert-deftest gptel-claude-code-test-format-tool-result ()
   "Test tool result formatting."
   (let ((result (gptel-claude-code--format-tool-result
@@ -525,7 +551,7 @@ to avoid duplicate --model flags."
                    :models (gptel--process-models '(haiku sonnet))
                    :permission-mode "bypassPermissions"
                    :default-flags '("--print" "--output-format" "stream-json")
-                   :mcp-port 8080
+                   :mcp-port 18684
                    :cwd-fn (lambda () "/tmp")))
          (gptel-model 'haiku)
          (gptel--system-message nil)
@@ -562,7 +588,7 @@ to avoid duplicate --model flags."
                    :models (gptel--process-models '(haiku))
                    :permission-mode "bypassPermissions"
                    :default-flags '("--print")
-                   :mcp-port 8080
+                   :mcp-port 18684
                    :cwd-fn (lambda () "/tmp")))
          (gptel-model 'haiku)
          (gptel--system-message "You are a helpful assistant.")
@@ -587,7 +613,7 @@ to avoid duplicate --model flags."
                    :models (gptel--process-models '(haiku))
                    :permission-mode "bypassPermissions"
                    :default-flags '("--print")
-                   :mcp-port 8080
+                   :mcp-port 18684
                    :cwd-fn (lambda () "/tmp")))
          (gptel-model 'haiku)
          (gptel--system-message nil)
@@ -639,7 +665,7 @@ to avoid duplicate --model flags."
                    :models (gptel--process-models '(haiku))
                    :permission-mode "bypassPermissions"
                    :default-flags '("--print")
-                   :mcp-port 8080
+                   :mcp-port 18684
                    :cwd-fn (lambda () "/tmp")))
          (gptel-model 'haiku)
          (gptel--system-message nil)
@@ -666,7 +692,7 @@ to avoid duplicate --model flags."
                    :permission-mode "bypassPermissions"
                    :default-flags '("--print")
                    :extra-args '("--max-turns" "5")
-                   :mcp-port 8080
+                   :mcp-port 18684
                    :cwd-fn (lambda () "/tmp")))
          (gptel-model 'haiku)
          (gptel--system-message nil)
@@ -718,7 +744,7 @@ build-args must use `with-current-buffer' to access chat buffer state."
                    :models (gptel--process-models '(haiku sonnet))
                    :permission-mode "bypassPermissions"
                    :default-flags '("--print")
-                   :mcp-port 8080
+                   :mcp-port 18684
                    :cwd-fn (lambda () "/tmp")))
          (info (list :buffer chat-buf :model 'haiku)))
     (unwind-protect
@@ -763,7 +789,7 @@ build-args must use `with-current-buffer' to access chat buffer state."
 
 (ert-deftest gptel-claude-code-test-mcp-config-json-format ()
   "Test MCP config JSON format."
-  (let ((json (gptel-claude-code--mcp-config-json "sess-123" 8080)))
+  (let ((json (gptel-claude-code--mcp-config-json "sess-123" 18684)))
     ;; Should be valid JSON-like string
     (should (stringp json))
     ;; Should contain mcpServers
@@ -771,7 +797,7 @@ build-args must use `with-current-buffer' to access chat buffer state."
     ;; Should contain the session id in the URL
     (should (string-match-p "sess-123" json))
     ;; Should contain the port
-    (should (string-match-p "8080" json))
+    (should (string-match-p "18684" json))
     ;; Should contain the emacs server name
     (should (string-match-p "emacs" json))
     ;; Should contain the full path structure
@@ -867,7 +893,7 @@ build-args must use `with-current-buffer' to access chat buffer state."
                   :models nil)))
     (should (equal (gptel-claude-code-claude-command backend) "claude"))
     (should (equal (gptel-claude-code-permission-mode backend) "bypassPermissions"))
-    (should (equal (gptel-claude-code-mcp-port backend) 8080))
+    (should (equal (gptel-claude-code-mcp-port backend) 18684))
     (should (member "--print" (gptel-claude-code-default-flags backend)))
     (should (member "--verbose" (gptel-claude-code-default-flags backend)))))
 
@@ -876,7 +902,7 @@ build-args must use `with-current-buffer' to access chat buffer state."
 ;;; ============================================================
 
 (ert-deftest gptel-claude-code-test-request-data-string ()
-  "Test gptel--request-data extracts last user message as string."
+  "Test gptel--request-data extracts last user message as plist with :prompt."
   (let ((backend (gptel--make-claude-code
                   :name "test"
                   :host "localhost"
@@ -889,11 +915,13 @@ build-args must use `with-current-buffer' to access chat buffer state."
                    (list (list :role "user" :content "What is 2+2?")
                          (list :role "assistant" :content "4")
                          (list :role "user" :content "Now multiply by 3")))))
-      ;; Should return the last user message content
-      (should (equal result "Now multiply by 3")))))
+      ;; Should return a plist with :prompt containing the last user message
+      (should (listp result))
+      (should (equal (plist-get result :prompt) "Now multiply by 3"))
+      (should (plist-member result :system-message)))))
 
 (ert-deftest gptel-claude-code-test-request-data-empty ()
-  "Test gptel--request-data with no user messages returns empty string."
+  "Test gptel--request-data with no user messages returns plist with empty prompt."
   (let ((backend (gptel--make-claude-code
                   :name "test"
                   :host "localhost"
@@ -902,7 +930,48 @@ build-args must use `with-current-buffer' to access chat buffer state."
                   :stream t
                   :models nil)))
     (let ((result (gptel--request-data backend nil)))
-      (should (equal result "")))))
+      (should (listp result))
+      (should (equal (plist-get result :prompt) ""))
+      (should (plist-member result :system-message)))))
+
+(ert-deftest gptel-claude-code-test-request-data-captures-system-message ()
+  "Test gptel--request-data captures augmented system message from data buffer."
+  (let ((backend (gptel--make-claude-code
+                  :name "test"
+                  :host "localhost"
+                  :protocol "file"
+                  :endpoint ""
+                  :stream t
+                  :models nil))
+        ;; Simulate context-augmented system message in data buffer
+        (gptel--system-message "Context: file.txt\n\nYou are helpful."))
+    (let ((result (gptel--request-data
+                   backend
+                   (list (list :role "user" :content "hello")))))
+      (should (equal (plist-get result :system-message)
+                     "Context: file.txt\n\nYou are helpful.")))))
+
+(ert-deftest gptel-claude-code-test-build-args-uses-data-system-message ()
+  "Test build-args prefers system message from info :data over chat buffer."
+  (let* ((backend (gptel--make-claude-code
+                   :name "test"
+                   :host "localhost"
+                   :protocol "file"
+                   :endpoint ""
+                   :stream t
+                   :models '("haiku")))
+         (gptel-model 'haiku)
+         (gptel--system-message "original system msg")
+         (info (list :buffer (current-buffer)
+                     :model 'haiku
+                     :data (list :prompt "hello"
+                                 :system-message "Context injected\n\noriginal system msg"))))
+    (let ((args (gptel-claude-code--build-args info backend)))
+      ;; Should use the augmented system message from :data
+      (let ((sys-idx (cl-position "--append-system-prompt" args :test #'equal)))
+        (should sys-idx)
+        (should (equal (nth (1+ sys-idx) args)
+                       "Context injected\n\noriginal system msg"))))))
 
 ;;; ============================================================
 ;;; Team module tests
@@ -1015,6 +1084,14 @@ build-args must use `with-current-buffer' to access chat buffer state."
   (should (equal (gptel-claude-code--format-tool-input-summary
                   "Unknown" nil)
                  "")))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-agent ()
+  "Test format-tool-input-summary for Agent tool shows type and description."
+  (should (equal (gptel-claude-code--format-tool-input-summary
+                  "Agent" '(:subagent_type "general-purpose"
+                             :description "Answer math question"
+                             :prompt "What is 2+2?"))
+                 "[general-purpose] Answer math question")))
 
 (ert-deftest gptel-claude-code-test-format-tool-input-summary-other ()
   "Test format-tool-input-summary for unknown tool falls back to JSON."
