@@ -1,0 +1,4 @@
+#+title: Todo
+
+* not working
+** claude code won't close stdin so the buffer stuck at =Typing...= 

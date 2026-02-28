@@ -1,5 +1,7 @@
 ;;; llm/gptel-claude-code/config.el -*- lexical-binding: t; -*-
 
+(load! "gptel-claude-code.el")
+
 (use-package! gptel-claude-code
   :after gptel
   :config
@@ -8,13 +10,9 @@
     :stream t
     :mcp-port (if (boundp 'mcp-server-lib-http-port)
                   mcp-server-lib-http-port
-                8080))
-  (gptel-make-claude-code "c"
-    :models gptel--claude-code-models
-    :stream t
-    :mcp-port (if (boundp 'mcp-server-lib-http-port)
-                  mcp-server-lib-http-port
                 8080)))
+(comment
+  (setf (gptel-claude-code-permission-mode (alist-get "Claude Code" gptel--known-backends nil nil #'equal)) "default"))
 
 ;; Validate claude binary exists
 (unless (executable-find "claude")

@@ -395,28 +395,40 @@ advances the FSM, and stops any teammate transcript watchers."
     (when-let* ((entry (alist-get process gptel--request-alist))
                 (fsm (car entry))
                 (info (gptel-fsm-info fsm)))
-      ;; Cancel timeout timer if set
-      (when-let* ((timer (plist-get info :claude-code-timer)))
-        (cancel-timer timer)
-        (plist-put info :claude-code-timer nil))
-      (if (plist-get info :http-status)
-          ;; Success path: we received an init message
-          (with-demoted-errors "gptel callback error: %S"
-            (funcall (plist-get info :callback) t info))
-        ;; Failure path: process ended without init message
-        (unless (plist-get info :error)
-          (plist-put info :error
-                     (format "Claude Code process exited with status: %s"
-                             (process-exit-status process))))
-        (with-demoted-errors "gptel callback error: %S"
-          (funcall (plist-get info :callback) nil info)))
-      ;; Clean up teammate transcript watchers
-      (when-let* ((buf (plist-get info :buffer)))
-        (when (buffer-live-p buf)
-          (gptel-claude-code--cleanup-watchers buf)))
-      (gptel--fsm-transition fsm)
-      ;; Clean up request alist
-      (setf (alist-get process gptel--request-alist nil 'remove) nil))
+      ;; Use unwind-protect to guarantee cleanup even if FSM transition
+      ;; handlers error (e.g. gptel--handle-error, gptel--parse-tool-results).
+      ;; Without this, stale entries accumulate in gptel--request-alist and
+      ;; the "Typing..." header-line status persists forever.
+      (unwind-protect
+          (progn
+            ;; Cancel timeout timer if set
+            (when-let* ((timer (plist-get info :claude-code-timer)))
+              (cancel-timer timer)
+              (plist-put info :claude-code-timer nil))
+            (if (plist-get info :http-status)
+                ;; Success path: we received an init message
+                (with-demoted-errors "gptel callback error: %S"
+                  (funcall (plist-get info :callback) t info))
+              ;; Failure path: process ended without init message
+              (unless (plist-get info :error)
+                (plist-put info :error
+                           (format "Claude Code process exited with status: %s"
+                                   (process-exit-status process))))
+              (with-demoted-errors "gptel callback error: %S"
+                (funcall (plist-get info :callback) nil info)))
+            ;; Clean up teammate transcript watchers
+            (when-let* ((buf (plist-get info :buffer)))
+              (when (buffer-live-p buf)
+                (gptel-claude-code--cleanup-watchers buf)))
+            ;; IMPORTANT: Clear :tool-use to prevent the FSM from entering TOOL
+            ;; state.  Claude Code handles all tool execution internally via MCP.
+            ;; If :tool-use somehow got set (e.g. by gptel core detecting tool_use
+            ;; content blocks), clearing it here ensures TYPE -> DONE, not TYPE -> TOOL.
+            (plist-put info :tool-use nil)
+            (with-demoted-errors "gptel Claude Code FSM transition error: %S"
+              (gptel--fsm-transition fsm)))
+        ;; CLEANUP (always runs): remove from request alist
+        (setf (alist-get process gptel--request-alist nil 'remove) nil)))
     ;; Kill the process buffer
     (when (buffer-live-p proc-buf)
       (kill-buffer proc-buf))))

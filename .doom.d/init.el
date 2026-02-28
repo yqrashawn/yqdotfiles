@@ -304,7 +304,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
        :llm
        git-heatmap
-       jina)
+       jina
+       gptel-claude-code)
 
 ;; https://discourse.doomemacs.org/t/using-lsp-use-plists-with-doom/2832
 (setenv "LSP_USE_PLISTS" "true")

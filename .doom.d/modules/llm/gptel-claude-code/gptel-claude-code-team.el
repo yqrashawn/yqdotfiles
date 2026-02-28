@@ -13,8 +13,8 @@
 ;; Transcript file paths follow this pattern:
 ;;   ~/.claude/projects/{project-slug}/{session-id}/subagents/agent-{agent-id}.jsonl
 ;;
-;; Where project-slug = cwd with "/" replaced by "-"
-;; (e.g., /Users/foo/bar -> -Users-foo-bar)
+;; Where project-slug = cwd with "/" and "." replaced by "-"
+;; (e.g., /Users/foo/.bar -> -Users-foo--bar)
 ;;
 ;; Teammate spawns are detected from `user' type messages in the
 ;; stream-json output that contain a `toolUseResult' with
@@ -61,7 +61,9 @@ Used to compute the transcript directory.")
 CWD is the working directory of the Claude Code process.
 SESSION-ID is the session ID from the init message.
 Returns an absolute path to the subagents directory."
-  (let ((slug (replace-regexp-in-string "/" "-" cwd)))
+  (let* ((trimmed (directory-file-name cwd)) ; strip trailing /
+         ;; NOTE: this might be a claude code bug, we might need to change this if they fixed it
+         (slug (replace-regexp-in-string "[/.]" "-" trimmed)))
     (expand-file-name
      (concat session-id "/subagents/")
      (expand-file-name slug "~/.claude/projects/"))))

@@ -31,6 +31,12 @@ Set to nil to disable timeout."
           (const :tag "No timeout" nil))
   :group 'gptel-claude-code)
 
+(defcustom gptel-claude-code-skip-permissions nil
+  "When non-nil, pass --dangerously-skip-permissions to Claude Code.
+This bypasses all permission checks in Claude Code."
+  :type 'boolean
+  :group 'gptel-claude-code)
+
 ;; Forward declarations -- gptel core
 (defvar gptel--known-backends)
 (defvar gptel--request-alist)
@@ -81,7 +87,8 @@ Communicates via stdin/stdout JSON messages."
                    "Permission mode passed to --permission-mode.
 One of \"default\", \"acceptEdits\", or \"bypassPermissions\".")
   (default-flags '("--print" "--output-format" "stream-json"
-                   "--verbose" "--chrome" "--include-partial-messages")
+                   "--verbose" "--chrome" "--include-partial-messages"
+                   "--teammate-mode" "in-process")
                  :documentation
                  "List of CLI flags always passed to Claude Code.")
   (extra-args nil
@@ -389,6 +396,9 @@ We use `with-current-buffer' to ensure correct context."
     ;; --permission-mode
     (setq args (append args (list "--permission-mode"
                                   (gptel-claude-code-permission-mode backend))))
+    ;; --dangerously-skip-permissions
+    (when gptel-claude-code-skip-permissions
+      (setq args (append args (list "--dangerously-skip-permissions"))))
     ;; --append-system-prompt (buffer-local, must read from chat buffer)
     (let ((system-msg (if (and chat-buf (buffer-live-p chat-buf))
                           (buffer-local-value 'gptel--system-message chat-buf)
@@ -562,6 +572,17 @@ equivalent of `gptel-curl-get-response'."
           (gptel-claude-code--get-response fsm)
           (run-hooks 'gptel-post-request-hook))
       (funcall orig-fn fsm))))
+
+;;; Safety-net generic methods
+;;
+;; Claude Code handles all tool execution internally via MCP.  The gptel
+;; tool-use FSM should never reach TOOL state for this backend, but if it
+;; does (e.g. due to advices or future gptel changes), these methods
+;; prevent cl-no-applicable-method crashes.
+
+(cl-defmethod gptel--parse-tool-results ((_backend gptel-claude-code) _tool-use)
+  "No-op: Claude Code handles tool results internally."
+  nil)
 
 (eval-and-compile
   (let ((dir (file-name-directory (or load-file-name byte-compile-current-file ""))))

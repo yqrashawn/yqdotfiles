@@ -34,4 +34,4 @@ After test, eval: =(setf (gptel-claude-code-permission-mode (alist-get "Claude C
 @user: Run this shell command: echo "permission test succeeded"
 
 * Test 6: Teammate transcript watching
-@user: Create a team with one teammate named "greeter". The teammate's only job is to respond with "hello from teammate" and nothing else. Keep it minimal.
+@user: Create a team with one teammate named "greeter". The teammate's only job is to output "hello" and nothing else. Keep it minimal.

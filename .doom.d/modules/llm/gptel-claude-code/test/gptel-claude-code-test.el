@@ -22,6 +22,7 @@
 (require 'gptel-claude-code-session)
 (require 'gptel-claude-code-display)
 (require 'gptel-claude-code-mcp)
+(require 'gptel-claude-code-team)
 
 ;;; ============================================================
 ;;; Stream parser tests
@@ -679,6 +680,29 @@ to avoid duplicate --model flags."
         (should (member "--max-turns" args))
         (should (member "5" args))))))
 
+(ert-deftest gptel-claude-code-test-build-args-skip-permissions ()
+  "Test --dangerously-skip-permissions flag injection."
+  (let* ((backend (gptel--make-claude-code
+                   :name "test"
+                   :host "localhost"
+                   :models (gptel--process-models '(claude-sonnet-4-20250514))
+                   :default-flags '("--print" "--output-format" "stream-json")))
+         (gptel-model 'claude-sonnet-4-20250514)
+         (gptel--system-message nil))
+    (cl-letf (((symbol-function 'gptel-claude-code--session-state)
+               (lambda (_b) (list :state :new :session-id "test-123")))
+              ((symbol-function 'gptel-claude-code--mcp-config-json)
+               (lambda (sid port)
+                 (format "{\"sid\":\"%s\",\"port\":%d}" sid port))))
+      ;; When nil, flag should NOT be present
+      (let ((gptel-claude-code-skip-permissions nil))
+        (let ((args (gptel-claude-code--build-args nil backend)))
+          (should-not (member "--dangerously-skip-permissions" args))))
+      ;; When non-nil, flag should be present
+      (let ((gptel-claude-code-skip-permissions t))
+        (let ((args (gptel-claude-code--build-args nil backend)))
+          (should (member "--dangerously-skip-permissions" args)))))))
+
 (ert-deftest gptel-claude-code-test-build-args-chat-buffer-context ()
   "Test build-args reads session state from chat buffer, not current buffer.
 This is a regression test for the buffer context bug: the WAIT handler
@@ -957,6 +981,301 @@ build-args must use `with-current-buffer' to access chat buffer state."
       (should (eq (car alist-entry) 'mock-proc))
       (should (eq (cadr alist-entry) 'mock-fsm))
       (should (eq (cddr alist-entry) mock-abort-fn)))))
+
+;;; ============================================================
+;;; Permission prompt / MCP tool tests
+;;; ============================================================
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-bash ()
+  "Test format-tool-input-summary for Bash tool."
+  (should (equal (gptel-claude-code--format-tool-input-summary
+                  "Bash" '(:command "echo hello"))
+                 "$ echo hello")))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-write ()
+  "Test format-tool-input-summary for Write tool with file_path."
+  (should (equal (gptel-claude-code--format-tool-input-summary
+                  "Write" '(:file_path "/tmp/foo.txt"))
+                 "/tmp/foo.txt")))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-read ()
+  "Test format-tool-input-summary for Read tool with file_path."
+  (should (equal (gptel-claude-code--format-tool-input-summary
+                  "Read" '(:file_path "/home/user/bar.el"))
+                 "/home/user/bar.el")))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-edit ()
+  "Test format-tool-input-summary for Edit tool with file_path."
+  (should (equal (gptel-claude-code--format-tool-input-summary
+                  "Edit" '(:file_path "/tmp/edit.el"))
+                 "/tmp/edit.el")))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-nil ()
+  "Test format-tool-input-summary with nil input."
+  (should (equal (gptel-claude-code--format-tool-input-summary
+                  "Unknown" nil)
+                 "")))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-summary-other ()
+  "Test format-tool-input-summary for unknown tool falls back to JSON."
+  (let ((result (gptel-claude-code--format-tool-input-summary
+                 "Grep" '(:pattern "foo" :path "/tmp"))))
+    (should (stringp result))
+    (should (string-match-p "foo" result))
+    (should (string-match-p "/tmp" result))))
+
+(ert-deftest gptel-claude-code-test-permission-build-response-allow ()
+  "Test permission-build-response for allow includes updatedInput.
+Response is flat: {behavior, updatedInput} — no hookSpecificOutput wrapping."
+  (let* ((tool-input '((command . "echo hi")))
+         (result (gptel-claude-code--permission-build-response "allow" tool-input))
+         (parsed (json-read-from-string result)))
+    (should (equal (alist-get 'behavior parsed) "allow"))
+    ;; updatedInput must be present for allow
+    (should (alist-get 'updatedInput parsed))
+    (should (equal (alist-get 'command (alist-get 'updatedInput parsed))
+                   "echo hi"))
+    ;; No hookSpecificOutput wrapping
+    (should-not (alist-get 'hookSpecificOutput parsed))))
+
+(ert-deftest gptel-claude-code-test-permission-build-response-deny ()
+  "Test permission-build-response for deny includes message.
+Response is flat: {behavior, message} — no hookSpecificOutput wrapping."
+  (let* ((result (gptel-claude-code--permission-build-response "deny"))
+         (parsed (json-read-from-string result)))
+    (should (equal (alist-get 'behavior parsed) "deny"))
+    ;; message must be present for deny
+    (should (stringp (alist-get 'message parsed)))
+    ;; updatedInput should NOT be present for deny
+    (should-not (alist-get 'updatedInput parsed))
+    ;; No hookSpecificOutput wrapping
+    (should-not (alist-get 'hookSpecificOutput parsed))))
+
+(ert-deftest gptel-claude-code-test-permission-param-mapping ()
+  "Test that positional args are correctly mapped to named parameters."
+  (let* ((param-names '(session_id transcript_path cwd permission_mode
+                                    hook_event_name tool_name tool_input
+                                    permission_suggestions))
+         (args '("sess-1" "/tmp/t" "/tmp" "default"
+                 "PermissionRequest" "Bash"
+                 ((command . "echo hi")) nil))
+         (params (cl-mapcar #'cons param-names args)))
+    (should (equal (cdr (assq 'session_id params)) "sess-1"))
+    (should (equal (cdr (assq 'tool_name params)) "Bash"))
+    (should (equal (cdr (assq 'hook_event_name params)) "PermissionRequest"))
+    (should (equal (cdr (assq 'tool_input params)) '((command . "echo hi"))))
+    (should (null (cdr (assq 'permission_suggestions params))))))
+
+(ert-deftest gptel-claude-code-test-permission-handler-stores-state ()
+  "Test that the handler stores state, shows popup, and enters recursive-edit.
+Mock recursive-edit to simulate immediate user response."
+  (let* ((captured-result nil)
+         (callback (lambda (result) (setq captured-result result)))
+         (gptel-claude-code--permission-pending nil)
+         (gptel-claude-code--permission-in-recursive-edit nil)
+         (popup-shown nil))
+    ;; Mock recursive-edit: simulate user pressing 'a' (allow) immediately.
+    ;; Also mock show-permission-popup to avoid buffer creation.
+    (cl-letf (((symbol-function 'recursive-edit)
+               (lambda ()
+                 ;; State should already be stored before recursive-edit
+                 (should gptel-claude-code--permission-pending)
+                 (should (equal (plist-get gptel-claude-code--permission-pending :tool-name) "Bash"))
+                 (should (equal (plist-get gptel-claude-code--permission-pending :input-summary) "$ echo test"))
+                 ;; Simulate user pressing 'a'
+                 (cl-letf (((symbol-function 'gptel-claude-code--cleanup-permission-buffer) #'ignore)
+                           ((symbol-function 'exit-recursive-edit) #'ignore))
+                   (gptel-claude-code--permission-respond t))))
+              ((symbol-function 'gptel-claude-code--show-permission-popup)
+               (lambda (_tn _is) (setq popup-shown t))))
+      (gptel-claude-code--handle-permission-prompt
+       callback
+       "sess-1" "/tmp/t" "/tmp" "default"
+       "PermissionRequest" "Bash"
+       '((command . "echo test")) nil))
+    ;; Popup was shown
+    (should popup-shown)
+    ;; Callback should have been called with allow + updatedInput (flat format)
+    (should captured-result)
+    (let* ((parsed (json-read-from-string captured-result)))
+      (should (equal (alist-get 'behavior parsed) "allow"))
+      (should (alist-get 'updatedInput parsed))
+      (should (equal (alist-get 'command (alist-get 'updatedInput parsed))
+                     "echo test")))
+    (should-not gptel-claude-code--permission-pending)))
+
+(ert-deftest gptel-claude-code-test-permission-handler-deny ()
+  "Test that deny sends the correct response."
+  (let* ((captured-result nil)
+         (callback (lambda (result) (setq captured-result result)))
+         (gptel-claude-code--permission-pending nil)
+         (gptel-claude-code--permission-in-recursive-edit nil))
+    ;; Mock recursive-edit: simulate user pressing 'd' (deny)
+    (cl-letf (((symbol-function 'recursive-edit)
+               (lambda ()
+                 (cl-letf (((symbol-function 'gptel-claude-code--cleanup-permission-buffer) #'ignore)
+                           ((symbol-function 'exit-recursive-edit) #'ignore))
+                   (gptel-claude-code--permission-respond nil))))
+              ((symbol-function 'gptel-claude-code--show-permission-popup)
+               (lambda (_tn _is) nil)))
+      (gptel-claude-code--handle-permission-prompt
+       callback
+       "sess-1" "/tmp/t" "/tmp" "default"
+       "PermissionRequest" "Bash"
+       '((command . "rm -rf /")) nil))
+    (should captured-result)
+    (let* ((parsed (json-read-from-string captured-result)))
+      (should (equal (alist-get 'behavior parsed) "deny"))
+      (should (stringp (alist-get 'message parsed))))
+    (should-not gptel-claude-code--permission-pending)))
+
+(ert-deftest gptel-claude-code-test-permission-handler-quit-denies ()
+  "Test that C-g (quit) during recursive-edit sends deny."
+  (let* ((captured-result nil)
+         (callback (lambda (result) (setq captured-result result)))
+         (gptel-claude-code--permission-pending nil)
+         (gptel-claude-code--permission-in-recursive-edit nil))
+    ;; Mock recursive-edit to signal quit (C-g)
+    (cl-letf (((symbol-function 'recursive-edit)
+               (lambda () (signal 'quit nil)))
+              ((symbol-function 'gptel-claude-code--show-permission-popup)
+               (lambda (_tn _is) nil))
+              ((symbol-function 'gptel-claude-code--cleanup-permission-buffer)
+               #'ignore))
+      ;; quit propagates after unwind-protect cleanup, so catch it
+      (condition-case nil
+          (gptel-claude-code--handle-permission-prompt
+           callback
+           "sess-1" "/tmp/t" "/tmp" "default"
+           "PermissionRequest" "Bash"
+           '((command . "echo test")) nil)
+        (quit nil)))
+    ;; unwind-protect should have sent deny (flat format)
+    (should captured-result)
+    (let* ((parsed (json-read-from-string captured-result)))
+      (should (equal (alist-get 'behavior parsed) "deny"))
+      (should (stringp (alist-get 'message parsed))))
+    (should-not gptel-claude-code--permission-pending)))
+
+(ert-deftest gptel-claude-code-test-permission-respond-function ()
+  "Test gptel-claude-code--permission-respond directly."
+  (let* ((captured-result nil)
+         (gptel-claude-code--permission-pending
+          (list :tool-name "Bash"
+                :tool-input '((command . "echo hi"))
+                :input-summary "$ echo hi"
+                :callback (lambda (result) (setq captured-result result))))
+         ;; Not inside recursive-edit, so exit-recursive-edit won't be called
+         (gptel-claude-code--permission-in-recursive-edit nil))
+    (cl-letf (((symbol-function 'gptel-claude-code--cleanup-permission-buffer) #'ignore))
+      (gptel-claude-code--permission-respond t))
+    (should captured-result)
+    (let* ((parsed (json-read-from-string captured-result)))
+      (should (equal (alist-get 'behavior parsed) "allow"))
+      (should (alist-get 'updatedInput parsed))
+      (should (equal (alist-get 'command (alist-get 'updatedInput parsed))
+                     "echo hi")))
+    (should-not gptel-claude-code--permission-pending)))
+
+;;; ============================================================
+;;; Team transcript-dir slug tests
+;;; ============================================================
+
+(ert-deftest gptel-claude-code-test-transcript-dir-basic ()
+  "Test transcript dir computation with basic path."
+  (should (equal (gptel-claude-code--transcript-dir "/Users/foo/bar" "sess-123")
+                 (expand-file-name
+                  "-Users-foo-bar/sess-123/subagents/"
+                  "~/.claude/projects/"))))
+
+(ert-deftest gptel-claude-code-test-transcript-dir-dot-in-path ()
+  "Test transcript dir replaces dots with dashes (matches Claude Code)."
+  (should (equal (gptel-claude-code--transcript-dir
+                  "/Users/yqrashawn/.nixpkgs" "sess-abc")
+                 (expand-file-name
+                  "-Users-yqrashawn--nixpkgs/sess-abc/subagents/"
+                  "~/.claude/projects/"))))
+
+(ert-deftest gptel-claude-code-test-transcript-dir-trailing-slash ()
+  "Test transcript dir strips trailing slash before slugifying."
+  (should (equal (gptel-claude-code--transcript-dir
+                  "/Users/yqrashawn/.nixpkgs/" "sess-abc")
+                 (gptel-claude-code--transcript-dir
+                  "/Users/yqrashawn/.nixpkgs" "sess-abc"))))
+
+(ert-deftest gptel-claude-code-test-transcript-dir-multiple-dots ()
+  "Test transcript dir with multiple dot-prefixed components."
+  (should (equal (gptel-claude-code--transcript-dir
+                  "/Users/yqrashawn/.emacs.d/.local/straight/repos/mcp-server-lib.el"
+                  "sess-xyz")
+                 (expand-file-name
+                  "-Users-yqrashawn--emacs-d--local-straight-repos-mcp-server-lib-el/sess-xyz/subagents/"
+                  "~/.claude/projects/"))))
+
+;;; ============================================================
+;;; Sentinel cleanup tests
+;;; ============================================================
+
+(ert-deftest gptel-claude-code-test-sentinel-cleanup-on-fsm-error ()
+  "Sentinel must clean up request alist even if FSM transition errors.
+This prevents stale entries from accumulating and 'Typing...' from
+persisting forever."
+  (let* ((gptel--request-alist nil)
+         (proc-buf (generate-new-buffer " *test-proc-buf*"))
+         ;; Create a mock process
+         (proc (start-process "test-sentinel" proc-buf "true"))
+         ;; Create a minimal FSM-like structure
+         (test-buf (generate-new-buffer " *test-chat*"))
+         (info (list :http-status "200"
+                     :buffer test-buf
+                     :callback #'ignore
+                     :position (with-current-buffer test-buf (point-min-marker))))
+         (fsm (record 'gptel-fsm 'TYPE
+                      ;; Transition table: TYPE always goes to BADSTATE
+                      '((TYPE (t . BADSTATE))
+                        (BADSTATE))
+                      ;; Handlers: BADSTATE handler errors
+                      `((BADSTATE ,(lambda (_fsm) (error "Test FSM error"))))
+                      info)))
+    ;; Register in the request alist
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    (should (= 1 (length gptel--request-alist)))
+    ;; Wait for process to exit
+    (while (process-live-p proc) (accept-process-output nil 0.01))
+    ;; Call sentinel -- FSM handler errors, but with-demoted-errors +
+    ;; unwind-protect ensures cleanup still happens.
+    (gptel-claude-code--stream-cleanup proc "finished\n")
+    ;; Entry must be removed despite the error
+    (should (= 0 (length gptel--request-alist)))
+    ;; Process buffer should be killed
+    (should-not (buffer-live-p proc-buf))
+    ;; Clean up test buffer
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+(ert-deftest gptel-claude-code-test-sentinel-cleanup-normal ()
+  "Sentinel cleans up properly on normal completion."
+  (let* ((gptel--request-alist nil)
+         (proc-buf (generate-new-buffer " *test-proc-buf*"))
+         (proc (start-process "test-sentinel" proc-buf "true"))
+         (callback-called nil)
+         (test-buf (generate-new-buffer " *test-chat*"))
+         (info (list :http-status "200"
+                     :buffer test-buf
+                     :callback (lambda (_response _info) (setq callback-called t))
+                     :position (with-current-buffer test-buf (point-min-marker))
+                     :stop-reason "end_turn"))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE))
+                        (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    (while (process-live-p proc) (accept-process-output nil 0.01))
+    (gptel-claude-code--stream-cleanup proc "finished\n")
+    (should callback-called)
+    (should (= 0 (length gptel--request-alist)))
+    (should-not (buffer-live-p proc-buf))
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
 
 (provide 'gptel-claude-code-test)
 ;;; gptel-claude-code-test.el ends here

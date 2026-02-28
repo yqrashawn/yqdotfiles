@@ -1025,40 +1025,48 @@ Closes #123"))
     nil))
 
 (defadvice! +gptel-handle-invalid-tool-calls (orig-fn fsm)
-  "Send error message to LLM when it calls non-existent tools."
+  "Send error message to LLM when it calls non-existent tools.
+Skips Claude Code backends since they handle all tool execution internally."
   :around #'gptel--handle-tool-use
   (let* ((info (gptel-fsm-info fsm))
-         (backend (plist-get info :backend))
-         (tool-use (cl-remove-if (lambda (tc) (plist-get tc :result))
-                                 (plist-get info :tool-use)))
-         (invalid-tools
-          (cl-remove-if-not
-           (lambda (tool-call)
-             (let ((name (plist-get tool-call :name)))
-               (and (not (equal name gptel--ersatz-json-tool))
-                    (null (cl-find-if
-                           (lambda (ts) (equal (gptel-tool-name ts) name))
-                           (plist-get info :tools))))))
-           tool-use)))
-    (when invalid-tools
-      ;; Handle invalid tool calls
-      (with-current-buffer (plist-get info :buffer)
-        (dolist (tool-call invalid-tools)
-          (let ((error-msg (format "Error: Tool '%s' does not exist. Please check the tool name CAREFULLY against the list of available tools and try again with the correct tool name."
-                                   (plist-get tool-call :name))))
-            (plist-put tool-call :result error-msg)
-            (message "Invalid tool call: %s" (plist-get tool-call :name))))
-        ;; Mark at least one tool as successful to trigger state transition
-        (plist-put info :tool-success t)
-        ;; Inject error messages back to LLM
-        (gptel--inject-prompt
-         backend (plist-get info :data)
-         (gptel--parse-tool-results backend (plist-get info :tool-use)))
-        (funcall (plist-get info :callback)
-                 (cons 'tool-error invalid-tools) info)
-        (gptel--fsm-transition fsm)))
-    ;; Always call original function to handle valid tool calls
-    (funcall orig-fn fsm)))
+         (backend (plist-get info :backend)))
+    ;; Claude Code handles all tool execution internally (including MCP tools).
+    ;; The FSM should never reach TOOL state for this backend, but if it does,
+    ;; clear :tool-use and transition directly to DONE (skip all tool handling).
+    (if (and (fboundp 'gptel-claude-code-p) (gptel-claude-code-p backend))
+        (progn
+          (plist-put info :tool-use nil)
+          (gptel--fsm-transition fsm))
+      (let* ((tool-use (cl-remove-if (lambda (tc) (plist-get tc :result))
+                                     (plist-get info :tool-use)))
+             (invalid-tools
+              (cl-remove-if-not
+               (lambda (tool-call)
+                 (let ((name (plist-get tool-call :name)))
+                   (and (not (equal name gptel--ersatz-json-tool))
+                        (null (cl-find-if
+                               (lambda (ts) (equal (gptel-tool-name ts) name))
+                               (plist-get info :tools))))))
+               tool-use)))
+        (when invalid-tools
+          ;; Handle invalid tool calls
+          (with-current-buffer (plist-get info :buffer)
+            (dolist (tool-call invalid-tools)
+              (let ((error-msg (format "Error: Tool '%s' does not exist. Please check the tool name CAREFULLY against the list of available tools and try again with the correct tool name."
+                                       (plist-get tool-call :name))))
+                (plist-put tool-call :result error-msg)
+                (message "Invalid tool call: %s" (plist-get tool-call :name))))
+            ;; Mark at least one tool as successful to trigger state transition
+            (plist-put info :tool-success t)
+            ;; Inject error messages back to LLM
+            (gptel--inject-prompt
+             backend (plist-get info :data)
+             (gptel--parse-tool-results backend (plist-get info :tool-use)))
+            (funcall (plist-get info :callback)
+                     (cons 'tool-error invalid-tools) info)
+            (gptel--fsm-transition fsm)))
+        ;; Always call original function to handle valid tool calls
+        (funcall orig-fn fsm)))))
 
 
 (defun +gptel-markdown-to-org (&optional input-string)
@@ -1246,11 +1254,11 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ("lattice" .
       (:command "lattice-mcp"))
 
-     ("emacs" .
-      ;; (:url "http://localhost:18684/mcp/v1/messages")
-      (:command ,(concat
-                  (expand-file-name user-emacs-directory)
-                  "emacs-mcp-stdio.sh")))
+     ;; ("emacs" .
+     ;;  (:command ,(concat
+     ;;              (expand-file-name user-emacs-directory)
+     ;;              "emacs-mcp-stdio.sh")))
+     
      ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
      
      ;; ("qmd" .
@@ -1276,8 +1284,8 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;   (:ZEROG_NETWORK "testnet",
      ;;    :ZEROG_PRIVATE_KEY ,+zerog-ai-pk)))
      
-     ;; ("emacs" .
-     ;;  (:url "http://localhost:18684/mcp/v1/messages"))
+     ("emacs" .
+      (:url "http://localhost:18684/mcp/v1/messages"))
      
 
      ;; ("desktop-commander" . (:command "bunx"

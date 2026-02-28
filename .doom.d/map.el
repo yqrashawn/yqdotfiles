@@ -147,11 +147,27 @@
     :desc "Org" "o" #'copy-as-format-org-mode
     :desc "Markdown" "m" #'copy-as-format-markdown))
   (:prefix-map ("fw" . "Workspace")
-   :desc "Find file in workspace" "w" (cmd! (let ((default-directory "~/workspace/")) (call-interactively #'find-file)))
-   :desc "Home" "h" (cmd! (let ((default-directory "~/workspace/home/")) (call-interactively #'find-file)))
-   :desc "Office" "o" (cmd! (let ((default-directory "~/workspace/office/")) (call-interactively #'find-file)))
-   :desc "Third" "t" (cmd! (let ((default-directory "~/workspace/third/")) (call-interactively #'find-file)))
-   :desc "Dropbox sync" "s" (cmd! (let ((default-directory "~/Dropbox/sync/")) (call-interactively #'find-file))))
+   :desc "Find file in workspace"
+   "w"
+   (cmd!
+    (let ((default-directory "~/workspace/"))
+      (call-interactively #'find-file)))
+   :desc "Home" "h"
+   (cmd!
+    (let ((default-directory "~/workspace/home/"))
+      (call-interactively #'find-file)))
+   :desc "Office" "o"
+   (cmd!
+    (let ((default-directory "~/workspace/office/"))
+      (call-interactively #'find-file)))
+   :desc "Third" "t"
+   (cmd!
+    (let ((default-directory "~/workspace/third/"))
+      (call-interactively #'find-file)))
+   :desc "Dropbox sync" "s"
+   (cmd!
+    (let ((default-directory "~/Dropbox/sync/"))
+      (call-interactively #'find-file))))
   (:prefix-map ("r" . "Misc")
    ;; :desc "Resume ivy" "l" #'ivy-resume
    :desc "Resume vertico" "l" #'vertico-repeat)
@@ -174,15 +190,16 @@
       (find-file-existing "~/Dropbox/application/Surge/xxxsmart.conf")))
    :desc "Edit nix config" "n"
    (cmd!
-    (let ((default-directory (expand-file-name "~/.nixpkgs/")))
-      (call-interactively #'project-find-file)))
+    (doom-project-find-file "~/.nixpkgs/"))
    :desc "Find gptel file" "a"
    (cmd!
-    (let ((buf (+vertico/consult-fd-or-find
-                (file-truename
-                 (expand-file-name "~/Dropbox/sync/gptel")))))
+    (let ((buf (doom-project-find-file "~/Dropbox/sync/gptel")))
       (with-current-buffer buf
         (gptel-mode +1))
+      buf))
+   :desc "Find screenshot" "S"
+   (cmd!
+    (let ((buf (doom-project-find-file "~/Dropbox/Screenshots/")))
       buf))
    :desc "Edit hammerspoon config" "h"
    (cmd! (find-file-existing "~/.spacehammer/config.fnl"))
@@ -206,15 +223,19 @@
            :n "rlv" #'turbo-log-print))
   (:after org
           (:map org-mode-map
-           :n "i" nil
-           :n "it" #'org-toggle-item
-           :n "ij" #'+org/insert-item-below
-           :n "ik" #'+org/insert-item-above
-           :n "ihh" #'org-insert-heading
-           :n "ihj" #'org-insert-heading-after-current
-           :n "iht" (cmd! (org-insert-heading) (insert (format-time-string "%T")))
-           :n "ds" #'orgbox-schedule
-           :n "j" '+org-emphasis-map))
+                (:prefix-map ("i" . "Insert")
+                 "t" #'org-toggle-item
+                 "j" #'+org/insert-item-below
+                 "k" #'+org/insert-item-above
+                 :desc "Last Screenshot Link" "S"
+                 (cmd! (+kill-latest-screenshot-path 2))
+                 (:prefix-map
+                  ("h" . "Header")
+                  "h" #'org-insert-heading
+                  "j" #'org-insert-heading-after-current
+                  "t" (cmd! (org-insert-heading) (insert (format-time-string "%T")))))
+                :n "ds" #'orgbox-schedule
+                :n "j" '+org-emphasis-map))
   (:after clojure-mode
           (:map clojure-mode-map
            :n "," 'yq-cljr-map))
