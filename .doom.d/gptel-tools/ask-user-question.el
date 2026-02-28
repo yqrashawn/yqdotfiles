@@ -152,6 +152,235 @@ Returns a cons of (label . description) for use with annotation."
          (desc (gptelt-auq--get-prop norm-opt "description" "")))
     (cons label desc)))
 
+;;; Interactive Buffer Mode
+
+(defvar-local gptelt-auq--multi-selected nil
+  "List of selected option indices (1-based) for multi-select questions.")
+
+(defvar-local gptelt-auq--other-text nil
+  "Custom text for the `Other' option in multi-select mode.")
+
+(defun gptelt-auq--button-action (button)
+  "Handle click on option BUTTON in the AUQ buffer."
+  (let ((idx (button-get button 'option-index)))
+    (gptelt-auq--select-option idx)))
+
+(define-button-type 'gptelt-auq-option
+  'action #'gptelt-auq--button-action
+  'follow-link t)
+
+(defvar gptelt-auq-buffer-mode-map
+  (let ((map (make-sparse-keymap)))
+    (dotimes (i 9)
+      (define-key map (number-to-string (1+ i))
+                  #'gptelt-auq--select-option-interactive))
+    (define-key map (kbd "RET") #'gptelt-auq--confirm-selection)
+    (define-key map "q" #'gptelt-auq-skip)
+    (define-key map "r" #'gptelt-auq-resume)
+    map)
+  "Keymap for the AUQ question buffer.")
+
+(define-minor-mode gptelt-auq-buffer-mode
+  "Minor mode for interacting with AUQ question buffers.
+Press number keys to select, RET to confirm multi-select,
+q to skip, r for completing-read fallback."
+  :lighter " AUQ"
+  :keymap gptelt-auq-buffer-mode-map)
+
+(defun gptelt-auq--select-option-interactive ()
+  "Select the option corresponding to the pressed number key."
+  (interactive)
+  (let ((n (- (aref (this-command-keys) 0) ?0)))
+    (gptelt-auq--select-option n)))
+
+(defun gptelt-auq--select-option (n)
+  "Select option N (1-based) from the pending question.
+For single-select, immediately records the answer and proceeds.
+For multi-select, toggles the selection state."
+  (unless gptelt-auq--pending
+    (user-error "No pending question"))
+  (let* ((state gptelt-auq--pending)
+         (option-pairs (plist-get state :option-pairs))
+         (multi-select (plist-get state :multi-select))
+         (max-idx (1+ (length option-pairs))))
+    (when (or (< n 1) (> n max-idx))
+      (user-error "Invalid option: %d (valid: 1-%d)" n max-idx))
+    (if multi-select
+        (gptelt-auq--toggle-multi-select n)
+      (gptelt-auq--answer-with-index n))))
+
+(defun gptelt-auq--answer-with-index (n)
+  "Answer the pending single-select question with option N (1-based).
+Handles `Other' (custom input) when N is the last option."
+  (let* ((state gptelt-auq--pending)
+         (option-pairs (plist-get state :option-pairs))
+         (other-idx (1+ (length option-pairs)))
+         (callback (plist-get state :callback))
+         (question-text (plist-get state :question-text))
+         (remaining-questions (plist-get state :remaining-questions))
+         (results-so-far (plist-get state :results-so-far))
+         (answer (if (= n other-idx)
+                     (read-string "Enter custom answer: ")
+                   (car (nth (1- n) option-pairs)))))
+    (let* ((this-result (cons question-text answer))
+           (all-results (append results-so-far (list this-result))))
+      (setq gptelt-auq--pending nil)
+      (gptelt-auq--cleanup-help-buffer)
+      (message "Answer recorded: %s" answer)
+      (if remaining-questions
+          (gptelt-auq--ask-remaining-questions
+           remaining-questions all-results callback)
+        (gptelt-auq--finish-with-results all-results callback)
+        (when gptelt-auq--in-recursive-edit
+          (exit-recursive-edit))))))
+
+(defun gptelt-auq--toggle-multi-select (n)
+  "Toggle option N (1-based) in multi-select mode and refresh display."
+  (when-let* ((buf (get-buffer gptelt-auq--help-buffer-name)))
+    (with-current-buffer buf
+      (let* ((option-pairs (plist-get gptelt-auq--pending :option-pairs))
+             (other-idx (1+ (length option-pairs))))
+        (if (= n other-idx)
+            ;; "Other" option
+            (if (memq n gptelt-auq--multi-selected)
+                (progn
+                  (setq gptelt-auq--multi-selected
+                        (delq n gptelt-auq--multi-selected))
+                  (setq gptelt-auq--other-text nil))
+              (let ((custom (read-string "Enter custom answer: ")))
+                (unless (string-empty-p custom)
+                  (push n gptelt-auq--multi-selected)
+                  (setq gptelt-auq--other-text custom))))
+          ;; Regular option - toggle
+          (if (memq n gptelt-auq--multi-selected)
+              (setq gptelt-auq--multi-selected
+                    (delq n gptelt-auq--multi-selected))
+            (push n gptelt-auq--multi-selected))))
+      (gptelt-auq--refresh-help-buffer))))
+
+(defun gptelt-auq--confirm-selection ()
+  "Confirm the current selection.
+For single-select, shows a hint.  For multi-select, submits toggled options."
+  (interactive)
+  (unless gptelt-auq--pending
+    (user-error "No pending question"))
+  (if (not (plist-get gptelt-auq--pending :multi-select))
+      (user-error "Press a number key to select an option")
+    (let* ((state gptelt-auq--pending)
+           (option-pairs (plist-get state :option-pairs))
+           (callback (plist-get state :callback))
+           (question-text (plist-get state :question-text))
+           (remaining-questions (plist-get state :remaining-questions))
+           (results-so-far (plist-get state :results-so-far))
+           (buf (get-buffer gptelt-auq--help-buffer-name))
+           (selected (when buf (buffer-local-value
+                                'gptelt-auq--multi-selected buf)))
+           (other-text (when buf (buffer-local-value
+                                  'gptelt-auq--other-text buf)))
+           (other-idx (1+ (length option-pairs))))
+      (unless selected
+        (user-error "No options selected. Toggle with number keys, then RET"))
+      (let* ((labels (mapcar (lambda (idx)
+                               (if (= idx other-idx)
+                                   (or other-text "Other")
+                                 (car (nth (1- idx) option-pairs))))
+                             (sort (copy-sequence selected) #'<)))
+             (answer (mapconcat #'identity labels ", "))
+             (this-result (cons question-text answer))
+             (all-results (append results-so-far (list this-result))))
+        (setq gptelt-auq--pending nil)
+        (gptelt-auq--cleanup-help-buffer)
+        (message "Answer recorded: %s" answer)
+        (if remaining-questions
+            (gptelt-auq--ask-remaining-questions
+             remaining-questions all-results callback)
+          (gptelt-auq--finish-with-results all-results callback)
+          (when gptelt-auq--in-recursive-edit
+            (exit-recursive-edit)))))))
+
+(defun gptelt-auq--refresh-help-buffer ()
+  "Refresh the help buffer display to show current multi-select state."
+  (when gptelt-auq--pending
+    (let* ((state gptelt-auq--pending)
+           (question-text (plist-get state :question-text))
+           (header (plist-get state :header))
+           (option-pairs (plist-get state :option-pairs))
+           (multi-select (plist-get state :multi-select)))
+      (when-let* ((buf (get-buffer gptelt-auq--help-buffer-name)))
+        (with-current-buffer buf
+          (let ((inhibit-read-only t)
+                (selected gptelt-auq--multi-selected)
+                (other-text gptelt-auq--other-text))
+            (erase-buffer)
+            (when (and header (> (length header) 0))
+              (insert (propertize (format "[%s]\n" header)
+                                  'face 'font-lock-keyword-face)))
+            (insert (propertize "Question:\n" 'face 'font-lock-function-name-face))
+            (insert question-text "\n\n")
+            (insert (propertize "Options:\n" 'face 'font-lock-function-name-face))
+            (when multi-select
+              (insert (propertize
+                       "  (toggle with number keys, RET to confirm)\n\n"
+                       'face 'font-lock-comment-face)))
+            (let ((idx 1))
+              (dolist (pair option-pairs)
+                (let* ((is-selected (memq idx selected))
+                       (marker (if multi-select
+                                   (if is-selected "[x]" "[ ]")
+                                 "  "))
+                       (face (if is-selected 'success 'font-lock-constant-face)))
+                  (insert marker " ")
+                  (insert-text-button
+                   (format "%d. %s" idx (car pair))
+                   'type 'gptelt-auq-option
+                   'option-index idx
+                   'face face)
+                  (when (and (cdr pair) (> (length (cdr pair)) 0))
+                    (insert "\n" (make-string (+ (length marker) 4) ?\s)
+                            (cdr pair)))
+                  (insert "\n"))
+                (cl-incf idx)))
+            ;; "Other" option
+            (let* ((other-idx (1+ (length option-pairs)))
+                   (is-selected (memq other-idx selected))
+                   (marker (if multi-select
+                               (if is-selected "[x]" "[ ]")
+                             "  "))
+                   (face (if is-selected 'success 'font-lock-comment-face)))
+              (insert marker " ")
+              (insert-text-button
+               (format "%d. Other (custom input)" other-idx)
+               'type 'gptelt-auq-option
+               'option-index other-idx
+               'face face)
+              (when (and is-selected other-text)
+                (insert (format " => %s" other-text)))
+              (insert "\n"))
+            ;; Selected summary
+            (when (and multi-select selected)
+              (let ((labels (mapcar
+                             (lambda (idx)
+                               (let ((other-idx (1+ (length option-pairs))))
+                                 (if (= idx other-idx)
+                                     (or other-text "Other")
+                                   (car (nth (1- idx) option-pairs)))))
+                             (sort (copy-sequence selected) #'<))))
+                (insert "\n")
+                (insert (propertize
+                         (format "Selected: %s"
+                                 (mapconcat #'identity labels ", "))
+                         'face 'font-lock-string-face))
+                (insert "\n")))
+            ;; Help text
+            (insert "\n")
+            (insert (propertize
+                     (if multi-select
+                         "Keys: [1-N] toggle  [RET] confirm  [q] skip  [r] completing-read"
+                       "Keys: [1-N] select  [q] skip  [r] completing-read")
+                     'face 'font-lock-comment-face))
+            (setq buffer-read-only t)
+            (goto-char (point-min))))))))
+
 ;;; Request Queue (for concurrent MCP agents)
 
 (defvar gptelt-auq--active-p nil
@@ -218,7 +447,7 @@ bring back the selection prompt."
          (results-so-far (plist-get state :results-so-far))
          result)
     ;; Re-show help buffer
-    (gptelt-auq--show-help-buffer question-text header option-pairs)
+    (gptelt-auq--show-help-buffer question-text header option-pairs multi-select)
     (condition-case _err
         (progn
           (setq result
@@ -305,10 +534,12 @@ Returns an error to the waiting agent's callback."
 (defconst gptelt-auq--help-buffer-name "*AUQ Question*"
   "Buffer name for displaying question details.")
 
-(defun gptelt-auq--show-help-buffer (question-text header option-pairs)
-  "Display a help buffer with QUESTION-TEXT, HEADER, and OPTION-PAIRS.
+(defun gptelt-auq--show-help-buffer (question-text header option-pairs
+                                                     &optional multi-select)
+  "Display an interactive help buffer with QUESTION-TEXT, HEADER, OPTION-PAIRS.
 OPTION-PAIRS is a list of (label . description) cons cells.
-The buffer uses word-wrap so long text is readable."
+When MULTI-SELECT is non-nil, show checkboxes for toggling.
+Options are clickable and respond to number key presses."
   (let ((buf (get-buffer-create gptelt-auq--help-buffer-name)))
     (with-current-buffer buf
       (let ((inhibit-read-only t))
@@ -319,19 +550,46 @@ The buffer uses word-wrap so long text is readable."
         (insert (propertize "Question:\n" 'face 'font-lock-function-name-face))
         (insert question-text "\n\n")
         (insert (propertize "Options:\n" 'face 'font-lock-function-name-face))
+        (when multi-select
+          (insert (propertize
+                   "  (toggle with number keys, RET to confirm)\n\n"
+                   'face 'font-lock-comment-face)))
         (let ((idx 1))
           (dolist (pair option-pairs)
-            (insert (propertize (format "  %d. %s" idx (car pair))
-                                'face 'font-lock-constant-face))
-            (when (and (cdr pair) (> (length (cdr pair)) 0))
-              (insert "\n     " (cdr pair)))
-            (insert "\n")
+            (let ((prefix (if multi-select "[ ] " "  ")))
+              (insert prefix)
+              (insert-text-button
+               (format "%d. %s" idx (car pair))
+               'type 'gptelt-auq-option
+               'option-index idx
+               'face 'font-lock-constant-face)
+              (when (and (cdr pair) (> (length (cdr pair)) 0))
+                (insert "\n" (make-string (+ (length prefix) 3) ?\s)
+                        (cdr pair)))
+              (insert "\n"))
             (cl-incf idx)))
-        (insert (propertize (format "  %d. Other (custom input)\n" (1+ (length option-pairs)))
-                            'face 'font-lock-comment-face))
+        ;; "Other" option
+        (let ((prefix (if multi-select "[ ] " "  ")))
+          (insert prefix)
+          (insert-text-button
+           (format "%d. Other (custom input)" (1+ (length option-pairs)))
+           'type 'gptelt-auq-option
+           'option-index (1+ (length option-pairs))
+           'face 'font-lock-comment-face)
+          (insert "\n"))
+        ;; Help text
+        (insert "\n")
+        (insert (propertize
+                 (if multi-select
+                     "Keys: [1-N] toggle  [RET] confirm  [q] skip  [r] completing-read"
+                   "Keys: [1-N] select  [q] skip  [r] completing-read")
+                 'face 'font-lock-comment-face))
         (setq buffer-read-only t)
         (goto-char (point-min))
-        (visual-line-mode 1)))
+        (visual-line-mode 1)
+        (gptelt-auq-buffer-mode 1)
+        (setq gptelt-auq--multi-selected nil)
+        (setq gptelt-auq--other-text nil)))
     (display-buffer buf
                     '((display-buffer-reuse-window display-buffer-below-selected)
                       (window-height . fit-window-to-buffer)))))
@@ -384,7 +642,7 @@ keeps Emacs responsive in the meantime."
          result)
 
     ;; Show help buffer with full question and descriptions
-    (gptelt-auq--show-help-buffer question-text header option-pairs)
+    (gptelt-auq--show-help-buffer question-text header option-pairs multi-select)
 
     (if gptelt-auq-defer-by-default
         ;; Defer immediately — show buffer, store state, let user resume when ready.
@@ -403,7 +661,7 @@ keeps Emacs responsive in the meantime."
                       :callback callback
                       :remaining-questions remaining-questions
                       :results-so-far results-so-far))
-          (message "Question ready. Review files, then M-x gptelt-auq-resume to answer.")
+          (message "Question ready. Press number keys or click options in *AUQ Question* buffer.")
           ;; Only enter recursive-edit at the top level to avoid nesting.
           ;; For subsequent questions (remaining-questions), we're already
           ;; inside a recursive-edit, so just store state and return.

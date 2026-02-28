@@ -244,4 +244,139 @@ defer off and a validation error, pending stays nil."
           gptelt-auq--pending nil
           gptelt-auq--in-recursive-edit nil)))
 
+;;; Interactive buffer tests
+
+(ert-deftest gptelt-auq-show-help-buffer-creates-buttons ()
+  "show-help-buffer creates clickable buttons for each option."
+  (let ((gptelt-auq--pending nil))
+    (gptelt-auq--show-help-buffer "Test?" "H" '(("A" . "desc A") ("B" . "desc B")))
+    (with-current-buffer gptelt-auq--help-buffer-name
+      ;; Buffer should have the minor mode enabled
+      (should gptelt-auq-buffer-mode)
+      ;; Should contain button text
+      (goto-char (point-min))
+      (should (search-forward "1. A" nil t))
+      (should (search-forward "2. B" nil t))
+      (should (search-forward "3. Other" nil t))
+      ;; Should show key hints
+      (goto-char (point-min))
+      (should (search-forward "[1-N] select" nil t)))
+    (gptelt-auq--cleanup-help-buffer)))
+
+(ert-deftest gptelt-auq-show-help-buffer-multi-select ()
+  "show-help-buffer shows checkboxes in multi-select mode."
+  (let ((gptelt-auq--pending nil))
+    (gptelt-auq--show-help-buffer "Pick?" "H" '(("X" . "") ("Y" . "")) t)
+    (with-current-buffer gptelt-auq--help-buffer-name
+      (goto-char (point-min))
+      (should (search-forward "[ ]" nil t))
+      (should (search-forward "toggle" nil t)))
+    (gptelt-auq--cleanup-help-buffer)))
+
+(ert-deftest gptelt-auq-select-option-no-pending ()
+  "select-option errors when no question is pending."
+  (let ((gptelt-auq--pending nil))
+    (should-error (gptelt-auq--select-option 1) :type 'user-error)))
+
+(ert-deftest gptelt-auq-select-option-out-of-range ()
+  "select-option errors for out-of-range index."
+  (let ((gptelt-auq--pending
+         (list :option-pairs '(("A" . "") ("B" . ""))
+               :multi-select nil)))
+    ;; max valid is 3 (2 options + Other)
+    (should-error (gptelt-auq--select-option 4) :type 'user-error)
+    (should-error (gptelt-auq--select-option 0) :type 'user-error)
+    (setq gptelt-auq--pending nil)))
+
+(ert-deftest gptelt-auq-answer-with-index-single-select ()
+  "answer-with-index selects the correct option and calls callback."
+  (let* ((callback-result nil)
+         (gptelt-auq--active-p t)
+         (gptelt-auq--queue nil)
+         (gptelt-auq--in-recursive-edit nil)
+         (gptelt-auq--pending
+          (list :option-pairs '(("Alpha" . "first") ("Beta" . "second"))
+                :question-text "Choose?"
+                :callback (lambda (r) (setq callback-result r))
+                :remaining-questions nil
+                :results-so-far nil)))
+    (gptelt-auq--answer-with-index 2)
+    ;; Pending should be cleared
+    (should (null gptelt-auq--pending))
+    ;; Callback should have been called with "Beta"
+    (should callback-result)
+    (let ((parsed (json-read-from-string callback-result)))
+      (should (string= "Beta" (alist-get (intern "Choose?") (alist-get 'answers parsed)))))
+    (setq gptelt-auq--active-p nil)))
+
+(ert-deftest gptelt-auq-toggle-multi-select ()
+  "toggle-multi-select toggles option indices in buffer-local var."
+  (let* ((gptelt-auq--pending
+          (list :option-pairs '(("A" . "") ("B" . ""))
+                :multi-select t
+                :question-text "Pick?"
+                :header "H"
+                :callback (lambda (_) nil)
+                :remaining-questions nil
+                :results-so-far nil)))
+    ;; Create the buffer with multi-select mode
+    (gptelt-auq--show-help-buffer "Pick?" "H" '(("A" . "") ("B" . "")) t)
+    (with-current-buffer gptelt-auq--help-buffer-name
+      ;; Initially empty
+      (should (null gptelt-auq--multi-selected))
+      ;; Toggle option 1 on
+      (gptelt-auq--toggle-multi-select 1)
+      (should (memq 1 gptelt-auq--multi-selected))
+      ;; Toggle option 2 on
+      (gptelt-auq--toggle-multi-select 2)
+      (should (memq 2 gptelt-auq--multi-selected))
+      ;; Toggle option 1 off
+      (gptelt-auq--toggle-multi-select 1)
+      (should (null (memq 1 gptelt-auq--multi-selected)))
+      (should (memq 2 gptelt-auq--multi-selected)))
+    (gptelt-auq--cleanup-help-buffer)
+    (setq gptelt-auq--pending nil)))
+
+(ert-deftest gptelt-auq-confirm-selection-no-pending ()
+  "confirm-selection errors when no question is pending."
+  (let ((gptelt-auq--pending nil))
+    (should-error (gptelt-auq--confirm-selection) :type 'user-error)))
+
+(ert-deftest gptelt-auq-confirm-selection-single-select ()
+  "confirm-selection errors in single-select mode."
+  (let ((gptelt-auq--pending
+         (list :multi-select nil
+               :option-pairs '(("A" . "")))))
+    (should-error (gptelt-auq--confirm-selection) :type 'user-error)
+    (setq gptelt-auq--pending nil)))
+
+(ert-deftest gptelt-auq-confirm-multi-select-submits ()
+  "confirm-selection submits toggled options in multi-select mode."
+  (let* ((callback-result nil)
+         (gptelt-auq--active-p t)
+         (gptelt-auq--queue nil)
+         (gptelt-auq--in-recursive-edit nil)
+         (gptelt-auq--pending
+          (list :option-pairs '(("X" . "") ("Y" . "") ("Z" . ""))
+                :multi-select t
+                :question-text "Features?"
+                :header "H"
+                :callback (lambda (r) (setq callback-result r))
+                :remaining-questions nil
+                :results-so-far nil)))
+    (gptelt-auq--show-help-buffer "Features?" "H"
+                                  '(("X" . "") ("Y" . "") ("Z" . "")) t)
+    (with-current-buffer gptelt-auq--help-buffer-name
+      ;; Toggle X and Z
+      (gptelt-auq--toggle-multi-select 1)
+      (gptelt-auq--toggle-multi-select 3))
+    (gptelt-auq--confirm-selection)
+    ;; Should have result with "X, Z"
+    (should callback-result)
+    (let ((parsed (json-read-from-string callback-result)))
+      (should (string= "X, Z"
+                        (alist-get (intern "Features?") (alist-get 'answers parsed)))))
+    (setq gptelt-auq--active-p nil
+          gptelt-auq--pending nil)))
+
 ;;; ask-user-question-test.el ends here
