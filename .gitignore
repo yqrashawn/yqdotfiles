@@ -27,3 +27,4 @@ __pycache__/
 /resources/public/app/js/
 /resources/public/ground/js
 /.agent-shell/
+/.doom.d/modules/llm/gptel-claude-code/*.elc

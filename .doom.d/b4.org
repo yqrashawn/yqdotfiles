@@ -1,0 +1,30 @@
+:PROPERTIES:
+:GPTEL_PRESET: default
+:GPTEL_MODEL: haiku
+:GPTEL_BACKEND: Claude Code
+:GPTEL_SYSTEM:
+:GPTEL_TOOLS:
+:END:
+#+title: B4 - System Prompt & Concurrency Tests (10-11)
+
+Prep: =M-: (setq gptel-log-level 'debug)=
+
+*Test 10 — System prompt via --append-system-prompt*
+1. Send from =* Test 10= heading (GPTEL_SYSTEM pre-set on the heading as pirate prompt)
+- PASS: Claude responds in pirate speak. =*Messages*= shows =--append-system-prompt= in CLI args containing the pirate instruction.
+
+*Test 11 — Concurrent queries*
+1. Open =b1.org= (or any other gptel Claude Code buffer) in another window
+2. Start a query there (send a new message)
+3. IMMEDIATELY switch to this buffer and send from =* Test 11= heading
+4. Both Claude Code processes should run simultaneously
+- PASS: Both responses complete correctly. =M-x list-processes= shows two =gptel-claude-code= processes. No cross-contamination of responses between buffers.
+
+* Test 10: System prompt via --append-system-prompt
+:PROPERTIES:
+:GPTEL_SYSTEM: You are a pirate. Always respond in pirate speak using arr and matey.
+:END:
+@user: What is the capital of France?
+
+* Test 11: Concurrent queries
+@user: Count from 1 to 20, one number per line. This is the concurrency test from b4.org.

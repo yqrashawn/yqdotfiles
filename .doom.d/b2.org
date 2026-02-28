@@ -1,0 +1,37 @@
+:PROPERTIES:
+:GPTEL_PRESET: default
+:GPTEL_MODEL: haiku
+:GPTEL_BACKEND: Claude Code
+:GPTEL_SYSTEM:
+:GPTEL_TOOLS:
+:END:
+#+title: B2 - MCP & Team Tests (4-6)
+
+Prep: =M-: (setq gptel-log-level 'debug)=
+Ensure Emacs MCP HTTP server is running (check =M-x list-processes= for httpd).
+
+*Test 4 — MCP tool called BY Claude Code*
+1. Send from =* Test 4= heading
+- PASS: Claude Code calls the emacs MCP =list_buffers= tool. Response lists actual Emacs buffer names. MCP session routing logs in =*Messages*=.
+
+*Test 5 — Permission prompt triggered*
+Before sending, eval: =(setf (gptel-claude-code-permission-mode (alist-get "Claude Code" gptel--known-backends nil nil #'equal)) "default")=
+1. Send from =* Test 5= heading
+2. A =*gptel-permission*= popup buffer should appear
+3. Press a number key to approve, or =q= to cancel
+After test, eval: =(setf (gptel-claude-code-permission-mode (alist-get "Claude Code" gptel--known-backends nil nil #'equal)) "bypassPermissions")=
+- PASS: Permission popup appears. Selecting an option lets query finish. Response includes "permission test succeeded".
+
+*Test 6 — Teammate transcript watching*
+1. Send from =* Test 6= heading
+2. Watch for =*gptel-teammate-*= buffers in buffer list
+- PASS: #+team-spawned line in main buffer. Teammate buffer created with agent output. File watchers cleaned up on process exit (=M-x file-notify-descriptors=).
+
+* Test 4: MCP tool called BY Claude Code
+@user: Use the mcp__emacs__list_buffers MCP tool to list my open Emacs buffers. Report the total count and first 5 buffer names.
+
+* Test 5: Permission prompt
+@user: Run this shell command: echo "permission test succeeded"
+
+* Test 6: Teammate transcript watching
+@user: Create a team with one teammate named "greeter". The teammate's only job is to respond with "hello from teammate" and nothing else. Keep it minimal.
