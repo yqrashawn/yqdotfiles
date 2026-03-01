@@ -54,6 +54,7 @@ insert ~/ normally"
     ;; ` 96
     ;; ~ 126
     ;; / 47
+    ;; = 61
     (cond
      ((and
        (eq (char-before) 47)
@@ -65,10 +66,10 @@ insert ~/ normally"
       (progn
         (delete-char -1)
         (delete-char 1)
-        (insert 126)
-        (insert 126)
+        (insert 61)
+        (insert 61)
         (backward-char 1)))
-     ((eq (char-before) 126)
+     ((eq (char-before) 61)
       (progn
         (delete-char -1)
         (insert 96))))))
