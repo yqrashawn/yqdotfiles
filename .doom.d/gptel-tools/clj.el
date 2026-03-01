@@ -16,9 +16,9 @@ session, regardless of what the current buffer is (could be CLJS, chat, scratch,
     (if proj-buf
         (with-current-buffer proj-buf
           (or (cider-current-repl 'clj)
-              (error "Clojure nREPL is not connected")))
+              (error "Clojure nREPL is not connected. Use M-x cider-jack-in to start a REPL.")))
       (or (cider-current-repl 'clj)
-          (error "Clojure nREPL is not connected")))))
+          (error "Clojure nREPL is not connected. Use M-x cider-jack-in to start a REPL.")))))
 
 (defun gptelt-clj-ensure-helper-loaded ()
   "Load clj_helper.clj into the CLJ REPL via load-file.
@@ -37,14 +37,14 @@ when the helper file is outside the current project."
     (unless (++workspace-cljs?)
       (error "This is not a clojure project"))
     (unless (++workspace-cljs-repl-connected?)
-      (error "Clojure nREPL is not connected")))
+      (error "ClojureScript nREPL is not connected. Use cljs_get_project_states to check available builds and runtimes, or M-x cider-jack-in-cljs to connect.")))
 
   (when (or (eq type 'clj)
             (eq type 'cljs))
     (unless (++workspace-clj?)
       (error "This is not a clojure project"))
     (unless (++workspace-clj-repl-connected?)
-      (error "Clojure nREPL is not connected"))
+      (error "Clojure nREPL is not connected. Use M-x cider-jack-in to start a REPL."))
     (when ns
       ;; Use find-ns via direct eval on the CLJ REPL to check namespace.
       ;; cider-sync-request:ns-list is unreliable for dynamically loaded
@@ -55,7 +55,16 @@ when the helper file is outside the current project."
                       clj-repl "user"))
              (value (nrepl-dict-get result "value")))
         (unless (and value (string= value "true"))
-          (error "Namespace '%s' is not available" ns))))))
+          (let ((ns-sample
+                 (condition-case nil
+                     (nrepl-dict-get
+                      (cider-nrepl-sync-request:eval
+                       "(vec (take 20 (sort (map str (all-ns)))))"
+                       clj-repl "user")
+                      "value")
+                   (error nil))))
+            (error "Namespace '%s' is not loaded.\n\nSample of loaded namespaces (use clj_list_ns for full list):\n%s"
+                   ns (or ns-sample "(could not list namespaces)"))))))))
 
 (defun gptel-clojure--resolve-file-path (file-path)
   (let* ((proj-root (++workspace-current-project-root))
@@ -179,7 +188,14 @@ Returns the namespace string if found, or nil if no namespace is detected."
   (gptelt-clojure--ensure-workspace 'clj)
   (let ((buffer (get-buffer buffer-name)))
     (unless buffer
-      (error "Buffer '%s' not found" buffer-name))
+      (let ((clj-bufs (seq-filter
+                       (lambda (b)
+                         (with-current-buffer b
+                           (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))))
+                       (buffer-list))))
+        (error "Buffer '%s' not found.\n\nAvailable Clojure buffers:\n%s"
+               buffer-name
+               (if clj-bufs (mapconcat #'buffer-name clj-bufs "\n") "No Clojure buffers open"))))
     (with-current-buffer buffer
       (unless (or (eq major-mode 'clojure-mode)
                   (eq major-mode 'clojurescript-mode)
@@ -313,7 +329,14 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
          (shown-before (if no-confirm t (get-buffer-window buffer)))
          win)
     (unless buffer
-      (error "Buffer '%s' not found" buffer-name))
+      (let ((clj-bufs (seq-filter
+                       (lambda (b)
+                         (with-current-buffer b
+                           (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))))
+                       (buffer-list))))
+        (error "Buffer '%s' not found.\n\nAvailable Clojure buffers:\n%s"
+               buffer-name
+               (if clj-bufs (mapconcat #'buffer-name clj-bufs "\n") "No Clojure buffers open"))))
     (let ((file-path (buffer-file-name buffer)))
       (unless file-path
         (error "Buffer '%s' is not associated with a file" buffer-name))

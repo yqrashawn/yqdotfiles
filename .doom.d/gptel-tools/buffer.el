@@ -21,7 +21,11 @@
   "Return the file path for buffer BUF-NAME."
   (if-let ((b (get-buffer buf-name)))
       (buffer-file-name b)
-    (error "Buffer not found: %s" buf-name)))
+    (let ((available-buffers (when (fboundp '++workspace-current-project-buffers-info)
+                               (++workspace-current-project-buffers-info))))
+      (error "Buffer not found: %s\n\nAvailable buffers in current project:\n%s"
+             buf-name
+             (or available-buffers "No buffers found")))))
 
 (comment
   (gptelt--get-buffer-file-path "buffer.el"))

@@ -7,8 +7,8 @@ Resolves from a known CLJS project buffer to ensure correct sesman session."
     (if cljs-buf
         (with-current-buffer cljs-buf
           (or (cider-current-repl 'cljs)
-              (error "ClojureScript nREPL is not connected")))
-      (error "No ClojureScript buffer found in workspace"))))
+              (error "ClojureScript nREPL is not connected. Use cljs_get_project_states to check available builds and runtimes, or M-x cider-jack-in-cljs to connect.")))
+      (error "No ClojureScript buffer found in workspace. Use cljs_get_project_states to verify shadow-cljs is running."))))
 
 (defun gptelt-clj-eval-cljs-in-clj-repl (clj-str)
   "Evaluate CLJ-STR in the CLJ side of the CLJS REPL connection.

@@ -172,13 +172,17 @@ Returns a message describing the result of the operation."
          (original-fn (plist-get args :function))
          (wrapped-fn
           (if is-async
-              ;; Wrap async functions to catch errors and pass to callback
               (lambda (callback &rest fn-args)
                 (condition-case err
                     (apply original-fn callback fn-args)
-                  (error (funcall callback (format "Error: %s"
-                                                   (error-message-string err))))))
-            original-fn))
+                  (error (funcall callback
+                                  (format "<tool_use_error>%s</tool_use_error>"
+                                          (error-message-string err))))))
+            (lambda (&rest fn-args)
+              (condition-case err
+                  (apply original-fn fn-args)
+                (error (format "<tool_use_error>%s</tool_use_error>"
+                               (error-message-string err)))))))
          (tool (apply #'gptel-make-tool (plist-put args :function wrapped-fn))))
     (mcp-server-lib-register-gptel-tool tool)
     tool
