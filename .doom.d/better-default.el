@@ -871,6 +871,7 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
   (let* ((bname (buffer-name))
          (bfile (buffer-file-name)))
     (cond
+     ((get-buffer-process (current-buffer)) :keep)
      ((memq major-mode
             '(copilot-chat-prompt-mode
               copilot-chat-mode

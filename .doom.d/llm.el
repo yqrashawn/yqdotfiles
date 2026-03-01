@@ -507,7 +507,6 @@ Merge buffer-local with global default files."
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   ;; (add-hook! 'gptel-post-response-functions #'+gptel-collapse-blank-lines)
-  (setq! gptel-log-level 'debug)
   (defun +gptel-toggle-debug ()
     (interactive)
     (if gptel-log-level
@@ -823,8 +822,6 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
 
 
      (setq-default gptel--preset 'default)))
-  (setq! mcp-log-level 'debug)
-  (setq! mcp-log-level 'info)
 
   (defadvice! +mcp-make-text-tool (orig-fn name tool-name &optional asyncp)
     :around #'mcp-make-text-tool
