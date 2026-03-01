@@ -774,7 +774,14 @@ When inside recursive-edit, queue processing is deferred to a timer
 so it runs after exit-recursive-edit returns control to the MCP handler."
   (when gptelt-auq-debug
     (message "[ASK-USER-DEBUG] Finishing with %d result(s)" (length results)))
-  (funcall callback (gptelt-auq--build-result-json results))
+  ;; Isolate callback errors so queue processing always continues.
+  ;; Without this, a callback error would prevent remaining queued
+  ;; requests from being processed.
+  (condition-case err
+      (funcall callback (gptelt-auq--build-result-json results))
+    (error
+     (message "[ASK-USER-QUESTION] Error in callback: %s"
+              (error-message-string err))))
   (if gptelt-auq--in-recursive-edit
       ;; Defer queue processing until after recursive-edit exits,
       ;; otherwise process-queue would start a new session inside

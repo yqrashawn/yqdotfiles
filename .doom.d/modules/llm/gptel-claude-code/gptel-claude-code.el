@@ -24,7 +24,7 @@
 
 ;;; User options
 
-(defcustom gptel-claude-code-timeout 300
+(defcustom gptel-claude-code-timeout 7200
   "Timeout in seconds for Claude Code queries.
 Set to nil to disable timeout."
   :type '(choice (integer :tag "Seconds")
@@ -490,6 +490,14 @@ equivalent of `gptel-curl-get-response'."
         (let ((process (let ((default-directory cwd))
                          (apply #'start-process "gptel-claude-code" buf
                                 (gptel-claude-code-claude-command backend) args))))
+          ;; Log prompt text at info level (like curl logs request body)
+          (when gptel-log-level
+            (let* ((data (plist-get info :data))
+                   (prompt-text (if (and (listp data) (plist-get data :prompt))
+                                    (plist-get data :prompt)
+                                  data)))
+              (when (and prompt-text (stringp prompt-text))
+                (gptel--log prompt-text "request Claude Code prompt" 'no-json))))
           ;; Log command at debug level
           (when (eq gptel-log-level 'debug)
             (gptel--log (mapconcat #'shell-quote-argument
@@ -552,6 +560,10 @@ equivalent of `gptel-curl-get-response'."
                                         (when (process-live-p process)
                                           (plist-put info :error
                                                      "Claude Code query timed out")
+                                          ;; Set :status so gptel--handle-error
+                                          ;; can display the error (it requires
+                                          ;; :status in its when-let* chain).
+                                          (plist-put info :status "timeout")
                                           (delete-process process))))))
               (plist-put info :claude-code-timer timer))))
       (file-missing
@@ -606,9 +618,10 @@ equivalent of `gptel-curl-get-response'."
   nil)
 
 (eval-and-compile
-  (let ((dir (file-name-directory (or load-file-name byte-compile-current-file ""))))
-    (unless (member dir load-path)
+  (let ((dir (file-name-directory (or load-file-name byte-compile-current-file buffer-file-name))))
+    (when (and dir (not (member dir load-path)))
       (add-to-list 'load-path dir))))
+
 (require 'gptel-claude-code-display)
 (require 'gptel-claude-code-session)
 (require 'gptel-claude-code-team)

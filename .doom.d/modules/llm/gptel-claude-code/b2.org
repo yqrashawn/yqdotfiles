@@ -1,0 +1,88 @@
+:PROPERTIES:
+:GPTEL_MODEL: sonnet
+:GPTEL_BACKEND: Claude Code
+:GPTEL_SYSTEM: You are a test assistant in Emacs. You have access to MCP tools from the "emacs" MCP server. Use them when asked.
+:END:
+#+TITLE: E2E Test: MCP Tools, Permission Prompt, Subagent (Tests 4, 5, 7)
+
+* README: How to run these tests
+This file tests: MCP tool called BY Claude Code, permission prompt, subagent inline output.
+
+Prerequisites:
+1. Enable =gptel-mode=: =M-x gptel-mode=
+2. Set debug logging: =(setq gptel-log-level 'debug)=
+3. Ensure MCP server is running (mcp-server-lib HTTP on port 18684)
+   Check with: =(mcp-server-lib-http--running-p)= or similar
+4. Each top-level heading is an independent test
+
+* Test 4: MCP tool called BY Claude Code
+This tests that Claude Code can discover and call Emacs MCP tools
+during a query. The MCP config with session-aware URL should route
+the tool call back to this buffer's session.
+
+@user: Use the emacs MCP tools available to you. Call the =list_buffers= tool to list currently open Emacs buffers. Show me the first 10 buffer names from the result.
+
+** Verification
+- [ ] Claude Code called the =list_buffers= MCP tool (check tool use blocks in response)
+- [ ] Tool call was routed through session-aware MCP endpoint
+- [ ] Tool result was returned and Claude Code displayed buffer names
+- [ ] =*Messages*= shows =--mcp-config= with session-specific URL
+- [ ] No MCP routing errors in =*Messages*= or =*Warnings*=
+
+* Test 5: Permission prompt triggered
+This test requires changing permission mode from =bypassPermissions= to =default=.
+
+** Step 0: Change permission mode
+Evaluate this elisp BEFORE sending the test message:
+
+#+begin_src elisp :results silent
+(setf (gptel-claude-code-permission-mode
+       (alist-get "Claude Code" gptel--known-backends nil nil #'equal))
+      "default")
+#+end_src
+
+** Step 1: Trigger permission prompt
+Send this - Claude Code should ask for permission to run the bash command,
+which triggers the =permission_prompt= MCP tool and shows a popup buffer.
+
+@user: Run this bash command: echo "hello from permission test"
+
+** Step 2: Respond to permission prompt
+When the =*gptel-permission*= buffer pops up:
+1. Read the permission request
+2. Press =a= to allow (or =d= to deny)
+3. The response should continue after your choice
+
+** Step 3: Restore bypass mode
+After testing, restore bypass mode:
+
+#+begin_src elisp :results silent
+(setf (gptel-claude-code-permission-mode
+       (alist-get "Claude Code" gptel--known-backends nil nil #'equal))
+      "bypassPermissions")
+#+end_src
+
+** Verification
+- [ ] =*gptel-permission*= buffer appeared with permission request
+- [ ] Buffer showed the action description and allow/deny options
+- [ ] Pressing =a= allowed the action and returned result to Claude Code
+- [ ] Claude Code continued and showed the bash output "hello from permission test"
+- [ ] Pressing =d= (if tested separately) denied the action gracefully
+- [ ] =*Messages*= shows =--permission-mode default=
+- [ ] =*Messages*= shows =--permission-prompt-tool mcp__emacs__permission_prompt=
+
+* Test 7: Subagent inline output
+This tests that when Claude Code spawns a subagent (via Agent tool),
+the stream_event messages with =parent_tool_use_id= are handled correctly.
+
+Note: Claude Code uses subagents internally for complex tasks. The
+=--include-partial-messages= flag should include subagent output in the stream.
+
+@user: Use the Agent tool to search for files matching "*.org" in the current directory. Show the results.
+
+** Verification
+- [ ] Claude Code spawned a subagent (Agent tool use block visible)
+- [ ] Subagent output appeared in the response (file listing)
+- [ ] No errors related to =parent_tool_use_id= in =*Messages*=
+- [ ] Tool use and result blocks are properly formatted in org
+- [ ] The response completed cleanly after subagent finished

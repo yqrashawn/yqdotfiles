@@ -96,6 +96,10 @@ to JSON encoding."
      (let ((query (plist-get input :query)))
        (or query "")))
 
+    ("Skill"
+     (let ((skill (plist-get input :skill)))
+       (or skill "")))
+
     ("Agent"
      (let ((type (plist-get input :subagent_type))
            (desc (plist-get input :description))

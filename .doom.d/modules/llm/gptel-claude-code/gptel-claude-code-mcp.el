@@ -91,6 +91,9 @@ Used to prevent nested recursive-edits.")
     (format "[%s] %s"
             (or (plist-get tool-input :subagent_type) "agent")
             (plist-get tool-input :description)))
+   ((and (equal tool-name "Skill")
+         (plist-get tool-input :skill))
+    (plist-get tool-input :skill))
    (tool-input
     (let ((json-encoding-pretty-print t))
       (condition-case nil

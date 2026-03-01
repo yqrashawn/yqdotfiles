@@ -408,7 +408,6 @@ Merge buffer-local with global default files."
       ;; Remove only the specific context buffers we manage, not all context
       (dolist (buf (list (+current-workspace-info-buffer)
                          (+visible-buffers-list-buffer)
-                         (+magit-wip-diff-n-min-buffer 5)
                          (+current-workspace-lints-buffer)))
         (setf (alist-get buf gptel-context nil 'remove) nil))
       
@@ -416,16 +415,6 @@ Merge buffer-local with global default files."
       (+gptel-context-add-buffer (+current-workspace-info-buffer))
       (+gptel-context-add-buffer (+visible-buffers-list-buffer))
       (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
-      ;; ;; add visible buffers to context
-      ;; ;; let llm decides based on the visible buffer list
-      ;; (dolist (b (seq-filter
-      ;;             (lambda (b)
-      ;;               (and
-      ;;                (not (string= (buffer-name b) "*Messages*"))
-      ;;                (with-current-buffer b
-      ;;                  (not gptel-mode))))
-      ;;             (mapcar 'window-buffer (window-list))))
-      ;;   (+gptel-context-add-buffer b))
       (when-let ((root (++workspace-current-project-root)))
         (dolist (f (+llm-get-project-default-files))
           (when-let ((file (file-truename (format "%s/%s" root f))))

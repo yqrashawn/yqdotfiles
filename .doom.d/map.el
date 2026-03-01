@@ -212,8 +212,7 @@
      (:prefix ("l" . "llm")
       :desc "Reload all gptel tools" "R" #'+gptel-reload-tools
       :desc "Compress gptel conversation to kill ring" "C"
-      #'llm-compress-buffer-conversation
-      :desc "Reload all gptel tools" "L" #'gptelt-log-check))))
+      #'llm-compress-buffer-conversation))))
  (:localleader
   (:after js2-mode
           (:map js2-mode-map
@@ -248,6 +247,10 @@
            :n "yb" #'slack-buffer-copy-link
            :n "rr" #'slack-message-reaction-add
            :n "rx" #'slack-message-reaction-remove)))
+ (:after simple
+         (:map messages-buffer-mode-map
+               (:localleader
+                :n "c" #'yq/clear-messages-buffer)))
  (:after org
          (:map org-mode-map
           :g "C-c r" verb-command-map))

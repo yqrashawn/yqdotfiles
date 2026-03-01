@@ -151,7 +151,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-              (insert! (",File project root: `%s`" buf-proj-root))
+            (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -307,10 +307,12 @@ Used to maintain workspace context during async LLM operations.")
 
 (defun ++workspace-current-project-root ()
   "Get project root for current workspace or gptel request workspace."
-  (or (when ++gptel-request-workspace
-        (persp-parameter '++workspace-project-root ++gptel-request-workspace))
-      (persp-parameter '++workspace-project-root)
-      ++fake-project-root))
+  (or
+   mcp-server-lib--request-cwd
+   (when ++gptel-request-workspace
+     (persp-parameter '++workspace-project-root ++gptel-request-workspace))
+   (persp-parameter '++workspace-project-root)
+   ++fake-project-root))
 
 (defun ++workspace-current-project-buffers-names ()
   (seq-map 'buffer-name (++workspace-current-project-buffers)))

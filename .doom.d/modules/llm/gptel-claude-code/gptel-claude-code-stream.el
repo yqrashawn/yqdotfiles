@@ -35,6 +35,28 @@
 ;; gptel--json-read-string is a macro from gptel, available via the
 ;; parent file's (require 'gptel)
 
+;;; Unhandled type logging
+
+(defvar gptel-claude-code-unhandled-log-file
+  (expand-file-name "gptel-claude-code-unhandled.log"
+                    (or (getenv "XDG_DATA_HOME")
+                        (expand-file-name "~/.local/share")))
+  "File path to log unhandled Claude Code message/event/block types.
+New types from Claude Code updates will be appended here with timestamps.")
+
+(defun gptel-claude-code--log-unhandled (category type-name raw-json)
+  "Log an unhandled CATEGORY (msg/event/block/delta) with TYPE-NAME to file.
+RAW-JSON is the original JSON string or plist for context."
+  (let ((entry (format "[%s] %s: %s\n  %S\n\n"
+                       (format-time-string "%Y-%m-%dT%H:%M:%S%z")
+                       category type-name raw-json)))
+    (condition-case nil
+        (let ((dir (file-name-directory gptel-claude-code-unhandled-log-file)))
+          (unless (file-directory-p dir)
+            (make-directory dir t))
+          (append-to-file entry nil gptel-claude-code-unhandled-log-file))
+      (error nil))))
+
 ;;; Buffer-local state
 
 (defvar-local gptel-claude-code--session-id nil
@@ -113,7 +135,11 @@ Dispatches on event type to extract text deltas and reasoning."
             (when-let* ((thinking (plist-get cblock :thinking)))
               (plist-put info :reasoning thinking))
             nil)
-           (_ nil))))
+           ("text" nil) ; known type, no special handling needed
+           (_
+            (gptel-claude-code--log-unhandled
+             "block-type" (or block-type "nil") cblock)
+            nil))))
 
       ("content_block_delta"
        (let* ((delta (plist-get event :delta))
@@ -139,7 +165,10 @@ Dispatches on event type to extract text deltas and reasoning."
             ;; Ignore signature deltas
             nil)
 
-           (_ nil))))
+           (_
+            (gptel-claude-code--log-unhandled
+             "delta-type" (or delta-type "nil") delta)
+            nil))))
 
       ("content_block_stop"
        (let ((current-block (plist-get info :claude-code-current-block))
@@ -185,27 +214,50 @@ Dispatches on event type to extract text deltas and reasoning."
            (plist-put info :claude-code-pending-results nil))
          display-str))
 
-      ;; message_start, message_delta, message_stop: ignore
-      (_ nil))))
+      ;; message_start, message_delta, message_stop: known, ignore
+      ("message_start" nil)
+      ("message_delta" nil)
+      ("message_stop" nil)
+      (_
+       (gptel-claude-code--log-unhandled
+        "event-type" (or event-type "nil") event)
+       nil))))
 
 (defun gptel-claude-code--handle-assistant (msg info)
   "Handle an assistant-type message MSG with request INFO.
-Extracts thinking content for reasoning display.  Tool use blocks
-are tracked via :claude-code-tools (set by the stream_event handler)
-for display purposes only -- Claude Code executes all tools internally."
-  (when-let* ((message (plist-get msg :message))
-              (content (plist-get message :content)))
-    ;; content is a vector of content blocks
-    (cl-loop for cblock across content
-             for ctype = (plist-get cblock :type)
-             do (pcase ctype
-                  ("thinking"
-                   ;; Store full thinking text for potential later use
-                   (when-let* ((thinking (plist-get cblock :thinking)))
-                     (plist-put info :partial_reasoning
-                                (concat (plist-get info :partial_reasoning)
-                                        thinking)))))))
-  nil)
+Extracts thinking content for reasoning display.  Also records
+tool_use blocks from subagent assistant messages so that subsequent
+tool_result messages can look up the tool name (instead of showing
+\"unknown\").  Tool use blocks are for display only -- Claude Code
+executes all tools internally."
+  (let ((display-parts nil))
+    (when-let* ((message (plist-get msg :message))
+                (content (plist-get message :content)))
+      ;; content is a vector of content blocks
+      (cl-loop for cblock across content
+               for ctype = (plist-get cblock :type)
+               do (pcase ctype
+                    ("thinking"
+                     ;; Store full thinking text for potential later use
+                     (when-let* ((thinking (plist-get cblock :thinking)))
+                       (plist-put info :partial_reasoning
+                                  (concat (plist-get info :partial_reasoning)
+                                          thinking))))
+                    ("tool_use"
+                     ;; Subagent tool calls arrive as full assistant messages
+                     ;; (not stream_events).  Record them so handle-user can
+                     ;; match tool_result entries by tool_use_id.
+                     (let ((name (plist-get cblock :name))
+                           (id (plist-get cblock :id))
+                           (input (plist-get cblock :input)))
+                       (plist-put info :claude-code-tools
+                                  (cons (list :id id :name name :input input)
+                                        (plist-get info :claude-code-tools)))
+                       ;; Format tool use block for display
+                       (push (gptel-claude-code--format-tool-use name input id)
+                             display-parts))))))
+    (when display-parts
+      (apply #'concat (nreverse display-parts)))))
 
 (defun gptel-claude-code--handle-user (msg info)
   "Handle a user-type message MSG with request INFO.
@@ -390,10 +442,16 @@ deltas are forwarded to the gptel callback for display."
                 (when (and (not (string-empty-p line))
                            (eq (aref line 0) ?{))  ; Quick JSON check
                   (condition-case err
-                      (let* ((msg (gptel--json-read-string line))
+                      (let* ((msg (progn
+                                    (when (eq gptel-log-level 'debug)
+                                      (gptel--log line "Claude Code stream"))
+                                    (gptel--json-read-string line)))
                              (msg-type (plist-get msg :type))
                              (handler (cdr (assoc msg-type
                                                   gptel-claude-code--message-handlers))))
+                        (unless handler
+                          (gptel-claude-code--log-unhandled
+                           "msg-type" (or msg-type "nil") line))
                         (when handler
                           (let ((response (funcall handler msg proc-info)))
                             ;; Handle reasoning display (same logic as curl filter)
@@ -441,6 +499,12 @@ advances the FSM, and stops any teammate transcript watchers."
     (when-let* ((entry (alist-get process gptel--request-alist))
                 (fsm (car entry))
                 (info (gptel-fsm-info fsm)))
+      ;; Log response body (all stream JSON lines) at info level
+      (when gptel-log-level
+        (when (buffer-live-p proc-buf)
+          (gptel--log (with-current-buffer proc-buf
+                        (buffer-substring-no-properties (point-min) (point-max)))
+                      "response Claude Code body" 'no-json)))
       ;; Use unwind-protect to guarantee cleanup even if FSM transition
       ;; handlers error (e.g. gptel--handle-error, gptel--parse-tool-results).
       ;; Without this, stale entries accumulate in gptel--request-alist and
@@ -460,6 +524,11 @@ advances the FSM, and stops any teammate transcript watchers."
                 (plist-put info :error
                            (format "Claude Code process exited with status: %s"
                                    (process-exit-status process))))
+              ;; Ensure :status is set so gptel--handle-error can display
+              ;; the error message (its when-let* requires :status).
+              (unless (plist-get info :status)
+                (plist-put info :status
+                           (format "exit %d" (process-exit-status process))))
               (with-demoted-errors "gptel callback error: %S"
                 (funcall (plist-get info :callback) nil info)))
             ;; Clean up teammate transcript watchers

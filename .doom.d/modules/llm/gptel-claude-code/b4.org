@@ -1,0 +1,75 @@
+:PROPERTIES:
+:GPTEL_MODEL: sonnet
+:GPTEL_BACKEND: Claude Code
+:END:
+#+TITLE: E2E Test: System Prompt, Concurrent Queries (Tests 10, 11)
+
+* README: How to run these tests
+This file tests: system prompt via --append-system-prompt, concurrent queries.
+
+Prerequisites:
+1. Enable =gptel-mode=: =M-x gptel-mode=
+2. Set debug logging: =(setq gptel-log-level 'debug)=
+
+* Test 10: System prompt via --append-system-prompt
+This tests that the =GPTEL_SYSTEM= property is correctly passed to Claude Code
+as =--append-system-prompt= and affects the model's behavior.
+
+** Test 10a: Custom persona
+:PROPERTIES:
+:GPTEL_SYSTEM: You are a pirate captain named Blackbeard. You MUST speak entirely in pirate dialect. Every response must include "Arrr!" at least once. Never break character.
+:END:
+
+@user: What is the capital of France?
+
+** Test 10b: Restrictive system prompt
+:PROPERTIES:
+:GPTEL_SYSTEM: You are a calculator. You can ONLY respond with numbers. No words, no explanations, just the numeric answer. If the input is not a math question, respond with "ERROR".
+:END:
+
+@user: What is 15 * 7?
+
+** Test 10c: Empty system prompt
+:PROPERTIES:
+:GPTEL_SYSTEM:
+:END:
+
+@user: Say "hello" and nothing else.
+
+** Verification
+- [ ] Test 10a: Response is in pirate dialect, includes "Arrr!"
+- [ ] Test 10b: Response is just "105" (or the number, no words)
+- [ ] Test 10c: Behaves normally with empty/no system prompt
+- [ ] =*Messages*= shows =--append-system-prompt= with the custom prompt text for 10a and 10b
+- [ ] =*Messages*= does NOT show =--append-system-prompt= for 10c (empty prompt skipped)
+- [ ] System prompt does not appear in the buffer output (only affects behavior)
+
+* Test 11: Concurrent queries
+This tests that two simultaneous Claude Code processes can run without
+interfering with each other. Each gets its own process, session-id, and
+MCP routing.
+
+** Query A
+Send this FIRST, then IMMEDIATELY switch to Query B heading and send there
+before Query A finishes.
+
+Tip: Use =M-x gptel-send= here, then quickly =C-c C-n= (or navigate) to
+Query B heading and =M-x gptel-send= there.
+
+@user: Count slowly from 1 to 20. Put each number on its own line. Take your time.
+
+** Query B
+Send this while Query A is still running.
+
+@user: List the first 10 elements of the periodic table, one per line, with their atomic numbers.
+
+** Verification
+- [ ] Both queries started (two =gptel-claude-code= processes visible in =M-x list-processes=)
+- [ ] Each query got its own =GPTEL_CLAUDE_CODE_SESSION= (different session IDs)
+- [ ] Both responses completed without corruption (no interleaved text)
+- [ ] Query A shows numbers 1-20
+- [ ] Query B shows elements H through Ne with atomic numbers
+- [ ] Each response went into the correct heading (no cross-contamination)
+- [ ] Both processes cleaned up properly after completion
+- [ ] =gptel--request-alist= is empty after both complete
+- [ ] No errors in =*Messages*= about process or session conflicts

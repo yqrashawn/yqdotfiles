@@ -373,6 +373,66 @@ inside tool 2's #+begin_tool/#+end_tool block."
     ;; :tool-use must NOT be set — Claude Code handles all tools internally
     (should (null (plist-get info :tool-use)))))
 
+(ert-deftest gptel-claude-code-test-handle-assistant-records-subagent-tools ()
+  "Test assistant handler records tool_use blocks in :claude-code-tools.
+Subagent tool calls arrive as full assistant messages (not stream_events).
+The handler must record them so handle-user can match tool_result by ID."
+  (let ((info (list :buffer nil :data nil))
+        (msg (list :type "assistant"
+                   :message (list :content
+                                  (vector
+                                   (list :type "tool_use"
+                                         :id "tu-sub-1"
+                                         :name "Grep"
+                                         :input (list :pattern "foo" :path "/tmp"))
+                                   (list :type "tool_use"
+                                         :id "tu-sub-2"
+                                         :name "Read"
+                                         :input (list :file_path "/tmp/bar.txt")))))))
+    (let ((result (gptel-claude-code--handle-assistant msg info)))
+      ;; Should record both tool entries
+      (let ((tools (plist-get info :claude-code-tools)))
+        (should (= 2 (length tools)))
+        ;; Most recent push is first (Read was pushed last)
+        (should (equal "Read" (plist-get (car tools) :name)))
+        (should (equal "tu-sub-2" (plist-get (car tools) :id)))
+        (should (equal "Grep" (plist-get (cadr tools) :name)))
+        (should (equal "tu-sub-1" (plist-get (cadr tools) :id))))
+      ;; Should return formatted display string with tool blocks
+      (should (stringp result))
+      (should (cl-search "#+begin_tool Grep" result))
+      (should (cl-search "#+begin_tool Read" result))
+      (should (cl-search "#+end_tool" result)))))
+
+(ert-deftest gptel-claude-code-test-subagent-tool-result-resolves-name ()
+  "Test that tool_result from subagent resolves name via assistant-recorded tools.
+Simulates the full flow: assistant message records tool_use, then user message
+with tool_result looks up the name by tool_use_id."
+  (let ((info (list :buffer nil :data nil)))
+    ;; Step 1: assistant message with subagent's tool_use
+    (gptel-claude-code--handle-assistant
+     (list :type "assistant"
+           :message (list :content
+                          (vector
+                           (list :type "tool_use"
+                                 :id "tu-grep-99"
+                                 :name "Grep"
+                                 :input (list :pattern "test")))))
+     info)
+    ;; Step 2: user message with tool_result referencing that id
+    (let ((result (gptel-claude-code--handle-user
+                   (list :type "user"
+                         :message (list :content
+                                        (vector
+                                         (list :type "tool_result"
+                                               :tool_use_id "tu-grep-99"
+                                               :content "found 3 matches"))))
+                   info)))
+      ;; Should resolve to "Grep", not "unknown"
+      (should (stringp result))
+      (should (cl-search "#+begin_result Grep" result))
+      (should-not (cl-search "unknown" result)))))
+
 (ert-deftest gptel-claude-code-test-handle-assistant-thinking ()
   "Test assistant handler extracts thinking content."
   (let ((info (list :buffer nil :data nil))
@@ -555,6 +615,16 @@ to avoid duplicate --model flags."
     (should (string-match-p "subagent_type: Explore" result))
     (should (string-match-p "model: haiku" result))
     (should (string-match-p "name: researcher" result))))
+
+(ert-deftest gptel-claude-code-test-format-tool-input-skill ()
+  "Test Skill tool input extracts skill name."
+  (should (equal (gptel-claude-code--format-tool-input
+                  "Skill" (list :skill "superpowers:systematic-debugging"))
+                 "superpowers:systematic-debugging"))
+  (should (equal (gptel-claude-code--format-tool-input
+                  "Skill" (list :skill "commit"))
+                 "commit"))
+  (should (equal (gptel-claude-code--format-tool-input "Skill" nil) "")))
 
 (ert-deftest gptel-claude-code-test-format-tool-result ()
   "Test tool result formatting."
@@ -1456,8 +1526,8 @@ persisting forever."
     ;; Register in the request alist
     (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
     (should (= 1 (length gptel--request-alist)))
-    ;; Wait for process to exit
-    (while (process-live-p proc) (accept-process-output nil 0.01))
+    ;; Wait for process to exit (use proc to avoid triggering other process filters)
+    (while (process-live-p proc) (accept-process-output proc 0.01))
     ;; Call sentinel -- FSM handler errors, but with-demoted-errors +
     ;; unwind-protect ensures cleanup still happens.
     (gptel-claude-code--stream-cleanup proc "finished\n")
@@ -1486,7 +1556,7 @@ persisting forever."
                       `((DONE ,(lambda (_fsm) nil)))
                       info)))
     (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
-    (while (process-live-p proc) (accept-process-output nil 0.01))
+    (while (process-live-p proc) (accept-process-output proc 0.01))
     (gptel-claude-code--stream-cleanup proc "finished\n")
     (should callback-called)
     (should (= 0 (length gptel--request-alist)))
@@ -1576,6 +1646,343 @@ persisting forever."
       (goto-char (point-min))
       (forward-line 1)
       (should-not (invisible-p (point))))))
+
+;;; ============================================================
+;;; Logging tests
+;;; ============================================================
+
+(ert-deftest gptel-claude-code-test-stream-filter-logs-json-at-debug ()
+  "Stream filter logs each JSON line to *gptel-log* at debug level."
+  (let* ((gptel-log-level 'debug)
+         (gptel--request-alist nil)
+         (log-buf (get-buffer-create gptel--log-buffer-name))
+         (proc-buf (generate-new-buffer " *test-proc-buf*"))
+         (proc (start-process "test-log" proc-buf "true"))
+         (test-buf (generate-new-buffer " *test-chat-log*"))
+         (info (list :buffer test-buf
+                     :callback #'ignore
+                     :position (with-current-buffer test-buf (point-min-marker))))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    ;; Clear log buffer
+    (with-current-buffer log-buf (erase-buffer))
+    ;; Feed a system init JSON line through the stream filter
+    (let ((json-line "{\"type\":\"system\",\"subtype\":\"init\",\"session_id\":\"test-log-sid\",\"model\":\"claude-sonnet-4-20250514\"}\n"))
+      (gptel-claude-code--stream-filter proc json-line))
+    ;; Check log buffer contains the JSON
+    (with-current-buffer log-buf
+      (should (string-match-p "test-log-sid" (buffer-string)))
+      (should (string-match-p "Claude Code stream" (buffer-string))))
+    ;; Cleanup
+    (when (process-live-p proc) (delete-process proc))
+    (when (buffer-live-p proc-buf) (kill-buffer proc-buf))
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+(ert-deftest gptel-claude-code-test-stream-filter-no-log-without-debug ()
+  "Stream filter does NOT log JSON lines when gptel-log-level is nil."
+  (let* ((gptel-log-level nil)
+         (gptel--request-alist nil)
+         (log-buf (get-buffer-create gptel--log-buffer-name))
+         (proc-buf (generate-new-buffer " *test-proc-buf*"))
+         (proc (start-process "test-nolog" proc-buf "true"))
+         (test-buf (generate-new-buffer " *test-chat-nolog*"))
+         (info (list :buffer test-buf
+                     :callback #'ignore
+                     :position (with-current-buffer test-buf (point-min-marker))))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    ;; Clear log buffer and record starting content
+    (with-current-buffer log-buf (erase-buffer))
+    ;; Feed a text delta JSON line
+    (let ((json-line "{\"type\":\"stream_event\",\"event\":{\"type\":\"content_block_delta\",\"delta\":{\"type\":\"text_delta\",\"text\":\"hello\"}}}\n"))
+      (gptel-claude-code--stream-filter proc json-line))
+    ;; Log buffer should NOT contain "Claude Code stream"
+    (with-current-buffer log-buf
+      (should-not (string-match-p "Claude Code stream" (buffer-string))))
+    ;; Cleanup
+    (when (process-live-p proc) (delete-process proc))
+    (when (buffer-live-p proc-buf) (kill-buffer proc-buf))
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+(ert-deftest gptel-claude-code-test-sentinel-logs-response-body ()
+  "Sentinel logs full response body at info level."
+  (let* ((gptel-log-level 'info)
+         (gptel--request-alist nil)
+         (log-buf (get-buffer-create gptel--log-buffer-name))
+         (proc-buf (generate-new-buffer " *test-proc-resp*"))
+         (proc (start-process "test-resp-log" proc-buf "true"))
+         (test-buf (generate-new-buffer " *test-chat-resp*"))
+         (info (list :http-status "200"
+                     :buffer test-buf
+                     :callback (lambda (_r _i &rest _) nil)
+                     :position (with-current-buffer test-buf (point-min-marker))
+                     :stop-reason "end_turn"))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    ;; Insert some content into the process buffer as if streamed
+    (with-current-buffer proc-buf
+      (insert "{\"type\":\"system\",\"subtype\":\"init\",\"session_id\":\"resp-log-test\"}\n")
+      (insert "{\"type\":\"result\",\"subtype\":\"success\"}\n"))
+    ;; Clear log buffer
+    (with-current-buffer log-buf (erase-buffer))
+    ;; Wait for process to exit
+    (while (process-live-p proc) (accept-process-output proc 0.01))
+    ;; Call sentinel
+    (gptel-claude-code--stream-cleanup proc "finished\n")
+    ;; Check that response body was logged
+    (with-current-buffer log-buf
+      (should (string-match-p "response Claude Code body" (buffer-string)))
+      (should (string-match-p "resp-log-test" (buffer-string))))
+    ;; Cleanup
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+(ert-deftest gptel-claude-code-test-sentinel-no-log-when-nil ()
+  "Sentinel does NOT log response body when gptel-log-level is nil."
+  (let* ((gptel-log-level nil)
+         (gptel--request-alist nil)
+         (log-buf (get-buffer-create gptel--log-buffer-name))
+         (proc-buf (generate-new-buffer " *test-proc-noresp*"))
+         (proc (start-process "test-noresp-log" proc-buf "true"))
+         (test-buf (generate-new-buffer " *test-chat-noresp*"))
+         (info (list :http-status "200"
+                     :buffer test-buf
+                     :callback (lambda (_r _i &rest _) nil)
+                     :position (with-current-buffer test-buf (point-min-marker))
+                     :stop-reason "end_turn"))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    (with-current-buffer proc-buf
+      (insert "{\"type\":\"result\",\"subtype\":\"success\"}\n"))
+    ;; Clear log buffer
+    (with-current-buffer log-buf (erase-buffer))
+    (while (process-live-p proc) (accept-process-output proc 0.01))
+    (gptel-claude-code--stream-cleanup proc "finished\n")
+    ;; Should NOT contain Claude Code body log
+    (with-current-buffer log-buf
+      (should-not (string-match-p "response Claude Code body" (buffer-string))))
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+(ert-deftest gptel-claude-code-test-sentinel-sets-status-on-failure ()
+  "Sentinel sets :status when process exits without init message.
+Without :status, gptel--handle-error skips its body and the
+header-line stays stuck on 'Typing...' forever."
+  (let* ((gptel-log-level nil)
+         (gptel--request-alist nil)
+         (proc-buf (generate-new-buffer " *test-proc-status*"))
+         (proc (start-process "test-status" proc-buf "true"))
+         (test-buf (generate-new-buffer " *test-chat-status*"))
+         (callback-called nil)
+         (info (list :buffer test-buf
+                     :callback (lambda (_r _i &rest _)
+                                 (setq callback-called t))
+                     :position (with-current-buffer test-buf (point-min-marker))))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    ;; No content in proc buffer -- simulates process dying before init
+    ;; Use process-specific accept to avoid triggering filters on other processes
+    (while (process-live-p proc) (accept-process-output proc 0.01))
+    (gptel-claude-code--stream-cleanup proc "finished\n")
+    ;; :status must be set for gptel--handle-error to display the error
+    (should (stringp (plist-get info :status)))
+    (should (stringp (plist-get info :error)))
+    (should callback-called)
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))))
+
+(ert-deftest gptel-claude-code-test-sentinel-status-on-timeout ()
+  "Timeout handler sets :status so ERRS state can display the error."
+  (let* ((gptel-log-level nil)
+         (gptel--request-alist nil)
+         (proc-buf (generate-new-buffer " *test-proc-timeout*"))
+         (proc (start-process "test-timeout" proc-buf "sleep" "10"))
+         (test-buf (generate-new-buffer " *test-chat-timeout*"))
+         (callback-called nil)
+         (info (list :buffer test-buf
+                     :http-status "200"
+                     :callback (lambda (_r _i &rest _)
+                                 (setq callback-called t))
+                     :position (with-current-buffer test-buf (point-min-marker))))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info)))
+    (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+    ;; Simulate what the timeout timer does
+    (plist-put info :error "Claude Code query timed out")
+    (plist-put info :status "timeout")
+    (delete-process proc)
+    ;; Wait for sentinel
+    (while (process-live-p proc) (accept-process-output nil 0.01))
+    (gptel-claude-code--stream-cleanup proc "killed\n")
+    ;; :status must be "timeout" for gptel--handle-error
+    (should (equal (plist-get info :status) "timeout"))
+    (should (equal (plist-get info :error) "Claude Code query timed out"))
+    (when (buffer-live-p test-buf) (kill-buffer test-buf))
+    (when (buffer-live-p proc-buf) (kill-buffer proc-buf))))
+
+;;; Unhandled type logging tests
+
+(ert-deftest gptel-claude-code-test-log-unhandled-writes-to-file ()
+  "Logging an unhandled type appends an entry to the log file."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--log-unhandled "msg-type" "new_thing" "{\"type\":\"new_thing\"}")
+          (let ((content (with-temp-buffer
+                           (insert-file-contents tmp)
+                           (buffer-string))))
+            (should (string-match-p "msg-type" content))
+            (should (string-match-p "new_thing" content))))
+      (delete-file tmp))))
+
+(ert-deftest gptel-claude-code-test-log-unhandled-creates-directory ()
+  "Logging creates parent directory if it doesn't exist."
+  (let* ((tmp-dir (make-temp-file "gptel-unhandled-dir-" t))
+         (sub-dir (expand-file-name "sub/dir" tmp-dir))
+         (gptel-claude-code-unhandled-log-file
+          (expand-file-name "test.log" sub-dir)))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--log-unhandled "event-type" "foo" "data")
+          (should (file-exists-p gptel-claude-code-unhandled-log-file)))
+      (delete-directory tmp-dir t))))
+
+(ert-deftest gptel-claude-code-test-log-unhandled-appends ()
+  "Multiple log entries are appended, not overwritten."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--log-unhandled "msg-type" "alpha" "data1")
+          (gptel-claude-code--log-unhandled "delta-type" "beta" "data2")
+          (let ((content (with-temp-buffer
+                           (insert-file-contents tmp)
+                           (buffer-string))))
+            (should (string-match-p "alpha" content))
+            (should (string-match-p "beta" content))))
+      (delete-file tmp))))
+
+(ert-deftest gptel-claude-code-test-stream-filter-logs-unhandled-msg-type ()
+  "Stream filter logs unhandled top-level message types to file."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp)
+         (gptel-log-level nil)
+         (gptel--request-alist nil)
+         (proc-buf (generate-new-buffer " *test-unhandled-msg*" t))
+         (test-buf (generate-new-buffer "*test-unhandled-msg-buf*" t))
+         (info (list :buffer test-buf
+                     :callback #'ignore
+                     :position (with-current-buffer test-buf (point-min-marker))))
+         (fsm (record 'gptel-fsm 'TYPE
+                      '((TYPE (t . DONE)) (DONE))
+                      `((DONE ,(lambda (_fsm) nil)))
+                      info))
+         (proc (start-process "test-unhandled" proc-buf "true")))
+    (unwind-protect
+        (progn
+          (setf (alist-get proc gptel--request-alist) (cons fsm #'ignore))
+          ;; Send an unknown message type
+          (gptel-claude-code--stream-filter
+           proc "{\"type\":\"brand_new_type\",\"data\":\"hello\"}\n")
+          ;; Should be logged to file
+          (let ((content (with-temp-buffer
+                           (insert-file-contents tmp)
+                           (buffer-string))))
+            (should (string-match-p "msg-type" content))
+            (should (string-match-p "brand_new_type" content))))
+      (when (process-live-p proc) (delete-process proc))
+      (when (buffer-live-p proc-buf) (kill-buffer proc-buf))
+      (when (buffer-live-p test-buf) (kill-buffer test-buf))
+      (delete-file tmp))))
+
+(ert-deftest gptel-claude-code-test-stream-event-logs-unhandled-event-type ()
+  "handle-stream-event logs unhandled event types."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp)
+         (info (list :buffer (current-buffer)))
+         (msg `(:type "stream_event"
+                :event (:type "completely_new_event" :data "test"))))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--handle-stream-event msg info)
+          (let ((content (with-temp-buffer
+                           (insert-file-contents tmp)
+                           (buffer-string))))
+            (should (string-match-p "event-type" content))
+            (should (string-match-p "completely_new_event" content))))
+      (delete-file tmp))))
+
+(ert-deftest gptel-claude-code-test-stream-event-logs-unhandled-block-type ()
+  "handle-stream-event logs unhandled content_block_start block types."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp)
+         (info (list :buffer (current-buffer)))
+         (msg `(:type "stream_event"
+                :event (:type "content_block_start"
+                        :content_block (:type "new_block_type" :data "x")))))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--handle-stream-event msg info)
+          (let ((content (with-temp-buffer
+                           (insert-file-contents tmp)
+                           (buffer-string))))
+            (should (string-match-p "block-type" content))
+            (should (string-match-p "new_block_type" content))))
+      (delete-file tmp))))
+
+(ert-deftest gptel-claude-code-test-stream-event-logs-unhandled-delta-type ()
+  "handle-stream-event logs unhandled content_block_delta delta types."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp)
+         (info (list :buffer (current-buffer)))
+         (msg `(:type "stream_event"
+                :event (:type "content_block_delta"
+                        :delta (:type "new_delta_type" :data "y")))))
+    (unwind-protect
+        (progn
+          (gptel-claude-code--handle-stream-event msg info)
+          (let ((content (with-temp-buffer
+                           (insert-file-contents tmp)
+                           (buffer-string))))
+            (should (string-match-p "delta-type" content))
+            (should (string-match-p "new_delta_type" content))))
+      (delete-file tmp))))
+
+(ert-deftest gptel-claude-code-test-known-event-types-not-logged ()
+  "Known event types (message_start etc.) are NOT logged as unhandled."
+  (let* ((tmp (make-temp-file "gptel-unhandled-" nil ".log"))
+         (gptel-claude-code-unhandled-log-file tmp)
+         (info (list :buffer (current-buffer))))
+    (unwind-protect
+        (progn
+          ;; These are all known types that should NOT be logged
+          (dolist (event-type '("content_block_start" "content_block_delta"
+                                "content_block_stop" "message_start"
+                                "message_delta" "message_stop"))
+            (let ((msg `(:type "stream_event"
+                         :event (:type ,event-type
+                                 :content_block (:type "text")
+                                 :delta (:type "text_delta" :text "hi")))))
+              (gptel-claude-code--handle-stream-event msg info)))
+          ;; File should not exist or be empty (no unhandled types logged)
+          (should (or (not (file-exists-p tmp))
+                      (= 0 (file-attribute-size (file-attributes tmp))))))
+      (when (file-exists-p tmp) (delete-file tmp)))))
 
 (provide 'gptel-claude-code-test)
 ;;; gptel-claude-code-test.el ends here

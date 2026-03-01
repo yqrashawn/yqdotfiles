@@ -1172,9 +1172,9 @@ Returns evaluation result if confirmed, otherwise returns rejection message."
   "Copy LSP eldoc/hover content at point to kill ring."
   (interactive)
   (if-let ((msg lsp--eldoc-saved-message))
-      (progn
-        (kill-new msg)
-        (message "Copied eldoc content"))
+    (progn
+      (kill-new msg)
+      (message "Copied eldoc content"))
     (message "No eldoc content available")))
 
 ;;;###autoload
@@ -1263,3 +1263,63 @@ With prefix ARG 2 (C-u 2), insert path wrapped in equal signs at point. "
             (kill-new path)
             (message "Killed: %s" path))))
       (message "No screenshots found in %s" dir))))
+
+;;;###autoload
+(defun yq/clear-messages-buffer ()
+  "Clear the content of the *Messages* buffer without killing it."
+  (interactive)
+  (with-current-buffer (get-buffer "*Messages*")
+    (let ((inhibit-read-only t))
+      (erase-buffer))))
+
+;;; org-mode auto-wrap pasted paths/URLs with = (verbatim)
+
+(defun +org--text-looks-like-path-or-url-p (text)
+  "Return non-nil if TEXT looks like a file path or URL."
+  (and (stringp text)
+       (not (string-blank-p text))
+       (not (string-match-p "\n" (string-trim text)))
+       (let ((trimmed (string-trim text)))
+         (or
+          (string-match-p "\\`https?://" trimmed)
+          (string-match-p "\\`ftp://" trimmed)
+          (string-match-p "\\`/" trimmed)
+          (string-match-p "\\`~/" trimmed)
+          (string-match-p "\\`\\.\\{1,2\\}/" trimmed)))))
+
+(defun +org--wrap-pasted-verbatim (beg end)
+  "Wrap region BEG..END with = if it looks like a path/URL in org-mode.
+Only wraps if not already wrapped and not inside a src block."
+  (when (and (derived-mode-p 'org-mode)
+             beg end (< beg end)
+             (not (org-in-src-block-p)))
+    (let ((text (buffer-substring-no-properties beg end)))
+      (when (and (+org--text-looks-like-path-or-url-p text)
+                 (not (and (> beg (point-min))
+                           (eq (char-before beg) ?=)
+                           (< end (point-max))
+                           (eq (char-after end) ?=))))
+        (save-excursion
+          (goto-char end) (insert "=")
+          (goto-char beg) (insert "="))))))
+
+;;;###autoload
+(defadvice! +org--auto-wrap-evil-paste-a (&rest _)
+  "Auto-wrap pasted paths/URLs with = in org-mode after evil paste."
+  :after #'evil-paste-after
+  (when (derived-mode-p 'org-mode)
+    (let ((beg (evil-get-marker ?\[))
+          (end (evil-get-marker ?\])))
+      (when (and beg end)
+        (+org--wrap-pasted-verbatim beg (1+ end))))))
+
+;;;###autoload
+(defadvice! +org--auto-wrap-org-yank-a (&rest _)
+  "Auto-wrap pasted paths/URLs with = in org-mode after org-yank."
+  :after #'org-yank
+  (when (derived-mode-p 'org-mode)
+    (let ((beg (mark t))
+          (end (point)))
+      (when (and beg end (< beg end))
+        (+org--wrap-pasted-verbatim beg end)
+        (right-char)))))

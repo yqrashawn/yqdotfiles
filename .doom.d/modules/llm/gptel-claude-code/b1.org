@@ -1,0 +1,101 @@
+:PROPERTIES:
+:GPTEL_MODEL: sonnet
+:GPTEL_BACKEND: Claude Code
+:GPTEL_SYSTEM: You are a test assistant. Keep responses very brief (under 20 words). Follow instructions precisely. Do not use any tools.
+:END:
+#+TITLE: E2E Test: Session Management (Tests 1, 2, 3, 12)
+
+* README: How to run these tests
+This file tests: multi-turn (--resume), org branching (--fork-session),
+model switching (--fork-session --model), session resume across restart.
+
+Prerequisites:
+1. Enable =gptel-mode= in this buffer: =M-x gptel-mode=
+2. Set =gptel-log-level= to ='debug= to see CLI args in =*Messages*=:
+   =(setq gptel-log-level 'debug)=
+3. Each top-level heading is an independent test
+4. Send messages with =M-x gptel-send= (cursor at end of heading content)
+
+* Test 1: Multi-turn --resume
+** Step 1
+@user: What is 2+2? Reply ONLY with the number, nothing else.
+
+** Step 2 (after Step 1 response)
+After Step 1 completes and you see a response:
+1. Verify =GPTEL_CLAUDE_CODE_SESSION= property was set on =Step 1= heading
+2. Come to this heading, place cursor after the =@user:= line below, and send
+
+@user: What was my previous question? Quote it exactly. Reply in one sentence.
+
+** Verification
+- [ ] Step 1: =GPTEL_CLAUDE_CODE_SESSION= property set on heading
+- [ ] Step 1: =*Messages*= shows =--session-id NEW-UUID= (new session)
+- [ ] Step 2: =*Messages*= shows =--resume UUID= (continuation)
+- [ ] Step 2: Response correctly references "2+2" (proves context preserved via --resume)
+- [ ] Both steps share the same session ID in their heading properties
+
+* Test 2: Org branching --fork-session
+First send from this heading to establish a session, then test fork from children.
+
+@user: Remember this secret code word: PLATYPUS. Reply "OK, I memorized PLATYPUS."
+
+** Test 2 Branch A
+After the parent heading has a response and session property, send from here.
+This child heading has no session - it should fork from the parent.
+
+@user: What was the secret code word I told you? Reply with just the word.
+
+** Test 2 Branch B
+Send from here too - another independent fork from the parent session.
+
+@user: What was the secret code word I told you? Also tell me what model you are.
+
+** Verification
+- [ ] Parent =Test 2= heading gets =GPTEL_CLAUDE_CODE_SESSION= property after first send
+- [ ] Branch A gets a DIFFERENT =GPTEL_CLAUDE_CODE_SESSION= than parent
+- [ ] Branch B gets a DIFFERENT =GPTEL_CLAUDE_CODE_SESSION= than parent and Branch A
+- [ ] Both branches respond with "PLATYPUS" (proves fork preserved parent context)
+- [ ] =*Messages*= for branches shows =--resume PARENT-SESSION --fork-session --session-id NEW=
+
+* Test 3: Model switching --fork-session --model
+:PROPERTIES:
+:GPTEL_MODEL: haiku
+:END:
+
+** Step 1: Send with haiku
+@user: What model are you? Reply with just your model identifier, nothing else.
+
+** Step 2: Switch model and send
+After Step 1 completes:
+1. Change =:GPTEL_MODEL:= property on =Test 3= heading from =haiku= to =sonnet=
+2. Send from this heading
+
+@user: What model are you now? Reply with just your model identifier, nothing else.
+
+** Verification
+- [ ] Step 1 response identifies as haiku (or claude-3-haiku variant)
+- [ ] After changing GPTEL_MODEL property to =sonnet= and sending Step 2:
+- [ ] Step 2 response identifies as sonnet (or claude-3-sonnet variant)
+- [ ] =GPTEL_CLAUDE_CODE_SESSION= changed between steps (new session from fork)
+- [ ] =GPTEL_CLAUDE_CODE_MODEL= changed from haiku to sonnet
+- [ ] =*Messages*= for Step 2 shows =--resume OLD-SESSION --fork-session --session-id NEW=
+
+* Test 12: Session resume across Emacs restart
+** Step 1: Establish session
+@user: Remember this number: 42. Reply "I will remember 42."
+
+** Step 2: Simulate restart
+After Step 1 completes:
+1. Note the =GPTEL_CLAUDE_CODE_SESSION= property value on Step 1 heading
+2. Kill this buffer: =C-x k=
+3. Reopen: =C-x C-f ~/.nixpkgs/.doom.d/b1.org=
+4. Re-enable: =M-x gptel-mode=
+5. Come to this heading and send:
+
+@user: What number did I ask you to remember?
+
+** Verification
+- [ ] =GPTEL_CLAUDE_CODE_SESSION= property survived buffer kill/reopen (check Step 1 heading)
+- [ ] =GPTEL_CLAUDE_CODE_MODEL= property also survived
+- [ ] Response mentions "42" (proves --resume with persisted session-id works)
+- [ ] =*Messages*= shows =--resume= with the original session-id from Step 1

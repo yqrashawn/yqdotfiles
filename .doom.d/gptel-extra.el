@@ -72,12 +72,6 @@ INFO is the gptel process info plist."
         ;; Update workspace context for next request in the correct buffer
         (+gptel--add-workspace-context)))))
 
-(defun gptel--setup-workspace-context ()
-  "Setup workspace context for gptel buffers.
-Adds hooks to set workspace context before each request."
-  ;; Add to gptel-mode-hook for chat buffers
-  (add-hook! 'gptel-mode-hook #'+gptel--add-workspace-context))
-
 (after! gptel
   ;; Hook into streaming response cleanup to capture metadata
   (defadvice! +gptel-curl--stream-cleanup-capture-metadata (orig-fn process status)
@@ -88,7 +82,7 @@ Adds hooks to set workspace context before each request."
            (info (and fsm (gptel-fsm-info fsm)))
            (backend (and info (plist-get info :backend))))
       ;; Only capture for CCL backend
-      (when (and backend (eq backend gptel--ccl))
+      (when (and backend (or (eq backend gptel--ccl) (eq backend gptel--ccld)))
         (with-current-buffer proc-buf
           (save-excursion
             ;; For streaming responses, we need to reconstruct the full response
@@ -144,5 +138,6 @@ Adds hooks to set workspace context before each request."
           (+gptel--add-workspace-context)))))
 
   ;; Initialize workspace context setup
-  (gptel--setup-workspace-context))
-
+  (defadvice! +add-workspace-context-before-gptel-send (&optional _args)
+    :before #'gptel-send
+    (+gptel--add-workspace-context)))

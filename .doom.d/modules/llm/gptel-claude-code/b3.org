@@ -1,0 +1,104 @@
+:PROPERTIES:
+:GPTEL_MODEL: sonnet
+:GPTEL_BACKEND: Claude Code
+:GPTEL_SYSTEM: You are a test assistant. Follow instructions precisely.
+:END:
+#+TITLE: E2E Test: Teams, Abort, Error (Tests 6, 8, 9)
+
+* README: How to run these tests
+This file tests: teammate transcript watching, gptel-abort on live process,
+error result handling.
+
+Prerequisites:
+1. Enable =gptel-mode=: =M-x gptel-mode=
+2. Set debug logging: =(setq gptel-log-level 'debug)=
+3. Tests 6 and 8 involve active processes - read instructions carefully
+
+* Test 6: Teammate transcript watching
+This tests that when Claude Code spawns teammates (via TeamCreate + Agent),
+the module detects teammate spawn events, sets up file-notify watchers on
+transcript directories, and creates dedicated teammate buffers.
+
+Note: =--teammate-mode in-process= flag is set by default, which enables
+teammates to run as subprocesses of the main Claude Code process.
+
+@user: Create a team of 2 agents to work in parallel. Agent 1 should write a haiku about Emacs. Agent 2 should write a haiku about Vim. Use the TeamCreate tool first, then spawn both agents with the Agent tool. Wait for both to finish and show me their haikus.
+
+** Verification
+- [ ] Claude Code spawned teammates (look for =user= messages with teammate info in stream)
+- [ ] =*gptel-teammate-*= buffers were created for each teammate
+- [ ] Teammate buffers show the agent's output (haiku text)
+- [ ] File-notify watchers were set up (check via =(file-notify-descriptors)=)
+- [ ] After process completes, watchers were cleaned up
+- [ ] Main buffer shows team-update notifications or teammate results
+- [ ] No errors in =*Messages*= related to team/transcript parsing
+
+* Test 8: gptel-abort on live process
+This tests that =gptel-abort= correctly kills a running Claude Code process,
+cancels timers, stops file watchers, and cleans up gracefully.
+
+** Step 1: Start a long-running query
+Send this prompt - it should take several seconds to complete:
+
+@user: Write a very detailed 2000-word essay about the history of text editors, starting from ed in 1969 through modern editors like VS Code and Neovim. Include specific dates, version numbers, and key contributors for each editor.
+
+** Step 2: Abort the process
+While Claude Code is still streaming its response (you should see text appearing):
+1. Run =M-x gptel-abort= (or the keybinding if configured)
+2. This should immediately kill the Claude Code process
+
+** Verification
+- [ ] Query started and text began streaming into the buffer
+- [ ] =gptel-abort= killed the process (no more text streaming)
+- [ ] No "Typing..." indicator stuck in modeline after abort
+- [ ] Process buffer was cleaned up (no leftover =*gptel-claude-code*= buffer)
+- [ ] Timeout timer was cancelled (no delayed timeout error later)
+- [ ] =gptel--request-alist= no longer contains the aborted process
+- [ ] Can send a new query after abort (backend not in broken state)
+- [ ] No errors in =*Messages*= from the abort
+
+* Test 9: Error result from Claude Code
+This tests handling of =type: "result", subtype: "error"= messages.
+
+** Test 9a: Invalid session resume
+Try to resume a non-existent session. This should trigger an error from Claude Code.
+
+First, manually set a fake session property on this heading:
+
+#+begin_src elisp :results silent
+(org-set-property "GPTEL_CLAUDE_CODE_SESSION" "00000000-0000-0000-0000-000000000000")
+(org-set-property "GPTEL_CLAUDE_CODE_MODEL" "sonnet")
+#+end_src
+
+Then send (Claude Code should fail to resume a non-existent session):
+
+@user: Hello, can you hear me?
+
+** Test 9b: Process exit with non-zero code
+If Test 9a produces an error, verify it was handled. If Claude Code
+silently created a new session instead, try this alternative:
+
+#+begin_src elisp :results silent
+;; Temporarily set claude command to something that fails
+(setf (gptel-claude-code-claude-command
+       (alist-get "Claude Code" gptel--known-backends nil nil #'equal))
+      "claude-nonexistent-binary")
+#+end_src
+
+@user: This should fail because the binary doesn't exist.
+
+After testing, restore:
+#+begin_src elisp :results silent
+(setf (gptel-claude-code-claude-command
+       (alist-get "Claude Code" gptel--known-backends nil nil #'equal))
+      "claude")
+#+end_src
+
+** Verification
+- [ ] Error result was detected and displayed in the buffer
+- [ ] Error displayed as =#+begin_error= / =#+end_error= block (or inline error)
+- [ ] No "Typing..." indicator stuck in modeline
+- [ ] FSM transitioned properly (not stuck in WAIT state)
+- [ ] =*Messages*= logged the error details
+- [ ] Buffer remains usable after error (can send new queries)
+- [ ] For 9b: =file-missing= error caught, displayed as user-friendly message
