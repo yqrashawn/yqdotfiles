@@ -250,12 +250,22 @@ executes all tools internally."
                      (let ((name (plist-get cblock :name))
                            (id (plist-get cblock :id))
                            (input (plist-get cblock :input)))
-                       (plist-put info :claude-code-tools
-                                  (cons (list :id id :name name :input input)
-                                        (plist-get info :claude-code-tools)))
-                       ;; Format tool use block for display
-                       (push (gptel-claude-code--format-tool-use name input id)
-                             display-parts))))))
+                       ;; Check if this tool_use was already displayed by the
+                       ;; streaming handler (content_block_start/stop events).
+                       ;; If so, just update the recorded input without
+                       ;; re-formatting the block.
+                       (let ((existing (cl-find-if
+                                        (lambda (tu) (equal (plist-get tu :id) id))
+                                        (plist-get info :claude-code-tools))))
+                         (if existing
+                             ;; Already streamed — update input for result lookup
+                             (plist-put existing :input input)
+                           ;; New tool_use (e.g. from subagent) — record and format
+                           (plist-put info :claude-code-tools
+                                      (cons (list :id id :name name :input input)
+                                            (plist-get info :claude-code-tools)))
+                           (push (gptel-claude-code--format-tool-use name input id)
+                                 display-parts))))))))
     (when display-parts
       (apply #'concat (nreverse display-parts)))))
 

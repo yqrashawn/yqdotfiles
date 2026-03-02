@@ -433,6 +433,42 @@ with tool_result looks up the name by tool_use_id."
       (should (cl-search "#+begin_result Grep" result))
       (should-not (cl-search "unknown" result)))))
 
+(ert-deftest gptel-claude-code-test-handle-assistant-skips-streamed-tools ()
+  "Test assistant handler skips tool_use blocks already recorded by streaming.
+When Claude Code sends tool_use both via stream_event and as a full assistant
+message, the assistant handler should not duplicate the display."
+  (let ((info (list :buffer nil :data nil
+                    ;; Simulate streaming handler already recorded this tool
+                    :claude-code-tools (list (list :id "tu-streamed-1"
+                                                  :name "Read"))))
+        (msg (list :type "assistant"
+                   :message (list :content
+                                  (vector
+                                   (list :type "tool_use"
+                                         :id "tu-streamed-1"
+                                         :name "Read"
+                                         :input (list :file_path "/tmp/test.txt"))
+                                   (list :type "tool_use"
+                                         :id "tu-new-1"
+                                         :name "Grep"
+                                         :input (list :pattern "foo")))))))
+    (let ((result (gptel-claude-code--handle-assistant msg info)))
+      ;; Should only format the new tool (Grep), not the already-streamed one (Read)
+      (should (stringp result))
+      (should (cl-search "#+begin_tool Grep" result))
+      (should-not (cl-search "#+begin_tool Read" result))
+      ;; The streamed tool's input should be updated
+      (let ((streamed (cl-find-if
+                       (lambda (tu) (equal (plist-get tu :id) "tu-streamed-1"))
+                       (plist-get info :claude-code-tools))))
+        (should (equal "/tmp/test.txt" (plist-get (plist-get streamed :input) :file_path))))
+      ;; New tool should be recorded
+      (let ((new-tool (cl-find-if
+                       (lambda (tu) (equal (plist-get tu :id) "tu-new-1"))
+                       (plist-get info :claude-code-tools))))
+        (should new-tool)
+        (should (equal "Grep" (plist-get new-tool :name)))))))
+
 (ert-deftest gptel-claude-code-test-handle-assistant-thinking ()
   "Test assistant handler extracts thinking content."
   (let ((info (list :buffer nil :data nil))

@@ -294,6 +294,7 @@ Merge buffer-local with global default files."
   :commands (gptel gptel-context-add)
   :init
   (setq! gptel-api-key +open-ai-api-key
+         gptel-include-reasoning nil
          gptel-default-mode 'org-mode
          gptel-expert-commands t
          gptel-temperature 1.0
@@ -374,7 +375,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
