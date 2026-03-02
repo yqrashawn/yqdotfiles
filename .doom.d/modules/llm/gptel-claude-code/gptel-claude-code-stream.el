@@ -25,6 +25,9 @@
 (declare-function gptel-claude-code--detect-teammate-spawn "gptel-claude-code-team")
 (declare-function gptel-claude-code--cleanup-watchers "gptel-claude-code-team")
 
+;; Forward declarations -- main module
+(defvar gptel-claude-code-include-tool-calls)
+
 ;; Forward declarations -- gptel core
 (defvar gptel--request-alist)
 (declare-function gptel-fsm-info "gptel-request")
@@ -127,7 +130,8 @@ Dispatches on event type to extract text deltas and reasoning."
                          (cons (list :id id :name name)
                                (plist-get info :claude-code-tools)))
               ;; Return tool header for display (include tool_use_id)
-              (gptel-claude-code--format-tool-use-header name id)))
+              (when gptel-claude-code-include-tool-calls
+                (gptel-claude-code--format-tool-use-header name id))))
            ("thinking"
             ;; Mark reasoning block as active; initial thinking text
             ;; (if any) will arrive via thinking_delta events
@@ -186,20 +190,22 @@ Dispatches on event type to extract text deltas and reasoning."
                       (tool-entry (car (plist-get info :claude-code-tools))))
                  (plist-put tool-entry :input args-decoded)
                  ;; Format the tool input and closing tag for display
-                 (let* ((name (plist-get tool-entry :name))
-                        (formatted-input
-                         (gptel-claude-code--format-tool-input name args-decoded)))
-                   (setq display-str
-                         (concat
-                          (unless (string-empty-p formatted-input)
-                            (concat formatted-input "\n"))
-                          (gptel-claude-code--format-tool-use-footer)))))
+                 (when gptel-claude-code-include-tool-calls
+                   (let* ((name (plist-get tool-entry :name))
+                          (formatted-input
+                           (gptel-claude-code--format-tool-input name args-decoded)))
+                     (setq display-str
+                           (concat
+                            (unless (string-empty-p formatted-input)
+                              (concat formatted-input "\n"))
+                            (gptel-claude-code--format-tool-use-footer))))))
              (error (pop (plist-get info :claude-code-tools))))
            (plist-put info :partial_json nil))
 
           ;; End of tool_use block with no accumulated JSON (empty args)
           ((equal current-block "tool_use")
-           (setq display-str (gptel-claude-code--format-tool-use-footer)))
+           (when gptel-claude-code-include-tool-calls
+             (setq display-str (gptel-claude-code--format-tool-use-footer))))
 
           ;; End of thinking block: signal end of reasoning stream
           ((equal current-block "thinking")
@@ -209,9 +215,10 @@ Dispatches on event type to extract text deltas and reasoning."
          (plist-put info :claude-code-current-block nil)
          ;; Flush any pending tool results that were queued while
          ;; a tool_use block was open (parallel tool call interleaving).
-         (when-let* ((pending (plist-get info :claude-code-pending-results)))
-           (setq display-str (concat (or display-str "") pending))
-           (plist-put info :claude-code-pending-results nil))
+         (when gptel-claude-code-include-tool-calls
+           (when-let* ((pending (plist-get info :claude-code-pending-results)))
+             (setq display-str (concat (or display-str "") pending))
+             (plist-put info :claude-code-pending-results nil)))
          display-str))
 
       ;; message_start, message_delta, message_stop: known, ignore
@@ -264,8 +271,9 @@ executes all tools internally."
                            (plist-put info :claude-code-tools
                                       (cons (list :id id :name name :input input)
                                             (plist-get info :claude-code-tools)))
-                           (push (gptel-claude-code--format-tool-use name input id)
-                                 display-parts))))))))
+                           (when gptel-claude-code-include-tool-calls
+                             (push (gptel-claude-code--format-tool-use name input id)
+                                   display-parts)))))))))
     (when display-parts
       (apply #'concat (nreverse display-parts)))))
 
@@ -277,38 +285,40 @@ Also detects teammate spawn events from toolUseResult fields."
   (let ((spawn-str (gptel-claude-code--detect-teammate-spawn msg info))
         (tool-str nil))
     ;; Process tool_result content blocks
-    (when-let* ((message (plist-get msg :message))
-                (content (plist-get message :content)))
-      ;; content is a vector of content blocks
-      (let ((result-parts nil))
-        (cl-loop for cblock across content
-                 for ctype = (plist-get cblock :type)
-                 do (pcase ctype
-                      ("tool_result"
-                       (let* ((tool-use-id (plist-get cblock :tool_use_id))
-                              (is-error (eq (plist-get cblock :is_error) t))
-                              ;; Find the tool name from recorded tool entries
-                              (tool-entry
-                               (cl-find-if
-                                (lambda (tu) (equal (plist-get tu :id) tool-use-id))
-                                (plist-get info :claude-code-tools)))
-                              (name (or (plist-get tool-entry :name) "unknown"))
-                              ;; Extract result content -- can be a string or vector
-                              (result-content (plist-get cblock :content))
-                              (result-text
-                               (cond
-                                ((stringp result-content) result-content)
-                                ((vectorp result-content)
-                                 (mapconcat
-                                  (lambda (rc)
-                                    (or (plist-get rc :text) ""))
-                                  result-content "\n"))
-                                (t ""))))
-                         (push (gptel-claude-code--format-tool-result
-                                name result-text is-error tool-use-id)
-                               result-parts)))))
-        (when result-parts
-          (setq tool-str (apply #'concat (nreverse result-parts))))))
+    (when (and gptel-claude-code-include-tool-calls
+               (plist-get msg :message))
+      (when-let* ((message (plist-get msg :message))
+                  (content (plist-get message :content)))
+        ;; content is a vector of content blocks
+        (let ((result-parts nil))
+          (cl-loop for cblock across content
+                   for ctype = (plist-get cblock :type)
+                   do (pcase ctype
+                        ("tool_result"
+                         (let* ((tool-use-id (plist-get cblock :tool_use_id))
+                                (is-error (eq (plist-get cblock :is_error) t))
+                                ;; Find the tool name from recorded tool entries
+                                (tool-entry
+                                 (cl-find-if
+                                  (lambda (tu) (equal (plist-get tu :id) tool-use-id))
+                                  (plist-get info :claude-code-tools)))
+                                (name (or (plist-get tool-entry :name) "unknown"))
+                                ;; Extract result content -- can be a string or vector
+                                (result-content (plist-get cblock :content))
+                                (result-text
+                                 (cond
+                                  ((stringp result-content) result-content)
+                                  ((vectorp result-content)
+                                   (mapconcat
+                                    (lambda (rc)
+                                      (or (plist-get rc :text) ""))
+                                    result-content "\n"))
+                                  (t ""))))
+                           (push (gptel-claude-code--format-tool-result
+                                  name result-text is-error tool-use-id)
+                                 result-parts)))))
+          (when result-parts
+            (setq tool-str (apply #'concat (nreverse result-parts)))))))
     ;; Combine spawn notification with tool results
     (let ((combined (cond
                      ((and spawn-str tool-str) (concat spawn-str tool-str))

@@ -37,6 +37,13 @@ This bypasses all permission checks in Claude Code."
   :type 'boolean
   :group 'gptel-claude-code)
 
+(defcustom gptel-claude-code-include-tool-calls t
+  "When non-nil, display tool call blocks in the chat buffer.
+When nil, tool calls and their results are hidden from display
+while still being processed internally."
+  :type 'boolean
+  :group 'gptel-claude-code)
+
 ;; Forward declarations -- gptel core
 (defvar gptel--known-backends)
 (defvar gptel--request-alist)
