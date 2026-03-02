@@ -233,22 +233,34 @@
   (gptelt-search-function-by-regex "save" 5))
 
 ;;; Tool: Run ERT test by selector regex and return summary report
-(defun gptelt-run-ert-test (test_selector_regex)
-  "Run ERT tests matching TEST_SELECTOR_REGEX, return summary report as string. Handles 'test-started and 'test-ended events."
-  (let ((msgb (generate-new-buffer "*temp-ert-report*" t)))
-    (letf!
-      ((defadvice message (:around (fn msg &rest args))
-         (with-current-buffer msgb
-           (insert (apply fn msg args))
-           (insert "\n"))))
-      (ert-run-tests-batch test_selector_regex)
-      (let ((report (with-current-buffer msgb (buffer-string))))
-        (kill-buffer msgb)
-        report))))
+(defun gptelt-run-ert-test (callback test_selector_regex)
+  "Run ERT tests matching TEST_SELECTOR_REGEX asynchronously.
+CALLBACK is called with the summary report string when tests finish.
+Uses `run-with-timer' to avoid blocking Emacs during test execution."
+  (run-with-timer
+   0 nil
+   (lambda ()
+     (let ((msgb (generate-new-buffer "*temp-ert-report*" t)))
+       (condition-case err
+           (progn
+             (letf!
+               ((defadvice message (:around (fn msg &rest args))
+                  (let ((formatted (apply fn msg args)))
+                    (with-current-buffer msgb
+                      (insert (or formatted "") "\n"))
+                    formatted))))
+             (ert-run-tests-batch test_selector_regex)
+             (let ((report (with-current-buffer msgb (buffer-string))))
+               (kill-buffer msgb)
+               (funcall callback report))))
+       (error
+        (let ((err-msg (format "ERT test error: %s" (error-message-string err))))
+          (when (buffer-live-p msgb) (kill-buffer msgb))
+          (funcall callback err-msg)))))))
 
 (comment
-  (gptelt-run-ert-test "list-buffers-test")
-  (gptelt-run-ert-test "clj-test-"))
+  (gptelt-run-ert-test (lambda (r) (message "Result: %s" r)) "list-buffers-test")
+  (gptelt-run-ert-test (lambda (r) (message "Result: %s" r)) "clj-test-"))
 
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
@@ -277,6 +289,7 @@
   (gptelt-make-tool
    :name "run_ert_tests"
    :function #'gptelt-run-ert-test
+   :async t
    :description "Run elisp ert test(s) by selector regex, return summary report."
    :args '((:name "test_selector_regex" :type string :description "Regex selector for tests to run."))
    :category "elisp"

@@ -166,10 +166,24 @@ Everywhere else: max 2 consecutive blank lines."
     :system ""
     :parents '(default)
     :tools '())
+  (gptel-make-preset 's1
+    :description "claude code"
+    :backend "Claude Code"
+    :model (intern "sonnet[1m]")
+    :system ""
+    :parents '(default)
+    :tools '())
   (gptel-make-preset 'o
     :description "claude code"
     :backend "Claude Code"
     :model 'opus
+    :system ""
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'o1
+    :description "claude code"
+    :backend "Claude Code"
+    :model (intern "opus[1m]")
     :system ""
     :parents '(default)
     :tools '())
@@ -650,7 +664,8 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
         (json-pretty-print-buffer))
       (message "Wrote MCP config to %s and updated %s"
                output-file claude-json-file))))
-(load "mcp.el")
+
+(load! "mcp.el")
 
 (use-package! mcp
   :after gptel
@@ -853,9 +868,12 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
-           :backend +gptel-free-backend
+           ;; :backend +gptel-free-backend
+           :backend gptel-claude-code-backend
            ;; :backend gptel--gh-copilot-business
-           :model 'gpt-4.1
+           ;; :model 'gpt-4.1
+           :model 'sonnet
+           ;; :model 'haiku
            ;; :model 'gpt-4o
            ;; :model 'gpt-4o-mini
            ;; :model 'gpt-5-mini

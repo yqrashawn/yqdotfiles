@@ -28,12 +28,6 @@
             (car (project-roots project)))))
       default-directory))
 
-(defun gptelt--resolve-file-path (file-path)
-  "Resolve FILE-PATH to absolute path. Only accepts absolute paths."
-  (unless (file-name-absolute-p file-path)
-    (error "file_path must be an absolute path"))
-  file-path)
-
 ;;; Mode/Lisp checks
 (defun gptelt--is-lisp-mode-p (mode)
   "Check if MODE is a Lisp-related mode."

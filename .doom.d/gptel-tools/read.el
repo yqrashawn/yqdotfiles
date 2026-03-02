@@ -5,27 +5,17 @@
 ;; Keywords: tools, read
 
 ;;; Commentary:
-;;
-;; Buffer and file reading utilities for GPTEL.
-;;
-;;; Code:
-
-;;; Commentary:
 ;; Reading utilities for gptel-tools:
 ;;  - Read a file's content by file path.
 ;;  - Read a buffer's content by buffer name.
 
 ;;; Code:
 
-;;; Debug Configuration
-(defvar gptelt-read-debug nil
-  "When non-nil, log read tool operations for debugging.")
-
 (defun gptelt--image-file-p (file-path)
   "Check if FILE-PATH is an image file based on extension."
   (when (stringp file-path)
     (let ((ext (downcase (file-name-extension file-path ""))))
-      (member ext '(".png" ".jpg" ".jpeg" ".gif" ".bmp" ".webp" ".svg" ".tiff" ".ico")))))
+      (member ext '("png" "jpg" "jpeg" "gif" "bmp" "webp" "svg" "tiff" "ico")))))
 
 (defun gptelt--file-to-base64 (file-path)
   "Convert FILE-PATH to base64 string with data URI prefix."
@@ -35,14 +25,14 @@
     (base64-encode-region (point-min) (point-max) t)
     (let* ((ext (downcase (file-name-extension file-path "")))
            (mime-type (cond
-                       ((member ext '(".jpg" ".jpeg")) "image/jpeg")
-                       ((string= ext ".png") "image/png")
-                       ((string= ext ".gif") "image/gif")
-                       ((string= ext ".svg") "image/svg+xml")
-                       ((string= ext ".webp") "image/webp")
-                       ((member ext '(".tif" ".tiff")) "image/tiff")
-                       ((string= ext ".bmp") "image/bmp")
-                       ((string= ext ".ico") "image/x-icon")
+                       ((member ext '("jpg" "jpeg")) "image/jpeg")
+                       ((string= ext "png") "image/png")
+                       ((string= ext "gif") "image/gif")
+                       ((string= ext "svg") "image/svg+xml")
+                       ((string= ext "webp") "image/webp")
+                       ((member ext '("tif" "tiff")) "image/tiff")
+                       ((string= ext "bmp") "image/bmp")
+                       ((string= ext "ico") "image/x-icon")
                        (t "application/octet-stream"))))
       (concat "data:" mime-type ";base64," (buffer-string)))))
 
@@ -62,7 +52,6 @@
             (line-offset (or offset 0)))
         (with-temp-buffer
           (insert-file-contents file_path)
-          (when (llm-danger-buffer-p) (error "User denied the read request"))
           (let* ((total-lines (count-lines (point-min) (point-max)))
                  (start-line (1+ line-offset))
                  (end-line (min total-lines (+ line-offset max-lines))))
@@ -116,26 +105,53 @@
                     (let ((content (buffer-substring-no-properties start (point))))
                       (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
                                       total-lines start-line end-line buffer_name file-name)
-                              "\n␂" content "␃"))))))
-            ;; Buffer without associated file
-            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                  (line-offset (or offset 0)))
-              (save-excursion
-                (let* ((total-lines (count-lines (point-min) (point-max)))
-                       (start-line (1+ line-offset))
-                       (end-line (min total-lines (+ line-offset max-lines))))
-                  (goto-char (point-min))
-                  (forward-line line-offset)
-                  (let ((start (point)))
-                    (forward-line max-lines)
-                    (let ((content (buffer-substring-no-properties start (point))))
-                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
-                                      total-lines start-line end-line buffer_name)
-                              "\n␂" content "␃")))))))))))
+                              "\n␂" content "␃")))))))
+        ;; Buffer without associated file
+        (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+              (line-offset (or offset 0)))
+          (save-excursion
+            (let* ((total-lines (count-lines (point-min) (point-max)))
+                   (start-line (1+ line-offset))
+                   (end-line (min total-lines (+ line-offset max-lines))))
+              (goto-char (point-min))
+              (forward-line line-offset)
+              (let ((start (point)))
+                (forward-line max-lines)
+                (let ((content (buffer-substring-no-properties start (point))))
+                  (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
+                                  total-lines start-line end-line buffer_name)
+                          "\n␂" content "␃"))))))))))
 
 (comment
   (gptelt-read-buffer (current-buffer))
   (gptelt-read-buffer "none-existing-buffer"))
+
+;;; MCP Parameter Translation Wrappers
+
+(defun gptelt-read-buffer-mcp (buffer_name &optional offset limit)
+  "MCP wrapper for read-buffer with error wrapping.
+Catches errors and wraps them in <tool_use_error> tags."
+  (condition-case err
+      (gptelt-read-buffer buffer_name offset limit)
+    (error (format "<tool_use_error>%s</tool_use_error>"
+                   (error-message-string err)))))
+
+(defun gptelt-read-multiple-buffers-mcp (buffer_requests)
+  "MCP wrapper for read-multiple-buffers with error wrapping.
+Wraps both top-level errors and per-buffer errors in <tool_use_error> tags."
+  (condition-case err
+      (let ((results (gptelt-read-multiple-buffers buffer_requests)))
+        (mapcar (lambda (result)
+                  (let ((err-msg (plist-get result :error)))
+                    (if (and err-msg
+                             (stringp err-msg)
+                             (not (string-prefix-p "<tool_use_error>" err-msg)))
+                        (plist-put result :error
+                                   (format "<tool_use_error>%s</tool_use_error>" err-msg))
+                      result)))
+                results))
+    (error (format "<tool_use_error>%s</tool_use_error>"
+                   (error-message-string err)))))
 
 ;; Register the file and buffer reading tools with gptel
 (when (fboundp 'gptelt-make-tool)
@@ -165,7 +181,7 @@
 
   (gptelt-make-tool
    :name "read_buffer"
-   :function #'gptelt-read-buffer
+   :function #'gptelt-read-buffer-mcp
    :description
    (concat "Read a buffer by buffer name. Optimized for reading currently open files in Emacs without needing full file path. "
            "Faster and more convenient than read_file when you know the buffer name. "
@@ -242,10 +258,8 @@ Returns a list of plists, each containing either:
    (lambda (req)
      (let* ((file-path (or (plist-get req :file_path)
                            (plist-get req :file-path)))
-            (offset (or (plist-get req :offset)
-                        (plist-get req :offset)))
-            (limit (or (plist-get req :limit)
-                       (plist-get req :limit))))
+            (offset (plist-get req :offset))
+            (limit (plist-get req :limit)))
        (condition-case err
            (let ((content (gptelt-read-file file-path offset limit)))
              (if content
@@ -268,7 +282,7 @@ Returns a list of plists, each containing either:
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "read_multiple_buffers"
-   :function #'gptelt-read-multiple-buffers
+   :function #'gptelt-read-multiple-buffers-mcp
    :description
    "Read multiple buffers in one call with per-buffer offset and limit control. Returns a list where each element is either a successful read (with :buffer-name and :content) or a failed read (with :buffer-name and :error). This is more efficient than calling read_buffer multiple times when you need to read several buffers.
 
@@ -315,10 +329,8 @@ Returns a list of plists, each containing either:
    (lambda (req)
      (let* ((buffer-name (or (plist-get req :buffer_name)
                              (plist-get req :buffer-name)))
-            (offset (or (plist-get req :offset)
-                        (plist-get req :offset)))
-            (limit (or (plist-get req :limit)
-                       (plist-get req :limit))))
+            (offset (plist-get req :offset))
+            (limit (plist-get req :limit)))
        (condition-case err
            (let ((content (gptelt-read-buffer buffer-name offset limit)))
              (if content

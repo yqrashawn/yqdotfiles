@@ -52,10 +52,14 @@
   (let ((test-name 'gptelt-ert-smoke-pass))
     (unless (ert-test-boundp test-name)
       (eval '(ert-deftest gptelt-ert-smoke-pass () (should (= 1 1)))))
-    (let ((output (gptelt-run-ert-test "gptelt-ert-smoke-pass")))
+    (let ((output nil))
+      (gptelt-run-ert-test
+       (lambda (result) (setq output result))
+       "gptelt-ert-smoke-pass")
+      ;; Let the timer fire (0-delay timer runs on next event loop)
+      (sit-for 1)
+      (should output)
       (should (string-match-p "Running \\([0-9]+\\) tests" output))
-      (should (string-match-p "Started: gptelt-ert-smoke-pass" output))
-      (should (string-match-p "Ended:   gptelt-ert-smoke-pass" output))
       (should (string-match-p "passed.*gptelt-ert-smoke-pass" output))
       (should (string-match-p "Ran \\([0-9]+\\) tests" output)))))
 

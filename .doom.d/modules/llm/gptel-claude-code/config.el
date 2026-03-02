@@ -47,12 +47,15 @@
 (use-package! gptel-claude-code
   :after gptel
   :init
-  (setq! gptel-claude-code-skip-permissions t)
+  (setq! gptel-claude-code-skip-permissions t
+         gptel-claude-code-include-tool-calls nil)
   :config
-  (gptel-make-claude-code "Claude Code"
-    :models gptel--claude-code-models
-    :stream t
-    :mcp-port 18684))
+  (setq!
+   gptel-claude-code-backend
+   (gptel-make-claude-code "Claude Code"
+     :models gptel--claude-code-models
+     :stream t
+     :mcp-port 18684)))
 
 (comment
   (setf (gptel-claude-code-permission-mode (alist-get "Claude Code" gptel--known-backends nil nil #'equal)) "default"))

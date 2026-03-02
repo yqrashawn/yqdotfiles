@@ -1,76 +1,31 @@
-;;; .nixpkgs/.doom.d/gptel-tools/edit-tool.el -*- lexical-binding: t; -*-
+;;; edit-file.el --- GPTEL file/buffer edit tools -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:
 
 (require 'gptel)
-(require 'smartparens nil t)
-
-(declare-function sp-region-ok-p "smartparens")
-
-;;; Variables
-(defvar gptelt-edit--temp-buffers nil
-  "List of temporary buffers created by edit tool for cleanup.")
-
+(require 'cl-lib)
 
 ;;; Utility functions
-(defun gptelt-edit--resolve-file-path (file-path)
-  "Resolve FILE-PATH to absolute path.
-If FILE-PATH is relative, resolve it against the current project root."
-  (let ((file-path (expand-file-name file-path)))
-    (unless (file-name-absolute-p file-path)
-      (error "file_path must be an absolute path"))
-    file-path))
 
-(defun gptelt-edit--get-buffer-context (file-path)
-  "Generate context information for FILE-PATH (must be absolute path) including buffer, project, and mode info."
-  (let* ((resolved-path (gptelt-edit--resolve-file-path file-path))
-         (buffer (or (get-file-buffer resolved-path)
-                     (when (file-exists-p resolved-path)
-                       (find-file-noselect resolved-path))))
-         (project-root (gptelt--get-project-root))
-         (major-mode (when buffer (buffer-local-value 'major-mode buffer)))
-         (minor-modes (when buffer
-                        (buffer-local-value 'minor-mode-list buffer))))
-    (list :buffer buffer
-          :file-path resolved-path
-          :original-path file-path
-          :project-root project-root
-          :major-mode major-mode
-          :minor-modes minor-modes
-          :exists-p (and buffer (get-file-buffer resolved-path)))))
-
-(defun gptelt-edit--is-lisp-mode-p (mode)
-  "Check if MODE is a Lisp-related mode."
-  (memq mode '(emacs-lisp-mode lisp-mode clojure-mode scheme-mode
-               clojurescript-mode clojurec-mode common-lisp-mode
-               lisp-interaction-mode)))
+(defun gptelt-edit--get-buffer-for-file (file-path)
+  "Get or open a buffer for FILE-PATH.
+FILE-PATH is expanded via `expand-file-name'. Returns the buffer or nil."
+  (let ((resolved (expand-file-name file-path)))
+    (or (get-file-buffer resolved)
+        (when (file-exists-p resolved)
+          (find-file-noselect resolved)))))
 
 ;;; Matching strategies module
 
-;; Whitespace normalization
-(defun gptelt-edit--normalize-whitespace (text)
-  "Normalize whitespace in TEXT for flexible matching.
-Strips leading/trailing whitespace per line and normalizes internal whitespace."
-  (with-temp-buffer
-    (insert text)
-    (goto-char (point-min))
-    (while (not (eobp))
-      (beginning-of-line)
-      (skip-chars-forward " \t")
-      (let ((line-start (point)))
-        (end-of-line)
-        (skip-chars-backward " \t")
-        (delete-region (point) (line-end-position))
-        (goto-char line-start)
-        (while (re-search-forward "[ \t]+" (line-end-position) t)
-          (replace-match " "))
-        (forward-line 1)))
-    (buffer-string)))
+(defun gptelt-edit--normalize-line (line)
+  "Normalize a single LINE for flexible matching.
+Strips leading/trailing whitespace and collapses internal whitespace runs."
+  (replace-regexp-in-string "[ \t]+" " " (string-trim line)))
 
 ;; Strategy 1: Exact match
 (defun gptelt-edit--try-exact-match (old-string)
-  "Try to find exact match for OLD-STRING.
+  "Try to find exact match for OLD-STRING in current buffer.
 Returns (START . END) cons cell if found, nil otherwise."
   (save-excursion
     (goto-char (point-min))
@@ -79,23 +34,39 @@ Returns (START . END) cons cell if found, nil otherwise."
 
 ;; Strategy 2: Flexible whitespace match
 (defun gptelt-edit--try-flexible-match (old-string)
-  "Try to find OLD-STRING with flexible whitespace matching.
-Returns (START . END) cons cell if found, nil otherwise."
-  (let ((normalized-old (gptelt-edit--normalize-whitespace old-string)))
+  "Try to find OLD-STRING with flexible whitespace matching in current buffer.
+Compares normalized lines using a sliding window matching the line count
+of OLD-STRING.  Returns (START . END) cons cell if found, nil otherwise."
+  (let* ((old-lines (split-string old-string "\n"))
+         (norm-old-lines (mapcar #'gptelt-edit--normalize-line old-lines))
+         (n (length norm-old-lines)))
     (save-excursion
       (goto-char (point-min))
       (catch 'found
         (while (not (eobp))
-          (let* ((region-start (point))
-                 (region-end (min (+ region-start (* 2 (length old-string)))
-                                  (point-max))))
-            (when (> region-end region-start)
-              (let ((region-text
-                     (buffer-substring-no-properties region-start region-end)))
-                (when (string=
-                       normalized-old
-                       (gptelt-edit--normalize-whitespace region-text))
-                  (throw 'found (cons region-start region-end)))))
+          (let ((start (line-beginning-position))
+                (buf-lines nil)
+                (pos (point)))
+            ;; Collect N lines from current position
+            (dotimes (_ n)
+              (unless (eobp)
+                (push (buffer-substring-no-properties
+                       (line-beginning-position) (line-end-position))
+                      buf-lines)
+                (forward-line 1)))
+            (setq buf-lines (nreverse buf-lines))
+            ;; Compare if we got enough lines
+            (when (= (length buf-lines) n)
+              (let ((norm-buf-lines (mapcar #'gptelt-edit--normalize-line buf-lines)))
+                (when (equal norm-old-lines norm-buf-lines)
+                  ;; Match found - return region spanning the matched lines
+                  (let ((end (save-excursion
+                               (goto-char start)
+                               (forward-line (1- n))
+                               (line-end-position))))
+                    (throw 'found (cons start end))))))
+            ;; Advance by one line from original position
+            (goto-char pos)
             (forward-line 1)))
         nil))))
 
@@ -117,26 +88,27 @@ Returns nil if no match found."
               (car pos) (cdr pos)))))))
 
 ;; Helper for error messages
-(defun gptelt-edit--find-similar-text (old-string)
-  "Find text similar to OLD-STRING for error reporting.
+(defun gptelt-edit--find-similar-text (buffer old-string)
+  "Find text in BUFFER similar to OLD-STRING for error reporting.
 Returns a snippet of nearby text that might have been intended."
   (let* ((lines (split-string old-string "\n"))
          (first-line (car lines))
          (first-line-normalized (string-trim first-line)))
     (when (> (length first-line-normalized) 5)
-      (save-excursion
-        (goto-char (point-min))
-        (when (search-forward first-line-normalized nil t)
-          (let* ((line-start (line-beginning-position))
-                 (context-start (max (point-min) (- line-start 200)))
-                 (context-end (min (point-max) (+ line-start 200))))
-            (buffer-substring-no-properties context-start context-end)))))))
+      (with-current-buffer buffer
+        (save-excursion
+          (goto-char (point-min))
+          (when (search-forward first-line-normalized nil t)
+            (let* ((line-start (line-beginning-position))
+                   (context-start (max (point-min) (- line-start 200)))
+                   (context-end (min (point-max) (+ line-start 200))))
+              (buffer-substring-no-properties context-start context-end))))))))
 
 ;;; Error handling module
 
-(defun gptelt-edit--generate-error (old-string)
-  "Generate error message for failed match of OLD-STRING."
-  (let ((similar-text (gptelt-edit--find-similar-text old-string)))
+(defun gptelt-edit--generate-error (buffer old-string)
+  "Generate error message for failed match of OLD-STRING in BUFFER."
+  (let ((similar-text (gptelt-edit--find-similar-text buffer old-string)))
     (format "old_string not found. %s\n\nSearched for:\n%s%s"
             "CHECK CAREFULLY - try including more context lines."
             old-string
@@ -181,10 +153,10 @@ Please find the EXACT string from the file that matches what I'm trying to chang
                         nil
                       (string-trim response))))
      :error (lambda (_error)
-              (funcall callback "ERROR: failed to call LLM to fix the old string")))))
+              (funcall callback nil)))))
 
 ;;; Edit application module
-(defun gptelt-edit--apply-match-with-llm (buffer old-string instruction callback new-string original-point replace-all)
+(defun gptelt-edit--apply-match-with-llm (buffer old-string instruction callback new-string replace-all)
   "Try LLM correction for failed match and apply edit.
 CALLBACK is called with the result message."
   (gptelt-edit--llm-fix-old-string
@@ -196,12 +168,12 @@ CALLBACK is called with the result message."
              (goto-char (point-min))
              (if (search-forward fixed-string nil t)
                  (gptelt-edit--do-replacement
-                  buffer fixed-string new-string original-point
+                  buffer fixed-string new-string
                   replace-all callback)
                (funcall callback
-                        (gptelt-edit--generate-error old-string)))))
+                        (gptelt-edit--generate-error buffer old-string)))))
        (funcall callback
-                (gptelt-edit--generate-error old-string))))))
+                (gptelt-edit--generate-error buffer old-string))))))
 
 (defun gptelt-edit--apply-edit-directly
     (buffer old-string new-string callback &optional replace-all instruction)
@@ -216,76 +188,72 @@ Tries multiple matching strategies:
 3. LLM self-correction (if instruction provided)
 
 IMPORTANT: Reverts buffer first to ensure we're working with disk state."
-  (let* ((original-point (with-current-buffer buffer (point))))
-    ;; Revert buffer first to ensure we're editing the actual disk state
-    (+gptel-tool-revert-to-be-visited-buffer buffer)
+  ;; Revert buffer first to ensure we're editing the actual disk state
+  (+gptel-tool-revert-to-be-visited-buffer buffer)
 
-    ;; Try to find match using strategy pipeline
-    (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
+  ;; Try to find match using strategy pipeline
+  (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
       ;; Match found - apply replacement
       (gptelt-edit--do-replacement
        buffer
        (plist-get match-result :corrected-string)
        new-string
-       original-point
        replace-all
        callback)
-      ;; No match - try LLM correction if instruction provided
-      (if instruction
-          (gptelt-edit--apply-match-with-llm
-           buffer old-string instruction callback
-           new-string original-point replace-all)
-        ;; No instruction and no match - error
-        (funcall callback (gptelt-edit--generate-error old-string))))))
+    ;; No match - try LLM correction if instruction provided
+    (if instruction
+        (gptelt-edit--apply-match-with-llm
+         buffer old-string instruction callback
+         new-string replace-all)
+      ;; No instruction and no match - error
+      (funcall callback (gptelt-edit--generate-error buffer old-string)))))
 
 (defun gptelt-edit--do-replacement
-    (buffer old-string new-string original-point replace-all callback)
+    (buffer old-string new-string replace-all callback)
   "Helper function to perform the actual replacement in BUFFER.
 OLD-STRING is the text to replace, NEW-STRING is the replacement.
-ORIGINAL-POINT is the cursor position before edit.
 REPLACE-ALL determines if all occurrences should be replaced.
 CALLBACK is called with the result message."
   (let ((replacement-count 0)
         (replacement-start nil)
         (replacement-end nil))
     (with-current-buffer buffer
-      (save-excursion
-        (goto-char (point-min))
-        (if replace-all
-            (while (search-forward old-string nil t)
+      (let ((original-point (point)))
+        (save-excursion
+          (goto-char (point-min))
+          (if replace-all
+              (while (search-forward old-string nil t)
+                (let ((start (match-beginning 0))
+                      (end (match-end 0)))
+                  (setq replacement-start (or replacement-start start))
+                  (goto-char start)
+                  (delete-region start end)
+                  (insert new-string)
+                  (setq replacement-end (+ start (length new-string)))
+                  (setq replacement-count (1+ replacement-count))))
+            (when (search-forward old-string nil t)
               (let ((start (match-beginning 0))
                     (end (match-end 0)))
-                (setq replacement-start (or replacement-start start))
+                (setq replacement-start start)
                 (goto-char start)
                 (delete-region start end)
                 (insert new-string)
                 (setq replacement-end (+ start (length new-string)))
-                (setq replacement-count (1+ replacement-count))))
-          (when (search-forward old-string nil t)
-            (let ((start (match-beginning 0))
-                  (end (match-end 0)))
-              (setq replacement-start start)
-              (goto-char start)
-              (delete-region start end)
-              (insert new-string)
-              (setq replacement-end (+ start (length new-string)))
-              (setq replacement-count 1))))
-        
-        (+force-save-buffer)
+                (setq replacement-count 1))))
 
-        (when (and (fboundp 'lsp-format-region)
-                   (bound-and-true-p lsp-mode))
-          (condition-case err
-              (progn (lsp-format-region (or replacement-start (point-min)) 
-                                        (or replacement-end (point-max)))
-                     (+force-save-buffer))
-            (error (message "LSP formatting failed: %s" err)))))
+          (+force-save-buffer)
 
-      (let ((point-adjustment (- (length new-string) (length old-string))))
-        (if (and replacement-start (> original-point replacement-start))
-            (goto-char (+ original-point (* point-adjustment replacement-count)))
-          (goto-char original-point))))
-    
+          (when (and (fboundp 'lsp-format-region)
+                     (bound-and-true-p lsp-mode))
+            (condition-case err
+                (progn (lsp-format-region (or replacement-start (point-min))
+                                          (or replacement-end (point-max)))
+                       (+force-save-buffer))
+              (error (message "LSP formatting failed: %s" err)))))
+
+        ;; Restore point, clamped to buffer bounds
+        (goto-char (min original-point (point-max)))))
+
     (funcall callback
              (format "Successfully replaced %d occurrence(s) of text in %s."
                      replacement-count
@@ -294,18 +262,18 @@ CALLBACK is called with the result message."
 ;;; Balance checking and edit logic
 (defun gptelt-edit--edit-buffer-impl
     (buffer old-string new-string callback &optional replace-all instruction)
-  "editing BUFFER by replacing OLD-STRING with NEW-STRING.
+  "Edit BUFFER by replacing OLD-STRING with NEW-STRING.
 If REPLACE-ALL is non-nil, replace all occurrences.
 INSTRUCTION is optional natural language description of the change.
 CALLBACK is called with the result string when done (async if LLM correction needed)."
   (let* ((mj-mode (buffer-local-value 'major-mode buffer))
          (match-result (gptelt-edit--find-match buffer old-string)))
-    
+
     ;; Define the continuation function that does the actual edit
     (let ((do-edit
            (lambda (final-old-string)
              ;; For Lisp code, check balance in temp buffer (async)
-             (if (gptelt-edit--is-lisp-mode-p mj-mode)
+             (if (gptelt--is-lisp-mode-p mj-mode)
                  (let ((temp-buffer (generate-new-buffer " *gptelt-balance-check*")))
                    (with-current-buffer temp-buffer
                      (erase-buffer)
@@ -346,13 +314,13 @@ CALLBACK is called with the result string when done (async if LLM correction nee
                ;; Non-Lisp mode, proceed directly
                (gptelt-edit--apply-edit-directly
                 buffer final-old-string new-string callback replace-all instruction)))))
-      
+
       ;; If match found or no instruction, proceed synchronously
       (if (or match-result (not instruction))
           (if match-result
               (funcall do-edit (plist-get match-result :corrected-string))
             ;; No match and no instruction - error
-            (funcall callback (gptelt-edit--generate-error old-string)))
+            (funcall callback (gptelt-edit--generate-error buffer old-string)))
         ;; No match but have instruction - try LLM correction (async)
         (gptelt-edit--llm-fix-old-string
          buffer old-string instruction
@@ -363,8 +331,8 @@ CALLBACK is called with the result string when done (async if LLM correction nee
                    (goto-char (point-min))
                    (if (search-forward fixed-string nil t)
                        (funcall do-edit fixed-string)
-                     (funcall callback (gptelt-edit--generate-error old-string)))))
-             (funcall callback (gptelt-edit--generate-error old-string)))))))))
+                     (funcall callback (gptelt-edit--generate-error buffer old-string)))))
+             (funcall callback (gptelt-edit--generate-error buffer old-string)))))))))
 
 ;;; Main edit functions
 (defun gptelt-edit-edit-buffer
@@ -410,19 +378,15 @@ FILE-PATH must be an absolute path.
 This function:
 1. Ensures file-path is absolute
 2. Reads the file if no buffer exists for it
-3. Generates context (project root, major mode, minor modes)
-4. Tries multiple matching strategies (exact, flexible whitespace, LLM correction)
-5. Validates balanced parentheses for Lisp code
-6. Applies the edit directly to the buffer
-7. Formats the changed region if LSP is available"
-  (let* ((file-path (gptelt-edit--resolve-file-path file-path))
-         (context (gptelt-edit--get-buffer-context file-path))
-         (buffer (plist-get context :buffer))
-         (resolved-path (plist-get context :file-path))
-         (original-path (plist-get context :original-path)))
+3. Tries multiple matching strategies (exact, flexible whitespace, LLM correction)
+4. Validates balanced parentheses for Lisp code
+5. Applies the edit directly to the buffer
+6. Formats the changed region if LSP is available"
+  (let* ((resolved-path (expand-file-name file-path))
+         (buffer (gptelt-edit--get-buffer-for-file resolved-path)))
     (unless buffer
       (error "Could not open or create buffer for file: %s (resolved to: %s)"
-             original-path resolved-path))
+             file-path resolved-path))
     (gptelt-edit--edit-buffer-impl buffer old-string new-string callback replace-all instruction)))
 
 (comment
@@ -462,35 +426,48 @@ This function:
 (defvar gptelt-edit-debug nil
   "When non-nil, log edit tool parameter translation for debugging.")
 
+(defun gptelt-edit--error-wrapping-callback (callback)
+  "Wrap CALLBACK to tag non-success results with <tool_use_error>.
+Returns a new callback that passes through success messages unchanged
+and wraps error messages in <tool_use_error> tags."
+  (lambda (result)
+    (funcall callback
+             (if (or (not (stringp result))
+                     (string-prefix-p "Successfully" result)
+                     (string-prefix-p "<tool_use_error>" result))
+                 result
+               (format "<tool_use_error>%s</tool_use_error>" result)))))
+
 (defun gptelt-edit-edit-file-mcp (callback file-path old-string new-string &optional replace-all instruction)
   "MCP wrapper for edit-file that matches :args specification.
 CALLBACK is first, then individual parameters as defined in :args.
 
 Validates all required parameters and provides clear error messages."
   (when gptelt-edit-debug
-    (message "[EDIT-DEBUG] edit_file: path=%s old=%s new=%s replace_all=%s instruction=%s" 
-             file-path 
-             (substring old-string 0 (min 20 (length old-string)))
-             (substring new-string 0 (min 20 (length new-string)))
+    (message "[EDIT-DEBUG] edit_file: path=%s old=%s new=%s replace_all=%s instruction=%s"
+             file-path
+             (and (stringp old-string) (substring old-string 0 (min 20 (length old-string))))
+             (and (stringp new-string) (substring new-string 0 (min 20 (length new-string))))
              replace-all
              (if instruction "provided" "nil")))
-  
-  ;; Validate required parameters
-  (cond
-   ((or (null file-path) (not (stringp file-path)) (string-empty-p file-path))
-    (funcall callback "Error: Parameter 'file_path' is required and must be a non-empty string"))
-   ((or (null old-string) (not (stringp old-string)))
-    (funcall callback "Error: Parameter 'old_string' is required and must be a string"))
-   ((or (null new-string) (not (stringp new-string)))
-    (funcall callback "Error: Parameter 'new_string' is required and must be a string"))
-   ((and replace-all (not (booleanp replace-all)))
-    (funcall callback (format "Error: Parameter 'replace_all' must be a boolean (true/false), got: %S" replace-all)))
-   ((and instruction (not (stringp instruction)))
-    (funcall callback (format "Error: Parameter 'instruction' must be a string, got: %S" instruction)))
-   (t
-    ;; All validation passed - proceed with edit
-    (gptelt-edit-edit-file
-     callback file-path old-string new-string replace-all instruction))))
+
+  (let ((callback (gptelt-edit--error-wrapping-callback callback)))
+    ;; Validate required parameters
+    (cond
+     ((or (null file-path) (not (stringp file-path)) (string-empty-p file-path))
+      (funcall callback "Error: Parameter 'file_path' is required and must be a non-empty string"))
+     ((or (null old-string) (not (stringp old-string)))
+      (funcall callback "Error: Parameter 'old_string' is required and must be a string"))
+     ((or (null new-string) (not (stringp new-string)))
+      (funcall callback "Error: Parameter 'new_string' is required and must be a string"))
+     ((and replace-all (not (booleanp replace-all)))
+      (funcall callback (format "Error: Parameter 'replace_all' must be a boolean (true/false), got: %S" replace-all)))
+     ((and instruction (not (stringp instruction)))
+      (funcall callback (format "Error: Parameter 'instruction' must be a string, got: %S" instruction)))
+     (t
+      ;; All validation passed - proceed with edit
+      (gptelt-edit-edit-file
+       callback file-path old-string new-string replace-all instruction)))))
 
 (defun gptelt-edit-edit-buffer-mcp (callback buffer-name old-string new-string &optional replace-all instruction)
   "MCP wrapper for edit-buffer that matches :args specification.
@@ -498,29 +475,30 @@ CALLBACK is first, then individual parameters as defined in :args.
 
 Validates all required parameters and provides clear error messages."
   (when gptelt-edit-debug
-    (message "[EDIT-DEBUG] edit_buffer: buf=%s old=%s new=%s replace_all=%s instruction=%s" 
-             buffer-name 
-             (substring old-string 0 (min 20 (length old-string)))
-             (substring new-string 0 (min 20 (length new-string)))
+    (message "[EDIT-DEBUG] edit_buffer: buf=%s old=%s new=%s replace_all=%s instruction=%s"
+             buffer-name
+             (and (stringp old-string) (substring old-string 0 (min 20 (length old-string))))
+             (and (stringp new-string) (substring new-string 0 (min 20 (length new-string))))
              replace-all
              (if instruction "provided" "nil")))
-  
-  ;; Validate required parameters
-  (cond
-   ((or (null buffer-name) (not (stringp buffer-name)) (string-empty-p buffer-name))
-    (funcall callback "Error: Parameter 'buffer_name' is required and must be a non-empty string"))
-   ((or (null old-string) (not (stringp old-string)))
-    (funcall callback "Error: Parameter 'old_string' is required and must be a string"))
-   ((or (null new-string) (not (stringp new-string)))
-    (funcall callback "Error: Parameter 'new_string' is required and must be a string"))
-   ((and replace-all (not (booleanp replace-all)))
-    (funcall callback (format "Error: Parameter 'replace_all' must be a boolean (true/false), got: %S" replace-all)))
-   ((and instruction (not (stringp instruction)))
-    (funcall callback (format "Error: Parameter 'instruction' must be a string, got: %S" instruction)))
-   (t
-    ;; All validation passed - proceed with edit
-    (gptelt-edit-edit-buffer
-     callback buffer-name old-string new-string replace-all instruction))))
+
+  (let ((callback (gptelt-edit--error-wrapping-callback callback)))
+    ;; Validate required parameters
+    (cond
+     ((or (null buffer-name) (not (stringp buffer-name)) (string-empty-p buffer-name))
+      (funcall callback "Error: Parameter 'buffer_name' is required and must be a non-empty string"))
+     ((or (null old-string) (not (stringp old-string)))
+      (funcall callback "Error: Parameter 'old_string' is required and must be a string"))
+     ((or (null new-string) (not (stringp new-string)))
+      (funcall callback "Error: Parameter 'new_string' is required and must be a string"))
+     ((and replace-all (not (booleanp replace-all)))
+      (funcall callback (format "Error: Parameter 'replace_all' must be a boolean (true/false), got: %S" replace-all)))
+     ((and instruction (not (stringp instruction)))
+      (funcall callback (format "Error: Parameter 'instruction' must be a string, got: %S" instruction)))
+     (t
+      ;; All validation passed - proceed with edit
+      (gptelt-edit-edit-buffer
+       callback buffer-name old-string new-string replace-all instruction)))))
 
 (defun gptelt-edit-multi-edit-file-mcp (callback file-path edits)
   "MCP wrapper for multi-edit-file that matches :args specification.
@@ -529,27 +507,28 @@ CALLBACK is first, then file-path, then edits list/vector.
 Validates all required parameters and provides clear error messages.
 Automatically converts vector to list if needed."
   (when gptelt-edit-debug
-    (message "[EDIT-DEBUG] multi_edit_file: path=%s edits=%S (type=%s)" 
+    (message "[EDIT-DEBUG] multi_edit_file: path=%s edits=%S (type=%s)"
              file-path edits (type-of edits)))
-  
-  ;; Validate required parameters
-  (cond
-   ((or (null file-path) (not (stringp file-path)) (string-empty-p file-path))
-    (funcall callback "Error: Parameter 'file_path' is required and must be a non-empty string"))
-   ((null edits)
-    (funcall callback "Error: Parameter 'edits' is required and must be a list or array"))
-   ((not (or (listp edits) (vectorp edits)))
-    (funcall callback (format "Error: Parameter 'edits' must be a list or array, got: %S" (type-of edits))))
-   (t
-    ;; Convert vector to list if needed
-    (when (vectorp edits)
-      (setq edits (append edits nil)))
-    
-    ;; Validate edits list is not empty
-    (if (zerop (length edits))
-        (funcall callback "Error: Parameter 'edits' must contain at least one edit")
-      ;; All validation passed - proceed with multi-edit
-      (gptelt-edit-multi-edit-file callback file-path edits)))))
+
+  (let ((callback (gptelt-edit--error-wrapping-callback callback)))
+    ;; Validate required parameters
+    (cond
+     ((or (null file-path) (not (stringp file-path)) (string-empty-p file-path))
+      (funcall callback "Error: Parameter 'file_path' is required and must be a non-empty string"))
+     ((null edits)
+      (funcall callback "Error: Parameter 'edits' is required and must be a list or array"))
+     ((not (or (listp edits) (vectorp edits)))
+      (funcall callback (format "Error: Parameter 'edits' must be a list or array, got: %S" (type-of edits))))
+     (t
+      ;; Convert vector to list if needed
+      (when (vectorp edits)
+        (setq edits (append edits nil)))
+
+      ;; Validate edits list is not empty
+      (if (zerop (length edits))
+          (funcall callback "Error: Parameter 'edits' must contain at least one edit")
+        ;; All validation passed - proceed with multi-edit
+        (gptelt-edit-multi-edit-file callback file-path edits))))))
 
 (defun gptelt-edit-multi-edit-buffer-mcp (callback buffer-name edits)
   "MCP wrapper for multi-edit-buffer that matches :args specification.
@@ -558,27 +537,28 @@ CALLBACK is first, then buffer-name, then edits list/vector.
 Validates all required parameters and provides clear error messages.
 Automatically converts vector to list if needed."
   (when gptelt-edit-debug
-    (message "[EDIT-DEBUG] multi_edit_buffer: buf=%s edits=%S (type=%s)" 
+    (message "[EDIT-DEBUG] multi_edit_buffer: buf=%s edits=%S (type=%s)"
              buffer-name edits (type-of edits)))
-  
-  ;; Validate required parameters
-  (cond
-   ((or (null buffer-name) (not (stringp buffer-name)) (string-empty-p buffer-name))
-    (funcall callback "Error: Parameter 'buffer_name' is required and must be a non-empty string"))
-   ((null edits)
-    (funcall callback "Error: Parameter 'edits' is required and must be a list or array"))
-   ((not (or (listp edits) (vectorp edits)))
-    (funcall callback (format "Error: Parameter 'edits' must be a list or array, got: %S" (type-of edits))))
-   (t
-    ;; Convert vector to list if needed
-    (when (vectorp edits)
-      (setq edits (append edits nil)))
-    
-    ;; Validate edits list is not empty
-    (if (zerop (length edits))
-        (funcall callback "Error: Parameter 'edits' must contain at least one edit")
-      ;; All validation passed - proceed with multi-edit
-      (gptelt-edit-multi-edit-buffer callback buffer-name edits)))))
+
+  (let ((callback (gptelt-edit--error-wrapping-callback callback)))
+    ;; Validate required parameters
+    (cond
+     ((or (null buffer-name) (not (stringp buffer-name)) (string-empty-p buffer-name))
+      (funcall callback "Error: Parameter 'buffer_name' is required and must be a non-empty string"))
+     ((null edits)
+      (funcall callback "Error: Parameter 'edits' is required and must be a list or array"))
+     ((not (or (listp edits) (vectorp edits)))
+      (funcall callback (format "Error: Parameter 'edits' must be a list or array, got: %S" (type-of edits))))
+     (t
+      ;; Convert vector to list if needed
+      (when (vectorp edits)
+        (setq edits (append edits nil)))
+
+      ;; Validate edits list is not empty
+      (if (zerop (length edits))
+          (funcall callback "Error: Parameter 'edits' must contain at least one edit")
+        ;; All validation passed - proceed with multi-edit
+        (gptelt-edit-multi-edit-buffer callback buffer-name edits))))))
 
 ;;; Tool registration
 (when (fboundp 'gptelt-make-tool)
@@ -652,8 +632,7 @@ Automatically converts vector to list if needed."
                         "- Simple replacement: edit_file('/path/to/main.py', 'old_value = 1', 'new_value = 2', false, 'update constant')\n"
                         "- Function replacement: edit_file('/path/to/app.js', 'function oldName() {\\n  return false;\\n}', 'function newName() {\\n  return true;\\n}', false, 'rename function')\n"
                         "- Replace all: edit_file('/path/to/config.json', '\"debug\": false', '\"debug\": true', true)\n\n"
-                        "For Lisp code, automatically validates parentheses balance and applies LSP formatting. "
-                        "Creates the file if it doesn't exist (use empty old_string for new files).")
+                        "For Lisp code, automatically validates parentheses balance and applies LSP formatting.")
    :args '((:name "file_path" :type string
             :description "Absolute path to the file to edit (must be absolute, not relative)")
            (:name "old_string" :type string
@@ -762,13 +741,11 @@ CALLBACK is called with the result string when all edits are done."
 EDITS is a list where each element is either a cons cell (OLD . NEW), or an object with :old_string, :new_string, and optional :replace_all (boolean).
 For Lisp code, checks balance after each edit.
 CALLBACK is called with the result string when all edits are done."
-  (let* ((context (gptelt-edit--get-buffer-context file-path))
-         (buffer (plist-get context :buffer))
-         (resolved-path (plist-get context :file-path))
-         (original-path (plist-get context :original-path)))
+  (let* ((resolved-path (expand-file-name file-path))
+         (buffer (gptelt-edit--get-buffer-for-file resolved-path)))
     (unless buffer
       (error "Could not open or create buffer for file: %s (resolved to: %s)"
-             original-path resolved-path))
+             file-path resolved-path))
     (gptelt-edit--multi-edit-buffer-impl buffer edits callback)))
 
 (comment
@@ -881,10 +858,9 @@ CALLBACK is called with the result string when all edits are done."
                         "  {\"old_string\": \"port: 3000\", \"new_string\": \"port: 8080\", \"instruction\": \"update port\"},\n"
                         "  {\"old_string\": \"env: 'dev'\", \"new_string\": \"env: 'prod'\", \"instruction\": \"switch to production\"}\n"
                         "])\n\n"
-                        "For Lisp code, validates parentheses balance after each edit. "
-                        "Supports both absolute paths and paths relative to project root (~/ expansion supported).")
+                        "For Lisp code, validates parentheses balance after each edit.")
    :args '((:name "file_path" :type string
-            :description "absolute or relative file path to the file to edit, `~/` is supported")
+            :description "Absolute path to the file to edit (must be absolute, not relative). Supports `~/` expansion.")
            (:name "edits"
             :type array
             :items

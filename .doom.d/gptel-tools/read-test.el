@@ -71,4 +71,39 @@
           (should-not (string-match-p "line1" result)))
       (kill-buffer buf))))
 
+;;; --- Error wrapping tests ---
+
+(ert-deftest gptelt-test-read-buffer-mcp-error-wrapped ()
+  "Test that read-buffer-mcp wraps errors in <tool_use_error> tags."
+  (let ((result (gptelt-read-buffer-mcp "nonexistent-buffer-xyz-999")))
+    (should (stringp result))
+    (should (string-prefix-p "<tool_use_error>" result))
+    (should (string-suffix-p "</tool_use_error>" result))
+    (should (string-match-p "not found" result))))
+
+(ert-deftest gptelt-test-read-buffer-mcp-success-not-wrapped ()
+  "Test that read-buffer-mcp does NOT wrap successful reads."
+  (let* ((fname (make-temp-file "gptelt-read-mcp-test" nil ".txt"))
+         (buf (find-file-noselect fname))
+         result)
+    (unwind-protect
+        (progn
+          (with-current-buffer buf (insert "hello\n"))
+          (setq result (gptelt-read-buffer-mcp (buffer-name buf) 0 10))
+          (should (stringp result))
+          (should-not (string-match-p "<tool_use_error>" result))
+          (should (string-match-p "hello" result)))
+      (kill-buffer buf)
+      (when (file-exists-p fname) (delete-file fname)))))
+
+(ert-deftest gptelt-test-read-multiple-buffers-mcp-error-wrapped ()
+  "Test that read-multiple-buffers-mcp wraps per-buffer errors."
+  (let ((results (gptelt-read-multiple-buffers-mcp
+                  (list (list :buffer-name "nonexistent-buf-abc-777")))))
+    (should (listp results))
+    (let ((err-msg (plist-get (car results) :error)))
+      (should err-msg)
+      (should (string-prefix-p "<tool_use_error>" err-msg))
+      (should (string-suffix-p "</tool_use_error>" err-msg)))))
+
 ;;; read-test.el ends here
