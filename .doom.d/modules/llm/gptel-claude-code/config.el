@@ -46,6 +46,8 @@
 
 (use-package! gptel-claude-code
   :after gptel
+  :init
+  (setq! gptel-claude-code-skip-permissions t)
   :config
   (gptel-make-claude-code "Claude Code"
     :models gptel--claude-code-models

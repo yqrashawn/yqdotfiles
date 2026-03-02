@@ -43,7 +43,11 @@
                      dir))))))
            (lambda (e) (user-error
                         "Error setting gptel org title: %s"
-                        (error-message-string e))))
+                        (if (plistp e)
+                            (or (plist-get e :error)
+                                (plist-get e :status)
+                                (format "%S" e))
+                          (error-message-string e)))))
           t)))))
 
 (defun +gptel-kill-default-buffer ()

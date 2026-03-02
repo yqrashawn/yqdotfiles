@@ -404,22 +404,21 @@ Each handler takes (MSG INFO) and returns a string to display, or nil.")
   "Fold tool/result org blocks inserted after buffer position START.
 INFO is the request info plist containing :buffer and :tracking-marker.
 Searches for #+end_tool and #+end_result lines between START and
-the tracking marker, folding each with `org-cycle'."
+the tracking marker, then folds each block using `org-cycle'."
   (when-let* ((buf (plist-get info :buffer))
               (tracking-marker (plist-get info :tracking-marker)))
     (when (buffer-live-p buf)
       (with-current-buffer buf
         (when (derived-mode-p 'org-mode)
-          (ignore-errors
-            (save-excursion
-              (goto-char start)
-              (while (re-search-forward
-                      "^#\\+end_\\(tool\\|result\\)"
-                      tracking-marker t)
-                (let ((resume-pos (point)))
-                  (forward-line 0)
-                  (org-cycle)
-                  (goto-char resume-pos))))))))))
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward
+                    "^#\\+end_\\(tool\\|result\\)"
+                    tracking-marker t)
+              (ignore-errors
+                (save-excursion
+                  (goto-char (line-beginning-position))
+                  (org-cycle))))))))))
 
 ;;; Stream filter
 
