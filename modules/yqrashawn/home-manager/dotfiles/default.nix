@@ -1,11 +1,4 @@
-{
-  inputs,
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-{
+{ inputs, config, pkgs, lib, ... }: {
   home.file = {
     hammerspoon = {
       source = inputs.spacehammer;
@@ -199,6 +192,14 @@
       target = "./.asdf/plugins/bun";
       recursive = true;
     };
+    bunfig = {
+      source = ./bunfig.toml;
+      target = ".bunfig.toml";
+    };
+    bun-preload = {
+      source = ./bun-preload.ts;
+      target = ".bun-preload.ts";
+    };
     asdf-yarn = {
       source = inputs.asdf-yarn;
       target = "./.asdf/plugins/yarn";
@@ -314,19 +315,23 @@
     #   target = "atuin/server.toml";
     # };
     kitty-light = {
-      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
+      source =
+        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
       target = "kitty/light-theme.auto.conf";
     };
     kitty-light2 = {
-      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
+      source =
+        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
       target = "kitty/light2.conf";
     };
     kitty-dark = {
-      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
+      source =
+        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
       target = "kitty/dark-theme.auto.conf";
     };
     kitty-dark2 = {
-      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
+      source =
+        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
       target = "kitty/dark2.conf";
     };
     topgrade = {
@@ -353,12 +358,8 @@
       source = ./.zsh.d;
       recursive = true;
     };
-    "broot/conf.hjson" = {
-      source = ./broot.hjson;
-    };
-    ".lsp/config.edn" = {
-      source = ./lsp.edn;
-    };
+    "broot/conf.hjson" = { source = ./broot.hjson; };
+    ".lsp/config.edn" = { source = ./lsp.edn; };
     alacritty = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./alacritty;
       recursive = true;
@@ -372,12 +373,8 @@
       source = ./clojure_lsp.edn;
       target = "./clojure-lsp/config.edn";
     };
-    "mpv/mpv.conf" = {
-      source = ./mpv.conf;
-    };
-    "husky/init.sh" = {
-      source = ./.huskyrc;
-    };
+    "mpv/mpv.conf" = { source = ./mpv.conf; };
+    "husky/init.sh" = { source = ./.huskyrc; };
     # yarn-global = {
     #   source = ./package.json;
     #   target = "./yarn/global/package.json";
