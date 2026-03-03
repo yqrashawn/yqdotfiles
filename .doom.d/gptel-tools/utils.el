@@ -102,13 +102,11 @@ Tries LLM auto-repair if unbalanced."
                 (gptelt--attempt-llm-balance
                  buffer
                  (lambda (llm-check)
-                   (let* ((result (if (and (listp llm-check)
-                                           (plist-get llm-check :rst))
-                                      llm-check
-                                    (list :rst llm-check :err nil)))
-                          (balanced (plist-get result :rst))
-                          (err (plist-get result :err)))
-                     (if balanced
+                   (let* ((balanced (and (listp llm-check)
+                                         (plist-get llm-check :rst)))
+                          (err (and (listp llm-check)
+                                    (plist-get llm-check :err))))
+                     (if (and balanced (stringp balanced))
                          (with-current-buffer buffer
                            (erase-buffer)
                            (insert balanced)
@@ -118,7 +116,11 @@ Tries LLM auto-repair if unbalanced."
                                       (cons nil
                                             (format "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
                                                     (symbol-name mj-mode))))))
-                       (funcall callback (cons nil err)))))))
+                       (funcall callback
+                                (cons nil
+                                      (or err
+                                          (format "The %s buffer would end up in an unbalanced state after replace. CHECK THE PARENTHESES CAREFULLY"
+                                                  (symbol-name mj-mode))))))))))
             (error (funcall callback (cons nil (error-message-string err))))))
       ;; Non-Lisp modes always pass (sync)
       (funcall callback (cons t nil)))))

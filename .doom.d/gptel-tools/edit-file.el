@@ -193,13 +193,13 @@ IMPORTANT: Reverts buffer first to ensure we're working with disk state."
 
   ;; Try to find match using strategy pipeline
   (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
-      ;; Match found - apply replacement
-      (gptelt-edit--do-replacement
-       buffer
-       (plist-get match-result :corrected-string)
-       new-string
-       replace-all
-       callback)
+    ;; Match found - apply replacement
+    (gptelt-edit--do-replacement
+     buffer
+     (plist-get match-result :corrected-string)
+     new-string
+     replace-all
+     callback)
     ;; No match - try LLM correction if instruction provided
     (if instruction
         (gptelt-edit--apply-match-with-llm
@@ -648,52 +648,150 @@ Automatically converts vector to list if needed."
    :include t))
 
 ;;; Multi-edit logic
+
+(defun gptelt-edit--multi-edit-apply-in-temp (buffer edits)
+  "Apply all EDITS as text replacements in a temp copy of BUFFER.
+Returns plist (:success BOOL :applied-count N :content STRING :error STRING).
+Does NOT check balance — caller is responsible for that."
+  (when (vectorp edits)
+    (setq edits (append edits nil)))
+  (let ((temp-buffer (generate-new-buffer " *gptelt-multi-edit-temp*"))
+        (applied-count 0)
+        (error-result nil))
+    (unwind-protect
+        (progn
+          (with-current-buffer temp-buffer
+            (insert-buffer-substring buffer))
+          (catch 'edit-failed
+            (dolist (edit edits)
+              (let* ((old (plist-get edit :old_string))
+                     (new (plist-get edit :new_string))
+                     (replace-all (plist-get edit :replace_all))
+                     (match-result (with-current-buffer temp-buffer
+                                     (gptelt-edit--find-match temp-buffer old))))
+                (if (not match-result)
+                    (let ((status-lines
+                           (cl-loop for i from 1 to (length edits)
+                                    collect
+                                    (cond
+                                     ((< i (1+ applied-count))
+                                      (format "- Edit %d/%d: SUCCESS" i (length edits)))
+                                     ((= i (1+ applied-count))
+                                      (format "- Edit %d/%d: FAILED" i (length edits)))
+                                     (t
+                                      (format "- Edit %d/%d: SKIPPED (not applied)" i (length edits)))))))
+                      (setq error-result
+                            (format "Multi-edit failed:\n%s\n\nError from failed edit:\n%s"
+                                    (string-join status-lines "\n")
+                                    (gptelt-edit--generate-error temp-buffer old)))
+                      (throw 'edit-failed nil))
+                  ;; Apply the replacement in temp buffer
+                  (with-current-buffer temp-buffer
+                    (let ((corrected (plist-get match-result :corrected-string)))
+                      (save-excursion
+                        (goto-char (point-min))
+                        (if replace-all
+                            (while (search-forward corrected nil t)
+                              (let ((start (match-beginning 0))
+                                    (end (match-end 0)))
+                                (goto-char start)
+                                (delete-region start end)
+                                (insert new)))
+                          (when (search-forward corrected nil t)
+                            (let ((start (match-beginning 0))
+                                  (end (match-end 0)))
+                              (goto-char start)
+                              (delete-region start end)
+                              (insert new)))))))
+                  (setq applied-count (1+ applied-count))))))
+          (if error-result
+              (list :success nil :applied-count applied-count
+                    :content nil :error error-result)
+            (list :success t :applied-count applied-count
+                  :content (with-current-buffer temp-buffer (buffer-string))
+                  :error nil)))
+      (when (buffer-live-p temp-buffer)
+        (kill-buffer temp-buffer)))))
+
 (defun gptelt-edit--multi-edit-buffer-impl (buffer edits callback)
   "Apply multiple edits to BUFFER sequentially. Each edit is a plist or cons cell.
 Supports :replace_all and :instruction for each edit (default nil).
-CALLBACK is called with the final result message when all edits are done."
-  ;; Convert vector to list if needed
+CALLBACK is called with the final result message when all edits are done.
+
+For Lisp modes, all edits are applied in a temp buffer first, then
+balance is checked ONCE on the final result (not per-edit)."
   (when (vectorp edits)
     (setq edits (append edits nil)))
-  (let ((applied-count 0))
-    (cl-labels
-        ((process-next-edit (remaining-edits)
-           (if (null remaining-edits)
-               (funcall
-                callback
-                (format "Successfully applied %d edits to buffer: %s"
-                        applied-count (buffer-name buffer)))
-             ;; Process next edit
-             (let* ((oe (car remaining-edits))
-                    (old (plist-get oe :old_string))
-                    (new (plist-get oe :new_string))
-                    (replace-all (plist-get oe :replace_all))
-                    (instruction (plist-get oe :instruction)))
-               (gptelt-edit--edit-buffer-impl
-                buffer old new
-                (lambda (result)
-                  ;; Check if the edit failed
-                  (if (string-match-p "old_string not found\\|ERROR:" result)
-                      ;; Edit failed - stop processing and report error
-                      (let ((status-lines
-                             (cl-loop for i from 1 to (length edits)
-                                      collect
-                                      (cond
-                                       ((< i (1+ applied-count))
-                                        (format "- Edit %d/%d: SUCCESS" i (length edits)))
-                                       ((= i (1+ applied-count))
-                                        (format "- Edit %d/%d: FAILED" i (length edits)))
-                                       (t
-                                        (format "- Edit %d/%d: SKIPPED (not applied)" i (length edits)))))))
-                        (funcall callback
-                                 (format "Multi-edit failed:\n%s\n\nError from failed edit:\n%s"
-                                         (string-join status-lines "\n")
-                                         result)))
-                    ;; Edit succeeded - continue with next edit
-                    (setq applied-count (1+ applied-count))
-                    (process-next-edit (cdr remaining-edits))))
-                replace-all instruction)))))
-      (process-next-edit edits))))
+  (let* ((mj-mode (buffer-local-value 'major-mode buffer))
+         (is-lisp (gptelt--is-lisp-mode-p mj-mode)))
+    (if is-lisp
+        ;; Lisp mode: apply all edits in temp buffer, then check balance once
+        (let ((result (gptelt-edit--multi-edit-apply-in-temp buffer edits)))
+          (if (not (plist-get result :success))
+              (funcall callback (plist-get result :error))
+            ;; All edits applied successfully in temp — now check balance
+            (let ((check-buffer (generate-new-buffer " *gptelt-multi-balance*"))
+                  (applied-count (plist-get result :applied-count))
+                  (new-content (plist-get result :content)))
+              (with-current-buffer check-buffer
+                (insert new-content)
+                (funcall mj-mode))
+              (gptelt--check-buffer-balanced-parens
+               check-buffer
+               (lambda (bal-result)
+                 (let ((balanced-p (car bal-result))
+                       (error-msg (cdr bal-result)))
+                   (if balanced-p
+                       ;; Balanced — extract (possibly LLM-repaired) content, then apply
+                       (let ((final-content
+                              (with-current-buffer check-buffer
+                                (buffer-string))))
+                         (kill-buffer check-buffer)
+                         (funcall callback
+                                  (gptelt--replace-buffer-directly
+                                   buffer final-content)))
+                     ;; Unbalanced — report error
+                     (kill-buffer check-buffer)
+                     (funcall callback
+                              (or error-msg
+                                  (format "The %s buffer would end up in an unbalanced state after multi-edit. CHECK THE PARENTHESES CAREFULLY."
+                                          (symbol-name mj-mode))))))))))))
+    ;; Non-lisp mode: apply edits sequentially using edit-buffer-impl
+    (let ((applied-count 0))
+      (cl-labels
+          ((process-next-edit (remaining-edits)
+             (if (null remaining-edits)
+                 (funcall
+                  callback
+                  (format "Successfully applied %d edits to buffer: %s"
+                          applied-count (buffer-name buffer)))
+               (let* ((oe (car remaining-edits))
+                      (old (plist-get oe :old_string))
+                      (new (plist-get oe :new_string))
+                      (replace-all (plist-get oe :replace_all))
+                      (instruction (plist-get oe :instruction)))
+                 (gptelt-edit--edit-buffer-impl
+                  buffer old new
+                  (lambda (result)
+                    (if (not (string-prefix-p "Successfully" result))
+                        (let ((status-lines
+                               (cl-loop for i from 1 to (length edits)
+                                        collect
+                                        (cond
+                                         ((< i (1+ applied-count))
+                                          (format "- Edit %d/%d: SUCCESS" i (length edits)))
+                                         ((= i (1+ applied-count))
+                                          (format "- Edit %d/%d: FAILED" i (length edits)))
+                                         (t
+                                          (format "- Edit %d/%d: SKIPPED (not applied)" i (length edits)))))))
+                          (funcall callback
+                                   (format "Multi-edit failed:\n%s\n\nError from failed edit:\n%s"
+                                           (string-join status-lines "\n")
+                                           result)))
+                      (setq applied-count (1+ applied-count))
+                      (process-next-edit (cdr remaining-edits))))
+                  replace-all instruction)))))
+        (process-next-edit edits)))))
 
 ;;; Public multi-edit entrypoints
 

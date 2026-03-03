@@ -363,7 +363,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -834,15 +834,15 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
-           ;; :backend +gptel-free-backend
-           :backend gptel-claude-code-backend
+           :backend +gptel-free-backend
+           ;; :backend gptel-claude-code-backend
            ;; :backend gptel--gh-copilot-business
            ;; :model 'gpt-4.1
-           :model 'sonnet
+           ;; :model 'sonnet
            ;; :model 'haiku
            ;; :model 'gpt-4o
            ;; :model 'gpt-4o-mini
-           ;; :model 'gpt-5-mini
+           :model 'gpt-5-mini
            :temperature 0.5
            :system llm-lisp-balancer-system-message
            :timeout 60
