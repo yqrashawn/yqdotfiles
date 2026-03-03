@@ -75,7 +75,8 @@
         ":cli-assit")))
 
      ("lattice" .
-      (:command "lattice-mcp"))
+      (:command "bunx"
+       :args ("-p" "matryoshka-rlm" "lattice-mcp")))
 
      ;; ("emacs" .
      ;;  (:command ,(concat
@@ -84,9 +85,9 @@
      
      ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
      
-     ;; ("qmd" .
-     ;;  (:command "npx"
-     ;;   :args ("-y" "@tobilu/qmd" "mcp")))
+     ("qmd" .
+      (:command "bunx"
+       :args ("@tobilu/qmd" "mcp")))
      
      ;; ("daisyui-blueprint" .
      ;;   (:command "npx"

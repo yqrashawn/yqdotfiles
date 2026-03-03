@@ -146,12 +146,6 @@ Everywhere else: max 2 consecutive blank lines."
           (seq-map 'car (alist-get category gptel--known-tools)))))
      gptel--known-tools))
 
-  (gptel-make-preset 'ghsonnet
-    :description "preset"
-    :backend "cpi"
-    :parents '(default)
-    :model 'claude-sonnet-4.5)
-
   (gptel-make-preset 'h
     :description "claude code"
     :backend "Claude Code"
@@ -239,17 +233,21 @@ Everywhere else: max 2 consecutive blank lines."
     :parents '(sonnet)
     :tools '())
 
+  (gptel-make-preset 'ghsonnet
+    :description "preset"
+    :backend "cpi"
+    :parents '(default)
+    :model 'claude-sonnet-4.5)
+
   (gptel-make-preset 'codex
     :description "codex"
     :backend "codex"
     :model 'gpt-5-codex
     :system (alist-get 'default gptel-directives)
     :parents '(default))
-  ;; (gptel--apply-preset 'ghsonnet)
-  ;; (gptel--apply-preset 'codex)
-  ;; (gptel--apply-preset 'default)
-  (gptel--apply-preset 'sonnet)
-  (gptel--apply-preset 'opus))
+  ;; (gptel--apply-preset 'sonnet)
+  ;; (gptel--apply-preset 'opus)
+  )
 
 ;;;###autoload
 (defun +gptel (arg)
@@ -261,11 +259,6 @@ Everywhere else: max 2 consecutive blank lines."
    ((eq arg 90)
     (progn (funcall #'gptel-context-remove-all)
            (message "gptel context removed!")))
-   ((eq arg 99)
-    (when (require 'gptel nil t)
-      (if (s-contains? "8033" (gptel-backend-host gptel-backend))
-          (+gptel-cc-dev)
-        (+gptel-cc-prod))))
    ((eq arg 6) (call-interactively #'gptel-context-add))))
 
 (defvar +llm-project-default-files '())
@@ -283,30 +276,6 @@ Merge buffer-local with global default files."
    (append
     +llm-project-default-files
     +llm-global-project-default-files)))
-
-(defun +gptel-cc-dev ()
-  (setq! gptel--ccld
-         (gptel-make-openai "ccld"
-           :protocol "http"
-           :host "localhost:8003"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
-  (setq! gptel-backend gptel--ccld)
-  (message "ccl dev"))
-
-(defun +gptel-cc-prod ()
-  (setq! gptel--ccl
-         (gptel-make-openai "ccl"
-           :protocol "http"
-           :host "localhost:8033"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
-  (setq! gptel-backend gptel--ccl)
-  (message "ccl prod"))
 
 (use-package! gptel
   :commands (gptel gptel-context-add)
@@ -327,12 +296,12 @@ Merge buffer-local with global default files."
            'identity
            '("--http1.1"
              ;; "--fail-with-body"
-             "--no-buffer"   ;flush chunks ASAP so Emacs sees tokens as they arrive.
+             "--no-buffer" ;flush chunks ASAP so Emacs sees tokens as they arrive.
              ;; "--retry 3" "--retry-delay 1"
              "--connect-timeout 10"
              "--max-time 7200"
-             "--no-alpn"                    ;tsl
-             "-4"                           ;force ipv4
+             "--no-alpn"                  ;tsl
+             "-4"                         ;force ipv4
              "--insecure")
            " ")))
 
@@ -480,8 +449,6 @@ Merge buffer-local with global default files."
            :stream t
            :key "no-key-required"
            :models gptel--gh-models))
-  (+gptel-cc-dev)
-  (+gptel-cc-prod)
   (setq! gptel--codex
          (gptel-make-openai "codex"
            :protocol "http"
@@ -504,15 +471,31 @@ Merge buffer-local with global default files."
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--codex)
   (setq! gptel-backend gptel--claude-code)
+  (setq! gptel-backend gptel--gh-copilot-local)
+  (setq! gptel-backend gptel--gh-copilot-business)
+  (setq! gptel--ccld
+         (gptel-make-openai "ccld"
+           :protocol "http"
+           :host "localhost:8003"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+  (setq! gptel-backend gptel--ccld)
+
+  (setq! gptel--ccl
+         (gptel-make-openai "ccl"
+           :protocol "http"
+           :host "localhost:8033"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+
   (setq! gptel-backend gptel--ccl)
-  ;; (setq! gptel-backend gptel--gh-copilot-local)
-  ;; (setq! gptel-backend gptel--gh-copilot-business)
-  (setq! gptel-backend gptel--gh-copilot-individual)
-  (setq! gptel-model 'gemini-2.5-pro)
-  (setq! gptel-model 'claude-sonnet-4)
-  (setq! gptel-model 'gpt-5-codex)
-  (setq! gptel-model 'claude-sonnet-4.5)
-  (setq! gptel-model 'gpt-4.1)
+  (+gptel-make-my-presets)
+  (gptel--apply-preset 'opus)
+
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
   ;; (add-hook! 'gptel-post-response-functions #'+gptel-collapse-blank-lines)
@@ -524,14 +507,6 @@ Merge buffer-local with global default files."
       (setq! gptel-log-level 'debug
              mcp-server-lib-http-log-requests t)))
   (setq! gptel-log-level 'nil)
-
-  (defadvice! +gptel-mcp--activate-tools (_)
-    :after #'gptel-mcp--activate-tools
-    (+gptel-make-my-presets))
-
-  (defadvice! +gptel-make-tool (&rest _args)
-    :after #'gptel-make-tool
-    (+gptel-make-my-presets))
 
   (add-hook! 'gptel-post-response-functions
     (defun +gptel-notify-done (beg end)
@@ -667,26 +642,6 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
 
 (load! "mcp.el")
 
-(use-package! mcp
-  :after gptel
-  :config
-  (require 'gptel-integrations)
-  (require 'mcp-hub)
-  (load! "gptel-tools.el")
-  (mcp-hub-start-all-server
-   (lambda ()
-     (gptel-mcp-connect)
-     (+gptel-make-my-presets)
-     ;; at http://localhost:18684/mcp/v1/messages
-     (mcp-server-lib-http-start)
-
-
-     (setq-default gptel--preset 'default)))
-
-  (defadvice! +mcp-make-text-tool (orig-fn name tool-name &optional asyncp)
-    :around #'mcp-make-text-tool
-    (plist-put (funcall orig-fn name tool-name asyncp) :include t)))
-
 (use-package! mcp-server-lib
   :defer t
   :init
@@ -696,7 +651,6 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
            (concat (expand-file-name user-emacs-directory)
                    "emacs-mcp-stdio.sh"))
     (mcp-server-lib-install))
-  :config
   (setq! mcp-server-lib-default-directory-function
          (defun +mcp-server-lib-default-directory-function (session-id)
            (or
@@ -705,12 +659,24 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
               (gptel-claude-code--mcp-default-directory session-id))
             (when (fboundp '++workspace-current-project-root)
               (++workspace-current-project-root)))))
+  (load! "gptel-tools.el")
+  (+gptel-reinit)
 
   ;; (mcp-server-lib-http-stop)
   (comment
     (mcp-server-lib-stop))
   (unless (and (boundp 'mcp-server-lib--running) mcp-server-lib--running)
     (mcp-server-lib-start)))
+
+(use-package! mcp
+  :after mcp-server-lib
+  :config
+  (require 'gptel-integrations)
+  (require 'mcp-hub)
+
+  (defadvice! +mcp-make-text-tool (orig-fn name tool-name &optional asyncp)
+    :around #'mcp-make-text-tool
+    (plist-put (funcall orig-fn name tool-name asyncp) :include t)))
 
 (defvar simple-llm-req-p nil)
 
