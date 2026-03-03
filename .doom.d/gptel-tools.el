@@ -19,14 +19,16 @@
 (load! "gptel-tools/ask-user-question.el")
 
 (comment
-  (+gptel-reload-tools)
+  (+gptel-reinit))
 
-  (mcp-stop-server "emacs")
-  (mcp-hub--start-server
-   (cl-find "emacs" mcp-hub-servers :key #'car :test #'equal)))
-
-(defun +gptel-reload-tools ()
+(defun +gptel-reinit ()
   (interactive)
+  (require 'mcp-server-lib)
+  (require 'gptel)
+  (require 'mcp)
+  (require 'mcp-hub)
+  (require 'gptel-integrations)
+  (mcp-hub-close-all-server)
   (setq mcp-server-lib--tools (make-hash-table :test 'equal))
   (setq gptel--known-tools nil)
   (when (mcp--server-running-p "emacs")
@@ -39,11 +41,11 @@
     (gptel-claude-code-mcp-register-tools))
   (mcp-server-lib-start)
   (mcp-server-lib-http-start)
-  (mcp-hub--start-server
-   (cl-find "emacs" mcp-hub-servers :key #'car :test #'equal)
-   nil t)
-  (gptel-mcp-connect)
-  (load! "gptel-tools.el")
-  (+gptel-make-my-presets))
+  (mcp-hub-start-all-server
+   (lambda ()
+     (gptel-mcp-connect
+      nil (lambda ()
+            (+gptel-make-my-presets)
+            (gptel--apply-preset 'opus))))))
 
 ;;; End

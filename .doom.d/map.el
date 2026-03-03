@@ -210,7 +210,7 @@
      :desc "Open gptel menu" "o" #'gptel-menu)
    (:when (modulep! :tools llm)
      (:prefix ("l" . "llm")
-      :desc "Reload all gptel tools" "R" #'+gptel-reload-tools
+      :desc "Reload all gptel tools" "R" #'+gptel-reinit
       :desc "Compress gptel conversation to kill ring" "C"
       #'llm-compress-buffer-conversation))))
  (:localleader
