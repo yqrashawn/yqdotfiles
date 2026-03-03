@@ -179,6 +179,10 @@ We mock recursive-edit to prevent actually entering it in tests."
         (gptelt-auq--pending nil)
         (gptelt-auq--queue nil)
         (gptelt-auq--in-recursive-edit nil)
+        ;; Unbind async-response-fn to simulate stdio transport,
+        ;; otherwise the HTTP binding from the current session
+        ;; would cause recursive-edit to be skipped.
+        (mcp-server-lib--async-response-fn nil)
         (callback-called nil)
         (recursive-edit-entered nil))
     ;; Mock recursive-edit to just set a flag instead of blocking
@@ -243,6 +247,35 @@ defer off and a validation error, pending stays nil."
     (setq gptelt-auq--active-p nil
           gptelt-auq--pending nil
           gptelt-auq--in-recursive-edit nil)))
+
+(ert-deftest gptelt-auq-http-transport-skips-recursive-edit ()
+  "When mcp-server-lib--async-response-fn is bound (HTTP transport),
+recursive-edit is skipped so the call stack unwinds and the HTTP handler
+can return :async-pending and start chunked keepalive."
+  (let ((gptelt-auq-defer-by-default t)
+        (gptelt-auq--active-p nil)
+        (gptelt-auq--pending nil)
+        (gptelt-auq--queue nil)
+        (gptelt-auq--in-recursive-edit nil)
+        (recursive-edit-count 0)
+        ;; Simulate HTTP transport by binding the async response fn
+        (mcp-server-lib--async-response-fn (lambda (_response) nil)))
+    (cl-letf (((symbol-function 'recursive-edit)
+               (lambda () (cl-incf recursive-edit-count))))
+      (gptelt-auq-ask-user-question
+       (lambda (_r) nil)
+       '(((:question . "HTTP test?")
+          (:options . (((:label . "A")) ((:label . "B"))))))))
+    ;; recursive-edit should NOT have been called
+    (should (= 0 recursive-edit-count))
+    ;; Pending should still be stored for the buffer UI
+    (should gptelt-auq--pending)
+    (should (string= "HTTP test?" (plist-get gptelt-auq--pending :question-text)))
+    ;; in-recursive-edit should remain nil (never entered)
+    (should (null gptelt-auq--in-recursive-edit))
+    ;; Clean up
+    (setq gptelt-auq--active-p nil
+          gptelt-auq--pending nil)))
 
 ;;; Interactive buffer tests
 

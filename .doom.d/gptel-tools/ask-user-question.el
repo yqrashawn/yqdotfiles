@@ -15,7 +15,7 @@
   "When non-nil, log ask-user-question tool operations for debugging.")
 
 ;;; Constants
-(defconst gptelt-auq-max-questions 5
+(defconst gptelt-auq-max-questions 4
   "Maximum number of questions per tool call.")
 
 (defconst gptelt-auq-max-options 4
@@ -534,8 +534,8 @@ Returns an error to the waiting agent's callback."
 (defconst gptelt-auq--help-buffer-name "*AUQ Question*"
   "Buffer name for displaying question details.")
 
-(defun gptelt-auq--show-help-buffer (question-text header option-pairs
-                                                     &optional multi-select)
+(defun gptelt-auq--show-help-buffer
+    (question-text header option-pairs &optional multi-select)
   "Display an interactive help buffer with QUESTION-TEXT, HEADER, OPTION-PAIRS.
 OPTION-PAIRS is a list of (label . description) cons cells.
 When MULTI-SELECT is non-nil, show checkboxes for toggling.
@@ -662,90 +662,96 @@ keeps Emacs responsive in the meantime."
                       :remaining-questions remaining-questions
                       :results-so-far results-so-far))
           (message "Question ready. Press number keys or click options in *AUQ Question* buffer.")
-          ;; Only enter recursive-edit at the top level to avoid nesting.
-          ;; For subsequent questions (remaining-questions), we're already
-          ;; inside a recursive-edit, so just store state and return.
-          (unless gptelt-auq--in-recursive-edit
+          ;; Skip recursive-edit when:
+          ;; 1. Already inside one (subsequent questions in a batch)
+          ;; 2. HTTP transport is active (mcp-server-lib--async-response-fn
+          ;;    is bound) — recursive-edit would block the call stack,
+          ;;    preventing mcp-server-lib-process-jsonrpc from returning
+          ;;    :async-pending, so the HTTP handler never starts chunked
+          ;;    keepalive and the client times out with an empty result.
+          ;;    The HTTP handler's own event loop keeps Emacs responsive.
+          (unless (or gptelt-auq--in-recursive-edit
+                      (bound-and-true-p mcp-server-lib--async-response-fn))
             (setq gptelt-auq--in-recursive-edit t)
             (unwind-protect
                 (recursive-edit)
               (setq gptelt-auq--in-recursive-edit nil))))
 
-    (condition-case _err
-        (progn
-          (setq result
-                (if multi-select
-                    (completing-read-multiple
-                     prompt all-numbered nil t)
-                  (completing-read
-                   prompt all-numbered nil t)))
+      (condition-case _err
+          (progn
+            (setq result
+                  (if multi-select
+                      (completing-read-multiple
+                       prompt all-numbered nil t)
+                    (completing-read
+                     prompt all-numbered nil t)))
 
-          ;; Map numbered labels back to original labels
-          (setq result
+            ;; Map numbered labels back to original labels
+            (setq result
+                  (if (listp result)
+                      (mapcar (lambda (r)
+                                (or (cdr (assoc r numbered-to-orig)) r))
+                              result)
+                    (or (cdr (assoc result numbered-to-orig)) result)))
+
+            ;; Handle "Other" custom input
+            (when (if (listp result)
+                      (member "Other (custom input)" result)
+                    (string= result "Other (custom input)"))
+              (let ((custom (read-string "Enter custom answer: ")))
                 (if (listp result)
-                    (mapcar (lambda (r)
-                              (or (cdr (assoc r numbered-to-orig)) r))
-                            result)
-                  (or (cdr (assoc result numbered-to-orig)) result)))
+                    (setq result
+                          (mapcar (lambda (s)
+                                    (if (string= s "Other (custom input)")
+                                        custom
+                                      s))
+                                  result))
+                  (setq result custom))))
 
-          ;; Handle "Other" custom input
-          (when (if (listp result)
-                    (member "Other (custom input)" result)
-                  (string= result "Other (custom input)"))
-            (let ((custom (read-string "Enter custom answer: ")))
-              (if (listp result)
-                  (setq result
-                        (mapcar (lambda (s)
-                                  (if (string= s "Other (custom input)")
-                                      custom
-                                    s))
-                                result))
-                (setq result custom))))
+            ;; Clean up help buffer
+            (gptelt-auq--cleanup-help-buffer)
+            (let* ((answer (if (listp result)
+                               (mapconcat #'identity result ", ")
+                             result))
+                   (this-result (cons question-text answer))
+                   (all-results (append results-so-far (list this-result))))
+              ;; Continue with remaining questions or finish
+              (if remaining-questions
+                  (gptelt-auq--ask-remaining-questions
+                   remaining-questions all-results callback)
+                (gptelt-auq--finish-with-results all-results callback))))
 
-          ;; Clean up help buffer
-          (gptelt-auq--cleanup-help-buffer)
-          (let* ((answer (if (listp result)
-                             (mapconcat #'identity result ", ")
-                           result))
-                 (this-result (cons question-text answer))
-                 (all-results (append results-so-far (list this-result))))
-            ;; Continue with remaining questions or finish
-            (if remaining-questions
-                (gptelt-auq--ask-remaining-questions
-                 remaining-questions all-results callback)
-              (gptelt-auq--finish-with-results all-results callback))))
+        (quit
+         ;; User hit C-g -- defer the question.
+         ;; Keep help buffer open so they can read it.
+         ;; Store state so gptelt-auq-resume can bring back the prompt.
+         ;; Do NOT block here -- just return.  The MCP server's own
+         ;; accept-process-output loop keeps Emacs responsive, so the
+         ;; user can freely interact and call M-x gptelt-auq-resume.
+         (setq gptelt-auq--pending
+               (list :all-numbered all-numbered
+                     :numbered-to-orig numbered-to-orig
+                     :prompt prompt
+                     :multi-select multi-select
+                     :question-text question-text
+                     :option-pairs option-pairs
+                     :header header
+                     :callback callback
+                     :remaining-questions remaining-questions
+                     :results-so-far results-so-far))
+         (message "Question deferred. Do your research, then M-x gptelt-auq-resume to answer."))
 
-      (quit
-       ;; User hit C-g -- defer the question.
-       ;; Keep help buffer open so they can read it.
-       ;; Store state so gptelt-auq-resume can bring back the prompt.
-       ;; Do NOT block here -- just return.  The MCP server's own
-       ;; accept-process-output loop keeps Emacs responsive, so the
-       ;; user can freely interact and call M-x gptelt-auq-resume.
-       (setq gptelt-auq--pending
-             (list :all-numbered all-numbered
-                   :numbered-to-orig numbered-to-orig
-                   :prompt prompt
-                   :multi-select multi-select
-                   :question-text question-text
-                   :option-pairs option-pairs
-                   :header header
-                   :callback callback
-                   :remaining-questions remaining-questions
-                   :results-so-far results-so-far))
-       (message "Question deferred. Do your research, then M-x gptelt-auq-resume to answer."))
-
-      (error
-       (gptelt-auq--cleanup-help-buffer)
-       (message "Question failed: %s" (error-message-string _err))
-       ;; On error, call callback with error result, then drain queue
-       (funcall callback
-                (json-encode
-                 `((isError . t)
-                   (content . [((type . "text")
-                                (text . ,(format "Error: %s"
-                                                 (error-message-string _err))))]))))
-       (gptelt-auq--process-queue))))))
+        (error
+         (gptelt-auq--cleanup-help-buffer)
+         (message "Question failed: %s" (error-message-string _err))
+         ;; On error, call callback with error result, then drain queue
+         (funcall callback
+                  (json-encode
+                   `((isError . t)
+                     (content . [((type . "text")
+                                  (text . ,(format "Error: %s"
+                                                   (error-message-string _err))))]))))
+         (gptelt-auq--process-queue))))))
 
 ;;; Result Helpers
 
@@ -845,69 +851,69 @@ This is the main entry point called by the LLM."
         (message "Question queued (%d in queue). Will prompt after current question."
                  (length gptelt-auq--queue)))
 
-  ;; No active session — mark as active and proceed.
-  (setq gptelt-auq--active-p t)
+    ;; No active session — mark as active and proceed.
+    (setq gptelt-auq--active-p t)
 
-  ;; Validate input parameters first
-  (let* ((validation (gptelt-auq--validate-input-parameters questions-input))
-         (questions (car validation))
-         (error-msg (cdr validation)))
+    ;; Validate input parameters first
+    (let* ((validation (gptelt-auq--validate-input-parameters questions-input))
+           (questions (car validation))
+           (error-msg (cdr validation)))
 
-    (if error-msg
-        ;; Return parameter validation error immediately, then drain queue
-        (progn
-          (when gptelt-auq-debug
-            (message "[ASK-USER-DEBUG] Validation failed: %s" error-msg))
-          (funcall callback
-                   (json-encode
-                    `((isError . t)
-                      (content . [((type . "text")
-                                   (text . ,error-msg))]))))
-          (gptelt-auq--process-queue))
-
-      ;; Parameters valid - proceed with asking questions
-      (condition-case err
+      (if error-msg
+          ;; Return parameter validation error immediately, then drain queue
           (progn
             (when gptelt-auq-debug
-              (message "[ASK-USER-DEBUG] Asking %d validated question(s)"
-                       (length questions)))
+              (message "[ASK-USER-DEBUG] Validation failed: %s" error-msg))
+            (funcall callback
+                     (json-encode
+                      `((isError . t)
+                        (content . [((type . "text")
+                                     (text . ,error-msg))]))))
+            (gptelt-auq--process-queue))
 
-            ;; Notify via pushover
-            (ignore-errors
-              (let ((msg (mapconcat
-                          (lambda (q)
-                            (let* ((norm-q (gptelt-auq--normalize-question q))
-                                   (question-text (gptelt-auq--get-prop norm-q "question"))
-                                   (options-raw (gptelt-auq--get-prop norm-q "options"))
-                                   (options (if (vectorp options-raw) (append options-raw nil) options-raw))
-                                   (opts-str (mapconcat
-                                              (lambda (opt)
-                                                (let ((pair (gptelt-auq--format-option opt)))
-                                                  (if (and (cdr pair) (> (length (cdr pair)) 0))
-                                                      (format "%s - %s" (car pair) (cdr pair))
-                                                    (car pair))))
-                                              options "\n  ")))
-                              (format "Q: %s\n  %s" question-text opts-str)))
-                          questions
-                          "\n\n")))
-                (pushover-send "GPTEL Question" msg :sound "magic")))
+        ;; Parameters valid - proceed with asking questions
+        (condition-case err
+            (progn
+              (when gptelt-auq-debug
+                (message "[ASK-USER-DEBUG] Asking %d validated question(s)"
+                         (length questions)))
 
-            ;; Start asking questions -- the first call either completes all
-            ;; questions synchronously or defers on C-g.  When deferred, the
-            ;; callback will be called later from gptelt-auq-resume.
-            (gptelt-auq--ask-remaining-questions questions nil callback))
+              ;; Notify via pushover
+              (ignore-errors
+                (let ((msg (mapconcat
+                            (lambda (q)
+                              (let* ((norm-q (gptelt-auq--normalize-question q))
+                                     (question-text (gptelt-auq--get-prop norm-q "question"))
+                                     (options-raw (gptelt-auq--get-prop norm-q "options"))
+                                     (options (if (vectorp options-raw) (append options-raw nil) options-raw))
+                                     (opts-str (mapconcat
+                                                (lambda (opt)
+                                                  (let ((pair (gptelt-auq--format-option opt)))
+                                                    (if (and (cdr pair) (> (length (cdr pair)) 0))
+                                                        (format "%s - %s" (car pair) (cdr pair))
+                                                      (car pair))))
+                                                options "\n  ")))
+                                (format "Q: %s\n  %s" question-text opts-str)))
+                            questions
+                            "\n\n")))
+                  (pushover-send "GPTEL Question" msg :sound "magic")))
 
-        (error
-         ;; Top-level error handling — drain queue after error
-         (when gptelt-auq-debug
-           (message "[ASK-USER-DEBUG] Caught error: %s" (error-message-string err)))
-         (funcall callback
-                  (json-encode
-                   `((isError . t)
-                     (content . [((type . "text")
-                                  (text . ,(format "Error: %s"
-                                                   (error-message-string err))))]))))
-         (gptelt-auq--process-queue)))))))
+              ;; Start asking questions -- the first call either completes all
+              ;; questions synchronously or defers on C-g.  When deferred, the
+              ;; callback will be called later from gptelt-auq-resume.
+              (gptelt-auq--ask-remaining-questions questions nil callback))
+
+          (error
+           ;; Top-level error handling — drain queue after error
+           (when gptelt-auq-debug
+             (message "[ASK-USER-DEBUG] Caught error: %s" (error-message-string err)))
+           (funcall callback
+                    (json-encode
+                     `((isError . t)
+                       (content . [((type . "text")
+                                    (text . ,(format "Error: %s"
+                                                     (error-message-string err))))]))))
+           (gptelt-auq--process-queue)))))))
 
 ;;; Tool Registration
 
@@ -984,23 +990,23 @@ This is the main entry point called by the LLM."
                   :properties
                   (:question (:type "string"
                               :description "The question text to display")
-                   :header (:type "string"
-                            :description "Header text shown before question")
-                   :options (:type "array"
-                             :description "Array of 2-4 option objects"
-                             :minItems 2
-                             :maxItems 4
-                             :items (:type "object"
-                                     :description "Option object"
-                                     :required ["label"]
-                                     :additionalProperties :json-false
-                                     :properties
-                                     (:label (:type "string"
-                                              :description "The option label shown to user")
-                                      :description (:type "string"
-                                                    :description "Option description"))))
-                   :multiSelect (:type "boolean"
-                                 :description "Allow multiple selections")))))
+                             :header (:type "string"
+                                      :description "Header text shown before question")
+                             :options (:type "array"
+                                       :description "Array of 2-4 option objects"
+                                       :minItems 2
+                                       :maxItems 4
+                                       :items (:type "object"
+                                               :description "Option object"
+                                               :required ["label"]
+                                               :additionalProperties :json-false
+                                               :properties
+                                               (:label (:type "string"
+                                                        :description "The option label shown to user")
+                                                       :description (:type "string"
+                                                                     :description "Option description"))))
+                             :multiSelect (:type "boolean"
+                                           :description "Allow multiple selections")))))
  :category "interaction"
  :confirm nil
  :include t)
