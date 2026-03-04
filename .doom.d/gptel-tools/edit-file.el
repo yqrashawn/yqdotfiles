@@ -193,13 +193,13 @@ IMPORTANT: Reverts buffer first to ensure we're working with disk state."
 
   ;; Try to find match using strategy pipeline
   (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
-    ;; Match found - apply replacement
-    (gptelt-edit--do-replacement
-     buffer
-     (plist-get match-result :corrected-string)
-     new-string
-     replace-all
-     callback)
+      ;; Match found - apply replacement
+      (gptelt-edit--do-replacement
+       buffer
+       (plist-get match-result :corrected-string)
+       new-string
+       replace-all
+       callback)
     ;; No match - try LLM correction if instruction provided
     (if instruction
         (gptelt-edit--apply-match-with-llm
@@ -241,14 +241,14 @@ CALLBACK is called with the result message."
                 (setq replacement-end (+ start (length new-string)))
                 (setq replacement-count 1))))
 
-          (+force-save-buffer)
+          (+force-save-buffer-no-hooks)
 
           (when (and (fboundp 'lsp-format-region)
                      (bound-and-true-p lsp-mode))
             (condition-case err
                 (progn (lsp-format-region (or replacement-start (point-min))
                                           (or replacement-end (point-max)))
-                       (+force-save-buffer))
+                       (+force-save-buffer-no-hooks))
               (error (message "LSP formatting failed: %s" err)))))
 
         ;; Restore point, clamped to buffer bounds

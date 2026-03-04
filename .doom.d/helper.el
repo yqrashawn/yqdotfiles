@@ -151,7 +151,7 @@ Each file is opened (if not already) with `find-file-noselect` relative to
         (when-let ((buf-file (buffer-file-name b)))
           (insert! (",Buffer's File name: `%s`" buf-file))
           (if-let ((buf-proj-root (doom-project-root buf-file)))
-            (insert! (",File project root: `%s`" buf-proj-root))
+              (insert! (",File project root: `%s`" buf-proj-root))
             (insert! ",File is not in any project")))
         (insert! "\n"))
       (insert! "\n"))
@@ -415,6 +415,20 @@ Example:
             ((symbol-function 'message) (lambda (&rest _) nil))
             ((symbol-function 'ask-user-about-supersession-threat) (lambda (&rest _) nil)))
     (basic-save-buffer)))
+
+(defun +force-save-buffer-no-hooks ()
+  "Like `+force-save-buffer' but actually skips before/after-save hooks.
+Use this when saving programmatic edits that should not be modified by
+lsp-before-save-edits, clojure-sort-ns, apheleia format-on-save, etc."
+  (interactive)
+  (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest _) t))
+            ((symbol-function 'y-or-n-p) (lambda (&rest _) t))
+            ((symbol-function 'message) (lambda (&rest _) nil))
+            ((symbol-function 'ask-user-about-supersession-threat) (lambda (&rest _) nil)))
+    (let ((before-save-hook nil)
+          (after-save-hook nil)
+          (write-file-functions (bound-and-true-p write-file-functions)))
+      (basic-save-buffer))))
 
 (defun +lsp-diagnostic-at-point-to-string ()
   (mapconcat

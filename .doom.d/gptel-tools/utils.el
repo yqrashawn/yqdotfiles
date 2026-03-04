@@ -144,7 +144,7 @@ Returns a message describing the result of the operation."
         (erase-buffer)
         (insert result-string)
         (when (buffer-file-name)
-          (+force-save-buffer))
+          (+force-save-buffer-no-hooks))
         (goto-char (min original-point (point-max)))
         (when (and (fboundp 'lsp-format-region)
                    (bound-and-true-p lsp-mode))
