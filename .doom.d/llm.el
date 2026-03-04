@@ -363,7 +363,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -937,9 +937,12 @@ Drop:
   :defer t
   :config
   (setq!
-   gptel-magit-model 'gpt-4.1
+   ;; gptel-magit-model 'gpt-4.1
+   gptel-magit-model 'sonnet
    ;; gptel-magit-backend gptel--gh-copilot-business
-   gptel-magit-backend +gptel-free-backend
+   ;; gptel-magit-backend +gptel-free-backend
+   ;; gptel-magit-backend gptel-claude-code-backend
+   gptel-magit-backend gptel--ccl
    gptel-magit-commit-prompt
    "You are an expert at writing Git commits compliant with @commitlint/config-conventional.
 

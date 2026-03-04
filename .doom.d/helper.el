@@ -417,17 +417,15 @@ Example:
     (basic-save-buffer)))
 
 (defun +force-save-buffer-no-hooks ()
-  "Like `+force-save-buffer' but actually skips before/after-save hooks.
-Use this when saving programmatic edits that should not be modified by
-lsp-before-save-edits, clojure-sort-ns, apheleia format-on-save, etc."
+  "Like `+force-save-buffer' but skips `before-save-hook' to prevent
+lsp-before-save-edits, clojure-sort-ns, etc. from reverting edits.
+Keeps `after-save-hook' so that `lsp--after-save' sends didSave notification."
   (interactive)
   (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest _) t))
             ((symbol-function 'y-or-n-p) (lambda (&rest _) t))
             ((symbol-function 'message) (lambda (&rest _) nil))
             ((symbol-function 'ask-user-about-supersession-threat) (lambda (&rest _) nil)))
-    (let ((before-save-hook nil)
-          (after-save-hook nil)
-          (write-file-functions (bound-and-true-p write-file-functions)))
+    (let ((before-save-hook nil))
       (basic-save-buffer))))
 
 (defun +lsp-diagnostic-at-point-to-string ()
