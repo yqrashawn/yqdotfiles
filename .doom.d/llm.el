@@ -936,6 +936,14 @@ Drop:
 (use-package! gptel-magit
   :defer t
   :config
+  (defadvice! +gptel-magit-strip-code-fences (orig-fn message)
+    "Strip markdown code fences from LLM-generated commit messages."
+    :around #'gptel-magit--format-commit-message
+    (funcall orig-fn
+             (replace-regexp-in-string
+              "\\`[ \t\n]*```[a-z]*\n\\(\\(?:.\\|\n\\)*?\\)\n```[ \t\n]*\\'"
+              "\\1"
+              message)))
   (setq!
    ;; gptel-magit-model 'gpt-4.1
    gptel-magit-model 'sonnet
