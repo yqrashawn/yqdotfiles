@@ -725,8 +725,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    (format "```\n%s```\n\nGenerate a file title for the above conversation with llm"
            (or chat-content
                (with-current-buffer (current-buffer) (buffer-string))))
-   :backend gptel--openrouter
-   :model 'google/gemini-2.5-flash
+   ;; :backend gptel--openrouter
+   :backend gptel--ccl
+   ;; :model 'google/gemini-2.5-flash
+   :model 'haiku
    :temperature 0.5
    :max-token 20
    :cb (or on-title 'print)
@@ -787,22 +789,6 @@ The user's chat will now follow. Generate the title."))
                    (length gptel--known-tools)))
       md-output)))
 
-(comment
-  (get-gptel-org-title)
-  (simple-llm-req
-   "hi"
-   :backend gptel--openrouter
-   :model 'google/gemini-2.5-flash
-   :cb 'print
-   :error 'print)
-
-  (simple-llm-req
-   "hi"
-   :backend gptel--ccl
-   :model 'haiku
-   :cb 'message
-   :error 'message))
-
 ;;; lisp balancer
 (setq llm-lisp-balancer-system-message
       (with-file-contents!
@@ -834,15 +820,16 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
-           :backend +gptel-free-backend
+           ;; :backend +gptel-free-backend
            ;; :backend gptel-claude-code-backend
            ;; :backend gptel--gh-copilot-business
+           :backend gptel--ccl
            ;; :model 'gpt-4.1
-           ;; :model 'sonnet
+           :model 'sonnet
            ;; :model 'haiku
            ;; :model 'gpt-4o
            ;; :model 'gpt-4o-mini
-           :model 'gpt-5-mini
+           ;; :model 'gpt-5-mini
            :temperature 0.5
            :system llm-lisp-balancer-system-message
            :timeout 60
@@ -904,9 +891,10 @@ Drop:
                    compression-prompt
                    (prin1-to-string conversation))
            ;; :backend gptel--gh-copilot-business
-           :backend +gptel-free-backend
+           ;; :backend +gptel-free-backend
+           :backend gptel--ccl
            ;; :model 'gpt-4.1
-           :model 'gemini-3-pro-preview
+           :model 'opus
            :temperature 0.3
            :cb (lambda (response)
                  (kill-new response)
@@ -919,8 +907,10 @@ Drop:
                 (format "%s\n\nConversation to compress:\n%s"
                         compression-prompt
                         (prin1-to-string conversation))
-                :backend gptel--openrouter
-                :model 'google/gemini-2.5-flash
+                :backend gptel--ccl
+                ;; :backend gptel--openrouter
+                ;; :model 'google/gemini-2.5-flash
+                :model 'opus
                 :temperature 0.3)))
           (kill-new (gptel--convert-markdown->org response))
           (message "Compressed conversation saved to kill-ring")
@@ -946,7 +936,8 @@ Drop:
               message)))
   (setq!
    ;; gptel-magit-model 'gpt-4.1
-   gptel-magit-model 'sonnet
+   ;; gptel-magit-model 'sonnet
+   gptel-magit-model 'haiku
    ;; gptel-magit-backend gptel--gh-copilot-business
    ;; gptel-magit-backend +gptel-free-backend
    ;; gptel-magit-backend gptel-claude-code-backend
