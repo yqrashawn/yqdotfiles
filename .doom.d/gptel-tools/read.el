@@ -11,6 +11,22 @@
 
 ;;; Code:
 
+(defun gptelt--add-line-numbers (content start-line end-line)
+  "Add line number prefixes to CONTENT string.
+START-LINE is the first line number, END-LINE is the last.
+Format: right-aligned number followed by → then content, matching Claude Code style."
+  (let* ((width (max 6 (length (number-to-string end-line))))
+         (fmt (format "%%%dd→" width))
+         (line-num start-line))
+    (with-temp-buffer
+      (insert content)
+      (goto-char (point-min))
+      (while (not (eobp))
+        (insert (format fmt line-num))
+        (setq line-num (1+ line-num))
+        (forward-line 1))
+      (buffer-string))))
+
 (defun gptelt--image-file-p (file-path)
   "Check if FILE-PATH is an image file based on extension."
   (when (stringp file-path)
@@ -62,7 +78,7 @@
               (let ((content (buffer-substring-no-properties start (point))))
                 (concat (format "[File path: %s]\n[Total lines: %d]\n[Content lines: %d-%d]\n"
                                 file_path total-lines start-line end-line)
-                        "\n␂" content "␃")))))))))
+                        "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃")))))))))
 
 (comment
   (gptelt-read-file
@@ -105,7 +121,7 @@
                     (let ((content (buffer-substring-no-properties start (point))))
                       (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
                                       total-lines start-line end-line buffer_name file-name)
-                              "\n␂" content "␃")))))))
+                              "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃")))))))
         ;; Buffer without associated file
         (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
               (line-offset (or offset 0)))
@@ -120,7 +136,7 @@
                 (let ((content (buffer-substring-no-properties start (point))))
                   (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n"
                                   total-lines start-line end-line buffer_name)
-                          "\n␂" content "␃"))))))))))
+                          "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃"))))))))))
 
 (comment
   (gptelt-read-buffer (current-buffer))

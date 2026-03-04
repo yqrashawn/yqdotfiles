@@ -16,8 +16,8 @@
           (should (string-match-p "\\[Total lines: 4\\]" result))
           (should (string-match-p "\\[Content lines: 1-4\\]" result))
           (should (string-match-p (format "\\[File path: %s\\]" fname) result))
-          (should (string-match-p "␂foo" result))
-          (should (string-match-p "quux\n␃" result)))
+          (should (string-match-p "␂ *1→foo" result))
+          (should (string-match-p "4→quux\n␃" result)))
       (when (file-exists-p fname) (delete-file fname)))))
 
 (ert-deftest gptelt-test-read-buffer ()
@@ -35,8 +35,8 @@
           (should (string-match-p
                    (concat "\\[File path: .*gptelt-read-buffer-test\\w+\\.txt\\]")
                    result))
-          (should (string-match-p "␂ReadBufferTest123" result))
-          (should (string-match-p "foobar\n␃" result)))
+          (should (string-match-p "␂ *1→ReadBufferTest123" result))
+          (should (string-match-p "2→foobar\n␃" result)))
       (kill-buffer buf))))
 
 (ert-deftest gptelt-test-read-file-string-numbers ()
@@ -49,9 +49,9 @@
         (progn
           (should (string-match-p "\\[Total lines: 5\\]" result))
           (should (string-match-p "\\[Content lines: 2-5\\]" result))
-          (should (string-match-p "␂line2" result))
-          (should (string-match-p "line5\n␃" result))
-          (should-not (string-match-p "line1" result)))
+          (should (string-match-p "␂ *2→line2" result))
+          (should (string-match-p "5→line5\n␃" result))
+          (should-not (string-match-p "1→line1" result)))
       (when (file-exists-p fname) (delete-file fname)))))
 
 (ert-deftest gptelt-test-read-buffer-string-numbers ()
@@ -66,10 +66,27 @@
           (setq result (gptelt-read-buffer (buffer-name buf) "1" "400"))
           (should (string-match-p "\\[Total lines: 5\\]" result))
           (should (string-match-p "\\[Content lines: 2-5\\]" result))
-          (should (string-match-p "␂line2" result))
-          (should (string-match-p "line5\n␃" result))
-          (should-not (string-match-p "line1" result)))
+          (should (string-match-p "␂ *2→line2" result))
+          (should (string-match-p "5→line5\n␃" result))
+          (should-not (string-match-p "1→line1" result)))
       (kill-buffer buf))))
+
+;;; --- Line number tests ---
+
+(ert-deftest gptelt-test-add-line-numbers ()
+  "Test gptelt--add-line-numbers formats like Claude Code."
+  ;; Basic case
+  (let ((result (gptelt--add-line-numbers "foo\nbar\nbaz\n" 1 3)))
+    (should (string-match-p "^ *1→foo$" result))
+    (should (string-match-p "^ *2→bar$" result))
+    (should (string-match-p "^ *3→baz$" result)))
+  ;; Width adjusts for large line numbers
+  (let ((result (gptelt--add-line-numbers "a\nb\n" 99 100)))
+    (should (string-match-p "^ *99→a$" result))
+    (should (string-match-p "^100→b$" result)))
+  ;; Minimum width is 6 (matches Claude Code)
+  (let ((result (gptelt--add-line-numbers "x\n" 1 1)))
+    (should (string-match-p "^     1→x$" result))))
 
 ;;; --- Error wrapping tests ---
 
