@@ -123,4 +123,68 @@
       (should (string-prefix-p "<tool_use_error>" err-msg))
       (should (string-suffix-p "</tool_use_error>" err-msg)))))
 
+;;; --- read_multiple_files tests ---
+
+(ert-deftest gptelt-test-read-multiple-files ()
+  "Test gptelt-read-multiple-files returns line-numbered content."
+  (let* ((f1 (make-temp-file "gptelt-multi-read-1" nil ".txt"))
+         (f2 (make-temp-file "gptelt-multi-read-2" nil ".txt"))
+         (f3 (make-temp-file "gptelt-multi-read-nonexist" nil ".txt")))
+    (with-temp-file f1 (insert "alpha\nbeta\n"))
+    (with-temp-file f2 (insert "gamma\ndelta\nepsilon\n"))
+    (delete-file f3)  ; make it nonexistent
+    (unwind-protect
+        (let ((results (gptelt-read-multiple-files
+                        (list (list :file-path f1)
+                              (list :file-path f2 :offset 1 :limit 300)
+                              (list :file-path f3)))))
+          ;; First file: full content with line numbers
+          (let ((r1 (nth 0 results)))
+            (should (equal (plist-get r1 :file-path) f1))
+            (should (plist-get r1 :content))
+            (should (string-match-p "␂ *1→alpha" (plist-get r1 :content)))
+            (should (string-match-p "2→beta" (plist-get r1 :content))))
+          ;; Second file: offset=1, should start at line 2
+          (let ((r2 (nth 1 results)))
+            (should (equal (plist-get r2 :file-path) f2))
+            (should (plist-get r2 :content))
+            (should (string-match-p "␂ *2→delta" (plist-get r2 :content)))
+            (should-not (string-match-p "1→gamma" (plist-get r2 :content))))
+          ;; Third file: nonexistent, should have error
+          (let ((r3 (nth 2 results)))
+            (should (equal (plist-get r3 :file-path) f3))
+            (should (plist-get r3 :error))))
+      (when (file-exists-p f1) (delete-file f1))
+      (when (file-exists-p f2) (delete-file f2)))))
+
+(ert-deftest gptelt-test-read-multiple-buffers-line-numbers ()
+  "Test gptelt-read-multiple-buffers returns line-numbered content."
+  (let* ((f1 (make-temp-file "gptelt-multi-buf-1" nil ".txt"))
+         (f2 (make-temp-file "gptelt-multi-buf-2" nil ".txt"))
+         (b1 (find-file-noselect f1))
+         (b2 (find-file-noselect f2)))
+    (unwind-protect
+        (progn
+          (with-current-buffer b1 (insert "one\ntwo\nthree\n"))
+          (with-current-buffer b2 (insert "four\nfive\n"))
+          (let ((results (gptelt-read-multiple-buffers
+                          (list (list :buffer-name (buffer-name b1))
+                                (list :buffer-name (buffer-name b2))
+                                (list :buffer-name "nonexistent-multi-buf-999")))))
+            ;; First buffer
+            (let ((r1 (nth 0 results)))
+              (should (string-match-p "␂ *1→one" (plist-get r1 :content)))
+              (should (string-match-p "3→three" (plist-get r1 :content))))
+            ;; Second buffer
+            (let ((r2 (nth 1 results)))
+              (should (string-match-p "␂ *1→four" (plist-get r2 :content)))
+              (should (string-match-p "2→five" (plist-get r2 :content))))
+            ;; Third: error
+            (let ((r3 (nth 2 results)))
+              (should (plist-get r3 :error)))))
+      (kill-buffer b1)
+      (kill-buffer b2)
+      (when (file-exists-p f1) (delete-file f1))
+      (when (file-exists-p f2) (delete-file f2)))))
+
 ;;; read-test.el ends here
