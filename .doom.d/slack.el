@@ -45,7 +45,15 @@
    :modeline-enabled t
    :subscribed-channels '((general)))
 
-  (setq slack-buffer-function #'switch-to-buffer))
+  (setq slack-buffer-function #'switch-to-buffer)
+
+  (add-hook 'kill-buffer-query-functions
+            (defun +slack/auto-kill-stream-buffer-process ()
+              "Auto-kill process in slack stream buffers without prompting."
+              (when (and (string-match-p "\\*stream buffer\\*" (buffer-name))
+                         (get-buffer-process (current-buffer)))
+                (delete-process (get-buffer-process (current-buffer))))
+              t)))
 
 (use-package! alert
   :commands (alert)
