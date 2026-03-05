@@ -173,10 +173,11 @@ Each file is opened (if not already) with `find-file-noselect` relative to
       (file-exists-p)))
 
 (defun ++workspace-clj? ()
-  (-> (expand-file-name
-       "deps.edn"
-       (++workspace-current-project-root))
-      (file-exists-p)))
+  (or (-> (expand-file-name
+           "deps.edn"
+           (++workspace-current-project-root))
+          (file-exists-p))
+      (++workspace-cljs?)))
 
 (defun ++workspace-clojure? ()
   (or (++workspace-clj?)
@@ -218,10 +219,18 @@ Each file is opened (if not already) with `find-file-noselect` relative to
   (when (and (++workspace-clj?)
              (fboundp 'cider-connected-p))
     (let ((connected (with-current-buffer
-                         (-> (expand-file-name
-                              "deps.edn"
-                              (++workspace-current-project-root))
-                             (find-file-noselect))
+                         (if (-> (expand-file-name
+                                  "deps.edn"
+                                  (++workspace-current-project-root))
+                                 (file-exists-p))
+                             (-> (expand-file-name
+                                  "deps.edn"
+                                  (++workspace-current-project-root))
+                                 (find-file-noselect))
+                           (-> (expand-file-name
+                                "shadow-cljs.edn"
+                                (++workspace-current-project-root))
+                               (find-file-noselect)))
                        (cider-connected-p))))
       (unless connected
         (message "Connect the CLJ REPL"))
