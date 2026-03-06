@@ -98,9 +98,9 @@
      
      ;; "/Users/yqrashawn/.emacs.d/.local/cache/emacs-mcp-stdio.sh"
      
-     ("qmd" .
-      (:command "bunx"
-       :args ("@tobilu/qmd" "mcp")))
+     ;; ("qmd" .
+     ;;  (:command "bunx"
+     ;;   :args ("@tobilu/qmd" "mcp")))
      
      ;; ("daisyui-blueprint" .
      ;;   (:command "npx"

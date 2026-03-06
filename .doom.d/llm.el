@@ -150,87 +150,87 @@ Everywhere else: max 2 consecutive blank lines."
           (seq-map 'car (alist-get category gptel--known-tools)))))
      gptel--known-tools))
 
-  (gptel-make-preset 'h
+  (gptel-make-preset 'ha
     :description "claude code"
     :backend "Claude Code"
     :model 'haiku
+    :system ""
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'so
+    :description "claude code"
+    :backend "Claude Code"
+    :model 'sonnet
+    :system ""
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'so1
+    :description "claude code"
+    :backend "Claude Code"
+    :model (intern "sonnet[1m]")
+    :system ""
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'op
+    :description "claude code"
+    :backend "Claude Code"
+    :model 'opus
+    :system ""
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'op1
+    :description "claude code"
+    :backend "Claude Code"
+    :model (intern "opus[1m]")
     :system ""
     :parents '(default)
     :tools '())
   (gptel-make-preset 's
     :description "claude code"
-    :backend "Claude Code"
+    :backend "ccl"
     :model 'sonnet
-    :system ""
+    :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
   (gptel-make-preset 's1
     :description "claude code"
-    :backend "Claude Code"
+    :backend "ccl"
     :model (intern "sonnet[1m]")
-    :system ""
-    :parents '(default)
-    :tools '())
-  (gptel-make-preset 'o
-    :description "claude code"
-    :backend "Claude Code"
-    :model 'opus
-    :system ""
+    :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
   (gptel-make-preset 'o1
     :description "claude code"
-    :backend "Claude Code"
-    :model (intern "opus[1m]")
-    :system ""
-    :parents '(default)
-    :tools '())
-  (gptel-make-preset 'sonnet
-    :description "claude code"
-    :backend "ccl"
-    :model 'sonnet
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
-  (gptel-make-preset 'sonnetm
-    :description "claude code"
-    :backend "ccl"
-    :model (intern "sonnet[1m]")
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
-  (gptel-make-preset 'opusm
-    :description "claude code"
     :backend "ccl"
     :model (intern "opus[1m]")
     :parents '(sonnet)
     :tools '())
-  (gptel-make-preset 'opus
+  (gptel-make-preset 'o
     :description "claude code"
     :backend "ccl"
     :model 'opus
     :parents '(sonnet)
     :tools '())
-  (gptel-make-preset 'haiku
+  (gptel-make-preset 'h
     :description "claude code"
     :backend "ccl"
     :model 'haiku
     :parents '(sonnet)
     :tools '())
-  (gptel-make-preset 'sonnetd
+  (gptel-make-preset 'sd
     :description "claude code"
     :backend "ccld"
     :model 'sonnet
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
-  (gptel-make-preset 'opusd
+  (gptel-make-preset 'od
     :description "claude code"
     :backend "ccld"
     :model 'opus
     :parents '(sonnet)
     :tools '())
-  (gptel-make-preset 'haikud
+  (gptel-make-preset 'hd
     :description "claude code"
     :backend "ccld"
     :model 'haiku
@@ -760,10 +760,12 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
    (format "```\n%s```\n\nGenerate a file title for the above conversation with llm"
            (or chat-content
                (with-current-buffer (current-buffer) (buffer-string))))
+   :backend +gptel-free-backend
    ;; :backend gptel--openrouter
-   :backend gptel--ccl
+   ;; :backend gptel--ccl
    ;; :model 'google/gemini-2.5-flash
-   :model 'haiku
+   ;; :model 'haiku
+   :model 'gpt-5-mini
    :temperature 0.5
    :max-token 20
    :cb (or on-title 'print)

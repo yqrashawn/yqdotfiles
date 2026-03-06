@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: implment and review skill
+# key: iar
+# --
+
+use the implement-and-review skill, $0
