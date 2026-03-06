@@ -123,6 +123,9 @@
      
      ("emacs" .
       (:url "http://localhost:18684/mcp/v1/messages"))
+
+     ("cchp" .
+      (:url "http://localhost:8035/mcp"))
      
 
      ;; ("desktop-commander" . (:command "bunx"
