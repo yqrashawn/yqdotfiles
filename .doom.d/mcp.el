@@ -66,13 +66,26 @@
      ;;   ("shadcn@latest"
      ;;    "mcp")))
 
+     ;; ("clojure-mcp" .
+     ;;  (:command "clojure"
+     ;;   :args
+     ;;   ("-Sdeps"
+     ;;    "{:deps {io.github.bhauman/clojure-mcp {:local/root \"/Users/yqrashawn/workspace/third/clojure-mcp\"}}}"
+     ;;    "-X"
+     ;;    "clojure-mcp.main/start"
+     ;;    ":config-profile"
+     ;;    ":cli-assist")))
+
+
      ("clojure-mcp" .
       (:command "clojure"
        :args
-       ("-Tmcp"
-        "start"
+       ("-Sdeps"
+        "{:deps {io.github.bhauman/clojure-mcp {:git/tag \"v0.2.6\" :git/sha \"cc68ad0\"}}}"
+        "-X"
+        "clojure-mcp.main/start"
         ":config-profile"
-        ":cli-assit")))
+        ":cli-assist")))
 
      ("lattice" .
       (:command "bunx"

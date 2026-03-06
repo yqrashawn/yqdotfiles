@@ -820,16 +820,15 @@ The user's chat will now follow. Generate the title."))
           (funcall
            f
            (format "```%s\n%s\n```" lang code)
-           ;; :backend +gptel-free-backend
+           :backend +gptel-free-backend
            ;; :backend gptel-claude-code-backend
            ;; :backend gptel--gh-copilot-business
-           :backend gptel--ccl
+           ;; :backend gptel--ccl
            ;; :model 'gpt-4.1
-           :model 'sonnet
-           ;; :model 'haiku
            ;; :model 'gpt-4o
-           ;; :model 'gpt-4o-mini
-           ;; :model 'gpt-5-mini
+           :model 'gpt-5-mini
+           ;; :model 'sonnet
+           ;; :model 'haiku
            :temperature 0.5
            :system llm-lisp-balancer-system-message
            :timeout 60

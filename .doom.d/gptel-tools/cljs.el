@@ -35,14 +35,20 @@ corrupt the REPL state."
 
 (defun gptelt-cljs-ensure-helper-loaded ()
   "Load cljs_helper.clj into the CLJ REPL via load-file.
-Uses gptelt-clj--get-clj-repl for workspace-safe REPL resolution."
+Uses gptelt-clj--get-clj-repl for workspace-safe REPL resolution.
+Skips load-file if the cljs-helper namespace is already loaded."
   (let* ((clj-repl (gptelt-clj--get-clj-repl))
-         (helper-path (expand-file-name "~/.nixpkgs/env/dev/cljs_helper.clj"))
-         (result (cider-nrepl-sync-request:eval
-                  (format "(load-file \"%s\")" helper-path)
-                  clj-repl "user")))
-    (when-let ((err (nrepl-dict-get result "err")))
-      (error "Failed to load cljs-helper: %s" err))))
+         (ns-check (cider-nrepl-sync-request:eval
+                    "(some? (find-ns 'cljs-helper))"
+                    clj-repl "user"))
+         (already-loaded (string= "true" (nrepl-dict-get ns-check "value"))))
+    (unless already-loaded
+      (let* ((helper-path (expand-file-name "~/.nixpkgs/env/dev/cljs_helper.clj"))
+             (result (cider-nrepl-sync-request:eval
+                      (format "(load-file \"%s\")" helper-path)
+                      clj-repl "user")))
+        (when-let ((err (nrepl-dict-get result "err")))
+          (error "Failed to load cljs-helper: %s" err))))))
 
 (comment
   (gptelt-cljs-ensure-helper-loaded))

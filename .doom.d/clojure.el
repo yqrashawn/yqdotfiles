@@ -1,5 +1,7 @@
 ;;; lang/clojure.el -*- lexical-binding: t; -*-
 
+(setq! nrepl-sync-request-timeout 30)
+
 (set-lookup-handlers! '(cider-mode cider-repl-mode)
   :definition #'+clojure-cider-lookup-definition
   :documentation #'cider-doc)
