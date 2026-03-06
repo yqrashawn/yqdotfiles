@@ -2,6 +2,7 @@
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.1.20",
     "@github/copilot": "^0.0.395",
+    "@googleworkspace/cli": "^0.6.3",
     "@openai/codex": "^0.91.0",
     "@tailwindcss/language-server": "^0.14.29",
     "@tobilu/qmd": "^1.0.7",
@@ -39,11 +40,10 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild",
-      "sharp",
-      "tree-sitter-cli",
-      "workerd"
+      "@googleworkspace/cli",
+      "agent-browser",
+      "edgedriver",
+      "geckodriver"
     ],
     "ignoredBuiltDependencies": [
       "@whiskeysockets/baileys",

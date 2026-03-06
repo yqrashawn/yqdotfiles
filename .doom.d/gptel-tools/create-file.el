@@ -72,7 +72,7 @@ Returns a string describing the result of the operation."
              (let ((auto-mode-alist auto-mode-alist))
                (set-auto-mode))
 
-             (save-buffer)
+             (+force-save-buffer-no-hooks)
 
              (when gptelt-create-debug
                (message "[CREATE-DEBUG] File saved with mode: %s" major-mode))
@@ -82,7 +82,7 @@ Returns a string describing the result of the operation."
                         (bound-and-true-p lsp-mode))
                (condition-case err
                    (progn (lsp-format-buffer)
-                          (save-buffer))
+                          (+force-save-buffer-no-hooks))
                  (error (message "LSP formatting failed: %s" err))))
 
              ;; Buffer created but not displayed to user

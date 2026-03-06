@@ -16,39 +16,43 @@
   (interactive)
   (when-let ((buf (current-buffer)))
     (with-current-buffer buf
-      (if buffer-file-name
-          (save-buffer)
-        (progn
-          (get-gptel-org-title
-           (buffer-string)
-           (lambda (title)
-             (let ((new-title (+gptel-sanitize-filename title)))
-               (with-current-buffer buf
-                 (let ((dir (format
-                             "~/Dropbox/sync/gptel/%s/%s"
-                             (format-time-string "%Y")
-                             (format-time-string "%m"))))
-                   (unless (file-directory-p dir)
-                     (make-directory dir t))
-                   (+set-org-top-header new-title)
-                   (insert "\n")
-                   (+set-org-title new-title)
-                   (write-file
-                    (expand-file-name
-                     (format
-                      "%s-%s-%s.org"
-                      (format-time-string "%d")
-                      (format-time-string "%H_%M")
-                      new-title)
-                     dir))))))
-           (lambda (e) (user-error
-                        "Error setting gptel org title: %s"
-                        (if (plistp e)
-                            (or (plist-get e :error)
-                                (plist-get e :status)
-                                (format "%S" e))
-                          (error-message-string e)))))
-          t)))))
+      (cond
+       ;; File on disk and modified — just save
+       ((and buffer-file-name
+             (file-exists-p buffer-file-name)
+             (buffer-modified-p))
+        (save-buffer))
+       ;; No file on disk — generate title and save to Dropbox
+       ((not buffer-file-name)
+        (get-gptel-org-title
+         (buffer-string)
+         (lambda (title)
+           (let ((new-title (+gptel-sanitize-filename title)))
+             (with-current-buffer buf
+               (let ((dir (format
+                           "~/Dropbox/sync/gptel/%s/%s/%s"
+                           (format-time-string "%Y")
+                           (format-time-string "%m")
+                           (format-time-string "%d"))))
+                 (unless (file-directory-p dir)
+                   (make-directory dir t))
+                 (+set-org-top-header new-title)
+                 (insert "\n")
+                 (+set-org-title new-title)
+                 (write-file
+                  (expand-file-name
+                   (format
+                    "%s-%s.org"
+                    (format-time-string "%H_%M")
+                    new-title)
+                   dir))))))
+         (lambda (e) (user-error
+                      "Error setting gptel org title: %s"
+                      (if (plistp e)
+                          (or (plist-get e :error)
+                              (plist-get e :status)
+                              (format "%S" e))
+                        (error-message-string e))))))))))
 
 (defun +gptel-kill-default-buffer ()
   (interactive)
@@ -363,7 +367,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -681,27 +685,58 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
 (defvar simple-llm-req-p nil)
 
 (defun simple-llm-req (prompt &rest args)
-  (let ((simple-llm-req-p t)
-        (gptel-backend (plist-get args :backend))
-        (gptel-model (plist-get args :model))
-        (gptel-temperature (clj/get args :temperature gptel-temperature))
-        (gptel--system-message (clj/get args :system ""))
-        (gptel-max-tokens (clj/get args :max-token gptel-max-tokens))
-        (gptel-cache (clj/get args :cache t))
-        (gptel--num-messages-to-send 1)
-        (gptel-include-reasoning nil)
-        (gptel-track-media nil)
-        (gptel-use-context nil)
-        (gptel-stream nil)
-        (on-finish (clj/get args :cb 'clj/identity))
-        (on-error (clj/get args :error 'clj/identity)))
-    (gptel-request prompt
-      :stream nil
-      :callback
-      (lambda (response info)
-        (if response
-            (funcall on-finish response)
-          (funcall on-error info))))))
+  (let* ((simple-llm-req-p t)
+         (gptel-backend (plist-get args :backend))
+         (gptel-model (plist-get args :model))
+         (gptel-temperature (clj/get args :temperature gptel-temperature))
+         (gptel--system-message (clj/get args :system ""))
+         (gptel-max-tokens (clj/get args :max-token gptel-max-tokens))
+         (gptel-cache (clj/get args :cache t))
+         (gptel--num-messages-to-send 1)
+         (gptel-include-reasoning nil)
+         (gptel-track-media nil)
+         (gptel-use-context nil)
+         (gptel-stream nil)
+         (timeout (plist-get args :timeout))
+         (on-finish (clj/get args :cb 'clj/identity))
+         (on-error (clj/get args :error 'clj/identity))
+         (called-back nil)
+         (timeout-timer nil)
+         (wrapped-finish (lambda (response)
+                           (unless called-back
+                             (setq called-back t)
+                             (when timeout-timer (cancel-timer timeout-timer))
+                             (funcall on-finish response))))
+         (wrapped-error (lambda (info)
+                          (unless called-back
+                            (setq called-back t)
+                            (when timeout-timer (cancel-timer timeout-timer))
+                            (funcall on-error info)))))
+    (let ((fsm (gptel-request prompt
+                 :stream nil
+                 :callback
+                 (lambda (response info)
+                   (if response
+                       (funcall wrapped-finish response)
+                     (funcall wrapped-error info))))))
+      (when (and timeout (numberp timeout) (> timeout 0))
+        (setq timeout-timer
+              (run-at-time timeout nil
+                           (lambda ()
+                             (unless called-back
+                               (setq called-back t)
+                               ;; Try to abort the in-flight request
+                               (when-let* ((proc-entry
+                                            (cl-find-if
+                                             (lambda (entry) (eq (cadr entry) fsm))
+                                             gptel--request-alist))
+                                           (proc (car proc-entry))
+                                           (abort-fn (cddr proc-entry)))
+                                 (funcall abort-fn)
+                                 (setf (alist-get proc gptel--request-alist nil 'remove) nil))
+                               (funcall on-error
+                                        (list :status (format "Timeout after %d seconds" timeout))))))))
+      fsm)))
 
 (defun simple-llm-req-sync (prompt &rest args)
   (await-callback
