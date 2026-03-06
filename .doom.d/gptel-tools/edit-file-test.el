@@ -426,6 +426,28 @@
                                     (with-current-buffer buf (buffer-string))))))
       (when (file-exists-p temp-path) (delete-file temp-path)))))
 
+(ert-deftest gptelt-edit-skip-balance-check-test ()
+  "Test that `gptelt-edit-skip-balance-check' skips Lisp balance checking."
+  (let* ((temp-path (make-temp-file "gptelt-test-" nil ".el"))
+         (result-msg nil))
+    (unwind-protect
+        (progn
+          (with-temp-file temp-path
+            (insert "(defun foo ()\n  (message \"hello\"))\n"))
+          (let ((buf (find-file-noselect temp-path))
+                (gptelt-edit-skip-balance-check t))
+            (with-current-buffer buf (emacs-lisp-mode))
+            (gptelt-edit-edit-buffer
+             (lambda (r) (setq result-msg r))
+             (buffer-name buf)
+             "(message \"hello\")"
+             "(message \"hello\"")  ;; missing closing paren — unbalanced
+            (sleep-for 0.5)
+            (should result-msg)
+            ;; Should succeed because balance check is skipped
+            (should (string-match-p "Successfully\\|replaced" result-msg))))
+      (when (file-exists-p temp-path) (delete-file temp-path)))))
+
 ;;; --- multi-edit-file tests ---
 
 (ert-deftest gptelt-edit-multi-edit-file-test ()
@@ -554,25 +576,25 @@
   (let ((result nil))
     ;; edit_file validation error
     (gptelt-edit-edit-file-mcp (lambda (r) (setq result r))
-                                nil "old" "new")
+                               nil "old" "new")
     (should (string-prefix-p "<tool_use_error>" result))
     (should (string-match-p "file_path.*required" result))
     ;; edit_buffer validation error
     (setq result nil)
     (gptelt-edit-edit-buffer-mcp (lambda (r) (setq result r))
-                                  nil "old" "new")
+                                 nil "old" "new")
     (should (string-prefix-p "<tool_use_error>" result))
     (should (string-match-p "buffer_name.*required" result))
     ;; multi_edit_file validation error
     (setq result nil)
     (gptelt-edit-multi-edit-file-mcp (lambda (r) (setq result r))
-                                      "/tmp/foo.txt" nil)
+                                     "/tmp/foo.txt" nil)
     (should (string-prefix-p "<tool_use_error>" result))
     (should (string-match-p "edits.*required" result))
     ;; multi_edit_buffer validation error
     (setq result nil)
     (gptelt-edit-multi-edit-buffer-mcp (lambda (r) (setq result r))
-                                        nil '((:old_string "a" :new_string "b")))
+                                       nil '((:old_string "a" :new_string "b")))
     (should (string-prefix-p "<tool_use_error>" result))
     (should (string-match-p "buffer_name.*required" result))))
 

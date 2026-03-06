@@ -6,6 +6,9 @@
 (require 'gptel)
 (require 'cl-lib)
 
+(defvar gptelt-edit-skip-balance-check nil
+  "When non-nil, skip Lisp parentheses balance checking after edits.")
+
 ;;; Utility functions
 
 (defun gptelt-edit--get-buffer-for-file (file-path)
@@ -193,13 +196,13 @@ IMPORTANT: Reverts buffer first to ensure we're working with disk state."
 
   ;; Try to find match using strategy pipeline
   (if-let ((match-result (gptelt-edit--find-match buffer old-string)))
-      ;; Match found - apply replacement
-      (gptelt-edit--do-replacement
-       buffer
-       (plist-get match-result :corrected-string)
-       new-string
-       replace-all
-       callback)
+    ;; Match found - apply replacement
+    (gptelt-edit--do-replacement
+     buffer
+     (plist-get match-result :corrected-string)
+     new-string
+     replace-all
+     callback)
     ;; No match - try LLM correction if instruction provided
     (if instruction
         (gptelt-edit--apply-match-with-llm
@@ -273,7 +276,8 @@ CALLBACK is called with the result string when done (async if LLM correction nee
     (let ((do-edit
            (lambda (final-old-string)
              ;; For Lisp code, check balance in temp buffer (async)
-             (if (gptelt--is-lisp-mode-p mj-mode)
+             (if (and (gptelt--is-lisp-mode-p mj-mode)
+                      (not gptelt-edit-skip-balance-check))
                  (let ((temp-buffer (generate-new-buffer " *gptelt-balance-check*")))
                    (with-current-buffer temp-buffer
                      (erase-buffer)
@@ -724,7 +728,7 @@ balance is checked ONCE on the final result (not per-edit)."
     (setq edits (append edits nil)))
   (let* ((mj-mode (buffer-local-value 'major-mode buffer))
          (is-lisp (gptelt--is-lisp-mode-p mj-mode)))
-    (if is-lisp
+    (if (and is-lisp (not gptelt-edit-skip-balance-check))
         ;; Lisp mode: apply all edits in temp buffer, then check balance once
         (let ((result (gptelt-edit--multi-edit-apply-in-temp buffer edits)))
           (if (not (plist-get result :success))
