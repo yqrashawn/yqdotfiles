@@ -1323,3 +1323,43 @@ Only wraps if not already wrapped and not inside a src block."
       (when (and beg end (< beg end))
         (+org--wrap-pasted-verbatim beg end)
         (right-char)))))
+
+;;;###autoload
+(defun +gptel-format-known-tools-to-markdown ()
+  "Format gptel--known-tools to human-readable markdown and copy to kill-ring."
+  (interactive)
+  (let ((md-output
+         (with-temp-buffer
+           (insert "# Available GPTEL Tools\n\n")
+           (dolist (category gptel--known-tools)
+             (let ((category-name (car category))
+                   (tools (cdr category)))
+               (insert (format "## %s\n\n" category-name))
+               (dolist (tool-entry tools)
+                 (let* ((tool-name (car tool-entry))
+                        (tool (cdr tool-entry))
+                        (description (gptel-tool-description tool))
+                        (args (gptel-tool-args tool)))
+                   (insert (format "### %s\n\n" tool-name))
+                   (when description
+                     (insert (format "%s\n\n" description)))
+                   (when args
+                     (insert "**Parameters:**\n\n")
+                     (dolist (arg args)
+                       (let ((arg-name (plist-get arg :name))
+                             (arg-type (plist-get arg :type))
+                             (arg-desc (plist-get arg :description))
+                             (arg-optional (plist-get arg :optional)))
+                         (insert (format "- `%s` (%s)%s: %s\n"
+                                         arg-name
+                                         arg-type
+                                         (if arg-optional " *optional*" "")
+                                         (or arg-desc "No description")))))))
+                 (insert "\n"))))
+           (buffer-string))))
+    (if (called-interactively-p 'any)
+        (progn
+          (kill-new md-output)
+          (message "Formatted %d tool categories to kill-ring"
+                   (length gptel--known-tools)))
+      md-output)))

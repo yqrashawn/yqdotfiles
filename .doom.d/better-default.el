@@ -511,7 +511,7 @@ This function could be in the list `comint-output-filter-functions'."
                      (font (doom-normalize-font original-font))
                      (dfont (or (if-let* ((remap-font (alist-get var font-alist))
                                           (remap-xlfd (doom-normalize-font remap-font)))
-                                    remap-xlfd
+                                  remap-xlfd
                                   (purecopy font))
                                 (error "Could not decompose %s font" var))))
                 (let* ((step      (if fixed-size-p 0 (* increment doom-font-increment)))
@@ -1158,3 +1158,11 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
             ("https" . "127.0.0.1:9090")))
     (setenv "HTTP_PROXY" "http://127.0.0.1:9090")
     (setenv "HTTPS_PROXY" "http://127.0.0.1:9090")))
+
+;; use docker on macmini
+(after! docker
+  (when (-> "hostname"
+            shell-command-to-string
+            s-trim
+            (string= "studio.local"))
+    (setenv "DOCKER_HOST" "tcp://macmini.local:2375")))

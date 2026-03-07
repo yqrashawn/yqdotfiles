@@ -407,7 +407,7 @@ Merge buffer-local with global default files."
       ;; Re-add updated context
       (+gptel-context-add-buffer (+current-workspace-info-buffer))
       (+gptel-context-add-buffer (+visible-buffers-list-buffer))
-      (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
+      ;; (+gptel-context-add-buffer (+magit-wip-diff-n-min-buffer 5))
       (when-let ((root (++workspace-current-project-root)))
         (dolist (f (+llm-get-project-default-files))
           (when-let ((file (file-truename (format "%s/%s" root f))))
@@ -498,7 +498,7 @@ Merge buffer-local with global default files."
 
   (setq! gptel-backend gptel--ccl)
   (+gptel-make-my-presets)
-  (gptel--apply-preset 'opus)
+  (gptel--apply-preset 'o)
 
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)
@@ -571,393 +571,10 @@ Merge buffer-local with global default files."
           (+pabbrev-scavenge-all-visible-buffers))))))
 
 ;;; mcp
-(defun +gen-mcp-json-conf ()
-  "Generate MCP JSON config from `mcp-hub-servers'.
-
-Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.claude.json."
-  (interactive)
-  (let* ((output-file (expand-file-name "~/Downloads/mcp.json"))
-         (claude-json-file (expand-file-name "~/.claude.json"))
-         (servers-plist
-          (cl-loop for (name . cfg) in mcp-hub-servers
-                   append
-                   (list
-                    (intern name)  ; Convert string name to symbol for plist key
-                    (let* ((command (plist-get cfg :command))
-                           (args (plist-get cfg :args))
-                           (url (plist-get cfg :url))
-                           (type (plist-get cfg :type))
-                           (env (plist-get cfg :env))
-                           (env-plist
-                            (when env
-                              (cond
-                               ((and (listp env) (keywordp (car env)))
-                                (cl-loop for (k v) on env by #'cddr
-                                         when v
-                                         append (list (intern (substring (symbol-name k) 1)) v)))
-                               ((and (listp env) (consp (car env)))
-                                (cl-loop for (k . v) in env
-                                         append (list (intern (if (keywordp k)
-                                                                  (substring (symbol-name k) 1)
-                                                                (format "%s" k)))
-                                                      v)))
-                               (t nil))))
-                           (server-plist nil))
-                      (when command
-                        (setq server-plist (plist-put server-plist :command command)))
-                      (when args
-                        (setq server-plist
-                              (plist-put server-plist :args
-                                         (cond
-                                          ((vectorp args) args)
-                                          ((listp args) (vconcat args))
-                                          (t args)))))
-                      (when url
-                        (setq server-plist (plist-put server-plist :url url))
-                        (setq server-plist (plist-put server-plist :type "http")))
-                      (when type
-                        (setq server-plist (plist-put server-plist :type type)))
-                      (when env-plist
-                        (setq server-plist (plist-put server-plist :env env-plist)))
-                      server-plist)))))
-    (make-directory (file-name-directory output-file) t)
-    (with-temp-file output-file
-      (insert (json-serialize (list :mcpServers servers-plist)
-                              :null-object :null
-                              :false-object :json-false)))
-    (let ((claude-conf
-           (if (file-exists-p claude-json-file)
-               (with-temp-buffer
-                 (insert-file-contents claude-json-file)
-                 (goto-char (point-min))
-                 (json-parse-buffer
-                  :object-type 'plist
-                  :null-object :null
-                  :false-object :json-false))
-             (list :mcpServers nil))))
-      (plist-put claude-conf :mcpServers servers-plist)
-      (with-temp-file claude-json-file
-        (insert (json-serialize claude-conf
-                                :null-object :null
-                                :false-object :json-false))
-        (json-pretty-print-buffer))
-      (message "Wrote MCP config to %s and updated %s"
-               output-file claude-json-file))))
-
 (load! "mcp.el")
 
-(use-package! mcp-server-lib
-  :defer t
-  :init
-  (setq! mcp-server-lib-http-port 18684
-         mcp-server-lib-async-timeout 3600)
-  (unless (file-exists-p
-           (concat (expand-file-name user-emacs-directory)
-                   "emacs-mcp-stdio.sh"))
-    (mcp-server-lib-install))
-  (setq! mcp-server-lib-default-directory-function
-         (defun +mcp-server-lib-default-directory-function (session-id)
-           (or
-            mcp-server-lib--request-cwd
-            (when (fboundp 'gptel-claude-code--mcp-default-directory)
-              (gptel-claude-code--mcp-default-directory session-id))
-            (when (fboundp '++workspace-current-project-root)
-              (++workspace-current-project-root)))))
-  (load! "gptel-tools.el")
-  (+gptel-reinit)
-
-  ;; (mcp-server-lib-http-stop)
-  (comment
-    (mcp-server-lib-stop))
-  (unless (and (boundp 'mcp-server-lib--running) mcp-server-lib--running)
-    (mcp-server-lib-start)))
-
-(use-package! mcp
-  :after mcp-server-lib
-  :config
-  (require 'gptel-integrations)
-  (require 'mcp-hub)
-
-  (defadvice! +mcp-make-text-tool (orig-fn name tool-name &optional asyncp)
-    :around #'mcp-make-text-tool
-    (plist-put (funcall orig-fn name tool-name asyncp) :include t)))
-
-(defvar simple-llm-req-p nil)
-
-(defun simple-llm-req (prompt &rest args)
-  (let* ((simple-llm-req-p t)
-         (gptel-backend (plist-get args :backend))
-         (gptel-model (plist-get args :model))
-         (gptel-temperature (clj/get args :temperature gptel-temperature))
-         (gptel--system-message (clj/get args :system ""))
-         (gptel-max-tokens (clj/get args :max-token gptel-max-tokens))
-         (gptel-cache (clj/get args :cache t))
-         (gptel--num-messages-to-send 1)
-         (gptel-include-reasoning nil)
-         (gptel-track-media nil)
-         (gptel-use-context nil)
-         (gptel-stream nil)
-         (timeout (plist-get args :timeout))
-         (on-finish (clj/get args :cb 'clj/identity))
-         (on-error (clj/get args :error 'clj/identity))
-         (called-back nil)
-         (timeout-timer nil)
-         (wrapped-finish (lambda (response)
-                           (unless called-back
-                             (setq called-back t)
-                             (when timeout-timer (cancel-timer timeout-timer))
-                             (funcall on-finish response))))
-         (wrapped-error (lambda (info)
-                          (unless called-back
-                            (setq called-back t)
-                            (when timeout-timer (cancel-timer timeout-timer))
-                            (funcall on-error info)))))
-    (let ((fsm (gptel-request prompt
-                 :stream nil
-                 :callback
-                 (lambda (response info)
-                   (if response
-                       (funcall wrapped-finish response)
-                     (funcall wrapped-error info))))))
-      (when (and timeout (numberp timeout) (> timeout 0))
-        (setq timeout-timer
-              (run-at-time timeout nil
-                           (lambda ()
-                             (unless called-back
-                               (setq called-back t)
-                               ;; Try to abort the in-flight request
-                               (when-let* ((proc-entry
-                                            (cl-find-if
-                                             (lambda (entry) (eq (cadr entry) fsm))
-                                             gptel--request-alist))
-                                           (proc (car proc-entry))
-                                           (abort-fn (cddr proc-entry)))
-                                 (funcall abort-fn)
-                                 (setf (alist-get proc gptel--request-alist nil 'remove) nil))
-                               (funcall on-error
-                                        (list :status (format "Timeout after %d seconds" timeout))))))))
-      fsm)))
-
-(defun simple-llm-req-sync (prompt &rest args)
-  (await-callback
-   (lambda (resolve reject)
-     (simple-llm-req
-      prompt
-      :backend (plist-get args :backend)
-      :model (plist-get args :model)
-      :temperature (plist-get args :temperature)
-      :system (plist-get args :system)
-      :max-token (plist-get args :max-token)
-      :cache (plist-get args :cache)
-      :cb (lambda (response)
-            (funcall resolve response))
-      :error (lambda (error)
-               (funcall reject error))))
-   (or (plist-get args :timeout) 60)))
-
-(defun get-gptel-org-title (&optional chat-content on-title on-error)
-  (simple-llm-req
-   (format "```\n%s```\n\nGenerate a file title for the above conversation with llm"
-           (or chat-content
-               (with-current-buffer (current-buffer) (buffer-string))))
-   :backend +gptel-free-backend
-   ;; :backend gptel--openrouter
-   ;; :backend gptel--ccl
-   ;; :model 'google/gemini-2.5-flash
-   ;; :model 'haiku
-   :model 'gpt-5-mini
-   :temperature 0.5
-   :max-token 20
-   :cb (or on-title 'print)
-   :error (or on-error 'print)
-   :system "You are an expert chat titling AI. Your sole purpose is to read the beginning of a chat conversation and generate a concise, descriptive title for it. This title will be used as a filename or an HTML page title.
-
-RULES:
-1.  Directly output the title text and NOTHING ELSE.
-2.  Do NOT use quotation marks or any other formatting.
-3.  Do NOT include prefixes like \"Title:\" or \"Chat about:\".
-4.  Do NOT add any explanation or commentary.
-5.  The title should be brief, typically 3-7 words.
-6.  Capture the core subject or the user's primary intent from the provided text.
-
-EXAMPLES:
-- User asks for a Python function to sort a list -> Title: Python List Sorting Function
-- User asks for ideas for a sci-fi story -> Title: Sci-Fi Story Ideas
-- User asks \"What were the main causes of World War 1?\" -> Title: Main Causes of WWI
-
-The user's chat will now follow. Generate the title."))
-
-;;;###autoload
-(defun +gptel-format-known-tools-to-markdown ()
-  "Format gptel--known-tools to human-readable markdown and copy to kill-ring."
-  (interactive)
-  (let ((md-output (with-temp-buffer
-                     (insert "# Available GPTEL Tools\n\n")
-                     (dolist (category gptel--known-tools)
-                       (let ((category-name (car category))
-                             (tools (cdr category)))
-                         (insert (format "## %s\n\n" category-name))
-                         (dolist (tool-entry tools)
-                           (let* ((tool-name (car tool-entry))
-                                  (tool (cdr tool-entry))
-                                  (description (gptel-tool-description tool))
-                                  (args (gptel-tool-args tool)))
-                             (insert (format "### %s\n\n" tool-name))
-                             (when description
-                               (insert (format "%s\n\n" description)))
-                             (when args
-                               (insert "**Parameters:**\n\n")
-                               (dolist (arg args)
-                                 (let ((arg-name (plist-get arg :name))
-                                       (arg-type (plist-get arg :type))
-                                       (arg-desc (plist-get arg :description))
-                                       (arg-optional (plist-get arg :optional)))
-                                   (insert (format "- `%s` (%s)%s: %s\n"
-                                                   arg-name
-                                                   arg-type
-                                                   (if arg-optional " *optional*" "")
-                                                   (or arg-desc "No description")))))))
-                           (insert "\n"))))
-                     (buffer-string))))
-    (if (called-interactively-p 'any)
-        (progn
-          (kill-new md-output)
-          (message "Formatted %d tool categories to kill-ring"
-                   (length gptel--known-tools)))
-      md-output)))
-
-;;; lisp balancer
-(setq llm-lisp-balancer-system-message
-      (with-file-contents!
-          (expand-file-name "~/Dropbox/sync/gptel-system-message/lisp-balancer.md")
-        (buffer-string)))
-
-(defun llm-balance-lisp-code--exrtract-md-fence (response)
-  (let ((rst) (err))
-    (when (string-match "^```\\(txt\\|[a-z]+\\)\n\\(\\(?:.\\|\n\\)*?\\)\n```" response)
-      (let ((fence-lang (match-string 1 response))
-            (fence-content (match-string 2 response)))
-        (if (string= fence-lang "txt")
-            (setq err fence-content)
-          (setq rst fence-content))))
-    (list :rst rst :err err)))
-
-(defun llm-balance-lisp-code (code lang-mode &optional on-ok on-error)
-  (let* ((async-p (and on-ok on-error))
-         (lang (cond
-                ((eq lang-mode 'emacs-lisp-mode) "elisp")
-                ((eq lang-mode 'clojure-mode) "clojure")
-                ((eq lang-mode 'clojurescript-mode) "clojure")
-                ((eq lang-mode 'common-lisp-mode) "lisp")
-                ((eq lang-mode 'scheme-mode) "scheme")
-                ((eq lang-mode 'racket-mode) "racket")
-                (t "lisp")))
-         (f (if async-p #'simple-llm-req #'simple-llm-req-sync))
-         (response
-          (funcall
-           f
-           (format "```%s\n%s\n```" lang code)
-           :backend +gptel-free-backend
-           ;; :backend gptel-claude-code-backend
-           ;; :backend gptel--gh-copilot-business
-           ;; :backend gptel--ccl
-           ;; :model 'gpt-4.1
-           ;; :model 'gpt-4o
-           :model 'gpt-5-mini
-           ;; :model 'sonnet
-           ;; :model 'haiku
-           :temperature 0.5
-           :system llm-lisp-balancer-system-message
-           :timeout 60
-           :cb (lambda (response)
-                 (when on-ok
-                   (funcall on-ok
-                            (llm-balance-lisp-code--exrtract-md-fence response))))
-           :error (or on-error 'print)))
-         (rst)
-         (err))
-    (when (and (not async-p)
-               (string-match "^```\\(txt\\|[a-z]+\\)\n\\(\\(?:.\\|\n\\)*?\\)\n```" response))
-      (let ((fence-lang (match-string 1 response))
-            (fence-content (match-string 2 response)))
-        (if (string= fence-lang "txt")
-            (setq err fence-content)
-          (setq rst fence-content))
-        (list :rst rst :err err)))))
-
-;;;###autoload
-(defun llm-compress-buffer-conversation (&optional buffer async)
-  "Compress conversation in BUFFER (defaults to current buffer).
-Save compressed output to kill-ring.
-If ASYNC is non-nil, run asynchronously."
-  (interactive (list (current-buffer) current-prefix-arg))
-  (unless (buffer-live-p buffer)
-    (user-error "Buffer %s is not live" buffer))
-  
-  (with-current-buffer buffer
-    (unless gptel-mode
-      (user-error "Buffer must be in gptel-mode"))
-    
-    (let* ((conversation (gptel--parse-buffer gptel-backend))
-           (compression-prompt
-            "You are a precision compression engine. Convert the entire prior conversation into a concise \"Context Memo\" we can reuse without exceeding the context window.
-
-Hard rules:
-- No speculation or invention. Use only information stated in the chat. Mark unknowns as \"UNKNOWN\".
-- Normalize and deduplicate; collapse repeated ideas; keep canonical names/IDs/dates/URLs.
-- Preserve only what helps continue the task.
-
-Keep (in priority order):
-1) User goals/intents & success criteria
-2) Final decisions made + rationale in one short sentence each
-3) Active constraints (APIs, stack, versions, budgets, deadlines, formats)
-4) User preferences (style, tools, tone) that affect future replies
-5) Open questions/blockers
-6) Next actions/TODOs (who/what/when)
-7) Key facts/figures/IDs/links/artifacts (filenames, endpoints, env vars)
-8) Domain terms/acronyms defined in this chat
-
-Drop:
-- Pleasantries, verbose reasoning, dead ends unless they explain a decision.
-- Long code; keep only names, signatures, or file paths unless a snippet is absolutely essential (<=10 lines)."))
-      
-      (if async
-          (simple-llm-req
-           (format "%s\n\nConversation to compress:\n%s"
-                   compression-prompt
-                   (prin1-to-string conversation))
-           ;; :backend gptel--gh-copilot-business
-           ;; :backend +gptel-free-backend
-           :backend gptel--ccl
-           ;; :model 'gpt-4.1
-           :model 'opus
-           :temperature 0.3
-           :cb (lambda (response)
-                 (kill-new response)
-                 (message "Compressed conversation saved to kill-ring"))
-           :error (lambda (err)
-                    (message "Compression failed: %S" err)))
-        
-        (let ((response
-               (simple-llm-req-sync
-                (format "%s\n\nConversation to compress:\n%s"
-                        compression-prompt
-                        (prin1-to-string conversation))
-                :backend gptel--ccl
-                ;; :backend gptel--openrouter
-                ;; :model 'google/gemini-2.5-flash
-                :model 'opus
-                :temperature 0.3)))
-          (kill-new (gptel--convert-markdown->org response))
-          (message "Compressed conversation saved to kill-ring")
-          response)))))
-
-(comment
-  (kill-new "abc")
-  (let ((str) (gptel--convert-markdown->org (buffer-string)))
-    str)
-  (with-current-buffer (current-buffer)
-    (gptel--parse-buffer gptel-backend)))
+;;; llm fns
+(load! "gptel-llm-fns.el")
 
 (use-package! gptel-magit
   :defer t
@@ -973,82 +590,11 @@ Drop:
   (setq!
    ;; gptel-magit-model 'gpt-4.1
    ;; gptel-magit-model 'sonnet
-   gptel-magit-model 'haiku
+   gptel-magit-model 'sonnet
    ;; gptel-magit-backend gptel--gh-copilot-business
    ;; gptel-magit-backend +gptel-free-backend
    ;; gptel-magit-backend gptel-claude-code-backend
-   gptel-magit-backend gptel--ccl
-   gptel-magit-commit-prompt
-   "You are an expert at writing Git commits compliant with @commitlint/config-conventional.
-
-STRUCTURE:
-<type>(<optional scope>): <description>
-
-[optional body]
-
-[optional footer(s)]
-
-IMPORTANT REQUIRED RULES (errors):
-1. type: MUST be one of: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
-2. type: MUST be lowercase
-3. type: MUST NOT be empty
-4. description: MUST NOT be empty
-5. description: MUST start with lowercase (never sentence-case, start-case, pascal-case, or upper-case)
-6. description: MUST be bullet points
-7. description: MUST cover all changes among the commit
-8. header (type + scope + description): MUST be 80 characters or less
-9. body: each line MUST be 80 characters or less
-10. footer: each line MUST be 80 characters or less
-
-WARNINGS (should follow):
-- body: MUST have a leading blank line before it
-- footer: MUST have a leading blank line before it
-
-CONVENTIONS:
-- Use imperative mood (\"add feature\" not \"added feature\")
-- scope: optional, describes codebase section, e.g., fix(parser):
-- body: provide additional context, wrap at 80 chars per line
-- footer: use for BREAKING CHANGE or issue references
-
-TYPE DEFINITIONS:
-- build: Changes to build system or dependencies (example scopes: gulp, broccoli, npm)
-- chore: Other changes that don't modify src or test files
-- ci: Changes to CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-- docs: Documentation only changes
-- feat: A new feature
-- fix: A bug fix
-- perf: A code change that improves performance
-- refactor: A code change that neither fixes a bug nor adds a feature
-- revert: Reverts a previous commit
-- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- test: Adding missing tests or correcting existing tests
-
-BREAKING CHANGES:
-- Mark breaking changes with ! before the colon: feat!: remove deprecated API
-- OR include BREAKING CHANGE: in footer with description
-- When both are used, they MUST be consistent (either both present or both absent)
-
-EXAMPLES:
-feat(api): add user authentication endpoint
-
-fix: resolve memory leak in cache manager
-
-docs(readme): update installation instructions
-
-refactor(core): simplify error handling logic
-
-This improves maintainability and reduces complexity.
-
-feat!: remove support for Node 12
-
-BREAKING CHANGE: Node 12 is no longer supported
-
-fix(parser): handle edge case with empty strings
-
-Previously, empty strings would cause a crash. This commit adds
-proper validation and returns early with a default value.
-
-Closes #123"))
+   gptel-magit-backend gptel--ccl))
 
 ;;; Workspace persistence and isolation
 ;; Store and restore gptel-context per workspace
@@ -1088,7 +634,6 @@ Closes #123"))
     (plist-put info :workspace (get-current-persp))
     result))
 
-
 ;; Advice gptel's tool execution to bind the captured workspace
 (defadvice! +gptel--handle-tool-use-with-workspace (orig-fn fsm)
   "Wrap tool execution to use the captured workspace from FSM's info."
@@ -1096,30 +641,6 @@ Closes #123"))
   (let* ((info (gptel-fsm-info fsm))
          (++gptel-request-workspace (plist-get info :workspace)))
     (funcall orig-fn fsm)))
-
-(comment
-  (progn
-    (require 'acp)
-    (setq! gptel--claude-code-acp
-           (gptel-make-acp "claude-code-acp"
-                           :command (executable-find "claude-code-acp")
-                           :models '(claude-sonnet-4-5)
-                           :host "claude code via acp"
-                           :mcp-servers
-                           '(((name . "emacs")
-                              (command .
-                                       "~/.emacs.d/.local/cache/emacs-mcp-stdio.sh")
-                              (args . ["--init-function=elisp-dev-mcp-enable"
-                                       "--stop-function=elisp-dev-mcp-disable"])
-                              (env . [((name . "EMACS_MCP_DEBUG_LOG")
-                                       (value . "/Users/yqrashawn/mcp-lib.log"))])))))
-    (simple-llm-req
-     "hi"
-     :backend gptel--claude-code-acp
-     :model 'claude-sonnet-4-5
-     :cb 'message           
-     :error 'message)
-    nil))
 
 (defadvice! +gptel-handle-invalid-tool-calls (orig-fn fsm)
   "Send error message to LLM when it calls non-existent tools.
@@ -1180,27 +701,6 @@ the result."
         (message "Converted markdown to org and saved to kill ring"))
     (gptel--convert-markdown->org input-string)))
 
-(comment
-  (setq gptel--tmp-backend
-        (gptel-make-openai "tmp"
-          :host "localhost:11434"
-          :endpoint "/v1/chat/completions"
-          :stream t
-          :key "no key"
-          :models gptel--claude-code-models))
-
-  (simple-llm-req
-   "hi"
-   :backend gptel--tmp-backend
-   :model 'opusplan
-   :cb (lambda (data) (message "DATA: %s" data)) 
-   :error (lambda (err)
-            (when (plist-p err)
-              (message "ERROR: %s\nHTTP-STATUS: %s\nSTATUS: %s"
-                       (plist-get err :error)
-                       (plist-get err :http-status)
-                       (plist-get err :status))))))
-
 (setq! gptel-log-level 'debug)
 (setq! gptel-log-level nil)
 (setq! mcp-log-level 'debug)
@@ -1208,13 +708,9 @@ the result."
 (setq! mcp-server-lib-log-io t)
 (setq! mcp-server-lib-log-io nil)
 
-(after! docker
-  (when (-> "hostname"
-            shell-command-to-string
-            s-trim
-            (string= "studio.local"))
-    (setenv "DOCKER_HOST" "tcp://macmini.local:2375")))
+(load! "gptel-extra.el")
 
+;;; other agent/llm in emacs pkgs
 (use-package agent-shell
   :defer t
   :ensure-system-package
@@ -1226,15 +722,12 @@ the result."
    (agent-shell-make-environment-variables :inherit-env t)
    agent-shell-anthropic-authentication
    (agent-shell-anthropic-make-authentication :login t)))
+
 (use-package! agent-shell-sidebar
   :after agent-shell)
+
 (use-package! agent-shell-manager
   :after agent-shell)
-
-(comment
-  (simple-llm-req-sync
-   "hi"
-   :backend gptel--tmp))
 
 (use-package claude-code
   :defer t
@@ -1251,8 +744,6 @@ the result."
   (add-hook! 'claude-code-process-environment-functions #'monet-start-server-function)
   (monet-mode 1)
   (claude-code-mode))
-
-(load! "gptel-extra.el")
 
 (use-package! claude-code-ide
   :defer t
