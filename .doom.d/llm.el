@@ -203,19 +203,19 @@ Everywhere else: max 2 consecutive blank lines."
     :description "claude code"
     :backend "ccl"
     :model (intern "opus[1m]")
-    :parents '(sonnet)
+    :parents '(s)
     :tools '())
   (gptel-make-preset 'o
     :description "claude code"
     :backend "ccl"
     :model 'opus
-    :parents '(sonnet)
+    :parents '(s)
     :tools '())
   (gptel-make-preset 'h
     :description "claude code"
     :backend "ccl"
     :model 'haiku
-    :parents '(sonnet)
+    :parents '(s)
     :tools '())
   (gptel-make-preset 'sd
     :description "claude code"
@@ -228,13 +228,13 @@ Everywhere else: max 2 consecutive blank lines."
     :description "claude code"
     :backend "ccld"
     :model 'opus
-    :parents '(sonnet)
+    :parents '(s)
     :tools '())
   (gptel-make-preset 'hd
     :description "claude code"
     :backend "ccld"
     :model 'haiku
-    :parents '(sonnet)
+    :parents '(s)
     :tools '())
 
   (gptel-make-preset 'ghsonnet
@@ -367,7 +367,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)

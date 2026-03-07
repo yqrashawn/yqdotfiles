@@ -133,5 +133,9 @@
         echo 'link atuin server'
         ln -s ~/Dropbox/sync/atuin-server.toml ~/.config/atuin/server.toml
     fi
+    if command -v rtk &> /dev/null; then
+        echo 'rtk init --global --auto-patch'
+        rtk init --global --auto-patch
+    fi
   '';
 }

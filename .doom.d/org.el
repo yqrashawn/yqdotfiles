@@ -22,6 +22,13 @@ Opposed to word boundaries, sexp's work with `subword-mode' enabled."
   (org-emphasize char))
 
 (after! org
+  ;; Fix: gptel leaves text properties on the lang string passed to
+  ;; org-src-font-lock-fontify-block, which breaks native fontification.
+  ;; Strip them so org-mode gets a plain string.
+  (defadvice! +org-src-font-lock-strip-lang-properties (fn lang &rest args)
+    :around #'org-src-font-lock-fontify-block
+    (apply fn (substring-no-properties (if (stringp lang) lang "")) args))
+
   (setq! org-log-done 'time
          org-roam-dailies-directory ""
          org-startup-with-inline-images "inlineimages"

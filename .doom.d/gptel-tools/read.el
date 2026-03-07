@@ -104,24 +104,24 @@ Format: right-aligned number followed by → then content, matching Claude Code 
         (+gptel-tool-revert-to-be-visited-buffer b))
       (when (llm-danger-buffer-p b) (error "User denied the read request"))
       (if-let ((file-name (buffer-file-name b)))
-          (if (gptelt--image-file-p file-name)
-              ;; Handle image files: return direct base64 without wrapping
-              (gptelt--file-to-base64 file-name)
-            ;; Handle regular files
-            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                  (line-offset (or offset 0)))
-              (save-excursion
-                (let* ((total-lines (count-lines (point-min) (point-max)))
-                       (start-line (1+ line-offset))
-                       (end-line (min total-lines (+ line-offset max-lines))))
-                  (goto-char (point-min))
-                  (forward-line line-offset)
-                  (let ((start (point)))
-                    (forward-line max-lines)
-                    (let ((content (buffer-substring-no-properties start (point))))
-                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
-                                      total-lines start-line end-line buffer_name file-name)
-                              "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃")))))))
+        (if (gptelt--image-file-p file-name)
+            ;; Handle image files: return direct base64 without wrapping
+            (gptelt--file-to-base64 file-name)
+          ;; Handle regular files
+          (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+                (line-offset (or offset 0)))
+            (save-excursion
+              (let* ((total-lines (count-lines (point-min) (point-max)))
+                     (start-line (1+ line-offset))
+                     (end-line (min total-lines (+ line-offset max-lines))))
+                (goto-char (point-min))
+                (forward-line line-offset)
+                (let ((start (point)))
+                  (forward-line max-lines)
+                  (let ((content (buffer-substring-no-properties start (point))))
+                    (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
+                                    total-lines start-line end-line buffer_name file-name)
+                            "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃")))))))
         ;; Buffer without associated file
         (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
               (line-offset (or offset 0)))
@@ -171,29 +171,29 @@ Wraps both top-level errors and per-buffer errors in <tool_use_error> tags."
 
 ;; Register the file and buffer reading tools with gptel
 (when (fboundp 'gptelt-make-tool)
-  (gptelt-make-tool
-   :name "read_file"
-   :function #'gptelt-read-file
-   :description
-   (concat "Read a file from the local filesystem. The file_path parameter must be an absolute path. "
-           "By default, reads up to 2000 lines from the beginning. For long files, use offset and limit parameters. "
-           "IMPORTANT: For reading currently open Emacs buffers, use read_buffer instead (faster, no full path needed)."
-           "\n\nPARAMETER STRUCTURE:\n"
-           "{\n"
-           "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
-           "  \"offset\": integer (optional, default: 0) - Line number to start reading from\n"
-           "  \"limit\": integer (optional, default: 2000, min: 300) - Number of lines to read\n"
-           "}\n\n"
-           "The returned result includes metadata (total lines, content range) followed by content wrapped with ␂ and ␃.")
-   :args '((:name "file_path" :type string
-            :description "The absolute path to the file to read (must be absolute, not relative)")
-           (:name "offset" :type integer :optional t :minimum 0
-            :description "The line number to start reading from. Only provide if the file is too large to read at once")
-           (:name "limit" :type integer :optional t :minimum 300
-            :description "The number of lines to read. Only provide if the file is too large to read at once. Min value is 300."))
-   :category "read"
-   :confirm nil
-   :include t)
+  ;; (gptelt-make-tool
+  ;;  :name "read_file"
+  ;;  :function #'gptelt-read-file
+  ;;  :description
+  ;;  (concat "Read a file from the local filesystem. The file_path parameter must be an absolute path. "
+  ;;          "By default, reads up to 2000 lines from the beginning. For long files, use offset and limit parameters. "
+  ;;          "IMPORTANT: For reading currently open Emacs buffers, use read_buffer instead (faster, no full path needed)."
+  ;;          "\n\nPARAMETER STRUCTURE:\n"
+  ;;          "{\n"
+  ;;          "  \"file_path\": \"string\" (required) - Absolute path to the file\n"
+  ;;          "  \"offset\": integer (optional, default: 0) - Line number to start reading from\n"
+  ;;          "  \"limit\": integer (optional, default: 2000, min: 300) - Number of lines to read\n"
+  ;;          "}\n\n"
+  ;;          "The returned result includes metadata (total lines, content range) followed by content wrapped with ␂ and ␃.")
+  ;;  :args '((:name "file_path" :type string
+  ;;           :description "The absolute path to the file to read (must be absolute, not relative)")
+  ;;          (:name "offset" :type integer :optional t :minimum 0
+  ;;           :description "The line number to start reading from. Only provide if the file is too large to read at once")
+  ;;          (:name "limit" :type integer :optional t :minimum 300
+  ;;           :description "The number of lines to read. Only provide if the file is too large to read at once. Min value is 300."))
+  ;;  :category "read"
+  ;;  :confirm nil
+  ;;  :include t)
 
   (gptelt-make-tool
    :name "read_buffer"
