@@ -11,12 +11,40 @@ This is an alist with the following structure:
 This can be used to access server-provided context, session info,
 or other data to pass to subsequent requests.")
 
+(defun +gptel--update-org-file-properties ()
+  "Update org file-level properties for workspace root and CCL session ID.
+Uses `org-entry-put' at point-min so properties live in the same
+:PROPERTIES: drawer as gptel's own state."
+  (when (derived-mode-p 'org-mode)
+    (org-with-wide-buffer
+     (goto-char (point-min))
+     (when (org-at-heading-p)
+       (org-open-line 1))
+     ;; Only set workspace root if not already present -- the value from
+     ;; the before-send hook (when the user is in the right workspace) is
+     ;; correct; the after-response hook may run in a different workspace.
+     (unless (org-entry-get (point-min) "GPTEL_WORKSPACE_ROOT")
+       (let ((root (or (++workspace-current-project-root) default-directory)))
+         (org-entry-put (point-min) "GPTEL_WORKSPACE_ROOT" root)))
+     (when (and (boundp 'gptel-backend)
+                gptel-backend
+                (boundp 'gptel--ccl)
+                (boundp 'gptel--ccld)
+                (or (eq gptel-backend gptel--ccl)
+                    (eq gptel-backend gptel--ccld)))
+       (let ((session-id (or (and (boundp 'gptel-claude-code--session-id)
+                                  gptel-claude-code--session-id)
+                             (alist-get 'session-id +gptel--last-response))))
+         (when session-id
+           (org-entry-put (point-min) "GPTEL_CCL_SESSION_ID" session-id)))))))
+
 (defun +gptel--add-workspace-context ()
   "Add workspace context to gptel request params.
 This sets buffer-local `gptel--request-params' with workspace metadata
 that will be included in each gptel request.  Also includes any server
 metadata from the previous response."
   (when gptel-mode
+    (+gptel--update-org-file-properties)
     (let ((session-id (alist-get 'session-id +gptel--last-response)))
       (setq-local
        gptel--request-params
@@ -78,39 +106,37 @@ INFO is the gptel process info plist."
     "Capture metadata from streaming response before cleanup."
     :around #'gptel-curl--stream-cleanup
     (let* ((proc-buf (process-buffer process))
-           (fsm (car (alist-get process gptel--request-alist)))
-           (info (and fsm (gptel-fsm-info fsm)))
-           (backend (and info (plist-get info :backend))))
+            (fsm (car (alist-get process gptel--request-alist)))
+            (info (and fsm (gptel-fsm-info fsm)))
+            (backend (and info (plist-get info :backend))))
       ;; Only capture for CCL backend
       (when (and backend (or (eq backend gptel--ccl) (eq backend gptel--ccld)))
         (with-current-buffer proc-buf
           (save-excursion
-            ;; For streaming responses, we need to reconstruct the full response
-            ;; from the stream chunks. Look for "data:" lines and collect them.
             (goto-char (point-min))
             ;; Skip HTTP headers - look for double newline
             (when (re-search-forward "\n\n" nil t)
-              (let ((headers-text (buffer-substring-no-properties (point-min) (point))))
-                ;; Now we're at the start of the response body
-                ;; Collect all the response text from data: lines
-                (let ((full-response ""))
-                  (while (re-search-forward "^data: " nil t)
-                    (let ((start (point)))
-                      (end-of-line)
-                      (let ((line (buffer-substring-no-properties start (point))))
-                        (unless (string-prefix-p "[DONE]" line)
-                          (setq full-response (concat full-response line))))))
-                  ;; Try to parse the accumulated response as JSON
-                  (condition-case err
-                      (when (> (length full-response) 0)
-                        (let ((body-plist (gptel--json-read-string full-response)))
-                          (+gptel--capture-response-data headers-text body-plist info)))
-                    (error
-                     (message "[+gptel stream] Failed to parse response: %S" err)
-                     (message "[+gptel stream] Response text (first 500 chars): %s"
-                              (substring full-response 0 (min 500 (length full-response))))))))))))
-      ;; Call original function
-      (funcall orig-fn process status)))
+              (let ((headers-text (buffer-substring-no-properties (point-min) (point)))
+                    (session-id nil))
+                ;; Parse SSE data lines for session_id from :session-start event
+                (save-excursion
+                  (while (and (not session-id)
+                              (re-search-forward "^data: " nil t))
+                    (let* ((line-end (line-end-position))
+                           (json-str (buffer-substring-no-properties (point) line-end)))
+                      (unless (string= json-str "[DONE]")
+                        (ignore-errors
+                          (let* ((json-obj (gptel--json-read-string json-str))
+                                 (sid (plist-get json-obj :session_id)))
+                            (when sid (setq session-id sid))))))))
+                (+gptel--capture-response-data headers-text nil info)
+                ;; Override session-id from SSE data if found
+                (when (and session-id (plist-get info :buffer))
+                  (with-current-buffer (plist-get info :buffer)
+                    (setf (alist-get 'session-id +gptel--last-response) session-id)
+                    (+gptel--add-workspace-context)))))))))
+    ;; Call original function
+    (funcall orig-fn process status))
 
   ;; Also hook into non-streaming responses
   ;; Unlike streaming, non-streaming has the HTTP buffer available
@@ -122,18 +148,18 @@ INFO is the gptel process info plist."
                              (goto-char (point-min))
                              (when (re-search-forward "^\n" nil t)
                                (buffer-substring-no-properties (point-min) (point)))))
-             (headers-alist (when headers-text
-                              (+gptel--parse-http-headers headers-text)))
-             (session-id (when headers-alist
-                           (alist-get "X-Session-Id" headers-alist nil nil #'equal)))
-             (metadata (plist-get response :metadata)))
+              (headers-alist (when headers-text
+                               (+gptel--parse-http-headers headers-text)))
+              (session-id (when headers-alist
+                            (alist-get "X-Session-Id" headers-alist nil nil #'equal)))
+              (metadata (plist-get response :metadata)))
         
         (with-current-buffer buf
           (setq-local +gptel--last-response
-                      `((headers . ,headers-alist)
-                        (body . ,response)
-                        (session-id . ,session-id)
-                        (metadata . ,metadata)))
+            `((headers . ,headers-alist)
+               (body . ,response)
+               (session-id . ,session-id)
+               (metadata . ,metadata)))
           ;; Update workspace context for next request in the correct buffer
           (+gptel--add-workspace-context)))))
 

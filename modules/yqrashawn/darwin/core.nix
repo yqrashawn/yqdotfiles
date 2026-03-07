@@ -111,7 +111,7 @@ in
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system = {
-    primaryUser = "yqrashawn";
+    primaryUser = config.user.name;
     # stateVersion = 4;
     defaults = {
       NSGlobalDomain = {
