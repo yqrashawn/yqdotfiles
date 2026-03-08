@@ -164,6 +164,13 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
       (:command "bunx"
        :args ("-p" "matryoshka-rlm" "lattice-mcp")))
 
+     ("cclsp" .
+      (:command "bunx"
+       :args ("cclsp@latest")
+       :env
+       (:CCLSP_CONFIG_PATH
+        ,(expand-file-name "~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/cclsp.json"))))
+
      ;; ("emacs" .
      ;;  (:command ,(concat
      ;;              (expand-file-name user-emacs-directory)

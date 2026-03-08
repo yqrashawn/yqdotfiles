@@ -1,0 +1,14 @@
+{
+  "servers": [
+    {
+      "extensions": ["js", "ts", "jsx", "tsx"],
+      "command": ["npx", "--", "typescript-language-server", "--stdio"],
+      "rootDir": "."
+    },
+    {
+      "extensions": ["clj", "cljs", "cljc"],
+      "command": ["clojure-lsp"],
+      "rootDir": "."
+    }
+  ]
+}

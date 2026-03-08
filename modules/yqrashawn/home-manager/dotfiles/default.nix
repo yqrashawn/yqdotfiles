@@ -375,6 +375,7 @@
     };
     "mpv/mpv.conf" = { source = ./mpv.conf; };
     "husky/init.sh" = { source = ./.huskyrc; };
+    "claude/cclsp.json" = { source = ./cclsp.json; };
     # yarn-global = {
     #   source = ./package.json;
     #   target = "./yarn/global/package.json";
