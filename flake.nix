@@ -39,6 +39,10 @@
       url = "github:atuinsh/atuin/v18.10.0";
       flake = true;
     };
+    gws = {
+      url = "github:googleworkspace/cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     comma = {
       url = "github:nix-community/comma";
       flake = false;

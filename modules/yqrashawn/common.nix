@@ -298,6 +298,7 @@ in {
         # openjdk
 
         rtk
+        inputs.gws.packages.${pkgs.system}.default
         watchman
 
         # lib

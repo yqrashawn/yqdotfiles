@@ -1,13 +1,30 @@
 {
   "servers": [
     {
-      "extensions": ["js", "ts", "jsx", "tsx"],
-      "command": ["npx", "--", "typescript-language-server", "--stdio"],
+      "extensions": [
+        "js",
+        "ts",
+        "jsx",
+        "tsx"
+      ],
+      "command": [
+        "npx",
+        "--",
+        "typescript-language-server",
+        "--stdio"
+      ],
       "rootDir": "."
     },
     {
-      "extensions": ["clj", "cljs", "cljc"],
-      "command": ["clojure-lsp"],
+      "extensions": [
+        "clj",
+        "cljs",
+        "cljc",
+        "edn"
+      ],
+      "command": [
+        "clojure-lsp"
+      ],
       "rootDir": "."
     }
   ]
