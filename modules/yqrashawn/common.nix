@@ -299,6 +299,7 @@ in {
 
         rtk
         inputs.gws.packages.${pkgs.system}.default
+        google-cloud-sdk
         watchman
 
         # lib
