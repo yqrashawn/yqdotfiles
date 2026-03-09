@@ -88,21 +88,28 @@
       source = ./shadow-cljs.edn;
       target = ".shadow-cljs/config.edn";
     };
-    # gpg-agent-conf = {
-    #   source = pkgs.writeTextFile {
-    #     name = "gpg-agent.conf";
-    #     text = ''
-    #       default-cache-ttl 600
-    #       max-cache-ttl 7200
-    #       allow-emacs-pinentry
-    #       allow-loopback-pinentry
-    #       enable-ssh-support
-    #       pinentry-program ${pkgs.pinentry-emacs}/bin/pinentry-emacs
-    #       # pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
-    #     '';
-    #   };
-    #   target = ".gnupg/gpg-agent.conf";
-    # };
+    gpg-agent-conf = let
+      pinentry-auto = pkgs.writeShellScript "pinentry-auto" ''
+        if [ -t 0 ]; then
+          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+        else
+          exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"
+        fi
+      '';
+    in {
+      source = pkgs.writeTextFile {
+        name = "gpg-agent.conf";
+        text = ''
+          default-cache-ttl 86400
+          max-cache-ttl 86400
+          allow-emacs-pinentry
+          allow-loopback-pinentry
+          enable-ssh-support
+          pinentry-program ${pinentry-auto}
+        '';
+      };
+      target = ".gnupg/gpg-agent.conf";
+    };
     lein = {
       source = ./.lein;
       target = ".lein";

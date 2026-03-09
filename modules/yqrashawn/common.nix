@@ -211,7 +211,7 @@ in {
         # pinentry
         pinentry-emacs
         # pinentry-qt
-        # pinentry_mac
+        pinentry_mac
         # feroxbuster # content discovery
         ffmpeg
         pandoc
