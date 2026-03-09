@@ -39,13 +39,20 @@
                  (+set-org-top-header new-title)
                  (insert "\n")
                  (+set-org-title new-title)
-                 (write-file
-                  (expand-file-name
-                   (format
-                    "%s-%s.org"
-                    (format-time-string "%H_%M")
-                    new-title)
-                   dir))))))
+                 (let ((filepath (expand-file-name
+                                  (format
+                                   "%s-%s.org"
+                                   (format-time-string "%H_%M")
+                                   new-title)
+                                  dir)))
+                   ;; Avoid write-file which calls rename-buffer.
+                   ;; Buffer rename breaks persp-mode window config
+                   ;; restoration when response completes in another
+                   ;; workspace.
+                   (setq buffer-file-name filepath)
+                   (setq buffer-file-truename (file-truename filepath))
+                   (set-buffer-modified-p t)
+                   (save-buffer))))))
          (lambda (e) (user-error
                       "Error setting gptel org title: %s"
                       (if (plistp e)
