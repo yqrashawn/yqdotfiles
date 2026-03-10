@@ -215,6 +215,27 @@ Everywhere else: max 2 consecutive blank lines."
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
+  (gptel-make-preset 'sl
+    :description "claude code"
+    :backend "ccl"
+    :model 'sonnet-low
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'sm
+    :description "claude code"
+    :backend "ccl"
+    :model 'sonnet-medium
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'sh
+    :description "claude code"
+    :backend "ccl"
+    :model 'sonnet-high
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
   (gptel-make-preset 's1
     :description "claude code"
     :backend "ccl"
@@ -222,16 +243,73 @@ Everywhere else: max 2 consecutive blank lines."
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
+  (gptel-make-preset 's1l
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "sonnet[1m]-low")
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 's1m
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "sonnet[1m]-medium")
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 's1h
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "sonnet[1m]-high")
+    :system (alist-get 'claude gptel-directives)
+    :parents '(default)
+    :tools '())
+  (gptel-make-preset 'o
+    :description "claude code"
+    :backend "ccl"
+    :model 'opus
+    :parents '(s)
+    :tools '())
+  (gptel-make-preset 'ol
+    :description "claude code"
+    :backend "ccl"
+    :model 'opus-low
+    :parents '(s)
+    :tools '())
+  (gptel-make-preset 'om
+    :description "claude code"
+    :backend "ccl"
+    :model 'opus-medium
+    :parents '(s)
+    :tools '())
+  (gptel-make-preset 'oh
+    :description "claude code"
+    :backend "ccl"
+    :model 'opus-high
+    :parents '(s)
+    :tools '())
   (gptel-make-preset 'o1
     :description "claude code"
     :backend "ccl"
     :model (intern "opus[1m]")
     :parents '(s)
     :tools '())
-  (gptel-make-preset 'o
+  (gptel-make-preset 'o1l
     :description "claude code"
     :backend "ccl"
-    :model 'opus
+    :model (intern "opus[1m]-low")
+    :parents '(s)
+    :tools '())
+  (gptel-make-preset 'o1m
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "opus[1m]-medium")
+    :parents '(s)
+    :tools '())
+  (gptel-make-preset 'o1h
+    :description "claude code"
+    :backend "ccl"
+    :model (intern "opus[1m]-high")
     :parents '(s)
     :tools '())
   (gptel-make-preset 'h

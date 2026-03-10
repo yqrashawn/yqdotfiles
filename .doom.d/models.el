@@ -49,48 +49,6 @@
      :output-cost 2.5
      :cutoff-date "2025-01")))
 
-(defconst gptel--claude-code-models
-  `((haiku
-     :description "Near-frontier intelligence at blazing speeds with extended thinking"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 1
-     :output-cost 5
-     :cutoff-date "2025-02")
-    (sonnet
-     :description "High-performance model with exceptional reasoning and efficiency"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07")
-    (,(intern "sonnet[1m]")
-     :description "High-performance model with exceptional reasoning and efficiency"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 1000
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07")
-    (opus
-     :description "Most capable model for complex reasoning and advanced coding"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03")
-    (,(intern "opus[1m]")
-     :description "Most capable model for complex reasoning and advanced coding"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 1000
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03")))
-
 (defconst gptel--codex-models
   '((gpt-5-codex
      :description "Flagship model for coding, reasoning, and agentic tasks across domains"
@@ -170,3 +128,157 @@
      :input-cost 1
      :output-cost 5
      :cutoff-date "2025-02")))
+
+(defconst gptel--claude-code-models
+  `((haiku
+     :description "Near-frontier intelligence at blazing speeds with extended thinking"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 1
+     :output-cost 5
+     :cutoff-date "2025-02")
+    (sonnet-low
+     :description "High-performance model with exceptional reasoning and efficiency (low effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 1024)))
+    (sonnet-medium
+     :description "High-performance model with exceptional reasoning and efficiency (medium effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 8000)))
+    (sonnet-high
+     :description "High-performance model with exceptional reasoning and efficiency (high effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 16000)))
+    (sonnet
+     :description "High-performance model with exceptional reasoning and efficiency (max effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
+    (,(intern "sonnet[1m]-low")
+     :description "High-performance model with exceptional reasoning and efficiency, 1M context (low effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 1024)))
+    (,(intern "sonnet[1m]-medium")
+     :description "High-performance model with exceptional reasoning and efficiency, 1M context (medium effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 8000)))
+    (,(intern "sonnet[1m]-high")
+     :description "High-performance model with exceptional reasoning and efficiency, 1M context (high effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 16000)))
+    (,(intern "sonnet[1m]")
+     :description "High-performance model with exceptional reasoning and efficiency, 1M context (max effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 3
+     :output-cost 15
+     :cutoff-date "2025-07"
+     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
+    (opus-low
+     :description "Most capable model for complex reasoning and advanced coding (low effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 1024)))
+    (opus-medium
+     :description "Most capable model for complex reasoning and advanced coding (medium effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 8000)))
+    (opus-high
+     :description "Most capable model for complex reasoning and advanced coding (high effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 16000)))
+    (opus
+     :description "Most capable model for complex reasoning and advanced coding (max effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 200
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
+    (,(intern "opus[1m]-low")
+     :description "Most capable model for complex reasoning and advanced coding, 1M context (low effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 1024)))
+    (,(intern "opus[1m]-medium")
+     :description "Most capable model for complex reasoning and advanced coding, 1M context (medium effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 8000)))
+    (,(intern "opus[1m]-high")
+     :description "Most capable model for complex reasoning and advanced coding, 1M context (high effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 16000)))
+    (,(intern "opus[1m]")
+     :description "Most capable model for complex reasoning and advanced coding, 1M context (max effort)"
+     :capabilities (media tool-use cache)
+     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
+     :context-window 1000
+     :input-cost 5
+     :output-cost 25
+     :cutoff-date "2025-03"
+     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))))
