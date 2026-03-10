@@ -181,6 +181,68 @@ Checks if clj nREPL is connected and namespace is available before evaluation."
   (gptelt-eval-clj-string "+" "cljs.core")
   (gptelt-eval-clj-string "(name :abc)" "clojure.core"))
 
+;;; async eval clj string (for MCP tool use — non-blocking)
+(defun gptelt-eval--clj-string-async (callback clj-string &optional namespace)
+  "Evaluate CLJ-STRING asynchronously via nREPL, call CALLBACK with result.
+CALLBACK receives a single string: the eval value, error output, or error
+message.  NAMESPACE defaults to \"user\".  Uses `nrepl-request:eval' so
+the main thread is never blocked by polling."
+  (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
+  (gptelt-clj-ensure-helper-loaded)
+
+  (let* ((clj-repl (gptelt-clj--get-clj-repl))
+         (ns (or namespace "user"))
+         ;; Mutable accumulator — nREPL sends multiple messages per eval
+         (response (cons 'dict nil)))
+    (nrepl-request:eval
+     clj-string
+     (lambda (resp)
+       (condition-case err
+           (progn
+             (nrepl--merge response resp)
+             (when (member "done" (nrepl-dict-get response "status"))
+               (let ((out (nrepl-dict-get response "out"))
+                     (value (nrepl-dict-get response "value"))
+                     (err-out (nrepl-dict-get response "err"))
+                     (id (nrepl-dict-get response "id")))
+                 ;; Echo to REPL buffer
+                 (when (buffer-live-p clj-repl)
+                   (with-current-buffer clj-repl
+                     (cider-repl--replace-input (format! "%s\n" clj-string))
+                     (when (or out value err-out)
+                       (cider-repl-reset-markers))
+                     (when out
+                       (cider-repl-emit-stdout clj-repl out))
+                     (when value
+                       (cider-repl-emit-result clj-repl value t t))
+                     (when err-out
+                       (cider-repl-emit-stderr clj-repl err-out))
+                     (cider-repl-emit-prompt clj-repl)))
+                 ;; Mark request as completed in nREPL
+                 (when id
+                   (with-current-buffer clj-repl
+                     (nrepl--mark-id-completed id)))
+                 ;; Deliver result to MCP callback
+                 (funcall callback
+                          (or value err-out
+                              "Evaluation completed with no output")))))
+         (error
+          (funcall callback
+                   (format "Error processing nREPL response: %s"
+                           (error-message-string err))))))
+     clj-repl
+     ns)))
+
+(defun gptelt-eval-clj-string-async (callback clj-string &optional namespace)
+  "Async MCP tool wrapper for `gptelt-eval--clj-string-async'.
+CALLBACK is the MCP async callback, CLJ-STRING and NAMESPACE are tool args."
+  (gptelt-eval--clj-string-async callback clj-string namespace))
+
+(comment
+  (gptelt-eval-clj-string-async
+   (lambda (r) (message "Async result: %s" r))
+   "(+ 1 2)" "user"))
+
 ;;; get buffer namespace
 (defun gptelt-clj-get-buffer-ns (buffer-name)
   "Get the namespace of the given BUFFER-NAME containing Clojure code.
@@ -455,7 +517,8 @@ shows buffer if not visible, asks for user permission, and evaluates it."
 
   (gptelt-make-tool
    :name "clj_eval_string"
-   :function #'gptelt-eval-clj-string
+   :function #'gptelt-eval-clj-string-async
+   :async t
    :description "Evaluate given clojure code string in given namespace, get eval result or error."
    :args '((:name "clj_string"
             :type string

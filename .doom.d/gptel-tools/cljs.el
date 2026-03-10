@@ -90,6 +90,22 @@ Skips load-file if the cljs-helper namespace is already loaded."
   (gptel-cljs-eval-string :ground 10 "js/document.body")
   (gptel-cljs-eval-string :ground 10 "js/location.hreff.f"))
 
+;;; async eval cljs string (for MCP tool use — non-blocking)
+(defun gptel-cljs-eval-string-async (callback build-id runtime-id cljs-code &optional ns)
+  "Async MCP tool wrapper for ClojureScript evaluation.
+CALLBACK is the MCP async callback.  Evaluates CLJS-CODE in BUILD-ID
+and RUNTIME-ID via the cljs-helper, using `gptelt-eval--clj-string-async'."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async
+   callback
+   (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
+   "cljs-helper"))
+
+(comment
+  (gptel-cljs-eval-string-async
+   (lambda (r) (message "CLJS async result: %s" r))
+   :ground 10 "js/document.title"))
+
 ;;; eval buffer
 (defun gptelt-cljs-eval-buffer (buffer-name)
   "Evaluate a Clojurescript buffer by BUFFER-NAME.
@@ -240,7 +256,8 @@ Otherwise returns status for all active builds."
    :include t)
   (gptelt-make-tool
    :name "cljs_eval_string"
-   :function #'gptel-cljs-eval-string
+   :function #'gptel-cljs-eval-string-async
+   :async t
    :description "Evaluate given cljs code string in given build and runtime, get eval result, error, stdout, stderr."
    :args '((:name "build_id"
             :type string
