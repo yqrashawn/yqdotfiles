@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: bmad help
+# key: bm
+# --
+use the =bmap-help= skill, $0

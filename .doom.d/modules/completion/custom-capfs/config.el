@@ -82,15 +82,24 @@ result is =skill-name= skill."
     (when (and word bounds (string-prefix-p "sk" word t))
       (let* ((beg (car bounds))
              (end (cdr bounds))
-             (skills-dir (expand-file-name "~/.claude/skills"))
-             (entries (when (file-directory-p skills-dir)
-                        (cl-remove-if
-                         (lambda (f) (member f '("." "..")))
-                         (directory-files skills-dir nil "^[^.]"))))
-             (dirs (cl-remove-if-not
-                    (lambda (f)
-                      (file-directory-p (expand-file-name f skills-dir)))
-                    entries))
+             (skills-dirs (cl-remove-if-not
+                           #'file-directory-p
+                           (list (expand-file-name "~/.claude/skills")
+                                 (when-let ((root (++workspace-current-project-root)))
+                                   (expand-file-name ".claude/skills" root)))))
+             (dirs (cl-remove-duplicates
+                    (cl-loop for sd in skills-dirs
+                             append
+                             ;; Directory-based skills: skills/foo/ (or skills/foo/SKILL.md)
+                             (cl-remove-if-not
+                              (lambda (f)
+                                (file-directory-p (expand-file-name f sd)))
+                              (directory-files sd nil "^[^.]"))
+                             append
+                             ;; Markdown file-based skills: skills/foo.md -> "foo"
+                             (mapcar #'file-name-sans-extension
+                                     (directory-files sd nil "\\.md$")))
+                    :test #'string=))
              ;; Prefix candidates with "sk" so they match the typed text
              (candidates (mapcar (lambda (d) (concat "sk" d)) dirs)))
         (list beg end candidates
@@ -119,10 +128,16 @@ The completion result is =agent-name= agent."
     (when (and word bounds (string-prefix-p "ag" word t))
       (let* ((beg (car bounds))
              (end (cdr bounds))
-             (agents-dir (expand-file-name "~/.claude/agents"))
-             (files (when (file-directory-p agents-dir)
-                      (directory-files agents-dir nil "\\.md$")))
-             (names (mapcar (lambda (f) (file-name-sans-extension f)) files))
+             (agents-dirs (cl-remove-if-not
+                           #'file-directory-p
+                           (list (expand-file-name "~/.claude/agents")
+                                 (when-let ((root (++workspace-current-project-root)))
+                                   (expand-file-name ".claude/agents" root)))))
+             (names (cl-remove-duplicates
+                     (cl-loop for ad in agents-dirs
+                              append (mapcar #'file-name-sans-extension
+                                             (directory-files ad nil "\\.md$")))
+                     :test #'string=))
              ;; Prefix candidates with "ag" so they match the typed text
              (candidates (mapcar (lambda (n) (concat "ag" n)) names)))
         (list beg end candidates
