@@ -46,6 +46,6 @@
      (gptel-mcp-connect
       nil (lambda ()
             (+gptel-make-my-presets)
-            (gptel--apply-preset 'o))))))
+            (gptel--apply-preset +gptel-default-preset))))))
 
 ;;; End

@@ -74,12 +74,12 @@ Wraps candidates with =...= if current buffer is org-mode."
 
 (defun +claude-code-skill-completion ()
   "Cape capf for completing Claude Code skill names.
-Triggers when the word at point starts with \"skill\".  Lists all
+Triggers when the word at point starts with \"sk\".  Lists all
 folder names in ~/.claude/skills/ as candidates.  The completion
 result is =skill-name= skill."
   (let* ((word (thing-at-point 'symbol t))
          (bounds (when word (bounds-of-thing-at-point 'symbol))))
-    (when (and word bounds (string-prefix-p "skill" word t))
+    (when (and word bounds (string-prefix-p "sk" word t))
       (let* ((beg (car bounds))
              (end (cdr bounds))
              (skills-dir (expand-file-name "~/.claude/skills"))
@@ -91,53 +91,53 @@ result is =skill-name= skill."
                     (lambda (f)
                       (file-directory-p (expand-file-name f skills-dir)))
                     entries))
-             ;; Prefix candidates with "skill" so they match the typed text
-             (candidates (mapcar (lambda (d) (concat "skill" d)) dirs)))
+             ;; Prefix candidates with "sk" so they match the typed text
+             (candidates (mapcar (lambda (d) (concat "sk" d)) dirs)))
         (list beg end candidates
               :exclusive 'no
               :exit-function (lambda (str status)
                                (when (eq status 'finished)
-                                 ;; str is "skill<name>", replace with "=<name>= skill"
-                                 (let* ((name (substring str (length "skill")))
+                                 ;; str is "sk<name>", replace with "=<name>= skill"
+                                 (let* ((name (substring str (length "sk")))
                                         (end (point))
                                         (start (- end (length str))))
                                    (delete-region start end)
                                    (goto-char start)
-                                   (insert "=" name "= skill"))))
+                                   (insert "use " "=" name "= skill"))))
               :annotation-function (lambda (s)
-                                     (concat " " (substring s (length "skill"))))
+                                     (concat " " (substring s (length "sk"))))
               :company-kind (lambda (_) 'text)
               :category 'claude-code-skill)))))
 
 (defun +claude-code-agent-completion ()
   "Cape capf for completing Claude Code agent names.
-Triggers when the word at point starts with \"agent\".  Lists all
+Triggers when the word at point starts with \"ag\".  Lists all
 markdown file names (without .md) in ~/.claude/agents/ as candidates.
 The completion result is =agent-name= agent."
   (let* ((word (thing-at-point 'symbol t))
          (bounds (when word (bounds-of-thing-at-point 'symbol))))
-    (when (and word bounds (string-prefix-p "agent" word t))
+    (when (and word bounds (string-prefix-p "ag" word t))
       (let* ((beg (car bounds))
              (end (cdr bounds))
              (agents-dir (expand-file-name "~/.claude/agents"))
              (files (when (file-directory-p agents-dir)
                       (directory-files agents-dir nil "\\.md$")))
              (names (mapcar (lambda (f) (file-name-sans-extension f)) files))
-             ;; Prefix candidates with "agent" so they match the typed text
-             (candidates (mapcar (lambda (n) (concat "agent" n)) names)))
+             ;; Prefix candidates with "ag" so they match the typed text
+             (candidates (mapcar (lambda (n) (concat "ag" n)) names)))
         (list beg end candidates
               :exclusive 'no
               :exit-function (lambda (str status)
                                (when (eq status 'finished)
-                                 ;; str is "agent<name>", replace with "=<name>= agent"
-                                 (let* ((name (substring str (length "agent")))
+                                 ;; str is "ag<name>", replace with "=<name>= agent"
+                                 (let* ((name (substring str (length "ag")))
                                         (end (point))
                                         (start (- end (length str))))
                                    (delete-region start end)
                                    (goto-char start)
-                                   (insert "=" name "= agent"))))
+                                   (insert "use " "=" name "= agent"))))
               :annotation-function (lambda (s)
-                                     (concat " " (substring s (length "agent"))))
+                                     (concat " " (substring s (length "ag"))))
               :company-kind (lambda (_) 'text)
               :category 'claude-code-agent)))))
 

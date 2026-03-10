@@ -2,6 +2,7 @@
 
 ;;; init
 (load! "models.el")
+(setq! +gptel-default-preset 's)
 
 ;;; helper fns
 (defun +gptel-sanitize-filename (str)
@@ -45,14 +46,29 @@
                                    (format-time-string "%H_%M")
                                    new-title)
                                   dir)))
-                   ;; Avoid write-file which calls rename-buffer.
-                   ;; Buffer rename breaks persp-mode window config
-                   ;; restoration when response completes in another
-                   ;; workspace.
+                   ;; Avoid write-file which calls rename-buffer
+                   ;; synchronously — that breaks persp-mode window
+                   ;; config when response completes in another workspace.
                    (setq buffer-file-name filepath)
                    (setq buffer-file-truename (file-truename filepath))
+                   (setq default-directory (file-name-directory filepath))
                    (set-buffer-modified-p t)
-                   (save-buffer))))))
+                   (save-buffer)
+                   ;; Rename buffer to match filename. If visible, rename
+                   ;; now. Otherwise defer until displayed — remove hook
+                   ;; BEFORE rename to avoid infinite loop.
+                   (let ((new-name (file-name-nondirectory filepath)))
+                     (if (get-buffer-window buf t)
+                         (rename-buffer new-name t)
+                       (let (hook-fn)
+                         (setq hook-fn
+                               (lambda ()
+                                 (when (and (buffer-live-p buf)
+                                            (get-buffer-window buf t))
+                                   (remove-hook 'buffer-list-update-hook hook-fn)
+                                   (with-current-buffer buf
+                                     (rename-buffer new-name t)))))
+                         (add-hook 'buffer-list-update-hook hook-fn)))))))))
          (lambda (e) (user-error
                       "Error setting gptel org title: %s"
                       (if (plistp e)
@@ -255,10 +271,7 @@ Everywhere else: max 2 consecutive blank lines."
     :backend "codex"
     :model 'gpt-5-codex
     :system (alist-get 'default gptel-directives)
-    :parents '(default))
-  ;; (gptel--apply-preset 'sonnet)
-  ;; (gptel--apply-preset 'opus)
-  )
+    :parents '(default)))
 
 ;;;###autoload
 (defun +gptel (arg)
@@ -374,7 +387,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -404,13 +417,13 @@ Merge buffer-local with global default files."
       (require 'gptel-context)
       ;; Capture current workspace for this gptel request
       (setq-local ++gptel-request-workspace (get-current-persp))
-      
+
       ;; Remove only the specific context buffers we manage, not all context
       (dolist (buf (list (+current-workspace-info-buffer)
                          (+visible-buffers-list-buffer)
                          (+current-workspace-lints-buffer)))
         (setf (alist-get buf gptel-context nil 'remove) nil))
-      
+
       ;; Re-add updated context
       (+gptel-context-add-buffer (+current-workspace-info-buffer))
       (+gptel-context-add-buffer (+visible-buffers-list-buffer))
@@ -505,7 +518,7 @@ Merge buffer-local with global default files."
 
   (setq! gptel-backend gptel--ccl)
   (+gptel-make-my-presets)
-  (gptel--apply-preset 'o)
+  (gptel--apply-preset +gptel-default-preset)
 
   (add-hook! 'gptel-post-response-functions '+gptel-save-buffer)
   (add-hook! 'gptel-post-response-functions #'my/gptel-remove-headings)

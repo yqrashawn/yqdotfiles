@@ -197,6 +197,15 @@
       (with-current-buffer buf
         (gptel-mode +1))
       buf))
+   :desc "Find today's gptel file" "g"
+   (cmd!
+    (let ((default-directory
+           (expand-file-name
+            (format "~/Dropbox/sync/gptel/%s/%s/%s/"
+                    (format-time-string "%Y")
+                    (format-time-string "%m")
+                    (format-time-string "%d")))))
+      (call-interactively #'find-file)))
    :desc "Find screenshot" "S"
    (cmd!
     (let ((buf (doom-project-find-file "~/Dropbox/Screenshots/")))

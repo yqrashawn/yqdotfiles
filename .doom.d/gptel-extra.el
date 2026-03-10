@@ -166,4 +166,19 @@ INFO is the gptel process info plist."
   ;; Initialize workspace context setup
   (defadvice! +add-workspace-context-before-gptel-send (&optional _args)
     :before #'gptel-send
-    (+gptel--add-workspace-context)))
+    (+gptel--add-workspace-context))
+
+  ;; Auto-enable gptel-mode in org buffers that have GPTEL_* properties
+  (defun +gptel-auto-enable-in-org ()
+    "Auto-enable `gptel-mode' if org buffer has GPTEL_* file properties."
+    (when (and (derived-mode-p 'org-mode)
+               (not gptel-mode))
+      (save-restriction
+        (widen)
+        (when (cl-some (lambda (prop)
+                         (org-entry-get (point-min) prop))
+                       '("GPTEL_PRESET" "GPTEL_SYSTEM" "GPTEL_BACKEND"
+                         "GPTEL_MODEL" "GPTEL_BOUNDS" "GPTEL_TOOLS"))
+          (gptel-mode 1)))))
+
+  (add-hook 'org-mode-hook #'+gptel-auto-enable-in-org))
