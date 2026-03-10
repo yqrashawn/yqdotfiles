@@ -155,7 +155,7 @@ Everywhere else: max 2 consecutive blank lines."
 ;;; gptel
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
-    :description "default preset"
+    :description "copilot default"
     :backend "cpi"
     ;; :model 'claude-sonnet-4.5
     ;; :system (alist-get 'claude gptel-directives)
@@ -174,172 +174,128 @@ Everywhere else: max 2 consecutive blank lines."
      gptel--known-tools))
 
   (gptel-make-preset 'ha
-    :description "claude code"
+    :description "cc haiku"
     :backend "Claude Code"
     :model 'haiku
     :system ""
     :parents '(default)
     :tools '())
   (gptel-make-preset 'so
-    :description "claude code"
-    :backend "Claude Code"
+    :description "cc sonnet"
+    :backend "Claude code"
     :model 'sonnet
     :system ""
     :parents '(default)
     :tools '())
   (gptel-make-preset 'so1
-    :description "claude code"
-    :backend "Claude Code"
+    :description "cc sonet 1m"
     :model (intern "sonnet[1m]")
-    :system ""
-    :parents '(default)
-    :tools '())
+    :parents '(so))
   (gptel-make-preset 'op
-    :description "claude code"
-    :backend "Claude Code"
+    :description "cc opus"
     :model 'opus
-    :system ""
-    :parents '(default)
-    :tools '())
+    :parents '(so))
   (gptel-make-preset 'op1
-    :description "claude code"
-    :backend "Claude Code"
+    :description "cc opus 1m"
     :model (intern "opus[1m]")
-    :system ""
-    :parents '(default)
-    :tools '())
+    :parents '(so))
   (gptel-make-preset 's
-    :description "claude code"
+    :description "cchp sonnet max"
     :backend "ccl"
     :model 'sonnet
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
   (gptel-make-preset 'sl
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp sonnet low"
     :model 'sonnet-low
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'sm
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp sonnet medium"
     :model 'sonnet-medium
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'sh
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp sonnet high"
     :model 'sonnet-high
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 's1
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp sonnet 1m max"
     :model (intern "sonnet[1m]")
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 's1l
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp sonnet 1m low"
     :model (intern "sonnet[1m]-low")
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 's1m
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp sonnet 1m medium"
     :model (intern "sonnet[1m]-medium")
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 's1h
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp 1m high"
     :model (intern "sonnet[1m]-high")
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'o
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp opus max"
     :model 'opus
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'ol
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp opus low"
     :model 'opus-low
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'om
     :description "claude code"
-    :backend "ccl"
     :model 'opus-medium
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'oh
     :description "claude code"
-    :backend "ccl"
     :model 'opus-high
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'o1
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp opus 1m max"
     :model (intern "opus[1m]")
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'o1l
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp opus 1m low"
     :model (intern "opus[1m]-low")
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'o1m
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp opus 1m medium"
     :model (intern "opus[1m]-medium")
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'o1h
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp opus 1m high"
     :model (intern "opus[1m]-high")
-    :parents '(s)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'h
-    :description "claude code"
-    :backend "ccl"
+    :description "cchp haiku"
     :model 'haiku
-    :parents '(s)
-    :tools '())
+    :parents '(s))
+  (gptel-make-preset 'sla
+    :description "cchp/anthropic dev sonnet low"
+    :backend "cclda"
+    :model 'sonnet-low
+    :parents '(s))
+  (gptel-make-preset 'slg
+    :description "cchp/gemini dev sonnet low"
+    :backend "ccldg"
+    :model 'sonnet-low
+    :parents '(s))
   (gptel-make-preset 'sd
-    :description "claude code"
+    :description "cchp dev sonnet"
     :backend "ccld"
     :model 'sonnet
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
+    :parents '(s))
   (gptel-make-preset 'od
-    :description "claude code"
-    :backend "ccld"
+    :description "cchp dev opus"
     :model 'opus
-    :parents '(s)
-    :tools '())
+    :parents '(sd))
   (gptel-make-preset 'hd
-    :description "claude code"
-    :backend "ccld"
+    :description "cchp dev haiku"
     :model 'haiku
-    :parents '(s)
-    :tools '())
-
+    :parents '(sd))
+  
   (gptel-make-preset 'ghsonnet
-    :description "preset"
+    :description "copilot sonnet"
     :backend "cpi"
     :parents '(default)
     :model 'claude-sonnet-4.5)
@@ -580,6 +536,20 @@ Merge buffer-local with global default files."
            :protocol "http"
            :host "localhost:8003"
            :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+  (setq! gptel--cclda
+         (gptel-make-anthropic "cclda"
+           :protocol "http"
+           :host "localhost:8003"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+  (setq! gptel--ccldg
+         (gptel-make-gemini "ccldg"
+           :protocol "http"
+           :host "localhost:8003"
            :stream t
            :key "no-key-required"
            :models gptel--claude-code-models))
