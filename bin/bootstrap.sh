@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
-# yqrashawn is the bootstrap target
-nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --darwin "$(id -un)"
-# nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --home-manager "$(id -un)"
+# Use short hostname as config target (matches darwinConfigurations keys)
+HOST="$(hostname -s)"
+nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --darwin "$HOST"
+# nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --home-manager "$HOST"
