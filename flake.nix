@@ -301,7 +301,7 @@
         (map (system: {
           name = system;
           value = {
-            darwin = self.darwinConfigurations.yqrashawn-intel.config.system.build.toplevel;
+            darwin = self.darwinConfigurations.yqrashawn.config.system.build.toplevel;
             # darwinServer =
             #   self.homeConfigurations.darwinServer.activationPackage;
           };
@@ -359,21 +359,6 @@
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/mbpi.nix
             { homebrew.brewPrefix = "/usr/local/bin"; }
-          ];
-        };
-        yqrashawn-intel = mkDarwinConfig {
-          system = "x86_64-darwin";
-          extraModules = [
-            ./profiles/yqrashawn.nix
-            ./modules/yqrashawn/darwin/apps.nix
-            { homebrew.brewPrefix = "/usr/local/bin"; }
-          ];
-        };
-        work = mkDarwinConfig {
-          system = "x86_64-darwin";
-          extraModules = [
-            ./profiles/work.nix
-            ./modules/yqrashawn/darwin/apps-minimal.nix
           ];
         };
       };

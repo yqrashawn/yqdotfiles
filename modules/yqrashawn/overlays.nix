@@ -11,7 +11,9 @@ in {
     inputs.zed.overlays.default
     inputs.emacs-lsp-booster.overlays.default
     # inputs.nix-openclaw.overlays.default
-    inputs.clojure-lsp.overlays.default
+    (final: prev: if prev.stdenv.hostPlatform.isAarch64 then
+      inputs.clojure-lsp.overlays.default final prev
+    else {})
     inputs.emacs-overlay.overlays.default
     (final: prev: {
       emacs30-overlay = (prev.emacs-git.override {
