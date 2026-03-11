@@ -1288,6 +1288,23 @@
         "type": "github"
       }
     },
+    "paradedb-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1772220384,
+        "narHash": "sha256-mHCicifo3uZHcU85sZGd/SY5uBKMAcqPPvcHVc3NV+Q=",
+        "owner": "paradedb",
+        "repo": "paradedb",
+        "rev": "c81c4e6ee98479394efcf7d2a446cb9e433c080b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "paradedb",
+        "ref": "v0.21.10",
+        "repo": "paradedb",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "asdf-babashka": "asdf-babashka",
@@ -1343,6 +1360,7 @@
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "own": "own",
+        "paradedb-src": "paradedb-src",
         "small": "small",
         "sops-nix": "sops-nix",
         "spacehammer": "spacehammer",

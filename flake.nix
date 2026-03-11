@@ -212,6 +212,10 @@
       url = "github:asdf-community/asdf-uv";
       flake = false;
     };
+    paradedb-src = {
+      url = "github:paradedb/paradedb/v0.21.10";
+      flake = false;
+    };
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
     nix-openclaw = {
       url = "github:openclaw/nix-openclaw";
@@ -347,6 +351,14 @@
             ./modules/yqrashawn/darwin/happs.nix
             ./modules/yqrashawn/hmbp.nix
             { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+          ];
+        };
+        mbpi = mkDarwinConfig {
+          system = "x86_64-darwin";
+          extraModules = [
+            ./profiles/yqrashawn.nix
+            ./modules/yqrashawn/mbpi.nix
+            { homebrew.brewPrefix = "/usr/local/bin"; }
           ];
         };
         yqrashawn-intel = mkDarwinConfig {
