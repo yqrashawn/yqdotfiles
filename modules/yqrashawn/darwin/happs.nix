@@ -6,6 +6,7 @@
 }:
 {
   imports = [ ./happs-minimal.nix ];
+  environment.systemPackages = with pkgs; [ clojure-lsp ];
   homebrew = {
     casks = [
       "voov-meeting"

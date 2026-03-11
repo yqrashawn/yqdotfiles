@@ -62,7 +62,7 @@ in {
         eask-cli
         # firefox-devedition
         lzip
-        clojure-lsp
+        # clojure-lsp  # moved to apps.nix/happs.nix (not needed on mbpi server)
         notmuch
         # zed-editor
         emacs-lsp-booster
