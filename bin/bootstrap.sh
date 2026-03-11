@@ -1,6 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-# Use short hostname as config target (matches darwinConfigurations keys)
-HOST="$(hostname -s)"
-nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --darwin "$HOST"
+set -euo pipefail
+
+nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --darwin "$@"
 # nix --extra-experimental-features "nix-command flakes" develop -c sysdo bootstrap --home-manager "$HOST"

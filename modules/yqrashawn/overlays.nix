@@ -55,7 +55,7 @@ in {
           sha256 = if prev.stdenv.hostPlatform.isAarch64 then
             "sha256-p2XccLukutDpFu0v2ssDz9nZBqGulPxrXuyXFR3MGhc="
           else
-            "0m86ybd3jb0gln51811rhn7lhj3i47maif6r5aygbp63sg1789r3";
+            "sha256-Pnc33Q/JiPuL3CWuqTGZZBAiIAnn9cxCAMimOxU0EHw=";
         };
         sourceRoot = ".";
         dontBuild = true;
