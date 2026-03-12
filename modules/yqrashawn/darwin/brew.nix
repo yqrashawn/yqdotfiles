@@ -14,7 +14,6 @@
     };
     # https://daiderd.com/nix-darwin/manual/index.html#opt-homebrew.global
     global = {
-      lockfiles = true;
       autoUpdate = false;
       brewfile = true;
     };

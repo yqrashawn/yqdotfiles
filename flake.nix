@@ -314,7 +314,7 @@
           extraModules = [
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/darwin/apps.nix
-            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+            { homebrew.prefix = "/opt/homebrew"; }
           ];
         };
         mini = mkDarwinConfig {
@@ -323,7 +323,7 @@
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/darwin/apps.nix
             ./modules/yqrashawn/mini.nix
-            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+            { homebrew.prefix = "/opt/homebrew"; }
           ];
         };
         studio = mkDarwinConfig {
@@ -332,7 +332,7 @@
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/darwin/apps.nix
             ./modules/yqrashawn/studio.nix
-            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+            { homebrew.prefix = "/opt/homebrew"; }
           ];
         };
         mbp = mkDarwinConfig {
@@ -341,7 +341,7 @@
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/darwin/apps.nix
             ./modules/yqrashawn/mbp.nix
-            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+            { homebrew.prefix = "/opt/homebrew"; }
           ];
         };
         holybasil = mkDarwinConfig {
@@ -350,7 +350,7 @@
             ./profiles/holybasil.nix
             ./modules/yqrashawn/darwin/happs.nix
             ./modules/yqrashawn/hmbp.nix
-            { homebrew.brewPrefix = "/opt/homebrew/bin"; }
+            { homebrew.prefix = "/opt/homebrew"; }
           ];
         };
         mbpi = mkDarwinConfig {
@@ -358,7 +358,7 @@
           extraModules = [
             ./profiles/yqrashawn.nix
             ./modules/yqrashawn/mbpi.nix
-            { homebrew.brewPrefix = "/usr/local/bin"; }
+            { homebrew.prefix = "/usr/local"; }
           ];
         };
       };

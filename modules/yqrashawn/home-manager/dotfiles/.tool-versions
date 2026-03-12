@@ -5,7 +5,7 @@ java oracle-graalvm-24
 # java adoptopenjdk-21.0.1+12.0.LTS
 nodejs 22.21.1
 python 3.12.2
-ruby 3.2.2
+ruby 3.4.8
 golang 1.25.1
 bun 1.3.2
 deno 1.39.1

@@ -1,4 +1,10 @@
-{ inputs, config, pkgs, emacs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  emacs,
+  ...
+}:
 let
   own = with pkgs.own; [ ];
   darwins = with pkgs.darwins; [
@@ -30,15 +36,19 @@ let
     emacs = pkgs.emacs30-overlay;
     inherit inputs;
   };
-in {
-  imports = [ ./primary.nix ./nixpkgs.nix ./overlays.nix ./etc-zsh.nix ];
+in
+{
+  imports = [
+    ./primary.nix
+    ./nixpkgs.nix
+    ./overlays.nix
+    ./etc-zsh.nix
+  ];
 
   # user -> users.users.<primary user>
   user = {
     description = "Rashawn Zhang";
-    home = "${
-        if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"
-      }/${config.user.name}";
+    home = "${if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"}/${config.user.name}";
     shell = pkgs.zsh;
   };
 
@@ -56,8 +66,10 @@ in {
 
   # environment setup
   environment = {
-    systemPackages = with pkgs;
+    systemPackages =
+      with pkgs;
       [
+        lefthook
         git-filter-repo
         eask-cli
         # firefox-devedition
@@ -66,7 +78,9 @@ in {
         notmuch
         # zed-editor
         emacs-lsp-booster
-        (curl.override (args: { brotliSupport = true; }))
+        (curl.override (args: {
+          brotliSupport = true;
+        }))
         # curl
         k6
         xcodes
@@ -281,7 +295,13 @@ in {
         plantuml
         rustup
         # rust-analyzer
-        (pkgs.ruby.withPackages (ps: with ps; [ rufo solargraph rubocop ]))
+        (pkgs.ruby.withPackages (
+          ps: with ps; [
+            rufo
+            solargraph
+            rubocop
+          ]
+        ))
 
         # sbcl
         # asdf
@@ -320,14 +340,23 @@ in {
 
         # not available
         # du
-      ] ++ masters ++ stables ++ darwins ++ own;
+      ]
+      ++ masters
+      ++ stables
+      ++ darwins
+      ++ own;
     etc = {
       home-manager.source = "${inputs.home-manager}";
       nixpkgs.source = "${pkgs.path}";
       stable.source = "${inputs.stable}";
     };
     # list of acceptable shells in /etc/shells
-    shells = with pkgs; [ bash zsh "/bin/bash" "/bin/zsh" ];
+    shells = with pkgs; [
+      bash
+      zsh
+      "/bin/bash"
+      "/bin/zsh"
+    ];
     # systemPath = [ "/run/current-system/sw/bin" ];
   };
 
