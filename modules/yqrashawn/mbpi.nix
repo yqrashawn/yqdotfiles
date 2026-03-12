@@ -30,6 +30,48 @@
     RunAtLoad = lib.mkForce false;
   };
 
+  launchd.user.agents.redis.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
+  launchd.user.agents.postgresql.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
+  launchd.user.agents.grafana.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
+  launchd.user.agents.loki.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
+  launchd.user.agents.prometheus.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
+  launchd.user.agents.alloy.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
+  launchd.user.agents.tempo.serviceConfig = {
+    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
+    KeepAlive = lib.mkForce false;
+    RunAtLoad = lib.mkForce false;
+  };
+
   # No GUI casks for server use, keep CLI brews
   homebrew.casks = lib.mkForce [];
 
