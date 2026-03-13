@@ -655,6 +655,15 @@ Merge buffer-local with global default files."
               "\\`[ \t\n]*```[a-z]*\n\\(\\(?:.\\|\n\\)*?\\)\n```[ \t\n]*\\'"
               "\\1"
               message)))
+  (defadvice! +gptel-magit-preserve-directory (orig-fn callback)
+    "Capture `default-directory' so async callback runs in the correct repo.
+Without this, magit-commit-create runs in the wrong directory after the
+LLM response arrives and throws \"Nothing staged (or unstaged)\"."
+    :around #'gptel-magit--generate
+    (let ((dir default-directory))
+      (funcall orig-fn (lambda (message)
+                         (let ((default-directory dir))
+                           (funcall callback message))))))
   (setq!
    ;; gptel-magit-model 'gpt-4.1
    ;; gptel-magit-model 'sonnet

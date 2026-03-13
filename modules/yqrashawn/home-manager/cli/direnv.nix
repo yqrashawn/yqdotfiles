@@ -1,17 +1,29 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let home = config.home.homeDirectory;
-in {
+let
+  home = config.home.homeDirectory;
+in
+{
   programs.direnv = {
     enable = true;
     config = {
-      global = { load_dotenv = true; };
+      global = {
+        load_dotenv = true;
+      };
       whitelist = {
-        prefix = [ "${home}/workspace/office"
-                   "${home}/workspace/home"
-                   "${home}/Dropbox/sync/scripts/mcp"
-                   "${home}/Library/CloudStorage/Dropbox/sync/scripts/mcp"
-                   "/opt/homebrew/var/buildkite-agent/builds" ];
+        prefix = [
+          "${home}/workspace/office"
+          "${home}/workspace/home"
+          "${home}/Dropbox/sync/scripts/mcp"
+          "${home}/Library/CloudStorage/Dropbox/sync/scripts/mcp"
+          "${home}/.local/share/buildkite-agent/builds"
+          "/opt/homebrew/var/buildkite-agent/builds"
+        ];
         exact = [ "${home}/miniser" ];
       };
     };

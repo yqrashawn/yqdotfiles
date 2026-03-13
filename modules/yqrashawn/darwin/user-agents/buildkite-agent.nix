@@ -21,7 +21,7 @@ let
     build-path="${buildDir}"
     hooks-path="${hooksDir}"
     plugins-path="${pluginsDir}"
-    shell="/etc/profiles/per-user/${config.user.name}/bin/zsh"
+    shell="/etc/profiles/per-user/${config.user.name}/bin/zsh -e -c"
   '';
 
   startScript = pkgs.writeShellScript "buildkite-agent-start" ''
