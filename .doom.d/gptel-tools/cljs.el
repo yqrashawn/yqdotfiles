@@ -63,6 +63,16 @@ Skips load-file if the cljs-helper namespace is already loaded."
    "cljs-helper"
    t))
 
+(defun gptelt-cljs-list-ns-async (callback build-id _runtime-id &optional regex-filter)
+  "Async version of `gptelt-cljs-list-ns' for MCP tool use."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async
+   callback
+   (if regex-filter
+       (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
+     (format "(get-build-namespaces %s)" build-id))
+   "cljs-helper"))
+
 (comment
   (gptelt-cljs-list-ns :ground 1)
   (gptelt-cljs-list-ns :ground 1 "user")
@@ -74,6 +84,11 @@ Skips load-file if the cljs-helper namespace is already loaded."
 (defun gptelt-cljs-get-project-states ()
   (gptelt-cljs-ensure-helper-loaded)
   (gptelt-eval--clj-string "(get-shadow-cljs-info)" "cljs-helper" t))
+
+(defun gptelt-cljs-get-project-states-async (callback)
+  "Async version of `gptelt-cljs-get-project-states' for MCP tool use."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async callback "(get-shadow-cljs-info)" "cljs-helper"))
 
 (comment
   (gptelt-cljs-get-project-states))
@@ -143,6 +158,17 @@ Returns the documentation string if available, or an error if not found."
        "cljs-helper" t)
       (read)))
 
+(defun gptelt-cljs-get-symbol-doc-async (callback symbol build-id runtime-id &optional namespace)
+  "Async version of `gptelt-cljs-get-symbol-doc' for MCP tool use."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async
+   (lambda (result)
+     (funcall callback (format "%s" (read result))))
+   (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
+           build-id runtime-id symbol
+           (or namespace "cljs.user"))
+   "cljs-helper"))
+
 (comment
   (gptelt-cljs-get-symbol-doc "defn" ":ground" -1))
 
@@ -156,6 +182,16 @@ Returns the source code string if available, or an error if not found."
                build-id runtime-id symbol (or namespace "cljs.user"))
        "cljs-helper" t)
       (read)))
+
+(defun gptelt-cljs-get-symbol-source-code-async (callback symbol build-id runtime-id &optional namespace)
+  "Async version of `gptelt-cljs-get-symbol-source-code' for MCP tool use."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async
+   (lambda (result)
+     (funcall callback (format "%s" (read result))))
+   (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
+           build-id runtime-id symbol (or namespace "cljs.user"))
+   "cljs-helper"))
 
 (comment
   (gptelt-cljs-get-symbol-source-code "defn" ":ground" -1)
@@ -210,6 +246,16 @@ Otherwise returns status for all active builds."
      "(get-build-status)")
    "cljs-helper" t))
 
+(defun gptelt-cljs-get-build-status-async (callback &optional build-id)
+  "Async version of `gptelt-cljs-get-build-status' for MCP tool use."
+  (gptelt-cljs-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async
+   callback
+   (if build-id
+       (format "(get-build-status %s)" build-id)
+     "(get-build-status)")
+   "cljs-helper"))
+
 (comment
   (gptelt-cljs-get-build-status)
   (gptelt-cljs-get-build-status ":app"))
@@ -218,7 +264,8 @@ Otherwise returns status for all active builds."
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
    :name "cljs_list_ns"
-   :function #'gptelt-cljs-list-ns
+   :function #'gptelt-cljs-list-ns-async
+   :async t
    :description "List all loaded namespaces in cljs nREPL connection. Supports optional regex filtering."
    :args '((:name "build_id"
             ;; TODO: check if this symbol works
@@ -237,7 +284,8 @@ Otherwise returns status for all active builds."
    :include t)
   (gptelt-make-tool
    :name "cljs_get_project_states"
-   :function #'gptelt-cljs-get-project-states
+   :function #'gptelt-cljs-get-project-states-async
+   :async t
    :description "Get current shadow-cljs project states including active builds, runtimes, and build information, you MUST call this before calling other cljs tools."
    :args '()
    :category "clojurescript"
@@ -245,7 +293,8 @@ Otherwise returns status for all active builds."
    :include t)
   (gptelt-make-tool
    :name "get_shadow-cljs_build_status"
-   :function #'gptelt-cljs-get-build-status
+   :function #'gptelt-cljs-get-build-status-async
+   :async t
    :description "Get the last build status, build logs, and error logs of shadow-cljs. Returns compilation status (:completed/:failed/:compiling), duration, compiled file count, warnings (with file/line/message), and error reports. Useful for checking if a build succeeded or diagnosing compilation errors."
    :args '((:name "build_id"
             :type string
@@ -279,7 +328,8 @@ Otherwise returns status for all active builds."
 
   (gptelt-make-tool
    :name "cljs_get_symbol_doc"
-   :function #'gptelt-cljs-get-symbol-doc
+   :function #'gptelt-cljs-get-symbol-doc-async
+   :async t
    :description "Get documentation for a ClojureScript symbol (function, macro, var, etc.). Returns formatted documentation including arglists, type, and docstring."
    :args '((:name "symbol"
             :type string
@@ -300,7 +350,8 @@ Otherwise returns status for all active builds."
 
   (gptelt-make-tool
    :name "cljs_get_symbol_source_code"
-   :function #'gptelt-cljs-get-symbol-source-code
+   :function #'gptelt-cljs-get-symbol-source-code-async
+   :async t
    :description "Get source code for a ClojureScript symbol (function, macro, var, etc.). Returns the complete source code definition."
    :args '((:name "symbol"
             :type string

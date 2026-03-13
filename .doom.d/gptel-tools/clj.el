@@ -376,6 +376,26 @@ Ensures clj workspace and nREPL connection before proceeding."
           (error "Symbol '%s' not found or not resolved" qualified-symbol)))
     (error (error "Error getting symbol source code: %s" (error-message-string err)))))
 
+(defun gptelt-clj-get-symbol-source-code-async (callback symbol &optional namespace)
+  "Async version of `gptelt-clj-get-symbol-source-code' for MCP tool use.
+CALLBACK receives the source code string or an error message."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (condition-case err
+      (let ((qualified-symbol (if namespace
+                                  (format "%s/%s" namespace symbol)
+                                symbol)))
+        (gptelt-eval--clj-string-async
+         (lambda (result)
+           (if (and result (not (string= result "nil")))
+               (funcall callback (string-trim (substring result 1 -1)))
+             (funcall callback
+                      (format "Source code not found for symbol '%s'" qualified-symbol))))
+         (format "(with-out-str (clojure.repl/source %s))" qualified-symbol)
+         "user"))
+    (error (funcall callback
+                    (format "Error getting symbol source code: %s"
+                            (error-message-string err))))))
+
 (comment
   (gptelt-clj-get-symbol-source-code "when")
   (gptelt-clj-get-symbol-source-code "log!" "taoensso.telemere"))
@@ -482,6 +502,28 @@ shows buffer if not visible, asks for user permission, and evaluates it."
         (error rst)
       rst)))
 
+(defun gptelt-clj-read-file-url-async (callback file-url &optional limit offset)
+  "Async version of `gptelt-clj-read-file-url' for MCP tool use.
+CALLBACK receives the file content string or an error message."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (gptelt-clj-ensure-helper-loaded)
+  (gptelt-eval--clj-string-async
+   (lambda (result)
+     (condition-case err
+         (let ((rst (read result)))
+           (if (string-prefix-p "Failed to read file url: " rst)
+               (funcall callback (format "Error: %s" rst))
+             (funcall callback rst)))
+       (error (funcall callback
+                       (format "Error reading file: %s" (error-message-string err))))))
+   (if (or limit offset)
+       (format "(read-file-url \"%s\" {:limit %s :offset %s})"
+               file-url
+               (or limit 2000)
+               (or offset 0))
+     (format "(read-file-url \"%s\")" file-url))
+   "clj-helper"))
+
 (comment
   (gptelt-clj-read-file-url
    (gptelt-clj-get-ns-file-url "clojure.core")
@@ -566,7 +608,8 @@ shows buffer if not visible, asks for user permission, and evaluates it."
 
   (gptelt-make-tool
    :name "clj_read_file_url"
-   :function #'gptelt-clj-read-file-url
+   :function #'gptelt-clj-read-file-url-async
+   :async t
    :description
    "Read the content of file url returned by cljs_get_ns_file_url, the content will be wrapped with ␂ at the start and ␃ at the end."
    :args '((:name "file_url"
@@ -601,7 +644,8 @@ shows buffer if not visible, asks for user permission, and evaluates it."
 
   (gptelt-make-tool
    :name "clj_get_symbol_source_code"
-   :function #'gptelt-clj-get-symbol-source-code
+   :function #'gptelt-clj-get-symbol-source-code-async
+   :async t
    :description "Use this whenever you want to check the source code of a Clojure symbol (function, macro, var, etc.). Returns the complete source code definition."
    :args '((:name "symbol"
             :type string
