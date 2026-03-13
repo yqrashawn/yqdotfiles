@@ -142,7 +142,18 @@
 
 (after! doom-modeline
   (setq! doom-modeline-persp-name t
+         doom-modeline-irc nil
          doom-modeline-persp-icon nil))
+
+;; perf
+(after! visual-fill-column
+  (defvar my-vfc--last-width nil)
+  (defadvice! my-vfc-skip-redundant-adjust (orig-fn &rest args)
+    :around #'visual-fill-column--adjust-window
+    (let ((w (window-total-width)))
+      (unless (eq w my-vfc--last-width)
+        (setq my-vfc--last-width w)
+        (apply orig-fn args)))))
 
 ;; https://github.com/rainstormstudio/nerd-icons.el#installing-fonts
 (setq! nerd-icons-font-family "PragmataPro Mono Liga")

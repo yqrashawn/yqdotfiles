@@ -7,7 +7,10 @@
 {
   imports = [
     ./darwin/daemons/tailscale-utun.nix
+    ./darwin/user-agents/buildkite-agent.nix
   ];
+
+  networking.hostName = "mbpi";
 
   # mbpi has newer Nix install with GID 350 for nixbld group
   ids.gids.nixbld = 350;

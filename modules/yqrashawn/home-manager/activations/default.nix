@@ -54,14 +54,6 @@
     rm -rf ~/.gitignore_global || true
     ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/gitignore_global ~/.gitignore_global
 
-    if [ "$cuser" = "yqrashawn" ]; then
-      rm ~/.ssh/config || true
-      ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.ssh/config ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/ssh.gpg || true
-
-      rm ~/.mbsyncrc || true
-      ${pkgs.gnupg}/bin/gpg --decrypt --output  ~/.mbsyncrc ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.mbsyncrc.gpg || true
-    fi
-
     ln -fs /Applications/Nix\ Apps/* /Applications/
 
     if [ -e ~/Dropbox/sync/oauth2token ] && [ ! -e ~/.local/share/oauth2token ]; then

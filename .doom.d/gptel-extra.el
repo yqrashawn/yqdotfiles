@@ -1,5 +1,52 @@
 ;;; .nixpkgs/.doom.d/gptel-extra.el -*- lexical-binding: t; -*-
 
+;;; Idle buffer cleanup
+
+(defvar +gptel-idle-timeout (* 6 60 60)
+  "Seconds of idle time before a gptel-mode buffer is killed.
+Defaults to 6 hours.")
+
+(defvar +gptel-idle-check-interval (* 60 60)
+  "Seconds between idle buffer checks.
+Defaults to 1 hour.")
+
+(defvar +gptel--idle-timer nil
+  "Timer for periodic gptel idle buffer checks.")
+
+(defun +gptel--kill-idle-buffers ()
+  "Kill file-visiting gptel-mode buffers idle for `+gptel-idle-timeout' seconds.
+Uses `buffer-display-time' (last time the buffer was displayed in a window)
+to determine idleness.  Only considers buffers whose file exists on disk."
+  (dolist (buf (buffer-list))
+    (when (buffer-live-p buf)
+      (with-current-buffer buf
+        (when-let* (((eq gptel-mode t))
+                    (file (buffer-file-name))
+                    ((file-exists-p file))
+                    (display-time (buffer-local-value 'buffer-display-time buf))
+                    ((> (float-time (time-subtract (current-time) display-time))
+                        +gptel-idle-timeout)))
+          (when (buffer-modified-p)
+            (save-buffer))
+          (kill-buffer buf))))))
+
+(defun +gptel-start-idle-timer ()
+  "Start the periodic timer to kill idle gptel-mode buffers."
+  (when +gptel--idle-timer
+    (cancel-timer +gptel--idle-timer))
+  (setq +gptel--idle-timer
+        (run-with-timer +gptel-idle-check-interval
+                        +gptel-idle-check-interval
+                        #'+gptel--kill-idle-buffers)))
+
+(defun +gptel-stop-idle-timer ()
+  "Stop the periodic idle buffer check timer."
+  (when +gptel--idle-timer
+    (cancel-timer +gptel--idle-timer)
+    (setq +gptel--idle-timer nil)))
+
+;;; Response data
+
 (defvar-local +gptel--last-response nil
   "Complete response data from the LLM backend in the last request.
 This is an alist with the following structure:
@@ -181,4 +228,7 @@ INFO is the gptel process info plist."
                          "GPTEL_MODEL" "GPTEL_BOUNDS" "GPTEL_TOOLS"))
           (gptel-mode 1)))))
 
-  (add-hook 'org-mode-hook #'+gptel-auto-enable-in-org))
+  (add-hook 'org-mode-hook #'+gptel-auto-enable-in-org)
+
+  ;; Start the idle buffer cleanup timer
+  (+gptel-start-idle-timer))

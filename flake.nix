@@ -29,7 +29,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     clojure-lsp.url = "github:clojure-lsp/clojure-lsp";
     small.url = "github:nixos/nixpkgs/nixos-unstable-small";
-    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-custom-src = {
       url = "github:emacs-mirror/emacs/emacs-30.2";
@@ -258,6 +261,7 @@
           stable ? inputs.stable,
           baseModules ? [
             home-manager.darwinModules.home-manager
+            sops-nix.darwinModules.sops
             ./modules/yqrashawn/darwin
           ],
           extraModules ? [ ],

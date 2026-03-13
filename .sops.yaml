@@ -1,7 +1,17 @@
 keys:
-  - &yqrashawn B198FB15EC5C13012E940B37E394C5D9A8E535A6
+  - &pgp_yqrashawn B198FB15EC5C13012E940B37E394C5D9A8E535A6
+  - &age_studio age1k2punqk6m96wlr7dxcx5255dcse30rr8gcpqrqhejre2v2ggfygq0hfqzt
+  - &age_mbp age1479up9vpv9cqxf82m9nmrj2dlkzm5vjg69hms3pu525ttucaksaq980qpx
+  - &age_mini age1957d6rczw7q2k2zzjqvql02t90wzw0lakqqw9252w9jqnc88mpxqc849ya
+  - &age_mbpi age128kvdhfwkeqdhjdp25pnlj97rr3egacm98c3vllm90zs90tfnqrq5kmeh6
+
 creation_rules:
-  - path_regex: secrets/yqrashawn/[^/]+\.yaml$
+  - path_regex: secrets/[^/]+\.yaml$
     key_groups:
       - pgp:
-          - *yqrashawn
+          - *pgp_yqrashawn
+        age:
+          - *age_studio
+          - *age_mbp
+          - *age_mini
+          - *age_mbpi
