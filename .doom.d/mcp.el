@@ -204,6 +204,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ("emacs" .
       (:url "http://localhost:18684/mcp/v1/messages"))
 
+     ("scrapling" .
+      (:command "uvx"
+       :args ("'scrapling[all]'" "mcp" "--http" "--port" "17982")))
+
      ("cchp" .
       (:url "http://localhost:8035/mcp"))
      
