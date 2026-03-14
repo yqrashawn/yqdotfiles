@@ -205,8 +205,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
       (:url "http://localhost:18684/mcp/v1/messages"))
 
      ("scrapling" .
-      (:command "uvx"
-       :args ("'scrapling[all]'" "mcp" "--http" "--port" "17982")))
+      (:url "http://localhost:17982/mcp"))
 
      ("cchp" .
       (:url "http://localhost:8035/mcp"))
@@ -228,7 +227,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;    "dash-mcp-server")))
 
      ;; ("ramcp-macmini" .
-     ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
+     ;;  (:url "http://mini.local:9897/api/mcp/sse"))
 
      ;; ("ramcp-local" .
      ;;  (:url "http://localhost:7999/api/mcp/sse"))

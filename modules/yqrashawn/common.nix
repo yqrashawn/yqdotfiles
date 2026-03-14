@@ -317,6 +317,7 @@ in
         perl
         # openjdk
 
+        buildkite-agent
         rtk
         inputs.gws.packages.${pkgs.system}.default
         google-cloud-sdk
