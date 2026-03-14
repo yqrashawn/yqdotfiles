@@ -21,12 +21,28 @@ let
     build-path="${buildDir}"
     hooks-path="${hooksDir}"
     plugins-path="${pluginsDir}"
-    shell="/etc/profiles/per-user/${config.user.name}/bin/zsh -e -c"
+    shell="${buildkiteShell}"
+  '';
+
+  agentPath = "${pkgs.buildkite-agent}/bin";
+  userPath = "/etc/profiles/per-user/${config.user.name}/bin";
+  basePath = "${agentPath}:${userPath}:/run/current-system/sw/bin:$PATH";
+
+  environmentHook = pkgs.writeShellScript "buildkite-environment-hook" ''
+    export PATH="${basePath}"
+  '';
+
+  # Wrapper shell: sets PATH *before* exec-ing zsh, so even if /etc/zshenv
+  # calls path_helper and rearranges PATH, buildkite-agent stays available.
+  buildkiteShell = pkgs.writeShellScript "buildkite-shell-wrapper" ''
+    export PATH="${basePath}"
+    exec ${userPath}/zsh -e -c "$1"
   '';
 
   startScript = pkgs.writeShellScript "buildkite-agent-start" ''
     export BUILDKITE_AGENT_TOKEN="$(cat ${tokenPath})"
     mkdir -p ${buildDir} ${hooksDir} ${pluginsDir}
+    ln -sf ${environmentHook} ${hooksDir}/environment
     exec ${pkgs.buildkite-agent}/bin/buildkite-agent start --config ${buildkiteConfig}
   '';
 in

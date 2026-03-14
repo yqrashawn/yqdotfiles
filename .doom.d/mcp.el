@@ -228,7 +228,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;    "dash-mcp-server")))
 
      ;; ("ramcp-macmini" .
-     ;;  (:url "http://macmini.local:9897/api/mcp/sse"))
+     ;;  (:url "http://mini.local:9897/api/mcp/sse"))
 
      ;; ("ramcp-local" .
      ;;  (:url "http://localhost:7999/api/mcp/sse"))

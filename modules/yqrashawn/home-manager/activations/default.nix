@@ -9,8 +9,9 @@
   home.activation.defaultSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     cuser="$(id -un)"
 
-    rm -rf ~/.doom.d || true
-    ln -s ~/.nixpkgs/.doom.d ~/.doom.d
+    if [ ! -e ~/.doom.d ]; then
+        ln -s ~/.nixpkgs/.doom.d ~/.doom.d
+    fi
 
     if [ ! -e ~/.local/share/yarn/global/package.json ]; then
         mkdir -p ~/.local/share/yarn/global
@@ -28,36 +29,43 @@
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/bun-package.json ~/.cache/.bun/install/global/package.json
     fi
 
-    rm -rf ~/.config/karabiner.edn || true
-
-    if [ "$cuser" = "holybasil" ]; then
-      ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/hkarabiner.edn ~/.config/karabiner.edn
-    else
-      ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
+    if [ ! -e ~/.config/karabiner.edn ]; then
+      if [ "$cuser" = "holybasil" ]; then
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/hkarabiner.edn ~/.config/karabiner.edn
+      else
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/karabiner.edn ~/.config/karabiner.edn
+      fi
     fi
 
-    rm -rf ~/.config/yabai || true
-    ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai ~/.config/yabai
+    if [ ! -e ~/.config/yabai ]; then
+      rm -rf ~/.config/yabai || true
+      ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/yabai ~/.config/yabai
+    fi
 
-    rm -rf ~/Dropbox || true
-    ln -s ~/Library/CloudStorage/Dropbox ~/Dropbox
+    if [ ! -e ~/Dropbox ]; then
+      rm -rf ~/Dropbox || true
+      ln -s ~/Library/CloudStorage/Dropbox ~/Dropbox
+    fi
 
-    rm -rf ~/.tridactylrc || true
-    ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.tridactylrc ~/.tridactylrc
+    if [ ! -e ~/.tridactylrc ]; then
+      rm -rf ~/.tridactylrc || true
+      ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.tridactylrc ~/.tridactylrc
+    fi
 
-    # rm -rf ~/.tridactyl || true
-    # ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl ~/.tridactyl
-
-    if [ "$cuser" = "yqrashawn" ]; then
+    if [ ! -e ~/.authinfo.gpg ] && [ "$cuser" = "yqrashawn" ]; then
       rm -rf ~/.authinfo.gpg || true
       ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.authinfo.gpg ~/.authinfo.gpg
     fi
 
-    rm -rf ~/.spacehammer || true
-    ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.spacehammer ~/.spacehammer
+    if [ ! -e ~/.spacehammer ]; then
+      rm -rf ~/.spacehammer || true
+      ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/.spacehammer ~/.spacehammer
+    fi
 
-    rm -rf ~/.gitignore_global || true
-    ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/gitignore_global ~/.gitignore_global
+    if [ ! -e ~/.gitignore_global ]; then
+      rm -rf ~/.gitignore_global || true
+      ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/gitignore_global ~/.gitignore_global
+    fi
 
     ln -fs /Applications/Nix\ Apps/* /Applications/
 
@@ -68,18 +76,6 @@
     if [ -e ~/Dropbox/sync/ntf ] && [ ! -e ~/local/bin/ntf ]; then
         echo 'link ~/local/bin/ntf'
         ln -s ~/Dropbox/sync/ntf ~/local/bin/ntf
-    fi
-    if [ -e ~/Dropbox/sync/.ntf.yml ] && [ ! -e ~/.ntf.yml ]; then
-        echo 'link ~/.ntf.yml'
-        ln -s ~/Dropbox/sync/.ntf.yml ~/.ntf.yml
-    fi
-    if [ -e ~/Dropbox/sync/.notmuch-config ] && [ ! -e ~/.notmuch-config ]; then
-        echo 'link .notmuch-config'
-        ln -s ~/Dropbox/sync/.notmuch-config ~/.notmuch-config
-    fi
-    if [ -e ~/Dropbox/sync/.msmtprc ] && [ ! -e ~/.msmtprc ]; then
-        echo 'link .msmtprc'
-        ln -s ~/Dropbox/sync/.msmtprc ~/.msmtprc
     fi
     if [ -e ~/Dropbox/sync/personal_dictionaries/en_US.dic ] && [ ! -e ~/.config/enchant/en_US.dic ]; then
         echo 'link enchant/hunspell dictionaries'
@@ -117,18 +113,6 @@
         echo 'link ~/.config/nyxt/config.lisp'
         mkdir -p ~/.config/nyxt
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/nyxt.lisp ~/.config/nyxt/config.lisp
-    fi
-    if [ -e ~/Dropbox/sync/gitleaks.toml ] && [ ! -e ~/.config/.gitleaks.toml ]; then
-        echo 'link gitleaks config'
-        ln -s ~/Dropbox/sync/gitleaks.toml ~/.config/.gitleaks.toml
-    fi
-    if [ -e ~/Dropbox/sync/atuin.toml ] && [ ! -e ~/.config/atuin/config.toml ]; then
-        echo 'link atuin'
-        ln -s ~/Dropbox/sync/atuin.toml ~/.config/atuin/config.toml
-    fi
-    if [ -e ~/Dropbox/sync/atuin-server.toml ] && [ ! -e ~/.config/atuin/server.toml ]; then
-        echo 'link atuin server'
-        ln -s ~/Dropbox/sync/atuin-server.toml ~/.config/atuin/server.toml
     fi
     if command -v rtk &> /dev/null; then
         echo 'rtk init --global --auto-patch'

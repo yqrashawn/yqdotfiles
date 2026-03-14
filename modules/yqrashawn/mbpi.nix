@@ -27,12 +27,6 @@
     RunAtLoad = lib.mkForce false;
   };
 
-  launchd.user.agents.atuin-daemon.serviceConfig = {
-    ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
-    KeepAlive = lib.mkForce false;
-    RunAtLoad = lib.mkForce false;
-  };
-
   launchd.user.agents.redis.serviceConfig = {
     ProgramArguments = lib.mkForce [ "/usr/bin/true" ];
     KeepAlive = lib.mkForce false;
@@ -76,8 +70,8 @@
   };
 
   # No GUI casks for server use, keep CLI brews
-  homebrew.casks = lib.mkForce [];
+  homebrew.casks = lib.mkForce [ ];
 
   # No fonts needed for headless server
-  fonts.packages = lib.mkForce [];
+  fonts.packages = lib.mkForce [ ];
 }

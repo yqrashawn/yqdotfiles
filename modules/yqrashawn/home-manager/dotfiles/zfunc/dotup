@@ -11,7 +11,7 @@ dotup () {
 
   cd ~/.nixpkgs/
   # ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/local-bins/update_flakes
-  nix --extra-experimental-features "nix-command flakes" develop --impure --accept-flake-config --command sysdo switch $@
+  nix --extra-experimental-features "nix-command flakes" develop --impure --accept-flake-config --command sysdo switch "$HOST"
   ~/local/bin/ddd || true
 
   if [ "$current_dir" != "$HOME/.nixpkgs" ]; then

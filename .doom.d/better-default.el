@@ -1166,4 +1166,4 @@ Targets `vimmish-fold', `hideshow', `ts-fold' and `outline' folds."
             shell-command-to-string
             s-trim
             (string= "studio.local"))
-    (setenv "DOCKER_HOST" "tcp://macmini.local:2375")))
+    (setenv "DOCKER_HOST" "tcp://mini.local:2375")))

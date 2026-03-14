@@ -27,6 +27,48 @@ in
         owner = username;
         mode = "0600";
       };
+
+      msmtprc = {
+        sopsFile = ../../../secrets/msmtprc.yaml;
+        path = "/Users/${username}/.msmtprc";
+        owner = username;
+        mode = "0600";
+      };
+
+      notmuch-config = {
+        sopsFile = ../../../secrets/notmuch-config.yaml;
+        path = "/Users/${username}/.notmuch-config";
+        owner = username;
+        mode = "0600";
+      };
+
+      ntf = {
+        sopsFile = ../../../secrets/ntf.yaml;
+        path = "/Users/${username}/.ntf.yml";
+        owner = username;
+        mode = "0600";
+      };
+
+      atuin = {
+        sopsFile = ../../../secrets/atuin.yaml;
+        path = "/Users/${username}/.config/atuin/config.toml";
+        owner = username;
+        mode = "0600";
+      };
+
+      atuin-server = {
+        sopsFile = ../../../secrets/atuin-server.yaml;
+        path = "/Users/${username}/.config/atuin/server.toml";
+        owner = username;
+        mode = "0600";
+      };
+
+      gitleaks = {
+        sopsFile = ../../../secrets/gitleaks.yaml;
+        path = "/Users/${username}/.config/.gitleaks.toml";
+        owner = username;
+        mode = "0600";
+      };
     };
   };
 }

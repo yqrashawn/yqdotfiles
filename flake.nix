@@ -324,7 +324,7 @@
         mini = mkDarwinConfig {
           system = "aarch64-darwin";
           extraModules = [
-            ./profiles/yqrashawn.nix
+            ./profiles/mini.nix
             ./modules/yqrashawn/darwin/apps.nix
             ./modules/yqrashawn/mini.nix
             { homebrew.prefix = "/opt/homebrew"; }

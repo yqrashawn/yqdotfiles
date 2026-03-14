@@ -488,6 +488,8 @@
   :recipe (:host github :repo "emacs-slack/emacs-slack"))
 ;; (package! compile-angel)
 
+(package! sops)
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:
