@@ -634,10 +634,11 @@ used in the POST request made to the LanguageTool server."
        )
 
 (after! tramp
-  (pushnew! tramp-connection-properties
-            (list
-             (regexp-quote "/sshx:studio")
-             "remote-shell" "/etc/profiles/per-user/yqrashawn/bin/zsh")))
+  (dolist (host '("studio" "mbpi" "mini" "mbp"))
+    (pushnew! tramp-connection-properties
+              (list
+               (regexp-quote (format "/sshx:%s" host))
+               "remote-shell" "/etc/profiles/per-user/yqrashawn/bin/zsh"))))
 
 (pushnew! vc-directory-exclusion-list "node_modules")
 

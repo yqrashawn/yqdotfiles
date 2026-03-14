@@ -8,11 +8,13 @@
 
 let
   envExtra = ''
-    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    . $HOME/.asdf/plugins/java/set-java-home.zsh
+    if [[ $TERM != "dumb" && -z $INSIDE_EMACS ]]; then
+      . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+      . $HOME/.asdf/plugins/java/set-java-home.zsh
 
-    if ! typeset -f _asdf > /dev/null; then
-      fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
+      if ! typeset -f _asdf > /dev/null; then
+        fpath=(${pkgs.asdf-vm}/share/zsh/site-functions $fpath)
+      fi
     fi
     export PNPM_HOME="$HOME/.local/share/pnpm"
   '';
@@ -25,8 +27,10 @@ let
   '';
   bashProfileExtra = ''
     ${lib.optionalString pkgs.stdenvNoCC.isLinux "[[ -e /etc/profile ]] && source /etc/profile"}
-    . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
-    export JAVA_HOME=$(asdf where java)
+    if [[ $TERM != "dumb" && -z $INSIDE_EMACS ]]; then
+      . ${pkgs.asdf-vm}/etc/profile.d/asdf-prepare.sh
+      export JAVA_HOME=$(asdf where java)
+    fi
     export PNPM_HOME="$HOME/.local/share/pnpm"
     # eval "$(${pkgs.masters.mise}/bin/mise activate bash)"
   '';
@@ -194,7 +198,9 @@ in
       loginExtra = ''
         # https://github.com/alacritty/alacritty/issues/2950
         # disable alacritty icon bouncing
-        printf "\e[?1042l"
+        if [[ $TERM != "dumb" && -z $INSIDE_EMACS ]]; then
+          printf "\e[?1042l"
+        fi
       '';
       envExtra = envExtra;
       profileExtra = zshProfileExtra;

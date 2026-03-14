@@ -65,9 +65,9 @@
         echo 'link oauth2token, pip install oauth2token'
         ln -s ~/Dropbox/sync/oauth2token ~/.local/share/oauth2token
     fi
-    if [ -e ~/Dropbox/sync/ntf ] && [ ! -e /opt/homebrew/bin/ntf ]; then
-        echo 'link /opt/homebrew/bin/ntf'
-        ln -s ~/Dropbox/sync/ntf /opt/homebrew/bin/ntf
+    if [ -e ~/Dropbox/sync/ntf ] && [ ! -e ~/local/bin/ntf ]; then
+        echo 'link ~/local/bin/ntf'
+        ln -s ~/Dropbox/sync/ntf ~/local/bin/ntf
     fi
     if [ -e ~/Dropbox/sync/.ntf.yml ] && [ ! -e ~/.ntf.yml ]; then
         echo 'link ~/.ntf.yml'
