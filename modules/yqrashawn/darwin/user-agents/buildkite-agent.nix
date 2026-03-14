@@ -43,6 +43,9 @@ in
       KeepAlive = true;
       StandardErrorPath = "/tmp/buildkite-agent-stderr.log";
       StandardOutPath = "/tmp/buildkite-agent-stdout.log";
+      EnvironmentVariables = {
+        PATH = "${pkgs.buildkite-agent}/bin:/etc/profiles/per-user/${config.user.name}/bin:/run/current-system/sw/bin:/usr/local/bin:/usr/bin:/bin";
+      };
     };
   };
 }

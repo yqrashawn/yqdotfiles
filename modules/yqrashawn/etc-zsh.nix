@@ -20,6 +20,7 @@ let
     "$HOME/.web3j"
     "$HOME/local/bin/funcs"
     "$HOME/.asdf/shims"
+    "$HOME/.cache/.bun/bin:$PATH"
     "$HOME/.local/share/pnpm"
     # for usc https://github.com/software-mansion/universal-sierra-compiler
     "$HOME/.cargo/bin"
@@ -43,7 +44,7 @@ in
     # enableSyntaxHighlighting = true;
     # enableFzfHistory = true;
     # enableFzfGit = true;
-    interactiveShellInit = ''
+    shellInit = ''
       export PATH="${builtins.concatStringsSep ":" paths}:$PATH"
       export NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1
       export NODE_TLS_REJECT_UNAUTHORIZED=0

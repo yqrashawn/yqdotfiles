@@ -23,6 +23,11 @@
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/pnpm-lock.yaml ~/.local/share/pnpm/global/5/pnpm-lock.yaml
     fi
 
+    if [ ! -e ~/.cache/.bun/install/global/package.json ]; then
+        mkdir -p ~/.cache/.bun/install/global
+        ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/bun-package.json ~/.cache/.bun/install/global/package.json
+    fi
+
     rm -rf ~/.config/karabiner.edn || true
 
     if [ "$cuser" = "holybasil" ]; then

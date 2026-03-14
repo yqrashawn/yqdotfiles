@@ -360,7 +360,7 @@
         mbpi = mkDarwinConfig {
           system = "x86_64-darwin";
           extraModules = [
-            ./profiles/yqrashawn.nix
+            ./profiles/mbpi.nix
             ./modules/yqrashawn/mbpi.nix
             { homebrew.prefix = "/usr/local"; }
           ];

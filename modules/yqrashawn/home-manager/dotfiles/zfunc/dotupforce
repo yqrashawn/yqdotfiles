@@ -14,7 +14,7 @@ dotupforce () {
     cd ~/.nixpkgs/
     git fetch --all
     git reset --hard origin/master
-    reload
+    reload || true
     nix --extra-experimental-features "nix-command flakes" develop --impure -c sysdo switch $@
     if [ "$current_dir" != "$HOME/.nixpkgs" ]; then
       popd > /dev/null
