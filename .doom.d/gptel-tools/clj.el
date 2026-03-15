@@ -531,6 +531,39 @@ CALLBACK receives the file content string or an error message."
   (gptelt-clj-read-file-url (gptelt-clj-get-ns-file-url "shadow.json"))
   (gptelt-clj-read-file-url "a"))
 
+;;; run namespace tests
+(defun gptelt-clj-run-ns-test-async (callback namespaces)
+  "Run tests for NAMESPACES (space-separated string) asynchronously.
+Uses kaocha.repl/run if available, falls back to clojure.test/run-tests.
+CALLBACK receives the test output string."
+  (gptelt-clojure--ensure-workspace 'clj)
+  (let* ((ns-list (split-string (string-trim namespaces)))
+         (require-forms (mapconcat (lambda (ns) (format "(require '%s)" ns)) ns-list "\n  "))
+         (quoted-nss (mapconcat (lambda (ns) (format "'%s" ns)) ns-list " "))
+         (clj-code (format
+                    "(do\n  %s\n  (let [has-kaocha? (try (require 'kaocha.repl) true (catch Exception _ false))]\n    (with-out-str\n      (binding [clojure.test/*test-out* *out*]\n        (if has-kaocha?\n          (kaocha.repl/run %s {:color? false})\n          (clojure.test/run-tests %s))))))"
+                    require-forms
+                    quoted-nss
+                    quoted-nss)))
+    (gptelt-eval--clj-string-async
+     (lambda (result)
+       (condition-case err
+           (if (and result (not (string= result "nil")))
+               (funcall callback (read result))
+             (funcall callback "No test output"))
+         (error (funcall callback
+                         (format "Error parsing test output: %s\nRaw: %s"
+                                 (error-message-string err) result)))))
+     clj-code "user")))
+
+(comment
+  (gptelt-clj-run-ns-test-async
+   (lambda (r) (message "Test result:\n%s" r))
+   "cchp.web.routes.llm-logs-test")
+  (gptelt-clj-run-ns-test-async
+   (lambda (r) (message "Test result:\n%s" r))
+   "cchp.web.routes.llm-logs-test cchp.web.routes.utils-test"))
+
 ;;; gptel tool registration
 (when (fboundp 'gptelt-make-tool)
   (gptelt-make-tool
@@ -561,7 +594,7 @@ CALLBACK receives the file content string or an error message."
    :name "clj_eval_string"
    :function #'gptelt-eval-clj-string-async
    :async t
-   :description "Evaluate given clojure code string in given namespace, get eval result or error."
+   :description "Evaluate given clojure code string in given namespace, get eval result or error. Use `clojure_run_ns_test` tool to run tests for better output. or wrap test with this to get better failure/error output (with-out-str (binding [clojure.test/*test-out* *out*] (clojure.test/run-tests ...)))"
    :args '((:name "clj_string"
             :type string
             :description "The Clojure code string to evaluate")
@@ -676,6 +709,18 @@ CALLBACK receives the file content string or an error message."
    :args '((:name "file_path"
             :type string
             :description "Path to the Clojure file in the current project root (relative or absolute)"))
+   :category "clojure"
+   :confirm nil
+   :include t)
+
+  (gptelt-make-tool
+   :name "clojure_run_ns_test"
+   :function #'gptelt-clj-run-ns-test-async
+   :async t
+   :description "Run tests for one or more Clojure test namespaces using clojure.test/run-tests."
+   :args '((:name "namespaces"
+            :type string
+            :description "Space-separated list of test namespace names to run (e.g., 'cchp.web.routes.llm-logs-test cchp.web.routes.utils-test')"))
    :category "clojure"
    :confirm nil
    :include t))
