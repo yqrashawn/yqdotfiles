@@ -105,6 +105,102 @@ MOCK-REPL-BUF is a symbol bound to the mock REPL buffer."
          #'ignore "(+ 1 2)")))
     (should (equal captured-ns "user"))))
 
+;;; Tests for error handling and timeout in gptelt-eval--clj-string-async
+
+(ert-deftest gptelt-eval-clj-string-async-workspace-error-test ()
+  "Test async CLJ eval calls callback with error when workspace check fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-clojure--ensure-workspace)
+               (lambda (&rest _) (error "Clojure nREPL is not connected")))
+              ((symbol-function 'gptelt-clj-ensure-helper-loaded) #'ignore)
+              ((symbol-function 'gptelt-clj--get-clj-repl) #'ignore))
+      (gptelt-eval--clj-string-async
+       (lambda (r) (setq result r))
+       "(+ 1 2)" "user"))
+    (should (stringp result))
+    (should (string-match-p "nREPL is not connected" result))))
+
+(ert-deftest gptelt-eval-clj-string-async-helper-error-test ()
+  "Test async CLJ eval calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-clojure--ensure-workspace) #'ignore)
+              ((symbol-function 'gptelt-clj-ensure-helper-loaded)
+               (lambda () (error "Failed to load clj-helper")))
+              ((symbol-function 'gptelt-clj--get-clj-repl) #'ignore))
+      (gptelt-eval--clj-string-async
+       (lambda (r) (setq result r))
+       "(+ 1 2)" "user"))
+    (should (stringp result))
+    (should (string-match-p "Failed to load clj-helper" result))))
+
+(ert-deftest gptelt-eval-clj-string-async-timeout-test ()
+  "Test async CLJ eval calls callback on timeout when nREPL never responds."
+  (let ((result nil)
+        (timer-fn nil))
+    (clj-test--with-mock-nrepl buf
+      (cl-letf (((symbol-function 'nrepl-request:eval)
+                 (lambda (input callback connection &optional ns &rest _)
+                   ;; Never call callback — simulates nREPL hang
+                   nil))
+                ((symbol-function 'run-with-timer)
+                 (lambda (secs _repeat fn &rest _args)
+                   (setq timer-fn fn)
+                   'mock-timer))
+                ((symbol-function 'cancel-timer) #'ignore))
+        (gptelt-eval--clj-string-async
+         (lambda (r) (setq result r))
+         "(Thread/sleep 100000)" "user")
+        ;; Simulate timer firing
+        (when timer-fn (funcall timer-fn))))
+    (should (stringp result))
+    (should (string-match-p "timed out" result))))
+
+(ert-deftest gptelt-eval-clj-string-async-callback-once-test ()
+  "Test async CLJ eval callback is called exactly once even with timeout race."
+  (let ((call-count 0)
+        (timer-fn nil))
+    (clj-test--with-mock-nrepl buf
+      (cl-letf (((symbol-function 'run-with-timer)
+                 (lambda (secs _repeat fn &rest _args)
+                   (setq timer-fn fn)
+                   'mock-timer))
+                ((symbol-function 'cancel-timer) #'ignore)
+                ((symbol-function 'nrepl-request:eval)
+                 (lambda (input callback connection &optional ns &rest _)
+                   (funcall callback (nrepl-dict "value" "42"))
+                   (funcall callback (nrepl-dict "status" '("done") "id" "test-once")))))
+        (gptelt-eval--clj-string-async
+         (lambda (r) (cl-incf call-count))
+         "(+ 1 2)" "user")
+        ;; Timer fires after normal completion — should be no-op
+        (when timer-fn (funcall timer-fn))))
+    (should (= call-count 1))))
+
+;;; Tests for error handling in async wrappers
+
+(ert-deftest gptelt-clj-read-file-url-async-workspace-error-test ()
+  "Test async file URL reading calls callback when workspace check fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-clojure--ensure-workspace)
+               (lambda (&rest _) (error "nREPL not connected")))
+              ((symbol-function 'gptelt-clj-ensure-helper-loaded) #'ignore))
+      (gptelt-clj-read-file-url-async
+       (lambda (r) (setq result r))
+       "file:///path"))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
+(ert-deftest gptelt-clj-run-ns-test-async-workspace-error-test ()
+  "Test async test runner calls callback when workspace check fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-clojure--ensure-workspace)
+               (lambda (&rest _) (error "nREPL not connected"))))
+      (gptelt-clj-run-ns-test-async
+       (lambda (r) (setq result r))
+       "my.test-ns"))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
 ;;; Tests for gptelt-clj-get-symbol-source-code-async
 
 (ert-deftest gptelt-clj-get-symbol-source-code-async-success-test ()

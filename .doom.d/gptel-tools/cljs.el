@@ -65,13 +65,18 @@ Skips load-file if the cljs-helper namespace is already loaded."
 
 (defun gptelt-cljs-list-ns-async (callback build-id _runtime-id &optional regex-filter)
   "Async version of `gptelt-cljs-list-ns' for MCP tool use."
-  (gptelt-cljs-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async
-   callback
-   (if regex-filter
-       (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
-     (format "(get-build-namespaces %s)" build-id))
-   "cljs-helper"))
+  (condition-case err
+      (progn
+        (gptelt-cljs-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async
+         callback
+         (if regex-filter
+             (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
+           (format "(get-build-namespaces %s)" build-id))
+         "cljs-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-list-ns :ground 1)
@@ -87,8 +92,13 @@ Skips load-file if the cljs-helper namespace is already loaded."
 
 (defun gptelt-cljs-get-project-states-async (callback)
   "Async version of `gptelt-cljs-get-project-states' for MCP tool use."
-  (gptelt-cljs-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async callback "(get-shadow-cljs-info)" "cljs-helper"))
+  (condition-case err
+      (progn
+        (gptelt-cljs-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async callback "(get-shadow-cljs-info)" "cljs-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-project-states))
@@ -110,11 +120,16 @@ Skips load-file if the cljs-helper namespace is already loaded."
   "Async MCP tool wrapper for ClojureScript evaluation.
 CALLBACK is the MCP async callback.  Evaluates CLJS-CODE in BUILD-ID
 and RUNTIME-ID via the cljs-helper, using `gptelt-eval--clj-string-async'."
-  (gptelt-cljs-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async
-   callback
-   (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
-   "cljs-helper"))
+  (condition-case err
+      (progn
+        (gptelt-cljs-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async
+         callback
+         (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
+         "cljs-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptel-cljs-eval-string-async
@@ -160,14 +175,23 @@ Returns the documentation string if available, or an error if not found."
 
 (defun gptelt-cljs-get-symbol-doc-async (callback symbol build-id runtime-id &optional namespace)
   "Async version of `gptelt-cljs-get-symbol-doc' for MCP tool use."
-  (gptelt-cljs-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async
-   (lambda (result)
-     (funcall callback (format "%s" (read result))))
-   (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
-           build-id runtime-id symbol
-           (or namespace "cljs.user"))
-   "cljs-helper"))
+  (condition-case err
+      (progn
+        (gptelt-cljs-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async
+         (lambda (result)
+           (condition-case err
+               (funcall callback (format "%s" (read result)))
+             (error (funcall callback
+                             (format "Error parsing doc result: %s"
+                                     (error-message-string err))))))
+         (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
+                 build-id runtime-id symbol
+                 (or namespace "cljs.user"))
+         "cljs-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-symbol-doc "defn" ":ground" -1))
@@ -185,13 +209,22 @@ Returns the source code string if available, or an error if not found."
 
 (defun gptelt-cljs-get-symbol-source-code-async (callback symbol build-id runtime-id &optional namespace)
   "Async version of `gptelt-cljs-get-symbol-source-code' for MCP tool use."
-  (gptelt-cljs-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async
-   (lambda (result)
-     (funcall callback (format "%s" (read result))))
-   (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
-           build-id runtime-id symbol (or namespace "cljs.user"))
-   "cljs-helper"))
+  (condition-case err
+      (progn
+        (gptelt-cljs-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async
+         (lambda (result)
+           (condition-case err
+               (funcall callback (format "%s" (read result)))
+             (error (funcall callback
+                             (format "Error parsing source result: %s"
+                                     (error-message-string err))))))
+         (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
+                 build-id runtime-id symbol (or namespace "cljs.user"))
+         "cljs-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-symbol-source-code "defn" ":ground" -1)
@@ -248,13 +281,18 @@ Otherwise returns status for all active builds."
 
 (defun gptelt-cljs-get-build-status-async (callback &optional build-id)
   "Async version of `gptelt-cljs-get-build-status' for MCP tool use."
-  (gptelt-cljs-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async
-   callback
-   (if build-id
-       (format "(get-build-status %s)" build-id)
-     "(get-build-status)")
-   "cljs-helper"))
+  (condition-case err
+      (progn
+        (gptelt-cljs-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async
+         callback
+         (if build-id
+             (format "(get-build-status %s)" build-id)
+           "(get-build-status)")
+         "cljs-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-build-status)

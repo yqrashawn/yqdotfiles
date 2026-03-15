@@ -70,3 +70,6 @@ Extensive YASnippet template collection in `snippets/` for:
 - **pragmatapro-prettify-symbols.el**: Font ligature configuration
 
 The Emacs configuration is symlinked from the repository root via `install.sh` and integrates with the broader Nix-managed development environment.
+
+### MCP server
+Emacs also starts a MCP server using the `mcp-server-lib` package.

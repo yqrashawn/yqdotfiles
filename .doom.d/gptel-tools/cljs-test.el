@@ -173,4 +173,70 @@
     (should (string-match-p ":app" captured-code))
     (should (equal result "\"hello from cljs\""))))
 
+;;; Tests for error handling in async wrappers
+
+(ert-deftest gptelt-cljs-list-ns-async-error-test ()
+  "Test async CLJS list ns calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-cljs-ensure-helper-loaded)
+               (lambda () (error "nREPL not connected"))))
+      (gptelt-cljs-list-ns-async
+       (lambda (r) (setq result r))
+       ":app" 1))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
+(ert-deftest gptelt-cljs-get-project-states-async-error-test ()
+  "Test async project states calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-cljs-ensure-helper-loaded)
+               (lambda () (error "nREPL not connected"))))
+      (gptelt-cljs-get-project-states-async
+       (lambda (r) (setq result r))))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
+(ert-deftest gptel-cljs-eval-string-async-error-test ()
+  "Test async CLJS eval calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-cljs-ensure-helper-loaded)
+               (lambda () (error "nREPL not connected"))))
+      (gptel-cljs-eval-string-async
+       (lambda (r) (setq result r))
+       ":app" 1 "js/document.title"))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
+(ert-deftest gptelt-cljs-get-symbol-doc-async-error-test ()
+  "Test async CLJS symbol doc calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-cljs-ensure-helper-loaded)
+               (lambda () (error "nREPL not connected"))))
+      (gptelt-cljs-get-symbol-doc-async
+       (lambda (r) (setq result r))
+       "map" ":app" 1))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
+(ert-deftest gptelt-cljs-get-symbol-source-code-async-error-test ()
+  "Test async CLJS source code calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-cljs-ensure-helper-loaded)
+               (lambda () (error "nREPL not connected"))))
+      (gptelt-cljs-get-symbol-source-code-async
+       (lambda (r) (setq result r))
+       "map" ":app" 1))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
+(ert-deftest gptelt-cljs-get-build-status-async-error-test ()
+  "Test async build status calls callback with error when helper loading fails."
+  (let ((result nil))
+    (cl-letf (((symbol-function 'gptelt-cljs-ensure-helper-loaded)
+               (lambda () (error "nREPL not connected"))))
+      (gptelt-cljs-get-build-status-async
+       (lambda (r) (setq result r))))
+    (should (stringp result))
+    (should (string-match-p "nREPL not connected" result))))
+
 ;;; cljs-test.el ends here

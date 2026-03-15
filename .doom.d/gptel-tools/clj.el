@@ -185,52 +185,76 @@ Explicitly uses the CLJ REPL connection so this works even when called from a CL
   "Evaluate CLJ-STRING asynchronously via nREPL, call CALLBACK with result.
 CALLBACK receives a single string: the eval value, error output, or error
 message.  NAMESPACE defaults to \"user\".  Uses `nrepl-request:eval' so
-the main thread is never blocked by polling."
-  (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
-  (gptelt-clj-ensure-helper-loaded)
+the main thread is never blocked by polling.
 
-  (let* ((clj-repl (gptelt-clj--get-clj-repl))
-         (ns (or namespace "user"))
-         ;; Mutable accumulator — nREPL sends multiple messages per eval
-         (response (cons 'dict nil)))
-    (nrepl-request:eval
-     clj-string
-     (lambda (resp)
-       (condition-case err
-           (progn
-             (nrepl--merge response resp)
-             (when (member "done" (nrepl-dict-get response "status"))
-               (let ((out (nrepl-dict-get response "out"))
-                     (value (nrepl-dict-get response "value"))
-                     (err-out (nrepl-dict-get response "err"))
-                     (id (nrepl-dict-get response "id")))
-                 ;; Echo to REPL buffer
-                 (when (buffer-live-p clj-repl)
-                   (with-current-buffer clj-repl
-                     (cider-repl--replace-input (format! "%s\n" clj-string))
-                     (when (or out value err-out)
-                       (cider-repl-reset-markers))
-                     (when out
-                       (cider-repl-emit-stdout clj-repl out))
-                     (when value
-                       (cider-repl-emit-result clj-repl value t t))
-                     (when err-out
-                       (cider-repl-emit-stderr clj-repl err-out))
-                     (cider-repl-emit-prompt clj-repl)))
-                 ;; Mark request as completed in nREPL
-                 (when id
-                   (with-current-buffer clj-repl
-                     (nrepl--mark-id-completed id)))
-                 ;; Deliver result to MCP callback
-                 (funcall callback
-                          (or value err-out
-                              "Evaluation completed with no output")))))
-         (error
-          (funcall callback
-                   (format "Error processing nREPL response: %s"
-                           (error-message-string err))))))
-     clj-repl
-     ns)))
+Includes a timeout guard: if nREPL never sends a \"done\" status within
+`gptelt-clj-sync-request-timeout' seconds, CALLBACK is called with a
+timeout error.  The guard ensures CALLBACK is called exactly once."
+  (condition-case err
+      (progn
+        (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
+        (gptelt-clj-ensure-helper-loaded)
+
+        (let* ((clj-repl (gptelt-clj--get-clj-repl))
+               (ns (or namespace "user"))
+               ;; Mutable accumulator — nREPL sends multiple messages per eval
+               (response (cons 'dict nil))
+               ;; Ensure callback is called exactly once (timeout vs normal)
+               (called-p (cons nil nil))
+               (safe-callback
+                (lambda (result)
+                  (unless (car called-p)
+                    (setcar called-p t)
+                    (funcall callback result))))
+               (timer (run-with-timer
+                       gptelt-clj-sync-request-timeout nil
+                       (lambda ()
+                         (funcall safe-callback
+                                  (format "Error: nREPL evaluation timed out after %ds"
+                                          gptelt-clj-sync-request-timeout))))))
+          (nrepl-request:eval
+           clj-string
+           (lambda (resp)
+             (condition-case err
+                 (progn
+                   (nrepl--merge response resp)
+                   (when (member "done" (nrepl-dict-get response "status"))
+                     (cancel-timer timer)
+                     (let ((out (nrepl-dict-get response "out"))
+                           (value (nrepl-dict-get response "value"))
+                           (err-out (nrepl-dict-get response "err"))
+                           (id (nrepl-dict-get response "id")))
+                       ;; Echo to REPL buffer
+                       (when (buffer-live-p clj-repl)
+                         (with-current-buffer clj-repl
+                           (cider-repl--replace-input (format! "%s\n" clj-string))
+                           (when (or out value err-out)
+                             (cider-repl-reset-markers))
+                           (when out
+                             (cider-repl-emit-stdout clj-repl out))
+                           (when value
+                             (cider-repl-emit-result clj-repl value t t))
+                           (when err-out
+                             (cider-repl-emit-stderr clj-repl err-out))
+                           (cider-repl-emit-prompt clj-repl)))
+                       ;; Mark request as completed in nREPL
+                       (when id
+                         (with-current-buffer clj-repl
+                           (nrepl--mark-id-completed id)))
+                       ;; Deliver result to MCP callback
+                       (funcall safe-callback
+                                (or value err-out
+                                    "Evaluation completed with no output")))))
+               (error
+                (cancel-timer timer)
+                (funcall safe-callback
+                         (format "Error processing nREPL response: %s"
+                                 (error-message-string err))))))
+           clj-repl
+           ns)))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (defun gptelt-eval-clj-string-async (callback clj-string &optional namespace)
   "Async MCP tool wrapper for `gptelt-eval--clj-string-async'.
@@ -381,7 +405,6 @@ Ensures clj workspace and nREPL connection before proceeding."
 (defun gptelt-clj-get-symbol-source-code-async (callback symbol &optional namespace)
   "Async version of `gptelt-clj-get-symbol-source-code' for MCP tool use.
 CALLBACK receives the source code string or an error message."
-  (gptelt-clojure--ensure-workspace 'clj)
   (condition-case err
       (let ((qualified-symbol (if namespace
                                   (format "%s/%s" namespace symbol)
@@ -507,24 +530,29 @@ shows buffer if not visible, asks for user permission, and evaluates it."
 (defun gptelt-clj-read-file-url-async (callback file-url &optional limit offset)
   "Async version of `gptelt-clj-read-file-url' for MCP tool use.
 CALLBACK receives the file content string or an error message."
-  (gptelt-clojure--ensure-workspace 'clj)
-  (gptelt-clj-ensure-helper-loaded)
-  (gptelt-eval--clj-string-async
-   (lambda (result)
-     (condition-case err
-         (let ((rst (read result)))
-           (if (string-prefix-p "Failed to read file url: " rst)
-               (funcall callback (format "Error: %s" rst))
-             (funcall callback rst)))
-       (error (funcall callback
-                       (format "Error reading file: %s" (error-message-string err))))))
-   (if (or limit offset)
-       (format "(read-file-url \"%s\" {:limit %s :offset %s})"
-               file-url
-               (or limit 2000)
-               (or offset 0))
-     (format "(read-file-url \"%s\")" file-url))
-   "clj-helper"))
+  (condition-case err
+      (progn
+        (gptelt-clojure--ensure-workspace 'clj)
+        (gptelt-clj-ensure-helper-loaded)
+        (gptelt-eval--clj-string-async
+         (lambda (result)
+           (condition-case err
+               (let ((rst (read result)))
+                 (if (string-prefix-p "Failed to read file url: " rst)
+                     (funcall callback (format "Error: %s" rst))
+                   (funcall callback rst)))
+             (error (funcall callback
+                             (format "Error reading file: %s" (error-message-string err))))))
+         (if (or limit offset)
+             (format "(read-file-url \"%s\" {:limit %s :offset %s})"
+                     file-url
+                     (or limit 2000)
+                     (or offset 0))
+           (format "(read-file-url \"%s\")" file-url))
+         "clj-helper"))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-clj-read-file-url
@@ -538,25 +566,30 @@ CALLBACK receives the file content string or an error message."
   "Run tests for NAMESPACES (space-separated string) asynchronously.
 Uses kaocha.repl/run if available, falls back to clojure.test/run-tests.
 CALLBACK receives the test output string."
-  (gptelt-clojure--ensure-workspace 'clj)
-  (let* ((ns-list (split-string (string-trim namespaces)))
-         (require-forms (mapconcat (lambda (ns) (format "(require '%s)" ns)) ns-list "\n  "))
-         (quoted-nss (mapconcat (lambda (ns) (format "'%s" ns)) ns-list " "))
-         (clj-code (format
-                    "(do\n  %s\n  (let [has-kaocha? (try (require 'kaocha.repl) true (catch Exception _ false))]\n    (with-out-str\n      (binding [clojure.test/*test-out* *out*]\n        (if has-kaocha?\n          (kaocha.repl/run %s {:color? false})\n          (clojure.test/run-tests %s))))))"
-                    require-forms
-                    quoted-nss
-                    quoted-nss)))
-    (gptelt-eval--clj-string-async
-     (lambda (result)
-       (condition-case err
-           (if (and result (not (string= result "nil")))
-               (funcall callback (read result))
-             (funcall callback "No test output"))
-         (error (funcall callback
-                         (format "Error parsing test output: %s\nRaw: %s"
-                                 (error-message-string err) result)))))
-     clj-code "user")))
+  (condition-case err
+      (progn
+        (gptelt-clojure--ensure-workspace 'clj)
+        (let* ((ns-list (split-string (string-trim namespaces)))
+               (require-forms (mapconcat (lambda (ns) (format "(require '%s)" ns)) ns-list "\n  "))
+               (quoted-nss (mapconcat (lambda (ns) (format "'%s" ns)) ns-list " "))
+               (clj-code (format
+                          "(do\n  %s\n  (let [has-kaocha? (try (require 'kaocha.repl) true (catch Exception _ false))]\n    (with-out-str\n      (binding [clojure.test/*test-out* *out*]\n        (if has-kaocha?\n          (kaocha.repl/run %s {:color? false})\n          (clojure.test/run-tests %s))))))"
+                          require-forms
+                          quoted-nss
+                          quoted-nss)))
+          (gptelt-eval--clj-string-async
+           (lambda (result)
+             (condition-case err
+                 (if (and result (not (string= result "nil")))
+                     (funcall callback (read result))
+                   (funcall callback "No test output"))
+               (error (funcall callback
+                               (format "Error parsing test output: %s\nRaw: %s"
+                                       (error-message-string err) result)))))
+           clj-code "user")))
+    (error
+     (funcall callback
+              (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-clj-run-ns-test-async
