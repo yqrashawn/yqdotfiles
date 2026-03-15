@@ -86,6 +86,7 @@ in
         xcodes
         jsonnet
         inputs.atuin.packages.${pkgs.system}.default
+        inputs.parinfer-rust.packages.${pkgs.system}.default
         # ntfy
         postgresql
         # rtx

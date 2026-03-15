@@ -220,6 +220,7 @@
       flake = false;
     };
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
+    parinfer-rust.url = "github:eraserhd/parinfer-rust";
     # nix-openclaw = {
     #   url = "github:openclaw/nix-openclaw";
     #   inputs.nixpkgs.follows = "nixpkgs";

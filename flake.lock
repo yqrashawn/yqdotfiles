@@ -901,6 +901,24 @@
         "type": "github"
       }
     },
+    "flake-utils_5": {
+      "inputs": {
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "forgit": {
       "flake": false,
       "locked": {
@@ -1186,6 +1204,21 @@
     },
     "nixpkgs_7": {
       "locked": {
+        "lastModified": 1737983954,
+        "narHash": "sha256-/q5imfCnkog54fjcJDelT8SrHMzidUU//oLZSkIMCPU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b04bc354ce84af48baead53372c66bdc7f0db1a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_8": {
+      "locked": {
         "lastModified": 1769789167,
         "narHash": "sha256-kKB3bqYJU5nzYeIROI82Ef9VtTbu4uA3YydSk/Bioa8=",
         "owner": "NixOS",
@@ -1230,6 +1263,25 @@
         "owner": "paradedb",
         "ref": "v0.21.10",
         "repo": "paradedb",
+        "type": "github"
+      }
+    },
+    "parinfer-rust": {
+      "inputs": {
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": "nixpkgs_7"
+      },
+      "locked": {
+        "lastModified": 1767478091,
+        "narHash": "sha256-WhxebTxGffFyNC6EFNO2dSNkBNiKM47VDjbvit2B9h4=",
+        "owner": "eraserhd",
+        "repo": "parinfer-rust",
+        "rev": "845bfbb9916687cba5b6bae088c9eab70dbb83a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eraserhd",
+        "repo": "parinfer-rust",
         "type": "github"
       }
     },
@@ -1288,6 +1340,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "own": "own",
         "paradedb-src": "paradedb-src",
+        "parinfer-rust": "parinfer-rust",
         "small": "small",
         "sops-nix": "sops-nix",
         "spacehammer": "spacehammer",
@@ -1464,6 +1517,21 @@
         "type": "github"
       }
     },
+    "systems_5": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "tmux-conf": {
       "flake": false,
       "locked": {
@@ -1484,7 +1552,7 @@
       "inputs": {
         "crane": "crane",
         "flake-parts": "flake-parts_2",
-        "nixpkgs": "nixpkgs_7",
+        "nixpkgs": "nixpkgs_8",
         "rust-overlay": "rust-overlay"
       },
       "locked": {
