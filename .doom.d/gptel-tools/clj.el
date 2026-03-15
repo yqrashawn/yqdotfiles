@@ -2,6 +2,11 @@
 
 (require 'cider)
 
+(defvar gptelt-clj-sync-request-timeout 300
+  "Timeout in seconds for sync nREPL requests from MCP tools.
+This overrides `nrepl-sync-request-timeout' when MCP tool functions
+make synchronous nREPL calls.")
+
 ;;; utilities
 
 (defun gptelt-clj--get-clj-repl ()
@@ -24,7 +29,8 @@ session, regardless of what the current buffer is (could be CLJS, chat, scratch,
   "Load clj_helper.clj into the CLJ REPL via load-file.
 Uses explicit CLJ REPL connection to avoid CIDER sesman session mismatch
 when the helper file is outside the current project."
-  (let* ((clj-repl (gptelt-clj--get-clj-repl))
+  (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+         (clj-repl (gptelt-clj--get-clj-repl))
          (helper-path (expand-file-name "~/.nixpkgs/env/dev/clj_helper.clj"))
          (result (cider-nrepl-sync-request:eval
                   (format "(load-file \"%s\")" helper-path)
@@ -49,7 +55,8 @@ when the helper file is outside the current project."
       ;; Use find-ns via direct eval on the CLJ REPL to check namespace.
       ;; cider-sync-request:ns-list is unreliable for dynamically loaded
       ;; namespaces (e.g. helper files outside the project).
-      (let* ((clj-repl (gptelt-clj--get-clj-repl))
+      (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+             (clj-repl (gptelt-clj--get-clj-repl))
              (result (cider-nrepl-sync-request:eval
                       (format "(some? (find-ns '%s))" ns)
                       clj-repl "user"))
@@ -87,8 +94,9 @@ when the helper file is outside the current project."
   "List all loaded namespaces in clj nREPL connection.
 Optional FILTER-REGEX filters the namespace list before returning."
   (gptelt-clojure--ensure-workspace 'clj)
-  (let ((ns-list (with-current-buffer (gptelt-clj--get-clj-repl)
-                   (cider-sync-request:ns-list))))
+  (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+         (ns-list (with-current-buffer (gptelt-clj--get-clj-repl)
+                    (cider-sync-request:ns-list))))
     (if filter-regex
         (seq-filter
          (lambda (ns)
@@ -108,8 +116,9 @@ Optional FILTER-REGEX filters the namespace list before returning."
   "List all classpath entries in clj nREPL connection.
 Optional FILTER-REGEX filters the classpath list before returning."
   (gptelt-clojure--ensure-workspace 'clj)
-  (let ((classpath-list (with-current-buffer (gptelt-clj--get-clj-repl)
-                          (cider-classpath-entries))))
+  (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+         (classpath-list (with-current-buffer (gptelt-clj--get-clj-repl)
+                           (cider-classpath-entries))))
     (if filter-regex
         (seq-filter
          (lambda (classpath)
@@ -130,7 +139,8 @@ Explicitly uses the CLJ REPL connection so this works even when called from a CL
   (gptelt-clojure--ensure-workspace 'clj (or namespace "user"))
   (gptelt-clj-ensure-helper-loaded)
 
-  (let* ((clj-repl (gptelt-clj--get-clj-repl))
+  (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+         (clj-repl (gptelt-clj--get-clj-repl))
          (ns (or namespace "user"))
          (no-confirm t)
          allow?)
@@ -169,17 +179,6 @@ Explicitly uses the CLJ REPL connection so this works even when called from a CL
                   (error "Unexpected evaluation result")))
           (error (format "Error evaluating clj code: %s" (error-message-string err))))
       "User rejected the eval request")))
-
-(defun gptelt-eval-clj-string (clj-string &optional namespace)
-  "Evaluate CLJ-STRING in NAMESPACE (defaults to 'user') and return result or error.
-Checks if clj nREPL is connected and namespace is available before evaluation."
-  (gptelt-eval--clj-string clj-string namespace t))
-
-(comment
-  (gptelt-eval-clj-string "+" "clojure.core")
-  (gptelt-eval-clj-string "(prn 1)" "clojure.core")
-  (gptelt-eval-clj-string "+" "cljs.core")
-  (gptelt-eval-clj-string "(name :abc)" "clojure.core"))
 
 ;;; async eval clj string (for MCP tool use — non-blocking)
 (defun gptelt-eval--clj-string-async (callback clj-string &optional namespace)
@@ -308,7 +307,8 @@ Returns a list with: (file-path file-exists-p total-lines).
 Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clojure--ensure-workspace 'clj namespace)
   (condition-case err
-      (let* ((file-path (with-current-buffer (gptelt-clj--get-clj-repl)
+      (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+             (file-path (with-current-buffer (gptelt-clj--get-clj-repl)
                           (cider-sync-request:ns-path namespace t))))
         (if (string= file-path "")
             (error "File for ns %s does not exist, this usually means this namespace is not loaded" namespace)
@@ -327,7 +327,8 @@ Returns the documentation string if available, or an error if not found.
 Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clojure--ensure-workspace 'clj)
   (condition-case err
-      (let* ((qualified-symbol (if namespace
+      (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+             (qualified-symbol (if namespace
                                    (format "%s/%s" namespace symbol)
                                  symbol))
              (info (with-current-buffer (gptelt-clj--get-clj-repl)
@@ -362,7 +363,8 @@ Returns the source code string if available, or an error if not found.
 Ensures clj workspace and nREPL connection before proceeding."
   (gptelt-clojure--ensure-workspace 'clj)
   (condition-case err
-      (let* ((qualified-symbol (if namespace
+      (let* ((nrepl-sync-request-timeout gptelt-clj-sync-request-timeout)
+             (qualified-symbol (if namespace
                                    (format "%s/%s" namespace symbol)
                                  symbol))
              (source-code (cider-nrepl-sync-request:eval
