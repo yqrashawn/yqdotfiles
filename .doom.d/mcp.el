@@ -95,11 +95,14 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;   :args
      ;;   ("-y" "next-devtools-mcp@latest")))
 
+     ;; ("exa" .
+     ;;  (:command "bun"
+     ;;   :args ("run"
+     ;;          ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
+     ;;               file-truename))))
+
      ("exa" .
-      (:command "bun"
-       :args ("run"
-              ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
-                   file-truename))))
+      (:url "http://localhost:18681/mcp"))
 
      ;; ("perplexity" .
      ;;  (:command "npx"
@@ -107,16 +110,16 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;   :env
      ;;   (:PERPLEXITY_API_KEY ,+perplexity-api-key
      ;;    :PERPLEXITY_TIMEOUT_MS "600000")))
+     
+     ("jina_search" .
+      (:url "http://localhost:18682/v1"))
 
      ;; ("jina_search" .
-     ;;  (:url "http://localhost:18682/mcp"))
-
-     ("jina_search" .
-      (:command "npx"
-       :args
-       ("-y"
-        "mcp-remote"
-        "http://localhost:18682/mcp")))
+     ;;  (:command "npx"
+     ;;   :args
+     ;;   ("-y"
+     ;;    "mcp-remote"
+     ;;    "http://localhost:18682/mcp")))
 
      ;; ("github" .
      ;;  (:command "npx"

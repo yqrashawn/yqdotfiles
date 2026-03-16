@@ -48,3 +48,11 @@ flycheck_*
 # (keep root CLAUDE.md for project-level instructions)
 **/CLAUDE.md
 !/CLAUDE.md
+
+cchp-global.md
+cchp-telegram-global.md
+cchp-slack-global.md
+cchp-telegram-global.md
+cchp-telegram.md
+cchp-slack.md
+cchp.md
