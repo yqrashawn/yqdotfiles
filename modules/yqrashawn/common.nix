@@ -68,6 +68,7 @@ in
     systemPackages =
       with pkgs;
       [
+        aliyun-cli
         lefthook
         git-filter-repo
         eask-cli
