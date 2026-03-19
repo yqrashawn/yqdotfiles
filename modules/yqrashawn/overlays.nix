@@ -70,6 +70,34 @@ in {
         };
       };
     })
+    # lightpanda - headless browser for AI agents
+    (final: prev: {
+      lightpanda = prev.stdenv.mkDerivation rec {
+        pname = "lightpanda";
+        version = "0.2.6";
+        src = prev.fetchurl {
+          url = "https://github.com/lightpanda-io/browser/releases/download/v${version}/lightpanda-${
+            if prev.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64"
+          }-${
+            if prev.stdenv.hostPlatform.isDarwin then "macos" else "linux"
+          }";
+          sha256 = if prev.stdenv.hostPlatform.isAarch64 then
+            "sha256-6fdqFy/XAQi1sj8S0qC0LjfDbfaszOXoD8OVhc4/lcE="
+          else
+            "sha256-Nt7v+b3xJwnJDIJpdCLk/IPz33wtnkf4SyZChEbVvDY=";
+        };
+        dontUnpack = true;
+        dontBuild = true;
+        installPhase = ''
+          install -Dm755 $src $out/bin/lightpanda
+        '';
+        meta = with prev.lib; {
+          description = "Open-source headless browser for AI agents";
+          homepage = "https://github.com/lightpanda-io/browser";
+          platforms = [ "aarch64-darwin" "x86_64-darwin" ];
+        };
+      };
+    })
     # channels
     (final: prev: {
       # expose other channels via overlays

@@ -251,11 +251,12 @@
           (:map todoist-mode-map
            :g "," #'todoist-task-menu))
   (:after slack
-          (:map slack-message-buffer-mode-map
+          (:map (slack-message-buffer-mode-map slack-thread-message-buffer-mode-map) 
            :n "yy" #'slack-message-copy-link
            :n "yb" #'slack-buffer-copy-link
            :n "rr" #'slack-message-reaction-add
-           :n "rx" #'slack-message-reaction-remove)))
+           :n "rx" #'slack-message-reaction-remove
+           :n "mm" #'slack-message-embed-mention)))
  (:after simple
          (:map messages-buffer-mode-map
                (:localleader

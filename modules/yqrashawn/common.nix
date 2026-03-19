@@ -21,7 +21,6 @@ let
     gitleaks
     trufflehog
     clj-kondo
-    # mise
     zprint
     neil
     bbin
@@ -318,6 +317,7 @@ in
         perl
         # openjdk
 
+        lightpanda
         buildkite-agent
         rtk
         inputs.gws.packages.${pkgs.system}.default

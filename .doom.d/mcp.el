@@ -212,6 +212,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
 
      ("cchp" .
       (:url "http://localhost:8035/mcp"))
+
+     ;; ("slack" .
+     ;;  (:url "http://localhost:13080/mcp"))
      
 
      ;; ("desktop-commander" . (:command "bunx"
@@ -249,7 +252,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;             "figma-developer-mcp"
      ;;             ,(concat "--figma-api-key=" +figma-access-token)
      ;;             "--stdio")))
-
+     
      ;; ("core-memory" .
      ;;  (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))
      ))

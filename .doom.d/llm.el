@@ -421,7 +421,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -668,7 +668,7 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
   (setq!
    ;; gptel-magit-model 'gpt-4.1
    ;; gptel-magit-model 'sonnet
-   gptel-magit-model 'sonnet
+   gptel-magit-model 'sonnet-medium
    ;; gptel-magit-backend gptel--gh-copilot-business
    ;; gptel-magit-backend +gptel-free-backend
    ;; gptel-magit-backend gptel-claude-code-backend
