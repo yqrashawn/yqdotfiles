@@ -151,7 +151,7 @@ in
       };
       localVariables = {
         LANG = "en_US.UTF-8";
-        GPG_TTY = "/dev/ttys000";
+        # GPG_TTY is set dynamically in initContent below
         DEFAULT_USER = "${config.home.username}";
         CLICOLOR = 1;
         EDITOR = "emacsclient";
@@ -163,6 +163,14 @@ in
       initContent = ''
         # alias cd to zoxide only outside Claude Code sessions
         [[ -z "$CLAUDECODE" ]] && alias cd=z
+
+        # GPG TTY — must use current tty, not a hardcoded path
+        export GPG_TTY=$(tty)
+
+        # When SSH'd in without a display, tell gpg-agent to use curses pinentry
+        if [[ -n "$SSH_CONNECTION" ]]; then
+          export PINENTRY_USER_DATA="USE_CURSES=1"
+        fi
 
         # initExtraBeforeCompInit
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/site-functions

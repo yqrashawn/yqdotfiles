@@ -90,7 +90,9 @@
     };
     gpg-agent-conf = let
       pinentry-auto = pkgs.writeShellScript "pinentry-auto" ''
-        if [ -t 0 ]; then
+        if echo "''${PINENTRY_USER_DATA:-}" | grep -q "USE_CURSES=1"; then
+          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+        elif [ -t 0 ]; then
           exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
         else
           exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"

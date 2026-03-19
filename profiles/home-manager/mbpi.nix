@@ -8,15 +8,4 @@
   imports = [ ./yqrashawn.nix ];
 
   programs.git.signing.signByDefault = lib.mkForce false;
-
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    matchBlocks."*" = {
-      extraOptions = {
-        UseKeychain = "yes";
-        AddKeysToAgent = "yes";
-      };
-    };
-  };
 }
