@@ -283,6 +283,9 @@ Everywhere else: max 2 consecutive blank lines."
    ((region-active-p) (call-interactively #'gptel-rewrite))
    ((not arg) (call-interactively #'gptel))
    ((eq arg 7) (call-interactively #'gptel-menu))
+   ((eq arg 8) (call-interactively #'+gptel-inject-message))
+   ((eq arg 88) (call-interactively #'+gptel-find-session-id))
+   ((eq arg 87) (call-interactively #'+gptel-claude-here))
    ((eq arg 90)
     (progn (funcall #'gptel-context-remove-all)
            (message "gptel context removed!")))
@@ -390,7 +393,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -601,6 +604,14 @@ Merge buffer-local with global default files."
                     (cancel-timer timer)))
                 nil t)
       fsm))
+
+  ;; Strip `gptel' text property from yanked text in gptel-mode buffers.
+  ;; Prevents assistant response text from being treated as a separate message
+  ;; when pasted into a user message.
+  (add-hook! 'gptel-mode-hook
+    (defun +gptel-exclude-gptel-prop-on-yank ()
+      (setq-local yank-excluded-properties
+                  (cl-adjoin 'gptel yank-excluded-properties))))
 
   (after! pabbrev
     (add-hook! 'buffer-list-update-hook

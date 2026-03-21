@@ -174,9 +174,9 @@ INFO is the gptel process info plist."
     "Capture response metadata (headers, body) from streaming response."
     :around #'gptel-curl--stream-cleanup
     (let* ((proc-buf (process-buffer process))
-            (fsm (car (alist-get process gptel--request-alist)))
-            (info (and fsm (gptel-fsm-info fsm)))
-            (backend (and info (plist-get info :backend))))
+           (fsm (car (alist-get process gptel--request-alist)))
+           (info (and fsm (gptel-fsm-info fsm)))
+           (backend (and info (plist-get info :backend))))
       ;; Only capture for CCL backend
       (when (and backend (or (eq backend gptel--ccl) (eq backend gptel--ccld)))
         (with-current-buffer proc-buf
@@ -196,14 +196,14 @@ INFO is the gptel process info plist."
                              (goto-char (point-min))
                              (when (re-search-forward "^\n" nil t)
                                (buffer-substring-no-properties (point-min) (point)))))
-              (headers-alist (when headers-text
-                               (+gptel--parse-http-headers headers-text)))
-              (metadata (plist-get response :metadata)))
+             (headers-alist (when headers-text
+                              (+gptel--parse-http-headers headers-text)))
+             (metadata (plist-get response :metadata)))
         (with-current-buffer buf
           (setq-local +gptel--last-response
-            `((headers . ,headers-alist)
-               (body . ,response)
-               (metadata . ,metadata)))))))
+                      `((headers . ,headers-alist)
+                        (body . ,response)
+                        (metadata . ,metadata)))))))
 
   ;; Initialize workspace context setup
   (defadvice! +add-workspace-context-before-gptel-send (&optional _args)
@@ -287,28 +287,46 @@ Respects gptel branching context — reads from the heading at point."
     (when (bound-and-true-p gptel-mode)
       (+gptel--current-heading-session-id))))
 
-(defun +gptel--find-session-id ()
+(defun +gptel-find-session-id ()
   "Find a Claude Code session ID from gptel buffers.
 If the current buffer is gptel-mode with a session ID, use it directly.
 Otherwise scan all buffers; prompt if multiple found.
+When called interactively, also copies the session ID to the kill ring.
 Returns (session-id . buffer) or nil."
-  ;; Try current buffer first
-  (if-let ((sid (+gptel--buffer-session-id)))
-      (cons sid (current-buffer))
-    ;; Fall back to scanning all buffers
-    (let (candidates)
-      (dolist (buf (buffer-list))
-        (when-let ((sid (+gptel--buffer-session-id buf)))
-          (push (cons sid buf) candidates)))
-      (cond
-       ((null candidates) nil)
-       ((= 1 (length candidates)) (car candidates))
-       (t (let* ((choices (mapcar (lambda (c)
-                                    (cons (format "%s [%s]" (cdr c) (car c))
-                                          c))
-                                  candidates))
-                 (choice (completing-read "Session: " choices nil t)))
-            (cdr (assoc choice choices))))))))
+  (interactive)
+  (let ((result
+         ;; Try current buffer first
+         (if-let ((sid (+gptel--buffer-session-id)))
+           (cons sid (current-buffer))
+           ;; Fall back to scanning all buffers
+           (let (candidates)
+             (dolist (buf (buffer-list))
+               (when-let ((sid (+gptel--buffer-session-id buf)))
+                 (push (cons sid buf) candidates)))
+             (cond
+              ((null candidates) nil)
+              ((= 1 (length candidates)) (car candidates))
+              (t (let* ((choices (mapcar (lambda (c)
+                                           (cons (format "%s [%s]" (cdr c) (car c))
+                                                 c))
+                                         candidates))
+                        (choice (completing-read "Session: " choices nil t)))
+                   (cdr (assoc choice choices)))))))))
+    (when (and result (called-interactively-p 'interactive))
+      (kill-new (car result))
+      (message "Session ID copied: %s" (car result)))
+    result))
+
+(defun +gptel-claude-here ()
+  (interactive)
+  (when-let ((session-id (+gptel-find-session-id)))
+    (let ((root (++workspace-current-project-root)))
+      (+kitten
+       (format!
+        "launch --type tab --tab-title 'cc %s' --cwd '%s' zsh -l -c 'claude --resume %s --fork-session'"
+        (++workspace-current-project-root)
+        (++workspace-current-project-root)
+        (car session-id))))))
 
 ;;;###autoload
 (defun +gptel-inject-message ()
@@ -316,7 +334,7 @@ Returns (session-id . buffer) or nil."
 The message will be picked up by the PreToolUse hook before the next
 tool call and delivered as additionalContext."
   (interactive)
-  (let ((found (+gptel--find-session-id)))
+  (let ((found (+gptel-find-session-id)))
     (unless found
       (user-error "No active Claude Code session found in gptel buffers"))
     (let ((session-id (car found))
