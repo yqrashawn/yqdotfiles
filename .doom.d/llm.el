@@ -187,22 +187,14 @@ Everywhere else: max 2 consecutive blank lines."
     :system ""
     :parents '(default)
     :tools '())
-  (gptel-make-preset 'so1
-    :description "cc sonet 1m"
-    :model (intern "sonnet[1m]")
-    :parents '(so))
   (gptel-make-preset 'op
     :description "cc opus"
     :model 'opus
     :parents '(so))
-  (gptel-make-preset 'op1
-    :description "cc opus 1m"
-    :model (intern "opus[1m]")
-    :parents '(so))
   (gptel-make-preset 's
-    :description "cchp sonnet max"
+    :description "cchp sonnet medium"
     :backend "ccl"
-    :model 'sonnet
+    :model 'sonnet-medium
     :system (alist-get 'claude gptel-directives)
     :parents '(default)
     :tools '())
@@ -211,60 +203,28 @@ Everywhere else: max 2 consecutive blank lines."
     :model 'sonnet-low
     :parents '(s))
   (gptel-make-preset 'sm
-    :description "cchp sonnet medium"
-    :model 'sonnet-medium
+    :description "cchp sonnet max"
+    :model 'sonnet-max
     :parents '(s))
   (gptel-make-preset 'sh
     :description "cchp sonnet high"
     :model 'sonnet-high
     :parents '(s))
-  (gptel-make-preset 's1
-    :description "cchp sonnet 1m max"
-    :model (intern "sonnet[1m]")
-    :parents '(s))
-  (gptel-make-preset 's1l
-    :description "cchp sonnet 1m low"
-    :model (intern "sonnet[1m]-low")
-    :parents '(s))
-  (gptel-make-preset 's1m
-    :description "cchp sonnet 1m medium"
-    :model (intern "sonnet[1m]-medium")
-    :parents '(s))
-  (gptel-make-preset 's1h
-    :description "cchp 1m high"
-    :model (intern "sonnet[1m]-high")
-    :parents '(s))
   (gptel-make-preset 'o
-    :description "cchp opus max"
-    :model 'opus
+    :description "cchp opus medium"
+    :model 'opus-medium
     :parents '(s))
   (gptel-make-preset 'ol
     :description "cchp opus low"
     :model 'opus-low
     :parents '(s))
   (gptel-make-preset 'om
-    :description "claude code"
-    :model 'opus-medium
+    :description "claude code opus max"
+    :model 'opus-max
     :parents '(s))
   (gptel-make-preset 'oh
     :description "claude code"
     :model 'opus-high
-    :parents '(s))
-  (gptel-make-preset 'o1
-    :description "cchp opus 1m max"
-    :model (intern "opus[1m]")
-    :parents '(s))
-  (gptel-make-preset 'o1l
-    :description "cchp opus 1m low"
-    :model (intern "opus[1m]-low")
-    :parents '(s))
-  (gptel-make-preset 'o1m
-    :description "cchp opus 1m medium"
-    :model (intern "opus[1m]-medium")
-    :parents '(s))
-  (gptel-make-preset 'o1h
-    :description "cchp opus 1m high"
-    :model (intern "opus[1m]-high")
     :parents '(s))
   (gptel-make-preset 'h
     :description "cchp haiku"
@@ -289,16 +249,25 @@ Everywhere else: max 2 consecutive blank lines."
     :description "cchp dev opus"
     :model 'opus
     :parents '(sd))
+  (gptel-make-preset 'omd
+    :description "cchp dev opus"
+    :model 'opus-max
+    :parents '(sd))
   (gptel-make-preset 'hd
     :description "cchp dev haiku"
     :model 'haiku
     :parents '(sd))
+  (gptel-make-preset 'glmd
+    :description "cchp dev glm 5"
+    :backend "ccld"
+    :model (intern "0g-zai-org/GLM-5-FP8")
+    :parents '(s))
   
   (gptel-make-preset 'ghsonnet
     :description "copilot sonnet"
     :backend "cpi"
     :parents '(default)
-    :model 'claude-sonnet-4.5)
+    :model 'claude-sonnet-4.6)
 
   (gptel-make-preset 'codex
     :description "codex"
@@ -421,7 +390,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)
@@ -668,7 +637,7 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
   (setq!
    ;; gptel-magit-model 'gpt-4.1
    ;; gptel-magit-model 'sonnet
-   gptel-magit-model 'sonnet-medium
+   gptel-magit-model 'sonnet-low
    ;; gptel-magit-backend gptel--gh-copilot-business
    ;; gptel-magit-backend +gptel-free-backend
    ;; gptel-magit-backend gptel-claude-code-backend

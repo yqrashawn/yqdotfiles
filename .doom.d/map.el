@@ -872,7 +872,8 @@
           :n "r" #'gptelt-auq-resume)
          (:map gptel-mode-map
           :g "C-3" (cmd! ())
-          :nv "RET" nil))
+          :nv "RET" nil
+          :n "C-c j" #'gptel-send))
  (:after agent-shell
          (:map agent-shell-mode-map
           :g "C-r" #'agent-shell-search-history

@@ -165,16 +165,13 @@ Explicitly uses the CLJ REPL connection so this works even when called from a CL
                    (err-out (nrepl-dict-get result "err")))
               (when (buffer-live-p clj-repl)
                 (with-current-buffer clj-repl
-                  (cider-repl--replace-input (format! "%s\n" clj-string))
-                  (when (or out value err-out)
-                    (cider-repl-reset-markers))
+                  (cider-repl-emit-stdout clj-repl (format "%s\n" clj-string))
                   (when out
                     (cider-repl-emit-stdout clj-repl out))
                   (when value
                     (cider-repl-emit-result clj-repl value t t))
                   (when err-out
-                    (cider-repl-emit-stderr clj-repl err-out))
-                  (cider-repl-emit-prompt clj-repl)))
+                    (cider-repl-emit-stderr clj-repl err-out))))
               (or value err-out
                   (error "Unexpected evaluation result")))
           (error (format "Error evaluating clj code: %s" (error-message-string err))))
@@ -227,16 +224,13 @@ timeout error.  The guard ensures CALLBACK is called exactly once."
                        ;; Echo to REPL buffer
                        (when (buffer-live-p clj-repl)
                          (with-current-buffer clj-repl
-                           (cider-repl--replace-input (format! "%s\n" clj-string))
-                           (when (or out value err-out)
-                             (cider-repl-reset-markers))
+                           (cider-repl-emit-stdout clj-repl (format "%s\n" clj-string))
                            (when out
                              (cider-repl-emit-stdout clj-repl out))
                            (when value
                              (cider-repl-emit-result clj-repl value t t))
                            (when err-out
-                             (cider-repl-emit-stderr clj-repl err-out))
-                           (cider-repl-emit-prompt clj-repl)))
+                             (cider-repl-emit-stderr clj-repl err-out))))
                        ;; Mark request as completed in nREPL
                        (when id
                          (with-current-buffer clj-repl
@@ -471,11 +465,8 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
                     (cider-load-buffer buffer)
                     (when-let ((repl-buf (cider-current-repl type)))
                       (with-current-buffer repl-buf
-                        (cider-repl-reset-markers)
                         (cider-repl-emit-stdout
-                         repl-buf (format ";; eval %s" buffer))
-                        (cider-repl-reset-markers)
-                        (cider-repl-emit-prompt repl-buf)))
+                         repl-buf (format ";; eval %s\n" buffer))))
                     (format "Successfully evaluated buffer '%s'" buffer-name))
                 (error (format "Error evaluating buffer '%s': %s" buffer-name (error-message-string err))))
             (when (and win (window-live-p win))

@@ -52,14 +52,50 @@ to determine idleness.  Only considers buffers whose file exists on disk."
 This is an alist with the following structure:
   \\='((headers . ((\"Header-Name\" . \"value\") ...))
     (body . <parsed-json-plist>)
-    (session-id . \"session-id-from-header\")
     (metadata . <metadata-plist-if-present>))
 
-This can be used to access server-provided context, session info,
-or other data to pass to subsequent requests.")
+This can be used to access server-provided metadata or other
+response data.")
+
+(defun +gptel--ccl-backend-p ()
+  "Return non-nil if current gptel backend is ccl or ccld."
+  (and (boundp 'gptel-backend)
+       gptel-backend
+       (boundp 'gptel--ccl)
+       (boundp 'gptel--ccld)
+       (or (eq gptel-backend gptel--ccl)
+           (eq gptel-backend gptel--ccld))))
+
+(defun +gptel--new-session-id ()
+  "Generate a new session ID for ccl/ccld backends.
+Always creates a fresh UUID.  Stores it as an org property on the
+current heading (respecting gptel branching context) and in the
+buffer-local var.  Returns the new UUID, or nil for non-ccl backends."
+  (when (+gptel--ccl-backend-p)
+    (let ((new-id (org-id-uuid)))
+      (when (boundp 'gptel-claude-code--session-id)
+        (setq-local gptel-claude-code--session-id new-id))
+      (when (derived-mode-p 'org-mode)
+        (org-with-wide-buffer
+         (org-back-to-heading-or-point-min t)
+         (org-set-property "GPTEL_CCL_SESSION_ID" new-id)))
+      new-id)))
+
+(defun +gptel--current-heading-session-id ()
+  "Read session ID from the current org heading.
+Respects gptel branching context — returns the session ID for
+the heading at point, not the file-level property.
+Returns session-id string or nil."
+  (when (+gptel--ccl-backend-p)
+    (or (and (derived-mode-p 'org-mode)
+             (org-with-wide-buffer
+              (org-back-to-heading-or-point-min t)
+              (org-entry-get nil "GPTEL_CCL_SESSION_ID")))
+        (and (boundp 'gptel-claude-code--session-id)
+             gptel-claude-code--session-id))))
 
 (defun +gptel--update-org-file-properties ()
-  "Update org file-level properties for workspace root and CCL session ID.
+  "Update org file-level properties for workspace root.
 Uses `org-entry-put' at point-min so properties live in the same
 :PROPERTIES: drawer as gptel's own state."
   (when (derived-mode-p 'org-mode)
@@ -72,27 +108,16 @@ Uses `org-entry-put' at point-min so properties live in the same
      ;; correct; the after-response hook may run in a different workspace.
      (unless (org-entry-get (point-min) "GPTEL_WORKSPACE_ROOT")
        (let ((root (or (++workspace-current-project-root) default-directory)))
-         (org-entry-put (point-min) "GPTEL_WORKSPACE_ROOT" root)))
-     (when (and (boundp 'gptel-backend)
-                gptel-backend
-                (boundp 'gptel--ccl)
-                (boundp 'gptel--ccld)
-                (or (eq gptel-backend gptel--ccl)
-                    (eq gptel-backend gptel--ccld)))
-       (let ((session-id (or (and (boundp 'gptel-claude-code--session-id)
-                                  gptel-claude-code--session-id)
-                             (alist-get 'session-id +gptel--last-response))))
-         (when session-id
-           (org-entry-put (point-min) "GPTEL_CCL_SESSION_ID" session-id)))))))
+         (org-entry-put (point-min) "GPTEL_WORKSPACE_ROOT" root))))))
 
 (defun +gptel--add-workspace-context ()
   "Add workspace context to gptel request params.
 This sets buffer-local `gptel--request-params' with workspace metadata
-that will be included in each gptel request.  Also includes any server
-metadata from the previous response."
+that will be included in each gptel request.  Generates a new session
+ID on every send (each send is a new Claude Code session)."
   (when gptel-mode
     (+gptel--update-org-file-properties)
-    (let ((session-id (alist-get 'session-id +gptel--last-response)))
+    (let ((session-id (+gptel--new-session-id)))
       (setq-local
        gptel--request-params
        (list
@@ -135,22 +160,18 @@ BODY-PLIST is the parsed JSON response body.
 INFO is the gptel process info plist."
   (when-let* ((buf (plist-get info :buffer)))
     (let* ((headers-alist (+gptel--parse-http-headers headers-text))
-           (session-id (alist-get "X-Session-Id" headers-alist nil nil #'equal))
            (metadata (plist-get body-plist :metadata))
            (response-data
             `((headers . ,headers-alist)
               (body . ,body-plist)
-              (session-id . ,session-id)
               (metadata . ,metadata))))
       (with-current-buffer buf
-        (setq-local +gptel--last-response response-data)
-        ;; Update workspace context for next request in the correct buffer
-        (+gptel--add-workspace-context)))))
+        (setq-local +gptel--last-response response-data)))))
 
 (after! gptel
   ;; Hook into streaming response cleanup to capture metadata
   (defadvice! +gptel-curl--stream-cleanup-capture-metadata (orig-fn process status)
-    "Capture metadata from streaming response before cleanup."
+    "Capture response metadata (headers, body) from streaming response."
     :around #'gptel-curl--stream-cleanup
     (let* ((proc-buf (process-buffer process))
             (fsm (car (alist-get process gptel--request-alist)))
@@ -161,54 +182,28 @@ INFO is the gptel process info plist."
         (with-current-buffer proc-buf
           (save-excursion
             (goto-char (point-min))
-            ;; Skip HTTP headers - look for double newline
             (when (re-search-forward "\n\n" nil t)
-              (let ((headers-text (buffer-substring-no-properties (point-min) (point)))
-                    (session-id nil))
-                ;; Parse SSE data lines for session_id from :session-start event
-                (save-excursion
-                  (while (and (not session-id)
-                              (re-search-forward "^data: " nil t))
-                    (let* ((line-end (line-end-position))
-                           (json-str (buffer-substring-no-properties (point) line-end)))
-                      (unless (string= json-str "[DONE]")
-                        (ignore-errors
-                          (let* ((json-obj (gptel--json-read-string json-str))
-                                 (sid (plist-get json-obj :session_id)))
-                            (when sid (setq session-id sid))))))))
-                (+gptel--capture-response-data headers-text nil info)
-                ;; Override session-id from SSE data if found
-                (when (and session-id (plist-get info :buffer))
-                  (with-current-buffer (plist-get info :buffer)
-                    (setf (alist-get 'session-id +gptel--last-response) session-id)
-                    (+gptel--add-workspace-context)))))))))
-    ;; Call original function
+              (let ((headers-text (buffer-substring-no-properties (point-min) (point))))
+                (+gptel--capture-response-data headers-text nil info)))))))
     (funcall orig-fn process status))
 
   ;; Also hook into non-streaming responses
   ;; Unlike streaming, non-streaming has the HTTP buffer available
   (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl)) response info)
-    "Extract complete response data from CCL backend non-streaming response."
+    "Capture response metadata from CCL backend non-streaming response."
     (when-let* ((buf (plist-get info :buffer)))
-      ;; The current buffer is the url-retrieve response buffer with headers
       (let* ((headers-text (save-excursion
                              (goto-char (point-min))
                              (when (re-search-forward "^\n" nil t)
                                (buffer-substring-no-properties (point-min) (point)))))
               (headers-alist (when headers-text
                                (+gptel--parse-http-headers headers-text)))
-              (session-id (when headers-alist
-                            (alist-get "X-Session-Id" headers-alist nil nil #'equal)))
               (metadata (plist-get response :metadata)))
-        
         (with-current-buffer buf
           (setq-local +gptel--last-response
             `((headers . ,headers-alist)
                (body . ,response)
-               (session-id . ,session-id)
-               (metadata . ,metadata)))
-          ;; Update workspace context for next request in the correct buffer
-          (+gptel--add-workspace-context)))))
+               (metadata . ,metadata)))))))
 
   ;; Initialize workspace context setup
   (defadvice! +add-workspace-context-before-gptel-send (&optional _args)
@@ -232,3 +227,109 @@ INFO is the gptel process info plist."
 
   ;; Start the idle buffer cleanup timer
   (+gptel-start-idle-timer))
+
+;;; Inject message into running Claude Code turn
+
+(defvar +gptel-inject-message-dir
+  (expand-file-name "inject-messages" "~/.claude/")
+  "Directory where inject message files are written for Claude Code hooks.")
+
+(defvar-local +gptel-inject--session-id nil
+  "Session ID stored for the inject message buffer.")
+
+(defvar +gptel-inject-message-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") #'+gptel-inject-message-send)
+    (define-key map (kbd "C-c C-k") #'+gptel-inject-message-cancel)
+    map)
+  "Keymap for `+gptel-inject-message-mode'.")
+
+(define-minor-mode +gptel-inject-message-mode
+  "Minor mode for composing messages to inject into a running Claude Code turn.
+\\<+gptel-inject-message-mode-map>
+\\[+gptel-inject-message-send] to send, \\[+gptel-inject-message-cancel] to cancel."
+  :lighter " Inject"
+  :keymap +gptel-inject-message-mode-map)
+
+(defun +gptel-inject--write-message (content session-id)
+  "Write CONTENT to the inject file for SESSION-ID.
+Returns t if written, nil if content was empty."
+  (if (string-empty-p (string-trim content))
+      (progn (message "Empty message, not sending.") nil)
+    (let ((file (expand-file-name (concat session-id ".txt")
+                                  +gptel-inject-message-dir)))
+      (unless (file-directory-p +gptel-inject-message-dir)
+        (make-directory +gptel-inject-message-dir t))
+      (write-region (string-trim content) nil file nil 'silent)
+      (message "Message queued for session %s" session-id)
+      t)))
+
+(defun +gptel-inject-message-send ()
+  "Send the composed message to the Claude Code session."
+  (interactive)
+  (+gptel-inject--write-message (buffer-string) +gptel-inject--session-id)
+  (let ((buf (current-buffer)))
+    (when (window-parameter nil 'quit-restore)
+      (quit-window t))
+    (when (buffer-live-p buf) (kill-buffer buf))))
+
+(defun +gptel-inject-message-cancel ()
+  "Cancel composing the inject message."
+  (interactive)
+  (let ((buf (current-buffer)))
+    (quit-window t)
+    (when (buffer-live-p buf) (kill-buffer buf))))
+
+(defun +gptel--buffer-session-id (&optional buf)
+  "Return session ID for the current heading in BUF, or nil.
+Respects gptel branching context — reads from the heading at point."
+  (with-current-buffer (or buf (current-buffer))
+    (when (bound-and-true-p gptel-mode)
+      (+gptel--current-heading-session-id))))
+
+(defun +gptel--find-session-id ()
+  "Find a Claude Code session ID from gptel buffers.
+If the current buffer is gptel-mode with a session ID, use it directly.
+Otherwise scan all buffers; prompt if multiple found.
+Returns (session-id . buffer) or nil."
+  ;; Try current buffer first
+  (if-let ((sid (+gptel--buffer-session-id)))
+      (cons sid (current-buffer))
+    ;; Fall back to scanning all buffers
+    (let (candidates)
+      (dolist (buf (buffer-list))
+        (when-let ((sid (+gptel--buffer-session-id buf)))
+          (push (cons sid buf) candidates)))
+      (cond
+       ((null candidates) nil)
+       ((= 1 (length candidates)) (car candidates))
+       (t (let* ((choices (mapcar (lambda (c)
+                                    (cons (format "%s [%s]" (cdr c) (car c))
+                                          c))
+                                  candidates))
+                 (choice (completing-read "Session: " choices nil t)))
+            (cdr (assoc choice choices))))))))
+
+;;;###autoload
+(defun +gptel-inject-message ()
+  "Compose a message to inject into a running Claude Code turn.
+The message will be picked up by the PreToolUse hook before the next
+tool call and delivered as additionalContext."
+  (interactive)
+  (let ((found (+gptel--find-session-id)))
+    (unless found
+      (user-error "No active Claude Code session found in gptel buffers"))
+    (let ((session-id (car found))
+          (source-buf (cdr found))
+          (buf (generate-new-buffer "*inject-message*")))
+      (pop-to-buffer buf
+                     '((display-buffer-below-selected)
+                       (window-height . 8)))
+      (org-mode)
+      (+gptel-inject-message-mode 1)
+      (setq-local +gptel-inject--session-id session-id)
+      (setq header-line-format
+            (format " Inject message into session %s (%s)  |  C-c C-c send  |  C-c C-k cancel"
+                    (substring session-id 0 (min 8 (length session-id)))
+                    (buffer-name source-buf)))
+      (message "Compose message, C-c C-c to send, C-c C-k to cancel"))))

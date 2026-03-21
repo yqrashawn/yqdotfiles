@@ -217,13 +217,13 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
    ;; cider-preferred-build-tool 'clojure-cli
    cider-default-cljs-repl 'shadow
    cider-auto-jump-to-error nil
-   ;; cider-print-fn 'fipp
-   cider-print-fn 'puget
+   cider-print-fn 'fipp
+   ;; cider-print-fn 'puget
    ;; cider-print-fn 'pprint
    ;; cider-print-fn 'pr
    ;; cider-print-fn 'zprint
    ;; cider-print-options '(("width" 80))
-   cider-print-options '(("map-delimiter" ""))
+   cider-print-options '(("map-delimiter" "") ("length" 200) ("level" 10))
    ;; cider-print-options '(("style" ":community"))
    ;; cider-print-options '(("style" ((keyword "community" ) (keyword "no-comma" ))))
    ;; cider-format-code-options '(("indents" (("letsubs" 0))))

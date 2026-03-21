@@ -1,4 +1,4 @@
 # key: im
 # name: interview me
 # --
-interview me (use the emacs mcp =ask_user_question= tool to keep ask me questions until all questions/concerns ... anything are clear for you) and $1 and of course you can interview me again and again if you have more questions/concerns while $1 $0
+interview me (use the cchp mcp =ask_user_question= tool to keep ask me questions until all questions/concerns ... anything are clear for you) and $1 and of course you can interview me again and again if you have more questions/concerns while $1 $0
