@@ -153,15 +153,19 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;    ":cli-assist")))
 
 
+     ;; ("clojure-mcp" .
+     ;;  (:command "clojure"
+     ;;   :args
+     ;;   ("-Sdeps"
+     ;;    "'{:deps {io.github.bhauman/clojure-mcp {:git/tag \"v0.3.1\" :git/sha \"81005ce\" } io.modelcontextprotocol.sdk/mcp {:mvn/version \"0.17.2\"}}'"
+     ;;    "-X"
+     ;;    "clojure-mcp.main/start")))
+
      ("clojure-mcp" .
-      (:command "clojure"
+      (:command "~/.asdf/shims/clojure"
        :args
-       ("-Sdeps"
-        "{:deps {io.github.bhauman/clojure-mcp {:git/tag \"v0.2.6\" :git/sha \"cc68ad0\"}}}"
-        "-X"
-        "clojure-mcp.main/start"
-        ":config-profile"
-        ":cli-assist")))
+       ("-Tmcp"
+        "start")))
 
      ("lattice" .
       (:command "bunx"

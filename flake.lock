@@ -919,6 +919,21 @@
         "type": "github"
       }
     },
+    "flake-utils_6": {
+      "locked": {
+        "lastModified": 1649676176,
+        "narHash": "sha256-OWKJratjt2RW151VUlJPRALb7OU2S5s+f0vLj4o1bHM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "a4b154ebbdc88c8498a5c7b01589addc9e9cb678",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "forgit": {
       "flake": false,
       "locked": {
@@ -1219,6 +1234,20 @@
     },
     "nixpkgs_8": {
       "locked": {
+        "lastModified": 1652252629,
+        "narHash": "sha256-SvT64apetqc8P5nYp1/fOZvUmHUPdPFUZbhSpKy+1aI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "d2fc6856824cb87742177eefc8dd534bdb6c3439",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_9": {
+      "locked": {
         "lastModified": 1769789167,
         "narHash": "sha256-kKB3bqYJU5nzYeIROI82Ef9VtTbu4uA3YydSk/Bioa8=",
         "owner": "NixOS",
@@ -1285,6 +1314,25 @@
         "type": "github"
       }
     },
+    "rep": {
+      "inputs": {
+        "flake-utils": "flake-utils_6",
+        "nixpkgs": "nixpkgs_8"
+      },
+      "locked": {
+        "lastModified": 1771422319,
+        "narHash": "sha256-7Ew+oHMvFknFuwf0LNwTv0mbO9o7b2utbVx3n7A1l58=",
+        "owner": "eraserhd",
+        "repo": "rep",
+        "rev": "0770336b916d8f99c8509f6f8cf4ee2bcb9c435f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eraserhd",
+        "repo": "rep",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "asdf-babashka": "asdf-babashka",
@@ -1341,6 +1389,7 @@
         "own": "own",
         "paradedb-src": "paradedb-src",
         "parinfer-rust": "parinfer-rust",
+        "rep": "rep",
         "small": "small",
         "sops-nix": "sops-nix",
         "spacehammer": "spacehammer",
@@ -1552,7 +1601,7 @@
       "inputs": {
         "crane": "crane",
         "flake-parts": "flake-parts_2",
-        "nixpkgs": "nixpkgs_8",
+        "nixpkgs": "nixpkgs_9",
         "rust-overlay": "rust-overlay"
       },
       "locked": {

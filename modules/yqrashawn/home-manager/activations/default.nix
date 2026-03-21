@@ -118,5 +118,8 @@
         echo 'rtk init --global --auto-patch'
         rtk init --global --auto-patch
     fi
+    if command -v ~/.asdf/shims/clojure &> /dev/null; then
+        ~/.asdf/shims/clojure -Ttools install-latest :lib io.github.bhauman/clojure-mcp :as mcp                        
+    fi
   '';
 }
