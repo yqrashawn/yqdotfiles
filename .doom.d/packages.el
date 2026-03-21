@@ -490,6 +490,11 @@
 
 (package! sops)
 
+;; (package! embr
+;;   :recipe (:host github
+;;            :repo "emacs-os/embr.el"
+;;            :files ("*.el" "*.py" "*.sh" "native/*.c" "native/Makefile")))
+
 ;; Local Variables:
 ;; eval: (apheleia-mode -1)
 ;; End:
