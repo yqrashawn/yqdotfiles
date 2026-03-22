@@ -1,15 +1,20 @@
 #!/bin/bash
 
 DROPBOX_DIR="$HOME/Library/CloudStorage/Dropbox"
+PLUGIN_ID="com.getdropbox.dropbox.fileprovider"
 
 case "$1" in
 on)
   sudo chown -R root:wheel "$DROPBOX_DIR"
   sudo chmod 700 "$DROPBOX_DIR"
+  pluginkit -e ignore -i "$PLUGIN_ID"
+  pkill -9 -f DropboxFileProviderCH
+  pkill -9 -f DropboxFileProvider
   ;;
 off)
   sudo chown -R $(whoami):staff "$DROPBOX_DIR"
   sudo chmod 755 "$DROPBOX_DIR"
+  pluginkit -e use -i "$PLUGIN_ID"
   ;;
 *)
   echo "Usage: dropboxlock [on|off]"
