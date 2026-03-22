@@ -2,16 +2,26 @@
 
 DROPBOX_DIR="$HOME/Library/CloudStorage/Dropbox"
 PLUGIN_ID="com.getdropbox.dropbox.fileprovider"
+APPEX_PATH="/Applications/Dropbox.app/Contents/PlugIns/DropboxFileProvider.appex"
+APPEX_DISABLED="${APPEX_PATH}.disabled"
 
 case "$1" in
 on)
   sudo chown -R root:wheel "$DROPBOX_DIR"
   sudo chmod 700 "$DROPBOX_DIR"
   pluginkit -e ignore -i "$PLUGIN_ID"
+  # Rename .appex so fileproviderd can't respawn the extension
+  if [ -d "$APPEX_PATH" ]; then
+    sudo mv "$APPEX_PATH" "$APPEX_DISABLED"
+  fi
   pkill -9 -f DropboxFileProviderCH
   pkill -9 -f DropboxFileProvider
   ;;
 off)
+  # Restore .appex bundle before re-enabling
+  if [ -d "$APPEX_DISABLED" ]; then
+    sudo mv "$APPEX_DISABLED" "$APPEX_PATH"
+  fi
   sudo chown -R $(whoami):staff "$DROPBOX_DIR"
   sudo chmod 755 "$DROPBOX_DIR"
   pluginkit -e use -i "$PLUGIN_ID"
