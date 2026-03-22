@@ -297,7 +297,7 @@ Returns (session-id . buffer) or nil."
   (let ((result
          ;; Try current buffer first
          (if-let ((sid (+gptel--buffer-session-id)))
-           (cons sid (current-buffer))
+             (cons sid (current-buffer))
            ;; Fall back to scanning all buffers
            (let (candidates)
              (dolist (buf (buffer-list))
@@ -323,7 +323,7 @@ Returns (session-id . buffer) or nil."
     (let ((root (++workspace-current-project-root)))
       (+kitten
        (format!
-        "launch --type tab --tab-title 'cc %s' --cwd '%s' zsh -l -c 'claude --resume %s --fork-session'"
+        "launch --type tab --tab-title 'cc %s' --cwd '%s' zsh -l -c 'claude --resume %s --fork-session --chrome --permission-mode bypassPermissions --dangerously-skip-permissions'"
         (++workspace-current-project-root)
         (++workspace-current-project-root)
         (car session-id))))))

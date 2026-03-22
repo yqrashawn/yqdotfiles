@@ -219,11 +219,11 @@ Everywhere else: max 2 consecutive blank lines."
     :model 'opus-low
     :parents '(s))
   (gptel-make-preset 'om
-    :description "claude code opus max"
+    :description "cchp opus max"
     :model 'opus-max
     :parents '(s))
   (gptel-make-preset 'oh
-    :description "claude code"
+    :description "cchp opus high"
     :model 'opus-high
     :parents '(s))
   (gptel-make-preset 'h
@@ -393,7 +393,7 @@ Merge buffer-local with global default files."
            (buf-file
             (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                  (buffer-file-name base-buffer)))))
+                    (buffer-file-name base-buffer)))))
       (when (and
              buf-file
              (buffer-modified-p buffer)

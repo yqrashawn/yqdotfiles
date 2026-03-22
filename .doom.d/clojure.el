@@ -387,7 +387,16 @@ creates a new one. Don't unnecessarily bother the user."
 (use-package! clj-ns-name
   :after clojure-mode
   :config
-  (clj-ns-name-install))
+  (clj-ns-name-install)
+  ;; Remove original advice and replace with version that skips tramp/remote
+  ;; files to avoid triggering SSH connections during completion enumeration
+  (advice-remove 'find-file-noselect #'clj-ns-name-find-file-noselect-advice)
+  (defun +clj-ns-name-find-file-noselect-advice (ffn-fun filename &rest args)
+    "Like `clj-ns-name-find-file-noselect-advice' but skips remote files."
+    (if (file-remote-p filename)
+        (apply ffn-fun filename args)
+      (apply #'clj-ns-name-find-file-noselect-advice ffn-fun filename args)))
+  (advice-add 'find-file-noselect :around #'+clj-ns-name-find-file-noselect-advice))
 
 (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode-hook)
   (defun +enable-cljr () (clj-refactor-mode 1)))

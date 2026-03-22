@@ -162,7 +162,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;    "clojure-mcp.main/start")))
 
      ("clojure-mcp" .
-      (:command "~/.asdf/shims/clojure"
+      (:command "clojure"
        :args
        ("-Tmcp"
         "start")))

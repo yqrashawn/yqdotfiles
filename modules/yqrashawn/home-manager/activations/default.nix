@@ -121,5 +121,16 @@
     if command -v ~/.asdf/shims/clojure &> /dev/null; then
         ~/.asdf/shims/clojure -Ttools install-latest :lib io.github.bhauman/clojure-mcp :as mcp                        
     fi
+    if [ ! -e ~/.claude/hooks ] &> /dev/null; then
+        mkdir -p ~/.claude
+        ln -s ~/Dropbox/sync/claude-settings.json ~/.claude/settings.json
+        ln -s ~/Dropbox/sync/claude-memory.json ~/.claude/CLAUDE.md
+        ln -s ~/Dropbox/sync/claude-commands ~/.claude/commands
+        ln -s ~/Dropbox/sync/claude-hooks ~/.claude/hooks
+        ln -s ~/Dropbox/sync/claude-skills ~/.claude/skills
+        ln -s ~/Dropbox/sync/claude-agents ~/.claude/agents
+        ln -s ~/Dropbox/sync/claude-plugins/installed_plugins.json ~/.claude/plugins/installed_plugins.json
+        ln -s ~/Dropbox/sync/claude-plugins/known_marketplaces.json ~/.claude/plugins/known_marketplaces.json
+    fi
   '';
 }

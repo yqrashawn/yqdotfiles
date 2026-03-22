@@ -11,6 +11,15 @@
 (setq user-full-name "yqrashawn"
       user-mail-address "namy.19@gmail.com")
 
+;; Prevent editorconfig from triggering tramp connections on remote files
+;; The advice doesn't check editorconfig-exclude-regexps, so we wrap it directly
+(after! editorconfig
+  (advice-add 'editorconfig--advice-find-file-noselect :around
+              (defun +editorconfig-skip-remote-a (fn f filename &rest args)
+                (if (file-remote-p filename)
+                    (apply f filename args)
+                  (apply fn f filename args)))))
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
