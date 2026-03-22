@@ -1,5 +1,68 @@
 ;;; completion/custom-capfs/config.el -*- lexical-binding: t; -*-
 
+;; --- Caches for disk-based capfs ---
+
+(defvar +claude-code--skill-cache nil
+  "Cached list of skill names (without \"sk\" prefix).")
+
+(defvar +claude-code--agent-cache nil
+  "Cached list of agent names (without \"ag\" prefix).")
+
+(defvar +claude-code--cache-refresh-interval 30
+  "Seconds between cache refreshes for skill/agent completions.")
+
+(defvar +claude-code--cache-timer nil
+  "Timer for periodic cache refresh.")
+
+(defun +claude-code--refresh-skill-cache ()
+  "Refresh the skill name cache from disk."
+  (let* ((skills-dirs (cl-remove-if-not
+                       #'file-directory-p
+                       (list (expand-file-name "~/.claude/skills")
+                             (when-let ((root (ignore-errors (++workspace-current-project-root))))
+                               (expand-file-name ".claude/skills" root)))))
+         (dirs (cl-remove-duplicates
+                (cl-loop for sd in skills-dirs
+                         append
+                         (cl-remove-if-not
+                          (lambda (f)
+                            (file-directory-p (expand-file-name f sd)))
+                          (directory-files sd nil "^[^.]"))
+                         append
+                         (mapcar #'file-name-sans-extension
+                                 (directory-files sd nil "\\.md$")))
+                :test #'string=)))
+    (setq +claude-code--skill-cache dirs)))
+
+(defun +claude-code--refresh-agent-cache ()
+  "Refresh the agent name cache from disk."
+  (let* ((agents-dirs (cl-remove-if-not
+                       #'file-directory-p
+                       (list (expand-file-name "~/.claude/agents")
+                             (when-let ((root (ignore-errors (++workspace-current-project-root))))
+                               (expand-file-name ".claude/agents" root)))))
+         (names (cl-remove-duplicates
+                 (cl-loop for ad in agents-dirs
+                          append (mapcar #'file-name-sans-extension
+                                         (directory-files ad nil "\\.md$")))
+                 :test #'string=)))
+    (setq +claude-code--agent-cache names)))
+
+(defun +claude-code--refresh-all-caches ()
+  "Refresh both skill and agent caches."
+  (+claude-code--refresh-skill-cache)
+  (+claude-code--refresh-agent-cache))
+
+(defun +claude-code--ensure-cache-timer ()
+  "Start the periodic cache refresh timer if not already running."
+  (unless (and +claude-code--cache-timer
+               (memq +claude-code--cache-timer timer-list))
+    (+claude-code--refresh-all-caches)
+    (setq +claude-code--cache-timer
+          (run-with-timer +claude-code--cache-refresh-interval
+                          +claude-code--cache-refresh-interval
+                          #'+claude-code--refresh-all-caches))))
+
 (defun +doom-buffer-files-capf ()
   "Cape capf for completing file paths of all buffers in doom-buffer-list.
 Filters candidates by fuzzy matching input against truncated path (no root, root-1 folders).
@@ -76,37 +139,19 @@ Wraps candidates with =...= if current buffer is org-mode."
   "Cape capf for completing Claude Code skill names.
 Triggers when the word at point starts with \"sk\".  Lists all
 folder names in ~/.claude/skills/ as candidates.  The completion
-result is =skill-name= skill."
+result is =skill-name= skill.
+Uses a periodically refreshed cache instead of hitting disk on each invocation."
   (let* ((word (thing-at-point 'symbol t))
          (bounds (when word (bounds-of-thing-at-point 'symbol))))
     (when (and word bounds (string-prefix-p "sk" word t))
       (let* ((beg (car bounds))
              (end (cdr bounds))
-             (skills-dirs (cl-remove-if-not
-                           #'file-directory-p
-                           (list (expand-file-name "~/.claude/skills")
-                                 (when-let ((root (++workspace-current-project-root)))
-                                   (expand-file-name ".claude/skills" root)))))
-             (dirs (cl-remove-duplicates
-                    (cl-loop for sd in skills-dirs
-                             append
-                             ;; Directory-based skills: skills/foo/ (or skills/foo/SKILL.md)
-                             (cl-remove-if-not
-                              (lambda (f)
-                                (file-directory-p (expand-file-name f sd)))
-                              (directory-files sd nil "^[^.]"))
-                             append
-                             ;; Markdown file-based skills: skills/foo.md -> "foo"
-                             (mapcar #'file-name-sans-extension
-                                     (directory-files sd nil "\\.md$")))
-                    :test #'string=))
-             ;; Prefix candidates with "sk" so they match the typed text
-             (candidates (mapcar (lambda (d) (concat "sk" d)) dirs)))
+             (candidates (mapcar (lambda (d) (concat "sk" d))
+                                 (or +claude-code--skill-cache '()))))
         (list beg end candidates
               :exclusive 'no
               :exit-function (lambda (str status)
                                (when (eq status 'finished)
-                                 ;; str is "sk<name>", replace with "=<name>= skill"
                                  (let* ((name (substring str (length "sk")))
                                         (end (point))
                                         (start (- end (length str))))
@@ -122,29 +167,19 @@ result is =skill-name= skill."
   "Cape capf for completing Claude Code agent names.
 Triggers when the word at point starts with \"ag\".  Lists all
 markdown file names (without .md) in ~/.claude/agents/ as candidates.
-The completion result is =agent-name= agent."
+The completion result is =agent-name= agent.
+Uses a periodically refreshed cache instead of hitting disk on each invocation."
   (let* ((word (thing-at-point 'symbol t))
          (bounds (when word (bounds-of-thing-at-point 'symbol))))
     (when (and word bounds (string-prefix-p "ag" word t))
       (let* ((beg (car bounds))
              (end (cdr bounds))
-             (agents-dirs (cl-remove-if-not
-                           #'file-directory-p
-                           (list (expand-file-name "~/.claude/agents")
-                                 (when-let ((root (++workspace-current-project-root)))
-                                   (expand-file-name ".claude/agents" root)))))
-             (names (cl-remove-duplicates
-                     (cl-loop for ad in agents-dirs
-                              append (mapcar #'file-name-sans-extension
-                                             (directory-files ad nil "\\.md$")))
-                     :test #'string=))
-             ;; Prefix candidates with "ag" so they match the typed text
-             (candidates (mapcar (lambda (n) (concat "ag" n)) names)))
+             (candidates (mapcar (lambda (n) (concat "ag" n))
+                                 (or +claude-code--agent-cache '()))))
         (list beg end candidates
               :exclusive 'no
               :exit-function (lambda (str status)
                                (when (eq status 'finished)
-                                 ;; str is "ag<name>", replace with "=<name>= agent"
                                  (let* ((name (substring str (length "ag")))
                                         (end (point))
                                         (start (- end (length str))))
@@ -159,6 +194,7 @@ The completion result is =agent-name= agent."
 (add-hook!
  '(gptel-mode-hook agent-shell-mode-hook eat-mode-hook)
  (defun +custom-capf-setup-org-mode ()
+   (+claude-code--ensure-cache-timer)
    (add-hook 'completion-at-point-functions
              #'+claude-code-skill-completion 900 t)
    (add-hook 'completion-at-point-functions

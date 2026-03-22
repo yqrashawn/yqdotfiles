@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: compact conversation
+# key: compact
+# --
+compact the current conversation $0

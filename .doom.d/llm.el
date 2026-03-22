@@ -290,7 +290,7 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\"
 (make-variable-buffer-local '+llm-project-default-files)
 (put '+llm-project-default-files 'safe-local-variable #'listp)
 (setq! +llm-global-project-default-files
-       '("CLAUDE.md" "AGENTS.md" "README.md" "README.org" ".github/copilot-instructions.md" "llm.txt" "llm.md"
+       '("AGENTS.md" ".github/copilot-instructions.md" "llm.txt" "llm.md"
          "llm.org" "deps.edn" "duct.edn" "shadow-cljs.edn" "package.json"))
 (setq! +llm-project-default-files +llm-global-project-default-files)
 
