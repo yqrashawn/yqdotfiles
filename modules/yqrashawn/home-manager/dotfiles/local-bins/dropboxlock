@@ -3,16 +3,16 @@
 DROPBOX_DIR="$HOME/Library/CloudStorage/Dropbox"
 
 case "$1" in
-  on)
-    sudo chmod 700 "$DROPBOX_DIR"
-    sudo chown root "$DROPBOX_DIR"
-    ;;
-  off)
-    sudo chown "$USER" "$DROPBOX_DIR"
-    sudo chmod 755 "$DROPBOX_DIR"
-    ;;
-  *)
-    echo "Usage: dropboxlock [on|off]"
-    exit 1
-    ;;
+on)
+  sudo chown -R root:wheel "$DROPBOX_DIR"
+  sudo chmod 700 "$DROPBOX_DIR"
+  ;;
+off)
+  sudo chown -R $(whoami):staff "$DROPBOX_DIR"
+  sudo chmod 755 "$DROPBOX_DIR"
+  ;;
+*)
+  echo "Usage: dropboxlock [on|off]"
+  exit 1
+  ;;
 esac

@@ -403,6 +403,93 @@ Returns (session-id . buffer) or nil."
         (++workspace-current-project-root)
         (car session-id))))))
 
+;;; Comment on quoted region
+
+(defvar-local +gptel-comment--quoted-text nil
+  "The quoted text stored for the comment buffer.")
+
+(defvar-local +gptel-comment--source-buffer nil
+  "The source gptel buffer to insert the comment into.")
+
+(defvar +gptel-comment-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") #'+gptel-comment-send)
+    (define-key map (kbd "C-c C-k") #'+gptel-comment-cancel)
+    map)
+  "Keymap for `+gptel-comment-mode'.")
+
+(define-minor-mode +gptel-comment-mode
+  "Minor mode for composing comments on quoted gptel text.
+\\<+gptel-comment-mode-map>
+\\[+gptel-comment-send] to insert, \\[+gptel-comment-cancel] to cancel."
+  :lighter " Comment"
+  :keymap +gptel-comment-mode-map)
+
+(defun +gptel-comment--insert (quoted-text comment source-buffer)
+  "Insert QUOTED-TEXT and COMMENT into SOURCE-BUFFER.
+Appends a quote block followed by the comment at the end of the buffer.
+QUOTED-TEXT and COMMENT should be pre-trimmed."
+  (with-current-buffer source-buffer
+    (save-excursion
+      (save-restriction
+        (widen)
+        (goto-char (point-max))
+        (unless (bolp) (insert "\n"))
+        ;; Ensure blank line before quote block for proper org rendering
+        (unless (or (bobp) (eq (char-before (1- (point))) ?\n))
+          (insert "\n"))
+        (insert "#+begin_quote\n" quoted-text "\n#+end_quote\n" comment "\n")))))
+
+(defun +gptel-comment-send ()
+  "Insert the quote+comment block into the source gptel buffer."
+  (interactive)
+  (let ((comment (string-trim (buffer-string)))
+        (quoted +gptel-comment--quoted-text)
+        (source +gptel-comment--source-buffer))
+    (when (string-empty-p comment)
+      (user-error "Empty comment"))
+    (unless (buffer-live-p source)
+      (user-error "Source buffer no longer exists"))
+    (let ((buf (current-buffer)))
+      (when (window-parameter nil 'quit-restore)
+        (quit-window t))
+      (when (buffer-live-p buf) (kill-buffer buf)))
+    (+gptel-comment--insert quoted comment source)))
+
+(defun +gptel-comment-cancel ()
+  "Cancel composing the comment."
+  (interactive)
+  (let ((buf (current-buffer)))
+    (quit-window t)
+    (when (buffer-live-p buf) (kill-buffer buf))))
+
+;;;###autoload
+(defun +gptel-comment-region (beg end)
+  "Quote the selected region and compose a comment to append.
+Select text in a gptel-mode buffer, then call this to open a
+comment buffer.  On C-c C-c, the quote+comment block is appended
+at the end of the gptel buffer."
+  (interactive "r")
+  (unless (bound-and-true-p gptel-mode)
+    (user-error "Not in a gptel-mode buffer"))
+  (let ((quoted-text (string-trim (buffer-substring-no-properties beg end)))
+        (source-buf (current-buffer))
+        (buf (generate-new-buffer "*gptel-comment*")))
+    (when (string-empty-p quoted-text)
+      (user-error "No text selected"))
+    (deactivate-mark)
+    (pop-to-buffer buf
+                   '((display-buffer-below-selected)
+                     (window-height . 8)))
+    (org-mode)
+    (+gptel-comment-mode 1)
+    (setq-local +gptel-comment--quoted-text quoted-text)
+    (setq-local +gptel-comment--source-buffer source-buf)
+    (setq header-line-format
+          (format " Comment on quote (%s)  |  C-c C-c insert  |  C-c C-k cancel"
+                  (buffer-name source-buf)))
+    (message "Type your comment, C-c C-c to insert, C-c C-k to cancel")))
+
 ;;;###autoload
 (defun +gptel-inject-message ()
   "Compose a message to inject into a running Claude Code turn.
