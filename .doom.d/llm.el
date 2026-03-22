@@ -2,7 +2,8 @@
 
 ;;; init
 (load! "models.el")
-(setq! +gptel-default-preset 's)
+(setq! +gptel-default-preset 'sh)
+(setq! +gptel-default-preset 'oh)
 
 ;;; helper fns
 (defun +gptel-sanitize-filename (str)
@@ -153,6 +154,56 @@ Everywhere else: max 2 consecutive blank lines."
     (funcall f response info raw)))
 
 ;;; gptel
+(defun +gptel-make-cchp-presets (suffix backend-name desc-prefix)
+  "Create a full set of cchp presets for a backend.
+SUFFIX is appended to preset names (\"\" for ccl, \"n\" for ccl-new, \"d\" for ccld).
+BACKEND-NAME is the gptel backend name string.
+DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\")."
+  (let ((base-name (intern (concat "s" suffix))))
+    ;; Base preset: sonnet medium
+    (gptel-make-preset base-name
+      :description (concat desc-prefix " sonnet medium")
+      :backend backend-name
+      :model 'sonnet-medium
+      :system (alist-get 'claude gptel-directives)
+      :parents '(default)
+      :tools '())
+    ;; Sonnet variants
+    (gptel-make-preset (intern (concat "sl" suffix))
+      :description (concat desc-prefix " sonnet low")
+      :model 'sonnet-low
+      :parents (list base-name))
+    (gptel-make-preset (intern (concat "sm" suffix))
+      :description (concat desc-prefix " sonnet max")
+      :model 'sonnet-max
+      :parents (list base-name))
+    (gptel-make-preset (intern (concat "sh" suffix))
+      :description (concat desc-prefix " sonnet high")
+      :model 'sonnet-high
+      :parents (list base-name))
+    ;; Opus variants
+    (gptel-make-preset (intern (concat "o" suffix))
+      :description (concat desc-prefix " opus medium")
+      :model 'opus-medium
+      :parents (list base-name))
+    (gptel-make-preset (intern (concat "ol" suffix))
+      :description (concat desc-prefix " opus low")
+      :model 'opus-low
+      :parents (list base-name))
+    (gptel-make-preset (intern (concat "om" suffix))
+      :description (concat desc-prefix " opus max")
+      :model 'opus-max
+      :parents (list base-name))
+    (gptel-make-preset (intern (concat "oh" suffix))
+      :description (concat desc-prefix " opus high")
+      :model 'opus-high
+      :parents (list base-name))
+    ;; Haiku
+    (gptel-make-preset (intern (concat "h" suffix))
+      :description (concat desc-prefix " haiku")
+      :model 'haiku
+      :parents (list base-name))))
+
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
     :description "copilot default"
@@ -191,72 +242,16 @@ Everywhere else: max 2 consecutive blank lines."
     :description "cc opus"
     :model 'opus
     :parents '(so))
-  (gptel-make-preset 's
-    :description "cchp sonnet medium"
-    :backend "ccl"
-    :model 'sonnet-medium
-    :system (alist-get 'claude gptel-directives)
-    :parents '(default)
-    :tools '())
-  (gptel-make-preset 'sl
-    :description "cchp sonnet low"
-    :model 'sonnet-low
-    :parents '(s))
-  (gptel-make-preset 'sm
-    :description "cchp sonnet max"
-    :model 'sonnet-max
-    :parents '(s))
-  (gptel-make-preset 'sh
-    :description "cchp sonnet high"
-    :model 'sonnet-high
-    :parents '(s))
-  (gptel-make-preset 'o
-    :description "cchp opus medium"
-    :model 'opus-medium
-    :parents '(s))
-  (gptel-make-preset 'ol
-    :description "cchp opus low"
-    :model 'opus-low
-    :parents '(s))
-  (gptel-make-preset 'om
-    :description "cchp opus max"
-    :model 'opus-max
-    :parents '(s))
-  (gptel-make-preset 'oh
-    :description "cchp opus high"
-    :model 'opus-high
-    :parents '(s))
-  (gptel-make-preset 'h
-    :description "cchp haiku"
-    :model 'haiku
-    :parents '(s))
-  (gptel-make-preset 'sla
-    :description "cchp/anthropic dev sonnet low"
-    :backend "cclda"
-    :model 'sonnet-low
-    :parents '(s))
-  (gptel-make-preset 'slg
-    :description "cchp/gemini dev sonnet low"
-    :backend "ccldg"
-    :model 'sonnet-low
-    :parents '(s))
-  (gptel-make-preset 'sd
-    :description "cchp dev sonnet"
-    :backend "ccld"
-    :model 'sonnet
-    :parents '(s))
-  (gptel-make-preset 'od
-    :description "cchp dev opus"
-    :model 'opus
-    :parents '(sd))
-  (gptel-make-preset 'omd
-    :description "cchp dev opus"
-    :model 'opus-max
-    :parents '(sd))
-  (gptel-make-preset 'hd
-    :description "cchp dev haiku"
-    :model 'haiku
-    :parents '(sd))
+
+  ;; ccl (production, port 8033)
+  (+gptel-make-cchp-presets "o" "ccl" "cchp")
+  ;; ccld (dev, port 8003)
+  (+gptel-make-cchp-presets "od" "ccld" "cchp dev")
+  ;; ccl-new (production with session resume, port 8033)
+  (+gptel-make-cchp-presets "" "ccl-new" "cchp-new")
+  ;; ccl-new-dev (dev with session resume, port 8003)
+  (+gptel-make-cchp-presets "d" "ccl-new-dev" "cchp-new-dev")
+
   (gptel-make-preset 'glmd
     :description "cchp dev glm 5"
     :backend "ccld"
@@ -532,6 +527,24 @@ Merge buffer-local with global default files."
          (gptel-make-openai "ccl"
            :protocol "http"
            :host "localhost:8033"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+
+  (setq! gptel--ccl-new
+         (gptel-make-openai "ccl-new"
+           :protocol "http"
+           :host "localhost:8033"
+           :endpoint "/api/v1/chat/completions"
+           :stream t
+           :key "no-key-required"
+           :models gptel--claude-code-models))
+
+  (setq! gptel--ccl-new-dev
+         (gptel-make-openai "ccl-new-dev"
+           :protocol "http"
+           :host "localhost:8003"
            :endpoint "/api/v1/chat/completions"
            :stream t
            :key "no-key-required"

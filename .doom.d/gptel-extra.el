@@ -58,13 +58,21 @@ This can be used to access server-provided metadata or other
 response data.")
 
 (defun +gptel--ccl-backend-p ()
-  "Return non-nil if current gptel backend is ccl or ccld."
+  "Return non-nil if current gptel backend is ccl, ccld, or ccl-new."
   (and (boundp 'gptel-backend)
        gptel-backend
        (boundp 'gptel--ccl)
        (boundp 'gptel--ccld)
        (or (eq gptel-backend gptel--ccl)
-           (eq gptel-backend gptel--ccld))))
+           (eq gptel-backend gptel--ccld)
+           (eq gptel-backend gptel--ccl-new))))
+
+(defun +gptel--ccl-new-backend-p ()
+  "Return non-nil if current gptel backend is ccl-new (session-resume enabled)."
+  (and (boundp 'gptel-backend)
+       gptel-backend
+       (boundp 'gptel--ccl-new)
+       (eq gptel-backend gptel--ccl-new)))
 
 (defun +gptel--new-session-id ()
   "Generate a new session ID for ccl/ccld backends.
@@ -94,6 +102,22 @@ Returns session-id string or nil."
         (and (boundp 'gptel-claude-code--session-id)
              gptel-claude-code--session-id))))
 
+(defun +gptel--find-resume-session-id ()
+  "Find resume session ID by walking up the org heading lineage.
+Checks the current heading first, then walks up to ancestors.
+Returns the nearest GPTEL_CCL_SESSION_ID or nil."
+  (when (and (+gptel--ccl-new-backend-p)
+             (derived-mode-p 'org-mode))
+    (org-with-wide-buffer
+     (org-back-to-heading-or-point-min t)
+     ;; Check current heading first
+     (or (org-entry-get nil "GPTEL_CCL_SESSION_ID")
+         ;; Walk up to find nearest ancestor with session-id
+         (cl-loop while (org-up-heading-safe)
+                  thereis (org-entry-get nil "GPTEL_CCL_SESSION_ID"))
+         ;; Check file-level property (point-min) as last resort
+         (org-entry-get (point-min) "GPTEL_CCL_SESSION_ID")))))
+
 (defun +gptel--update-org-file-properties ()
   "Update org file-level properties for workspace root.
 Uses `org-entry-put' at point-min so properties live in the same
@@ -114,10 +138,16 @@ Uses `org-entry-put' at point-min so properties live in the same
   "Add workspace context to gptel request params.
 This sets buffer-local `gptel--request-params' with workspace metadata
 that will be included in each gptel request.  Generates a new session
-ID on every send (each send is a new Claude Code session)."
+ID on every send (each send is a new Claude Code session).
+For ccl-new backend, also finds and passes resume_session_id from
+the org heading lineage for session fork/resume."
   (when gptel-mode
     (+gptel--update-org-file-properties)
-    (let ((session-id (+gptel--new-session-id)))
+    ;; IMPORTANT: find resume ID BEFORE generating new session ID,
+    ;; because new-session-id writes to the heading property that
+    ;; find-resume-session-id reads.
+    (let* ((resume-session-id (+gptel--find-resume-session-id))
+           (session-id (+gptel--new-session-id)))
       (setq-local
        gptel--request-params
        (list
@@ -128,6 +158,8 @@ ID on every send (each send is a new Claude Code session)."
           :working_dir default-directory)
          (when session-id
            (list :session_id session-id))
+         (when resume-session-id
+           (list :resume_session_id resume-session-id))
          (when-let ((root (++workspace-current-project-root)))
            (list :project_name (file-name-nondirectory
                                 (directory-file-name root))))))))))
@@ -152,12 +184,25 @@ ID on every send (each send is a new Claude Code session)."
         (forward-line 1)))
     (nreverse headers)))
 
+(defun +gptel--store-session-id-on-heading (session-id &optional position)
+  "Store SESSION-ID on the org heading at POSITION as GPTEL_CCL_SESSION_ID.
+POSITION is a marker or buffer position; defaults to point.
+Used by ccl-new backend to enable session resume on next send."
+  (when (and session-id
+             (derived-mode-p 'org-mode))
+    (org-with-wide-buffer
+     (when position (goto-char position))
+     (org-back-to-heading-or-point-min t)
+     (org-set-property "GPTEL_CCL_SESSION_ID" session-id))))
+
 (defun +gptel--capture-response-data (headers-text body-plist info)
   "Store complete response data (headers + body) from LLM backend.
 
 HEADERS-TEXT is the raw HTTP headers as a string.
 BODY-PLIST is the parsed JSON response body.
-INFO is the gptel process info plist."
+INFO is the gptel process info plist.
+For ccl-new backend, also captures the session_id from the
+X-Session-Id header and stores it on the current org heading."
   (when-let* ((buf (plist-get info :buffer)))
     (let* ((headers-alist (+gptel--parse-http-headers headers-text))
            (metadata (plist-get body-plist :metadata))
@@ -166,31 +211,46 @@ INFO is the gptel process info plist."
               (body . ,body-plist)
               (metadata . ,metadata))))
       (with-current-buffer buf
-        (setq-local +gptel--last-response response-data)))))
+        (setq-local +gptel--last-response response-data)
+        ;; For ccl-new backend, store session_id from response on heading
+        (when-let* ((sid (cdr (assoc "X-Session-Id" headers-alist))))
+          (+gptel--store-session-id-on-heading sid (plist-get info :position)))))))
 
 (after! gptel
   ;; Hook into streaming response cleanup to capture metadata
   (defadvice! +gptel-curl--stream-cleanup-capture-metadata (orig-fn process status)
-    "Capture response metadata (headers, body) from streaming response."
+    "Capture response metadata (headers, body) from streaming response.
+Also extracts session_id from SSE chunks for ccl-new session resume."
     :around #'gptel-curl--stream-cleanup
     (let* ((proc-buf (process-buffer process))
            (fsm (car (alist-get process gptel--request-alist)))
            (info (and fsm (gptel-fsm-info fsm)))
            (backend (and info (plist-get info :backend))))
-      ;; Only capture for CCL backend
-      (when (and backend (or (eq backend gptel--ccl) (eq backend gptel--ccld)))
+      ;; Only capture for CCL backends
+      (when (and backend (or (eq backend gptel--ccl)
+                             (eq backend gptel--ccld)
+                             (and (boundp 'gptel--ccl-new)
+                                  (eq backend gptel--ccl-new))))
         (with-current-buffer proc-buf
           (save-excursion
             (goto-char (point-min))
             (when (re-search-forward "\n\n" nil t)
               (let ((headers-text (buffer-substring-no-properties (point-min) (point))))
-                (+gptel--capture-response-data headers-text nil info)))))))
+                (+gptel--capture-response-data headers-text nil info)
+                ;; For streaming, session_id is in the first SSE data chunk,
+                ;; not in HTTP headers. Scan SSE body for "session_id" field.
+                (when-let* ((buf (plist-get info :buffer)))
+                  (save-excursion
+                    (when (re-search-forward "\"session_id\"\\s-*:\\s-*\"\\([^\"]+\\)\"" nil t)
+                      (let ((sid (match-string 1)))
+                        (with-current-buffer buf
+                          (+gptel--store-session-id-on-heading sid (plist-get info :position)))))))))))))
     (funcall orig-fn process status))
 
   ;; Also hook into non-streaming responses
   ;; Unlike streaming, non-streaming has the HTTP buffer available
-  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl)) response info)
-    "Capture response metadata from CCL backend non-streaming response."
+  (defun +gptel--handle-non-streaming-response (response info)
+    "Common handler for non-streaming response metadata capture."
     (when-let* ((buf (plist-get info :buffer)))
       (let* ((headers-text (save-excursion
                              (goto-char (point-min))
@@ -203,7 +263,22 @@ INFO is the gptel process info plist."
           (setq-local +gptel--last-response
                       `((headers . ,headers-alist)
                         (body . ,response)
-                        (metadata . ,metadata)))))))
+                        (metadata . ,metadata)))
+          ;; Store session_id on heading for resume
+          (when-let* ((sid (cdr (assoc "X-Session-Id" headers-alist))))
+            (+gptel--store-session-id-on-heading sid (plist-get info :position)))))))
+
+  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl)) response info)
+    "Capture response metadata from CCL backend non-streaming response."
+    (+gptel--handle-non-streaming-response response info))
+
+  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl-new)) response info)
+    "Capture response metadata from CCL-new backend non-streaming response."
+    (+gptel--handle-non-streaming-response response info))
+
+  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccld)) response info)
+    "Capture response metadata from CCLd backend non-streaming response."
+    (+gptel--handle-non-streaming-response response info))
 
   ;; Initialize workspace context setup
   (defadvice! +add-workspace-context-before-gptel-send (&optional _args)
