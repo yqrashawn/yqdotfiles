@@ -665,7 +665,7 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
    ;; gptel-magit-backend gptel--gh-copilot-business
    ;; gptel-magit-backend +gptel-free-backend
    ;; gptel-magit-backend gptel-claude-code-backend
-   gptel-magit-backend gptel--ccl))
+   gptel-magit-backend gptel--ccl-new))
 
 ;;; Workspace persistence and isolation
 ;; Store and restore gptel-context per workspace

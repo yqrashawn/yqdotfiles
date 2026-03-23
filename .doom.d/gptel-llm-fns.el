@@ -210,7 +210,7 @@ Drop:
                    (prin1-to-string conversation))
            ;; :backend gptel--gh-copilot-business
            ;; :backend +gptel-free-backend
-           :backend gptel--ccl
+           :backend gptel--ccl-new
            ;; :model 'gpt-4.1
            :model 'opus
            :temperature 0.3
@@ -225,7 +225,7 @@ Drop:
                 (format "%s\n\nConversation to compress:\n%s"
                         compression-prompt
                         (prin1-to-string conversation))
-                :backend gptel--ccl
+                :backend gptel--ccl-new
                 ;; :backend gptel--openrouter
                 ;; :model 'google/gemini-2.5-flash
                 :model 'opus
