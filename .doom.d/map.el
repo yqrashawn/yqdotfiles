@@ -229,9 +229,13 @@
            :n "jd" #'+jest-popup-debug
            :n "rll" #'turbo-log-print-immediately
            :n "rlv" #'turbo-log-print))
+  (:after gptel
+          (:map gptel-mode-map
+                "SPC" #'+ai-behaviors-insert-tags))
   (:after org
           (:map org-mode-map
-                (:prefix-map ("i" . "Insert")
+                (:prefix-map ("i" . "insert")
+                 "a" #'+ai-behaviors-insert-tags
                  "t" #'org-toggle-item
                  "j" #'+org/insert-item-below
                  "k" #'+org/insert-item-above

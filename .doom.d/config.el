@@ -113,3 +113,4 @@
 (load! "~/.emacs.d/modules/editor/fold/autoload/fold.el")
 ;; (load! "embr.el")
 (load! "pragmatapro-prettify-symbols.el")
+(load! "ai-behaviors.el")

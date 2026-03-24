@@ -244,9 +244,9 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\"
     :parents '(so))
 
   ;; ccl (production, port 8033)
-  (+gptel-make-cchp-presets "o" "ccl" "cchp")
+  ;; (+gptel-make-cchp-presets "o" "ccl" "cchp")
   ;; ccld (dev, port 8003)
-  (+gptel-make-cchp-presets "od" "ccld" "cchp dev")
+  ;; (+gptel-make-cchp-presets "od" "ccld" "cchp dev")
   ;; ccl-new (production with session resume, port 8033)
   (+gptel-make-cchp-presets "" "ccl-new" "cchp-new")
   ;; ccl-new-dev (dev with session resume, port 8003)
