@@ -114,6 +114,9 @@
         mkdir -p ~/.config/nyxt
         ln -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/nyxt.lisp ~/.config/nyxt/config.lisp
     fi
+    if [ ! -e ~/.config/ai-behaviors ]; then
+        ln -s ~/Dropbox/sync/ai-behaviors/ ~/.config/
+    fi
     if command -v rtk &> /dev/null; then
         echo 'rtk init --global --auto-patch'
         rtk init --global --auto-patch

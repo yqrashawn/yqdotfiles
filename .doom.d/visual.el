@@ -147,12 +147,19 @@
 
 ;; perf
 (after! visual-fill-column
-  (defvar my-vfc--last-width nil)
+  (defvar my-vfc--generation 0)
+  (run-with-timer 60 60 (lambda () (cl-incf my-vfc--generation)))
   (defadvice! my-vfc-skip-redundant-adjust (orig-fn &rest args)
     :around #'visual-fill-column--adjust-window
-    (let ((w (window-total-width)))
-      (unless (eq w my-vfc--last-width)
-        (setq my-vfc--last-width w)
+    (let* ((win (or (car args) (selected-window)))
+           (w (window-total-width win))
+           (buf (window-buffer win))
+           (cached (window-parameter win 'my-vfc--cache)))
+      (unless (and cached
+                   (eq (nth 0 cached) w)
+                   (eq (nth 1 cached) buf)
+                   (eq (nth 2 cached) my-vfc--generation))
+        (set-window-parameter win 'my-vfc--cache (list w buf my-vfc--generation))
         (apply orig-fn args)))))
 
 ;; https://github.com/rainstormstudio/nerd-icons.el#installing-fonts

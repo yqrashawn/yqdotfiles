@@ -33,19 +33,20 @@
                                             (untracked . show)
                                             (staged . show))
    ;; magit-blame-echo-style 'margin
-   magit-repository-directories '(("~/.emacs.d" . 0)
-                                  ;; ("~/.emacs.d/straight/repos/" . 1)
-                                  ;; ("~/workspace/third/" . 1)
-                                  ("~/workspace/home/" . 1)
-                                  ("~/workspace/office/" . 1))
-   magit-branch-prefer-remote-upstream '("master" "main" "mainnet" "dev" "develop" "sepolia" "next")
-   magit-branch-adjust-remote-upstream-alist '(("origin/develop" . ("/" "feat" "fix" "ci" "chore"))
-                                               ("origin/main" . ("/" "feat" "fix" "ci" "chore"))
-                                               ("origin/master" . ("/" "feat" "fix" "ci" "chore"))
-                                               ("origin/main" . ("/" "feat" "fix" "ci" "chore"))
-                                               ("origin/mainnet" . ("/" "feat" "fix" "ci" "chore"))
-                                               ("origin/sepolia" . ("/" "feat" "fix" "ci" "chore")))
-   magit-published-branches '("origin/master" "origin/main" "origin/dev" "origin/develop" "origin/mainnet" "origin/sepolia")
+   magit-repository-directories
+   '(("~/.emacs.d" . 0)
+     ;; ("~/.emacs.d/straight/repos/" . 1)
+     ;; ("~/workspace/third/" . 1)
+     ("~/workspace/home/" . 1)
+     ("~/workspace/office/" . 1))
+   magit-branch-prefer-remote-upstream
+   '("dev" "develop" "next" "sepolia" "mainnet" "master" "main")
+   magit-branch-adjust-remote-upstream-alist
+   '(("origin/dev" . ("/" "feat" "fix" "ci" "chore"))
+     ("origin/develop" . ("/" "feat" "fix" "ci" "chore"))
+     ("origin/main" . ("/" "feat" "fix" "ci" "chore")))
+   magit-published-branches
+   '("origin/master" "origin/main" "origin/dev" "origin/develop" "origin/mainnet" "origin/sepolia")
    magit-clone-set-remote.pushDefault t)
   (load! "forgeghp.el")
   (forgeghp-setup)

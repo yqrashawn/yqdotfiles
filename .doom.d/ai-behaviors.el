@@ -10,21 +10,14 @@
 (defvar +ai-behaviors--tags nil "List of selected quality/technique/modifier tag names.")
 
 (defvar +ai-behaviors--presets
-  '(("hard-work"
-     "#=code #deep #challenge #steel-man #fractal #decompose #checklist"
-     "Hard work")
-    ("deep-review"
-     "#=review #deep #challenge #steel-man #fractal #decompose"
-     "Deep review")
-    ("deep-research"
-     "#=research #deep #wide #ground"
-     "Deep research")
-    ("deep-plan"
-     "#=spec #deep #ground #challenge #steel-man #user-lens #first-principles #simulate #decompose #fractal"
-     "Deep research")
-    ("mentor"
-     "#=mentor #deep #wide"
-     "Deep mentor"))
+  '(("Frame" "#frame" "Frame")
+    ("Research" "#research" "Research")
+    ("Design" "#design" "Design")
+    ("Spec" "#spec" "Spec")
+    ("Code" "#code" "Code")
+    ("Review" "#review" "Review")
+    ("Test" "#test" "Test")
+    ("Debug" "#debug" "Debug"))
   "List of preset entries (ID HASHTAGS DESCRIPTION).
 Each entry defines a preset that inserts HASHTAGS directly.")
 
