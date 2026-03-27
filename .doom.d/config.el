@@ -82,6 +82,48 @@
 ;; they are implemented.
 
 ;; (setq debug-on-message "Wrong type argument: listp")
+
+;; Fix: evil-get-auxiliary-keymap returns temporary composed keymaps when both
+;; a keymap and its parent have [STATE-state] entries. Emacs's lookup-key creates
+;; a fresh merged keymap each call, so evil-define-key* writes to ephemeral objects
+;; and bindings are silently lost. Walk the keymap directly instead.
+(defun +evil-get-direct-auxiliary-keymap-a (orig-fn map state &optional create ignore-parent)
+  "Return the direct aux-map, not a composed one from lookup-key."
+  (if (and create (keymapp map) (keymap-parent map))
+      (let* ((state-sym (intern (format "%s-state" state)))
+             (direct-aux (let ((cell (cdr map)) found)
+                           (while (and cell (consp cell) (not (keymapp cell)))
+                             (when (and (consp (car cell))
+                                        (eq (caar cell) state-sym)
+                                        (keymapp (cdar cell)))
+                               (setq found (cdar cell)))
+                             (setq cell (cdr cell)))
+                           found)))
+        (if (and direct-aux (evil-auxiliary-keymap-p direct-aux))
+            direct-aux
+          (evil-set-auxiliary-keymap map state)))
+    (funcall orig-fn map state create ignore-parent)))
+(advice-add 'evil-get-auxiliary-keymap :around #'+evil-get-direct-auxiliary-keymap-a)
+
+;; Safety net: ensure org localleader bindings exist when entering org-mode.
+;; Re-applies Doom's org keybindings to the direct aux-map if missing.
+(defun +org-ensure-localleader-bindings-h ()
+  "Verify org localleader bindings and re-apply if missing."
+  (when (and (eq major-mode 'org-mode)
+             (boundp 'org-mode-map)
+             (fboundp '+org-init-keybinds-h))
+    (let ((aux (let ((cell (cdr org-mode-map)) found)
+                 (while (and cell (consp cell) (not (keymapp cell)))
+                   (when (and (consp (car cell))
+                              (eq (caar cell) 'normal-state)
+                              (keymapp (cdar cell)))
+                     (setq found (cdar cell)))
+                   (setq cell (cdr cell)))
+                 found)))
+      (unless (and aux (lookup-key aux ",t"))
+        (+org-init-keybinds-h)))))
+(add-hook 'org-mode-hook #'+org-ensure-localleader-bindings-h 90)
+
 (load! "clj-elisp.el")
 (load! "helper.el")
 (load! "not-secret.el" (expand-file-name "~/Dropbox/sync/") t)
