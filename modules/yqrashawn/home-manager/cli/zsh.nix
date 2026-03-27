@@ -170,6 +170,11 @@ in
         # When SSH'd in without a display, tell gpg-agent to use curses pinentry
         if [[ -n "$SSH_CONNECTION" ]]; then
           export PINENTRY_USER_DATA="USE_CURSES=1"
+          # Tell running gpg-agent to use this TTY for pinentry.
+          # PINENTRY_USER_DATA only works for gpg CLI calls (passed via Assuan),
+          # but SSH-via-gpg-agent doesn't pass it — updatestartuptty makes
+          # gpg-agent use the current TTY/PINENTRY_USER_DATA for all operations.
+          gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
         fi
 
         # initExtraBeforeCompInit
