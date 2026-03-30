@@ -316,5 +316,104 @@
           (should-error (+gptel-comment-region 1 4) :type 'user-error))
       (kill-buffer buf))))
 
+;;; Heading navigation tests
+
+(defvar gptel-prompt-prefix-alist nil)
+(defvar gptel-response-prefix-alist nil)
+
+(defmacro +gptel-nav-test (buffer-content point-pattern &rest body)
+  "Set up an org buffer with gptel-mode for navigation tests.
+BUFFER-CONTENT is inserted, point moves to POINT-PATTERN (regexp), BODY runs."
+  (declare (indent 2))
+  `(with-temp-buffer
+     (org-mode)
+     (insert ,buffer-content)
+     (goto-char (point-min))
+     (when ,point-pattern
+       (re-search-forward ,point-pattern)
+       (forward-line 0))
+     (setq-local gptel-mode t)
+     (let ((gptel-prompt-prefix-alist '((org-mode . "@user: ")))
+           (gptel-response-prefix-alist '((org-mode . "@assistant: "))))
+       ,@body)))
+
+(ert-deftest +gptel-nav-forward-marker-to-marker ()
+  "Forward from one marker should reach the next marker."
+  (+gptel-nav-test
+      "@user: q1\n\nsome text\n\n@assistant: a1\n\n@user: q2\n"
+      "@user: q1"
+    (org-forward-heading-same-level 1)
+    (should (looking-at "@assistant: a1"))
+    (org-forward-heading-same-level 1)
+    (should (looking-at "@user: q2"))))
+
+(ert-deftest +gptel-nav-backward-marker-to-marker ()
+  "Backward from a marker should reach the previous marker."
+  (+gptel-nav-test
+      "@user: q1\n\n@assistant: a1\n\n@user: q2\n"
+      "@user: q2"
+    (org-backward-heading-same-level 1)
+    (should (looking-at "@assistant: a1"))
+    (org-backward-heading-same-level 1)
+    (should (looking-at "@user: q1"))))
+
+(ert-deftest +gptel-nav-forward-with-arg ()
+  "Forward with ARG=2 should skip one marker."
+  (+gptel-nav-test
+      "@user: q1\n\n@assistant: a1\n\n@user: q2\n"
+      "@user: q1"
+    (org-forward-heading-same-level 2)
+    (should (looking-at "@user: q2"))))
+
+(ert-deftest +gptel-nav-forward-heading-and-marker ()
+  "Forward should stop at whichever comes first: heading or marker."
+  (+gptel-nav-test
+      "* Heading 1\n\n@user: q1\n\n@assistant: a1\n\n* Heading 2\n"
+      "\\* Heading 1"
+    (org-forward-heading-same-level 1)
+    (should (looking-at "@user: q1"))
+    (org-forward-heading-same-level 1)
+    (should (looking-at "@assistant: a1"))
+    (org-forward-heading-same-level 1)
+    (should (looking-at "\\* Heading 2"))))
+
+(ert-deftest +gptel-nav-skips-marker-in-block ()
+  "Markers inside org blocks should be skipped."
+  (+gptel-nav-test
+      "@user: q1\n\n#+begin_quote\n@assistant: fake\n#+end_quote\n\n@assistant: real\n"
+      "@user: q1"
+    (org-forward-heading-same-level 1)
+    (should (looking-at "@assistant: real"))))
+
+(ert-deftest +gptel-nav-no-gptel-mode-passthrough ()
+  "Without gptel-mode, original behavior is preserved."
+  (with-temp-buffer
+    (org-mode)
+    (insert "* H1\n\n@user: q1\n\n* H2\n")
+    (goto-char (point-min))
+    (org-forward-heading-same-level 1)
+    (should (looking-at "\\* H2"))))
+
+(ert-deftest +gptel-nav-no-match-stays-put ()
+  "When no next stop exists, point stays at BOL of current stop."
+  (+gptel-nav-test
+      "@user: only one\n\nsome text\n"
+      "@user: only one"
+    (let ((start (point)))
+      (org-forward-heading-same-level 1)
+      (should (= (point) (line-beginning-position)))
+      (should (looking-at "@user: only one")))))
+
+(ert-deftest +gptel-nav-heading-same-level-respected ()
+  "Deeper headings should be skipped when starting from a heading."
+  (+gptel-nav-test
+      "* H1\n\n** Sub\n\n@user: q1\n\n* H2\n"
+      "\\* H1"
+    ;; From H1 (level 1), ** Sub (level 2) should be skipped, but marker counts
+    (org-forward-heading-same-level 1)
+    (should (looking-at "@user: q1"))
+    (org-forward-heading-same-level 1)
+    (should (looking-at "\\* H2"))))
+
 (provide 'gptel-extra-test)
 ;;; gptel-extra-test.el ends here

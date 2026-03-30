@@ -28,3 +28,4 @@ __pycache__/
 /resources/public/ground/js
 /.agent-shell/
 /.doom.d/modules/llm/gptel-claude-code/*.elc
+/.claude/worktrees

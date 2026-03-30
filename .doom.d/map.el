@@ -234,14 +234,14 @@
                 "SPC" #'+ai-behaviors-insert-tags))
   (:after org
           (:map org-mode-map
-                (:prefix-map ("i" . "insert")
+                (:prefix ("i" . "insert")
                  "a" #'+ai-behaviors-insert-tags
                  "t" #'org-toggle-item
                  "j" #'+org/insert-item-below
                  "k" #'+org/insert-item-above
                  :desc "Last Screenshot Link" "S"
                  (cmd! (+kill-latest-screenshot-path 2))
-                 (:prefix-map
+                 (:prefix
                   ("h" . "Header")
                   "h" #'org-insert-heading
                   "j" #'org-insert-heading-after-current
@@ -877,7 +877,7 @@
          (:map gptel-mode-map
           :g "C-3" (cmd! ())
           :nv "RET" nil
-          :n "C-c j" #'gptel-send))
+          :ng "C-c j" #'gptel-send))
  (:after agent-shell
          (:map agent-shell-mode-map
           :g "C-r" #'agent-shell-search-history

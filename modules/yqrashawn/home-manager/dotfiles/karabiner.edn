@@ -414,9 +414,11 @@
            [:tab :!TStab :comma-mode]]}
   {:des   "s-mode in browser"
    :rules [:browser-s-mode
-           ;; vertical tab for firefox
+           ;; vertical tab for firefox and chrome
            [:j :!CSclose_bracket :Firefoxes]
            [:k :!CSopen_bracket :Firefoxes]
+           [:j :!CSclose_bracket :Chromes]
+           [:k :!CSopen_bracket :Chromes]
            [:j :!CSclose_bracket :Edge]
            [:k :!CSopen_bracket :Edge]
            [:j :!CSclose_bracket :Orion]

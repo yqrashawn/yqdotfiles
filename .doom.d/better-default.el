@@ -385,6 +385,19 @@ This function could be in the list `comint-output-filter-functions'."
             (comint-send-invisible
              (string-trim string "[ \n\r\t\v\f\b\a]+" "\n+"))))))))
 
+(after! ibuffer
+  ;; Fix Doom bug: (vc-status 12 :left) missing max-width arg
+  (setq ibuffer-formats
+        (mapcar (lambda (fmt)
+                  (if (listp fmt)
+                      (mapcar (lambda (col)
+                                (if (and (listp col) (eq (car col) 'vc-status))
+                                    `(vc-status 12 -1 :left)
+                                  col))
+                              fmt)
+                    fmt))
+                ibuffer-formats)))
+
 (after! hippie-exp
   (setq! hippie-expand-try-functions-list
          '(try-complete-file-name-partially

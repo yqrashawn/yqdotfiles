@@ -483,6 +483,7 @@ at the end of the gptel buffer."
                      (window-height . 8)))
     (org-mode)
     (+gptel-comment-mode 1)
+    (call-interactively #'evil-append)
     (setq-local +gptel-comment--quoted-text quoted-text)
     (setq-local +gptel-comment--source-buffer source-buf)
     (setq header-line-format
@@ -513,3 +514,76 @@ tool call and delivered as additionalContext."
                     (substring session-id 0 (min 8 (length session-id)))
                     (buffer-name source-buf)))
       (message "Compose message, C-c C-c to send, C-c C-k to cancel"))))
+
+;;; gptel heading navigation
+
+(defun +gptel--marker-regexp ()
+  "Build a regexp matching gptel turn markers at BOL for the current buffer.
+Returns nil if `gptel-mode' is not active or no non-empty prefixes are
+configured for the current major mode."
+  (when (bound-and-true-p gptel-mode)
+    (let* ((prompt (alist-get major-mode gptel-prompt-prefix-alist))
+           (response (alist-get major-mode gptel-response-prefix-alist))
+           (parts (cl-remove-if
+                   (lambda (s) (or (null s) (string-empty-p s)))
+                   (list prompt response))))
+      (when parts
+        (mapconcat (lambda (s) (concat "^" (regexp-quote s)))
+                   parts "\\|")))))
+
+(defun +gptel--in-org-block-p ()
+  "Return non-nil if point is inside any org begin/end block."
+  (org-between-regexps-p
+   "^[ \t]*#\\+begin_"
+   "^[ \t]*#\\+end_"))
+
+(defadvice! +gptel-org-forward-heading-same-level-a (orig-fn arg &optional invisible-ok)
+  "In `gptel-mode', also stop at conversation turn markers.
+Reads prefixes dynamically from `gptel-prompt-prefix-alist' and
+`gptel-response-prefix-alist'.  Markers inside org blocks are skipped.
+Only one advice is needed: `org-backward-heading-same-level' delegates
+to this function with negative ARG."
+  :around #'org-forward-heading-same-level
+  (let ((marker-re (+gptel--marker-regexp)))
+    (if (not marker-re)
+        (funcall orig-fn arg invisible-ok)
+      (let* ((backward? (and arg (< arg 0)))
+             (count (if arg (abs arg) 1))
+             (combined-re (concat org-outline-regexp-bol "\\|" marker-re))
+             (f (if backward? #'re-search-backward #'re-search-forward))
+             (at-heading (org-at-heading-p))
+             (at-marker (and (not at-heading)
+                             (save-excursion
+                               (forward-line 0)
+                               (looking-at marker-re))))
+             (level (when at-heading
+                      (save-excursion
+                        (org-back-to-heading invisible-ok)
+                        (org-current-level))))
+             (result (point)))
+        (save-excursion
+          (when (or at-heading at-marker)
+            (forward-line 0)
+            (unless backward? (end-of-line)))
+          (while (and (> count 0)
+                      (funcall f combined-re nil 'move))
+            (let ((mb (match-beginning 0)))
+              (save-excursion
+                (goto-char mb)
+                (if (looking-at org-outline-regexp-bol)
+                    ;; Heading match — apply same-level check
+                    (let ((l (- (match-end 0) (match-beginning 0) 1)))
+                      (cond
+                       ((and level (< l level))
+                        (setq count 0))
+                       ((or (null level) (= l level))
+                        (when (or invisible-ok
+                                  (not (org--line-fully-invisible-p)))
+                          (cl-decf count)
+                          (setq result mb)))))
+                  ;; Marker match — skip if inside org block
+                  (unless (+gptel--in-org-block-p)
+                    (cl-decf count)
+                    (setq result mb)))))))
+        (goto-char result)
+        (forward-line 0)))))

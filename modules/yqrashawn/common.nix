@@ -68,6 +68,7 @@ in
     systemPackages =
       with pkgs;
       [
+        doxygen
         aliyun-cli
         lefthook
         git-filter-repo
