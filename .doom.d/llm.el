@@ -3,7 +3,7 @@
 ;;; init
 (load! "models.el")
 (setq! +gptel-default-preset 'sh)
-(setq! +gptel-default-preset 'oh)
+(setq! +gptel-default-preset 'o)
 
 ;;; helper fns
 (defun +gptel-sanitize-filename (str)
@@ -201,6 +201,11 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\"
     ;; Haiku
     (gptel-make-preset (intern (concat "h" suffix))
       :description (concat desc-prefix " haiku")
+      :model 'haiku
+      :parents (list base-name))
+    ;; GLM5
+    (gptel-make-preset (intern (concat "g" suffix))
+      :description (concat desc-prefix " GLM5")
       :model 'haiku
       :parents (list base-name))))
 

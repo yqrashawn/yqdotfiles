@@ -13,6 +13,14 @@
 (setq! +clojure-load-clj-refactor-with-lsp t)
 
 ;;; clojure-mode
+;; Prevent clojure-mode hooks (cider, lsp, clj-refactor, lispy...) from running
+;; in org-src fontification temp buffers, which causes intermittent
+;; "Native code fontification error" messages.
+(defadvice! +clojure-mode-no-hooks-in-org-fontify-a (&rest _)
+  :before #'clojure-mode
+  (when (string-prefix-p " *org-src-fontification" (buffer-name))
+    (setq-local delay-mode-hooks t)))
+
 (after! clojure-mode
   (setq! clojure-toplevel-inside-comment-form t
          clojure-max-backtracking 10
@@ -205,10 +213,15 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
            '+cider-enable-fuzzy-completion)
 
 (after! cider
+  (add-hook 'cider-repl-mode-hook
+            (lambda ()
+              (setq-local jit-lock-defer-time 0.25)
+              (setq-local jit-lock-stealth-time nil)))
   (setq!
    cider-edit-jack-in-command t
    cider-auto-select-test-report-buffer nil
    cider-repl-buffer-size-limit 1048576
+   cider-repl-use-clojure-font-lock nil
    ;; Regular expression too big
    cider-font-lock-reader-conditionals nil
    cider-repl-use-content-types t
