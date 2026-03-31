@@ -8,7 +8,7 @@
   :defer t
   :commands (slack-start slack-stop slack-select-rooms slack-select-unread-rooms
                          slack-channel-select slack-im-select slack-search-from-messages)
-  :hook (doom-first-buffer . +defer-start-slack)
+  ;; :hook (doom-first-buffer . +defer-start-slack)
   :init
   (setq
    slack-buffer-emojify t
