@@ -508,6 +508,7 @@ tool call and delivered as additionalContext."
                        (window-height . 8)))
       (org-mode)
       (+gptel-inject-message-mode 1)
+      (call-interactively #'evil-append)
       (setq-local +gptel-inject--session-id session-id)
       (setq header-line-format
             (format " Inject message into session %s (%s)  |  C-c C-c send  |  C-c C-k cancel"

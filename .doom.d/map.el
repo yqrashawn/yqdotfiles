@@ -234,20 +234,19 @@
                 "SPC" #'+ai-behaviors-insert-tags))
   (:after org
           (:map org-mode-map
-                (:prefix ("i" . "insert")
-                 "a" #'+ai-behaviors-insert-tags
-                 "t" #'org-toggle-item
-                 "j" #'+org/insert-item-below
-                 "k" #'+org/insert-item-above
-                 :desc "Last Screenshot Link" "S"
-                 (cmd! (+kill-latest-screenshot-path 2))
-                 (:prefix
-                  ("h" . "Header")
-                  "h" #'org-insert-heading
-                  "j" #'org-insert-heading-after-current
-                  "t" (cmd! (org-insert-heading) (insert (format-time-string "%T")))))
-                :n "ds" #'orgbox-schedule
-                :n "j" '+org-emphasis-map))
+           (:prefix ("i" . "insert")
+                    "a" #'+ai-behaviors-insert-tags
+                    "t" #'org-toggle-item
+                    "j" #'+org/insert-item-below
+                    "k" #'+org/insert-item-above
+                    "S" (cmd! (+kill-latest-screenshot-path 2))
+                    (:prefix
+                     ("h" . "Header")
+                     "h" #'org-insert-heading
+                     "j" #'org-insert-heading-after-current
+                     "t" (cmd! (org-insert-heading) (insert (format-time-string "%T")))))
+           :n "ds" #'orgbox-schedule
+           :n "j" '+org-emphasis-map))
   (:after clojure-mode
           (:map clojure-mode-map
            :n "," 'yq-cljr-map))

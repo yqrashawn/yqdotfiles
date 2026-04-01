@@ -46,8 +46,6 @@ flycheck_*
 
 # ignore subdirectory CLAUDE.md files
 # (keep root CLAUDE.md for project-level instructions)
-**/CLAUDE.md
-!/CLAUDE.md
 
 cchp-global.md
 cchp-telegram-global.md
