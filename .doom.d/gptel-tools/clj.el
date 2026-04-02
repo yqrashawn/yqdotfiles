@@ -7,6 +7,10 @@
 This overrides `nrepl-sync-request-timeout' when MCP tool functions
 make synchronous nREPL calls.")
 
+(defvar gptelt-clj-emit-to-repl nil
+  "When non-nil, echo eval request and response to the CIDER REPL buffer.
+Set to nil to suppress REPL output when LLM tools evaluate clj/cljs code.")
+
 ;;; utilities
 
 (defun gptelt-clj--get-clj-repl ()
@@ -163,7 +167,7 @@ Explicitly uses the CLJ REPL connection so this works even when called from a CL
                    (out (nrepl-dict-get result "out"))
                    (value (nrepl-dict-get result "value"))
                    (err-out (nrepl-dict-get result "err")))
-              (when (buffer-live-p clj-repl)
+              (when (and gptelt-clj-emit-to-repl (buffer-live-p clj-repl))
                 (with-current-buffer clj-repl
                   (cider-repl-emit-stdout clj-repl (format "%s\n" clj-string))
                   (when out
@@ -222,7 +226,7 @@ timeout error.  The guard ensures CALLBACK is called exactly once."
                            (err-out (nrepl-dict-get response "err"))
                            (id (nrepl-dict-get response "id")))
                        ;; Echo to REPL buffer
-                       (when (buffer-live-p clj-repl)
+                       (when (and gptelt-clj-emit-to-repl (buffer-live-p clj-repl))
                          (with-current-buffer clj-repl
                            (cider-repl-emit-stdout clj-repl (format "%s\n" clj-string))
                            (when out
@@ -463,10 +467,11 @@ Ensures the buffer exists, its file is in the current project, and evaluates it.
               (condition-case err
                   (progn
                     (cider-load-buffer buffer)
-                    (when-let ((repl-buf (cider-current-repl type)))
-                      (with-current-buffer repl-buf
-                        (cider-repl-emit-stdout
-                         repl-buf (format ";; eval %s\n" buffer))))
+                    (when gptelt-clj-emit-to-repl
+                      (when-let ((repl-buf (cider-current-repl type)))
+                        (with-current-buffer repl-buf
+                          (cider-repl-emit-stdout
+                           repl-buf (format ";; eval %s\n" buffer)))))
                     (format "Successfully evaluated buffer '%s'" buffer-name))
                 (error (format "Error evaluating buffer '%s': %s" buffer-name (error-message-string err))))
             (when (and win (window-live-p win))
