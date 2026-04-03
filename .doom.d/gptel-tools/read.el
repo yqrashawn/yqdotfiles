@@ -104,24 +104,24 @@ Format: right-aligned number followed by → then content, matching Claude Code 
         (+gptel-tool-revert-to-be-visited-buffer b))
       (when (llm-danger-buffer-p b) (error "User denied the read request"))
       (if-let ((file-name (buffer-file-name b)))
-        (if (gptelt--image-file-p file-name)
-            ;; Handle image files: return direct base64 without wrapping
-            (gptelt--file-to-base64 file-name)
-          ;; Handle regular files
-          (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
-                (line-offset (or offset 0)))
-            (save-excursion
-              (let* ((total-lines (count-lines (point-min) (point-max)))
-                     (start-line (1+ line-offset))
-                     (end-line (min total-lines (+ line-offset max-lines))))
-                (goto-char (point-min))
-                (forward-line line-offset)
-                (let ((start (point)))
-                  (forward-line max-lines)
-                  (let ((content (buffer-substring-no-properties start (point))))
-                    (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
-                                    total-lines start-line end-line buffer_name file-name)
-                            "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃")))))))
+          (if (gptelt--image-file-p file-name)
+              ;; Handle image files: return direct base64 without wrapping
+              (gptelt--file-to-base64 file-name)
+            ;; Handle regular files
+            (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
+                  (line-offset (or offset 0)))
+              (save-excursion
+                (let* ((total-lines (count-lines (point-min) (point-max)))
+                       (start-line (1+ line-offset))
+                       (end-line (min total-lines (+ line-offset max-lines))))
+                  (goto-char (point-min))
+                  (forward-line line-offset)
+                  (let ((start (point)))
+                    (forward-line max-lines)
+                    (let ((content (buffer-substring-no-properties start (point))))
+                      (concat (format "[Total lines: %d]\n[Content lines: %d-%d]\n[Buffer name: %s]\n[File path: %s]\n"
+                                      total-lines start-line end-line buffer_name file-name)
+                              "\n␂" (gptelt--add-line-numbers content start-line end-line) "␃")))))))
         ;; Buffer without associated file
         (let ((max-lines (if (and limit (< limit 300)) 300 (or limit 2000)))
               (line-offset (or offset 0)))
@@ -220,40 +220,41 @@ Wraps both top-level errors and per-buffer errors in <tool_use_error> tags."
    :confirm nil
    :include t)
 
-  (gptelt-make-tool
-   :name "read_multiple_files"
-   :function #'gptelt-read-multiple-files
-   :description
-   "Read multiple files in one call with per-file offset and limit control. Returns a list where each element is either a successful read (with :file-path and :content) or a failed read (with :file-path and :error). This is more efficient than calling read_file multiple times when you need to read several files.
+  ;; (gptelt-make-tool
+  ;;  :name "read_multiple_files"
+  ;;  :function #'gptelt-read-multiple-files
+  ;;  :description
+  ;;  "Read multiple files in one call with per-file offset and limit control. Returns a list where each element is either a successful read (with :file-path and :content) or a failed read (with :file-path and :error). This is more efficient than calling read_file multiple times when you need to read several files.
 
-  Each result in the returned list is a plist with:
-  - :file-path - The file path that was attempted
-  - :content - The file content (if successful, same format as read_file)
-  - :error - Error message (if failed, e.g., file not found, not readable, permission denied)"
-   :args
-   '((:name "file_requests"
-      :type array
-      :items (:type object
-              :properties
-              (:file_path
-               (:type string
-                :description "Absolute path to the file to read")
-               :offset
-               (:type integer
-                :optional t
-                :minimum 0
-                :description "Line number to start reading from")
-               :limit
-               (:type integer
-                :optional t
-                :minimum 300
-                :description "Number of lines to read"))
-              :required ["file_path"]
-              :description "File request object with file_path (required), offset (optional), and limit (optional)")
-      :description "List of file requests to read"))
-   :category "read"
-   :confirm nil
-   :include t))
+  ;; Each result in the returned list is a plist with:
+  ;; - :file-path - The file path that was attempted
+  ;; - :content - The file content (if successful, same format as read_file)
+  ;; - :error - Error message (if failed, e.g., file not found, not readable, permission denied)"
+  ;;  :args
+  ;;  '((:name "file_requests"
+  ;;     :type array
+  ;;     :items (:type object
+  ;;             :properties
+  ;;             (:file_path
+  ;;              (:type string
+  ;;               :description "Absolute path to the file to read")
+  ;;              :offset
+  ;;              (:type integer
+  ;;               :optional t
+  ;;               :minimum 0
+  ;;               :description "Line number to start reading from")
+  ;;              :limit
+  ;;              (:type integer
+  ;;               :optional t
+  ;;               :minimum 300
+  ;;               :description "Number of lines to read"))
+  ;;             :required ["file_path"]
+  ;;             :description "File request object with file_path (required), offset (optional), and limit (optional)")
+  ;;     :description "List of file requests to read"))
+  ;;  :category "read"
+  ;;  :confirm nil
+  ;;  :include t)
+  )
 
 (defun gptelt-read-multiple-files (file_requests)
   "Read multiple files and return their contents or errors.
