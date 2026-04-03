@@ -1,61 +1,68 @@
-{ inputs, config, lib, pkgs, ... }:
+{
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  home = "${
-      if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"
-    }/${config.user.name}";
-  overlays = final: prev:
-    import ../../overlays/default.nix { inherit final prev pkgs; };
-in {
+  home = "${if pkgs.stdenvNoCC.isDarwin then "/Users" else "/home"}/${config.user.name}";
+  overlays = final: prev: import ../../overlays/default.nix { inherit final prev pkgs; };
+in
+{
   nixpkgs.overlays = [
     overlays
     inputs.zed.overlays.default
     inputs.emacs-lsp-booster.overlays.default
     # inputs.nix-openclaw.overlays.default
-    (final: prev: if prev.stdenv.hostPlatform.isAarch64 then
-      inputs.clojure-lsp.overlays.default final prev
-    else {})
+    (
+      final: prev:
+      if prev.stdenv.hostPlatform.isAarch64 then inputs.clojure-lsp.overlays.default final prev else { }
+    )
     inputs.emacs-overlay.overlays.default
     (final: prev: {
-      emacs30-overlay = (prev.emacs-git.override {
-        withNS = true;
-        withSQLite3 = true;
-        withWebP = true;
-        withImageMagick = true;
-        # withXwidgets = true;
-        # withNativeCompilation = false;
-        withNativeCompilation = true;
-        withTreeSitter = true;
-        withJansson = true;
-        withMailutils = true;
-        withCsrc = true;
-      }).overrideAttrs (old: {
-        name = "emacs30";
-        version = "30.0-${inputs.emacs-custom-src.shortRev}";
-        src = inputs.emacs-custom-src;
-        patches = old.patches ++ [ ];
-        buildInputs = old.buildInputs ++ [ ];
-        configureFlags = old.configureFlags ++ [ "--with-xwidgets" ];
-        # withMacport = true;
-        # macportVersion = "master";
-        # webkitgtk = true;
-        # texinfo = true;
-        # autoreconfHook = true;
-      });
+      emacs30-overlay =
+        (prev.emacs-git.override {
+          withNS = true;
+          withSQLite3 = true;
+          withWebP = true;
+          withImageMagick = true;
+          # withXwidgets = true;
+          # withNativeCompilation = false;
+          withNativeCompilation = true;
+          withTreeSitter = true;
+          withJansson = true;
+          withMailutils = true;
+          withCsrc = true;
+        }).overrideAttrs
+          (old: {
+            name = "emacs30";
+            version = "30.0-${inputs.emacs-custom-src.shortRev}";
+            src = inputs.emacs-custom-src;
+            patches = old.patches ++ [ ];
+            buildInputs = old.buildInputs ++ [ ];
+            configureFlags = old.configureFlags ++ [ "--with-xwidgets" ];
+            # withMacport = true;
+            # macportVersion = "master";
+            # webkitgtk = true;
+            # texinfo = true;
+            # autoreconfHook = true;
+          });
     })
     # rtk - CLI proxy that reduces LLM token consumption
     (final: prev: {
       rtk = prev.stdenv.mkDerivation rec {
         pname = "rtk";
-        version = "0.27.2";
+        version = "0.34.3";
         src = prev.fetchurl {
-          url =
-            "https://github.com/rtk-ai/rtk/releases/download/v${version}/rtk-${
-              if prev.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64"
-            }-apple-darwin.tar.gz";
-          sha256 = if prev.stdenv.hostPlatform.isAarch64 then
-            "sha256-p2XccLukutDpFu0v2ssDz9nZBqGulPxrXuyXFR3MGhc="
-          else
-            "sha256-Pnc33Q/JiPuL3CWuqTGZZBAiIAnn9cxCAMimOxU0EHw=";
+          url = "https://github.com/rtk-ai/rtk/releases/download/v${version}/rtk-${
+            if prev.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64"
+          }-apple-darwin.tar.gz";
+          sha256 =
+            if prev.stdenv.hostPlatform.isAarch64 then
+              "sha256:945f644a77e5da3367142a999c41a4fa448d0a4ae3e61c8a45094b8522dba047"
+            else
+              "sha256:35928229a7fe064016b7cd567e9333278c661221e2a19180d4f1943516a8c1f1";
         };
         sourceRoot = ".";
         dontBuild = true;
@@ -63,8 +70,7 @@ in {
           install -Dm755 rtk $out/bin/rtk
         '';
         meta = with prev.lib; {
-          description =
-            "CLI proxy that reduces LLM token consumption by 60-90% on common dev commands";
+          description = "CLI proxy that reduces LLM token consumption by 60-90% on common dev commands";
           homepage = "https://github.com/rtk-ai/rtk";
           platforms = platforms.darwin;
         };
@@ -78,13 +84,12 @@ in {
         src = prev.fetchurl {
           url = "https://github.com/lightpanda-io/browser/releases/download/v${version}/lightpanda-${
             if prev.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64"
-          }-${
-            if prev.stdenv.hostPlatform.isDarwin then "macos" else "linux"
-          }";
-          sha256 = if prev.stdenv.hostPlatform.isAarch64 then
-            "sha256-6fdqFy/XAQi1sj8S0qC0LjfDbfaszOXoD8OVhc4/lcE="
-          else
-            "sha256-Nt7v+b3xJwnJDIJpdCLk/IPz33wtnkf4SyZChEbVvDY=";
+          }-${if prev.stdenv.hostPlatform.isDarwin then "macos" else "linux"}";
+          sha256 =
+            if prev.stdenv.hostPlatform.isAarch64 then
+              "sha256-6fdqFy/XAQi1sj8S0qC0LjfDbfaszOXoD8OVhc4/lcE="
+            else
+              "sha256-Nt7v+b3xJwnJDIJpdCLk/IPz33wtnkf4SyZChEbVvDY=";
         };
         dontUnpack = true;
         dontBuild = true;
@@ -94,7 +99,10 @@ in {
         meta = with prev.lib; {
           description = "Open-source headless browser for AI agents";
           homepage = "https://github.com/lightpanda-io/browser";
-          platforms = [ "aarch64-darwin" "x86_64-darwin" ];
+          platforms = [
+            "aarch64-darwin"
+            "x86_64-darwin"
+          ];
         };
       };
     })
