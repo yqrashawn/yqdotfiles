@@ -206,7 +206,7 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\"
     ;; GLM5
     (gptel-make-preset (intern (concat "g" suffix))
       :description (concat desc-prefix " GLM5")
-      :model 'haiku
+      :model (intern "0g-zai-org/GLM-5-FP8")
       :parents (list base-name))))
 
 (defun +gptel-make-my-presets ()

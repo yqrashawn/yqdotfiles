@@ -65,7 +65,8 @@ response data.")
        (boundp 'gptel--ccld)
        (or (eq gptel-backend gptel--ccl)
            (eq gptel-backend gptel--ccld)
-           (eq gptel-backend gptel--ccl-new))))
+           (eq gptel-backend gptel--ccl-new)
+           (eq gptel-backend gptel--ccl-new-dev))))
 
 (defun +gptel--ccl-new-backend-p ()
   "Return non-nil if current gptel backend is ccl-new (session-resume enabled)."

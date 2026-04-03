@@ -25,9 +25,9 @@ session, regardless of what the current buffer is (could be CLJS, chat, scratch,
     (if proj-buf
         (with-current-buffer proj-buf
           (or (cider-current-repl 'clj)
-              (error "Clojure nREPL is not connected. Use M-x cider-jack-in to start a REPL.")))
+              (error "Clojure nREPL is not connected. Use the clojure-mcp tools instead.")))
       (or (cider-current-repl 'clj)
-          (error "Clojure nREPL is not connected. Use M-x cider-jack-in to start a REPL.")))))
+          (error "Clojure nREPL is not connected. Use the clojure-mcp tools instead.")))))
 
 (defun gptelt-clj-ensure-helper-loaded ()
   "Load clj_helper.clj into the CLJ REPL via load-file.
@@ -47,14 +47,14 @@ when the helper file is outside the current project."
     (unless (++workspace-cljs?)
       (error "This is not a clojure project"))
     (unless (++workspace-cljs-repl-connected?)
-      (error "ClojureScript nREPL is not connected. Use cljs_get_project_states to check available builds and runtimes, or M-x cider-jack-in-cljs to connect.")))
+      (error "ClojureScript nREPL is not connected. Use the clojure-mcp tools instead.")))
 
   (when (or (eq type 'clj)
             (eq type 'cljs))
     (unless (++workspace-clj?)
       (error "This is not a clojure project"))
     (unless (++workspace-clj-repl-connected?)
-      (error "Clojure nREPL is not connected. Use M-x cider-jack-in to start a REPL."))
+      (error "Clojure nREPL is not connected. Use the clojure-mcp tools instead."))
     (when ns
       ;; Use find-ns via direct eval on the CLJ REPL to check namespace.
       ;; cider-sync-request:ns-list is unreliable for dynamically loaded
