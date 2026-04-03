@@ -168,8 +168,11 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
         "start")))
 
      ("lattice" .
-      (:command "node"
-       :args ("/Users/yqrashawn/Dropbox/sync/Matryoshka/dist/lattice-mcp-server.js" "--dangerously-skip-cwd-checking")))
+      (:command "bunx"
+       :args ("-p"
+              "matryoshka-rlm@latest"
+              "lattice-mcp"
+              "--dangerously-skip-cwd-checking")))
 
      ;; ("cclsp" .
      ;;  (:command "bunx"
