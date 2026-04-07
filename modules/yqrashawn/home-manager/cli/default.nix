@@ -13,7 +13,7 @@
     ./tealdeer.nix
     ./helix.nix
   ];
-  home.packages = [ pkgs.tree ];
+  home.packages = [ pkgs.tree pkgs.worktrunk ];
   programs = {
     jq.enable = true;
     htop.enable = true;

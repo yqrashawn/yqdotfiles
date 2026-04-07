@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-{
+{ config, lib, pkgs, ... }: {
   imports = [
     ./dark-light.nix
     ./syncmail.nix
@@ -16,5 +10,6 @@
     ./tempo.nix
     ./postgresql.nix
     ./redis.nix
+    ./mcp-prometheus.nix
   ];
 }

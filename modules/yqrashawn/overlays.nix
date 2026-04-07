@@ -106,6 +106,41 @@ in
         };
       };
     })
+    # loki-mcp: MCP server for Loki
+    (final: prev: {
+      loki-mcp = prev.buildGoModule rec {
+        pname = "loki-mcp";
+        version = "0.6.0";
+        src = prev.fetchFromGitHub {
+          owner = "grafana";
+          repo = "loki-mcp";
+          rev = "v${version}";
+          hash = "sha256-rRnKsE/jiOcvLZ8keN+i5X3nw8Hyx4wdq6w6EpAPjZ0=";
+        };
+        vendorHash = "sha256-xu9/BBKiUMNUhQQZCaifCoYtu0fkXqyx2aZUGQh2hGQ=";
+        ldflags = [ "-s" "-w" ];
+        doCheck = false;
+      };
+    })
+    # mcp-prometheus: MCP server for Prometheus
+    (final: prev: {
+      mcp-prometheus = prev.buildGoModule rec {
+        pname = "mcp-prometheus";
+        version = "0.1.2";
+        src = prev.fetchFromGitHub {
+          owner = "giantswarm";
+          repo = "mcp-prometheus";
+          rev = "v${version}";
+          hash = "sha256-FCplEr+6ZjdPzpVuiRSIq1HCEYMyuq6uImJBh1BhtA4=";
+        };
+        vendorHash = "sha256-jCW5cL/d1CJVIZE++YVtDACIemGeGQr37OJYhgMCXsA=";
+        ldflags = [ "-s" "-w" ];
+      };
+    })
+    # worktrunk
+    (final: prev: {
+      worktrunk = inputs.worktrunk.packages.${prev.system}.default;
+    })
     # channels
     (final: prev: {
       # expose other channels via overlays

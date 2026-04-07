@@ -222,6 +222,7 @@
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
     parinfer-rust.url = "github:eraserhd/parinfer-rust";
     rep.url = "github:eraserhd/rep";
+    worktrunk.url = "github:max-sixty/worktrunk";
     # nix-openclaw = {
     #   url = "github:openclaw/nix-openclaw";
     #   inputs.nixpkgs.follows = "nixpkgs";

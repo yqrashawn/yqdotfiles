@@ -161,11 +161,11 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ;;    "-X"
      ;;    "clojure-mcp.main/start")))
 
-     ("clojure-mcp" .
-      (:command "clojure"
-       :args
-       ("-Tmcp"
-        "start")))
+     ;; ("clojure-mcp" .
+     ;;  (:command "clojure"
+     ;;   :args
+     ;;   ("-Tmcp"
+     ;;    "start")))
 
      ("lattice" .
       (:command "bunx"

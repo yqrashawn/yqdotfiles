@@ -71,9 +71,13 @@ response data.")
 (defun +gptel--ccl-new-backend-p ()
   "Return non-nil if current gptel backend is ccl-new (session-resume enabled)."
   (and (boundp 'gptel-backend)
-       gptel-backend
-       (boundp 'gptel--ccl-new)
-       (eq gptel-backend gptel--ccl-new)))
+       (or
+        (and
+         (boundp 'gptel--ccl-new)
+         (eq gptel-backend gptel--ccl-new))
+        (and
+         (boundp 'gptel--ccl-new-dev)
+         (eq gptel-backend gptel--ccl-new-dev)))))
 
 (defun +gptel--new-session-id ()
   "Generate a new session ID for ccl/ccld backends.
@@ -231,7 +235,9 @@ Also extracts session_id from SSE chunks for ccl-new session resume."
       (when (and backend (or (eq backend gptel--ccl)
                              (eq backend gptel--ccld)
                              (and (boundp 'gptel--ccl-new)
-                                  (eq backend gptel--ccl-new))))
+                                  (eq backend gptel--ccl-new))
+                             (and (boundp 'gptel--ccl-new-dev)
+                                  (eq backend gptel--ccl-new-dev))))
         (with-current-buffer proc-buf
           (save-excursion
             (goto-char (point-min))
@@ -275,6 +281,10 @@ Also extracts session_id from SSE chunks for ccl-new session resume."
 
   (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl-new)) response info)
     "Capture response metadata from CCL-new backend non-streaming response."
+    (+gptel--handle-non-streaming-response response info))
+
+  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl-new-dev)) response info)
+    "Capture response metadata from CCL-new-dev backend non-streaming response."
     (+gptel--handle-non-streaming-response response info))
 
   (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccld)) response info)

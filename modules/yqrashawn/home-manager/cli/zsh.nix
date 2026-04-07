@@ -49,9 +49,9 @@ let
     rm = "trash";
     rmm = "rm -rf";
     d = "cd ~/Downloads/";
-    wo = "cd ~/workspace/office";
-    wt = "cd ~/workspace/third";
-    wh = "cd ~/workspace/home";
+    # wo = "cd ~/workspace/office";
+    # wt = "cd ~/workspace/third";
+    # wh = "cd ~/workspace/home";
     o = "open";
     p2 = "percol";
     cleanup = "find . -type f -name '*.DS_Store' -ls -delete";
@@ -69,6 +69,10 @@ let
     pi = "pnpm i";
     pga = "pnpm i -g";
     px = "pnpx";
+    b = "bun";
+    bi = "bun i";
+    bga = "bun i -g";
+    bx = "bunx";
     y = "yarn";
     yi = "yarn init";
     ya = "yarn add";
