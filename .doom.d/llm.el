@@ -3,7 +3,7 @@
 ;;; init
 (load! "models.el")
 (setq! +gptel-default-preset 'sh)
-(setq! +gptel-default-preset 'o)
+(setq! +gptel-default-preset 'om)
 
 ;;; helper fns
 (defun +gptel-sanitize-filename (str)
@@ -39,7 +39,7 @@
                  (unless (file-directory-p dir)
                    (make-directory dir t))
                  (+set-org-top-header new-title)
-                 (insert "\n")
+                 ;; (insert "\n")
                  (+set-org-title new-title)
                  (let ((filepath (expand-file-name
                                   (format

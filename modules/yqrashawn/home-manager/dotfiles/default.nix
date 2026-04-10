@@ -385,6 +385,7 @@
     "mpv/mpv.conf" = { source = ./mpv.conf; };
     "husky/init.sh" = { source = ./.huskyrc; };
     "claude/cclsp.json" = { source = ./cclsp.json; };
+    "process-compose/shortcuts.yaml" = { source = ./process-compose-shortcuts.yaml; };
     # yarn-global = {
     #   source = ./package.json;
     #   target = "./yarn/global/package.json";

@@ -35,7 +35,7 @@ let
     # eval "$(${pkgs.masters.mise}/bin/mise activate bash)"
   '';
   functions = builtins.readFile ./functions.sh;
-  aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+  aliases = lib.mkIf pkgs.stdenvNoCC.isDarwin ({
     duct = "clojure -M:duct";
     ductt = "clojure -M:duct:test --test";
     ductr = "clojure -M:duct --nrepl --cider";
@@ -73,6 +73,7 @@ let
     bi = "bun i";
     bga = "bun i -g";
     bx = "bunx";
+    br = "bun run";
     y = "yarn";
     yi = "yarn init";
     ya = "yarn add";
@@ -100,13 +101,12 @@ let
     brewsl = "brew services list";
     brewsr = "brew services restart";
     brewsx = "brew services stop";
-    ssh = "kitty +kitten ssh";
     e = "~/local/bin/em";
-    br = "bun run";
-    bx = "bun x";
     # man = "nocorrect /etc/profiles/per-user/${config.user.name}/bin/man";
     # man = "nocorrect ${pkgs.man}/bin/man";
-  };
+  } // lib.optionalAttrs (config.home.username != "holybasil") {
+    ssh = "kitty +kitten ssh";
+  });
 in
 {
   imports = [ ./prezto.nix ];

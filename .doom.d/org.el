@@ -231,6 +231,6 @@ tasks."
       (goto-char (point-min))
       (if (re-search-forward "^\\*\\s.*" bound t)
           (replace-match
-           (format "* %s" title))
+           (format "* %s\n" title))
         (goto-char (point-min))
         (insert (format "* %s\n" title))))))

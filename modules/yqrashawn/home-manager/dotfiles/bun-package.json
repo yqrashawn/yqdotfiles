@@ -8,7 +8,7 @@
     "@tobilu/qmd": "^2.0.1",
     "@zed-industries/claude-code-acp": "^0.16.2",
     "@zed-industries/codex-acp": "^0.10.0",
-    "agent-browser": "^0.20.0",
+    "agent-browser": "^0.25.3",
     "bash-language-server": "^5.6.0",
     "cclsp": "^0.7.0",
     "concurrently": "^9.2.1",

@@ -1,0 +1,25 @@
+shortcuts:
+  quit:
+    shortcut: q
+    description: Quit
+  process_start:
+    shortcut: s
+    description: Start
+  process_stop:
+    shortcut: x
+    description: Stop
+  process_restart:
+    shortcut: r
+    description: Restart
+  log_follow:
+    shortcut: f
+    description: Follow log
+  log_screen:
+    shortcut: o
+    description: Toggle log
+  log_wrap:
+    shortcut: w
+    description: Wrap log
+  process_screen:
+    shortcut: p
+    description: Toggle process

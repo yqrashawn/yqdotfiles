@@ -174,6 +174,13 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
               "lattice-mcp"
               "--dangerously-skip-cwd-checking")))
 
+     ;; ("chiasmus" .
+     ;;  (:command "bunx"
+     ;;   :args ("-y" "chiasmus")
+     ;;   :env (:CHIASMUS_API_URL "http://localhost:8003/api/v1/messages"
+     ;;         :CHIASMUS_MODEL "sonnet"
+     ;;         :ANTHROPIC_API_KEY "no-key")))
+
      ;; ("cclsp" .
      ;;  (:command "bunx"
      ;;   :args ("cclsp@latest")
