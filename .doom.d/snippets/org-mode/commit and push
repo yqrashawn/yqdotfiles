@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: commit and push
+# key: cap
+# --
+
+commit and push #commit

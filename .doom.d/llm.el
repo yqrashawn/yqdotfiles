@@ -181,6 +181,10 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\"
       :description (concat desc-prefix " sonnet high")
       :model 'sonnet-high
       :parents (list base-name))
+    (gptel-make-preset (intern (concat "sx" suffix))
+      :description (concat desc-prefix " sonnet xhigh")
+      :model 'sonnet-high
+      :parents (list base-name))
     ;; Opus variants
     (gptel-make-preset (intern (concat "o" suffix))
       :description (concat desc-prefix " opus medium")
@@ -196,6 +200,10 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-new\", \"cchp dev\"
       :parents (list base-name))
     (gptel-make-preset (intern (concat "oh" suffix))
       :description (concat desc-prefix " opus high")
+      :model 'opus-high
+      :parents (list base-name))
+    (gptel-make-preset (intern (concat "ox" suffix))
+      :description (concat desc-prefix " opus xhigh")
       :model 'opus-high
       :parents (list base-name))
     ;; Haiku

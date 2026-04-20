@@ -17,7 +17,10 @@
     ("Code" "#code" "Code")
     ("Review" "#review" "Review")
     ("Test" "#test" "Test")
-    ("Debug" "#debug" "Debug"))
+    ("Debug" "#debug" "Debug")
+    ("Mentor" "#mentor" "Mentor")
+    ("Impl" "#mpl" "Impl")
+    ("Commit" "#commit" "Commit"))
   "List of preset entries (ID HASHTAGS DESCRIPTION).
 Each entry defines a preset that inserts HASHTAGS directly.")
 
