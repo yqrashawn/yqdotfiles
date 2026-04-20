@@ -206,6 +206,7 @@ in
         ''}
         unset RPS1
         [[ ! -f ~/.local.zsh ]] || source ~/.local.zsh
+        [[ ! -f $HOME/.config/cf/completions/_cf.zsh ]] || source $HOME/.config/cf/completions/_cf.zsh
 
         # eat
         [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
