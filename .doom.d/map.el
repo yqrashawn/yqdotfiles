@@ -679,9 +679,16 @@
           :g "TAB" #'side-hustle-show-item
           :g "q" #'side-hustle-toggle))
  (:after proced
+         (:localleader
+          (:map proced-mode-map
+                "c" #'proced-sort-pcpu
+                "m" #'proced-sort-pmem))
          (:map proced-mode-map
           :g "/" #'proced-narrow
-          :n "/" #'proced-narrow))
+          :n "/" #'proced-narrow
+          :g "W" #'rk/proced-show-cwd
+          :n "W" #'rk/proced-show-cwd
+          :n "gr" #'revert-buffer))
  (:after swiper
          (:map swiper-map
           :g "<escape>" (general-simulate-key "C-g")

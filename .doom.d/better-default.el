@@ -268,6 +268,73 @@ A prefix arg reverses this operation."
 
 (use-package! proced-narrow :after proced)
 
+(after! proced
+  (add-to-list 'proced-format-alist
+               '(rk pid tree pcpu pmem rss state (args comm)))
+  (setq-default proced-format 'rk)
+  (setq-default proced-tree-flag t)
+
+  (defvar rk/proced-ps-cache (make-hash-table :test 'eql)
+    "PID -> (pcpu . pmem) from ps snapshot. Darwin fills gap in process-attributes.")
+
+  (defun rk/proced-refresh-ps-cache ()
+    "Populate rk/proced-ps-cache from `ps -e -o pid,%cpu,%mem'."
+    (clrhash rk/proced-ps-cache)
+    (with-temp-buffer
+      (when (zerop (call-process "ps" nil t nil "-e" "-o" "pid=,%cpu=,%mem="))
+        (goto-char (point-min))
+        (while (re-search-forward "^ *\\([0-9]+\\) +\\([0-9.]+\\) +\\([0-9.]+\\)" nil t)
+          (puthash (string-to-number (match-string 1))
+                   (cons (string-to-number (match-string 2))
+                         (string-to-number (match-string 3)))
+                   rk/proced-ps-cache)))))
+
+  (define-advice proced-update (:before (&rest _) rk/refresh-ps-cache)
+    (rk/proced-refresh-ps-cache))
+
+  (define-advice process-attributes (:around (orig pid) rk/inject-pcpu-pmem)
+    (let ((attrs (funcall orig pid))
+          (cached (gethash pid rk/proced-ps-cache)))
+      (if cached
+          (append (list (cons 'pcpu (car cached))
+                        (cons 'pmem (cdr cached)))
+                  attrs)
+        attrs)))
+
+  (defvar rk/proced-hide-args-prefix-re nil
+    "Args prefix regex to hide in proced.")
+  (setq rk/proced-hide-args-prefix-re
+        "\\`\\(/System/Library/\\|/Library/Apple/\\|/usr/libexec/\\)")
+
+  (defun rk/proced-keep-p (attrs)
+    "Keep process unless args starts with darwin system prefix,
+or args is absent (restricted daemons with only comm)."
+    (let ((args (cdr (assq 'args attrs))))
+      (and (stringp args)
+           (not (string-match-p rk/proced-hide-args-prefix-re args)))))
+
+  (setq proced-filter-alist (assq-delete-all 'rk-user proced-filter-alist))
+  (add-to-list 'proced-filter-alist
+               '(rk-user (function . rk/proced-keep-p)))
+  (setq-default proced-filter 'rk-user))
+
+(defun rk/proced-show-cwd ()
+  "Show cwd of process at point (in proced) in minibuffer."
+  (interactive)
+  (let ((pid (proced-pid-at-point)))
+    (unless pid (user-error "No process at point"))
+    (with-temp-buffer
+      (let ((exit (call-process "lsof" nil t nil
+                                "-a" "-p" (number-to-string pid)
+                                "-d" "cwd" "-Fn")))
+        (goto-char (point-min))
+        (if (and (zerop exit)
+                 (re-search-forward "^n\\(.+\\)$" nil t))
+            (let ((cwd (abbreviate-file-name (match-string 1))))
+              (kill-new cwd)
+              (message "cwd: %s (copied)" cwd))
+          (user-error "lsof: no cwd for PID %d (permission denied?)" pid))))))
+
 (defadvice! +doom-init-all-the-icons-fonts-h (_)
   :around #'doom-init-all-the-icons-fonts-h
   (when (fboundp 'set-fontset-font)
