@@ -626,7 +626,7 @@ CALLBACK receives the test output string."
    :function #'gptelt-eval-clj-string-async
    :async t
    :description "Evaluate given clojure code string in given namespace, get eval result or error. Use `clojure_run_ns_test` tool to run tests for better output. or wrap test with this to get better failure/error output (with-out-str (binding [clojure.test/*test-out* *out*] (clojure.test/run-tests ...)))"
-   :args '((:name "clj_string"
+   :args '((:name "code"
             :type string
             :description "The Clojure code string to evaluate")
            (:name "namespace"
