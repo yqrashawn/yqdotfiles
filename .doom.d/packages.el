@@ -489,6 +489,7 @@
 ;; (package! compile-angel)
 
 (package! sops)
+(package! symon)
 
 ;; (package! embr
 ;;   :recipe (:host github
