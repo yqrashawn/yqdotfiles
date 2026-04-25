@@ -757,10 +757,12 @@ keeps Emacs responsive in the meantime."
 
 (defun gptelt-auq--build-result-json (results)
   "Build the final JSON result string from RESULTS alist.
-RESULTS is a list of (question-text . answer) pairs."
+RESULTS is a list of (question-text . answer) pairs.
+An answer prefixed with \"Validation error:\" marks that question as failed.
+Arbitrary substrings in user-supplied answers never trigger isError."
   (let ((has-errors (seq-some (lambda (pair)
-                                (string-match-p "error\\|cancelled"
-                                                (cdr pair)))
+                                (and (stringp (cdr pair))
+                                     (string-prefix-p "Validation error:" (cdr pair))))
                               results)))
     (if has-errors
         (json-encode
