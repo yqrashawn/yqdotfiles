@@ -14,7 +14,7 @@
   (setq!
    magit-openpgp-default-signing-key "B198FB15EC5C13012E940B37E394C5D9A8E535A6"
    magit-fetch-modules-jobs 10
-   magit-diff-expansion-threshold 20
+   magit-diff-expansion-threshold 20.0
    magit-diff-refine-hunk t
    magit-diff-visit-prefer-worktree nil
    magit-revision-insert-related-refs t

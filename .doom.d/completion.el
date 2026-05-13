@@ -74,10 +74,12 @@
    fussy-default-regex-fn #'fussy-pattern-flex-2
    fussy-compare-same-score-fn #'fussy-histlen->strlen<
    ;; completion-category-defaults nil
-   completion-category-overrides
-   '((cider (styles hotfuzz))
-     (sly-completion (styles sly--external-completion))
-     (lsp-capf (styles fussy))))
+   )
+  ;; plain setq: styles symbols not registered at validation time
+  (setq completion-category-overrides
+        '((cider (styles hotfuzz))
+          (sly-completion (styles sly--external-completion))
+          (lsp-capf (styles fussy))))
 
   (after! corfu
     (setq! corfu-separator (string-to-char ","))

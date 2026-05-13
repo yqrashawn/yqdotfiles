@@ -1,4 +1,11 @@
-{ inputs, config, pkgs, lib, ... }: {
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   home.file = {
     hammerspoon = {
       source = inputs.spacehammer;
@@ -88,30 +95,32 @@
       source = ./shadow-cljs.edn;
       target = ".shadow-cljs/config.edn";
     };
-    gpg-agent-conf = let
-      pinentry-auto = pkgs.writeShellScript "pinentry-auto" ''
-        if echo "''${PINENTRY_USER_DATA:-}" | grep -q "USE_CURSES=1"; then
-          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
-        elif [ -t 0 ]; then
-          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
-        else
-          exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"
-        fi
-      '';
-    in {
-      source = pkgs.writeTextFile {
-        name = "gpg-agent.conf";
-        text = ''
-          default-cache-ttl 86400
-          max-cache-ttl 86400
-          allow-emacs-pinentry
-          allow-loopback-pinentry
-          enable-ssh-support
-          pinentry-program ${pinentry-auto}
+    gpg-agent-conf =
+      let
+        pinentry-auto = pkgs.writeShellScript "pinentry-auto" ''
+          if echo "''${PINENTRY_USER_DATA:-}" | grep -q "USE_CURSES=1"; then
+            exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+          elif [ -t 0 ]; then
+            exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+          else
+            exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"
+          fi
         '';
+      in
+      {
+        source = pkgs.writeTextFile {
+          name = "gpg-agent.conf";
+          text = ''
+            default-cache-ttl 86400
+            max-cache-ttl 86400
+            allow-emacs-pinentry
+            allow-loopback-pinentry
+            enable-ssh-support
+            pinentry-program ${pinentry-auto}
+          '';
+        };
+        target = ".gnupg/gpg-agent.conf";
       };
-      target = ".gnupg/gpg-agent.conf";
-    };
     lein = {
       source = ./.lein;
       target = ".lein";
@@ -279,6 +288,11 @@
       target = "./.asdf/plugins/lua";
       recursive = true;
     };
+    asdf-lua-language-server = {
+      source = inputs.asdf-lua-language-server;
+      target = "./.asdf/plugins/lua-language-server";
+      recursive = true;
+    };
     asdf-haskell = {
       source = inputs.asdf-haskell;
       target = "./.asdf/plugins/haskell";
@@ -324,23 +338,19 @@
     #   target = "atuin/server.toml";
     # };
     kitty-light = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
       target = "kitty/light-theme.auto.conf";
     };
     kitty-light2 = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
       target = "kitty/light2.conf";
     };
     kitty-dark = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
       target = "kitty/dark-theme.auto.conf";
     };
     kitty-dark2 = {
-      source =
-        "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
+      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
       target = "kitty/dark2.conf";
     };
     topgrade = {
@@ -367,8 +377,12 @@
       source = ./.zsh.d;
       recursive = true;
     };
-    "broot/conf.hjson" = { source = ./broot.hjson; };
-    ".lsp/config.edn" = { source = ./lsp.edn; };
+    "broot/conf.hjson" = {
+      source = ./broot.hjson;
+    };
+    ".lsp/config.edn" = {
+      source = ./lsp.edn;
+    };
     alacritty = lib.mkIf pkgs.stdenvNoCC.isDarwin {
       source = ./alacritty;
       recursive = true;
@@ -382,10 +396,18 @@
       source = ./clojure_lsp.edn;
       target = "./clojure-lsp/config.edn";
     };
-    "mpv/mpv.conf" = { source = ./mpv.conf; };
-    "husky/init.sh" = { source = ./.huskyrc; };
-    "claude/cclsp.json" = { source = ./cclsp.json; };
-    "process-compose/shortcuts.yaml" = { source = ./process-compose-shortcuts.yaml; };
+    "mpv/mpv.conf" = {
+      source = ./mpv.conf;
+    };
+    "husky/init.sh" = {
+      source = ./.huskyrc;
+    };
+    "claude/cclsp.json" = {
+      source = ./cclsp.json;
+    };
+    "process-compose/shortcuts.yaml" = {
+      source = ./process-compose-shortcuts.yaml;
+    };
     # yarn-global = {
     #   source = ./package.json;
     #   target = "./yarn/global/package.json";

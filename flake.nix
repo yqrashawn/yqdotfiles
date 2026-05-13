@@ -215,6 +215,10 @@
       url = "github:asdf-community/asdf-uv";
       flake = false;
     };
+    asdf-lua-language-server = {
+      url = "github:bellini666/asdf-lua-language-server";
+      flake = false;
+    };
     paradedb-src = {
       url = "github:paradedb/paradedb/v0.21.10";
       flake = false;

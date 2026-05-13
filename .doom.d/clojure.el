@@ -205,9 +205,8 @@ If INSERT-BEFORE is non-nil, insert before the form, otherwise afterwards."
   (interactive)
   (when (< emacs-major-version 27)
     (user-error "`+cider-enable-fuzzy-completion' requires Emacs 27 or later"))
-  (setq!
-   completion-category-overrides
-   (clj/assoc completion-category-overrides 'cider '((styles hotfuzz)))))
+  (setq completion-category-overrides
+        (clj/assoc completion-category-overrides 'cider '((styles hotfuzz)))))
 
 (add-hook! '(cider-mode-hook cider-repl-mode-hook)
            '+cider-enable-fuzzy-completion)
@@ -439,7 +438,7 @@ creates a new one. Don't unnecessarily bother the user."
     (add-hook! 'cider-mode-hook '+make-cljr-add-use-snippet-interactive))
 
   (require 'a)
-  (setq!
+  (setq
    cljr-magic-require-namespaces
    '(("edn" . "clojure.edn")
      ("io" "clojure.java.io" :only ("clj"))
@@ -461,7 +460,8 @@ creates a new one. Don't unnecessarily bother the user."
      ("rf" "re-frame.core" :only ("cljs"))
      ("walk" . "clojure.walk")
      ("zip" . "clojure.zip")
-     ("mustache" . "cljstache.core"))
+     ("mustache" . "cljstache.core")))
+  (setq!
    cljr-clojure-test-declaration "[clojure.test :as t]"
    cljr-cljc-clojure-test-declaration "#?(:clj [clojure.test :as t]
 :cljs [cljs.test :as t :include-macros])"))

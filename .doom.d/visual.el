@@ -116,9 +116,8 @@
   :init
   (setq!
    modus-themes-italic-constructs t
-   modus-themes-completions '((matches . (extrabold background intense))
-                              (selection . (semibold accented intense))
-                              (popup . (accented)))
+   modus-themes-completions '((matches . (extrabold))
+                              (selection . (semibold)))
    modus-themes-mixed-fonts t))
 
 ;; (defun my-modus-themes-custom-faces ()

@@ -140,11 +140,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :around #'+fold--ts-fold-p
   nil)
 
-(use-package! eshell-follow
-  :after eshell
-  :after-call eshell-follow-global-mode
-  :config
-  (eshell-follow-global-mode t))
+;; (use-package! eshell-follow
+;;   :after eshell
+;;   :after-call eshell-follow-global-mode
+;;   :config
+;;   (eshell-follow-global-mode t))
 
 (use-package! eat
   :commands (eat)

@@ -224,6 +224,22 @@
         "type": "github"
       }
     },
+    "asdf-lua-language-server": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1678656799,
+        "narHash": "sha256-2mZE5+cYcB9ql/xyxrp/WlkZDVuCn+Ug4ZP4PINwjAw=",
+        "owner": "bellini666",
+        "repo": "asdf-lua-language-server",
+        "rev": "0cad5c3ac49b046e4add94ab83857b778f03851a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bellini666",
+        "repo": "asdf-lua-language-server",
+        "type": "github"
+      }
+    },
     "asdf-nim": {
       "flake": false,
       "locked": {
@@ -1398,6 +1414,7 @@
         "asdf-janet": "asdf-janet",
         "asdf-java": "asdf-java",
         "asdf-lua": "asdf-lua",
+        "asdf-lua-language-server": "asdf-lua-language-server",
         "asdf-nim": "asdf-nim",
         "asdf-ninja": "asdf-ninja",
         "asdf-nodejs": "asdf-nodejs",

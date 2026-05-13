@@ -256,8 +256,8 @@
            :files ("inf-carp-mode.el")))
 (package! parseclj :recipe (:host github :repo "clojure-emacs/parseclj" :branch "main"))
 (package! textsize)
-(package! eshell-follow
-  :recipe (:type git :repo "https://git.sr.ht/~e-v/eshell-follow.el"))
+;; (package! eshell-follow
+;;   :recipe (:type git :repo "https://git.sr.ht/~e-v/eshell-follow.el"))
 ;; (package! plz :recipe (:host github :repo "alphapapa/plz.el")) ;; http library
 ;; (package! ement :recipe (:host github :repo "alphapapa/ement.el")) ;; matrix client
 ;; (package! esup)

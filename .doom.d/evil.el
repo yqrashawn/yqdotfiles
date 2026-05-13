@@ -5,8 +5,9 @@
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
 
 (after! evil
-  (setq! evil-escape-key-sequence nil
-         evil-split-window-below t
+  ;; plain setq to bypass defcustom type check (key-sequence rejects nil)
+  (setq evil-escape-key-sequence nil)
+  (setq! evil-split-window-below t
          evil-vsplit-window-right t
          evil-move-cursor-back nil
          evil-kill-on-visual-paste nil
