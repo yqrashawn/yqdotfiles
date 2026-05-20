@@ -227,6 +227,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
      ("cchp" .
       (:url "http://localhost:8035/mcp"))
 
+     ("scout" .
+      (:url "https://scout.rashawn.work/mcp"))
+
      ;; ("slack" .
      ;;  (:url "http://localhost:13080/mcp"))
      

@@ -7,6 +7,7 @@
 
 {
   home.activation.defaultSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export PATH=/run/current-system/sw/bin:$PATH
     cuser="$(id -un)"
 
     if [ ! -e ~/.doom.d ]; then
