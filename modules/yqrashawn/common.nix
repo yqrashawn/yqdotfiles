@@ -68,6 +68,7 @@ in
     systemPackages =
       with pkgs;
       [
+        mitmproxy
         doxygen
         aliyun-cli
         lefthook

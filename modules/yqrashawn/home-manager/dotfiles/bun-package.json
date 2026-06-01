@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@anthropic-ai/claude-code": "^2.1.76",
+    "@anthropic-ai/claude-code": "^2.1.146",
     "@github/copilot": "^1.0.5",
     "@googleworkspace/cli": "^0.16.0",
     "@openai/codex": "^0.114.0",
