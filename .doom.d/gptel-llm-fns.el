@@ -78,12 +78,12 @@
    (format "```\n%s```\n\nGenerate a file title for the above conversation with llm"
            (or chat-content
                (with-current-buffer (current-buffer) (buffer-string))))
-   :backend +gptel-free-backend
-   ;; :backend gptel--openrouter
+   ;; :backend +gptel-free-backend
+   :backend gptel--openrouter
    ;; :backend gptel--ccl
-   ;; :model 'google/gemini-2.5-flash
+   :model 'google/gemini-2.5-flash
    ;; :model 'haiku
-   :model 'gpt-5-mini
+   ;; :model 'gpt-5-mini
    :temperature 0.5
    :max-token 60
    :cb (or on-title 'print)
@@ -210,7 +210,7 @@ Drop:
                    (prin1-to-string conversation))
            ;; :backend gptel--gh-copilot-business
            ;; :backend +gptel-free-backend
-           :backend gptel--ccl-new
+           :backend gptel--ccl
            ;; :model 'gpt-4.1
            :model 'opus
            :temperature 0.3
@@ -225,7 +225,7 @@ Drop:
                 (format "%s\n\nConversation to compress:\n%s"
                         compression-prompt
                         (prin1-to-string conversation))
-                :backend gptel--ccl-new
+                :backend gptel--ccl
                 ;; :backend gptel--openrouter
                 ;; :model 'google/gemini-2.5-flash
                 :model 'opus

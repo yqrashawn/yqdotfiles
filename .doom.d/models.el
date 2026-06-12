@@ -130,110 +130,56 @@
      :cutoff-date "2025-02")))
 
 (defconst gptel--claude-code-models
-  `((haiku
-     :description "Near-frontier intelligence at blazing speeds with extended thinking"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 1
-     :output-cost 5
-     :cutoff-date "2025-02")
-    (sonnet-low
-     :description "High-performance model with exceptional reasoning and efficiency (low effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07"
-     :request-params (:thinking (:type "enabled" :budget_tokens 1024)))
-    (sonnet-medium
-     :description "High-performance model with exceptional reasoning and efficiency (medium effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07"
-     :request-params (:thinking (:type "enabled" :budget_tokens 8000)))
-    (sonnet-high
-     :description "High-performance model with exceptional reasoning and efficiency (high effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07"
-     :request-params (:thinking (:type "enabled" :budget_tokens 16000)))
-    (sonnet
-     :description "High-performance model with exceptional reasoning and efficiency (max effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07"
-     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
-    (sonnet-max
-     :description "High-performance model with exceptional reasoning and efficiency (max effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 3
-     :output-cost 15
-     :cutoff-date "2025-07"
-     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
-    (opus-low
-     :description "Most capable model for complex reasoning and advanced coding (low effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03"
-     :request-params (:thinking (:type "enabled" :budget_tokens 1024)))
-    (opus-medium
-     :description "Most capable model for complex reasoning and advanced coding (medium effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03"
-     :request-params (:thinking (:type "enabled" :budget_tokens 8000)))
-    (opus-high
-     :description "Most capable model for complex reasoning and advanced coding (high effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03"
-     :request-params (:thinking (:type "enabled" :budget_tokens 16000)))
-    (opus
-     :description "Most capable model for complex reasoning and advanced coding (max effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03"
-     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
-    (opus-max
-     :description "Most capable model for complex reasoning and advanced coding (max effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 200
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03"
-     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))
-    (,(intern "0g-zai-org/GLM-5-FP8")
-     :description "Most capable model for complex reasoning and advanced coding, 1M context (max effort)"
-     :capabilities (media tool-use cache)
-     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf")
-     :context-window 1000
-     :input-cost 5
-     :output-cost 25
-     :cutoff-date "2025-03"
-     :request-params (:thinking (:type "enabled" :budget_tokens 32000)))))
+  ;; Generated from (base x effort x channel) instead of hand-writing each
+  ;; variant. Each base lists the effort tiers it supports; medium is emitted
+  ;; both as the bare name (e.g. `opus') and as `<base>-medium' (the -medium
+  ;; alias is kept so llm.el cchp presets keep resolving). Every variant also
+  ;; gets a `:rc' release-channel twin. The `0g:*' models are appended
+  ;; literally (1M context, custom names).
+  (let* ((mime-types '("image/jpeg" "image/png" "image/gif" "image/webp" "application/pdf"))
+         (effort-budgets '((low . 1024) (medium . 8000) (high . 16000) (xhigh . 24000) (max . 32000)))
+         ;; (base (effort...) desc-prefix input-cost output-cost cutoff-date)
+         (bases
+          '((haiku (low medium high)
+             "Near-frontier intelligence at blazing speeds with extended thinking" 1 5 "2025-02")
+            (sonnet (low medium high max)
+             "High-performance model with exceptional reasoning and efficiency" 3 15 "2025-07")
+            (opus (low medium high xhigh max)
+             "Most capable model for complex reasoning and advanced coding" 5 25 "2025-03")
+            (fable (low medium high xhigh max)
+             "Most capable model for complex reasoning and advanced coding" 5 25 "2025-03")))
+         (make-entry
+          (lambda (name desc ctx in out cutoff budget)
+            (list (intern name)
+                  :description desc
+                  :capabilities '(media tool-use cache)
+                  :mime-types mime-types
+                  :context-window ctx
+                  :input-cost in
+                  :output-cost out
+                  :cutoff-date cutoff
+                  :request-params (list :thinking (list :type "enabled" :budget_tokens budget)))))
+         (normal '())
+         (rc '()))
+    (pcase-dolist (`(,base ,efforts ,desc-prefix ,in ,out ,cutoff) bases)
+      (dolist (effort efforts)
+        (let* ((budget (alist-get effort effort-budgets))
+               (desc (format "%s (%s effort)" desc-prefix effort))
+               ;; medium = bare name + `<base>-medium' alias; others = `<base>-<effort>'
+               (stems (if (eq effort 'medium)
+                          (list (symbol-name base) (format "%s-medium" base))
+                        (list (format "%s-%s" base effort)))))
+          (dolist (stem stems)
+            (push (funcall make-entry stem desc 200 in out cutoff budget) normal)
+            (push (funcall make-entry (concat stem ":rc") desc 200 in out cutoff budget) rc)))))
+    (append
+     (nreverse normal)
+     (nreverse rc)
+     (mapcar
+      (lambda (name)
+        (funcall make-entry
+                 name
+                 "Most capable model for complex reasoning and advanced coding, 1M context (max effort)"
+                 1000 5 25 "2025-03" 32000))
+      '("0g:glm-5" "0g:glm-5.1" "0g:deepseek-v4-flash"
+        "0g:deepseek-v4-pro" "0g:qwen3.7-max")))))

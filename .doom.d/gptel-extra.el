@@ -58,26 +58,25 @@ This can be used to access server-provided metadata or other
 response data.")
 
 (defun +gptel--ccl-backend-p ()
-  "Return non-nil if current gptel backend is ccl, ccld, or ccl-new."
+  "Return non-nil if current gptel backend is ccl, ccld, or ccl-dev."
   (and (boundp 'gptel-backend)
        gptel-backend
        (boundp 'gptel--ccl)
        (boundp 'gptel--ccld)
        (or (eq gptel-backend gptel--ccl)
            (eq gptel-backend gptel--ccld)
-           (eq gptel-backend gptel--ccl-new)
-           (eq gptel-backend gptel--ccl-new-dev))))
+           (eq gptel-backend gptel--ccl-dev))))
 
 (defun +gptel--ccl-new-backend-p ()
-  "Return non-nil if current gptel backend is ccl-new (session-resume enabled)."
+  "Return non-nil if current gptel backend has session-resume enabled (ccl, ccl-dev)."
   (and (boundp 'gptel-backend)
        (or
         (and
-         (boundp 'gptel--ccl-new)
-         (eq gptel-backend gptel--ccl-new))
+         (boundp 'gptel--ccl)
+         (eq gptel-backend gptel--ccl))
         (and
-         (boundp 'gptel--ccl-new-dev)
-         (eq gptel-backend gptel--ccl-new-dev)))))
+         (boundp 'gptel--ccl-dev)
+         (eq gptel-backend gptel--ccl-dev)))))
 
 (defun +gptel--new-session-id ()
   "Generate a new session ID for ccl/ccld backends.
@@ -144,7 +143,7 @@ Uses `org-entry-put' at point-min so properties live in the same
 This sets buffer-local `gptel--request-params' with workspace metadata
 that will be included in each gptel request.  Generates a new session
 ID on every send (each send is a new Claude Code session).
-For ccl-new backend, also finds and passes resume_session_id from
+For ccl/ccl-dev backends, also finds and passes resume_session_id from
 the org heading lineage for session fork/resume."
   (when gptel-mode
     (+gptel--update-org-file-properties)
@@ -192,7 +191,7 @@ the org heading lineage for session fork/resume."
 (defun +gptel--store-session-id-on-heading (session-id &optional position)
   "Store SESSION-ID on the org heading at POSITION as GPTEL_CCL_SESSION_ID.
 POSITION is a marker or buffer position; defaults to point.
-Used by ccl-new backend to enable session resume on next send."
+Used by ccl/ccl-dev backends to enable session resume on next send."
   (when (and session-id
              (derived-mode-p 'org-mode))
     (org-with-wide-buffer
@@ -206,7 +205,7 @@ Used by ccl-new backend to enable session resume on next send."
 HEADERS-TEXT is the raw HTTP headers as a string.
 BODY-PLIST is the parsed JSON response body.
 INFO is the gptel process info plist.
-For ccl-new backend, also captures the session_id from the
+For ccl/ccl-dev backends, also captures the session_id from the
 X-Session-Id header and stores it on the current org heading."
   (when-let* ((buf (plist-get info :buffer)))
     (let* ((headers-alist (+gptel--parse-http-headers headers-text))
@@ -217,7 +216,7 @@ X-Session-Id header and stores it on the current org heading."
               (metadata . ,metadata))))
       (with-current-buffer buf
         (setq-local +gptel--last-response response-data)
-        ;; For ccl-new backend, store session_id from response on heading
+        ;; For ccl/ccl-dev backends, store session_id from response on heading
         (when-let* ((sid (cdr (assoc "X-Session-Id" headers-alist))))
           (+gptel--store-session-id-on-heading sid (plist-get info :position)))))))
 
@@ -225,7 +224,7 @@ X-Session-Id header and stores it on the current org heading."
   ;; Hook into streaming response cleanup to capture metadata
   (defadvice! +gptel-curl--stream-cleanup-capture-metadata (orig-fn process status)
     "Capture response metadata (headers, body) from streaming response.
-Also extracts session_id from SSE chunks for ccl-new session resume."
+Also extracts session_id from SSE chunks for ccl session resume."
     :around #'gptel-curl--stream-cleanup
     (let* ((proc-buf (process-buffer process))
            (fsm (car (alist-get process gptel--request-alist)))
@@ -234,10 +233,8 @@ Also extracts session_id from SSE chunks for ccl-new session resume."
       ;; Only capture for CCL backends
       (when (and backend (or (eq backend gptel--ccl)
                              (eq backend gptel--ccld)
-                             (and (boundp 'gptel--ccl-new)
-                                  (eq backend gptel--ccl-new))
-                             (and (boundp 'gptel--ccl-new-dev)
-                                  (eq backend gptel--ccl-new-dev))))
+                             (and (boundp 'gptel--ccl-dev)
+                                  (eq backend gptel--ccl-dev))))
         (with-current-buffer proc-buf
           (save-excursion
             (goto-char (point-min))
@@ -279,12 +276,8 @@ Also extracts session_id from SSE chunks for ccl-new session resume."
     "Capture response metadata from CCL backend non-streaming response."
     (+gptel--handle-non-streaming-response response info))
 
-  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl-new)) response info)
-    "Capture response metadata from CCL-new backend non-streaming response."
-    (+gptel--handle-non-streaming-response response info))
-
-  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl-new-dev)) response info)
-    "Capture response metadata from CCL-new-dev backend non-streaming response."
+  (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccl-dev)) response info)
+    "Capture response metadata from CCL-dev backend non-streaming response."
     (+gptel--handle-non-streaming-response response info))
 
   (cl-defmethod gptel--parse-response :after ((_backend (eql gptel--ccld)) response info)
