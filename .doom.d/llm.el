@@ -871,3 +871,54 @@ the result."
          claude-code-ide-use-side-window nil)
   :config
   (claude-code-ide-emacs-tools-setup))
+
+;;; gptel curl-death instrumentation
+;; Debug for recurring mid-turn cchp aborts ("Process exited without result").
+;; Records WHY a gptel curl request ends, to a dedicated append-only log:
+;;   - CURL-END: curl process status + exit code at end. Distinguishes
+;;       exit 0          = clean (gptel got a full response / [DONE])
+;;       exit <non-zero> = curl connection-level failure (e.g. server closed)
+;;       status 'signal  = curl was KILLED by a signal (e.g. gptel-abort / OS)
+;;   - ABORT: gptel-abort was invoked — with the command that triggered it,
+;;       so we can tell a user abort from the 7200s timer or an incidental cause.
+(defvar +gptel-death-log "/tmp/gptel-curl-deaths.log"
+  "Append-only log file for gptel curl request endings.")
+
+(defun +gptel--log-death (tag plist)
+  "Append TAG + PLIST as one timestamped line to `+gptel-death-log'."
+  (ignore-errors
+    (write-region
+     (format "%s %-9s %S\n"
+             (format-time-string "%Y-%m-%dT%H:%M:%S.%3N%z")
+             tag plist)
+     nil +gptel-death-log 'append 'silent)))
+
+(defun +gptel--log-curl-end (process &rest _)
+  "Log how a gptel curl PROCESS ended (exit code / signal / gptel status)."
+  (when (and (processp process) (boundp 'gptel--request-alist))
+    (let* ((fsm  (car (alist-get process gptel--request-alist)))
+           (info (and fsm (fboundp 'gptel-fsm-info) (gptel-fsm-info fsm))))
+      (+gptel--log-death
+       "CURL-END"
+       (list :proc          (process-name process)
+             :status        (process-status process)   ; exit | signal
+             :exit          (process-exit-status process)
+             :http-status   (and info (plist-get info :http-status))
+             :gptel-status  (and info (plist-get info :status))
+             :buffer        (and info (buffer-live-p (plist-get info :buffer))
+                                 (buffer-name (plist-get info :buffer))))))))
+
+(defun +gptel--log-abort (buf &rest _)
+  "Log a `gptel-abort' call and the command/context that triggered it."
+  (+gptel--log-death
+   "ABORT"
+   (list :buffer            (and (bufferp buf) (buffer-name buf))
+         :this-command      this-command
+         :last-command      last-command
+         :real-this-command real-this-command)))
+
+(with-eval-after-load 'gptel
+  (advice-add 'gptel-curl--stream-cleanup :before #'+gptel--log-curl-end)
+  (when (fboundp 'gptel-curl--sentinel)
+    (advice-add 'gptel-curl--sentinel :before #'+gptel--log-curl-end))
+  (advice-add 'gptel-abort :before #'+gptel--log-abort))
