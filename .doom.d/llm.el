@@ -155,72 +155,111 @@ Everywhere else: max 2 consecutive blank lines."
     (funcall f response info raw)))
 
 ;;; gptel
-(defun +gptel-make-cchp-presets (suffix backend-name desc-prefix)
+(defun +gptel-make-cchp-presets (suffix backend-name desc-prefix &optional rc)
   "Create a full set of cchp presets for a backend.
 SUFFIX is appended to preset names (\"\" for ccl, \"d\" for ccl-dev).
 BACKEND-NAME is the gptel backend name string.
-DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-dev\")."
-  (let ((base-name (intern (concat "s" suffix))))
-    ;; Base preset: sonnet medium
-    (gptel-make-preset base-name
-      :description (concat desc-prefix " sonnet medium")
-      :backend backend-name
-      :model 'sonnet-medium
-      :system (alist-get 'claude gptel-directives)
-      :parents '(default)
-      :tools '())
-    ;; Sonnet variants
-    (gptel-make-preset (intern (concat "sl" suffix))
-      :description (concat desc-prefix " sonnet low")
-      :model 'sonnet-low
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "sm" suffix))
-      :description (concat desc-prefix " sonnet max")
-      :model 'sonnet-max
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "sh" suffix))
-      :description (concat desc-prefix " sonnet high")
-      :model 'sonnet-high
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "sx" suffix))
-      :description (concat desc-prefix " sonnet xhigh")
-      :model 'sonnet-high
-      :parents (list base-name))
-    ;; Opus variants
-    (gptel-make-preset (intern (concat "o" suffix))
-      :description (concat desc-prefix " opus medium")
-      :model 'opus-medium
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "ol" suffix))
-      :description (concat desc-prefix " opus low")
-      :model 'opus-low
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "om" suffix))
-      :description (concat desc-prefix " opus max")
-      :model 'opus-max
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "oh" suffix))
-      :description (concat desc-prefix " opus high")
-      :model 'opus-high
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "ox" suffix))
-      :description (concat desc-prefix " opus xhigh")
-      :model 'opus-high
-      :parents (list base-name))
-    ;; Haiku
-    (gptel-make-preset (intern (concat "h" suffix))
-      :description (concat desc-prefix " haiku")
-      :model 'haiku
-      :parents (list base-name))
-    ;; GLM5
-    (gptel-make-preset (intern (concat "g51" suffix))
-      :description (concat desc-prefix " GLM5.1")
-      :model (intern "0g:glm-5.1")
-      :parents (list base-name))
-    (gptel-make-preset (intern (concat "g5" suffix))
-      :description (concat desc-prefix " GLM5")
-      :model (intern "0g:glm-5")
-      :parents (list base-name))))
+DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-dev\").
+When RC is non-nil, preset keys gain an `rc' infix (e.g. `o' -> `orc') and
+claude models resolve to their `:rc' release-channel twins.  GLM (`0g:*')
+models have no `:rc' twin in `models.el', so they are omitted in RC mode."
+  (cl-flet* ((pname (key) (intern (concat key (if rc "rc" "") suffix)))
+             (mdl (name) (intern (if rc (concat name ":rc") name))))
+    (let ((base-name (pname "s")))
+      ;; Base preset: sonnet medium
+      (gptel-make-preset base-name
+        :description (concat desc-prefix " sonnet medium")
+        :backend backend-name
+        :model (mdl "sonnet-medium")
+        :system (alist-get 'claude gptel-directives)
+        :parents '(default)
+        :tools '())
+      ;; Sonnet variants
+      (gptel-make-preset (pname "sl")
+        :description (concat desc-prefix " sonnet low")
+        :model (mdl "sonnet-low")
+        :parents (list base-name))
+      (gptel-make-preset (pname "sm")
+        :description (concat desc-prefix " sonnet max")
+        :model (mdl "sonnet-max")
+        :parents (list base-name))
+      (gptel-make-preset (pname "sh")
+        :description (concat desc-prefix " sonnet high")
+        :model (mdl "sonnet-high")
+        :parents (list base-name))
+      (gptel-make-preset (pname "sx")
+        :description (concat desc-prefix " sonnet xhigh")
+        :model (mdl "sonnet-high")
+        :parents (list base-name))
+      ;; Opus variants
+      (gptel-make-preset (pname "o")
+        :description (concat desc-prefix " opus medium")
+        :model (mdl "opus-medium")
+        :parents (list base-name))
+      (gptel-make-preset (pname "ol")
+        :description (concat desc-prefix " opus low")
+        :model (mdl "opus-low")
+        :parents (list base-name))
+      (gptel-make-preset (pname "om")
+        :description (concat desc-prefix " opus max")
+        :model (mdl "opus-max")
+        :parents (list base-name))
+      (gptel-make-preset (pname "oh")
+        :description (concat desc-prefix " opus high")
+        :model (mdl "opus-high")
+        :parents (list base-name))
+      (gptel-make-preset (pname "ox")
+        :description (concat desc-prefix " opus xhigh")
+        :model (mdl "opus-high")
+        :parents (list base-name))
+      ;; Haiku
+      (gptel-make-preset (pname "h")
+        :description (concat desc-prefix " haiku")
+        :model (mdl "haiku")
+        :parents (list base-name))
+      ;; GLM5 (no :rc twin -> skip in rc mode)
+      (unless rc
+        (gptel-make-preset (pname "g51")
+          :description (concat desc-prefix " GLM5.1")
+          :model (intern "0g:glm-5.1")
+          :parents (list base-name))
+        (gptel-make-preset (pname "g5")
+          :description (concat desc-prefix " GLM5")
+          :model (intern "0g:glm-5")
+          :parents (list base-name))
+        ;; Other 0g models
+        (gptel-make-preset (pname "dsf")
+          :description (concat desc-prefix " DeepSeek-V4-Flash")
+          :model (intern "0g:deepseek-v4-flash")
+          :parents (list base-name))
+        (gptel-make-preset (pname "dsp")
+          :description (concat desc-prefix " DeepSeek-V4-Pro")
+          :model (intern "0g:deepseek-v4-pro")
+          :parents (list base-name))
+        (gptel-make-preset (pname "ds3")
+          :description (concat desc-prefix " DeepSeek-V3")
+          :model (intern "0g:deepseek-v3")
+          :parents (list base-name))
+        (gptel-make-preset (pname "qm")
+          :description (concat desc-prefix " Qwen3.7-Max")
+          :model (intern "0g:qwen3.7-max")
+          :parents (list base-name))
+        (gptel-make-preset (pname "qp")
+          :description (concat desc-prefix " Qwen3.6-Plus")
+          :model (intern "0g:qwen3.6-plus")
+          :parents (list base-name))
+        (gptel-make-preset (pname "qvl")
+          :description (concat desc-prefix " Qwen3-VL-30B")
+          :model (intern "0g:qwen3-vl-30b")
+          :parents (list base-name))
+        (gptel-make-preset (pname "mm")
+          :description (concat desc-prefix " MiniMax-M3")
+          :model (intern "0g:minimax-m3")
+          :parents (list base-name))
+        (gptel-make-preset (pname "gm")
+          :description (concat desc-prefix " 0GM-1.0-35B-A3B")
+          :model (intern "0g:0gm-1.0-35b-a3b")
+          :parents (list base-name))))))
 
 (defun +gptel-make-my-presets ()
   (gptel-make-preset 'default
@@ -265,6 +304,8 @@ DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-dev\")."
   ;; (+gptel-make-cchp-presets "od" "ccld" "cchp dev")
   ;; ccl (production with session resume, port 8033)
   (+gptel-make-cchp-presets "" "ccl" "cchp")
+  ;; ccl release-channel twins (orc, ohrc, src, ...)
+  (+gptel-make-cchp-presets "" "ccl" "cchp rc" t)
   ;; ccl-dev (dev with session resume, port 8003)
   (+gptel-make-cchp-presets "d" "ccl-dev" "cchp-dev")
 

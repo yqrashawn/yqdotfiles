@@ -182,4 +182,6 @@
                  "Most capable model for complex reasoning and advanced coding, 1M context (max effort)"
                  1000 5 25 "2025-03" 32000))
       '("0g:glm-5" "0g:glm-5.1" "0g:deepseek-v4-flash"
-        "0g:deepseek-v4-pro" "0g:qwen3.7-max")))))
+        "0g:deepseek-v4-pro" "0g:qwen3.7-max"
+        "0g:0gm-1.0-35b-a3b" "0g:deepseek-v3" "0g:minimax-m3"
+        "0g:qwen3-vl-30b" "0g:qwen3.6-plus")))))
