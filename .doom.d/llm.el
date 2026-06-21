@@ -155,16 +155,22 @@ Everywhere else: max 2 consecutive blank lines."
     (funcall f response info raw)))
 
 ;;; gptel
-(defun +gptel-make-cchp-presets (suffix backend-name desc-prefix &optional rc)
+(defun +gptel-make-cchp-presets (suffix backend-name desc-prefix &optional rc live)
   "Create a full set of cchp presets for a backend.
 SUFFIX is appended to preset names (\"\" for ccl, \"d\" for ccl-dev).
 BACKEND-NAME is the gptel backend name string.
 DESC-PREFIX is the description prefix (e.g. \"cchp\", \"cchp-dev\").
 When RC is non-nil, preset keys gain an `rc' infix (e.g. `o' -> `orc') and
-claude models resolve to their `:rc' release-channel twins.  GLM (`0g:*')
-models have no `:rc' twin in `models.el', so they are omitted in RC mode."
-  (cl-flet* ((pname (key) (intern (concat key (if rc "rc" "") suffix)))
-             (mdl (name) (intern (if rc (concat name ":rc") name))))
+claude models resolve to their `:rc' release-channel twins.
+When LIVE is non-nil, preset keys gain a `live' infix and models resolve to
+their `:live' persistent-streaming-session twins (cchp :live: one long-lived
+claude process per org subtree, so background dev servers + the Monitor tool
+survive across sends).  GLM (`0g:*') models have no `:rc'/`:live' twin in
+`models.el', so they are omitted in RC and LIVE modes."
+  (cl-flet* ((pname (key) (intern (concat key (cond (rc "rc") (live "live") (t "")) suffix)))
+             (mdl (name) (intern (cond (rc (concat name ":rc"))
+                                       (live (concat name ":live"))
+                                       (t name)))))
     (let ((base-name (pname "s")))
       ;; Base preset: sonnet medium
       (gptel-make-preset base-name
@@ -217,8 +223,8 @@ models have no `:rc' twin in `models.el', so they are omitted in RC mode."
         :description (concat desc-prefix " haiku")
         :model (mdl "haiku")
         :parents (list base-name))
-      ;; GLM5 (no :rc twin -> skip in rc mode)
-      (unless rc
+      ;; GLM5 (no :rc/:live twin -> skip in rc/live mode)
+      (unless (or rc live)
         (gptel-make-preset (pname "g51")
           :description (concat desc-prefix " GLM5.1")
           :model (intern "0g:glm-5.1")
@@ -308,6 +314,12 @@ models have no `:rc' twin in `models.el', so they are omitted in RC mode."
   (+gptel-make-cchp-presets "" "ccl" "cchp rc" t)
   ;; ccl-dev (dev with session resume, port 8003)
   (+gptel-make-cchp-presets "d" "ccl-dev" "cchp-dev")
+  ;; ccl-live / ccl-dev-live: persistent :live streaming sessions.
+  ;; Keys gain a `live' infix (slive, olive, hlive, ...); models gain a `:live'
+  ;; suffix. Stable per-subtree session id (no fork-per-send) is applied in
+  ;; +gptel--add-workspace-context when gptel-model ends in :live.
+  (+gptel-make-cchp-presets "" "ccl" "cchp live" nil t)
+  (+gptel-make-cchp-presets "d" "ccl-dev" "cchp-dev live" nil t)
 
   (gptel-make-preset 'glmd
     :description "cchp dev glm 5"

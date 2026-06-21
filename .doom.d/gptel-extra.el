@@ -122,6 +122,23 @@ Returns the nearest GPTEL_CCL_SESSION_ID or nil."
          ;; Check file-level property (point-min) as last resort
          (org-entry-get (point-min) "GPTEL_CCL_SESSION_ID")))))
 
+(defun +gptel--live-mode-p ()
+  "Non-nil when the active gptel model carries the `:live' suffix.
+Live presets share the ccl/ccl-dev backend object, so the persistent-session
+mode is distinguished by the model name (e.g. `sonnet-medium:live'), not the
+backend.  See `+gptel-make-cchp-presets' LIVE."
+  (and (boundp 'gptel-model) gptel-model
+       (string-suffix-p ":live" (symbol-name gptel-model))))
+
+(defun +gptel--live-session-id ()
+  "Return a STABLE session id for the current org subtree (live mode).
+Reuses the heading's stored GPTEL_CCL_SESSION_ID when present; generates and
+stores a fresh one only when absent.  Unlike `+gptel--new-session-id', it does
+NOT fork per send — so the proxy maps every send under this heading to the same
+persistent :live process."
+  (or (+gptel--current-heading-session-id)
+      (+gptel--new-session-id)))
+
 (defun +gptel--update-org-file-properties ()
   "Update org file-level properties for workspace root.
 Uses `org-entry-put' at point-min so properties live in the same
@@ -150,8 +167,18 @@ the org heading lineage for session fork/resume."
     ;; IMPORTANT: find resume ID BEFORE generating new session ID,
     ;; because new-session-id writes to the heading property that
     ;; find-resume-session-id reads.
-    (let* ((resume-session-id (+gptel--find-resume-session-id))
-           (session-id (+gptel--new-session-id)))
+    ;; Live mode (model ends in :live): reuse a STABLE per-subtree session id
+    ;; (no fork-per-send) so the proxy continues the same persistent :live
+    ;; process; only send resume_session_id on the first send of a (sub)heading
+    ;; (cold-start/branch). Non-live behavior is unchanged.
+    (let* ((live (+gptel--live-mode-p))
+           (resume-session-id (if live
+                                  (unless (+gptel--current-heading-session-id)
+                                    (+gptel--find-resume-session-id))
+                                (+gptel--find-resume-session-id)))
+           (session-id (if live
+                           (+gptel--live-session-id)
+                         (+gptel--new-session-id))))
       (setq-local
        gptel--request-params
        (list
