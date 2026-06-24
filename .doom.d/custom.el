@@ -4,6 +4,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ai-code-onboarding-seen t)
  '(safe-local-variable-values
     '((elisp-lint-indent-specs (if-let* . 1) (if-let . 1)
         (mcp-server-lib-test--with-server . 0)
