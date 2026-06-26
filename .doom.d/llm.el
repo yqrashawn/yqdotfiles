@@ -976,7 +976,7 @@ the result."
     (advice-add 'gptel-curl--sentinel :before #'+gptel--log-curl-end))
   (advice-add 'gptel-abort :before #'+gptel--log-abort))
 
-(use-package ai-code
+(use-package! ai-code
   :defer t
   :init
   (global-set-key (kbd "C-c a") #'ai-code-menu)
@@ -985,3 +985,6 @@ the result."
   ;; Optional: use a narrower transient menu on smaller frames
   (setq ai-code-menu-layout 'two-columns)
   )
+
+(use-package! eca
+  :defer t)
