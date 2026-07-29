@@ -36,7 +36,7 @@
 (defn alacritty
   []
   (let [conf-file (fs/file (fs/expand-home
-                             "~/.config/alacritty-current-theme.yml"))
+                            "~/.config/alacritty-current-theme.yml"))
         conf (slurp conf-file)
         cur-theme (get theme-lines (if (= theme :dark) :light :dark))
         next-theme (get theme-lines theme)
@@ -58,7 +58,7 @@
         "-n" "-q"
         "-e" "(load-theme 'ef-day :no-confirm)")))
 
-(try (kitty) (reload-kitty-conf) (catch Exception _))
+;; (try (kitty) (reload-kitty-conf) (catch Exception _))
 (try (alacritty) (catch Exception _))
 (try (emacs) (catch Exception _))
 

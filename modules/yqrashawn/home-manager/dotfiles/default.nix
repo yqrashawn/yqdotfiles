@@ -341,17 +341,9 @@
       source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi.conf";
       target = "kitty/light-theme.auto.conf";
     };
-    kitty-light2 = {
-      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
-      target = "kitty/light2.conf";
-    };
     kitty-dark = {
       source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Vivendi.conf";
       target = "kitty/dark-theme.auto.conf";
-    };
-    kitty-dark2 = {
-      source = "${pkgs.kitty-themes}/share/kitty-themes/themes/Modus_Operandi_Faint.conf";
-      target = "kitty/dark2.conf";
     };
     topgrade = {
       source = ./topgrade.toml;
