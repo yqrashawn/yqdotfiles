@@ -461,7 +461,9 @@
 (package! kkp)
 (package! jtsx)
 (package! lsp-biome :recipe (:host github :repo "cxa/lsp-biome"))
-(package! pushover)
+(package! pushover
+  :recipe `(:local-repo ,(expand-file-name "~/Dropbox/sync/emacs-pushover")
+            :files ("*.el")))
 (package! pg)
 (package! vecdb :recipe (:host github :repo "ahyatt/vecdb"))
 (package! llm :recipe (:host github :repo "ahyatt/llm"))
