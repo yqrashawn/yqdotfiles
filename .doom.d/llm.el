@@ -5,79 +5,80 @@
 (setq! +gptel-default-preset 'sh)
 (setq! +gptel-default-preset 'om)
 (setq! +gptel-default-preset 'ox)
+(setq! +gptel-default-preset 'o)
 
 ;;; helper fns
 (defun +gptel-sanitize-filename (str)
   "Clean STR for use as a filename."
   (thread-last str
-               (string-trim)
-               (replace-regexp-in-string "```[a-z]*" "")
-               (replace-regexp-in-string "[^[:alnum:][:space:]-]" "_")
-               (replace-regexp-in-string "[[:space:]]+" "_")))
+    (string-trim)
+    (replace-regexp-in-string "```[a-z]*" "")
+    (replace-regexp-in-string "[^[:alnum:][:space:]-]" "_")
+    (replace-regexp-in-string "[[:space:]]+" "_")))
 
 (defun +gptel-save-buffer (&rest _args)
   (interactive)
   (when-let ((buf (current-buffer)))
     (with-current-buffer buf
       (cond
-       ;; File on disk and modified — just save
-       ((and buffer-file-name
-             (file-exists-p buffer-file-name)
-             (buffer-modified-p))
-        (save-buffer))
-       ;; No file on disk — generate title and save to Dropbox
-       ((not buffer-file-name)
-        (get-gptel-org-title
-         (buffer-string)
-         (lambda (title)
-           (let ((new-title (+gptel-sanitize-filename title)))
-             (with-current-buffer buf
-               (let ((dir (format
-                           "~/Dropbox/sync/gptel/%s/%s/%s"
-                           (format-time-string "%Y")
-                           (format-time-string "%m")
-                           (format-time-string "%d"))))
-                 (unless (file-directory-p dir)
-                   (make-directory dir t))
-                 (+set-org-top-header new-title)
-                 ;; (insert "\n")
-                 (+set-org-title new-title)
-                 (let ((filepath (expand-file-name
-                                  (format
-                                   "%s-%s.org"
-                                   (format-time-string "%H_%M")
-                                   new-title)
-                                  dir)))
-                   ;; Avoid write-file which calls rename-buffer
-                   ;; synchronously — that breaks persp-mode window
-                   ;; config when response completes in another workspace.
-                   (setq buffer-file-name filepath)
-                   (setq buffer-file-truename (file-truename filepath))
-                   (setq default-directory (file-name-directory filepath))
-                   (set-buffer-modified-p t)
-                   (save-buffer)
-                   ;; Rename buffer to match filename. If visible, rename
-                   ;; now. Otherwise defer until displayed — remove hook
-                   ;; BEFORE rename to avoid infinite loop.
-                   (let ((new-name (file-name-nondirectory filepath)))
-                     (if (get-buffer-window buf t)
-                         (rename-buffer new-name t)
-                       (let (hook-fn)
-                         (setq hook-fn
-                               (lambda ()
-                                 (when (and (buffer-live-p buf)
-                                            (get-buffer-window buf t))
-                                   (remove-hook 'buffer-list-update-hook hook-fn)
-                                   (with-current-buffer buf
-                                     (rename-buffer new-name t)))))
-                         (add-hook 'buffer-list-update-hook hook-fn)))))))))
-         (lambda (e) (user-error
-                      "Error setting gptel org title: %s"
-                      (if (plistp e)
-                          (or (plist-get e :error)
+        ;; File on disk and modified — just save
+        ((and buffer-file-name
+           (file-exists-p buffer-file-name)
+           (buffer-modified-p))
+          (save-buffer))
+        ;; No file on disk — generate title and save to Dropbox
+        ((not buffer-file-name)
+          (get-gptel-org-title
+            (buffer-string)
+            (lambda (title)
+              (let ((new-title (+gptel-sanitize-filename title)))
+                (with-current-buffer buf
+                  (let ((dir (format
+                               "~/Dropbox/sync/gptel/%s/%s/%s"
+                               (format-time-string "%Y")
+                               (format-time-string "%m")
+                               (format-time-string "%d"))))
+                    (unless (file-directory-p dir)
+                      (make-directory dir t))
+                    (+set-org-top-header new-title)
+                    ;; (insert "\n")
+                    (+set-org-title new-title)
+                    (let ((filepath (expand-file-name
+                                      (format
+                                        "%s-%s.org"
+                                        (format-time-string "%H_%M")
+                                        new-title)
+                                      dir)))
+                      ;; Avoid write-file which calls rename-buffer
+                      ;; synchronously — that breaks persp-mode window
+                      ;; config when response completes in another workspace.
+                      (setq buffer-file-name filepath)
+                      (setq buffer-file-truename (file-truename filepath))
+                      (setq default-directory (file-name-directory filepath))
+                      (set-buffer-modified-p t)
+                      (save-buffer)
+                      ;; Rename buffer to match filename. If visible, rename
+                      ;; now. Otherwise defer until displayed — remove hook
+                      ;; BEFORE rename to avoid infinite loop.
+                      (let ((new-name (file-name-nondirectory filepath)))
+                        (if (get-buffer-window buf t)
+                          (rename-buffer new-name t)
+                          (let (hook-fn)
+                            (setq hook-fn
+                              (lambda ()
+                                (when (and (buffer-live-p buf)
+                                        (get-buffer-window buf t))
+                                  (remove-hook 'buffer-list-update-hook hook-fn)
+                                  (with-current-buffer buf
+                                    (rename-buffer new-name t)))))
+                            (add-hook 'buffer-list-update-hook hook-fn)))))))))
+            (lambda (e) (user-error
+                          "Error setting gptel org title: %s"
+                          (if (plistp e)
+                            (or (plist-get e :error)
                               (plist-get e :status)
                               (format "%S" e))
-                        (error-message-string e))))))))))
+                            (error-message-string e))))))))))
 
 (defun +gptel-kill-default-buffer ()
   (interactive)
@@ -110,7 +111,7 @@ Everywhere else: max 2 consecutive blank lines."
             (goto-char marker-line-start)
             (forward-line -1)
             (while (and (not (bobp))
-                        (looking-at-p "^[ \t]*$"))
+                     (looking-at-p "^[ \t]*$"))
               (forward-line -1))
             ;; Now point is on the last non-blank line above (or bob)
             (unless (looking-at-p "^[ \t]*$") (forward-line 1))
@@ -127,7 +128,7 @@ Everywhere else: max 2 consecutive blank lines."
               (forward-line 1)
               (let ((after-marker (point)))
                 (while (and (not (eobp))
-                            (looking-at-p "^[ \t]*$"))
+                         (looking-at-p "^[ \t]*$"))
                   (forward-line 1))
                 (when (> (count-lines after-marker (point)) 1)
                   (delete-region after-marker (point))
@@ -142,14 +143,14 @@ Everywhere else: max 2 consecutive blank lines."
     (f response info &optional raw)
     :around #'gptel-curl--stream-insert-response
     (let* ((start-marker (plist-get info :position))
-           (tracking-marker (plist-get info :tracking-marker))
-           (cur-marker (or tracking-marker start-marker)))
+            (tracking-marker (plist-get info :tracking-marker))
+            (cur-marker (or tracking-marker start-marker)))
       (with-current-buffer (marker-buffer cur-marker)
         (when (eq gptel-backend gptel--claude-code)
           (save-excursion
             (goto-char cur-marker)
             (when (or (eq (char-before) ?:)
-                      (eq (char-before) ?.))
+                    (eq (char-before) ?.))
               (insert ?\n)
               (insert ?\n))))))
     (funcall f response info raw)))
@@ -168,9 +169,9 @@ claude process per org subtree, so background dev servers + the Monitor tool
 survive across sends).  GLM (`0g:*') models have no `:rc'/`:live' twin in
 `models.el', so they are omitted in RC and LIVE modes."
   (cl-flet* ((pname (key) (intern (concat key (cond (rc "rc") (live "live") (t "")) suffix)))
-             (mdl (name) (intern (cond (rc (concat name ":rc"))
-                                       (live (concat name ":live"))
-                                       (t name)))))
+              (mdl (name) (intern (cond (rc (concat name ":rc"))
+                                    (live (concat name ":live"))
+                                    (t name)))))
     (let ((base-name (pname "s")))
       ;; Base preset: sonnet medium
       (gptel-make-preset base-name
@@ -216,7 +217,7 @@ survive across sends).  GLM (`0g:*') models have no `:rc'/`:live' twin in
         :parents (list base-name))
       (gptel-make-preset (pname "ox")
         :description (concat desc-prefix " opus xhigh")
-        :model (mdl "opus-high")
+        :model (mdl "opus-xhigh")
         :parents (list base-name))
       ;; Haiku
       (gptel-make-preset (pname "h")
@@ -279,13 +280,13 @@ survive across sends).  GLM (`0g:*') models have no `:rc'/`:live' twin in
     :temperature 0.8
     :tools
     (cl-mapcan
-     (lambda (x)
-       (let ((category (car x)))
-         (seq-filter
-          (lambda (tool-name)
-            (not (string-prefix-p "emacs_" tool-name)))
-          (seq-map 'car (alist-get category gptel--known-tools)))))
-     gptel--known-tools))
+      (lambda (x)
+        (let ((category (car x)))
+          (seq-filter
+            (lambda (tool-name)
+              (not (string-prefix-p "emacs_" tool-name)))
+            (seq-map 'car (alist-get category gptel--known-tools)))))
+      gptel--known-tools))
 
   (gptel-make-preset 'ha
     :description "cc haiku"
@@ -344,60 +345,60 @@ survive across sends).  GLM (`0g:*') models have no `:rc'/`:live' twin in
 (defun +gptel (arg)
   (interactive "P")
   (cond
-   ((and (region-active-p) (or gptel-mode (eq arg 8))) (call-interactively #'+gptel-comment-region))
-   ((region-active-p) (call-interactively #'gptel-rewrite))
-   ((not arg) (call-interactively #'gptel))
-   ((eq arg 7) (call-interactively #'gptel-menu))
-   ((eq arg 8) (call-interactively #'+gptel-inject-message))
-   ((eq arg 88) (call-interactively #'+gptel-find-session-id))
-   ((eq arg 87) (call-interactively #'+gptel-claude-here))
-   ((eq arg 90)
-    (progn (funcall #'gptel-context-remove-all)
-           (message "gptel context removed!")))
-   ((eq arg 6) (call-interactively #'gptel-context-add))))
+    ((and (region-active-p) (or gptel-mode (eq arg 8))) (call-interactively #'+gptel-comment-region))
+    ((region-active-p) (call-interactively #'gptel-rewrite))
+    ((not arg) (call-interactively #'gptel))
+    ((eq arg 7) (call-interactively #'gptel-menu))
+    ((eq arg 8) (call-interactively #'+gptel-inject-message))
+    ((eq arg 88) (call-interactively #'+gptel-find-session-id))
+    ((eq arg 87) (call-interactively #'+gptel-claude-here))
+    ((eq arg 90)
+      (progn (funcall #'gptel-context-remove-all)
+        (message "gptel context removed!")))
+    ((eq arg 6) (call-interactively #'gptel-context-add))))
 
 (defvar +llm-project-default-files '())
 (make-variable-buffer-local '+llm-project-default-files)
 (put '+llm-project-default-files 'safe-local-variable #'listp)
 (setq! +llm-global-project-default-files
-       '("llm.txt" "llm.md" "llm.org"))
+  '("llm.txt" "llm.md" "llm.org"))
 (setq! +llm-project-default-files +llm-global-project-default-files)
 
 (defun +llm-get-project-default-files ()
   "Return a list of default project files.
 Merge buffer-local with global default files."
   (delete-dups
-   (append
-    +llm-project-default-files
-    +llm-global-project-default-files)))
+    (append
+      +llm-project-default-files
+      +llm-global-project-default-files)))
 
 (use-package! gptel
   :commands (gptel gptel-context-add)
   :init
   (setq! gptel-api-key +open-ai-api-key
-         gptel-include-tool-results nil
-         gptel-include-reasoning nil
-         gptel-default-mode 'org-mode
-         gptel-expert-commands t
-         gptel-temperature 1.0
-         gptel-org-branching-context t
-         gptel-track-media t
-         +gptel-disabled-tool-patterns
-         '("^show_api_key$" "^capture_screenshot" "^guess_datetime")
-         gptel-curl-extra-args
-         (split-string
-          (mapconcat
-           'identity
-           '("--http1.1"
-             ;; "--fail-with-body"
-             "--no-buffer" ;flush chunks ASAP so Emacs sees tokens as they arrive.
-             ;; "--retry 3" "--retry-delay 1"
-             "--connect-timeout 10"
-             "--max-time 172800" ;48h — match server :rc interactive-ask wait (was 7200/2h)
-             "--no-alpn"                  ;tsl
-             "-4"                         ;force ipv4
-             "--insecure")
-           " ")))
+    gptel-include-tool-results nil
+    gptel-include-reasoning nil
+    gptel-default-mode 'org-mode
+    gptel-expert-commands t
+    gptel-temperature 1.0
+    gptel-org-branching-context t
+    gptel-track-media t
+    +gptel-disabled-tool-patterns
+    '("^show_api_key$" "^capture_screenshot" "^guess_datetime")
+    gptel-curl-extra-args
+    (split-string
+      (mapconcat
+        'identity
+        '("--http1.1"
+           ;; "--fail-with-body"
+           "--no-buffer" ;flush chunks ASAP so Emacs sees tokens as they arrive.
+           ;; "--retry 3" "--retry-delay 1"
+           "--connect-timeout 10"
+           "--max-time 172800" ;48h — match server :rc interactive-ask wait (was 7200/2h)
+           "--no-alpn"                  ;tsl
+           "-4"                         ;force ipv4
+           "--insecure")
+        " ")))
 
   ;; (defadvice! +gptel-cleanup-default-buffer (&rest args)
   ;;   :before #'gptel
@@ -405,10 +406,10 @@ Merge buffer-local with global default files."
   (defun +gptel-buffer? (&optional b)
     (let ((b (if b (get-buffer b) (current-buffer))))
       (and (null gptel-display-buffer-action)
-           (or (buffer-local-value 'gptel-mode b)
-               (and (buffer-file-name b)
-                    (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
-                                    (buffer-file-name b))))))
+        (or (buffer-local-value 'gptel-mode b)
+          (and (buffer-file-name b)
+            (string-match-p "^/User/.*/Dropbox/sync/gptel/gptel-"
+              (buffer-file-name b))))))
     nil)
   :config
   (require 'gptel-context)
@@ -417,7 +418,7 @@ Merge buffer-local with global default files."
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user: ")
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant: ")
   (setq! gptel-display-buffer-action
-         `(display-buffer-same-window . nil))
+    `(display-buffer-same-window . nil))
   (comment
     (set-popup-rule!
       (lambda (bname _action) (+gptel-buffer? bname))
@@ -432,38 +433,38 @@ Merge buffer-local with global default files."
   (defun +gptel-popup-windows ()
     "Return list of popup windows displaying gptel buffers."
     (cl-remove-if-not
-     (lambda (w)
-       (and (+gptel-buffer? (window-buffer w))
-            (window-parameter w 'popup)))
-     (window-list)))
+      (lambda (w)
+        (and (+gptel-buffer? (window-buffer w))
+          (window-parameter w 'popup)))
+      (window-list)))
 
   (defadvice! +gptel-popup-assign-dynamic-slot (orig-fn buffer alist)
     "Assign unique slot to gptel buffers for vertical stacking."
     :around #'+popup-buffer
     (when (and buffer (+gptel-buffer? buffer))
       (let ((existing-slots
-             (mapcar (lambda (w) (or (window-parameter w 'window-slot) 0))
-                     (+gptel-popup-windows))))
+              (mapcar (lambda (w) (or (window-parameter w 'window-slot) 0))
+                (+gptel-popup-windows))))
         ;; Find the next available slot
         (setf (alist-get 'slot alist)
-              (if existing-slots
-                  (1+ (apply #'max existing-slots))
-                0))))
+          (if existing-slots
+            (1+ (apply #'max existing-slots))
+            0))))
     (funcall orig-fn buffer alist))
 
   (defadvice! ++popup--delete-window (win)
     :before #'+popup--delete-window
     (let* ((buffer (window-buffer win))
-           (buf-file
-            (or (buffer-file-name buffer)
+            (buf-file
+              (or (buffer-file-name buffer)
                 (if-let* ((base-buffer (buffer-base-buffer buffer)))
-                    (buffer-file-name base-buffer)))))
+                  (buffer-file-name base-buffer)))))
       (when (and
-             buf-file
-             (buffer-modified-p buffer)
-             (string-prefix-p
-              (file-truename "~/Dropbox/sync/gptel")
-              (file-truename buf-file)))
+              buf-file
+              (buffer-modified-p buffer)
+              (string-prefix-p
+                (file-truename "~/Dropbox/sync/gptel")
+                (file-truename buf-file)))
         (with-current-buffer buffer (save-buffer)))))
 
   (require 'magit)
@@ -481,10 +482,10 @@ Avoids repeated gitleaks subprocess spawns for unchanged buffers."
       (with-current-buffer buf
         (let ((hash (md5 (buffer-string))))
           (if (equal hash +llm-danger--cache-hash)
-              +llm-danger--cache-result
+            +llm-danger--cache-result
             (let ((result (llm-danger-buffer-p buf)))
               (setq +llm-danger--cache-hash hash
-                    +llm-danger--cache-result result)
+                +llm-danger--cache-result result)
               result)))))
     ;; always nil for now
     )
@@ -538,108 +539,108 @@ For buffers generated by our own code that cannot contain secrets."
           (let ((file (expand-file-name f root)))
             (when (file-exists-p file)
               (+gptel-context-add-buffer
-               (or (get-file-buffer file)
-                   (find-file-noselect file)))))))))
+                (or (get-file-buffer file)
+                  (find-file-noselect file)))))))))
 
   (defadvice! +after-gptel-send (&optional _args)
     :after #'gptel-send
     (when (and (bound-and-true-p gptel-mode)
-               (bound-and-true-p evil-local-mode)
-               (evil-insert-state-p))
+            (bound-and-true-p evil-local-mode)
+            (evil-insert-state-p))
       (evil-normal-state)))
 
   (setq! gptel--openrouter
-         (gptel-make-openai "OpenRouter"
-           :host "openrouter.ai"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key +openrouter-api-key
-           :models gptel--openrouter-models))
+    (gptel-make-openai "OpenRouter"
+      :host "openrouter.ai"
+      :endpoint "/api/v1/chat/completions"
+      :stream t
+      :key +openrouter-api-key
+      :models gptel--openrouter-models))
   ;; self host claude code
   (setq! gptel--claude-code
-         (gptel-make-openai "cc"
-           :protocol "http"
-           :host "localhost:14141"
-           :endpoint "/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
+    (gptel-make-openai "cc"
+      :protocol "http"
+      :host "localhost:14141"
+      :endpoint "/v1/chat/completions"
+      :stream t
+      :key "no-key-required"
+      :models gptel--claude-code-models))
   ;; self host gh copilot
   (setq! gptel--gh-copilot-local
-         (gptel-make-openai "Github Copilot"
-           :protocol "http"
-           :host "localhost:4141"
-           :endpoint "/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--gh-models))
+    (gptel-make-openai "Github Copilot"
+      :protocol "http"
+      :host "localhost:4141"
+      :endpoint "/chat/completions"
+      :stream t
+      :key "no-key-required"
+      :models gptel--gh-models))
   (setq! gptel--codex
-         (gptel-make-openai "codex"
-           :protocol "http"
-           :host "localhost:18683"
-           :endpoint "/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--codex-models))
+    (gptel-make-openai "codex"
+      :protocol "http"
+      :host "localhost:18683"
+      :endpoint "/v1/chat/completions"
+      :stream t
+      :key "no-key-required"
+      :models gptel--codex-models))
 
   ;; gptel one
   (setq! gptel--gh-copilot-individual
-         (gptel-make-gh-copilot "cpi"
-           :host "api.individual.githubcopilot.com"))
+    (gptel-make-gh-copilot "cpi"
+      :host "api.individual.githubcopilot.com"))
   (setq! +gptel-free-backend gptel--gh-copilot-individual)
   (setq! gptel--gh-copilot-business
-         (gptel-make-gh-copilot "cpb"
-           :host "api.business.githubcopilot.com"
-           :models gptel--gh-b-models
-           :stream t))
+    (gptel-make-gh-copilot "cpb"
+      :host "api.business.githubcopilot.com"
+      :models gptel--gh-b-models
+      :stream t))
   (setq! gptel-backend gptel--openrouter)
   (setq! gptel-backend gptel--codex)
   (setq! gptel-backend gptel--claude-code)
   (setq! gptel-backend gptel--gh-copilot-local)
   (setq! gptel-backend gptel--gh-copilot-business)
   (setq! gptel--ccld
-         (gptel-make-openai "ccld"
-           :protocol "http"
-           :host "localhost:8003"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
+    (gptel-make-openai "ccld"
+      :protocol "http"
+      :host "localhost:8003"
+      :endpoint "/api/v1/chat/completions"
+      :stream t
+      :key "no-key-required"
+      :models gptel--claude-code-models))
   (setq! gptel--cclda
-         (gptel-make-anthropic "cclda"
-           :protocol "http"
-           :host "localhost:8003"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
+    (gptel-make-anthropic "cclda"
+      :protocol "http"
+      :host "localhost:8003"
+      :stream t
+      :key "no-key-required"
+      :models gptel--claude-code-models))
   (setq! gptel--ccldg
-         (gptel-make-gemini "ccldg"
-           :protocol "http"
-           :host "localhost:8003"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
+    (gptel-make-gemini "ccldg"
+      :protocol "http"
+      :host "localhost:8003"
+      :stream t
+      :key "no-key-required"
+      :models gptel--claude-code-models))
   (setq! gptel-backend gptel--ccld)
 
   ;; ccl = production Claude Code proxy (port 8033) with org-tree session resume.
   (setq! gptel--ccl
-         (gptel-make-openai "ccl"
-           :protocol "http"
-           :host "localhost:8033"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
+    (gptel-make-openai "ccl"
+      :protocol "http"
+      :host "localhost:8033"
+      :endpoint "/api/v1/chat/completions"
+      :stream t
+      :key "no-key-required"
+      :models gptel--claude-code-models))
 
   ;; ccl-dev = dev proxy (port 8003) with session resume.
   (setq! gptel--ccl-dev
-         (gptel-make-openai "ccl-dev"
-           :protocol "http"
-           :host "localhost:8003"
-           :endpoint "/api/v1/chat/completions"
-           :stream t
-           :key "no-key-required"
-           :models gptel--claude-code-models))
+    (gptel-make-openai "ccl-dev"
+      :protocol "http"
+      :host "localhost:8003"
+      :endpoint "/api/v1/chat/completions"
+      :stream t
+      :key "no-key-required"
+      :models gptel--claude-code-models))
 
   (setq! gptel-backend gptel--ccl)
   (+gptel-make-my-presets)
@@ -651,62 +652,62 @@ For buffers generated by our own code that cannot contain secrets."
   (defun +gptel-toggle-debug ()
     (interactive)
     (if gptel-log-level
-        (setq! gptel-log-level nil
-               mcp-server-lib-http-log-requests nil)
+      (setq! gptel-log-level nil
+        mcp-server-lib-http-log-requests nil)
       (setq! gptel-log-level 'debug
-             mcp-server-lib-http-log-requests t)))
+        mcp-server-lib-http-log-requests t)))
   (setq! gptel-log-level 'nil)
 
   (add-hook! 'gptel-post-response-functions
     (defun +gptel-notify-done (beg end)
       (when (> (float-time (or (current-idle-time) 0)) 60)
         (let* ((response-text (string-trim (buffer-substring-no-properties beg end)))
-               (truncated (if (> (length response-text) 500)
-                              (concat (substring response-text 0 500) "...")
-                            response-text)))
+                (truncated (if (> (length response-text) 500)
+                             (concat (substring response-text 0 500) "...")
+                             response-text)))
           (pushover-send
-           "GPTEL Done" truncated :sound "magic")))))
+            "GPTEL Done" truncated :sound "magic")))))
 
   (defadvice! +gptel-filter-tools-before-request (orig-fn &rest args)
     :around #'gptel-request
     (let* ((clj-workspace? (++workspace-clojure?))
-           (proj-root (++workspace-current-project-root))
-           (dot-proj? (string-suffix-p ".nixpkgs" proj-root))
-           (gptel-tools
-            (cl-remove-if
-             (lambda (tool)
-               (let ((tool-name (gptel-tool-name tool)))
-                 (or (cl-some (lambda (pattern)
-                                (string-match-p pattern tool-name))
-                              +gptel-disabled-tool-patterns)
-                     (and (not clj-workspace?)
-                          (string-match-p "^cljs?_" tool-name))
-                     (and (not dot-proj?)
-                          (or (string-match-p "^elisp?_" tool-name)
-                              (string-match-p "^run_ert" tool-name))))))
-             gptel-tools)))
+            (proj-root (++workspace-current-project-root))
+            (dot-proj? (string-suffix-p ".nixpkgs" proj-root))
+            (gptel-tools
+              (cl-remove-if
+                (lambda (tool)
+                  (let ((tool-name (gptel-tool-name tool)))
+                    (or (cl-some (lambda (pattern)
+                                   (string-match-p pattern tool-name))
+                          +gptel-disabled-tool-patterns)
+                      (and (not clj-workspace?)
+                        (string-match-p "^cljs?_" tool-name))
+                      (and (not dot-proj?)
+                        (or (string-match-p "^elisp?_" tool-name)
+                          (string-match-p "^run_ert" tool-name))))))
+                gptel-tools)))
       (apply orig-fn args)))
 
   (defadvice! +gptel-add-request-timeout (orig-fn &rest args)
     :around #'gptel-request
     (let* ((fsm (apply orig-fn args))
-           (timeout-seconds 172800) ;48h — match curl --max-time + server :rc ask wait (was 7200/2h)
-           (timer (run-with-timer
-                   timeout-seconds nil
-                   (lambda (fsm)
-                     (when-let* ((proc (cl-find-if
-                                        (lambda (entry)
-                                          (eq (car entry) nil))
-                                        gptel--request-alist
-                                        :key #'cdr)))
-                       (message "gptel request timed out after %d seconds" timeout-seconds)
-                       (gptel-abort (plist-get (gptel-fsm-info fsm) :buffer))))
-                   fsm)))
+            (timeout-seconds 172800) ;48h — match curl --max-time + server :rc ask wait (was 7200/2h)
+            (timer (run-with-timer
+                     timeout-seconds nil
+                     (lambda (fsm)
+                       (when-let* ((proc (cl-find-if
+                                           (lambda (entry)
+                                             (eq (car entry) nil))
+                                           gptel--request-alist
+                                           :key #'cdr)))
+                         (message "gptel request timed out after %d seconds" timeout-seconds)
+                         (gptel-abort (plist-get (gptel-fsm-info fsm) :buffer))))
+                     fsm)))
       (add-hook 'gptel-post-response-functions
-                (lambda (&rest _)
-                  (when (timerp timer)
-                    (cancel-timer timer)))
-                nil t)
+        (lambda (&rest _)
+          (when (timerp timer)
+            (cancel-timer timer)))
+        nil t)
       fsm))
 
   ;; Strip `gptel' text property from yanked text in gptel-mode buffers.
@@ -715,7 +716,7 @@ For buffers generated by our own code that cannot contain secrets."
   (add-hook! 'gptel-mode-hook
     (defun +gptel-exclude-gptel-prop-on-yank ()
       (setq-local yank-excluded-properties
-                  (cl-adjoin 'gptel yank-excluded-properties))))
+        (cl-adjoin 'gptel yank-excluded-properties))))
 
   (after! pabbrev
     (defvar +pabbrev-gptel-scavenge-timer nil)
@@ -723,15 +724,15 @@ For buffers generated by our own code that cannot contain secrets."
       (defun +pabbrev-scavenge-all-visible-buffers-for-gptel ()
         (when (cl-some (lambda (w)
                          (buffer-local-value 'gptel-mode (window-buffer w)))
-                       (window-list))
+                (window-list))
           (when +pabbrev-gptel-scavenge-timer
             (cancel-timer +pabbrev-gptel-scavenge-timer))
           (setq +pabbrev-gptel-scavenge-timer
-                (run-with-idle-timer
-                 1.0 nil
-                 (lambda ()
-                   (setq +pabbrev-gptel-scavenge-timer nil)
-                   (+pabbrev-scavenge-all-visible-buffers)))))))))
+            (run-with-idle-timer
+              1.0 nil
+              (lambda ()
+                (setq +pabbrev-gptel-scavenge-timer nil)
+                (+pabbrev-scavenge-all-visible-buffers)))))))))
 
 ;;; mcp
 (load! "mcp.el")
@@ -746,10 +747,10 @@ For buffers generated by our own code that cannot contain secrets."
     "Strip markdown code fences from LLM-generated commit messages."
     :around #'gptel-magit--format-commit-message
     (funcall orig-fn
-             (replace-regexp-in-string
-              "\\`[ \t\n]*```[a-z]*\n\\(\\(?:.\\|\n\\)*?\\)\n```[ \t\n]*\\'"
-              "\\1"
-              message)))
+      (replace-regexp-in-string
+        "\\`[ \t\n]*```[a-z]*\n\\(\\(?:.\\|\n\\)*?\\)\n```[ \t\n]*\\'"
+        "\\1"
+        message)))
   (defadvice! +gptel-magit-preserve-directory (orig-fn callback)
     "Capture `default-directory' so async callback runs in the correct repo.
 Without this, magit-commit-create runs in the wrong directory after the
@@ -760,13 +761,13 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
                          (let ((default-directory dir))
                            (funcall callback message))))))
   (setq!
-   ;; gptel-magit-model 'gpt-4.1
-   ;; gptel-magit-model 'sonnet
-   gptel-magit-model 'sonnet-low
-   ;; gptel-magit-backend gptel--gh-copilot-business
-   ;; gptel-magit-backend +gptel-free-backend
-   ;; gptel-magit-backend gptel-claude-code-backend
-   gptel-magit-backend gptel--ccl))
+    ;; gptel-magit-model 'gpt-4.1
+    ;; gptel-magit-model 'sonnet
+    gptel-magit-model 'sonnet-low
+    ;; gptel-magit-backend gptel--gh-copilot-business
+    ;; gptel-magit-backend +gptel-free-backend
+    ;; gptel-magit-backend gptel-claude-code-backend
+    gptel-magit-backend gptel--ccl))
 
 ;;; Workspace persistence and isolation
 ;; Store and restore gptel-context per workspace
@@ -802,7 +803,7 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
   "Capture current workspace in the request INFO plist."
   :around #'gptel-request
   (let* ((result (apply orig-fn args))
-         (info (gptel-fsm-info result)))
+          (info (gptel-fsm-info result)))
     (plist-put info :workspace (get-current-persp))
     result))
 
@@ -811,7 +812,7 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
   "Wrap tool execution to use the captured workspace from FSM's info."
   :around #'gptel--handle-tool-use
   (let* ((info (gptel-fsm-info fsm))
-         (++gptel-request-workspace (plist-get info :workspace)))
+          (++gptel-request-workspace (plist-get info :workspace)))
     (funcall orig-fn fsm)))
 
 (defadvice! +gptel-handle-invalid-tool-calls (orig-fn fsm)
@@ -819,41 +820,41 @@ LLM response arrives and throws \"Nothing staged (or unstaged)\"."
 Skips Claude Code backends since they handle all tool execution internally."
   :around #'gptel--handle-tool-use
   (let* ((info (gptel-fsm-info fsm))
-         (backend (plist-get info :backend)))
+          (backend (plist-get info :backend)))
     ;; Claude Code handles all tool execution internally (including MCP tools).
     ;; The FSM should never reach TOOL state for this backend, but if it does,
     ;; clear :tool-use and transition directly to DONE (skip all tool handling).
     (if (and (fboundp 'gptel-claude-code-p) (gptel-claude-code-p backend))
-        (progn
-          (plist-put info :tool-use nil)
-          (gptel--fsm-transition fsm))
+      (progn
+        (plist-put info :tool-use nil)
+        (gptel--fsm-transition fsm))
       (let* ((tool-use (cl-remove-if (lambda (tc) (plist-get tc :result))
-                                     (plist-get info :tool-use)))
-             (invalid-tools
-              (cl-remove-if-not
-               (lambda (tool-call)
-                 (let ((name (plist-get tool-call :name)))
-                   (and (not (equal name gptel--ersatz-json-tool))
+                         (plist-get info :tool-use)))
+              (invalid-tools
+                (cl-remove-if-not
+                  (lambda (tool-call)
+                    (let ((name (plist-get tool-call :name)))
+                      (and (not (equal name gptel--ersatz-json-tool))
                         (null (cl-find-if
-                               (lambda (ts) (equal (gptel-tool-name ts) name))
-                               (plist-get info :tools))))))
-               tool-use)))
+                                (lambda (ts) (equal (gptel-tool-name ts) name))
+                                (plist-get info :tools))))))
+                  tool-use)))
         (when invalid-tools
           ;; Handle invalid tool calls
           (with-current-buffer (plist-get info :buffer)
             (dolist (tool-call invalid-tools)
               (let ((error-msg (format "Error: Tool '%s' does not exist. Please check the tool name CAREFULLY against the list of available tools and try again with the correct tool name."
-                                       (plist-get tool-call :name))))
+                                 (plist-get tool-call :name))))
                 (plist-put tool-call :result error-msg)
                 (message "Invalid tool call: %s" (plist-get tool-call :name))))
             ;; Mark at least one tool as successful to trigger state transition
             (plist-put info :tool-success t)
             ;; Inject error messages back to LLM
             (gptel--inject-prompt
-             backend (plist-get info :data)
-             (gptel--parse-tool-results backend (plist-get info :tool-use)))
+              backend (plist-get info :data)
+              (gptel--parse-tool-results backend (plist-get info :tool-use)))
             (funcall (plist-get info :callback)
-                     (cons 'tool-error invalid-tools) info)
+              (cons 'tool-error invalid-tools) info)
             (gptel--fsm-transition fsm)))
         ;; Always call original function to handle valid tool calls
         (funcall orig-fn fsm)))))
@@ -867,10 +868,10 @@ When called non-interactively with INPUT-STRING, converts and returns
 the result."
   (interactive)
   (if (called-interactively-p 'any)
-      (let* ((markdown-input (current-kill 0))
-             (org-output (gptel--convert-markdown->org markdown-input)))
-        (kill-new org-output)
-        (message "Converted markdown to org and saved to kill ring"))
+    (let* ((markdown-input (current-kill 0))
+            (org-output (gptel--convert-markdown->org markdown-input)))
+      (kill-new org-output)
+      (message "Converted markdown to org and saved to kill ring"))
     (gptel--convert-markdown->org input-string)))
 
 (setq! gptel-log-level 'debug)
@@ -887,13 +888,13 @@ the result."
   :defer t
   :ensure-system-package
   ((claude-code-acp . "pnpm install -g @zed-industries/claude-code-acp")
-   (codex-acp . "pnpm install -g @zed-industries/codex-acp"))
+    (codex-acp . "pnpm install -g @zed-industries/codex-acp"))
   :config
   (setq!
-   agent-shell-anthropic-claude-environment
-   (agent-shell-make-environment-variables :inherit-env t)
-   agent-shell-anthropic-authentication
-   (agent-shell-anthropic-make-authentication :login t)))
+    agent-shell-anthropic-claude-environment
+    (agent-shell-make-environment-variables :inherit-env t)
+    agent-shell-anthropic-authentication
+    (agent-shell-anthropic-make-authentication :login t)))
 
 (use-package! agent-shell-sidebar
   :after agent-shell)
@@ -921,7 +922,7 @@ the result."
   :defer t
   :init
   (setq! claude-code-ide-terminal-backend 'eat
-         claude-code-ide-use-side-window nil)
+    claude-code-ide-use-side-window nil)
   :config
   (claude-code-ide-emacs-tools-setup))
 
@@ -941,34 +942,34 @@ the result."
   "Append TAG + PLIST as one timestamped line to `+gptel-death-log'."
   (ignore-errors
     (write-region
-     (format "%s %-9s %S\n"
-             (format-time-string "%Y-%m-%dT%H:%M:%S.%3N%z")
-             tag plist)
-     nil +gptel-death-log 'append 'silent)))
+      (format "%s %-9s %S\n"
+        (format-time-string "%Y-%m-%dT%H:%M:%S.%3N%z")
+        tag plist)
+      nil +gptel-death-log 'append 'silent)))
 
 (defun +gptel--log-curl-end (process &rest _)
   "Log how a gptel curl PROCESS ended (exit code / signal / gptel status)."
   (when (and (processp process) (boundp 'gptel--request-alist))
     (let* ((fsm  (car (alist-get process gptel--request-alist)))
-           (info (and fsm (fboundp 'gptel-fsm-info) (gptel-fsm-info fsm))))
+            (info (and fsm (fboundp 'gptel-fsm-info) (gptel-fsm-info fsm))))
       (+gptel--log-death
-       "CURL-END"
-       (list :proc          (process-name process)
-             :status        (process-status process)   ; exit | signal
-             :exit          (process-exit-status process)
-             :http-status   (and info (plist-get info :http-status))
-             :gptel-status  (and info (plist-get info :status))
-             :buffer        (and info (buffer-live-p (plist-get info :buffer))
-                                 (buffer-name (plist-get info :buffer))))))))
+        "CURL-END"
+        (list :proc          (process-name process)
+          :status        (process-status process)   ; exit | signal
+          :exit          (process-exit-status process)
+          :http-status   (and info (plist-get info :http-status))
+          :gptel-status  (and info (plist-get info :status))
+          :buffer        (and info (buffer-live-p (plist-get info :buffer))
+                           (buffer-name (plist-get info :buffer))))))))
 
 (defun +gptel--log-abort (buf &rest _)
   "Log a `gptel-abort' call and the command/context that triggered it."
   (+gptel--log-death
-   "ABORT"
-   (list :buffer            (and (bufferp buf) (buffer-name buf))
-         :this-command      this-command
-         :last-command      last-command
-         :real-this-command real-this-command)))
+    "ABORT"
+    (list :buffer            (and (bufferp buf) (buffer-name buf))
+      :this-command      this-command
+      :last-command      last-command
+      :real-this-command real-this-command)))
 
 (with-eval-after-load 'gptel
   (advice-add 'gptel-curl--stream-cleanup :before #'+gptel--log-curl-end)
@@ -987,4 +988,7 @@ the result."
   )
 
 (use-package! eca
-  :defer t)
+  :defer t
+  :init
+  (setq! eca-chat-auto-add-repomap t
+    eca-chat-auto-add-cursor nil))

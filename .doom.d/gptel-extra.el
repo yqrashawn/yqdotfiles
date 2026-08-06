@@ -21,10 +21,10 @@ to determine idleness.  Only considers buffers whose file exists on disk."
     (when (buffer-live-p buf)
       (with-current-buffer buf
         (when-let* (((eq gptel-mode t))
-                    (file (buffer-file-name))
-                    ((file-exists-p file))
-                    (display-time (buffer-local-value 'buffer-display-time buf))
-                    ((> (float-time (time-subtract (current-time) display-time))
+                     (file (buffer-file-name))
+                     ((file-exists-p file))
+                     (display-time (buffer-local-value 'buffer-display-time buf))
+                     ((> (float-time (time-subtract (current-time) display-time))
                         +gptel-idle-timeout)))
           (when (buffer-modified-p)
             (save-buffer))
@@ -35,9 +35,9 @@ to determine idleness.  Only considers buffers whose file exists on disk."
   (when +gptel--idle-timer
     (cancel-timer +gptel--idle-timer))
   (setq +gptel--idle-timer
-        (run-with-timer +gptel-idle-check-interval
-                        +gptel-idle-check-interval
-                        #'+gptel--kill-idle-buffers)))
+    (run-with-timer +gptel-idle-check-interval
+      +gptel-idle-check-interval
+      #'+gptel--kill-idle-buffers)))
 
 (defun +gptel-stop-idle-timer ()
   "Stop the periodic idle buffer check timer."
@@ -60,23 +60,23 @@ response data.")
 (defun +gptel--ccl-backend-p ()
   "Return non-nil if current gptel backend is ccl, ccld, or ccl-dev."
   (and (boundp 'gptel-backend)
-       gptel-backend
-       (boundp 'gptel--ccl)
-       (boundp 'gptel--ccld)
-       (or (eq gptel-backend gptel--ccl)
-           (eq gptel-backend gptel--ccld)
-           (eq gptel-backend gptel--ccl-dev))))
+    gptel-backend
+    (boundp 'gptel--ccl)
+    (boundp 'gptel--ccld)
+    (or (eq gptel-backend gptel--ccl)
+      (eq gptel-backend gptel--ccld)
+      (eq gptel-backend gptel--ccl-dev))))
 
 (defun +gptel--ccl-new-backend-p ()
   "Return non-nil if current gptel backend has session-resume enabled (ccl, ccl-dev)."
   (and (boundp 'gptel-backend)
-       (or
-        (and
-         (boundp 'gptel--ccl)
-         (eq gptel-backend gptel--ccl))
-        (and
-         (boundp 'gptel--ccl-dev)
-         (eq gptel-backend gptel--ccl-dev)))))
+    (or
+      (and
+        (boundp 'gptel--ccl)
+        (eq gptel-backend gptel--ccl))
+      (and
+        (boundp 'gptel--ccl-dev)
+        (eq gptel-backend gptel--ccl-dev)))))
 
 (defun +gptel--new-session-id ()
   "Generate a new session ID for ccl/ccld backends.
@@ -89,8 +89,8 @@ buffer-local var.  Returns the new UUID, or nil for non-ccl backends."
         (setq-local gptel-claude-code--session-id new-id))
       (when (derived-mode-p 'org-mode)
         (org-with-wide-buffer
-         (org-back-to-heading-or-point-min t)
-         (org-set-property "GPTEL_CCL_SESSION_ID" new-id)))
+          (org-back-to-heading-or-point-min t)
+          (org-set-property "GPTEL_CCL_SESSION_ID" new-id)))
       new-id)))
 
 (defun +gptel--current-heading-session-id ()
@@ -100,27 +100,27 @@ the heading at point, not the file-level property.
 Returns session-id string or nil."
   (when (+gptel--ccl-backend-p)
     (or (and (derived-mode-p 'org-mode)
-             (org-with-wide-buffer
-              (org-back-to-heading-or-point-min t)
-              (org-entry-get nil "GPTEL_CCL_SESSION_ID")))
-        (and (boundp 'gptel-claude-code--session-id)
-             gptel-claude-code--session-id))))
+          (org-with-wide-buffer
+            (org-back-to-heading-or-point-min t)
+            (org-entry-get nil "GPTEL_CCL_SESSION_ID")))
+      (and (boundp 'gptel-claude-code--session-id)
+        gptel-claude-code--session-id))))
 
 (defun +gptel--find-resume-session-id ()
   "Find resume session ID by walking up the org heading lineage.
 Checks the current heading first, then walks up to ancestors.
 Returns the nearest GPTEL_CCL_SESSION_ID or nil."
   (when (and (+gptel--ccl-new-backend-p)
-             (derived-mode-p 'org-mode))
+          (derived-mode-p 'org-mode))
     (org-with-wide-buffer
-     (org-back-to-heading-or-point-min t)
-     ;; Check current heading first
-     (or (org-entry-get nil "GPTEL_CCL_SESSION_ID")
-         ;; Walk up to find nearest ancestor with session-id
-         (cl-loop while (org-up-heading-safe)
-                  thereis (org-entry-get nil "GPTEL_CCL_SESSION_ID"))
-         ;; Check file-level property (point-min) as last resort
-         (org-entry-get (point-min) "GPTEL_CCL_SESSION_ID")))))
+      (org-back-to-heading-or-point-min t)
+      ;; Check current heading first
+      (or (org-entry-get nil "GPTEL_CCL_SESSION_ID")
+        ;; Walk up to find nearest ancestor with session-id
+        (cl-loop while (org-up-heading-safe)
+          thereis (org-entry-get nil "GPTEL_CCL_SESSION_ID"))
+        ;; Check file-level property (point-min) as last resort
+        (org-entry-get (point-min) "GPTEL_CCL_SESSION_ID")))))
 
 (defun +gptel--live-mode-p ()
   "Non-nil when the active gptel model carries the `:live' suffix.
@@ -128,7 +128,7 @@ Live presets share the ccl/ccl-dev backend object, so the persistent-session
 mode is distinguished by the model name (e.g. `sonnet-medium:live'), not the
 backend.  See `+gptel-make-cchp-presets' LIVE."
   (and (boundp 'gptel-model) gptel-model
-       (string-suffix-p ":live" (symbol-name gptel-model))))
+    (string-suffix-p ":live" (symbol-name gptel-model))))
 
 (defun +gptel--live-session-id ()
   "Return a STABLE session id for the current org subtree (live mode).
@@ -137,7 +137,7 @@ stores a fresh one only when absent.  Unlike `+gptel--new-session-id', it does
 NOT fork per send — so the proxy maps every send under this heading to the same
 persistent :live process."
   (or (+gptel--current-heading-session-id)
-      (+gptel--new-session-id)))
+    (+gptel--new-session-id)))
 
 (defun +gptel--update-org-file-properties ()
   "Update org file-level properties for workspace root.
@@ -145,15 +145,15 @@ Uses `org-entry-put' at point-min so properties live in the same
 :PROPERTIES: drawer as gptel's own state."
   (when (derived-mode-p 'org-mode)
     (org-with-wide-buffer
-     (goto-char (point-min))
-     (when (org-at-heading-p)
-       (org-open-line 1))
-     ;; Only set workspace root if not already present -- the value from
-     ;; the before-send hook (when the user is in the right workspace) is
-     ;; correct; the after-response hook may run in a different workspace.
-     (unless (org-entry-get (point-min) "GPTEL_WORKSPACE_ROOT")
-       (let ((root (or (++workspace-current-project-root) default-directory)))
-         (org-entry-put (point-min) "GPTEL_WORKSPACE_ROOT" root))))))
+      (goto-char (point-min))
+      (when (org-at-heading-p)
+        (org-open-line 1))
+      ;; Only set workspace root if not already present -- the value from
+      ;; the before-send hook (when the user is in the right workspace) is
+      ;; correct; the after-response hook may run in a different workspace.
+      (unless (org-entry-get (point-min) "GPTEL_WORKSPACE_ROOT")
+        (let ((root (or (++workspace-current-project-root) default-directory)))
+          (org-entry-put (point-min) "GPTEL_WORKSPACE_ROOT" root))))))
 
 (defun +gptel--add-workspace-context ()
   "Add workspace context to gptel request params.
@@ -172,28 +172,28 @@ the org heading lineage for session fork/resume."
     ;; process; only send resume_session_id on the first send of a (sub)heading
     ;; (cold-start/branch). Non-live behavior is unchanged.
     (let* ((live (+gptel--live-mode-p))
-           (resume-session-id (if live
-                                  (unless (+gptel--current-heading-session-id)
-                                    (+gptel--find-resume-session-id))
-                                (+gptel--find-resume-session-id)))
-           (session-id (if live
-                           (+gptel--live-session-id)
-                         (+gptel--new-session-id))))
+            (resume-session-id (if live
+                                 (unless (+gptel--current-heading-session-id)
+                                   (+gptel--find-resume-session-id))
+                                 (+gptel--find-resume-session-id)))
+            (session-id (if live
+                          (+gptel--live-session-id)
+                          (+gptel--new-session-id))))
       (setq-local
-       gptel--request-params
-       (list
-        :metadata
-        (append
-         (list
-          :workspace_root (or (++workspace-current-project-root) default-directory)
-          :working_dir default-directory)
-         (when session-id
-           (list :session_id session-id))
-         (when resume-session-id
-           (list :resume_session_id resume-session-id))
-         (when-let ((root (++workspace-current-project-root)))
-           (list :project_name (file-name-nondirectory
-                                (directory-file-name root))))))))))
+        gptel--request-params
+        (list
+          :metadata
+          (append
+            (list
+              :workspace_root (or (++workspace-current-project-root) default-directory)
+              :working_dir default-directory)
+            (when session-id
+              (list :session_id session-id))
+            (when resume-session-id
+              (list :resume_session_id resume-session-id))
+            (when-let ((root (++workspace-current-project-root)))
+              (list :project_name (file-name-nondirectory
+                                    (directory-file-name root))))))))))
 
 (defun +gptel--parse-http-headers (headers-text)
   "Parse HTTP HEADERS-TEXT into an alist of (name . value) pairs."
@@ -206,11 +206,11 @@ the org heading lineage for session fork/resume."
       ;; Parse each header line
       (while (not (eobp))
         (when-let* ((line (buffer-substring-no-properties
-                           (line-beginning-position) (line-end-position)))
-                    ((not (string-blank-p line)))
-                    (colon-pos (string-match-p ":" line))
-                    (name (substring line 0 colon-pos))
-                    (value (string-trim (substring line (1+ colon-pos)))))
+                            (line-beginning-position) (line-end-position)))
+                     ((not (string-blank-p line)))
+                     (colon-pos (string-match-p ":" line))
+                     (name (substring line 0 colon-pos))
+                     (value (string-trim (substring line (1+ colon-pos)))))
           (push (cons name value) headers))
         (forward-line 1)))
     (nreverse headers)))
@@ -220,11 +220,11 @@ the org heading lineage for session fork/resume."
 POSITION is a marker or buffer position; defaults to point.
 Used by ccl/ccl-dev backends to enable session resume on next send."
   (when (and session-id
-             (derived-mode-p 'org-mode))
+          (derived-mode-p 'org-mode))
     (org-with-wide-buffer
-     (when position (goto-char position))
-     (org-back-to-heading-or-point-min t)
-     (org-set-property "GPTEL_CCL_SESSION_ID" session-id))))
+      (when position (goto-char position))
+      (org-back-to-heading-or-point-min t)
+      (org-set-property "GPTEL_CCL_SESSION_ID" session-id))))
 
 (defun +gptel--capture-response-data (headers-text body-plist info)
   "Store complete response data (headers + body) from LLM backend.
@@ -236,11 +236,11 @@ For ccl/ccl-dev backends, also captures the session_id from the
 X-Session-Id header and stores it on the current org heading."
   (when-let* ((buf (plist-get info :buffer)))
     (let* ((headers-alist (+gptel--parse-http-headers headers-text))
-           (metadata (plist-get body-plist :metadata))
-           (response-data
-            `((headers . ,headers-alist)
-              (body . ,body-plist)
-              (metadata . ,metadata))))
+            (metadata (plist-get body-plist :metadata))
+            (response-data
+              `((headers . ,headers-alist)
+                 (body . ,body-plist)
+                 (metadata . ,metadata))))
       (with-current-buffer buf
         (setq-local +gptel--last-response response-data)
         ;; For ccl/ccl-dev backends, store session_id from response on heading
@@ -254,14 +254,14 @@ X-Session-Id header and stores it on the current org heading."
 Also extracts session_id from SSE chunks for ccl session resume."
     :around #'gptel-curl--stream-cleanup
     (let* ((proc-buf (process-buffer process))
-           (fsm (car (alist-get process gptel--request-alist)))
-           (info (and fsm (gptel-fsm-info fsm)))
-           (backend (and info (plist-get info :backend))))
+            (fsm (car (alist-get process gptel--request-alist)))
+            (info (and fsm (gptel-fsm-info fsm)))
+            (backend (and info (plist-get info :backend))))
       ;; Only capture for CCL backends
       (when (and backend (or (eq backend gptel--ccl)
-                             (eq backend gptel--ccld)
-                             (and (boundp 'gptel--ccl-dev)
-                                  (eq backend gptel--ccl-dev))))
+                           (eq backend gptel--ccld)
+                           (and (boundp 'gptel--ccl-dev)
+                             (eq backend gptel--ccl-dev))))
         (with-current-buffer proc-buf
           (save-excursion
             (goto-char (point-min))
@@ -287,14 +287,14 @@ Also extracts session_id from SSE chunks for ccl session resume."
                              (goto-char (point-min))
                              (when (re-search-forward "^\n" nil t)
                                (buffer-substring-no-properties (point-min) (point)))))
-             (headers-alist (when headers-text
-                              (+gptel--parse-http-headers headers-text)))
-             (metadata (plist-get response :metadata)))
+              (headers-alist (when headers-text
+                               (+gptel--parse-http-headers headers-text)))
+              (metadata (plist-get response :metadata)))
         (with-current-buffer buf
           (setq-local +gptel--last-response
-                      `((headers . ,headers-alist)
-                        (body . ,response)
-                        (metadata . ,metadata)))
+            `((headers . ,headers-alist)
+               (body . ,response)
+               (metadata . ,metadata)))
           ;; Store session_id on heading for resume
           (when-let* ((sid (cdr (assoc "X-Session-Id" headers-alist))))
             (+gptel--store-session-id-on-heading sid (plist-get info :position)))))))
@@ -320,13 +320,13 @@ Also extracts session_id from SSE chunks for ccl session resume."
   (defun +gptel-auto-enable-in-org ()
     "Auto-enable `gptel-mode' if org buffer has GPTEL_* file properties."
     (when (and (derived-mode-p 'org-mode)
-               (not gptel-mode))
+            (not gptel-mode))
       (save-restriction
         (widen)
         (when (cl-some (lambda (prop)
                          (org-entry-get (point-min) prop))
-                       '("GPTEL_PRESET" "GPTEL_SYSTEM" "GPTEL_BACKEND"
-                         "GPTEL_MODEL" "GPTEL_BOUNDS" "GPTEL_TOOLS"))
+                '("GPTEL_PRESET" "GPTEL_SYSTEM" "GPTEL_BACKEND"
+                   "GPTEL_MODEL" "GPTEL_BOUNDS" "GPTEL_TOOLS"))
           (gptel-mode 1)))))
 
   (add-hook 'org-mode-hook #'+gptel-auto-enable-in-org)
@@ -361,9 +361,9 @@ Also extracts session_id from SSE chunks for ccl session resume."
   "Write CONTENT to the inject file for SESSION-ID.
 Returns t if written, nil if content was empty."
   (if (string-empty-p (string-trim content))
-      (progn (message "Empty message, not sending.") nil)
+    (progn (message "Empty message, not sending.") nil)
     (let ((file (expand-file-name (concat session-id ".txt")
-                                  +gptel-inject-message-dir)))
+                  +gptel-inject-message-dir)))
       (unless (file-directory-p +gptel-inject-message-dir)
         (make-directory +gptel-inject-message-dir t))
       (write-region (string-trim content) nil file nil 'silent)
@@ -401,23 +401,23 @@ When called interactively, also copies the session ID to the kill ring.
 Returns (session-id . buffer) or nil."
   (interactive)
   (let ((result
-         ;; Try current buffer first
-         (if-let ((sid (+gptel--buffer-session-id)))
-             (cons sid (current-buffer))
-           ;; Fall back to scanning all buffers
-           (let (candidates)
-             (dolist (buf (buffer-list))
-               (when-let ((sid (+gptel--buffer-session-id buf)))
-                 (push (cons sid buf) candidates)))
-             (cond
-              ((null candidates) nil)
-              ((= 1 (length candidates)) (car candidates))
-              (t (let* ((choices (mapcar (lambda (c)
-                                           (cons (format "%s [%s]" (cdr c) (car c))
-                                                 c))
-                                         candidates))
-                        (choice (completing-read "Session: " choices nil t)))
-                   (cdr (assoc choice choices)))))))))
+          ;; Try current buffer first
+          (if-let ((sid (+gptel--buffer-session-id)))
+            (cons sid (current-buffer))
+            ;; Fall back to scanning all buffers
+            (let (candidates)
+              (dolist (buf (buffer-list))
+                (when-let ((sid (+gptel--buffer-session-id buf)))
+                  (push (cons sid buf) candidates)))
+              (cond
+                ((null candidates) nil)
+                ((= 1 (length candidates)) (car candidates))
+                (t (let* ((choices (mapcar (lambda (c)
+                                             (cons (format "%s [%s]" (cdr c) (car c))
+                                               c))
+                                     candidates))
+                           (choice (completing-read "Session: " choices nil t)))
+                     (cdr (assoc choice choices)))))))))
     (when (and result (called-interactively-p 'interactive))
       (kill-new (car result))
       (message "Session ID copied: %s" (car result)))
@@ -428,11 +428,11 @@ Returns (session-id . buffer) or nil."
   (when-let ((session-id (+gptel-find-session-id)))
     (let ((root (++workspace-current-project-root)))
       (+kitten
-       (format!
-        "launch --type tab --tab-title 'cc %s' --cwd '%s' zsh -l -c 'claude --resume %s --fork-session --chrome --permission-mode bypassPermissions --dangerously-skip-permissions'"
-        (++workspace-current-project-root)
-        (++workspace-current-project-root)
-        (car session-id))))))
+        (format!
+          "launch --type tab --tab-title 'cc %s' --cwd '%s' zsh -l -c 'claude --resume %s --fork-session --chrome --permission-mode bypassPermissions --dangerously-skip-permissions'"
+          (++workspace-current-project-root)
+          (++workspace-current-project-root)
+          (car session-id))))))
 
 ;;; Comment on quoted region
 
@@ -475,8 +475,8 @@ QUOTED-TEXT and COMMENT should be pre-trimmed."
   "Insert the quote+comment block into the source gptel buffer."
   (interactive)
   (let ((comment (string-trim (buffer-string)))
-        (quoted +gptel-comment--quoted-text)
-        (source +gptel-comment--source-buffer))
+         (quoted +gptel-comment--quoted-text)
+         (source +gptel-comment--source-buffer))
     (when (string-empty-p comment)
       (user-error "Empty comment"))
     (unless (buffer-live-p source)
@@ -504,22 +504,22 @@ at the end of the gptel buffer."
   (unless (bound-and-true-p gptel-mode)
     (user-error "Not in a gptel-mode buffer"))
   (let ((quoted-text (string-trim (buffer-substring-no-properties beg end)))
-        (source-buf (current-buffer))
-        (buf (generate-new-buffer "*gptel-comment*")))
+         (source-buf (current-buffer))
+         (buf (generate-new-buffer "*gptel-comment*")))
     (when (string-empty-p quoted-text)
       (user-error "No text selected"))
     (deactivate-mark)
     (pop-to-buffer buf
-                   '((display-buffer-below-selected)
-                     (window-height . 8)))
+      '((display-buffer-below-selected)
+         (window-height . 8)))
     (org-mode)
     (+gptel-comment-mode 1)
     (call-interactively #'evil-append)
     (setq-local +gptel-comment--quoted-text quoted-text)
     (setq-local +gptel-comment--source-buffer source-buf)
     (setq header-line-format
-          (format " Comment on quote (%s)  |  C-c C-c insert  |  C-c C-k cancel"
-                  (buffer-name source-buf)))
+      (format " Comment on quote (%s)  |  C-c C-c insert  |  C-c C-k cancel"
+        (buffer-name source-buf)))
     (message "Type your comment, C-c C-c to insert, C-c C-k to cancel")))
 
 ;;;###autoload
@@ -532,19 +532,19 @@ tool call and delivered as additionalContext."
     (unless found
       (user-error "No active Claude Code session found in gptel buffers"))
     (let ((session-id (car found))
-          (source-buf (cdr found))
-          (buf (generate-new-buffer "*inject-message*")))
+           (source-buf (cdr found))
+           (buf (generate-new-buffer "*inject-message*")))
       (pop-to-buffer buf
-                     '((display-buffer-below-selected)
-                       (window-height . 8)))
+        '((display-buffer-below-selected)
+           (window-height . 8)))
       (org-mode)
       (+gptel-inject-message-mode 1)
       (call-interactively #'evil-append)
       (setq-local +gptel-inject--session-id session-id)
       (setq header-line-format
-            (format " Inject message into session %s (%s)  |  C-c C-c send  |  C-c C-k cancel"
-                    (substring session-id 0 (min 8 (length session-id)))
-                    (buffer-name source-buf)))
+        (format " Inject message into session %s (%s)  |  C-c C-c send  |  C-c C-k cancel"
+          (substring session-id 0 (min 8 (length session-id)))
+          (buffer-name source-buf)))
       (message "Compose message, C-c C-c to send, C-c C-k to cancel"))))
 
 ;;; gptel heading navigation
@@ -555,19 +555,19 @@ Returns nil if `gptel-mode' is not active or no non-empty prefixes are
 configured for the current major mode."
   (when (bound-and-true-p gptel-mode)
     (let* ((prompt (alist-get major-mode gptel-prompt-prefix-alist))
-           (response (alist-get major-mode gptel-response-prefix-alist))
-           (parts (cl-remove-if
-                   (lambda (s) (or (null s) (string-empty-p s)))
-                   (list prompt response))))
+            (response (alist-get major-mode gptel-response-prefix-alist))
+            (parts (cl-remove-if
+                     (lambda (s) (or (null s) (string-empty-p s)))
+                     (list prompt response))))
       (when parts
         (mapconcat (lambda (s) (concat "^" (regexp-quote s)))
-                   parts "\\|")))))
+          parts "\\|")))))
 
 (defun +gptel--in-org-block-p ()
   "Return non-nil if point is inside any org begin/end block."
   (org-between-regexps-p
-   "^[ \t]*#\\+begin_"
-   "^[ \t]*#\\+end_"))
+    "^[ \t]*#\\+begin_"
+    "^[ \t]*#\\+end_"))
 
 (defadvice! +gptel-org-forward-heading-same-level-a (orig-fn arg &optional invisible-ok)
   "In `gptel-mode', also stop at conversation turn markers.
@@ -578,39 +578,39 @@ to this function with negative ARG."
   :around #'org-forward-heading-same-level
   (let ((marker-re (+gptel--marker-regexp)))
     (if (not marker-re)
-        (funcall orig-fn arg invisible-ok)
+      (funcall orig-fn arg invisible-ok)
       (let* ((backward? (and arg (< arg 0)))
-             (count (if arg (abs arg) 1))
-             (combined-re (concat org-outline-regexp-bol "\\|" marker-re))
-             (f (if backward? #'re-search-backward #'re-search-forward))
-             (at-heading (org-at-heading-p))
-             (at-marker (and (not at-heading)
-                             (save-excursion
-                               (forward-line 0)
-                               (looking-at marker-re))))
-             (level (when at-heading
-                      (save-excursion
-                        (org-back-to-heading invisible-ok)
-                        (org-current-level))))
-             (result (point)))
+              (count (if arg (abs arg) 1))
+              (combined-re (concat org-outline-regexp-bol "\\|" marker-re))
+              (f (if backward? #'re-search-backward #'re-search-forward))
+              (at-heading (org-at-heading-p))
+              (at-marker (and (not at-heading)
+                           (save-excursion
+                             (forward-line 0)
+                             (looking-at marker-re))))
+              (level (when at-heading
+                       (save-excursion
+                         (org-back-to-heading invisible-ok)
+                         (org-current-level))))
+              (result (point)))
         (save-excursion
           (when (or at-heading at-marker)
             (forward-line 0)
             (unless backward? (end-of-line)))
           (while (and (> count 0)
-                      (funcall f combined-re nil 'move))
+                   (funcall f combined-re nil 'move))
             (let ((mb (match-beginning 0)))
               (save-excursion
                 (goto-char mb)
                 (if (looking-at org-outline-regexp-bol)
-                    ;; Heading match — apply same-level check
-                    (let ((l (- (match-end 0) (match-beginning 0) 1)))
-                      (cond
-                       ((and level (< l level))
+                  ;; Heading match — apply same-level check
+                  (let ((l (- (match-end 0) (match-beginning 0) 1)))
+                    (cond
+                      ((and level (< l level))
                         (setq count 0))
-                       ((or (null level) (= l level))
+                      ((or (null level) (= l level))
                         (when (or invisible-ok
-                                  (not (org--line-fully-invisible-p)))
+                                (not (org--line-fully-invisible-p)))
                           (cl-decf count)
                           (setq result mb)))))
                   ;; Marker match — skip if inside org block

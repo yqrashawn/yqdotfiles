@@ -49,6 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+(package! llama)
 (package! zoxide)
 (package! mwim)
 (package! emamux)
@@ -104,7 +105,6 @@
 (package! lisp-extra-font-lock :recipe (:host github :repo "Lindydancer/lisp-extra-font-lock"))
 (package! highlight-function-calls)
 (package! easy-escape)
-;; (package! company-tabnine)
 ;; (package! company-ctags)
 
 ;(package! jenkinsfile-mode)
@@ -203,11 +203,6 @@
 (package! elfeed-dashboard)
 (package! notmuch-transient :recipe (:type git :host github :repo "tarsius/notmuch-transient"))
 (package! tray :recipe (:type git :host github :repo "tarsius/tray"))
-;; (package! company-tabnine-capf
-;;   :recipe (:local-repo "./lisp/"
-;;            :files ("company-tabnine-capf.el")
-;;            ;; :build (:not compile)
-;;            ))
 
 (package! walkclj
   :recipe (:host github
@@ -346,17 +341,6 @@
 (unpin! nim-mode)
 (package! whisper :recipe (:host github :repo "natrys/whisper.el"))
 (package! memoize)
-;; (package! kagi)
-(package! copilot
-  :recipe (:host github
-           :repo "copilot-emacs/copilot.el"
-           :files ("*.el" "dist")))
-(package! copilot-chat
-  :recipe
-  (:host github
-   :repo "chep/copilot-chat.el"
-   :files ("*.el")))
-;; (package! devdocs)
 
 (package! combobulate)
 
@@ -370,7 +354,6 @@
 ;;   (package! markdown-mode)
 ;;   (package! yasnippet))
 
-;; (package! tabnine)
 ;; (package! pabbrev)
 (package! pabbrev :recipe (:host github :repo "amno1/pabbrev"))
 (package! yaml-pro)

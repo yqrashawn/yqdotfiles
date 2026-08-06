@@ -12,7 +12,7 @@
     enableDefaultConfig = false;
     matchBlocks."*" = {
       extraOptions = {
-        UseKeychain = "yes";
+        UseKeychain = "no";
         AddKeysToAgent = "yes";
       };
     };

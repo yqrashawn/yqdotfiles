@@ -4,25 +4,25 @@
 (el-patch-feature lispy)
 (after! lispy
   (setq! lispy-close-quotes-at-end-p nil
-         lispy-eval-display-style 'overlay)
+    lispy-eval-display-style 'overlay)
 
   (defadvice! +lispy-tab (orig-fn)
     "use `clojure-align' for lispy-tab in clojure modes"
     :around #'lispy-tab
     (if (memq major-mode '(clojure-mode clojurescript-mode clojurec-mode))
-        (progn (and (functionp #'clojure-align) (call-interactively #'clojure-align))
-               (when (region-active-p)
-                 (call-interactively orig-fn)))
+      (progn (and (functionp #'clojure-align) (call-interactively #'clojure-align))
+        (when (region-active-p)
+          (call-interactively orig-fn)))
       (call-interactively orig-fn)))
 
   (defun +lispy-update-cursor-style ()
     "error color when cursor in lispy special mode"
     (when (and lispy-mode (evil-insert-state-p))
       (if (or (lispy-right-p) (lispy-left-p) (region-active-p))
-          (progn (setq-local cursor-type '(bar . 3))
-                 (evil-set-cursor-color (face-foreground 'error)))
         (progn (setq-local cursor-type '(bar . 3))
-               (evil-set-cursor-color (face-foreground 'default))))))
+          (evil-set-cursor-color (face-foreground 'error)))
+        (progn (setq-local cursor-type '(bar . 3))
+          (evil-set-cursor-color (face-foreground 'default))))))
 
   (add-hook 'post-command-hook '+lispy-update-cursor-style)
 
@@ -46,47 +46,47 @@
       (save-match-data
         (end-of-line)
         (if (re-search-backward lispy-outline nil t)
-            (max (el-patch-swap (cl-count ?* (match-string 0))
-                                (- (cl-count ?\; (match-string 0)) 2)) 1)
+          (max (el-patch-swap (cl-count ?* (match-string 0))
+                 (- (cl-count ?\; (match-string 0)) 2)) 1)
           0))))
   (el-patch-defun lispy-backtick ()
     "Insert `. use markdown style backtick in clojure modes"
     (interactive)
     (if (region-active-p)
-        (el-patch-swap (lispy--surround-region "`" "`")
-                       (if (memq major-mode '(clojure-mode clojurescript-mode))
-                           (lispy--surround-region "`" "`")
-                         (lispy--surround-region "`" "'")))
+      (el-patch-swap (lispy--surround-region "`" "`")
+        (if (memq major-mode '(clojure-mode clojurescript-mode))
+          (lispy--surround-region "`" "`")
+          (lispy--surround-region "`" "'")))
       (el-patch-swap (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")
-                     (if (memq major-mode '(clojure-mode clojurescript-mode))
-                         (lispy--space-unless "\\s-\\|\\s(\\|[:?`]\\|\\\\")
-                       (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")))
+        (if (memq major-mode '(clojure-mode clojurescript-mode))
+          (lispy--space-unless "\\s-\\|\\s(\\|[:?`]\\|\\\\")
+          (lispy--space-unless "\\s-\\|\\s(\\|[:?`']\\|\\\\")))
       (insert "`")))
   (el-patch-defun lispy--oneline (expr &optional ignore-comments)
     "Remove newlines from EXPR.
 When IGNORE-COMMENTS is not nil, don't remove comments.
 Instead keep them, with a newline after each comment."
     (lispy-mapcan-tree
-     (lambda (x y)
-       (cond ((el-patch-swap (equal x '(ly-raw newline))
-                             (or (equal x '(ly-raw newline))
-                                 (equal x '(ly-raw clojure-symbol ","))))
-              y)
-             ((lispy--raw-comment-p x)
-              (if (null ignore-comments)
-                  (progn
-                    (push x lispy--oneline-comments)
-                    y)
-                (if (equal (car y) '(ly-raw newline))
-                    (cons x y)
-                  `(,x (ly-raw newline) ,@y))))
-             ((and (lispy--raw-string-p x)
-                   (null ignore-comments))
-              (cons `(ly-raw string ,(replace-regexp-in-string "\n" "\\\\n" (cl-caddr x)))
-                    y))
-             (t
-              (cons x y))))
-     expr))
+      (lambda (x y)
+        (cond ((el-patch-swap (equal x '(ly-raw newline))
+                 (or (equal x '(ly-raw newline))
+                   (equal x '(ly-raw clojure-symbol ","))))
+                y)
+          ((lispy--raw-comment-p x)
+            (if (null ignore-comments)
+              (progn
+                (push x lispy--oneline-comments)
+                y)
+              (if (equal (car y) '(ly-raw newline))
+                (cons x y)
+                `(,x (ly-raw newline) ,@y))))
+          ((and (lispy--raw-string-p x)
+             (null ignore-comments))
+            (cons `(ly-raw string ,(replace-regexp-in-string "\n" "\\\\n" (cl-caddr x)))
+              y))
+          (t
+            (cons x y))))
+      expr))
 
   (add-hook! 'lispy-mode-hook
     (defun +lispy-alter-clojure-complete-at-point-functions ()
@@ -99,23 +99,22 @@ Instead keep them, with a newline after each comment."
 (use-package! lispyville
   :defer t
   :init
-  (setq!
-   lispyville-motions-put-into-special t
-   lispyville-key-theme '(c-w
-                          operators
-                          prettify
-                          ;; text-objects
-                          (atom-movement t) ;; bind to WORD
-                          additional-movement
-                          commentary
-                          slurp/barf-lispy
-                          ;; wrap                               ;; M-( M-{ M-[
-                          ;; (additional-wrap normal visual insert)
-                          (additional normal visual insert) ;; M-j M-k M-J M-k M-s M-S M-r M-t M-v
-                          additional-insert
-                          escape
-                          mark-special
-                          mark-toggle))
+  (setq! lispyville-motions-put-into-special t)
+  (setq lispyville-key-theme '(c-w
+                                operators
+                                prettify
+                                ;; text-objects
+                                (atom-movement t) ;; bind to WORD
+                                additional-movement
+                                commentary
+                                slurp/barf-lispy
+                                ;; wrap                               ;; M-( M-{ M-[
+                                ;; (additional-wrap normal visual insert)
+                                (additional normal visual insert) ;; M-j M-k M-J M-k M-s M-S M-r M-t M-v
+                                additional-insert
+                                escape
+                                mark-special
+                                mark-toggle))
   :config
   (lispyville-set-key-theme)
   (lispy-define-key lispy-mode-map "v" #'lispyville-toggle-mark-type)
@@ -129,7 +128,7 @@ Instead keep them, with a newline after each comment."
   ;; :hook (emacs-lisp-mode clojure-mode clojurescript-mode)
   :init
   (setq! parinfer-rust-preferred-mode "paren"
-         parinfer-rust-check-before-enable nil))
+    parinfer-rust-check-before-enable nil))
 
 ;;; symex
 (use-package! symex
@@ -139,24 +138,24 @@ Instead keep them, with a newline after each comment."
   :config
   (setq! symex-lisp-modes +lispy-modes)
   (setq! symex--user-evil-keyspec
-         '(("j" . symex-go-forward)
-           ("k" . symex-go-backward)
-           ("l" . symex-go-up)
-           ("h" . symex-go-down)
-           ("C-j" . symex-climb-branch)
-           ("C-k" . symex-descend-branch)
-           ("C-a" . symex-goto-first)
-           ("C-e" . symex-goto-last)
-           ("M-j" . symex-goto-highest)
-           ("M-k" . symex-goto-lowest)
-           (">" . symex-capture-forward)
-           ("<" . symex-capture-backward)
-           ("[" . symex-soar-backward)
-           ("]" . symex-soar-forward)
-           ("{" . symex-create-square)
-           ("}" . symex-wrap-square)
-           ("M-[" . symex-leap-backward)
-           ("M-]" . symex-leap-forward)))
+    '(("j" . symex-go-forward)
+       ("k" . symex-go-backward)
+       ("l" . symex-go-up)
+       ("h" . symex-go-down)
+       ("C-j" . symex-climb-branch)
+       ("C-k" . symex-descend-branch)
+       ("C-a" . symex-goto-first)
+       ("C-e" . symex-goto-last)
+       ("M-j" . symex-goto-highest)
+       ("M-k" . symex-goto-lowest)
+       (">" . symex-capture-forward)
+       ("<" . symex-capture-backward)
+       ("[" . symex-soar-backward)
+       ("]" . symex-soar-forward)
+       ("{" . symex-create-square)
+       ("}" . symex-wrap-square)
+       ("M-[" . symex-leap-backward)
+       ("M-]" . symex-leap-forward)))
   (require 'hi-lock)
   ;; error color for symex cursor color
   (defadvice! +evil-update-cursor-color-h-symex ()
@@ -182,11 +181,11 @@ Instead keep them, with a newline after each comment."
   (defadvice! +evil-force-normal-state (orig)
     :around #'evil-force-normal-state
     (cond
-     ((and (not (evil-symex-state-p)) lispy-mode)
-      (symex-mode-interface))
-     ;; ((and (not (evil-symex-state-p)) (not lispy-mode))
-     ;;  (call-interactively #'combobulate))
-     ))
+      ((and (not (evil-symex-state-p)) lispy-mode)
+        (symex-mode-interface))
+      ;; ((and (not (evil-symex-state-p)) (not lispy-mode))
+      ;;  (call-interactively #'combobulate))
+      ))
 
   (symex-initialize)
 
@@ -200,9 +199,9 @@ Instead keep them, with a newline after each comment."
     :around #'symex-evaluate
     (interactive "p")
     (if (eq (char-after) 41)
-        (save-excursion
-          (evil-jump-item)
-          (call-interactively orig-fn count))
+      (save-excursion
+        (evil-jump-item)
+        (call-interactively orig-fn count))
       (call-interactively orig-fn count))))
 
 ;;; eval-sexp-fu
@@ -237,9 +236,9 @@ Instead keep them, with a newline after each comment."
     :around #'hs-hide-level
     (interactive "p")
     (if (and (+lispy-modes-p) (eq (char-after) 40))
-        (save-excursion
-          (backward-char)
-          (call-interactively orig-fn arg))
+      (save-excursion
+        (backward-char)
+        (call-interactively orig-fn arg))
       (call-interactively orig-fn arg))))
 
 (defun +gen-mcp-json-conf2 ()
@@ -249,67 +248,67 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
   (interactive)
   (require 'json)
   (let* ((output-file (expand-file-name "~/Downloads/mcp.json"))
-         (claude-json-file (expand-file-name "~/.claude.json"))
-         (servers-json
-          (mapcar
-           (lambda (entry)
-             (let* ((name (car entry))
-                    (cfg (cdr entry))
-                    (command (plist-get cfg :command))
-                    (args (plist-get cfg :args))
-                    (url (plist-get cfg :url))
-                    (type (plist-get cfg :type))
-                    (env (plist-get cfg :env))
-                    (env-alist
-                     (cond
-                      ((and (listp env) (keywordp (car env)))
-                       (cl-loop for (k v) on env by #'cddr
+          (claude-json-file (expand-file-name "~/.claude.json"))
+          (servers-json
+            (mapcar
+              (lambda (entry)
+                (let* ((name (car entry))
+                        (cfg (cdr entry))
+                        (command (plist-get cfg :command))
+                        (args (plist-get cfg :args))
+                        (url (plist-get cfg :url))
+                        (type (plist-get cfg :type))
+                        (env (plist-get cfg :env))
+                        (env-alist
+                          (cond
+                            ((and (listp env) (keywordp (car env)))
+                              (cl-loop for (k v) on env by #'cddr
                                 when v
                                 collect (cons (substring (symbol-name k) 1) v)))
-                      ((and (listp env) (consp (car env)))
-                       (mapcar (lambda (pair)
-                                 (cons (if (keywordp (car pair))
-                                           (substring (symbol-name (car pair)) 1)
-                                         (format "%s" (car pair)))
-                                       (cdr pair)))
-                               env))
-                      (t nil)))
-                    (server-alist nil))
-               (when command
-                 (push (cons "command" command) server-alist))
-               (when args
-                 (push (cons "args"
-                             (cond
+                            ((and (listp env) (consp (car env)))
+                              (mapcar (lambda (pair)
+                                        (cons (if (keywordp (car pair))
+                                                (substring (symbol-name (car pair)) 1)
+                                                (format "%s" (car pair)))
+                                          (cdr pair)))
+                                env))
+                            (t nil)))
+                        (server-alist nil))
+                  (when command
+                    (push (cons "command" command) server-alist))
+                  (when args
+                    (push (cons "args"
+                            (cond
                               ((vectorp args) args)
                               ((listp args) (vconcat args))
                               (t args)))
-                       server-alist))
-               (when url (push (cons "url" url) server-alist)
-                     (push (cons "type" "http") server-alist))
-               (when type (push (cons "type" type) server-alist))
-               (when env-alist (push (cons "env" env-alist) server-alist))
-               (cons name (nreverse server-alist))))
-           mcp-hub-servers))
-         (json-object-type 'alist)
-         (json-array-type 'vector)
-         (json-key-type 'string)
-         (json-encoding-pretty-print t))
+                      server-alist))
+                  (when url (push (cons "url" url) server-alist)
+                    (push (cons "type" "http") server-alist))
+                  (when type (push (cons "type" type) server-alist))
+                  (when env-alist (push (cons "env" env-alist) server-alist))
+                  (cons name (nreverse server-alist))))
+              mcp-hub-servers))
+          (json-object-type 'alist)
+          (json-array-type 'vector)
+          (json-key-type 'string)
+          (json-encoding-pretty-print t))
     (make-directory (file-name-directory output-file) t)
     (with-temp-file output-file
       (insert (json-encode `(("mcpServers" . ,servers-json)))))
     (let ((claude-conf
-           (if (file-exists-p claude-json-file)
-               (with-temp-buffer
-                 (insert-file-contents claude-json-file)
-                 (goto-char (point-min))
-                 (json-parse-buffer
+            (if (file-exists-p claude-json-file)
+              (with-temp-buffer
+                (insert-file-contents claude-json-file)
+                (goto-char (point-min))
+                (json-parse-buffer
                   :object-type 'alist
                   :array-type 'array
                   :null-object nil
                   :false-object :json-false))
-             (list (cons "mcpServers" nil)))))
+              (list (cons "mcpServers" nil)))))
       (setf (alist-get "mcpServers" claude-conf nil nil #'string=) servers-json)
       (with-temp-file claude-json-file
         (insert (json-encode claude-conf)))
       (message "Wrote MCP config to %s and updated %s"
-               output-file claude-json-file))))
+        output-file claude-json-file))))

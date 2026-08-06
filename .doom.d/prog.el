@@ -4,11 +4,11 @@
 
 (after! dash-docs
   (setq! dash-docs-docsets-path
-         (let ((original-dash-path (expand-file-name "~/Library/Application Support/Dash/DocSets")))
-           (if (and (string-equal system-type 'darwin)
-                    (file-directory-p original-dash-path))
-               original-dash-path
-             dash-docs))))
+    (let ((original-dash-path (expand-file-name "~/Library/Application Support/Dash/DocSets")))
+      (if (and (string-equal system-type 'darwin)
+            (file-directory-p original-dash-path))
+        original-dash-path
+        dash-docs))))
 
 (use-package! copy-as-format :defer t)
 (use-package! separedit :defer t)
@@ -69,7 +69,7 @@
 It is a fallback for when which-func-functions and `add-log-current-defun' return nil."
     (let (which-func-functions)
       (cl-letf (((symbol-function 'add-log-current-defun)
-                 (lambda () nil)))
+                  (lambda () nil)))
         (which-function))))
 
   ;; `add-log-current-defun' returns a not so meaningful result in some
@@ -106,15 +106,15 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
 
 (after! flycheck
   (setq! flycheck-global-modes
-         '(not
-           smerge-mode
-           elfeed-search-mode
-           outline-mode
-           diff-mode
-           shell-mode
-           eshell-mode
-           vterm-mode
-           notmuch-search-mode))
+    '(not
+       smerge-mode
+       elfeed-search-mode
+       outline-mode
+       diff-mode
+       shell-mode
+       eshell-mode
+       vterm-mode
+       notmuch-search-mode))
   (when global-flycheck-mode
     (global-flycheck-mode -1))
   (add-hook! 'prog-mode-hook (cmd! (flycheck-mode 1))))
@@ -124,9 +124,9 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   (interactive)
   (require 'f)
   (let* ((dir1-path (read-directory-name "Dir 1: "))
-         (dir2-path (read-directory-name "Dir 2: "))
-         (buf1 (get-buffer-create (format "*Dir 1 (%s)*" (f-base dir1-path))))
-         (buf2 (get-buffer-create (format "*Dir 2 (%s)*" (f-base dir2-path)))))
+          (dir2-path (read-directory-name "Dir 2: "))
+          (buf1 (get-buffer-create (format "*Dir 1 (%s)*" (f-base dir1-path))))
+          (buf2 (get-buffer-create (format "*Dir 2 (%s)*" (f-base dir2-path)))))
     (with-current-buffer buf1
       (erase-buffer))
     (with-current-buffer buf2
@@ -150,11 +150,11 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :commands (eat)
   :init
   (setq! eat-kill-buffer-on-exit t
-         eat-very-visible-cursor-type '(t nil nil)
-         eat-enable-yank-to-terminal t
-         eat-enable-blinking-text nil
-         process-adaptive-read-buffering nil
-         read-process-output-max (* 4 1024 1024))
+    eat-very-visible-cursor-type '(t nil nil)
+    eat-enable-yank-to-terminal t
+    eat-enable-blinking-text nil
+    process-adaptive-read-buffering nil
+    read-process-output-max (* 4 1024 1024))
   :config
   (defun +eat-deleted-window-after-kill-buffer ()
     (if (featurep 'evil) (evil-window-delete) (delete-window)))
@@ -162,78 +162,6 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
     (add-hook! 'kill-buffer-hook :local '+eat-deleted-window-after-kill-buffer))
   (add-hook! 'eat-mode-hook '+eat-setup)
   (pushnew! evil-emacs-state-modes 'eat-mode))
-
-;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook ((prog-mode) . copilot-mode)
-  :init
-  (setq! copilot-max-char -1
-         copilot-idle-delay 10
-         copilot-indent-offset-warning-disable t
-         ;; copilot-lsp-settings
-         ;; '(:github (:copilot (:selectedCompletionModel "gpt-4o-copilot")))
-         ;; copilot-lsp-settings
-         ;; nil
-         ;; copilot-server-executable (executable-find "copilot-language-server")
-         )
-  :config
-  (pushnew! copilot-indentation-alist
-            '(jtsx-tsx-mode
-              jtsx-jsx-mode
-              tsx-ts-mode typescript-ts-mode-indent-offset)
-            '(typescript-ts-mode typescript-ts-mode-indent-offset)))
-
-(use-package! copilot-chat
-  :defer t
-  :init
-  (setq!
-   copilot-chat-model "gemini-2.5-pro"
-   ;; copilot-chat-model "o3-mini"
-   copilot-chat-frontend 'org)
-  (add-hook! '(copilot-chat-mode-hook copilot-chat-prompt-mode-hook)
-    (defun +turn-off-languagetool-for-copilot-chat-buffers ()
-      (languagetool-server-mode -1)))
-  :config
-  (pushnew! doom-unreal-buffer-functions
-            (lambda (buf) (with-current-buffer buf copilot-chat-org-poly-mode)))
-  (pushnew! doom-unreal-buffer-functions
-            (lambda (buf) (with-current-buffer buf copilot-chat-prompt-mode)))
-  (defadvice! +copilot-chat--auth ()
-    :before #'copilot-chat--auth
-    ;; it's possible that the token is available but do not provide copilot chat
-    (unless (alist-get 'expires_at
-                       (copilot-chat-connection-token copilot-chat--connection))
-      (copilot-chat-clear-auth-cache)))
-
-  (defadvice! +copilot-chat--display (instance)
-    :after #'copilot-chat--display
-    (with-current-buffer (copilot-chat--get-buffer (copilot-chat--current-instance))
-      (with-current-buffer (pm-get-buffer-of-mode 'copilot-chat-org-prompt-mode)
-        (setq-local +word-wrap-extra-indent 2))))
-
-  (require 'magit)
-  (defadvice! +copilot-chat-prompt-send ()
-    :before #'copilot-chat-prompt-send
-    (let ((i (copilot-chat--current-instance)))
-
-      (copilot-chat--add-buffer i (+magit-wip-diff-n-min-buffer 5))
-
-      (dolist (b (mapcar 'window-buffer (window-list)))
-        (copilot-chat--add-buffer i b))
-
-      (dolist (f (+llm-get-project-default-files))
-        (when-let ((file (file-truename (format "%s%s" root f))))
-          (when (file-exists-p file)
-            (copilot-chat--add-buffer i (find-file-noselect file)))))
-
-      (dolist (b (+magit-wip-buffer-changed-within-n-min 5))
-        (with-current-buffer b
-          (copilot-chat--add-buffer i b))))))
-
-;; (use-package! ollama
-;;   :defer t
-;;   :init
-;;   (setq! ollama:model "phind-codellama"))
 
 (use-package! jarchive
   :hook (doom-after-init . jarchive-setup))
@@ -253,25 +181,25 @@ It is a fallback for when which-func-functions and `add-log-current-defun' retur
   :defer t
   :init
   (setq! leetcode-prefer-language "javascript"
-         leetcode-save-solutions t))
+    leetcode-save-solutions t))
 
 (defvar minuet-openai-compatible-options
   `(:end-point ,(concat +openrouter-url "/chat/completions")
-    :api-key ,(cl-constantly +openrouter-api-key)
-    ;; :model "qwen/qwen-2.5-coder-32b-instruct"
-    :model "google/gemini-2.0-flash-001"
-    :system
-    (:template minuet-default-system-template
-     :prompt minuet-default-prompt
-     :guidelines minuet-default-guidelines
-     :n-completions-template minuet-default-n-completion-template)
-    :fewshots minuet-default-fewshots
-    :chat-input
-    (:template minuet-default-chat-input-template
-     :language-and-tab minuet--default-chat-input-language-and-tab-function
-     :context-before-cursor minuet--default-chat-input-before-cursor-function
-     :context-after-cursor minuet--default-chat-input-after-cursor-function)
-    :optional nil)
+     :api-key ,(cl-constantly +openrouter-api-key)
+     ;; :model "qwen/qwen-2.5-coder-32b-instruct"
+     :model "google/gemini-2.0-flash-001"
+     :system
+     (:template minuet-default-system-template
+       :prompt minuet-default-prompt
+       :guidelines minuet-default-guidelines
+       :n-completions-template minuet-default-n-completion-template)
+     :fewshots minuet-default-fewshots
+     :chat-input
+     (:template minuet-default-chat-input-template
+       :language-and-tab minuet--default-chat-input-language-and-tab-function
+       :context-before-cursor minuet--default-chat-input-before-cursor-function
+       :context-after-cursor minuet--default-chat-input-after-cursor-function)
+     :optional nil)
   "Config options for Minuet OpenAI compatible provider.")
 
 (use-package! minuet
@@ -293,22 +221,22 @@ This can be added to `completion-at-point-functions`."
     (let ((prefix-info (ejc-company-backend 'prefix)))
       (when prefix-info
         (let* ((prefix (if (consp prefix-info) (car prefix-info) prefix-info))
-               (beg (- (point) (length prefix)))
-               (end (point))
-               (candidates (ejc-company-backend 'candidates prefix)))
+                (beg (- (point) (length prefix)))
+                (end (point))
+                (candidates (ejc-company-backend 'candidates prefix)))
           (when candidates
             (list beg end candidates
-                  :annotation-function
-                  (lambda (c) (ejc-company-backend 'annotation c))
-                  :company-doc-buffer
-                  (lambda (c) (ejc-company-backend 'doc-buffer c)))))))))
+              :annotation-function
+              (lambda (c) (ejc-company-backend 'annotation c))
+              :company-doc-buffer
+              (lambda (c) (ejc-company-backend 'doc-buffer c)))))))))
 
 (use-package! ejc-sql
   :defer t
   :init
   (setq! clomacs-httpd-default-port 8595
-         clomacs-allow-other-repl t
-         ejc-result-table-impl 'orgtbl-mode)
+    clomacs-allow-other-repl t
+    ejc-result-table-impl 'orgtbl-mode)
   (add-hook! 'ejc-sql-minor-mode-hook (lambda () (ejc-eldoc-setup)))
   (add-hook! 'ejc-sql-minor-mode-hook #'+ejc-capf-setup)
   :config
@@ -316,7 +244,7 @@ This can be added to `completion-at-point-functions`."
   (defadvice! +ejc-eval-org-snippet (orig-fn &optional orig-fun body params)
     :around #'ejc-eval-org-snippet
     (if (and params (assq :engine params))
-        (funcall orig-fun body params)
+      (funcall orig-fun body params)
       (funcall orig-fn orig-fun body params))))
 
 ;;; prog.el ends here
