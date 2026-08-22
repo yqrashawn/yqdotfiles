@@ -11,5 +11,6 @@
     ./postgresql.nix
     ./redis.nix
     ./mcp-prometheus.nix
+    ./pm2.nix
   ];
 }
