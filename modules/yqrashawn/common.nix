@@ -22,6 +22,7 @@ let
     trufflehog
     clj-kondo
     zprint
+    cljfmt
     neil
     bbin
     jet
