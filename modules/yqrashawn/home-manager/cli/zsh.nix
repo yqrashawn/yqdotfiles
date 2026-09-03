@@ -181,6 +181,14 @@ in
           gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
         fi
 
+        # Load ssh passphrases stored in the macOS login keychain. Nix's ssh
+        # doesn't support UseKeychain, so Apple's ssh-add is the only path to a
+        # passphrase that survives reboot. Login shells only, to keep it cheap.
+        # One-time per key: /usr/bin/ssh-add --apple-use-keychain ~/.ssh/id_0g
+        if [[ -o login && -z "$SSH_CONNECTION" && -x /usr/bin/ssh-add ]]; then
+          /usr/bin/ssh-add --apple-load-keychain -q 2>/dev/null
+        fi
+
         # initExtraBeforeCompInit
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/site-functions
         fpath+=/nix/var/nix/profiles/system/sw/share/zsh/$ZSH_VERSION/functions

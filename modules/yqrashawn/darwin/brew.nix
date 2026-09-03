@@ -29,7 +29,7 @@ in
 
     taps = [
       "yqrashawn/goku"
-      "cloudentity/tap"
+      "secureauthcorp/tap"
       # "homebrew/cask-fonts"
       # "homebrew/cask-drivers"
       # "homebrew/cask-versions"
@@ -39,6 +39,11 @@ in
       "huahaiy/brew"
       "incidentist/nyxt"
       "nikitabobko/tap"
+      "buildkite/buildkite"
+      "candid82/brew"
+      "smokris/getwindowid"
+      "stripe/stripe-cli"
+      "jimeh/emacs-builds"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
@@ -46,14 +51,19 @@ in
     brews = [
       # "alerter"
       "yqrashawn/goku/goku"
-      "cloudentity/tap/oauth2c"
+      "secureauthcorp/tap/oauth2c"
       "flyctl"
       "percol"
-      # "datalevin"
+      "huahaiy/brew/datalevin"
+      "candid82/brew/joker"
+      "buildkite/buildkite/buildkite-agent"
+      "smokris/getwindowid/getwindowid"
+      "stripe/stripe-cli/stripe"
       "fcitx-remote-for-osx"
     ];
     casks = [
       "hammerspoon"
+      "jimeh/emacs-builds/emacs-app"
       "font-inter"
       "font-fira-mono-nerd-font"
       "font-freefont"

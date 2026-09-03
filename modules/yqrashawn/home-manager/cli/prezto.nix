@@ -51,6 +51,6 @@ in {
     };
     # tmux = { autoStartLocal = true; };
     ssh.identities =
-      [ "id_rsa" "id_yvaine_ed25519" "id_rsa_holy" "id_rsa_website_jump" ];
+      [ "id_rsa" "id_ed25519" "id_yvaine_ed25519" ];
   };
 }

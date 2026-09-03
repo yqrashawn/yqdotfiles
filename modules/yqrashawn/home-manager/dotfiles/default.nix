@@ -111,11 +111,10 @@
         source = pkgs.writeTextFile {
           name = "gpg-agent.conf";
           text = ''
-            default-cache-ttl 86400
-            max-cache-ttl 86400
+            default-cache-ttl 604800
+            max-cache-ttl 604800
             allow-emacs-pinentry
             allow-loopback-pinentry
-            enable-ssh-support
             pinentry-program ${pinentry-auto}
           '';
         };
