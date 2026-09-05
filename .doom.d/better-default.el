@@ -1167,6 +1167,16 @@ The hook `treesit-fold-on-fold-hook' is run; see `run-hooks'."
                 (goto-char (treesit-node-start n))
                 (treesit-fold-close n)))))))))
 
+;; The `+fold--*-p' predicates live in the fold module's autoload file but carry
+;; no autoload cookie, so they stay void until a cookied `+fold/*' command loads
+;; that file. The `++fold/*' commands below call them directly, so declare them.
+(when-let* ((file (doom-module-locate-path '(:editor . fold) "autoload/fold.el")))
+  (dolist (fn '(+fold--treesit-fold-p
+                +fold--vimish-fold-p
+                +fold--outline-fold-p
+                +fold--hideshow-fold-p))
+    (autoload fn (file-name-sans-extension file))))
+
 ;;;###autoload
 (defun ++fold/level (arg)
   "Hide all blocks ARG levels below this block.
