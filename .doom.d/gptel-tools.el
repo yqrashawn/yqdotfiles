@@ -42,10 +42,10 @@
   (mcp-server-lib-start)
   (mcp-server-lib-http-start)
   (mcp-hub-start-all-server
-   (lambda ()
-     (gptel-mcp-connect
-      nil (lambda ()
-            (+gptel-make-my-presets)
-            (gptel--apply-preset +gptel-default-preset))))))
+    (lambda ()
+      (gptel-mcp-connect
+        nil (lambda ()
+              (+gptel-make-my-presets)
+              (gptel--apply-preset +gptel-default-preset))))))
 
 ;;; End

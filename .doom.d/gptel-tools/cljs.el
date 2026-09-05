@@ -5,9 +5,9 @@
 Resolves from a known CLJS project buffer to ensure correct sesman session."
   (let ((cljs-buf (++workspace-get-random-cljs-buffer)))
     (if cljs-buf
-        (with-current-buffer cljs-buf
-          (or (cider-current-repl 'cljs)
-              (error "ClojureScript nREPL is not connected. Use the clojure-mcp tools instead.")))
+      (with-current-buffer cljs-buf
+        (or (cider-current-repl 'cljs)
+          (error "ClojureScript nREPL is not connected. Use the clojure-mcp tools instead.")))
       (error "No ClojureScript buffer found in workspace. Use cljs_get_project_states to verify shadow-cljs is running."))))
 
 (defun gptelt-clj-eval-cljs-in-clj-repl (clj-str)
@@ -30,23 +30,23 @@ corrupt the REPL state."
   (gptelt-clj-eval-cljs-in-clj-repl "js/location.href")
   (gptelt-clj-eval-cljs-in-clj-repl "(prn 1)")
   (gptelt-clj-eval-cljs-in-clj-repl
-   (with-current-buffer (find-file-noselect"~/.nixpkgs/env/dev/cljs_helper.clj")
-     (buffer-substring (point-min) (point-max)))))
+    (with-current-buffer (find-file-noselect"~/.nixpkgs/env/dev/cljs_helper.clj")
+      (buffer-substring (point-min) (point-max)))))
 
 (defun gptelt-cljs-ensure-helper-loaded ()
   "Load cljs_helper.clj into the CLJ REPL via load-file.
 Uses gptelt-clj--get-clj-repl for workspace-safe REPL resolution.
 Skips load-file if the cljs-helper namespace is already loaded."
   (let* ((clj-repl (gptelt-clj--get-clj-repl))
-         (ns-check (cider-nrepl-sync-request:eval
-                    "(some? (find-ns 'cljs-helper))"
-                    clj-repl "user"))
-         (already-loaded (string= "true" (nrepl-dict-get ns-check "value"))))
+          (ns-check (cider-nrepl-sync-request:eval
+                      "(some? (find-ns 'cljs-helper))"
+                      clj-repl "user"))
+          (already-loaded (string= "true" (nrepl-dict-get ns-check "value"))))
     (unless already-loaded
       (let* ((helper-path (expand-file-name "~/.nixpkgs/env/dev/cljs_helper.clj"))
-             (result (cider-nrepl-sync-request:eval
-                      (format "(load-file \"%s\")" helper-path)
-                      clj-repl "user")))
+              (result (cider-nrepl-sync-request:eval
+                        (format "(load-file \"%s\")" helper-path)
+                        clj-repl "user")))
         (when-let ((err (nrepl-dict-get result "err")))
           (error "Failed to load cljs-helper: %s" err))))))
 
@@ -57,26 +57,26 @@ Skips load-file if the cljs-helper namespace is already loaded."
 (defun gptelt-cljs-list-ns (build-id _runtime-id &optional regex-filter)
   (gptelt-cljs-ensure-helper-loaded)
   (gptelt-eval--clj-string
-   (if regex-filter
-       (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
-     (format "(get-build-namespaces %s)" build-id))
-   "cljs-helper"
-   t))
+    (if regex-filter
+      (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
+      (format "(get-build-namespaces %s)" build-id))
+    "cljs-helper"
+    t))
 
 (defun gptelt-cljs-list-ns-async (callback build-id _runtime-id &optional regex-filter)
   "Async version of `gptelt-cljs-list-ns' for MCP tool use."
   (condition-case err
-      (progn
-        (gptelt-cljs-ensure-helper-loaded)
-        (gptelt-eval--clj-string-async
-         callback
-         (if regex-filter
-             (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
-           (format "(get-build-namespaces %s)" build-id))
-         "cljs-helper"))
+    (progn
+      (gptelt-cljs-ensure-helper-loaded)
+      (gptelt-eval--clj-string-async
+        callback
+        (if regex-filter
+          (format "(get-build-namespaces %s \"%s\")" build-id regex-filter)
+          (format "(get-build-namespaces %s)" build-id))
+        "cljs-helper"))
     (error
-     (funcall callback
-              (format "Error: %s" (error-message-string err))))))
+      (funcall callback
+        (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-list-ns :ground 1)
@@ -93,12 +93,12 @@ Skips load-file if the cljs-helper namespace is already loaded."
 (defun gptelt-cljs-get-project-states-async (callback)
   "Async version of `gptelt-cljs-get-project-states' for MCP tool use."
   (condition-case err
-      (progn
-        (gptelt-cljs-ensure-helper-loaded)
-        (gptelt-eval--clj-string-async callback "(get-shadow-cljs-info)" "cljs-helper"))
+    (progn
+      (gptelt-cljs-ensure-helper-loaded)
+      (gptelt-eval--clj-string-async callback "(get-shadow-cljs-info)" "cljs-helper"))
     (error
-     (funcall callback
-              (format "Error: %s" (error-message-string err))))))
+      (funcall callback
+        (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-project-states))
@@ -107,8 +107,8 @@ Skips load-file if the cljs-helper namespace is already loaded."
 (defun gptel-cljs-eval-string (build-id runtime-id cljs-code &optional ns)
   (gptelt-cljs-ensure-helper-loaded)
   (gptelt-eval--clj-string
-   (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
-   "cljs-helper" t))
+    (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
+    "cljs-helper" t))
 
 (comment
   (gptel-cljs-eval-string :app 1 "js/location.href" 'debug-helper)
@@ -121,20 +121,20 @@ Skips load-file if the cljs-helper namespace is already loaded."
 CALLBACK is the MCP async callback.  Evaluates CLJS-CODE in BUILD-ID
 and RUNTIME-ID via the cljs-helper, using `gptelt-eval--clj-string-async'."
   (condition-case err
-      (progn
-        (gptelt-cljs-ensure-helper-loaded)
-        (gptelt-eval--clj-string-async
-         callback
-         (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
-         "cljs-helper"))
+    (progn
+      (gptelt-cljs-ensure-helper-loaded)
+      (gptelt-eval--clj-string-async
+        callback
+        (format "(cljs-eval %s %d %s \"%s\")" build-id runtime-id (prin1-to-string cljs-code) ns)
+        "cljs-helper"))
     (error
-     (funcall callback
-              (format "Error: %s" (error-message-string err))))))
+      (funcall callback
+        (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptel-cljs-eval-string-async
-   (lambda (r) (message "CLJS async result: %s" r))
-   :ground 10 "js/document.title"))
+    (lambda (r) (message "CLJS async result: %s" r))
+    :ground 10 "js/document.title"))
 
 ;;; eval buffer
 (defun gptelt-cljs-eval-buffer (buffer-name)
@@ -155,7 +155,7 @@ shows buffer if not visible, asks for user permission, and evaluates it."
   (gptelt-clojure--ensure-workspace 'cljs)
   (gptel-clojure--ensure-current-project-file file-path)
   (let* ((abs-path (gptel-clojure--resolve-file-path file-path))
-         (buffer (find-file-noselect abs-path)))
+          (buffer (find-file-noselect abs-path)))
     (gptelt-cljs-eval-buffer buffer)))
 
 (comment
@@ -167,31 +167,31 @@ shows buffer if not visible, asks for user permission, and evaluates it."
 Returns the documentation string if available, or an error if not found."
   (gptelt-cljs-ensure-helper-loaded)
   (-> (gptelt-eval--clj-string
-       (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
-               build-id runtime-id symbol
-               (or namespace "cljs.user"))
-       "cljs-helper" t)
-      (read)))
+        (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
+          build-id runtime-id symbol
+          (or namespace "cljs.user"))
+        "cljs-helper" t)
+    (read)))
 
 (defun gptelt-cljs-get-symbol-doc-async (callback symbol build-id runtime-id &optional namespace)
   "Async version of `gptelt-cljs-get-symbol-doc' for MCP tool use."
   (condition-case err
-      (progn
-        (gptelt-cljs-ensure-helper-loaded)
-        (gptelt-eval--clj-string-async
-         (lambda (result)
-           (condition-case err
-               (funcall callback (format "%s" (read result)))
-             (error (funcall callback
-                             (format "Error parsing doc result: %s"
-                                     (error-message-string err))))))
-         (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
-                 build-id runtime-id symbol
-                 (or namespace "cljs.user"))
-         "cljs-helper"))
+    (progn
+      (gptelt-cljs-ensure-helper-loaded)
+      (gptelt-eval--clj-string-async
+        (lambda (result)
+          (condition-case err
+            (funcall callback (format "%s" (read result)))
+            (error (funcall callback
+                     (format "Error parsing doc result: %s"
+                       (error-message-string err))))))
+        (format "(get-symbol-doc %s %d \"%s\" \"%s\")"
+          build-id runtime-id symbol
+          (or namespace "cljs.user"))
+        "cljs-helper"))
     (error
-     (funcall callback
-              (format "Error: %s" (error-message-string err))))))
+      (funcall callback
+        (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-symbol-doc "defn" ":ground" -1))
@@ -202,29 +202,29 @@ Returns the documentation string if available, or an error if not found."
 Returns the source code string if available, or an error if not found."
   (gptelt-cljs-ensure-helper-loaded)
   (-> (gptelt-eval--clj-string
-       (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
-               build-id runtime-id symbol (or namespace "cljs.user"))
-       "cljs-helper" t)
-      (read)))
+        (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
+          build-id runtime-id symbol (or namespace "cljs.user"))
+        "cljs-helper" t)
+    (read)))
 
 (defun gptelt-cljs-get-symbol-source-code-async (callback symbol build-id runtime-id &optional namespace)
   "Async version of `gptelt-cljs-get-symbol-source-code' for MCP tool use."
   (condition-case err
-      (progn
-        (gptelt-cljs-ensure-helper-loaded)
-        (gptelt-eval--clj-string-async
-         (lambda (result)
-           (condition-case err
-               (funcall callback (format "%s" (read result)))
-             (error (funcall callback
-                             (format "Error parsing source result: %s"
-                                     (error-message-string err))))))
-         (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
-                 build-id runtime-id symbol (or namespace "cljs.user"))
-         "cljs-helper"))
+    (progn
+      (gptelt-cljs-ensure-helper-loaded)
+      (gptelt-eval--clj-string-async
+        (lambda (result)
+          (condition-case err
+            (funcall callback (format "%s" (read result)))
+            (error (funcall callback
+                     (format "Error parsing source result: %s"
+                       (error-message-string err))))))
+        (format "(get-symbol-source-code %s %d \"%s\" \"%s\")"
+          build-id runtime-id symbol (or namespace "cljs.user"))
+        "cljs-helper"))
     (error
-     (funcall callback
-              (format "Error: %s" (error-message-string err))))))
+      (funcall callback
+        (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-symbol-source-code "defn" ":ground" -1)
@@ -237,7 +237,7 @@ Returns the source code string if available, or an error if not found."
 
 (comment
   (gptelt-cljs-get-buffer-ns
-   (find-file-noselect "../../src/ground/core.cljs"))
+    (find-file-noselect "../../src/ground/core.cljs"))
   (gptelt-cljs-get-buffer-ns "foo"))
 
 ;;; get file namespace
@@ -274,192 +274,192 @@ If BUILD-ID is provided, returns status for that build only.
 Otherwise returns status for all active builds."
   (gptelt-cljs-ensure-helper-loaded)
   (gptelt-eval--clj-string
-   (if build-id
-       (format "(get-build-status %s)" build-id)
-     "(get-build-status)")
-   "cljs-helper" t))
+    (if build-id
+      (format "(get-build-status %s)" build-id)
+      "(get-build-status)")
+    "cljs-helper" t))
 
 (defun gptelt-cljs-get-build-status-async (callback &optional build-id)
   "Async version of `gptelt-cljs-get-build-status' for MCP tool use."
   (condition-case err
-      (progn
-        (gptelt-cljs-ensure-helper-loaded)
-        (gptelt-eval--clj-string-async
-         callback
-         (if build-id
-             (format "(get-build-status %s)" build-id)
-           "(get-build-status)")
-         "cljs-helper"))
+    (progn
+      (gptelt-cljs-ensure-helper-loaded)
+      (gptelt-eval--clj-string-async
+        callback
+        (if build-id
+          (format "(get-build-status %s)" build-id)
+          "(get-build-status)")
+        "cljs-helper"))
     (error
-     (funcall callback
-              (format "Error: %s" (error-message-string err))))))
+      (funcall callback
+        (format "Error: %s" (error-message-string err))))))
 
 (comment
   (gptelt-cljs-get-build-status)
   (gptelt-cljs-get-build-status ":app"))
 
 ;;; gptel tool registration
-(when (fboundp 'gptelt-make-tool)
-  (gptelt-make-tool
-   :name "cljs_list_ns"
-   :function #'gptelt-cljs-list-ns-async
-   :async t
-   :description "List all loaded namespaces in cljs nREPL connection. Supports optional regex filtering."
-   :args '((:name "build_id"
-            ;; TODO: check if this symbol works
-            :type string
-            :description
-            "The build ID to evaluate in, must be a string starts with `:`")
-           (:name "runtime_id"
-            :type integer
-            :description "The runtime ID")
-           (:name "filter_regex"
-            :type number
-            :optional t
-            :description "Optional regex pattern to filter namespace names"))
-   :category "clojurescript"
-   :confirm nil
-   :include t)
-  (gptelt-make-tool
-   :name "cljs_get_project_states"
-   :function #'gptelt-cljs-get-project-states-async
-   :async t
-   :description "Get current shadow-cljs project states including active builds, runtimes, and build information, you MUST call this before calling other cljs tools."
-   :args '()
-   :category "clojurescript"
-   :confirm nil
-   :include t)
-  (gptelt-make-tool
-   :name "get_shadow-cljs_build_status"
-   :function #'gptelt-cljs-get-build-status-async
-   :async t
-   :description "Get the last build status, build logs, and error logs of shadow-cljs. Returns compilation status (:completed/:failed/:compiling), duration, compiled file count, warnings (with file/line/message), and error reports. Useful for checking if a build succeeded or diagnosing compilation errors."
-   :args '((:name "build_id"
-            :type string
-            :optional t
-            :description "Optional build ID (e.g. ':app'). If omitted, returns status for all active builds."))
-   :category "clojurescript"
-   :confirm nil
-   :include t)
-  (gptelt-make-tool
-   :name "cljs_eval_string"
-   :function #'gptel-cljs-eval-string-async
-   :async t
-   :description "Evaluate given cljs code string in given build and runtime, get eval result, error, stdout, stderr."
-   :args '((:name "build_id"
-            :type string
-            :description
-            "The build ID to evaluate in, must be a string starts with `:`")
-           (:name "runtime_id"
-            :type integer
-            :description "The runtime ID to evaluate in")
-           (:name "cljs_code"
-            :type string
-            :description "The ClojureScript code string to evaluate")
-           (:name "ns"
-            :type string
-            :optional t
-            :description "The namespace to evaluate in (optional, defaults to 'cljs.user')"))
-   :category "clojurescript"
-   :confirm nil
-   :include t)
+;; (when (fboundp 'gptelt-make-tool)
+;;   (gptelt-make-tool
+;;    :name "cljs_list_ns"
+;;    :function #'gptelt-cljs-list-ns-async
+;;    :async t
+;;    :description "List all loaded namespaces in cljs nREPL connection. Supports optional regex filtering."
+;;    :args '((:name "build_id"
+;;             ;; TODO: check if this symbol works
+;;             :type string
+;;             :description
+;;             "The build ID to evaluate in, must be a string starts with `:`")
+;;            (:name "runtime_id"
+;;             :type integer
+;;             :description "The runtime ID")
+;;            (:name "filter_regex"
+;;             :type number
+;;             :optional t
+;;             :description "Optional regex pattern to filter namespace names"))
+;;    :category "clojurescript"
+;;    :confirm nil
+;;    :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_get_project_states"
+;;    :function #'gptelt-cljs-get-project-states-async
+;;    :async t
+;;    :description "Get current shadow-cljs project states including active builds, runtimes, and build information, you MUST call this before calling other cljs tools."
+;;    :args '()
+;;    :category "clojurescript"
+;;    :confirm nil
+;;    :include t)
+;;   (gptelt-make-tool
+;;    :name "get_shadow-cljs_build_status"
+;;    :function #'gptelt-cljs-get-build-status-async
+;;    :async t
+;;    :description "Get the last build status, build logs, and error logs of shadow-cljs. Returns compilation status (:completed/:failed/:compiling), duration, compiled file count, warnings (with file/line/message), and error reports. Useful for checking if a build succeeded or diagnosing compilation errors."
+;;    :args '((:name "build_id"
+;;             :type string
+;;             :optional t
+;;             :description "Optional build ID (e.g. ':app'). If omitted, returns status for all active builds."))
+;;    :category "clojurescript"
+;;    :confirm nil
+;;    :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_eval_string"
+;;    :function #'gptel-cljs-eval-string-async
+;;    :async t
+;;    :description "Evaluate given cljs code string in given build and runtime, get eval result, error, stdout, stderr."
+;;    :args '((:name "build_id"
+;;             :type string
+;;             :description
+;;             "The build ID to evaluate in, must be a string starts with `:`")
+;;            (:name "runtime_id"
+;;             :type integer
+;;             :description "The runtime ID to evaluate in")
+;;            (:name "cljs_code"
+;;             :type string
+;;             :description "The ClojureScript code string to evaluate")
+;;            (:name "ns"
+;;             :type string
+;;             :optional t
+;;             :description "The namespace to evaluate in (optional, defaults to 'cljs.user')"))
+;;    :category "clojurescript"
+;;    :confirm nil
+;;    :include t)
 
-  (gptelt-make-tool
-   :name "cljs_get_symbol_doc"
-   :function #'gptelt-cljs-get-symbol-doc-async
-   :async t
-   :description "Get documentation for a ClojureScript symbol (function, macro, var, etc.). Returns formatted documentation including arglists, type, and docstring."
-   :args '((:name "symbol"
-            :type string
-            :description "The ClojureScript symbol to get documentation for (e.g., 'map', 'reduce', 'defn')")
-           (:name "build_id"
-            :type string
-            :description "The build ID to evaluate in, must be a string starts with `:`")
-           (:name "runtime_id"
-            :type integer
-            :description "The runtime ID to evaluate in")
-           (:name "namespace"
-            :type string
-            :optional t
-            :description "Optional namespace to qualify the symbol (e.g., 'cljs.core', defaults to 'cljs.user')"))
-   :category "clojurescript"
-   :confirm nil
-   :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_get_symbol_doc"
+;;    :function #'gptelt-cljs-get-symbol-doc-async
+;;    :async t
+;;    :description "Get documentation for a ClojureScript symbol (function, macro, var, etc.). Returns formatted documentation including arglists, type, and docstring."
+;;    :args '((:name "symbol"
+;;             :type string
+;;             :description "The ClojureScript symbol to get documentation for (e.g., 'map', 'reduce', 'defn')")
+;;            (:name "build_id"
+;;             :type string
+;;             :description "The build ID to evaluate in, must be a string starts with `:`")
+;;            (:name "runtime_id"
+;;             :type integer
+;;             :description "The runtime ID to evaluate in")
+;;            (:name "namespace"
+;;             :type string
+;;             :optional t
+;;             :description "Optional namespace to qualify the symbol (e.g., 'cljs.core', defaults to 'cljs.user')"))
+;;    :category "clojurescript"
+;;    :confirm nil
+;;    :include t)
 
-  (gptelt-make-tool
-   :name "cljs_get_symbol_source_code"
-   :function #'gptelt-cljs-get-symbol-source-code-async
-   :async t
-   :description "Get source code for a ClojureScript symbol (function, macro, var, etc.). Returns the complete source code definition."
-   :args '((:name "symbol"
-            :type string
-            :description "The ClojureScript symbol to get source code for (e.g., 'map', 'reduce', 'when')")
-           (:name "build_id"
-            :type string
-            :description "The build ID to evaluate in, must be a string starts with `:`")
-           (:name "runtime_id"
-            :type integer
-            :description "The runtime ID to evaluate in")
-           (:name "namespace"
-            :type string
-            :optional t
-            :description "Optional namespace to qualify the symbol (e.g., 'cljs.core', defaults to 'cljs.user')"))
-   :category "clojurescript"
-   :confirm nil
-   :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_get_symbol_source_code"
+;;    :function #'gptelt-cljs-get-symbol-source-code-async
+;;    :async t
+;;    :description "Get source code for a ClojureScript symbol (function, macro, var, etc.). Returns the complete source code definition."
+;;    :args '((:name "symbol"
+;;             :type string
+;;             :description "The ClojureScript symbol to get source code for (e.g., 'map', 'reduce', 'when')")
+;;            (:name "build_id"
+;;             :type string
+;;             :description "The build ID to evaluate in, must be a string starts with `:`")
+;;            (:name "runtime_id"
+;;             :type integer
+;;             :description "The runtime ID to evaluate in")
+;;            (:name "namespace"
+;;             :type string
+;;             :optional t
+;;             :description "Optional namespace to qualify the symbol (e.g., 'cljs.core', defaults to 'cljs.user')"))
+;;    :category "clojurescript"
+;;    :confirm nil
+;;    :include t)
 
-  (gptelt-make-tool
-   :name "cljs_get_buffer_ns"
-   :function #'gptelt-cljs-get-buffer-ns
-   :description "Get the namespace of a cljs buffer by buffer name."
-   :args '((:name "buffer_name"
-            :type string
-            :description "The name of the cljs buffer to get the namespace from"))
-   :category "clojure"
-   :confirm nil
-   :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_get_buffer_ns"
+;;    :function #'gptelt-cljs-get-buffer-ns
+;;    :description "Get the namespace of a cljs buffer by buffer name."
+;;    :args '((:name "buffer_name"
+;;             :type string
+;;             :description "The name of the cljs buffer to get the namespace from"))
+;;    :category "clojure"
+;;    :confirm nil
+;;    :include t)
 
-  (gptelt-make-tool
-   :name "cljs_get_file_ns"
-   :function #'gptelt-cljs-get-file-ns
-   :description "Get the namespace of a cljs source file in the current project, given the file path. File must be under project root and be a .clj, .cljc"
-   :args '((:name "file_path"
-            :type string
-            :description
-            "Path to the cljs file in the current project root (relative or absolute)"))
-   :category "clojure"
-   :confirm nil
-   :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_get_file_ns"
+;;    :function #'gptelt-cljs-get-file-ns
+;;    :description "Get the namespace of a cljs source file in the current project, given the file path. File must be under project root and be a .clj, .cljc"
+;;    :args '((:name "file_path"
+;;             :type string
+;;             :description
+;;             "Path to the cljs file in the current project root (relative or absolute)"))
+;;    :category "clojure"
+;;    :confirm nil
+;;    :include t)
 
-  (gptelt-make-tool
-   :name "cljs_get_ns_file_url"
-   :function #'gptelt-cljs-get-ns-file-url
-   :description "Get file url for a given cljs namespace"
-   :args '((:name "namespace"
-            :type string
-            :description "The cljs namespace to get file information for"))
-   :category "clojure"
-   :confirm nil
-   :include t)
+;;   (gptelt-make-tool
+;;    :name "cljs_get_ns_file_url"
+;;    :function #'gptelt-cljs-get-ns-file-url
+;;    :description "Get file url for a given cljs namespace"
+;;    :args '((:name "namespace"
+;;             :type string
+;;             :description "The cljs namespace to get file information for"))
+;;    :category "clojure"
+;;    :confirm nil
+;;    :include t)
 
-  (gptelt-make-tool
-   :name "cljs_read_file_url"
-   :function #'gptelt-cljs-read-file-url
-   :description
-   "Read the content of file url returned by cljs_get_ns_file_url, the content will be wrapped with ␂ at the start and ␃ at the end."
-   :args '((:name "file_url"
-            :type string
-            :description "file_url return by cljs_get_ns_file_url")
-           (:name "limit"
-            :type integer
-            :optional t
-            :description "The number of lines to read. Default to 2000. Only provide if the file is too large to read at once.")
-           (:name "offset"
-            :type integer
-            :optional t
-            :description "The line number to start reading from. Only provide if the file is too large to read at once"))
-   :category "clojure"
-   :confirm nil
-   :include t))
+;;   (gptelt-make-tool
+;;    :name "cljs_read_file_url"
+;;    :function #'gptelt-cljs-read-file-url
+;;    :description
+;;    "Read the content of file url returned by cljs_get_ns_file_url, the content will be wrapped with ␂ at the start and ␃ at the end."
+;;    :args '((:name "file_url"
+;;             :type string
+;;             :description "file_url return by cljs_get_ns_file_url")
+;;            (:name "limit"
+;;             :type integer
+;;             :optional t
+;;             :description "The number of lines to read. Default to 2000. Only provide if the file is too large to read at once.")
+;;            (:name "offset"
+;;             :type integer
+;;             :optional t
+;;             :description "The line number to start reading from. Only provide if the file is too large to read at once"))
+;;    :category "clojure"
+;;    :confirm nil
+;;    :include t))
 
 ;;; cljs.el ends here
