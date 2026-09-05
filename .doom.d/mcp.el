@@ -288,12 +288,18 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
             (concat (expand-file-name user-emacs-directory)
               "emacs-mcp-stdio.sh"))
     (mcp-server-lib-install))
+  ;; Most specific first: the /cwd/ URL and a recorded session cwd both name a
+  ;; directory exactly; roots only declare which directories the client may
+  ;; work in, with no spec'd ordering; the workspace root is ambient Emacs
+  ;; state that has nothing to do with the caller.
   (setq! mcp-server-lib-default-directory-function
     (defun +mcp-server-lib-default-directory-function (session-id)
       (or
         mcp-server-lib--request-cwd
         (when (fboundp 'gptel-claude-code--mcp-default-directory)
           (gptel-claude-code--mcp-default-directory session-id))
+        (when (fboundp 'mcp-server-lib-roots-directory)
+          (mcp-server-lib-roots-directory))
         (when (fboundp '++workspace-current-project-root)
           (++workspace-current-project-root)))))
   (load! "gptel-tools.el")
