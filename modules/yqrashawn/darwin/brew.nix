@@ -33,7 +33,6 @@ in
       # "homebrew/cask-fonts"
       # "homebrew/cask-drivers"
       # "homebrew/cask-versions"
-      "railwaycat/emacsmacport"
       "teamookla/speedtest"
       "borkdude/brew"
       "huahaiy/brew"
@@ -43,7 +42,6 @@ in
       "candid82/brew"
       "smokris/getwindowid"
       "stripe/stripe-cli"
-      "jimeh/emacs-builds"
     ];
     # extraConfig = ''
     #   brew "yabai", restart_service: "changed"
@@ -63,7 +61,6 @@ in
     ];
     casks = [
       "hammerspoon"
-      "jimeh/emacs-builds/emacs-app"
       "font-inter"
       "font-fira-mono-nerd-font"
       "font-freefont"

@@ -120,7 +120,6 @@ in
   #   enable = true;
   #   enableScriptingAddition = true;
   # };
-  # services.emacs.package = pkgs.emacsMacport;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

@@ -150,7 +150,6 @@ in
       masters = import inputs.nixpkgs-master { system = prev.system; };
       own = import inputs.own { system = prev.system; };
       # old = import inputs.old { system = prev.system; };
-      # emacsMacport = import overlays.emacsMacport { system = prev.system; };
     })
   ];
 }
