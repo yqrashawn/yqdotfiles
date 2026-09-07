@@ -284,10 +284,6 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
   (setq! mcp-server-lib-http-port 18684
     mcp-server-lib-async-timeout 3600
     mcp-server-lib-http-async-timeout 176400)
-  (unless (file-exists-p
-            (concat (expand-file-name user-emacs-directory)
-              "emacs-mcp-stdio.sh"))
-    (mcp-server-lib-install))
   ;; Most specific first: the /cwd/ URL and a recorded session cwd both name a
   ;; directory exactly; roots only declare which directories the client may
   ;; work in, with no spec'd ordering; the workspace root is ambient Emacs
