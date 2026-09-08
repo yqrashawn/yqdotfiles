@@ -72,3 +72,40 @@
 
 (deftest body-is-preserved-verbatim
   (is (= good-output (:body (reviewer/parse-output good-output)))))
+
+(deftest echoed-template-is-MALFORMED-not-a-clean-pass
+  (let [echoed (->> (str/split-lines good-output)
+                     (map #(str "    " %))
+                     (str/join "\n"))
+        p (reviewer/parse-output echoed)]
+    (is (= "MALFORMED" (:verdict p))
+        "an indented, echoed format example must never parse as a real verdict")
+    (is (false? (reviewer/mergeable? p)))))
+
+(def ^:private space-and-colon-output
+  (str "VERDICT: NOT MERGEABLE — paths need care\n"
+       "\n"
+       "  [correctness/blocking]  none\n"
+       "  [correctness/followup]  none\n"
+       "  [coverage]              none\n"
+       "  [docs-accuracy]         1 findings\n"
+       "  [style]                 1 findings\n"
+       "\n"
+       "1. [docs-accuracy] docs/My Notes.md:12 — needs a heading\n"
+       "2. [style] src/pool:v2/file.clj:34 — naming\n"))
+
+(deftest parse-fingerprints-handles-paths-with-spaces-and-colons
+  (let [p (reviewer/parse-output space-and-colon-output)]
+    (is (= ["docs/My Notes.md:12:docs-accuracy"
+            "src/pool:v2/file.clj:34:style"]
+           (:fingerprints p))
+        "a path with a space or an internal colon must still produce a whole
+         file:line:category fingerprint — otherwise the one-re-raise rule can
+         never match it and it is re-reported on every pass, forever")))
+
+(deftest run-never-throws-even-if-the-spawner-does
+  (let [spawn (fn [_ _ _] (throw (ex-info "boom" {})))
+        res (reviewer/run! "PROMPT" "/repo" {:spawn-fn spawn})]
+    (is (not (zero? (:exit res)))
+        "a spawn failure must surface as a result, never propagate as an exception")
+    (is (= "boom" (:err res)))))

@@ -26,7 +26,10 @@
         out (prompt/build (base-args r))]
     (is (str/includes? out (:diff-path ctx)))
     (is (str/includes? out r))
-    (is (str/includes? out "src/a.clj"))))
+    (is (str/includes? out "src/a.clj"))
+    (is (str/includes? out "PR NUMBER: 370"))
+    (is (str/includes? out "BASE: basesha"))
+    (is (str/includes? out "HEAD: abc"))))
 
 (deftest first-pass-is-labelled-FIRST
   (let [out (prompt/build (base-args (tmp-repo)))]
