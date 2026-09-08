@@ -984,7 +984,9 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/gh`, exit 
   "Full diff of `base...sha`. Three-dot so the review sees only this branch's
    work, not everything that landed on the base since it forked."
   [repo-root base sha opts]
-  (or (ok-out (run opts ["git" "diff" (str base "..." sha)] repo-root)) ""))
+  ;; Bypasses ok-out on purpose: the reviewer trusts these bytes unseen, so trimming git's trailing newline here would silently corrupt the one file the whole module exists to keep faithful.
+  (let [{:keys [exit out]} (run opts ["git" "diff" (str base "..." sha)] repo-root)]
+    (if (zero? exit) out "")))
 
 (defn open-pr
   "The open PR whose head is `branch`, or nil. Measured at ~1.3s."
@@ -1194,7 +1196,7 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/context`, 
      :changed-files (changed-files diff-text)
      :base          base
      :sha           sha
-     :diff-bytes    (count diff-text)}))
+     :diff-bytes    (fs/size diff-path)}))
 
 (defn prune!
   "Delete all but the `keep` newest .diff files. Returns how many were removed."
