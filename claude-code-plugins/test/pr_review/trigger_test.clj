@@ -196,6 +196,15 @@
            regression that dropped repo-root from the message would still
            satisfy every assertion above it"))))
 
+(deftest findings-message-carries-parse-warnings
+  (let [msg (trigger/findings-message
+             {:repo-root "/r" :pr 1 :pass 1}
+             {:verdict "NOT MERGEABLE" :body "BODY" :counts {}}
+             ["PARSE WARNING TEXT"])]
+    (is (str/includes? msg "PARSE WARNING TEXT")
+        "a review whose findings carry no fingerprints cannot converge; agent
+         A has to be told")))
+
 ;; --------------------------------------------------------------- review!
 
 (deftest a-completed-review-records-one-pass-and-wakes-the-session
@@ -207,6 +216,29 @@
     (is (= ["headsha"] (mapv :sha (ledger/read-passes g 370))))
     (is (= "MERGEABLE" (:verdict (first (ledger/read-passes g 370)))))
     (is (nil? (lock/read-lock g)) "the lock is released on the success path")))
+
+(deftest the-ledger-row-records-the-reconciled-verdict-not-the-claimed-one
+  (testing "mergeable? had zero production call sites: any output whose count
+            block contradicted its verdict line yielded a MERGEABLE headline
+            and a self-contradictory ledger row (verdict MERGEABLE,
+            blocking 1)"
+    (let [[r g] (tmp-repo)
+          contradictory (str "VERDICT: MERGEABLE — nothing to fix\n\n"
+                             "  [correctness/blocking]  1\n"
+                             "  [correctness/followup]  none\n"
+                             "  [coverage]              none\n"
+                             "  [docs-accuracy]         none\n"
+                             "  [style]                 none\n\n"
+                             "1. [correctness/blocking] src/a.clj:7 — boom\n")
+          d {:repo-root r :git-dir g :pr 1 :pass 1 :sha "s" :base-ref "main"
+             :draft? false :prior-fingerprints []}
+          result (#'trigger/review! d (review-opts :out contradictory))]
+      (is (= 2 (:exit result)))
+      (is (str/includes? (:message result) "NOT MERGEABLE")
+          "the headline agent A reads must be the reconciled verdict")
+      (is (= "NOT MERGEABLE" (:verdict (first (ledger/read-passes g 1))))
+          "and so must the ledger row, or the next pass reads a clean history")
+      (is (= 1 (:blocking (first (ledger/read-passes g 1))))))))
 
 (deftest unresolved-base-ref-skips-the-reviewer-and-the-ledger
   (let [[r g] (tmp-repo)

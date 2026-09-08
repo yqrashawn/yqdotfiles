@@ -95,12 +95,15 @@
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
    wrapper and ignores rewakeMessage for third-party plugins, so this string
    has to introduce itself."
-  [{:keys [repo-root pr pass]} parsed]
-  (str "pr-review-loop — " (fs/file-name repo-root)
-       " PR #" pr ", pass " pass ": " (:verdict parsed) "\n\n"
-       (:body parsed)
-       "\n\nNext: use the pr-review-loop skill. Verify each"
-       " [correctness/blocking] finding against the source before fixing it."))
+  ([d parsed] (findings-message d parsed nil))
+  ([{:keys [repo-root pr pass]} parsed warnings]
+   (str "pr-review-loop — " (fs/file-name repo-root)
+        " PR #" pr ", pass " pass ": " (:verdict parsed) "\n\n"
+        (:body parsed)
+        (when (seq warnings)
+          (str "\n\n" (str/join "\n" warnings)))
+        "\n\nNext: use the pr-review-loop skill. Verify each"
+        " [correctness/blocking] finding against the source before fixing it.")))
 
 (defn- unresolved-base-message
   "Names the unresolved ref and the exact fix, so agent A does not have to
@@ -147,7 +150,10 @@
                                   :ctx ctx :pr pr :pass pass :draft? draft?
                                   :prior-fingerprints prior-fingerprints})
             res    (reviewer/run! text repo-root opts)
-            parsed (reviewer/parse-output (:out res))]
+            ;; reconcile is mergeable? wired in: a count block that
+            ;; contradicts the verdict line loses, here, once, so both the
+            ;; headline and the ledger row carry the same reconciled verdict.
+            parsed (reviewer/reconcile (reviewer/parse-output (:out res)))]
         ;; A non-zero reviewer exit or an unparsed MALFORMED verdict means the
         ;; real diagnosis is sitting unread in :err — surface it in the wake
         ;; message, or the session sees only the bare word MALFORMED and never
@@ -165,7 +171,8 @@
                 :coverage (get (:counts parsed) "coverage" 0)
                 :fingerprints (:fingerprints parsed)})
               (context/prune! git-dir context-keep)
-              {:exit 2 :message (findings-message d parsed)}))))))
+              {:exit 2 :message (findings-message
+                                 d parsed (reviewer/parse-warnings parsed))}))))))
 
 (defn- review!
   "Always returns an :exit of 0 or 2. Nothing inside — acquire!, the context
