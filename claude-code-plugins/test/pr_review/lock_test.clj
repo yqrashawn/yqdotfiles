@@ -2,6 +2,7 @@
   (:require [babashka.fs :as fs]
             [cheshire.core :as json]
             [clojure.test :refer [deftest is testing]]
+            [pr-review.flock :as flock]
             [pr-review.lock :as lock]))
 
 (defn- tmp-repo []
@@ -67,3 +68,25 @@
     (lock/acquire! r {:pr 1 :sha "s"} {:pid 7})
     (lock/release! r)
     (is (nil? (lock/read-lock r)))))
+
+(deftest acquire-runs-under-the-shared-flock-on-the-guard-path
+  (let [r (tmp-repo)
+        seen (atom nil)]
+    (with-redefs [flock/with-file-lock (fn [path f] (reset! seen path) (f))]
+      (is (= :acquired (:status (lock/acquire! r {:pr 1 :sha "s"} {:pid 9})))))
+    (is (some? @seen)
+        "acquire! must run its read-check-write through pr-review.flock/with-file-lock")
+    (is (= (flock/guard-path (lock/lock-path r)) @seen)
+        "acquire! must flock the sibling guard path")
+    (is (not= (lock/lock-path r) @seen)
+        "acquire! must never flock the lock record path itself: acquire! rewrites
+         that path, so a lock held on it would stop protecting anything the moment
+         it's rewritten")))
+
+(deftest acquire-on-lock-missing-pid-is-acquired-not-an-npe
+  (let [r (tmp-repo)]
+    (spit (lock/lock-path r) "{}")
+    (is (= :acquired (:status (lock/acquire! r {:pr 1 :sha "s"} {:pid 10})))
+        "a lock record that is valid JSON but missing :pid must read as free, not
+         throw: read-lock returning {} truthy would send (alive? nil) into
+         (long nil), an NPE")))

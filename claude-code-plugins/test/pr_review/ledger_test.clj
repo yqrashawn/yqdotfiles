@@ -1,6 +1,7 @@
 (ns pr-review.ledger-test
   (:require [babashka.fs :as fs]
             [clojure.test :refer [deftest is testing]]
+            [pr-review.flock :as flock]
             [pr-review.ledger :as ledger]))
 
 (defn- tmp-repo
@@ -68,3 +69,36 @@
     (spit (ledger/ledger-path r) "{not json\n" :append true)
     (is (= ["ok"] (mapv :sha (ledger/read-passes r 2)))
         "a truncated write from a killed reviewer must not break every later read")))
+
+(deftest interrupted-write-does-not-lose-prior-passes
+  (let [r (tmp-repo)]
+    (ledger/append-pass! r {:pr 42 :sha "first" :pass 1 :verdict "MERGEABLE"
+                            :blocking 0 :followup 0 :coverage 0 :fingerprints []})
+    ;; Simulate a reviewer killed after the new pass is durably written to the
+    ;; temp file but before it is published — the exact window lock/acquire!
+    ;; can interrupt by killing a superseded reviewer mid-run.
+    (with-redefs [ledger/atomic-replace! (fn [_ _] (throw (ex-info "simulated crash before publish" {})))]
+      (is (thrown? Exception
+                   (ledger/append-pass! r {:pr 42 :sha "second" :pass 2 :verdict "MERGEABLE"
+                                           :blocking 0 :followup 0 :coverage 0 :fingerprints []}))))
+    (is (= ["first"] (mapv :sha (ledger/read-passes r 42)))
+        "a crash between the temp write and the atomic rename must leave every
+         previously recorded pass intact, not zero the ledger")))
+
+(deftest append-pass-flocks-a-guard-file-not-the-ledger-path
+  (let [r (tmp-repo)
+        seen (atom [])]
+    (with-redefs [flock/with-file-lock (fn [path f] (swap! seen conj path) (f))]
+      (ledger/append-pass! r {:pr 77 :sha "one" :pass 1 :verdict "MERGEABLE"
+                              :blocking 0 :followup 0 :coverage 0 :fingerprints []})
+      (ledger/append-pass! r {:pr 77 :sha "two" :pass 2 :verdict "MERGEABLE"
+                              :blocking 0 :followup 0 :coverage 0 :fingerprints []}))
+    (testing "both sequential appends still land"
+      (is (= ["one" "two"] (mapv :sha (ledger/read-passes r 77)))))
+    (testing "the flock target is a sibling guard file, never the ledger path append-pass! renames over"
+      (is (= [(flock/guard-path (ledger/ledger-path r)) (flock/guard-path (ledger/ledger-path r))]
+             @seen))
+      (is (not-any? #{(ledger/ledger-path r)} @seen)
+          "flocking the path that gets renamed over lets a second process later lock a
+           different inode after the rename and run concurrently with this one — the
+           exact defect this test guards against"))))

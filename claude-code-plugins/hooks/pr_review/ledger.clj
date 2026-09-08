@@ -6,8 +6,9 @@
    precedent as Claude Code's own .git/claude-trailers."
   (:require [babashka.fs :as fs]
             [cheshire.core :as json]
-            [clojure.string :as str])
-  (:import [java.io RandomAccessFile]))
+            [clojure.string :as str]
+            [pr-review.flock :as flock])
+  (:import [java.nio.file CopyOption Files StandardCopyOption]))
 
 (def max-passes
   "Hard cap on review passes per PR. Ported from a real incident: a sibling
@@ -23,18 +24,6 @@
 (defn ledger-path
   [repo-root]
   (str repo-root "/.git/pr-review-ledger.jsonl"))
-
-(defn- with-file-lock
-  "Run `f` while holding an exclusive lock on `path`.
-
-   The lock is released by closing the channel, not by calling .release —
-   babashka does not allow sun.nio.ch.FileLockImpl.release."
-  [path f]
-  (fs/create-dirs (fs/parent path))
-  (when-not (fs/exists? path) (spit path ""))
-  (with-open [raf (RandomAccessFile. (str path) "rw")]
-    (.lock (.getChannel raf))
-    (f)))
 
 (defn- parse-line
   [line]
@@ -69,18 +58,40 @@
   (count (filter #(contains? (set (:fingerprints %)) fingerprint)
                  (read-passes repo-root pr-number))))
 
+(defn- atomic-replace!
+  "Atomically replace `path`'s content with `tmp`'s.
+
+   Renamed into place rather than written in place: `spit` truncates on
+   open, so a process killed between truncate and flush would zero the
+   entire ledger — exactly what lock/acquire! does to a superseded
+   reviewer mid-run. Same filesystem (tmp is a sibling of path), so
+   ATOMIC_MOVE is a real rename, not a copy."
+  [tmp path]
+  (Files/move (fs/path tmp) (fs/path path)
+              (into-array CopyOption [StandardCopyOption/ATOMIC_MOVE])))
+
 (defn append-pass!
   "Append one pass entry, stamping :ts. Trims to `max-lines` under the same
-   lock so concurrent triggers cannot interleave a read-trim-write."
+   lock so concurrent triggers cannot interleave a read-trim-write. Writes
+   the full trimmed content to a temp file and renames it into place, so a
+   process killed mid-write can never truncate the previously recorded
+   passes — it only ever loses its own not-yet-published entry.
+
+   Flocks `(flock/guard-path p)`, never `p` itself: `p` is the path this
+   function renames over, and a lock held on a path that gets renamed away
+   from under it stops protecting anything the instant the rename happens.
+   See pr-review.flock's namespace docstring."
   [repo-root entry]
   (let [entry (assoc entry :ts (System/currentTimeMillis))
-        p     (ledger-path repo-root)]
-    (with-file-lock p
+        p (ledger-path repo-root)]
+    (flock/with-file-lock (flock/guard-path p)
       (fn []
         (let [existing (if (fs/exists? p)
                          (vec (remove str/blank? (str/split-lines (slurp p))))
                          [])
-              lines    (conj existing (json/generate-string entry))
-              kept     (vec (take-last max-lines lines))]
-          (spit p (str (str/join "\n" kept) "\n")))))
+              lines (conj existing (json/generate-string entry))
+              kept (vec (take-last max-lines lines))
+              tmp (str p ".tmp")]
+          (spit tmp (str (str/join "\n" kept) "\n"))
+          (atomic-replace! tmp p))))
     entry))

@@ -5,20 +5,24 @@
    already stale — the newer push kills the older reviewer and takes over."
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [pr-review.flock :as flock]))
 
 (defn lock-path
   [repo-root]
   (str repo-root "/.git/pr-review.lock"))
 
 (defn read-lock
-  "Current lock record, or nil when absent or unparseable. A corrupt lock
-   reads as free: a half-written file must not wedge the loop forever."
+  "Current lock record, or nil when absent, unparseable, or missing a
+   usable :pid. A corrupt or incomplete lock reads as free: a half-written
+   file must not wedge the loop forever."
   [repo-root]
   (let [p (lock-path repo-root)]
     (when (fs/exists? p)
-      (try (json/parse-string (slurp p) true)
-           (catch Exception _ nil)))))
+      (let [parsed (try (json/parse-string (slurp p) true)
+                        (catch Exception _ nil))]
+        (when (:pid parsed)
+          parsed)))))
 
 (defn alive?
   [pid]
@@ -41,23 +45,35 @@
 
    :duplicate  — a live reviewer already holds this exact SHA. Caller exits 0.
    :superseded — a live reviewer held an older SHA; it was killed. Proceed.
-   :acquired   — the lock was free, corrupt, or held by a dead process."
+   :acquired   — the lock was free, corrupt, or held by a dead process.
+
+   The whole read-check-write runs under a shared flock on
+   `(flock/guard-path (lock-path repo-root))`, never on the lock path
+   itself: acquire! rewrites (and release! deletes) that path, so a lock
+   held on it would stop protecting anything the instant it's rewritten.
+   A guard file that acquire! never touches keeps the flock's identity
+   independent of the record's lifecycle, so two concurrent triggers in
+   the same clone cannot both observe a free or dead lock and both
+   proceed."
   [repo-root {:keys [pr sha]} {:keys [pid kill-fn]}]
-  (let [pid     (or pid (.pid (java.lang.ProcessHandle/current)))
-        kill-fn (or kill-fn default-kill!)
-        held    (read-lock repo-root)]
-    (cond
-      (and held (alive? (:pid held)) (= sha (:sha held)))
-      {:status :duplicate}
+  (flock/with-file-lock
+    (flock/guard-path (lock-path repo-root))
+    (fn []
+      (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))
+            kill-fn (or kill-fn default-kill!)
+            held (read-lock repo-root)]
+        (cond
+          (and held (alive? (:pid held)) (= sha (:sha held)))
+          {:status :duplicate}
 
-      (and held (alive? (:pid held)))
-      (do (kill-fn (:pid held))
-          (write-lock! repo-root {:pid pid :pr pr :sha sha})
-          {:status :superseded :killed-pid (:pid held)})
+          (and held (alive? (:pid held)))
+          (do (kill-fn (:pid held))
+              (write-lock! repo-root {:pid pid :pr pr :sha sha})
+              {:status :superseded :killed-pid (:pid held)})
 
-      :else
-      (do (write-lock! repo-root {:pid pid :pr pr :sha sha})
-          {:status :acquired}))))
+          :else
+          (do (write-lock! repo-root {:pid pid :pr pr :sha sha})
+              {:status :acquired}))))))
 
 (defn release!
   [repo-root]
