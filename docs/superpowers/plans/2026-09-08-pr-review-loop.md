@@ -857,7 +857,7 @@ git commit -qm "feat: reviewer lock with stale-SHA supersede"
   - `(head-sha repo-root opts)` → String or nil
   - `(open-pr repo-root branch opts)` → nil or `{:number long :isDraft boolean :baseRefName String}`
   - `(merge-base repo-root base-ref opts)` → String or nil
-  - `(diff repo-root base sha opts)` → String
+  - `(diff repo-root base sha opts)` → String on success (`""` when the range is genuinely empty), or **nil when the diff command itself failed**. The two must stay distinguishable: collapsing them let an unresolvable base ref produce a 0-byte diff that a reviewer then rubber-stamped as MERGEABLE.
 
 - [ ] **Step 1: Write the failing test**
 
