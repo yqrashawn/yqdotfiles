@@ -3,10 +3,15 @@
             [clojure.test :refer [deftest is testing]]
             [pr-review.context :as context]))
 
-(defn- tmp-repo []
-  (let [d (str (fs/create-temp-dir {:prefix "pr-review-ctx"}))]
-    (fs/create-dirs (str d "/.git"))
-    d))
+(defn- tmp-repo
+  "Returns [repo-root git-dir]. They are separate arguments to `build!` on
+   purpose: git runs in the work tree, the context is written under the
+   clone's shared git directory, and in a linked worktree those differ."
+  []
+  (let [d (str (fs/create-temp-dir {:prefix "pr-review-ctx"}))
+        g (str d "/.git")]
+    (fs/create-dirs g)
+    [d g]))
 
 (def ^:private sample-diff
   (str "diff --git a/src/a.clj b/src/a.clj\n"
@@ -26,8 +31,8 @@
 (defn- stub-sh [_args _dir] {:exit 0 :out "" :err ""})
 
 (deftest build-writes-the-full-diff-to-disk
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 370 :sha "headsha" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 370 :sha "headsha" :base-ref "main"}
                             {:merge-base-fn (constantly "basesha")
                              :diff-fn (constantly sample-diff)
                              :sh stub-sh})]
@@ -40,33 +45,33 @@
     (is (= (count sample-diff) (:diff-bytes res)))))
 
 (deftest diff-path-is-namespaced-by-sha
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 370 :sha "abc123" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 370 :sha "abc123" :base-ref "main"}
                             {:merge-base-fn (constantly "b") :diff-fn (constantly "d")
                              :sh stub-sh})]
-    (is (= (str (context/context-dir r) "/abc123.diff") (:diff-path res))
+    (is (= (str (context/context-dir g) "/abc123.diff") (:diff-path res))
         "one file per SHA so a superseded reviewer's diff is never overwritten
          under it mid-read")))
 
 (deftest changed-files-are-extracted-from-the-diff
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 1 :sha "s" :base-ref "main"}
                             {:merge-base-fn (constantly "b")
                              :diff-fn (constantly sample-diff)
                              :sh stub-sh})]
     (is (= ["src/a.clj" "test/b_test.clj"] (:changed-files res)))))
 
 (deftest missing-merge-base-falls-back-to-the-base-ref
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 1 :sha "s" :base-ref "main"}
                             {:merge-base-fn (constantly nil)
                              :diff-fn (constantly "d") :sh stub-sh})]
     (is (= "origin/main" (:base res))
         "an unfetched base must still produce a reviewable range, not nil")))
 
 (deftest empty-diff-is-reported-not-hidden
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 1 :sha "s" :base-ref "main"}
                             {:merge-base-fn (constantly "b")
                              :diff-fn (constantly "") :sh stub-sh})]
     (is (= 0 (:diff-bytes res)))
@@ -75,23 +80,23 @@
       (is (fs/exists? (:diff-path res))))))
 
 (deftest prune-keeps-the-newest-contexts
-  (let [r (tmp-repo)]
+  (let [[r g] (tmp-repo)]
     (doseq [n ["a" "b" "c" "d"]]
-      (context/build! r {:pr 1 :sha n :base-ref "main"}
+      (context/build! r g {:pr 1 :sha n :base-ref "main"}
                       {:merge-base-fn (constantly "b") :diff-fn (constantly "d")
                        :sh stub-sh})
       (Thread/sleep 5))
-    (is (= 2 (context/prune! r 2)))
-    (is (= 2 (count (fs/glob (context/context-dir r) "*.diff"))))))
+    (is (= 2 (context/prune! g 2)))
+    (is (= 2 (count (fs/glob (context/context-dir g) "*.diff"))))))
 
 (deftest build-through-real-defaults-keeps-real-diff-bytes
-  (let [r (tmp-repo)
+  (let [[r g] (tmp-repo)
         payload "diff --git a/café.clj b/café.clj\n@@ -1 +1 @@\n-(def café 1)\n+(def café 2)\n"
         responses {["git" "merge-base"] {:exit 0 :out "basesha\n" :err ""}
                    ["git" "diff"]       {:exit 0 :out payload :err ""}}
         sh (fn [args _dir]
              (get responses (vec (take 2 args)) {:exit 1 :out "" :err "unstubbed"}))
-        res (context/build! r {:pr 1 :sha "s" :base-ref "main"} {:sh sh})
+        res (context/build! r g {:pr 1 :sha "s" :base-ref "main"} {:sh sh})
         on-disk (fs/size (:diff-path res))]
     (testing "no :diff-fn or :merge-base-fn override, so build! runs through
               gh/merge-base and gh/diff's real default wiring"
@@ -105,8 +110,8 @@
            or a non-ASCII diff would under-report its own size"))))
 
 (deftest build-flags-a-failed-diff
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 1 :sha "s" :base-ref "main"}
                             {:merge-base-fn (constantly nil)
                              :diff-fn (constantly nil)
                              :sh stub-sh})]
@@ -120,8 +125,8 @@
     (is (= 0 (:diff-bytes res)))))
 
 (deftest build-does-not-flag-a-legitimately-empty-diff
-  (let [r (tmp-repo)
-        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+  (let [[r g] (tmp-repo)
+        res (context/build! r g {:pr 1 :sha "s" :base-ref "main"}
                             {:merge-base-fn (constantly "b")
                              :diff-fn (constantly "")
                              :sh stub-sh})]

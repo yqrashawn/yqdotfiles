@@ -1,9 +1,22 @@
 (ns pr-review.ledger
-  "Append-only, per-clone record of review passes.
+  "Append-only, per-clone record of review passes, and the termination rules
+   read off it.
 
-   Lives under .git/ so it survives session restarts, context compaction and
-   `claude` upgrades, needs no network, and works before a PR exists. Same
-   precedent as Claude Code's own .git/claude-trailers."
+   Lives under the clone's shared git directory so it survives session
+   restarts, context compaction and `claude` upgrades, needs no network, and
+   works before a PR exists. Same precedent as Claude Code's own
+   .git/claude-trailers.
+
+   Every function takes `git-dir` — what pr-review.gh/git-common-dir
+   resolved — never a repo root. In a linked worktree `<root>/.git` is a
+   file, so a repo-root-relative ledger is unwritable there and invisible to
+   every other worktree of the same clone.
+
+   The policy predicates are pure over an already-read `passes` collection so
+   one decision costs one file read. They used to each read the file
+   themselves, and the one-re-raise filter called a per-fingerprint helper
+   that re-slurped the whole ledger — 138 full reads for one decision at nine
+   passes and fifteen findings."
   (:require [babashka.fs :as fs]
             [cheshire.core :as json]
             [clojure.string :as str]
@@ -22,8 +35,8 @@
   500)
 
 (defn ledger-path
-  [repo-root]
-  (str repo-root "/.git/pr-review-ledger.jsonl"))
+  [git-dir]
+  (str git-dir "/pr-review-ledger.jsonl"))
 
 (defn- parse-line
   [line]
@@ -31,32 +44,42 @@
        (catch Exception _ nil)))
 
 (defn- read-all
-  [repo-root]
-  (let [p (ledger-path repo-root)]
+  [git-dir]
+  (let [p (ledger-path git-dir)]
     (if-not (fs/exists? p)
       []
       (into [] (keep parse-line) (str/split-lines (slurp p))))))
 
 (defn read-passes
   "Every recorded pass for `pr-number`, oldest first. Unparseable lines are
-   skipped: a reviewer killed mid-write must not break all later reads."
-  [repo-root pr-number]
-  (filterv #(= pr-number (:pr %)) (read-all repo-root)))
+   skipped: a reviewer killed mid-write must not break all later reads.
+
+   This is the only function here that touches the filesystem. Read once,
+   then hand the result to the pure predicates below."
+  [git-dir pr-number]
+  (filterv #(= pr-number (:pr %)) (read-all git-dir)))
 
 (defn next-pass-number
-  [repo-root pr-number]
-  (inc (count (read-passes repo-root pr-number))))
+  [passes]
+  (inc (count passes)))
 
 (defn cap-reached?
-  [repo-root pr-number]
-  (>= (count (read-passes repo-root pr-number)) max-passes))
+  [passes]
+  (>= (count passes) max-passes))
 
-(defn raise-count
-  "How many passes have reported `fingerprint` for `pr-number`.
-   The one-re-raise rule fires when this is already >= 2."
-  [repo-root pr-number fingerprint]
-  (count (filter #(contains? (set (:fingerprints %)) fingerprint)
-                 (read-passes repo-root pr-number))))
+(defn suppressed-fingerprints
+  "Fingerprints the next reviewer must not raise again: reported on two or
+   more of `passes`.
+
+   Order is first-appearance so the prompt's do-not-re-raise list is stable
+   between passes."
+  [passes]
+  (let [per-pass (mapv (comp distinct :fingerprints) passes)
+        all      (vec (apply concat per-pass))
+        freq     (frequencies all)]
+    (->> all
+         distinct
+         (filterv #(>= (get freq % 0) 2)))))
 
 (defn- atomic-replace!
   "Atomically replace `path`'s content with `tmp`'s.
@@ -81,9 +104,9 @@
    function renames over, and a lock held on a path that gets renamed away
    from under it stops protecting anything the instant the rename happens.
    See pr-review.flock's namespace docstring."
-  [repo-root entry]
+  [git-dir entry]
   (let [entry (assoc entry :ts (System/currentTimeMillis))
-        p (ledger-path repo-root)]
+        p (ledger-path git-dir)]
     (flock/with-file-lock (flock/guard-path p)
       (fn []
         (let [existing (if (fs/exists? p)

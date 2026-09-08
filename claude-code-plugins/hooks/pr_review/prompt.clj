@@ -10,15 +10,19 @@
   (str repo-root "/.claude/pr-review.md"))
 
 (defn hint-path
-  "One-shot note from agent A to the reviewer."
-  [repo-root]
-  (str repo-root "/.git/pr-review-hint"))
+  "One-shot note from agent A to the reviewer.
+
+   Under the clone's shared git directory (pr-review.gh/git-common-dir), so
+   the hint is readable from a linked worktree — where `<repo-root>/.git` is
+   a file and nothing can live under it."
+  [git-dir]
+  (str git-dir "/pr-review-hint"))
 
 (defn read-hint!
   "Read and delete the hint. A hint is scoped to one review; leaving it in
    place would silently steer every later pass on the PR."
-  [repo-root]
-  (let [p (hint-path repo-root)]
+  [git-dir]
+  (let [p (hint-path git-dir)]
     (when (fs/exists? p)
       (let [s (str/trim (slurp p))]
         (fs/delete-if-exists p)
@@ -30,10 +34,10 @@
     (str "\n## " title "\n\n" body "\n")))
 
 (defn build
-  [{:keys [core repo-root ctx pr pass draft? prior-fingerprints]}]
+  [{:keys [core repo-root git-dir ctx pr pass draft? prior-fingerprints]}]
   (let [overlay (when (fs/exists? (overlay-path repo-root))
                   (slurp (overlay-path repo-root)))
-        hint    (read-hint! repo-root)
+        hint    (read-hint! git-dir)
         first?  (= 1 pass)]
     (str
      core

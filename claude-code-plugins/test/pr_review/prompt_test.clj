@@ -4,26 +4,31 @@
             [clojure.test :refer [deftest is testing]]
             [pr-review.prompt :as prompt]))
 
-(defn- tmp-repo []
-  (let [d (str (fs/create-temp-dir {:prefix "pr-review-prompt"}))]
-    (fs/create-dirs (str d "/.git"))
-    d))
+(defn- tmp-repo
+  "Returns [repo-root git-dir]. The overlay is repo-root-relative
+   (`.claude/pr-review.md`, a tracked file); the hint is git-dir-relative, so
+   it is reachable from a linked worktree where `<repo-root>/.git` is a file."
+  []
+  (let [d (str (fs/create-temp-dir {:prefix "pr-review-prompt"}))
+        g (str d "/.git")]
+    (fs/create-dirs g)
+    [d g]))
 
 (def ^:private ctx
   {:diff-path "/r/.git/pr-review-context/abc.diff"
    :changed-files ["src/a.clj" "test/b_test.clj"]
    :base "basesha" :sha "abc" :diff-bytes 1234})
 
-(defn- base-args [repo]
-  {:core "CORE_TEXT" :repo-root repo :ctx ctx :pr 370 :pass 1
+(defn- base-args [[repo git-dir]]
+  {:core "CORE_TEXT" :repo-root repo :git-dir git-dir :ctx ctx :pr 370 :pass 1
    :draft? false :prior-fingerprints []})
 
 (deftest core-is-always-included
   (is (str/includes? (prompt/build (base-args (tmp-repo))) "CORE_TEXT")))
 
 (deftest prompt-names-the-diff-file-and-repo-root
-  (let [r (tmp-repo)
-        out (prompt/build (base-args r))]
+  (let [[r g :as repo] (tmp-repo)
+        out (prompt/build (base-args repo))]
     (is (str/includes? out (:diff-path ctx)))
     (is (str/includes? out r))
     (is (str/includes? out "src/a.clj"))
@@ -43,10 +48,10 @@
         "the reviewer must know which pass it is to apply the severity asymmetry")))
 
 (deftest overlay-is-included-when-present
-  (let [r (tmp-repo)]
+  (let [[r g :as repo] (tmp-repo)]
     (fs/create-dirs (str r "/.claude"))
     (spit (prompt/overlay-path r) "OVERLAY_TEXT")
-    (is (str/includes? (prompt/build (base-args r)) "OVERLAY_TEXT"))))
+    (is (str/includes? (prompt/build (base-args repo)) "OVERLAY_TEXT"))))
 
 (deftest missing-overlay-degrades-silently
   (let [out (prompt/build (base-args (tmp-repo)))]
@@ -55,11 +60,11 @@
         "a repo with no .claude/pr-review.md must still get a working review")))
 
 (deftest hint-is-included-and-consumed
-  (let [r (tmp-repo)]
-    (spit (prompt/hint-path r) "watch the retry path")
-    (let [out (prompt/build (base-args r))]
+  (let [[r g :as repo] (tmp-repo)]
+    (spit (prompt/hint-path g) "watch the retry path")
+    (let [out (prompt/build (base-args repo))]
       (is (str/includes? out "watch the retry path")))
-    (is (not (fs/exists? (prompt/hint-path r)))
+    (is (not (fs/exists? (prompt/hint-path g)))
         "a hint is for one review; leaving it would silently apply to every later pass")))
 
 (deftest draft-status-is-stated

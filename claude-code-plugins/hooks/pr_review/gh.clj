@@ -8,7 +8,8 @@
 
    Every function takes an opts map with an optional :sh so tests can stub the
    shell without a real repo."
-  (:require [babashka.process :as p]
+  (:require [babashka.fs :as fs]
+            [babashka.process :as p]
             [cheshire.core :as json]
             [clojure.string :as str]))
 
@@ -33,6 +34,28 @@
 (defn repo-root
   [cwd opts]
   (ok-out (run opts ["git" "rev-parse" "--show-toplevel"] cwd)))
+
+(defn git-common-dir
+  "Absolute path to the git directory shared by every worktree of this clone.
+
+   Never assume `<repo-root>/.git`. In a linked worktree that path is a
+   *file*, so anything that mkdirs it throws FileAlreadyExistsException and
+   anything that reads state under it finds none — which is why, before this
+   existed, every push from a worktree exited 1 and the cap and re-raise
+   rules never engaged there at all.
+
+   `--git-common-dir` also gives the sharing the loop wants: a PR is reviewed
+   per repository, not per worktree, so all worktrees of one clone must share
+   one ledger, one lock and one context directory or the 10-pass cap and the
+   single-reviewer lock mean nothing across them.
+
+   git prints it relative to `repo-root` in an ordinary clone (\".git\") and
+   absolute inside a worktree; both resolve correctly against `repo-root`.
+   Returns nil when git fails, and every caller falls back to
+   `<repo-root>/.git`."
+  [repo-root opts]
+  (when-let [d (ok-out (run opts ["git" "rev-parse" "--git-common-dir"] repo-root))]
+    (str (fs/normalize (fs/path repo-root d)))))
 
 (defn current-branch
   "Branch name, or nil on a detached HEAD (git prints the literal \"HEAD\")."

@@ -1,5 +1,7 @@
 (ns pr-review.gh-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [babashka.fs :as fs]
+            [babashka.process :as p]
+            [clojure.test :refer [deftest is testing]]
             [pr-review.gh :as gh]))
 
 (defn- stub
@@ -73,3 +75,55 @@
                       {:sh (fn [_ _] {:exit 0 :out "" :err ""})}))
       "a zero exit with no output is a genuinely empty diff and must still
        come back as \"\", not nil"))
+
+(deftest git-common-dir-resolves-a-relative-answer-against-the-repo-root
+  (let [calls (atom [])
+        sh (stub {["git" "rev-parse"] {:exit 0 :out ".git\n" :err ""}} calls)]
+    (is (= "/repo/.git" (gh/git-common-dir "/repo" {:sh sh}))
+        "git answers relatively in an ordinary clone, and a relative path
+         would be resolved against the hook's cwd, not the repo")
+    (is (= ["git" "rev-parse" "--git-common-dir"] (first @calls))
+        "--git-common-dir, not --git-dir: all worktrees of one clone must
+         share one ledger and one lock, and --git-dir gives each worktree its
+         own private directory")))
+
+(deftest git-common-dir-keeps-an-absolute-answer
+  (let [sh (stub {["git" "rev-parse"] {:exit 0 :out "/main/.git\n" :err ""}} (atom []))]
+    (is (= "/main/.git" (gh/git-common-dir "/wt" {:sh sh}))
+        "inside a worktree git answers with the main clone's .git; joining
+         that onto the worktree root would invent a path that does not exist")))
+
+(deftest git-common-dir-is-nil-when-git-fails
+  (is (nil? (gh/git-common-dir "/repo" {:sh (fn [_ _] {:exit 128 :out "" :err "no"})}))
+      "callers fall back to <repo-root>/.git, so a failure must be nil rather
+       than a throw out of the hook"))
+
+(deftest git-common-dir-in-a-real-worktree-points-at-the-main-clone
+  (testing "the fixture no test had: a repo root whose .git is a FILE.
+            fs/create-dirs on it throws FileAlreadyExistsException, which is
+            what made every push from a worktree exit 1"
+    (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-gh-wt"}))
+          main (str tmp "/main")
+          wt   (str tmp "/wt")
+          git! (fn [dir & args]
+                 (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
+                   (when-not (zero? exit)
+                     (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
+      (fs/create-dirs main)
+      (git! main "init" "-q")
+      (git! main "config" "user.email" "t@t.t")
+      (git! main "config" "user.name" "t")
+      (spit (str main "/f") "hi")
+      (git! main "add" "f")
+      (git! main "commit" "-qm" "init")
+      (git! main "worktree" "add" "-q" wt "-b" "feat")
+      (is (fs/regular-file? (str wt "/.git"))
+          "fixture precondition: a linked worktree's .git is a file, not a
+           directory")
+      (is (fs/directory? (gh/git-common-dir wt {}))
+          "the resolved git dir must be a real directory, or every ledger and
+           lock write under it fails")
+      (is (= (str (fs/real-path (str main "/.git")))
+             (str (fs/real-path (gh/git-common-dir wt {}))))
+          "a worktree must resolve to the main clone's .git so both share one
+           ledger, one lock and one context directory"))))

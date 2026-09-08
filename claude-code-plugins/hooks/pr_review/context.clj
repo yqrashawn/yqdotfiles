@@ -9,8 +9,11 @@
             [pr-review.gh :as gh]))
 
 (defn context-dir
-  [repo-root]
-  (str repo-root "/.git/pr-review-context"))
+  "Under the clone's shared git directory (pr-review.gh/git-common-dir), not
+   `<repo-root>/.git`: that path is a file in a linked worktree, so
+   `fs/create-dirs` on it throws and every push from a worktree died."
+  [git-dir]
+  (str git-dir "/pr-review-context"))
 
 (defn changed-files
   "Repo-relative paths touched by a unified diff, in first-appearance order.
@@ -35,9 +38,12 @@
    diff, which reports false. The file is still written (empty, in that
    case) either way, so nothing downstream ever names a missing path.
 
+   `repo-root` is where git runs; `git-dir` is where the result is written.
+   The two differ in a linked worktree and must not be conflated.
+
    opts may override :merge-base-fn and :diff-fn for testing; both default to
    the real git calls in pr-review.gh."
-  [repo-root {:keys [sha base-ref]} opts]
+  [repo-root git-dir {:keys [sha base-ref]} opts]
   (let [merge-base-fn (or (:merge-base-fn opts)
                           #(gh/merge-base repo-root base-ref opts))
         diff-fn       (or (:diff-fn opts)
@@ -46,7 +52,7 @@
         diff-result   (diff-fn base sha)
         diff-failed?  (nil? diff-result)
         diff-text     (or diff-result "")
-        dir           (context-dir repo-root)
+        dir           (context-dir git-dir)
         diff-path     (str dir "/" sha ".diff")]
     (fs/create-dirs dir)
     (spit diff-path diff-text)
@@ -59,8 +65,8 @@
 
 (defn prune!
   "Delete all but the `keep` newest .diff files. Returns how many were removed."
-  [repo-root keep]
-  (let [files (->> (fs/glob (context-dir repo-root) "*.diff")
+  [git-dir keep]
+  (let [files (->> (fs/glob (context-dir git-dir) "*.diff")
                    (sort-by #(fs/last-modified-time %))
                    reverse
                    (drop keep))]
