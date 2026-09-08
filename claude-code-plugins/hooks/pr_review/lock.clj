@@ -9,9 +9,13 @@
    contends for the same lock. A worktree-local lock would let one push per
    worktree run a reviewer concurrently, which is the thing this namespace
    exists to prevent.
-"
+
+   Nothing here may make the trigger exit anything but 0 or 2: any other code
+   makes Claude Code print `Failed with non-blocking status code:` and the
+   pass is silently lost. That is why the kill targets the superseded
+   reviewer rather than the superseded trigger — a SIGTERMed babashka exits
+   143."
   (:require [babashka.fs :as fs]
-            [babashka.process :as p]
             [cheshire.core :as json]
             [pr-review.flock :as flock]))
 
@@ -36,9 +40,29 @@
   (let [h (java.lang.ProcessHandle/of (long pid))]
     (and (.isPresent h) (.isAlive (.get h)))))
 
-(defn- default-kill!
+(defn kill-reviewers!
+  "SIGTERM the whole process subtree *below* `pid`, and not `pid` itself.
+
+   `pid` is the recorded trigger, and the reviewer is its `claude -p` child.
+   Killing the trigger — what this used to do — left that child running to
+   completion, so a supersede produced two concurrent reviewers for the two
+   to six minutes a review takes: R14 unmet. It also made the losing trigger
+   exit 143, a third exit code this module's contract forbids by name.
+
+   Killing downward instead fixes both. The reviewer dies, the loser stays
+   alive to reach its own `System/exit 0`, and it learns it lost by finding
+   the lock record no longer names it (see `superseded?`).
+
+   The descendant set is snapshotted before any destroy so a dying
+   intermediate process cannot orphan a grandchild out of the walk."
   [pid]
-  (try (p/sh ["kill" (str pid)]) (catch Exception _ nil)))
+  (try
+    (let [opt (java.lang.ProcessHandle/of (long pid))]
+      (when (.isPresent opt)
+        (let [kids (vec (iterator-seq (.iterator (.descendants (.get opt)))))]
+          (doseq [k kids] (.destroy k))
+          (count kids))))
+    (catch Exception _ nil)))
 
 (defn- write-lock!
   [git-dir {:keys [pid pr sha]}]
@@ -51,7 +75,7 @@
   "Take the reviewer lock for (`pr`, `sha`).
 
    :duplicate  — a live reviewer already holds this exact SHA. Caller exits 0.
-   :superseded — a live reviewer held an older SHA; it was killed. Proceed.
+   :superseded — a live reviewer held an older SHA; its reviewer was killed.
    :acquired   — the lock was free, corrupt, or held by a dead process.
 
    The whole read-check-write runs under a shared flock on
@@ -67,7 +91,7 @@
     (flock/guard-path (lock-path git-dir))
     (fn []
       (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))
-            kill-fn (or kill-fn default-kill!)
+            kill-fn (or kill-fn kill-reviewers!)
             held (read-lock git-dir)]
         (cond
           (and held (alive? (:pid held)) (= sha (:sha held)))
@@ -81,6 +105,24 @@
           :else
           (do (write-lock! git-dir {:pid pid :pr pr :sha sha})
               {:status :acquired}))))))
+
+(defn superseded?
+  "True when the lock record no longer names `pid` — another trigger took the
+   reviewer slot while this one was working.
+
+   This is how a loser learns it lost. `kill-reviewers!` kills the reviewer
+   child, not the trigger, so the trigger returns from a reviewer that was
+   SIGTERMed mid-answer; recording that as a pass would spend a cap slot on a
+   truncated review and wake agent A with findings for a SHA that is already
+   stale.
+
+   A missing record counts as superseded too. It can only mean this trigger
+   was superseded and the winner has since released, or that something
+   outside the loop deleted the record; in both cases the conservative move
+   is to stay quiet rather than publish a pass whose lock is gone."
+  [git-dir {:keys [pid]}]
+  (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))]
+    (not= pid (:pid (read-lock git-dir)))))
 
 (defn release!
   "Release the lock, but only when it is still held by `pid` (default this

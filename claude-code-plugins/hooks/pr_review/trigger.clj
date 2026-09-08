@@ -116,6 +116,21 @@
        " finding no changes. Fix: `git fetch origin " base-ref "`, then push"
        " again."))
 
+(defn- failed-review-message
+  "A review that produced no findings still has to wake agent A — the real
+   diagnosis is sitting unread in the reviewer's stderr — but it must say
+   plainly that no slot was spent, because none was."
+  [{:keys [repo-root pr pass]} parsed res]
+  (str "pr-review-loop — " (fs/file-name repo-root)
+       " PR #" pr ", pass " pass ": review did not complete ("
+       (:verdict parsed) ")"
+       "\n\nreviewer process exited " (:exit res) ": " (:err res)
+       (when-not (str/blank? (str (:body parsed)))
+         (str "\n\n" (:body parsed)))
+       "\n\nNo ledger row was written, so this attempt did not consume one of"
+       " the " ledger/max-passes " review slots for PR #" pr
+       ". Fix the cause and push again."))
+
 (defn- crash-message
   [{:keys [repo-root pr pass]} e]
   (str "pr-review-loop — " (fs/file-name repo-root)
@@ -154,14 +169,22 @@
             ;; contradicts the verdict line loses, here, once, so both the
             ;; headline and the ledger row carry the same reconciled verdict.
             parsed (reviewer/reconcile (reviewer/parse-output (:out res)))]
-        ;; A non-zero reviewer exit or an unparsed MALFORMED verdict means the
-        ;; real diagnosis is sitting unread in :err — surface it in the wake
-        ;; message, or the session sees only the bare word MALFORMED and never
-        ;; learns why the reviewer never ran cleanly.
-        (let [parsed (if (or (= "MALFORMED" (:verdict parsed)) (not (zero? (:exit res))))
-                       (update parsed :body str
-                               "\n\nreviewer process exited " (:exit res) ": " (:err res))
-                       parsed)]
+        (cond
+          ;; A newer push superseded this trigger and killed its reviewer
+          ;; mid-answer. Recording that truncated output would spend a slot
+          ;; and wake agent A with findings for a SHA that is already stale.
+          (lock/superseded? git-dir opts)
+          {:exit 0 :message nil}
+
+          ;; A crashed or unparsed reviewer produced no findings, so it does
+          ;; not consume a cap slot — the same ruling the unresolved-base-ref
+          ;; path already makes. Six pushes against an expired token used to
+          ;; write six MALFORMED rows and, with four real passes, exhaust the
+          ;; PR's budget permanently.
+          (or (not (zero? (:exit res))) (= "MALFORMED" (:verdict parsed)))
+          {:exit 2 :message (failed-review-message d parsed res)}
+
+          :else
           (do (ledger/append-pass!
                git-dir
                {:pr pr :sha sha :pass pass

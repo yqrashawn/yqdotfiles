@@ -260,6 +260,55 @@
          pass that never reviewed anything would let a PR reach \"cap
          reached\" without a single real review")))
 
+(deftest a-crashed-reviewer-does-not-consume-a-cap-slot
+  (testing "six pushes against an expired token wrote six MALFORMED rows and,
+            with four real passes, permanently exhausted the PR's budget. The
+            unresolved-base-ref path already refuses to record a pass that
+            reviewed nothing; the treatment must be identical"
+    (let [[r g] (tmp-repo)
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
+             :base-ref "main" :draft? false :prior-fingerprints []}
+          result (#'trigger/review! d (review-opts :exit 1 :out ""
+                                                   :err "OAuth token has expired"))]
+      (is (= 2 (:exit result)) "agent A must still be woken")
+      (is (str/includes? (:message result) "OAuth token has expired")
+          "the real diagnosis is in the reviewer's stderr and is otherwise unread")
+      (is (str/includes? (:message result) "exited 1")
+          "the exit code must be named")
+      (is (str/includes? (:message result) "did not consume")
+          "and the message must say no slot was spent, because none was")
+      (is (empty? (ledger/read-passes g 370))))))
+
+(deftest a-malformed-reply-does-not-consume-a-cap-slot
+  (let [[r g] (tmp-repo)
+        d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
+           :base-ref "main" :draft? false :prior-fingerprints []}
+        result (#'trigger/review! d (review-opts :out "I could not read the diff"))]
+    (is (= 2 (:exit result)))
+    (is (str/includes? (:message result) "MALFORMED"))
+    (is (str/includes? (:message result) "I could not read the diff"))
+    (is (empty? (ledger/read-passes g 370))
+        "a reply with no verdict produced no findings, so it buys no slot")))
+
+(deftest a-superseded-trigger-goes-quiet-and-records-nothing
+  (testing "kill-reviewers! kills the reviewer child, not the trigger, so the
+            loser returns from a reviewer that was SIGTERMed mid-answer.
+            Recording that would spend a slot and wake agent A with findings
+            for a SHA that is already stale"
+    (let [[r g] (tmp-repo)
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "old"
+             :base-ref "main" :draft? false :prior-fingerprints []}
+          ;; A newer push takes the lock while our reviewer is running.
+          steal (fn [_ _ _]
+                  (lock/acquire! g {:pr 370 :sha "new"} {:pid 9999})
+                  {:exit 143 :out "" :err "terminated"})
+          result (#'trigger/review! d (review-opts :spawn-fn steal))]
+      (is (= 0 (:exit result)) "silence, not a wake")
+      (is (nil? (:message result)))
+      (is (empty? (ledger/read-passes g 370)))
+      (is (= 9999 (:pid (lock/read-lock g)))
+          "and the loser must not have deleted the winner's lock record"))))
+
 (deftest a-duplicate-push-is-silent
   (let [[r g] (tmp-repo)
         self (.pid (java.lang.ProcessHandle/current))]
