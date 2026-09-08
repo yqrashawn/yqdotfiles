@@ -11,10 +11,15 @@
     d))
 
 (defn- opts
-  "Wire every collaborator to a stub so `decide` is exercised in isolation."
-  [repo & {:keys [branch pr]}]
+  "Wire every collaborator to a stub so `decide` is exercised in isolation.
+
+   :branch is read via `contains?`, not `(or branch \"feat/x\")`: the latter
+   cannot distinguish an explicit `:branch nil` (simulating detached HEAD)
+   from the key being omitted (the normal-branch default), so a caller
+   passing `:branch nil` would silently get \"feat/x\" back instead of nil."
+  [repo & {:keys [pr] :as kvs}]
   {:repo-root-fn (constantly repo)
-   :branch-fn    (constantly (or branch "feat/x"))
+   :branch-fn    (constantly (if (contains? kvs :branch) (:branch kvs) "feat/x"))
    :head-sha-fn  (constantly "headsha")
    :open-pr-fn   (constantly pr)})
 
@@ -27,7 +32,12 @@
 (deftest detached-head-is-silent
   (let [r (tmp-repo)
         d (trigger/decide {:cwd r} (opts r :branch nil))]
-    (is (= :silent (:action d)))))
+    (is (= :silent (:action d)))
+    (is (str/includes? (:reason d) "detached HEAD")
+        "must name detached HEAD specifically: this fixture's :open-pr-fn is
+         already nil, so deleting the detached-HEAD branch of `decide` would
+         still fall through to :silent via the no-open-PR branch, and this
+         test would not catch it without a :reason assertion")))
 
 (deftest no-open-pr-is-silent
   (let [r (tmp-repo)
@@ -94,4 +104,8 @@
       (is (str/starts-with? msg "pr-review-loop"))
       (is (str/includes? msg "PR #370"))
       (is (str/includes? msg "pass 2"))
-      (is (str/includes? msg "BODY")))))
+      (is (str/includes? msg "BODY"))
+      (is (str/includes? msg (str (fs/file-name "/r") " PR #370"))
+          "the repo identifier must appear right before the PR number — a
+           regression that dropped repo-root from the message would still
+           satisfy every assertion above it"))))

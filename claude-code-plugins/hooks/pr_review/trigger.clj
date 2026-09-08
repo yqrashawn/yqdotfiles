@@ -84,7 +84,15 @@
                                   :pr pr :pass pass :draft? draft?
                                   :prior-fingerprints prior-fingerprints})
             res    (reviewer/run! text repo-root opts)
-            parsed (reviewer/parse-output (:out res))]
+            parsed (reviewer/parse-output (:out res))
+            ;; A non-zero reviewer exit or an unparsed MALFORMED verdict means
+            ;; the real diagnosis is sitting unread in :err — surface it in
+            ;; the wake message, or the session sees only the bare word
+            ;; MALFORMED and never learns why the reviewer never ran cleanly.
+            parsed (if (or (= "MALFORMED" (:verdict parsed)) (not (zero? (:exit res))))
+                     (update parsed :body str
+                             "\n\nreviewer process exited " (:exit res) ": " (:err res))
+                     parsed)]
         (ledger/append-pass!
          repo-root
          {:pr pr :sha sha :pass pass
@@ -95,6 +103,15 @@
           :fingerprints (:fingerprints parsed)})
         (context/prune! repo-root context-keep)
         {:exit 2 :message (findings-message d parsed)})
+      ;; Any exception here (context/build!, core-prompt, ledger/append-pass!
+      ;; and context/prune! are all uncaught otherwise) must not propagate:
+      ;; -main has no try of its own around review!, and an exit code other
+      ;; than 0 or 2 is a silently lost pass, not a loud failure. Converting
+      ;; it to exit 2 wakes the session with the diagnosis instead.
+      (catch Exception e
+        {:exit 2 :message (str "pr-review-loop — " (fs/file-name repo-root)
+                               " PR #" pr ", pass " pass
+                               " crashed: " (ex-message e))})
       ;; Same `opts` acquire! was called with, not just repo-root: release!
       ;; now only deletes the record if its :pid still matches, and a test
       ;; that stubs :pid in opts to acquire! must have that same stub honoured
