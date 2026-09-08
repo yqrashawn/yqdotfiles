@@ -1589,8 +1589,14 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/reviewer`,
          (catch Exception e {:exit 127 :out "" :err (str (ex-message e))}))))
 
 (defn- parse-verdict
+  "The verdict line must start at column 0. Leading whitespace means the line
+   is quoted or indented — e.g. an echoed copy of the core prompt's own format
+   example — not the reviewer's real, final verdict. Without this anchor an
+   echoed template parses as a clean pass, which is worse than the reviewer
+   failing to run at all: it emits a positive signal for a review that never
+   happened."
   [out]
-  (when-let [[_ v] (re-find #"(?m)^\s*VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" out)]
+  (when-let [[_ v] (re-find #"(?m)^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" out)]
     v))
 
 (defn- parse-counts
@@ -1608,12 +1614,16 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/reviewer`,
 
 (defn- parse-fingerprints
   "Stable identity for a finding: file:line:category, taken from numbered
-   finding lines of the form `N. [category] path:line — text`."
+   finding lines of the form `N. [category] path:line — text`. The path
+   segment is non-greedy and anchors on the final `:<digits>` boundary (the
+   number is followed by whitespace or end of line), so a path containing a
+   space or an internal colon is still captured whole instead of truncating
+   at the first space or colon inside it."
   [out]
   (->> (str/split-lines out)
        (keep (fn [line]
                (when-let [[_ cat path ln]
-                          (re-find #"^\s*\d+\.\s*\[([a-z/-]+)\]\s+([^\s:]+):(\d+)" line)]
+                          (re-find #"^\s*\d+\.\s*\[([a-z/-]+)\]\s+(.+?):(\d+)(?=\s|$)" line)]
                  (str path ":" ln ":" cat))))
        distinct
        vec))
@@ -2056,7 +2066,12 @@ below: say whether the trigger is traced through the source or hypothesised.
 ## Output format — this is parsed, so match it exactly
 
 Begin with a verdict line, then a count block, then a single numbered list of
-every finding.
+every finding. Write your real verdict line flush left, starting at column 0
+with no leading whitespace, no quoting and no list marker. The parser only
+accepts a verdict at column 0 on purpose: an indented line reads as a quoted
+or illustrative example — including the two example lines immediately below —
+never as your actual, final verdict. If you echo any part of this prompt back,
+that echo stays indented and is not mistaken for your answer.
 
     VERDICT: MERGEABLE — N follow-ups to file
     VERDICT: NOT MERGEABLE — <shortest statement of the blocking finding>
