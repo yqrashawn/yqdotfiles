@@ -127,6 +127,54 @@
         echo 'rtk init --global --auto-patch'
         rtk init --global --auto-patch
     fi
+    # pr-review-loop: `rtk init --global --auto-patch` above re-registers rtk's
+    # own Bash PreToolUse hook. The push-directory recorder needs the wrapper in
+    # that slot instead: it delegates to rtk-rewrite.sh unchanged, then appends a
+    # $PWD recorder to `git push` / `gh pr create` commands, because the hook
+    # payload never carries the directory the command actually ran in. See
+    # .superpowers/sdd/2026-09-08-pr-review-loop/rtk-wrapper-report.md.
+    # Re-apply that swap idempotently. Deliberately not nested in the
+    # `command -v rtk` guard above: ~/.claude/settings.json is Dropbox-synced, so
+    # the entry is worth checking even on a machine that has no rtk.
+    prl_settings=~/.claude/settings.json
+    prl_wrapper=~/.claude/hooks/rtk-rewrite-wrapper.sh
+    prl_jq="$(command -v jq || true)"
+    [ -x "$prl_jq" ] || prl_jq=/etc/profiles/per-user/"$cuser"/bin/jq
+    prl_count='[.hooks.PreToolUse[]?.hooks[]?|select((.command // "")|endswith($s))]|length'
+    if [ ! -f "$prl_settings" ]; then
+        echo "WARNING: pr-review-loop hook swap skipped: $prl_settings not found" >&2
+    elif [ ! -x "$prl_wrapper" ]; then
+        echo "WARNING: pr-review-loop hook swap skipped: expected an executable hook at $prl_wrapper. rtk's own hook stays registered and push directories will NOT be recorded." >&2
+    elif [ ! -x "$prl_jq" ]; then
+        echo "WARNING: pr-review-loop hook swap skipped: no jq on PATH nor at $prl_jq" >&2
+    else
+        prl_n_rtk="$("$prl_jq" --arg s rtk-rewrite.sh "$prl_count" "$prl_settings" || echo -1)"
+        prl_n_wrap="$("$prl_jq" --arg s rtk-rewrite-wrapper.sh "$prl_count" "$prl_settings" || echo -1)"
+        if [ "$prl_n_rtk" = -1 ] || [ "$prl_n_wrap" = -1 ]; then
+            echo "WARNING: pr-review-loop hook swap skipped: could not read hooks.PreToolUse out of $prl_settings" >&2
+        elif [ "$prl_n_wrap" -gt 1 ]; then
+            echo "WARNING: pr-review-loop hook swap skipped: $prl_n_wrap rtk-rewrite-wrapper.sh entries are registered in $prl_settings, expected exactly 1. Remove the duplicates by hand; the wrapper is running more than once per Bash call." >&2
+        elif [ "$prl_n_rtk" = 0 ] && [ "$prl_n_wrap" = 0 ]; then
+            echo "WARNING: pr-review-loop hook swap found nothing to swap: expected a hooks.PreToolUse entry in $prl_settings whose command ends in rtk-rewrite.sh (rtk's, to be replaced) or rtk-rewrite-wrapper.sh (already swapped), and found neither. The hook layout changed; push directories will NOT be recorded." >&2
+        elif [ "$prl_n_rtk" = 0 ]; then
+            : # already swapped, nothing to do
+        else
+            if [ "$prl_n_wrap" = 1 ]; then
+                # wrapper still registered, so rtk spliced a duplicate entry: drop rtk's
+                prl_new="$("$prl_jq" '.hooks.PreToolUse |= ( [ .[] | .hooks |= map(select((.command // "") | endswith("rtk-rewrite.sh") | not)) ] | map(select((.hooks | length) > 0)) )' "$prl_settings" || true)"
+            else
+                # rtk took the slot back: point it at the wrapper again, in place
+                prl_new="$("$prl_jq" --arg w "$prl_wrapper" '.hooks.PreToolUse |= [ .[] | .hooks |= ( map(if (.command // "") | endswith("rtk-rewrite.sh") then .command = $w else . end) | reduce .[] as $h ([]; if ($h.command == $w and ((map(.command) | index($w)) != null)) then . else . + [$h] end) ) ]' "$prl_settings" || true)"
+            fi
+            # only write if the result really does register the wrapper
+            if [ -n "$prl_new" ] && printf '%s' "$prl_new" | "$prl_jq" -e --arg w "$prl_wrapper" 'any(.hooks.PreToolUse[]?.hooks[]?; .command == $w)' > /dev/null; then
+                printf '%s\n' "$prl_new" > "$prl_settings"
+                echo 'pr-review-loop: re-pointed the Bash PreToolUse hook at rtk-rewrite-wrapper.sh'
+            else
+                echo "WARNING: pr-review-loop hook swap FAILED: jq could not rewrite $prl_settings. rtk's own hook stays registered and push directories will NOT be recorded." >&2
+            fi
+        fi
+    fi
     if command -v ~/.asdf/shims/clojure &> /dev/null; then
         ~/.asdf/shims/clojure -Ttools install-latest :lib io.github.bhauman/clojure-mcp :as mcp                        
     fi
