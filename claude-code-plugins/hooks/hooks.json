@@ -1,0 +1,44 @@
+{
+  "description": "pr-review-loop: on agent-A push or PR creation, review in the background and wake the session with findings.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(rtk git push:*)",
+            "command": "bb",
+            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "asyncRewake": true,
+            "statusMessage": "Reviewing the pushed commits…"
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push:*)",
+            "command": "bb",
+            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "asyncRewake": true,
+            "statusMessage": "Reviewing the pushed commits…"
+          },
+          {
+            "type": "command",
+            "if": "Bash(rtk gh pr create:*)",
+            "command": "bb",
+            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "asyncRewake": true,
+            "statusMessage": "Reviewing the new PR…"
+          },
+          {
+            "type": "command",
+            "if": "Bash(gh pr create:*)",
+            "command": "bb",
+            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "asyncRewake": true,
+            "statusMessage": "Reviewing the new PR…"
+          }
+        ]
+      }
+    ]
+  }
+}
