@@ -1008,9 +1008,14 @@ Expected: PASS, `Ran 25 tests`.
 
 ```bash
 cd ~/workspace/home/claude-code-http-proxy
-bb -e '(require (quote [pr-review.gh :as gh])) (println (gh/repo-root "." {}) (gh/current-branch (gh/repo-root "." {}) {}))' \
-   --config ~/.nixpkgs/claude-code-plugins/bb.edn
+bb --config ~/.nixpkgs/claude-code-plugins/bb.edn \
+   -e '(require (quote [pr-review.gh :as gh])) (let [r (gh/repo-root "." {})] (println "root:" r "branch:" (gh/current-branch r {})))'
 ```
+
+`--config` must come **before** `-e`. Placed after, babashka silently ignores it
+— the expression then runs with no classpath and dies on the first `require`,
+which looks like a missing namespace rather than a misplaced flag.
+
 Expected: the cchp repo root and its current branch. If `gh` prompts or errors, note it — R31 in the spec flags the two-account `gh` config as untested.
 
 - [ ] **Step 6: Commit**
@@ -2357,13 +2362,13 @@ author reads that result. Do not report "tests were not run" as a finding.
 
 ```bash
 cd ~/workspace/home/claude-code-http-proxy
-bb -e '(require (quote [pr-review.prompt :as p]))
+bb --config ~/.nixpkgs/claude-code-plugins/bb.edn \
+   -e '(require (quote [pr-review.prompt :as p]))
         (println (clojure.string/includes?
                   (p/build {:core "CORE" :repo-root (System/getProperty "user.dir")
                             :ctx {:diff-path "/x" :changed-files [] :base "b" :sha "s" :diff-bytes 1}
                             :pr 1 :pass 1 :draft? false :prior-fingerprints []})
-                  "Search the keyword, not the function name"))' \
-   --config ~/.nixpkgs/claude-code-plugins/bb.edn
+                  "Search the keyword, not the function name"))'
 ```
 Expected: `true`.
 
