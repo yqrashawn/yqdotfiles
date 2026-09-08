@@ -58,6 +58,52 @@
     (is (false? (ledger/cap-reached? (ledger/read-passes g 10)))
         "the cap is per PR, not global")))
 
+(deftest reviewed-sha-is-recognised-per-pr
+  (let [g (tmp-git-dir)]
+    (ledger/append-pass! g (pass 370 "deadbeef" 1))
+    (is (true? (ledger/reviewed-sha? (ledger/read-passes g 370) "deadbeef"))
+        "a repeat push of one commit must be recognisable, or the same SHA is
+         reviewed again on every `git push --tags` and spends a cap slot each time")
+    (is (false? (ledger/reviewed-sha? (ledger/read-passes g 370) "newsha")))
+    (is (false? (ledger/reviewed-sha? (ledger/read-passes g 371) "deadbeef"))
+        "SHA identity is scoped to the PR")
+    (is (false? (ledger/reviewed-sha? (ledger/read-passes g 370) nil))
+        "an unresolvable HEAD must not match every recorded pass")))
+
+(deftest fingerprint-category-reads-after-the-last-colon
+  (is (= "style" (ledger/fingerprint-category "src/a.clj:1:style")))
+  (is (= "correctness/blocking"
+         (ledger/fingerprint-category "src/a.clj:1:correctness/blocking")))
+  (is (= "style" (ledger/fingerprint-category "src/pool:v2/file.clj:34:style"))
+      "a path may contain a colon; splitting on colons would read \"v2\" as the
+       category and silently mis-classify the finding")
+  (is (nil? (ledger/fingerprint-category "nocolons"))))
+
+(deftest only-followup-grade-categories-are-suppressible
+  (testing "the spec authorises the one-re-raise rule for follow-up grade only"
+    (is (true? (ledger/suppressible? "src/a.clj:1:correctness/followup")))
+    (is (true? (ledger/suppressible? "src/a.clj:1:docs-accuracy")))
+    (is (true? (ledger/suppressible? "src/a.clj:1:style"))))
+  (testing "a blocking or coverage finding that survived two passes is not
+            fixed; suppressing it makes the next pass report MERGEABLE with
+            the defect still in the tree"
+    (is (false? (ledger/suppressible? "src/a.clj:1:correctness/blocking")))
+    (is (false? (ledger/suppressible? "src/a.clj:1:coverage")))))
+
+(deftest suppressed-fingerprints-needs-two-raises-and-a-suppressible-category
+  (let [blocking "src/a.clj:1:correctness/blocking"
+        coverage "src/a.clj:2:coverage"
+        followup "src/a.clj:3:correctness/followup"
+        once     "src/a.clj:4:style"
+        passes [(pass 1 "a" 1 :fingerprints [blocking coverage followup])
+                (pass 1 "b" 2 :fingerprints [blocking coverage followup once])]]
+    (is (= [followup] (ledger/suppressed-fingerprints passes))
+        "a blocking finding reported on two passes must still be reported on
+         the third: filtering only on the raise count is a false-clean path,
+         not a convergence aid")
+    (is (= [] (ledger/suppressed-fingerprints [(first passes)]))
+        "one sighting is not a re-raise")))
+
 (deftest suppressed-fingerprints-counts-a-pass-once
   (let [fp "src/a.clj:9:style"
         passes [(pass 1 "a" 1 :fingerprints [fp fp])]]

@@ -134,3 +134,9 @@ is followup-grade, the verdict is MERGEABLE and the loop is over.
 
 Any finding listed under "Already reported twice — do not re-raise" stays on the
 followup list. Do not report it again.
+
+That list only ever holds follow-up, docs-accuracy and style findings. A
+[correctness/blocking] or [coverage] finding is never suppressed, however many
+passes it has survived: report it again every pass until it is actually fixed.
+Two pushes that do not close a blocking defect must not produce a MERGEABLE
+third pass.

@@ -117,6 +117,22 @@
       (is (= :cap-reached (:action d)))
       (is (str/includes? (:reason d) "10")))))
 
+(deftest an-already-reviewed-sha-is-silent
+  (testing "repeat pushes of one commit are ordinary — `git push` twice,
+            `--tags`, `--dry-run` and `--delete` all match
+            `Bash(git push:*)`. Counting rows and never consulting the :sha
+            the ledger faithfully records re-reviewed the same commit on every
+            one of them, one cap slot each"
+    (let [[r g] (tmp-repo)]
+      (ledger/append-pass! g (row 370 "headsha" 1))
+      (let [d (trigger/decide {:cwd r} (opts r g :pr (a-pr 370)))]
+        (is (= :silent (:action d)))
+        (is (str/includes? (:reason d) "headsha")
+            "the reason must name the SHA that was already reviewed"))
+      (testing "a new commit on the same PR still gets reviewed"
+        (is (= :review (:action (trigger/decide
+                                 {:cwd r} (opts r g :pr (a-pr 370) :sha "newsha")))))))))
+
 (deftest twice-raised-followup-fingerprints-are-carried-into-the-decision
   (let [[r g] (tmp-repo)
         fp "src/a.clj:1:correctness/followup"]
@@ -124,6 +140,25 @@
       (ledger/append-pass! g (row 370 (str n) n :fingerprints [fp] :verdict "MERGEABLE")))
     (is (= [fp] (:prior-fingerprints
                  (trigger/decide {:cwd r} (opts r g :pr (a-pr 370) :sha "s3")))))))
+
+(deftest a-blocking-finding-is-never-put-on-the-do-not-re-raise-list
+  (testing "the filter used to key on the raise count alone, and the prompt
+            then told the reviewer not to report those again. Two pushes that
+            do not close a blocking defect, line number unchanged: pass 3
+            reports MERGEABLE and the skill merges broken code"
+    (let [[r g] (tmp-repo)
+          blocking "src/a.clj:1:correctness/blocking"
+          coverage "src/a.clj:2:coverage"
+          followup "src/a.clj:3:correctness/followup"]
+      (doseq [n [1 2]]
+        (ledger/append-pass!
+         g (row 370 (str n) n :fingerprints [blocking coverage followup])))
+      (let [prior (:prior-fingerprints
+                   (trigger/decide {:cwd r} (opts r g :pr (a-pr 370) :sha "s3")))]
+        (is (= [followup] prior))
+        (is (not-any? #{blocking} prior)
+            "a blocking finding present after two passes has not been fixed")
+        (is (not-any? #{coverage} prior))))))
 
 (deftest decide-reads-the-ledger-once
   (testing "the one-re-raise filter used to call a per-fingerprint helper

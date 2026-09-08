@@ -64,6 +64,16 @@
                     git-dir (resolve-git-dir repo-root opts)
                     passes  (ledger/read-passes git-dir pr-num)]
                 (cond
+                  ;; Idempotence, before the cap: repeat pushes of one commit
+                  ;; are ordinary (`git push` twice, `--tags`, `--dry-run`,
+                  ;; `--delete` all match `Bash(git push:*)`), and re-reviewing
+                  ;; an already-reviewed SHA tells agent A nothing new while
+                  ;; spending a cap slot for it.
+                  (ledger/reviewed-sha? passes sha)
+                  {:action :silent
+                   :reason (str "PR #" pr-num " already has a recorded pass at "
+                                sha)}
+
                   (ledger/cap-reached? passes)
                   {:action :cap-reached
                    :repo-root repo-root :git-dir git-dir :pr pr-num

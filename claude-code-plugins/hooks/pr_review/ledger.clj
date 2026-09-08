@@ -29,6 +29,16 @@
    converging, two thirds of them defects in fixes for the previous pass."
   10)
 
+(def suppressible-categories
+  "The only finding categories the one-re-raise rule may ever silence.
+
+   The spec authorises it for follow-up grade only — \"A follow-up-grade
+   finding may be re-raised once, then it stays on the list.\" A
+   correctness/blocking or coverage finding still present after two passes
+   has not been fixed; silencing it makes the next pass report MERGEABLE with
+   the defect still in the tree, and the loop then merges broken code."
+  #{"correctness/followup" "docs-accuracy" "style"})
+
 (def ^:private max-lines
   "Ledger is trimmed to this many lines under the write lock. At ~200 bytes a
    line this bounds the file at ~100KB."
@@ -67,9 +77,40 @@
   [passes]
   (>= (count passes) max-passes))
 
+(defn reviewed-sha?
+  "True when `passes` already records a completed pass at `sha`.
+
+   Repeat pushes of one commit are ordinary: `git push` twice, `git push
+   --tags`, `--dry-run` and `--delete` all match `Bash(git push:*)`. Without
+   this the same commit is reviewed again on every one of them, spending a
+   cap slot each time and telling agent A nothing it has not already been
+   told."
+  [passes sha]
+  (boolean (and sha (some #(= sha (:sha %)) passes))))
+
+(defn fingerprint-category
+  "The category segment of a `<file>:<line>:<category>` fingerprint.
+
+   Read after the LAST colon rather than by splitting on colons: a path may
+   contain one (`src/pool:v2/file.clj:34:style`), a category never does."
+  [fingerprint]
+  (let [s (str fingerprint)]
+    (when-let [i (str/last-index-of s ":")]
+      (subs s (inc i)))))
+
+(defn suppressible?
+  "Whether the one-re-raise rule is allowed to silence this fingerprint at
+   all — see `suppressible-categories`."
+  [fingerprint]
+  (contains? suppressible-categories (fingerprint-category fingerprint)))
+
 (defn suppressed-fingerprints
   "Fingerprints the next reviewer must not raise again: reported on two or
-   more of `passes`.
+   more of `passes` AND of a suppressible category.
+
+   Both conditions are load-bearing. Without the count the rule fires on a
+   first sighting; without the category filter it fires on blocking and
+   coverage findings, which is a false-clean path, not a convergence aid.
 
    Order is first-appearance so the prompt's do-not-re-raise list is stable
    between passes."
@@ -79,7 +120,7 @@
         freq     (frequencies all)]
     (->> all
          distinct
-         (filterv #(>= (get freq % 0) 2)))))
+         (filterv #(and (>= (get freq % 0) 2) (suppressible? %))))))
 
 (defn- atomic-replace!
   "Atomically replace `path`'s content with `tmp`'s.
