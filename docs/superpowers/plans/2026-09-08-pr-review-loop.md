@@ -255,6 +255,16 @@ git add . && git commit -qm "test: version/manifest agreement"
 
 ### Task 2: Pass ledger
 
+> **Shipped code is authoritative for this task.** Two fix rounds hardened it
+> after the blocks below were written: `append-pass!` now publishes via a temp
+> file plus `ATOMIC_MOVE`, `acquire!` and `release!` run under a shared guard
+> flock from `pr-review.flock`, `release!` is a compare-and-delete on `:pid`,
+> and the test files carry six tests the blocks below do not. Read
+> `claude-code-plugins/hooks/pr_review/{flock,ledger,lock}.clj` and
+> `claude-code-plugins/test/pr_review/{ledger,lock}_test.clj` as built, and see
+> commits `07ef0aeb0`, `11e85b8dd`. Transcribing the Step 1 test block and the
+> Step 3 implementation block verbatim would produce a self-inconsistent pair.
+
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/flock.clj`
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/ledger.clj`
@@ -562,6 +572,16 @@ git commit -qm "feat: per-clone review pass ledger under .git/"
 ---
 
 ### Task 3: Reviewer lock with supersede
+
+> **Shipped code is authoritative for this task.** Two fix rounds hardened it
+> after the blocks below were written: `append-pass!` now publishes via a temp
+> file plus `ATOMIC_MOVE`, `acquire!` and `release!` run under a shared guard
+> flock from `pr-review.flock`, `release!` is a compare-and-delete on `:pid`,
+> and the test files carry six tests the blocks below do not. Read
+> `claude-code-plugins/hooks/pr_review/{flock,ledger,lock}.clj` and
+> `claude-code-plugins/test/pr_review/{ledger,lock}_test.clj` as built, and see
+> commits `07ef0aeb0`, `11e85b8dd`. Transcribing the Step 1 test block and the
+> Step 3 implementation block verbatim would produce a self-inconsistent pair.
 
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/lock.clj`
