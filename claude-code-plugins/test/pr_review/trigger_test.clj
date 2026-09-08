@@ -426,3 +426,94 @@
           (is (= ["wtsha"] (mapv :sha (ledger/read-passes (:git-dir d) 42)))
               "the pass lands in the shared ledger, visible to every worktree")
           (is (fs/exists? (str (:git-dir d) "/pr-review-context/wtsha.diff"))))))))
+
+;; ------------------------------------- the directory the command ran in
+
+(deftest a-push-from-a-worktree-reviews-that-worktrees-pr-not-the-sessions
+  (testing "the defect the first live push in a real repo found. The payload
+            `cwd` is the SESSION's directory; the push ran in a worktree the
+            command `cd`ed into. Measured on both sides: session cwd on
+            branch docs/mydeck-design with open-pr nil, the worktree on
+            fix/llm-logs-sse-deadline-and-abandoned-tabs with open PR #391.
+            `decide` resolved the repository from `cwd`, correctly-by-its-own-
+            logic found nothing, and exited 0 — so the loop was silently
+            inert for the workflow agents actually use, and a real PR went
+            unreviewed with nothing said about it"
+    (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-cd"}))
+          main (str tmp "/main")
+          wt   (str tmp "/wt-sse-deadline-abandon")
+          feat "fix/llm-logs-sse-deadline-and-abandoned-tabs"
+          git! (fn [dir & args]
+                 (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
+                   (when-not (zero? exit)
+                     (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
+      (fs/create-dirs main)
+      (git! main "init" "-q")
+      (git! main "config" "user.email" "t@t.t")
+      (git! main "config" "user.name" "t")
+      (spit (str main "/f") "hi")
+      (git! main "add" "f")
+      (git! main "commit" "-qm" "init")
+      (git! main "checkout" "-q" "-b" "docs/mydeck-design")
+      (git! main "worktree" "add" "-q" wt "-b" feat)
+
+      ;; Only the network call is stubbed. repo-root, branch, git-dir and
+      ;; head-sha all run real git against whichever directory `decide`
+      ;; resolved, which is the whole point: a stub that ignored the
+      ;; directory could not tell the two checkouts apart.
+      (let [pr-for   (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
+            command  (str "SP=" tmp "; cd \"$SP/wt-sse-deadline-abandon\""
+                          " && git push -u origin " feat " 2>&1 | tail -2"
+                          "; grep -aE 'a;b' /dev/null")
+            d        (trigger/decide {:cwd main :tool_input {:command command}}
+                                     {:open-pr-fn pr-for})]
+        (is (= :review (:action d)))
+        (is (= 391 (:pr d)) "the worktree's PR, which is the one that was pushed")
+        (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
+            "and the review runs against the worktree, not the session cwd")
+        (testing "the same payload with a command that never leaves the
+                  session directory is the measured control: no PR there"
+          (let [c (trigger/decide {:cwd main :tool_input {:command "git push"}}
+                                  {:open-pr-fn pr-for})]
+            (is (not= :review (:action c))
+                "if this were :review the fixture would be proving nothing")))))))
+
+(deftest a-push-that-finds-no-open-pr-wakes-the-session-instead-of-going-quiet
+  (testing "silence and a broken plugin are indistinguishable from agent A's
+            side — the cwd defect cost a whole live session exactly that way.
+            A command that clearly pushed must report where it looked"
+    (let [[r g] (tmp-repo)
+          d (trigger/decide {:cwd r :tool_input {:command "git push -u origin feat/x"}}
+                            (opts r g :pr nil))]
+      (is (= :no-pr (:action d)))
+      (is (str/includes? (:reason d) r) "the diagnostic names the directory it checked")
+      (is (str/includes? (:reason d) "feat/x") "and the branch it found there")
+      (let [res (#'trigger/respond d {})]
+        (is (= 2 (:exit res))
+            "exit 2 or agent A never hears it: exit 0 is silence and any other
+             code prints `Failed with non-blocking status code:`")
+        (is (str/starts-with? (:message res) "pr-review-loop")
+            "the harness wrapper is fixed and useless, so the line must
+             introduce itself")))))
+
+(deftest an-unresolvable-push-directory-says-so-in-the-diagnostic
+  (testing "when the command's directory could not be parsed the session cwd
+            was a guess, and agent A cannot tell a real `no PR` from a review
+            aimed at the wrong checkout unless the message admits it"
+    (let [[r g] (tmp-repo)
+          d (trigger/decide
+             {:cwd r :tool_input {:command "cd \"$(pwd)/wt\" && git push"}}
+             (opts r g :pr nil))]
+      (is (= :no-pr (:action d)))
+      (is (str/includes? (:reason d) "could not determine the push directory")))))
+
+(deftest a-command-with-no-trigger-verb-is-still-silent
+  (testing "the `if` rules are best-effort — C7 runs the hook anyway when it
+            cannot determine the command — so a command that never pushed
+            does reach here. Waking agent A for those turns the diagnostic
+            into noise and buries the pushes that matter"
+    (let [[r g] (tmp-repo)
+          d (trigger/decide {:cwd r :tool_input {:command "git status --short"}}
+                            (opts r g :pr nil))]
+      (is (= :silent (:action d)))
+      (is (= 0 (:exit (#'trigger/respond d {})))))))

@@ -19,7 +19,8 @@
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.prompt :as prompt]
-            [pr-review.reviewer :as reviewer]))
+            [pr-review.reviewer :as reviewer]
+            [pr-review.workdir :as workdir]))
 
 (def ^:private context-keep 5)
 
@@ -41,26 +42,66 @@
    of them used to assume `<repo-root>/.git`, which is a *file* in a linked
    worktree."
   [repo-root opts]
-  (or ((or (:git-dir-fn opts) #(gh/git-common-dir repo-root opts)))
+  (or ((or (:git-dir-fn opts) gh/git-common-dir) repo-root opts)
       (str repo-root "/.git")))
+
+(def ^:private trigger-verb-re
+  "A `git push` or `gh pr create` subcommand, bare or rtk-prefixed — rtk's
+   PreToolUse rewriter produces the second shape and hooks.json matches both.
+   Used for one thing only: telling a command that really did push from one
+   the `if` rules let through best-effort (C7 runs the hook anyway when it
+   cannot determine the command)."
+  #"(?:^|[;&|]|\s)(?:rtk\s+)?(?:git\s+push|gh\s+pr\s+create)(?![\w-])")
+
+(defn- trigger-verb?
+  [command]
+  (boolean (re-find trigger-verb-re (str command))))
+
+(defn- no-pr-decision
+  "A push that triggers nothing is indistinguishable from a broken plugin,
+   which is exactly what the cwd defect cost: the hook fired, the `if` rule
+   matched, the session directory had no open PR, and exit 0 said nothing
+   while a real PR went unreviewed. So a command that clearly pushed and
+   found no PR names the directory it checked, the branch it found there,
+   and whether it had to guess the directory at all.
+
+   No trigger verb is still genuine silence."
+  [{:keys [command dir basis branch]}]
+  (if (trigger-verb? command)
+    {:action :no-pr
+     :reason (str "no open PR for branch " branch " in " dir
+                  (when-not (= :explicit basis)
+                    (str "; could not determine the push directory from the"
+                         " command, so the session directory was used"))
+                  " — nothing was reviewed")}
+    {:action :silent :reason (str "no open PR for branch " branch)}))
 
 (defn decide
   "Pure decision from the hook input. No side effects, no spawning.
 
    Reads the ledger exactly once and hands the result to ledger's pure
-   predicates."
-  [{:keys [cwd]} opts]
-  (let [repo-root ((or (:repo-root-fn opts) #(gh/repo-root cwd opts)))]
+   predicates.
+
+   The directory comes from `tool_input.command` (pr-review.workdir), never
+   from the payload's `cwd` alone: `cwd` is the *session's* directory, and an
+   agent that `cd`s into a worktree and pushes from there is on another
+   branch of another checkout. Measured: `cwd` on `docs/mydeck-design` with
+   no open PR, the worktree the push ran in on a branch with open PR #391."
+  [{:keys [cwd tool_input]} opts]
+  (let [command             (:command tool_input)
+        {:keys [dir basis]} (workdir/resolve-dir command cwd)
+        repo-root           ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
     (if-not repo-root
-      {:action :silent :reason "not a git repo"}
-      (let [branch ((or (:branch-fn opts) #(gh/current-branch repo-root opts)))]
+      {:action :silent :reason (str "not a git repo: " dir)}
+      (let [branch ((or (:branch-fn opts) gh/current-branch) repo-root opts)]
         (if-not branch
           {:action :silent :reason "detached HEAD, no branch to match a PR"}
-          (let [pr ((or (:open-pr-fn opts) #(gh/open-pr repo-root branch opts)))]
+          (let [pr ((or (:open-pr-fn opts) gh/open-pr) repo-root branch opts)]
             (if-not pr
-              {:action :silent :reason (str "no open PR for branch " branch)}
+              (no-pr-decision {:command command :dir dir
+                               :basis basis :branch branch})
               (let [pr-num  (:number pr)
-                    sha     ((or (:head-sha-fn opts) #(gh/head-sha repo-root opts)))
+                    sha     ((or (:head-sha-fn opts) gh/head-sha) repo-root opts)
                     git-dir (resolve-git-dir repo-root opts)
                     passes  (ledger/read-passes git-dir pr-num)]
                 (cond
@@ -216,19 +257,29 @@
     (catch Exception e
       {:exit 2 :message (crash-message d e)})))
 
+(defn- respond
+  "The exit code and wake message a decision earns.
+
+   Split out of -main so the exit-code contract is testable without
+   System/exit: an action this `case` never learned falls through to the
+   default and is silently inert — which is precisely the defect class this
+   namespace keeps paying for."
+  [d opts]
+  (case (:action d)
+    :silent      {:exit 0 :message nil}
+    :cap-reached {:exit 2 :message (str "pr-review-loop — " (:reason d)
+                                        ". No further reviews will run"
+                                        " on this PR. Decide manually.")}
+    :no-pr       {:exit 2 :message (str "pr-review-loop — " (:reason d))}
+    :review      (review! d opts)
+    {:exit 0 :message nil}))
+
 (defn -main
   [& _]
   (let [input (try (json/parse-string (slurp *in*) true)
                    (catch Exception _ nil))
-        d     (decide (or input {}) {})]
-    (let [{:keys [exit message]}
-          (case (:action d)
-            :silent      {:exit 0 :message nil}
-            :cap-reached {:exit 2 :message (str "pr-review-loop — " (:reason d)
-                                                ". No further reviews will run"
-                                                " on this PR. Decide manually.")}
-            :review      (review! d {})
-            {:exit 0 :message nil})]
-      (when message
-        (binding [*out* *err*] (println message) (flush)))
-      (System/exit exit))))
+        d     (decide (or input {}) {})
+        {:keys [exit message]} (respond d {})]
+    (when message
+      (binding [*out* *err*] (println message) (flush)))
+    (System/exit exit)))
