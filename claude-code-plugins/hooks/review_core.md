@@ -29,7 +29,9 @@ with no leading whitespace, no quoting and no list marker. The parser only
 accepts a verdict at column 0 on purpose: an indented line reads as a quoted
 or illustrative example — including the two example lines immediately below —
 never as your actual, final verdict. If you echo any part of this prompt back,
-that echo stays indented and is not mistaken for your answer.
+that echo stays indented and is not mistaken for your answer. If more than one
+line does start at column 0 with `VERDICT:`, the LAST one is taken as your
+answer — so do not restate the required format flush left before reviewing.
 
     VERDICT: MERGEABLE — N follow-ups to file
     VERDICT: NOT MERGEABLE — <shortest statement of the blocking finding>

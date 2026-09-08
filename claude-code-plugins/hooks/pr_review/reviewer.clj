@@ -83,53 +83,100 @@
     (try (spawn (claude-argv) prompt repo-root)
          (catch Exception e {:exit 127 :out "" :err (str (ex-message e))}))))
 
-(defn- parse-verdict
-  "The verdict line must start at column 0. Leading whitespace means the line
-   is quoted or indented — e.g. an echoed copy of the core prompt's own format
-   example — not the reviewer's real, final verdict. Without this anchor an
-   echoed template parses as a clean pass, which is worse than the reviewer
-   failing to run at all: it emits a positive signal for a review that never
-   happened."
+(defn- strip-emphasis
+  "Remove inline markdown emphasis so one parser handles every shape a model
+   actually emits. A backticked path (`` `src/retry.clj:42` ``) is the single
+   likeliest reviewer shape, and a bolded one is next; both used to yield a
+   counted finding with no fingerprint at all, which made the one-re-raise
+   rule permanently unable to fire for it."
+  [line]
+  (str/replace line #"[`*]" ""))
+
+(defn- normalized-lines
   [out]
-  (when-let [[_ v] (re-find #"(?m)^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" out)]
-    v))
+  (mapv strip-emphasis (str/split-lines out)))
+
+(defn- parse-verdict
+  "The LAST line that starts a verdict at column 0.
+
+   Two rules, each closing a different false-clean path.
+
+   Column 0: leading whitespace means the line is quoted or indented — an
+   echoed copy of the core prompt's own format example, say — not a real
+   verdict. Without the anchor an echoed template parses as a clean pass,
+   worse than the reviewer failing to run at all because it emits a positive
+   signal for a review that never happened.
+
+   Last, not first: a reviewer that restates the required format unindented
+   before reviewing anything used to have that restatement parsed as its
+   answer. The real verdict is the one it ends on."
+  [lines]
+  (->> lines
+       (keep #(second (re-find #"^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" %)))
+       last))
 
 (defn- parse-counts
   "Read the per-category count block. \"none\" means 0 — a missing key and a
-   zero count must not be confusable, or a clean pass reads as an unparsed one."
-  [out]
+   zero count must not be confusable, or a clean pass reads as an unparsed one.
+
+   Case-insensitive over emphasis-stripped lines for the same reason
+   `parse-fingerprints` is: a bolded or capitalised count block that parses as
+   all-zero is a false clean, since `mergeable?` reads these counts as the
+   evidence that overrides the verdict line."
+  [lines]
   (into {}
         (map (fn [cat]
-               (let [re (re-pattern (str "(?m)^\\s*\\[" cat "\\]\\s+(none|\\d+)"))
-                     [_ n] (re-find re out)]
+               (let [re (re-pattern (str "(?i)^\\s*\\[" cat "\\]\\s+(none|\\d+)"))
+                     n  (->> lines (keep #(second (re-find re %))) first)]
                  [cat (cond (nil? n) 0
-                            (= "none" n) 0
+                            (= "none" (str/lower-case n)) 0
                             :else (parse-long n))])))
         categories))
 
+(def ^:private finding-line-re
+  "One finding line, in every shape a model plausibly writes it.
+
+   The invariant is `[category] <path>:<line>` — not the canonical
+   `N. [category] path:line — text` the prompt asks for. Anything narrower
+   has to enumerate shapes, and each shape it misses is a counted finding
+   with an empty fingerprint: invisible to the one-re-raise rule, so
+   re-reported on every pass straight into the 10-pass cap.
+
+   Deliberately permissive about everything that is not the invariant:
+     - any bullet, or none: `1.`  `2)`  `-`  `*`  `+`  `•`
+     - any category case: `[Correctness/Blocking]`
+     - `L`-prefixed and ranged lines: `:L42`  `:42-45`
+     - any separator after the line number: em-dash, colon, comma, EOL
+   Emphasis is stripped before this runs, so backticked and bolded paths
+   arrive bare.
+
+   The path is non-greedy and anchors on the first `:<digits>` boundary that
+   is actually followed by a separator, so a path holding a space or an
+   internal colon (`src/pool:v2/file.clj:34`) is still captured whole.
+
+   A range collapses to its first line: a reviewer that writes `42` one pass
+   and `42-45` the next must produce the same fingerprint, or the rule cannot
+   see the re-raise."
+  #"(?i)^\s*(?:\d+[.)]|[-+•])?\s*\[([a-z][a-z/-]*)\]\s+(.+?):L?(\d+)(?:-\d+)?(?=[\s:,;)\]]|$)")
+
 (defn- parse-fingerprints
-  "Stable identity for a finding: file:line:category, taken from numbered
-   finding lines of the form `N. [category] path:line — text`. The path
-   segment is non-greedy and anchors on the final `:<digits>` boundary (the
-   number is followed by whitespace or end of line), so a path containing a
-   space or an internal colon is still captured whole instead of truncating
-   at the first space or colon inside it."
-  [out]
-  (->> (str/split-lines out)
+  "Stable identity for a finding: `file:line:category`, lower-cased category."
+  [lines]
+  (->> lines
        (keep (fn [line]
-               (when-let [[_ cat path ln]
-                          (re-find #"^\s*\d+\.\s*\[([a-z/-]+)\]\s+(.+?):(\d+)(?=\s|$)" line)]
-                 (str path ":" ln ":" cat))))
+               (when-let [[_ cat path ln] (re-find finding-line-re line)]
+                 (str path ":" ln ":" (str/lower-case cat)))))
        distinct
        vec))
 
 (defn parse-output
   [out]
-  (let [out (or out "")]
-    (if-let [v (parse-verdict out)]
+  (let [out   (or out "")
+        lines (normalized-lines out)]
+    (if-let [v (parse-verdict lines)]
       {:verdict v
-       :counts (parse-counts out)
-       :fingerprints (parse-fingerprints out)
+       :counts (parse-counts lines)
+       :fingerprints (parse-fingerprints lines)
        :body out}
       {:verdict "MALFORMED"
        :counts (zipmap categories (repeat 0))
@@ -137,10 +184,63 @@
        :body (str/trim out)})))
 
 (defn mergeable?
-  "MERGEABLE means exactly: no correctness/blocking finding, and no coverage
-   finding. The verdict line is the reviewer's claim; the counts are the
-   evidence, and the evidence wins."
+  "MERGEABLE means exactly: the reviewer said so, and its own count block
+   agrees there is no [correctness/blocking] finding. The verdict line is the
+   reviewer's claim; the counts are the evidence, and the evidence wins.
+
+   No coverage clause, deliberately. The spec and the core prompt both define
+   MERGEABLE as no blocking finding and no coverage finding \"in which a test
+   certifies a safety property it does not check\" — a judgement about one
+   finding's content, which a bare `[coverage] N` count cannot express. This
+   function used to demand zero coverage findings outright, which would have
+   turned any benign coverage nit into a false NOT-clean the moment it was
+   wired in. The narrow clause stays where it can be judged: in the
+   reviewer's own verdict line, which this function still requires."
   [{:keys [verdict counts]}]
   (and (= "MERGEABLE" verdict)
-       (zero? (get counts "correctness/blocking" 0))
-       (zero? (get counts "coverage" 0))))
+       (zero? (get counts "correctness/blocking" 0))))
+
+(defn reconcile
+  "Replace the reviewer's claimed verdict with the one its own counts support,
+   and say so in the body when they disagreed.
+
+   This is `mergeable?` wired in. Before it was, `mergeable?` had zero
+   production call sites: any output whose count block contradicted its
+   verdict line — `VERDICT: MERGEABLE` over `[correctness/blocking] 1` —
+   produced a MERGEABLE headline for agent A and a self-contradictory ledger
+   row, and the skill merged on it.
+
+   MALFORMED is passed through: there is no verdict to reconcile, and the
+   count block of an unparsed review is all zeros by construction."
+  [parsed]
+  (if (= "MALFORMED" (:verdict parsed))
+    parsed
+    (let [effective (if (mergeable? parsed) "MERGEABLE" "NOT MERGEABLE")]
+      (if (= effective (:verdict parsed))
+        parsed
+        (assoc parsed
+               :verdict effective
+               :body (str (:body parsed)
+                          "\n\npr-review-loop: the reviewer's verdict line said "
+                          (:verdict parsed) " while its own count block reported "
+                          (get (:counts parsed) "correctness/blocking" 0)
+                          " [correctness/blocking] finding(s). Recorded as "
+                          effective " — the counts are the evidence."))))))
+
+(defn parse-warnings
+  "Diagnostics about the parse itself, for the wake message.
+
+   Non-zero counts with no fingerprints at all is a parse failure, not a
+   quiet review: the findings exist, but none of them carries an identity, so
+   the one-re-raise rule can never fire for any of them and every one is
+   re-reported until the cap. Nothing used to notice this."
+  [{:keys [counts fingerprints]}]
+  (let [total (reduce + 0 (vals counts))]
+    (cond-> []
+      (and (pos? total) (empty? fingerprints))
+      (conj (str "pr-review-loop parse warning: the count block reports "
+                 total " finding(s) but not one finding line carried a"
+                 " parseable `path:line`, so none of them has a fingerprint"
+                 " and the one-re-raise rule cannot track any of them."
+                 " Check the reviewer's finding-line format against"
+                 " review_core.md.")))))
