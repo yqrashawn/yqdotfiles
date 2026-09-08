@@ -47,7 +47,7 @@
      :changed-files (changed-files diff-text)
      :base          base
      :sha           sha
-     :diff-bytes    (count diff-text)}))
+     :diff-bytes    (fs/size diff-path)}))
 
 (defn prune!
   "Delete all but the `keep` newest .diff files. Returns how many were removed."

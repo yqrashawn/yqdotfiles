@@ -83,3 +83,23 @@
       (Thread/sleep 5))
     (is (= 2 (context/prune! r 2)))
     (is (= 2 (count (fs/glob (context/context-dir r) "*.diff"))))))
+
+(deftest build-through-real-defaults-keeps-real-diff-bytes
+  (let [r (tmp-repo)
+        payload "diff --git a/café.clj b/café.clj\n@@ -1 +1 @@\n-(def café 1)\n+(def café 2)\n"
+        responses {["git" "merge-base"] {:exit 0 :out "basesha\n" :err ""}
+                   ["git" "diff"]       {:exit 0 :out payload :err ""}}
+        sh (fn [args _dir]
+             (get responses (vec (take 2 args)) {:exit 1 :out "" :err "unstubbed"}))
+        res (context/build! r {:pr 1 :sha "s" :base-ref "main"} {:sh sh})
+        on-disk (fs/size (:diff-path res))]
+    (testing "no :diff-fn or :merge-base-fn override, so build! runs through
+              gh/merge-base and gh/diff's real default wiring"
+      (is (= payload (slurp (:diff-path res)))
+          "the file on disk must be byte-identical to git's raw output,
+           trailing newline included — a :diff-fn stub would have hidden
+           ok-out silently trimming it")
+      (is (= on-disk (:diff-bytes res)))
+      (is (> on-disk (count payload))
+          ":diff-bytes must count UTF-8 bytes on disk, not UTF-16 code units,
+           or a non-ASCII diff would under-report its own size"))))
