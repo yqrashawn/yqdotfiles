@@ -993,12 +993,14 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/gh`, exit 
   (ok-out (run opts ["git" "merge-base" (str "origin/" base-ref) "HEAD"] repo-root)))
 
 (defn diff
-  "Full diff of `base...sha`. Three-dot so the review sees only this branch's
+  "Full diff of `base...sha`, or nil if the diff command itself failed (e.g.
+   an unresolved base ref) — distinct from a successful diff that is merely
+   empty, which returns \"\". Three-dot so the review sees only this branch's
    work, not everything that landed on the base since it forked."
   [repo-root base sha opts]
   ;; Bypasses ok-out on purpose: the reviewer trusts these bytes unseen, so trimming git's trailing newline here would silently corrupt the one file the whole module exists to keep faithful.
   (let [{:keys [exit out]} (run opts ["git" "diff" (str base "..." sha)] repo-root)]
-    (if (zero? exit) out "")))
+    (when (zero? exit) out)))
 
 (defn open-pr
   "The open PR whose head is `branch`, or nil. Measured at ~1.3s."
@@ -1064,7 +1066,7 @@ git commit -qm "feat: injectable git/gh shell layer"
 - Consumes: `pr-review.gh/{merge-base,diff}` (head SHA is supplied by the caller, not read here)
 - Produces:
   - `(context-dir repo-root)` → String, `<repo-root>/.git/pr-review-context`
-  - `(build! repo-root {:pr long :sha String :base-ref String} opts)` → `{:diff-path String :changed-files [String] :base String :sha String :diff-bytes long}`
+  - `(build! repo-root {:pr long :sha String :base-ref String} opts)` → `{:diff-path String :changed-files [String] :base String :sha String :diff-bytes long :diff-failed? boolean}` — `:diff-failed?` is true only when the diff command itself failed (e.g. an unresolved base ref), never for a genuinely empty diff
   - `(prune! repo-root keep)` → long, number of files deleted
 
 - [ ] **Step 1: Write the failing test**
@@ -1203,6 +1205,11 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/context`, 
   "Write the true diff for this push to `<context-dir>/<sha>.diff` and return
    the paths and metadata the prompt will reference.
 
+   :diff-failed? is true when the diff command itself could not be produced
+   (e.g. an unresolved base ref) — never conflated with a genuinely empty
+   diff, which reports false. The file is still written (empty, in that
+   case) either way, so nothing downstream ever names a missing path.
+
    opts may override :merge-base-fn and :diff-fn for testing; both default to
    the real git calls in pr-review.gh."
   [repo-root {:keys [sha base-ref]} opts]
@@ -1211,7 +1218,9 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/context`, 
         diff-fn       (or (:diff-fn opts)
                           #(gh/diff repo-root %1 %2 opts))
         base          (or (merge-base-fn) (str "origin/" base-ref))
-        diff-text     (or (diff-fn base sha) "")
+        diff-result   (diff-fn base sha)
+        diff-failed?  (nil? diff-result)
+        diff-text     (or diff-result "")
         dir           (context-dir repo-root)
         diff-path     (str dir "/" sha ".diff")]
     (fs/create-dirs dir)
@@ -1220,7 +1229,8 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/context`, 
      :changed-files (changed-files diff-text)
      :base          base
      :sha           sha
-     :diff-bytes    (fs/size diff-path)}))
+     :diff-bytes    (fs/size diff-path)
+     :diff-failed?  diff-failed?}))
 
 (defn prune!
   "Delete all but the `keep` newest .diff files. Returns how many were removed."
@@ -1894,36 +1904,56 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
        "\n\nNext: use the pr-review-loop skill. Verify each"
        " [correctness/blocking] finding against the source before fixing it."))
 
+(defn- unresolved-base-message
+  "Names the unresolved ref and the exact fix, so agent A does not have to
+   guess why a branch with a real diff came back with nothing to say."
+  [{:keys [repo-root pr pass base-ref]}]
+  (str "pr-review-loop — " (fs/file-name repo-root)
+       " PR #" pr ", pass " pass
+       ": could not diff against base ref \"" base-ref "\" — this clone likely"
+       " never fetched it, so the diff command itself failed rather than"
+       " finding no changes. Fix: `git fetch origin " base-ref "`, then push"
+       " again."))
+
 (defn- review!
   [{:keys [repo-root pr pass sha base-ref draft? prior-fingerprints] :as d} opts]
   (case (:status (lock/acquire! repo-root {:pr pr :sha sha} opts))
     :duplicate {:exit 0 :message nil}
     (try
-      (let [ctx    (context/build! repo-root {:pr pr :sha sha :base-ref base-ref} opts)
-            core   (core-prompt)
-            text   (prompt/build {:core core :repo-root repo-root :ctx ctx
-                                  :pr pr :pass pass :draft? draft?
-                                  :prior-fingerprints prior-fingerprints})
-            res    (reviewer/run! text repo-root opts)
-            parsed (reviewer/parse-output (:out res))
-            ;; A non-zero reviewer exit or an unparsed MALFORMED verdict means
-            ;; the real diagnosis is sitting unread in :err — surface it in
-            ;; the wake message, or the session sees only the bare word
-            ;; MALFORMED and never learns why the reviewer never ran cleanly.
-            parsed (if (or (= "MALFORMED" (:verdict parsed)) (not (zero? (:exit res))))
-                     (update parsed :body str
-                             "\n\nreviewer process exited " (:exit res) ": " (:err res))
-                     parsed)]
-        (ledger/append-pass!
-         repo-root
-         {:pr pr :sha sha :pass pass
-          :verdict (:verdict parsed)
-          :blocking (get (:counts parsed) "correctness/blocking" 0)
-          :followup (get (:counts parsed) "correctness/followup" 0)
-          :coverage (get (:counts parsed) "coverage" 0)
-          :fingerprints (:fingerprints parsed)})
-        (context/prune! repo-root context-keep)
-        {:exit 2 :message (findings-message d parsed)})
+      (let [ctx (context/build! repo-root {:pr pr :sha sha :base-ref base-ref} opts)]
+        (if (:diff-failed? ctx)
+          ;; The diff command itself failed — almost always an unresolved
+          ;; base ref. A 0-byte diff here looks exactly like a real empty
+          ;; one, so spawning the reviewer would have it correctly report
+          ;; "nothing to review" and the loop would record a false
+          ;; MERGEABLE. Refuse to review, and refuse to spend a ledger slot
+          ;; on a pass that reviewed nothing — the PR would still owe a real
+          ;; review even after the cap.
+          {:exit 2 :message (unresolved-base-message d)}
+          (let [core   (core-prompt)
+                text   (prompt/build {:core core :repo-root repo-root :ctx ctx
+                                      :pr pr :pass pass :draft? draft?
+                                      :prior-fingerprints prior-fingerprints})
+                res    (reviewer/run! text repo-root opts)
+                parsed (reviewer/parse-output (:out res))
+                ;; A non-zero reviewer exit or an unparsed MALFORMED verdict means
+                ;; the real diagnosis is sitting unread in :err — surface it in
+                ;; the wake message, or the session sees only the bare word
+                ;; MALFORMED and never learns why the reviewer never ran cleanly.
+                parsed (if (or (= "MALFORMED" (:verdict parsed)) (not (zero? (:exit res))))
+                         (update parsed :body str
+                                 "\n\nreviewer process exited " (:exit res) ": " (:err res))
+                         parsed)]
+            (ledger/append-pass!
+             repo-root
+             {:pr pr :sha sha :pass pass
+              :verdict (:verdict parsed)
+              :blocking (get (:counts parsed) "correctness/blocking" 0)
+              :followup (get (:counts parsed) "correctness/followup" 0)
+              :coverage (get (:counts parsed) "coverage" 0)
+              :fingerprints (:fingerprints parsed)})
+            (context/prune! repo-root context-keep)
+            {:exit 2 :message (findings-message d parsed)})))
       ;; Any exception here (context/build!, core-prompt, ledger/append-pass!
       ;; and context/prune! are all uncaught otherwise) must not propagate:
       ;; -main has no try of its own around review!, and an exit code other
