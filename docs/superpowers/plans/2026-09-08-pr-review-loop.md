@@ -1252,6 +1252,17 @@ git commit -qm "feat: precompute untruncated diff context for the reviewer"
 
 ### Task 6: Prompt assembly
 
+> **Shipped code is authoritative for this task.** A fix round hardened it after
+> the blocks below were written: `parse-verdict` now anchors at column 0 so an
+> echoed, indented copy of the prompt's own format example can no longer parse as
+> a clean pass (it previously yielded `MERGEABLE` with all-zero counts from a
+> reply containing no review at all), and `parse-fingerprints` now captures paths
+> containing spaces or colons whole. The shipped test files carry four assertions
+> the blocks below lack. Read
+> `claude-code-plugins/hooks/pr_review/{prompt,reviewer}.clj` and
+> `claude-code-plugins/test/pr_review/{prompt,reviewer}_test.clj` as built, and
+> see commit `f024dcf91`.
+
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/prompt.clj`
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/prompt_test.clj`
@@ -1448,6 +1459,17 @@ git commit -qm "feat: reviewer prompt assembly with per-repo overlay and one-sho
 ---
 
 ### Task 7: Reviewer spawn and output parsing
+
+> **Shipped code is authoritative for this task.** A fix round hardened it after
+> the blocks below were written: `parse-verdict` now anchors at column 0 so an
+> echoed, indented copy of the prompt's own format example can no longer parse as
+> a clean pass (it previously yielded `MERGEABLE` with all-zero counts from a
+> reply containing no review at all), and `parse-fingerprints` now captures paths
+> containing spaces or colons whole. The shipped test files carry four assertions
+> the blocks below lack. Read
+> `claude-code-plugins/hooks/pr_review/{prompt,reviewer}.clj` and
+> `claude-code-plugins/test/pr_review/{prompt,reviewer}_test.clj` as built, and
+> see commit `f024dcf91`.
 
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/reviewer.clj`
