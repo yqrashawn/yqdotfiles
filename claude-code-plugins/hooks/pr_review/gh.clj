@@ -49,12 +49,14 @@
   (ok-out (run opts ["git" "merge-base" (str "origin/" base-ref) "HEAD"] repo-root)))
 
 (defn diff
-  "Full diff of `base...sha`. Three-dot so the review sees only this branch's
+  "Full diff of `base...sha`, or nil if the diff command itself failed (e.g.
+   an unresolved base ref) — distinct from a successful diff that is merely
+   empty, which returns \"\". Three-dot so the review sees only this branch's
    work, not everything that landed on the base since it forked."
   [repo-root base sha opts]
   ;; Bypasses ok-out on purpose: the reviewer trusts these bytes unseen, so trimming git's trailing newline here would silently corrupt the one file the whole module exists to keep faithful.
   (let [{:keys [exit out]} (run opts ["git" "diff" (str base "..." sha)] repo-root)]
-    (if (zero? exit) out "")))
+    (when (zero? exit) out)))
 
 (defn open-pr
   "The open PR whose head is `branch`, or nil. Measured at ~1.3s."

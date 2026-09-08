@@ -30,6 +30,11 @@
   "Write the true diff for this push to `<context-dir>/<sha>.diff` and return
    the paths and metadata the prompt will reference.
 
+   :diff-failed? is true when the diff command itself could not be produced
+   (e.g. an unresolved base ref) — never conflated with a genuinely empty
+   diff, which reports false. The file is still written (empty, in that
+   case) either way, so nothing downstream ever names a missing path.
+
    opts may override :merge-base-fn and :diff-fn for testing; both default to
    the real git calls in pr-review.gh."
   [repo-root {:keys [sha base-ref]} opts]
@@ -38,7 +43,9 @@
         diff-fn       (or (:diff-fn opts)
                           #(gh/diff repo-root %1 %2 opts))
         base          (or (merge-base-fn) (str "origin/" base-ref))
-        diff-text     (or (diff-fn base sha) "")
+        diff-result   (diff-fn base sha)
+        diff-failed?  (nil? diff-result)
+        diff-text     (or diff-result "")
         dir           (context-dir repo-root)
         diff-path     (str dir "/" sha ".diff")]
     (fs/create-dirs dir)
@@ -47,7 +54,8 @@
      :changed-files (changed-files diff-text)
      :base          base
      :sha           sha
-     :diff-bytes    (fs/size diff-path)}))
+     :diff-bytes    (fs/size diff-path)
+     :diff-failed?  diff-failed?}))
 
 (defn prune!
   "Delete all but the `keep` newest .diff files. Returns how many were removed."

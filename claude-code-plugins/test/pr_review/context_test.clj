@@ -103,3 +103,28 @@
       (is (> on-disk (count payload))
           ":diff-bytes must count UTF-8 bytes on disk, not UTF-16 code units,
            or a non-ASCII diff would under-report its own size"))))
+
+(deftest build-flags-a-failed-diff
+  (let [r (tmp-repo)
+        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+                            {:merge-base-fn (constantly nil)
+                             :diff-fn (constantly nil)
+                             :sh stub-sh})]
+    (is (true? (:diff-failed? res))
+        "a nil from diff-fn means the diff command itself failed — an
+         unresolved base ref, most often — and must be flagged, not
+         silently written as an empty file that reads as a clean pass")
+    (is (fs/exists? (:diff-path res))
+        "the file is still written even on failure, so nothing downstream
+         ever names a missing path")
+    (is (= 0 (:diff-bytes res)))))
+
+(deftest build-does-not-flag-a-legitimately-empty-diff
+  (let [r (tmp-repo)
+        res (context/build! r {:pr 1 :sha "s" :base-ref "main"}
+                            {:merge-base-fn (constantly "b")
+                             :diff-fn (constantly "")
+                             :sh stub-sh})]
+    (is (false? (:diff-failed? res))
+        "a real empty diff (exit 0, no output) is not a failure — flagging
+         it too would make the flag meaningless")))

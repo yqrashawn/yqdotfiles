@@ -109,3 +109,24 @@
           "the repo identifier must appear right before the PR number — a
            regression that dropped repo-root from the message would still
            satisfy every assertion above it"))))
+
+(deftest unresolved-base-ref-skips-the-reviewer-and-the-ledger
+  (let [r (tmp-repo)
+        d {:repo-root r :pr 370 :pass 1 :sha "headsha" :base-ref "main"
+           :draft? false :prior-fingerprints []}
+        ;; :spawn-fn is a safety net, not the point of the test: if a
+        ;; regression ever let review! reach the reviewer on this path, this
+        ;; stub keeps the test from shelling out to a real `claude -p`.
+        opts {:merge-base-fn (constantly nil)
+              :diff-fn (constantly nil)
+              :spawn-fn (fn [_ _ _] {:exit 0 :out "" :err ""})}
+        result (#'trigger/review! d opts)]
+    (is (= 2 (:exit result)))
+    (is (str/includes? (:message result) "main")
+        "the diagnostic must name the unresolved base ref")
+    (is (str/includes? (:message result) "git fetch origin main")
+        "the diagnostic must give the concrete command that fixes it")
+    (is (empty? (ledger/read-passes r 370))
+        "no findings were produced; spending one of the ten cap slots on a
+         pass that never reviewed anything would let a PR reach \"cap
+         reached\" without a single real review")))

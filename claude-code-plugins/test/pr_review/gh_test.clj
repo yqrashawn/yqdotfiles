@@ -62,3 +62,14 @@
     (is (= "DIFFTEXT" (gh/diff "/repo" "base1" "head1" {:sh sh})))
     (is (= ["git" "diff" "base1...head1"] (first @calls))
         "three-dot compares against the merge base, which is what a review wants")))
+
+(deftest diff-distinguishes-a-failure-from-a-real-empty-diff
+  (is (nil? (gh/diff "/repo" "origin/main" "headsha"
+                      {:sh (fn [_ _] {:exit 1 :out ""
+                                      :err "fatal: bad revision 'origin/main'"})}))
+      "a non-zero exit — e.g. an unresolved base ref — must come back as nil,
+       never as \"\", or a failed diff looks exactly like a real empty one")
+  (is (= "" (gh/diff "/repo" "origin/main" "headsha"
+                      {:sh (fn [_ _] {:exit 0 :out "" :err ""})}))
+      "a zero exit with no output is a genuinely empty diff and must still
+       come back as \"\", not nil"))
