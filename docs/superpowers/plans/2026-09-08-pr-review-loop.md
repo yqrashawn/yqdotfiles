@@ -353,7 +353,10 @@ git add . && git commit -qm "test: version/manifest agreement"
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 2 tests` (only the version tests) — `pr-review.ledger` does not exist so the namespace is filtered out.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/ledger`, exit 1. The
+selector picks the test file up because it exists, then `(apply require present)`
+throws on the missing implementation namespace. That crash — not a reduced test
+count — is the correct pre-implementation failure.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -562,7 +565,7 @@ git commit -qm "feat: per-clone review pass ledger under .git/"
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 9 tests` — the lock namespace is missing and filtered out.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/lock`, exit 1.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -746,7 +749,7 @@ git commit -qm "feat: reviewer lock with stale-SHA supersede"
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 17 tests` — `pr-review.gh` missing.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/gh`, exit 1.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -956,7 +959,7 @@ git commit -qm "feat: injectable git/gh shell layer"
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 25 tests`.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/context`, exit 1.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -1143,7 +1146,7 @@ git commit -qm "feat: precompute untruncated diff context for the reviewer"
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 31 tests`.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/prompt`, exit 1.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -1339,7 +1342,7 @@ git commit -qm "feat: reviewer prompt assembly with per-repo overlay and one-sho
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 41 tests`.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/reviewer`, exit 1.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -1572,7 +1575,7 @@ git commit -qm "feat: read-only reviewer spawn and output parsing"
 ```bash
 cd ~/.nixpkgs/claude-code-plugins && bb test
 ```
-Expected: `Ran 48 tests`.
+Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, exit 1.
 
 - [ ] **Step 3: Write the implementation**
 
