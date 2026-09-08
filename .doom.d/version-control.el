@@ -8,7 +8,13 @@
 (after! git-commit
   (setq! git-commit-major-mode 'markdown-mode
          git-commit-summary-max-length 75
-         git-commit-fill-column 75))
+         git-commit-fill-column 75)
+  ;; git-commit-major-mode is markdown-mode, which drags in markdownlint;
+  ;; a commit message is not a markdown document.
+  (add-hook! 'git-commit-setup-hook
+    (defun +git-commit-disable-flycheck-h ()
+      (when (bound-and-true-p flycheck-mode)
+        (flycheck-mode -1)))))
 
 (after! magit
   (setq!
