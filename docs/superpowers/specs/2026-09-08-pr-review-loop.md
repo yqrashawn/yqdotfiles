@@ -1,7 +1,7 @@
 # pr-review-loop — Design Spec
 
 **Date:** 2026-09-08
-**Status:** accepted, not yet implemented
+**Status:** implemented 2026-09-08
 **Plan:** [../plans/2026-09-08-pr-review-loop.md](../plans/2026-09-08-pr-review-loop.md)
 
 ## Problem
