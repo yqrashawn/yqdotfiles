@@ -2562,14 +2562,19 @@ git commit -qm "feat: read-only reviewer spawn and output parsing"
 
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/trigger.clj`
+- Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/workdir.clj`
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/hooks.json`
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/trigger_test.clj`
+- Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/workdir_test.clj`
 
 **Interfaces:**
 - Consumes: everything from Tasks 2–7
 - Produces:
-  - `(decide input opts)` → `{:action :silent|:review|:cap-reached :reason String …}` — pure decision, no side effects. Reads the ledger exactly **once** and hands the result to `ledger`'s pure predicates; a `:review` decision carries `:git-dir`, the resolved shared git directory. `opts` honours `:git-dir-fn`
+  - `(workdir/resolve-dir command fallback)` → `{:dir String :basis :explicit|:fallback|:ambiguous}` — which directory the command actually ran in. Pure string analysis; the only IO is the existence and repository checks that reject a resolved directory nothing could have pushed from. `:ambiguous` (command substitution, a variable the command never assigned, a glob, a leading `~`) and `:fallback` (the directory does not exist, or is not inside a repository) both hand back `fallback` — unguessed, because reviewing the wrong repository is worse than staying silent. `$VAR` is expanded from the command's own `VAR=value` assignments and **never** from this process's environment
+  - `(decide input opts)` → `{:action :silent|:review|:cap-reached|:no-pr :reason String …}` — pure decision, no side effects. Reads the ledger exactly **once** and hands the result to `ledger`'s pure predicates; a `:review` decision carries `:git-dir`, the resolved shared git directory. Takes the **whole** hook input: the directory comes from `tool_input.command` via `workdir`, not from the payload's `cwd`, which is the *session's* directory and names another branch of another checkout whenever the command `cd`ed first. Every injected collaborator (`:repo-root-fn` `:branch-fn` `:open-pr-fn` `:head-sha-fn` `:git-dir-fn`) is now called **with** its arguments, so a stub can tell two checkouts apart
+  - `:no-pr` is the anti-silence action: a command that clearly contains a trigger verb (`git push` / `gh pr create`, bare or rtk-prefixed) and finds no open PR exits 2 naming the directory checked, the branch found there, and whether the directory had to be guessed. A push that triggers nothing is indistinguishable from a broken plugin. No trigger verb is still genuine silence
   - `(-main & args)` → reads hook JSON on stdin, exits 0 or 2
+  - `respond` maps a decision to `{:exit :message}`. Split out of `-main` so the exit-code contract is testable without `System/exit`: an action the `case` never learned falls through to the default and is silently inert, which is the defect class this namespace keeps paying for
   - `review!` returns an `:exit` of 0 or 2 on **every** branch, `lock/acquire!`
     included. It used to be evaluated in the `case` head, outside the try, so a
     worktree made babashka exit 1 on every push; `release!` in the `finally` is
@@ -3008,6 +3013,97 @@ git commit -qm "feat: read-only reviewer spawn and output parsing"
           (is (= ["wtsha"] (mapv :sha (ledger/read-passes (:git-dir d) 42)))
               "the pass lands in the shared ledger, visible to every worktree")
           (is (fs/exists? (str (:git-dir d) "/pr-review-context/wtsha.diff"))))))))
+
+;; ------------------------------------- the directory the command ran in
+
+(deftest a-push-from-a-worktree-reviews-that-worktrees-pr-not-the-sessions
+  (testing "the defect the first live push in a real repo found. The payload
+            `cwd` is the SESSION's directory; the push ran in a worktree the
+            command `cd`ed into. Measured on both sides: session cwd on
+            branch docs/mydeck-design with open-pr nil, the worktree on
+            fix/llm-logs-sse-deadline-and-abandoned-tabs with open PR #391.
+            `decide` resolved the repository from `cwd`, correctly-by-its-own-
+            logic found nothing, and exited 0 — so the loop was silently
+            inert for the workflow agents actually use, and a real PR went
+            unreviewed with nothing said about it"
+    (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-cd"}))
+          main (str tmp "/main")
+          wt   (str tmp "/wt-sse-deadline-abandon")
+          feat "fix/llm-logs-sse-deadline-and-abandoned-tabs"
+          git! (fn [dir & args]
+                 (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
+                   (when-not (zero? exit)
+                     (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
+      (fs/create-dirs main)
+      (git! main "init" "-q")
+      (git! main "config" "user.email" "t@t.t")
+      (git! main "config" "user.name" "t")
+      (spit (str main "/f") "hi")
+      (git! main "add" "f")
+      (git! main "commit" "-qm" "init")
+      (git! main "checkout" "-q" "-b" "docs/mydeck-design")
+      (git! main "worktree" "add" "-q" wt "-b" feat)
+
+      ;; Only the network call is stubbed. repo-root, branch, git-dir and
+      ;; head-sha all run real git against whichever directory `decide`
+      ;; resolved, which is the whole point: a stub that ignored the
+      ;; directory could not tell the two checkouts apart.
+      (let [pr-for   (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
+            command  (str "SP=" tmp "; cd \"$SP/wt-sse-deadline-abandon\""
+                          " && git push -u origin " feat " 2>&1 | tail -2"
+                          "; grep -aE 'a;b' /dev/null")
+            d        (trigger/decide {:cwd main :tool_input {:command command}}
+                                     {:open-pr-fn pr-for})]
+        (is (= :review (:action d)))
+        (is (= 391 (:pr d)) "the worktree's PR, which is the one that was pushed")
+        (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
+            "and the review runs against the worktree, not the session cwd")
+        (testing "the same payload with a command that never leaves the
+                  session directory is the measured control: no PR there"
+          (let [c (trigger/decide {:cwd main :tool_input {:command "git push"}}
+                                  {:open-pr-fn pr-for})]
+            (is (not= :review (:action c))
+                "if this were :review the fixture would be proving nothing")))))))
+
+(deftest a-push-that-finds-no-open-pr-wakes-the-session-instead-of-going-quiet
+  (testing "silence and a broken plugin are indistinguishable from agent A's
+            side — the cwd defect cost a whole live session exactly that way.
+            A command that clearly pushed must report where it looked"
+    (let [[r g] (tmp-repo)
+          d (trigger/decide {:cwd r :tool_input {:command "git push -u origin feat/x"}}
+                            (opts r g :pr nil))]
+      (is (= :no-pr (:action d)))
+      (is (str/includes? (:reason d) r) "the diagnostic names the directory it checked")
+      (is (str/includes? (:reason d) "feat/x") "and the branch it found there")
+      (let [res (#'trigger/respond d {})]
+        (is (= 2 (:exit res))
+            "exit 2 or agent A never hears it: exit 0 is silence and any other
+             code prints `Failed with non-blocking status code:`")
+        (is (str/starts-with? (:message res) "pr-review-loop")
+            "the harness wrapper is fixed and useless, so the line must
+             introduce itself")))))
+
+(deftest an-unresolvable-push-directory-says-so-in-the-diagnostic
+  (testing "when the command's directory could not be parsed the session cwd
+            was a guess, and agent A cannot tell a real `no PR` from a review
+            aimed at the wrong checkout unless the message admits it"
+    (let [[r g] (tmp-repo)
+          d (trigger/decide
+             {:cwd r :tool_input {:command "cd \"$(pwd)/wt\" && git push"}}
+             (opts r g :pr nil))]
+      (is (= :no-pr (:action d)))
+      (is (str/includes? (:reason d) "could not determine the push directory")))))
+
+(deftest a-command-with-no-trigger-verb-is-still-silent
+  (testing "the `if` rules are best-effort — C7 runs the hook anyway when it
+            cannot determine the command — so a command that never pushed
+            does reach here. Waking agent A for those turns the diagnostic
+            into noise and buries the pushes that matter"
+    (let [[r g] (tmp-repo)
+          d (trigger/decide {:cwd r :tool_input {:command "git status --short"}}
+                            (opts r g :pr nil))]
+      (is (= :silent (:action d)))
+      (is (= 0 (:exit (#'trigger/respond d {})))))))
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
@@ -3043,7 +3139,8 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.prompt :as prompt]
-            [pr-review.reviewer :as reviewer]))
+            [pr-review.reviewer :as reviewer]
+            [pr-review.workdir :as workdir]))
 
 (def ^:private context-keep 5)
 
@@ -3065,26 +3162,66 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
    of them used to assume `<repo-root>/.git`, which is a *file* in a linked
    worktree."
   [repo-root opts]
-  (or ((or (:git-dir-fn opts) #(gh/git-common-dir repo-root opts)))
+  (or ((or (:git-dir-fn opts) gh/git-common-dir) repo-root opts)
       (str repo-root "/.git")))
+
+(def ^:private trigger-verb-re
+  "A `git push` or `gh pr create` subcommand, bare or rtk-prefixed — rtk's
+   PreToolUse rewriter produces the second shape and hooks.json matches both.
+   Used for one thing only: telling a command that really did push from one
+   the `if` rules let through best-effort (C7 runs the hook anyway when it
+   cannot determine the command)."
+  #"(?:^|[;&|]|\s)(?:rtk\s+)?(?:git\s+push|gh\s+pr\s+create)(?![\w-])")
+
+(defn- trigger-verb?
+  [command]
+  (boolean (re-find trigger-verb-re (str command))))
+
+(defn- no-pr-decision
+  "A push that triggers nothing is indistinguishable from a broken plugin,
+   which is exactly what the cwd defect cost: the hook fired, the `if` rule
+   matched, the session directory had no open PR, and exit 0 said nothing
+   while a real PR went unreviewed. So a command that clearly pushed and
+   found no PR names the directory it checked, the branch it found there,
+   and whether it had to guess the directory at all.
+
+   No trigger verb is still genuine silence."
+  [{:keys [command dir basis branch]}]
+  (if (trigger-verb? command)
+    {:action :no-pr
+     :reason (str "no open PR for branch " branch " in " dir
+                  (when-not (= :explicit basis)
+                    (str "; could not determine the push directory from the"
+                         " command, so the session directory was used"))
+                  " — nothing was reviewed")}
+    {:action :silent :reason (str "no open PR for branch " branch)}))
 
 (defn decide
   "Pure decision from the hook input. No side effects, no spawning.
 
    Reads the ledger exactly once and hands the result to ledger's pure
-   predicates."
-  [{:keys [cwd]} opts]
-  (let [repo-root ((or (:repo-root-fn opts) #(gh/repo-root cwd opts)))]
+   predicates.
+
+   The directory comes from `tool_input.command` (pr-review.workdir), never
+   from the payload's `cwd` alone: `cwd` is the *session's* directory, and an
+   agent that `cd`s into a worktree and pushes from there is on another
+   branch of another checkout. Measured: `cwd` on `docs/mydeck-design` with
+   no open PR, the worktree the push ran in on a branch with open PR #391."
+  [{:keys [cwd tool_input]} opts]
+  (let [command             (:command tool_input)
+        {:keys [dir basis]} (workdir/resolve-dir command cwd)
+        repo-root           ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
     (if-not repo-root
-      {:action :silent :reason "not a git repo"}
-      (let [branch ((or (:branch-fn opts) #(gh/current-branch repo-root opts)))]
+      {:action :silent :reason (str "not a git repo: " dir)}
+      (let [branch ((or (:branch-fn opts) gh/current-branch) repo-root opts)]
         (if-not branch
           {:action :silent :reason "detached HEAD, no branch to match a PR"}
-          (let [pr ((or (:open-pr-fn opts) #(gh/open-pr repo-root branch opts)))]
+          (let [pr ((or (:open-pr-fn opts) gh/open-pr) repo-root branch opts)]
             (if-not pr
-              {:action :silent :reason (str "no open PR for branch " branch)}
+              (no-pr-decision {:command command :dir dir
+                               :basis basis :branch branch})
               (let [pr-num  (:number pr)
-                    sha     ((or (:head-sha-fn opts) #(gh/head-sha repo-root opts)))
+                    sha     ((or (:head-sha-fn opts) gh/head-sha) repo-root opts)
                     git-dir (resolve-git-dir repo-root opts)
                     passes  (ledger/read-passes git-dir pr-num)]
                 (cond
@@ -3240,22 +3377,32 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
     (catch Exception e
       {:exit 2 :message (crash-message d e)})))
 
+(defn- respond
+  "The exit code and wake message a decision earns.
+
+   Split out of -main so the exit-code contract is testable without
+   System/exit: an action this `case` never learned falls through to the
+   default and is silently inert — which is precisely the defect class this
+   namespace keeps paying for."
+  [d opts]
+  (case (:action d)
+    :silent      {:exit 0 :message nil}
+    :cap-reached {:exit 2 :message (str "pr-review-loop — " (:reason d)
+                                        ". No further reviews will run"
+                                        " on this PR. Decide manually.")}
+    :no-pr       {:exit 2 :message (str "pr-review-loop — " (:reason d))}
+    :review      (review! d opts)
+    {:exit 0 :message nil}))
+
 (defn -main
   [& _]
   (let [input (try (json/parse-string (slurp *in*) true)
                    (catch Exception _ nil))
-        d     (decide (or input {}) {})]
-    (let [{:keys [exit message]}
-          (case (:action d)
-            :silent      {:exit 0 :message nil}
-            :cap-reached {:exit 2 :message (str "pr-review-loop — " (:reason d)
-                                                ". No further reviews will run"
-                                                " on this PR. Decide manually.")}
-            :review      (review! d {})
-            {:exit 0 :message nil})]
-      (when message
-        (binding [*out* *err*] (println message) (flush)))
-      (System/exit exit))))
+        d     (decide (or input {}) {})
+        {:keys [exit message]} (respond d {})]
+    (when message
+      (binding [*out* *err*] (println message) (flush)))
+    (System/exit exit)))
 ```
 
 - [ ] **Step 4: Run the tests to verify they pass**
@@ -3909,6 +4056,46 @@ claude plugin install pr-review-loop@nixpkgs-plugins
 ```
 
 Then start a **new** interactive session: plugin hooks do not hot-load.
+
+## Fix wave 2 — the effective working directory (0.4.0)
+
+One defect, found by the first live push in a real repository, which had made
+the loop **silently inert for the workflow agents actually use**.
+
+`decide` resolved the repository from the hook payload's `cwd`. That is the
+*session's* directory, and agents routinely `cd` into a worktree and push from
+there. Measured on both sides of the real command
+(`SP=…; cd "$SP/wt-…" && git push -u origin fix/… | tail -2; grep -aE …`):
+session cwd on branch `docs/mydeck-design` with open-pr **nil**, the worktree
+the push ran in on a branch with open PR **#391**. The hook fired, the `if`
+rule matched, `decide` correctly-by-its-own-logic found nothing and exited 0.
+A real PR went unreviewed and nothing said so. No test caught it because every
+test injected a `:cwd` that agreed with reality.
+
+No `PostToolUse` field carries the tool call's real directory — probed keys:
+`cwd`, `duration_ms`, `hook_event_name`, `permission_mode`, `prompt_id`,
+`scratchpad_dir`, `session_id`, `tool_input{command,description}`, `tool_name`,
+`tool_response{…}`, `tool_use_id`, `transcript_path` — and the hook process's
+own `PWD` is the session cwd too. Parsing `tool_input.command` is the only
+route, so `pr-review.workdir` does exactly that and nothing else (see Task 8's
+Interfaces). It is conservative by construction: anything it cannot resolve
+*literally* hands back the payload cwd marked `:ambiguous` rather than a guess,
+because reviewing the wrong repository is worse than staying silent.
+
+The other half is the anti-silence rule. A command that clearly contains a
+trigger verb and finds no open PR no longer exits 0: it wakes the session with
+one line naming the directory checked, the branch found there, and whether the
+directory had to be guessed. A push that triggers nothing is indistinguishable
+from a broken plugin, which is exactly what this defect cost. A command with no
+trigger verb is still genuine silence.
+
+Known cost, measured live: C7's `if` is best-effort and *runs the hook anyway*
+when it cannot determine the command, so a single undeterminable compound
+command that merely mentions `git push` fired all four `hooks.json` entries and
+produced four identical diagnostics. Determinable commands match one entry.
+
+Bump to 0.4.0 and reinstall (same commands as above, and again a **new**
+session).
 
 ---
 
