@@ -28,7 +28,7 @@ A background reviewer wakes you with findings. Your job is the loop, not the rev
 2. Merge.
 3. Post one summary comment on the PR before or immediately after merging:
    passes run, findings by category, what was fixed, what was deferred. Read
-   the pass history from `.git/pr-review-ledger.jsonl`.
+   the pass history from `$(git rev-parse --git-common-dir)/pr-review-ledger.jsonl`.
 4. If there are `[correctness/followup]` findings, open a **new** PR for them
    and let the loop run there. Verify each one before fixing it, same as above.
 5. If there are none, the job is done. Say so.
@@ -41,8 +41,10 @@ Summarise what is unresolved and hand the decision to the user.
 ## Hinting the reviewer
 
 To tell the reviewer something before it runs, write it to
-`<repo>/.git/pr-review-hint` before pushing. It is included in the next
-review's prompt and consumed — it applies to exactly one pass.
+`$(git rev-parse --git-common-dir)/pr-review-hint` before pushing. It is
+included in the next review's prompt and consumed — it applies to exactly one
+pass. Use the command, not a literal `.git/`: in a linked worktree `.git` is a
+file and nothing can live under it.
 
 ## What the reviewer cannot do
 

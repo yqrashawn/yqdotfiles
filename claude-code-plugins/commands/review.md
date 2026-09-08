@@ -9,7 +9,8 @@ Run the pr-review-loop reviewer against the current branch immediately.
    If there is none, stop and say so.
 
 2. If the user gave a note for the reviewer in their request, write it to
-   `.git/pr-review-hint` first.
+   `$(git rev-parse --git-common-dir)/pr-review-hint` first — not a literal
+   `.git/`, which is a file in a linked worktree.
 
 3. Invoke the trigger directly, feeding it the same JSON shape the hook feeds it.
    Note the literal path: `$CLAUDE_PLUGIN_ROOT` is set only for hooks declared in

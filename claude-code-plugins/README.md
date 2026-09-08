@@ -40,14 +40,17 @@ Reviews a PR in the background whenever this machine's Claude session pushes to
 it, and wakes the session with the findings. See
 `~/.nixpkgs/docs/superpowers/specs/2026-09-08-pr-review-loop.md`.
 
-Per-repo state, all under `.git/` and safe to delete:
+Per-repo state, all under the clone's *shared* git directory — what
+`git rev-parse --git-common-dir` prints, which is `<repo>/.git` in an ordinary
+clone and the main clone's `.git` from every linked worktree, so all worktrees
+of one repository share one ledger, one lock and one cap. Safe to delete:
 
 | Path | Purpose |
 |---|---|
-| `.git/pr-review-ledger.jsonl` | pass history, drives the 10-pass cap and the one-re-raise rule |
-| `.git/pr-review.lock` | at most one live reviewer per clone |
-| `.git/pr-review-context/<sha>.diff` | the untruncated diff the reviewer reads |
-| `.git/pr-review-hint` | one-shot note to the next review; consumed on read |
+| `<git-common-dir>/pr-review-ledger.jsonl` | pass history, drives the 10-pass cap and the one-re-raise rule |
+| `<git-common-dir>/pr-review.lock` | at most one live reviewer per clone |
+| `<git-common-dir>/pr-review-context/<sha>.diff` | the untruncated diff the reviewer reads |
+| `<git-common-dir>/pr-review-hint` | one-shot note to the next review; consumed on read |
 
 Optional per-repo prompt overlay: `<repo>/.claude/pr-review.md`.
 
