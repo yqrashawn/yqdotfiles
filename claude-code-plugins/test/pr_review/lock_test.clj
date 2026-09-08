@@ -66,7 +66,7 @@
 (deftest release-removes-the-lock
   (let [r (tmp-repo)]
     (lock/acquire! r {:pr 1 :sha "s"} {:pid 7})
-    (lock/release! r)
+    (lock/release! r {:pid 7})
     (is (nil? (lock/read-lock r)))))
 
 (deftest acquire-runs-under-the-shared-flock-on-the-guard-path
@@ -90,3 +90,35 @@
         "a lock record that is valid JSON but missing :pid must read as free, not
          throw: read-lock returning {} truthy would send (alive? nil) into
          (long nil), an NPE")))
+
+(deftest release-does-not-delete-a-record-owned-by-a-different-pid
+  (let [r (tmp-repo)]
+    (write-lock! r {:pid 4242 :pr 370 :sha "new" :started 1})
+    (lock/release! r {:pid 999})
+    (is (= {:pid 4242 :pr 370 :sha "new"}
+           (select-keys (lock/read-lock r) [:pid :pr :sha]))
+        "release! must never delete a record that belongs to a different holder:
+         a reviewer finishing normally must not be able to delete the record a
+         concurrent acquire! just wrote for the process that superseded it")))
+
+(deftest release-deletes-its-own-record
+  (let [r (tmp-repo)]
+    (write-lock! r {:pid 4242 :pr 370 :sha "new" :started 1})
+    (lock/release! r {:pid 4242})
+    (is (nil? (lock/read-lock r))
+        "the ownership check must not be so strict it turns release! into a
+         no-op for its own record")))
+
+(deftest release-runs-under-the-shared-flock-on-the-guard-path
+  (let [r (tmp-repo)
+        seen (atom nil)]
+    (write-lock! r {:pid 4242 :pr 370 :sha "new" :started 1})
+    (with-redefs [flock/with-file-lock (fn [path f] (reset! seen path) (f))]
+      (lock/release! r {:pid 4242}))
+    (is (some? @seen)
+        "release! must run under pr-review.flock/with-file-lock so it cannot
+         interleave with an in-flight acquire!")
+    (is (= (flock/guard-path (lock/lock-path r)) @seen)
+        "release! must flock the same sibling guard path acquire! uses")
+    (is (not= (lock/lock-path r) @seen)
+        "release! must never flock the lock record path itself")))

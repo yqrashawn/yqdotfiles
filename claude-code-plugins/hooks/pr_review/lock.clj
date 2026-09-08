@@ -76,6 +76,26 @@
               {:status :acquired}))))))
 
 (defn release!
-  [repo-root]
-  (fs/delete-if-exists (lock-path repo-root))
-  nil)
+  "Release the lock, but only when it is still held by `pid` (default this
+   process's own pid, matching acquire!'s default). Runs under the same
+   guard flock acquire! uses, so a reviewer finishing normally can never
+   interleave with an in-flight acquire! that is concurrently superseding
+   it.
+
+   Both halves matter together: without the flock, release! could still
+   run between acquire!'s kill and its write of the new record; without
+   the pid check, release! would delete whatever record it finds even
+   after losing that race. Either alone lets a reviewer that has already
+   been superseded delete the new holder's record — the lock then reads
+   free while a reviewer is actually still running, which is exactly what
+   acquire!'s duplicate/superseded logic exists to prevent."
+  ([repo-root] (release! repo-root {}))
+  ([repo-root {:keys [pid]}]
+   (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))]
+     (flock/with-file-lock
+       (flock/guard-path (lock-path repo-root))
+       (fn []
+         (let [held (read-lock repo-root)]
+           (when (= pid (:pid held))
+             (fs/delete-if-exists (lock-path repo-root))))))
+     nil)))
