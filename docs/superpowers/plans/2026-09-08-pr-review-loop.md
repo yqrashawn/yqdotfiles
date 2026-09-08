@@ -574,7 +574,9 @@ git commit -qm "feat: per-clone review pass ledger under .git/"
   - `(read-lock repo-root)` → nil or `{:pid long :pr long :sha String :started long}`
   - `(alive? pid)` → boolean
   - `(acquire! repo-root {:pr long :sha String} opts)` → `{:status :acquired}` | `{:status :duplicate}` | `{:status :superseded :killed-pid long}`
-  - `(release! repo-root)` → nil
+  - `(release! repo-root)` / `(release! repo-root opts)` → nil. Deletes the lock
+    record only if it is still held by `opts`'s `:pid` (default this process),
+    under the same guard flock `acquire!` uses
   - `opts` accepts `:kill-fn` (default kills by PID) and `:pid` (default this process)
 
 - [ ] **Step 1: Write the failing test**
@@ -766,9 +768,29 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/lock`, exi
               {:status :acquired}))))))
 
 (defn release!
-  [repo-root]
-  (fs/delete-if-exists (lock-path repo-root))
-  nil)
+  "Release the lock, but only when it is still held by `pid` (default this
+   process's own pid, matching acquire!'s default). Runs under the same
+   guard flock acquire! uses, so a reviewer finishing normally can never
+   interleave with an in-flight acquire! that is concurrently superseding
+   it.
+
+   Both halves matter together: without the flock, release! could still
+   run between acquire!'s kill and its write of the new record; without
+   the pid check, release! would delete whatever record it finds even
+   after losing that race. Either alone lets a reviewer that has already
+   been superseded delete the new holder's record — the lock then reads
+   free while a reviewer is actually still running, which is exactly what
+   acquire!'s duplicate/superseded logic exists to prevent."
+  ([repo-root] (release! repo-root {}))
+  ([repo-root {:keys [pid]}]
+   (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))]
+     (flock/with-file-lock
+       (flock/guard-path (lock-path repo-root))
+       (fn []
+         (let [held (read-lock repo-root)]
+           (when (= pid (:pid held))
+             (fs/delete-if-exists (lock-path repo-root))))))
+     nil)))
 ```
 
 - [ ] **Step 4: Run the tests to verify they pass**
@@ -1811,7 +1833,11 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
           :fingerprints (:fingerprints parsed)})
         (context/prune! repo-root context-keep)
         {:exit 2 :message (findings-message d parsed)})
-      (finally (lock/release! repo-root)))))
+      ;; Same `opts` acquire! was called with, not just repo-root: release!
+      ;; now only deletes the record if its :pid still matches, and a test
+      ;; that stubs :pid in opts to acquire! must have that same stub honoured
+      ;; on release! or the two would disagree about who holds the lock.
+      (finally (lock/release! repo-root opts)))))
 
 (defn -main
   [& _]
