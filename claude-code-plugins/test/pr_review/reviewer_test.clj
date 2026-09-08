@@ -17,16 +17,41 @@
        "3. [correctness/followup] src/pool.clj:12 — leak on 5xx\n"
        "4. [style] src/pool.clj:3 — naming\n"))
 
-(deftest argv-pins-the-reviewer-to-read-only-tools
+(deftest argv-sandboxes-the-reviewer-with-a-deny-list
   (let [argv (reviewer/claude-argv)]
     (is (= "claude" (first argv)))
     (is (some #{"-p"} argv))
-    (testing "no shell, no writes — this is what makes B provably non-mutating
-              and immune to rtk's diff truncation"
+    (is (some #{"opus"} argv) "review quality is the point; do not downgrade the model")
+    (testing "--disallowedTools is the only mechanism that actually removes a
+              tool. --allowedTools is a pre-approval allowlist, and with
+              permissions.defaultMode bypassPermissions every tool is
+              auto-approved regardless — measured: that invocation had Bash
+              and wrote a file outside every repo"
+      (let [i (.indexOf argv "--disallowedTools")]
+        (is (nat-int? i))
+        (let [denied (set (str/split (nth argv (inc i)) #","))]
+          (testing "a shell or a writer"
+            (is (every? denied ["Bash" "Write" "Edit" "MultiEdit" "NotebookEdit"])))
+          (testing "another agent to do it instead"
+            (is (every? denied ["Agent" "Task" "SendMessage"])))
+          (testing "a route off this machine — Artifact publishes to the web"
+            (is (every? denied ["WebFetch" "WebSearch" "Artifact"
+                                "PushNotification" "RemoteTrigger"
+                                "ShareOnboardingGuide"])))
+          (testing "a way to make work happen later"
+            (is (every? denied ["CronCreate" "ScheduleWakeup" "Workflow" "Skill"])))
+          (testing "a way to reach a tool that is not on this list at all"
+            (is (denied "ToolSearch")))
+          (testing "Read, Grep and Glob are the whole review"
+            (is (not-any? denied ["Read" "Grep" "Glob"]))))))
+    (testing "no MCP server the user happens to have configured: several write
+              files and reach the network, and their names are
+              per-installation so no deny list can enumerate them"
+      (is (some #{"--strict-mcp-config"} argv)))
+    (testing "--allowedTools is kept for intent; it restricts nothing"
       (let [i (.indexOf argv "--allowedTools")]
         (is (nat-int? i))
-        (is (= "Read,Grep,Glob" (nth argv (inc i))))))
-    (is (some #{"opus"} argv) "review quality is the point; do not downgrade the model")))
+        (is (= "Read,Grep,Glob" (nth argv (inc i))))))))
 
 (deftest run-passes-the-prompt-and-cwd-to-the-spawner
   (let [seen (atom nil)
