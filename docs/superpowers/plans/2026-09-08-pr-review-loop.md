@@ -256,12 +256,18 @@ git add . && git commit -qm "test: version/manifest agreement"
 ### Task 2: Pass ledger
 
 **Files:**
+- Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/flock.clj`
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/ledger.clj`
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/ledger_test.clj`
 
 **Interfaces:**
 - Consumes: nothing
 - Produces:
+  - `(flock/with-file-lock path f)` → runs no-arg `f` while holding an exclusive
+    OS-level lock on `path`, returns `f`'s value
+  - `(flock/guard-path path)` → String, `path` + `".guard"` — the sibling path to
+    flock when the locked operation itself renames or replaces `path`; also used
+    by Task 3's `pr-review.lock`
   - `(ledger-path repo-root)` → String, `<repo-root>/.git/pr-review-ledger.jsonl`
   - `(read-passes repo-root pr-number)` → vector of entry maps, oldest first
   - `(next-pass-number repo-root pr-number)` → long, 1 when none
@@ -279,6 +285,7 @@ git add . && git commit -qm "test: version/manifest agreement"
 (ns pr-review.ledger-test
   (:require [babashka.fs :as fs]
             [clojure.test :refer [deftest is testing]]
+            [pr-review.flock :as flock]
             [pr-review.ledger :as ledger]))
 
 (defn- tmp-repo
@@ -346,6 +353,39 @@ git add . && git commit -qm "test: version/manifest agreement"
     (spit (ledger/ledger-path r) "{not json\n" :append true)
     (is (= ["ok"] (mapv :sha (ledger/read-passes r 2)))
         "a truncated write from a killed reviewer must not break every later read")))
+
+(deftest interrupted-write-does-not-lose-prior-passes
+  (let [r (tmp-repo)]
+    (ledger/append-pass! r {:pr 42 :sha "first" :pass 1 :verdict "MERGEABLE"
+                            :blocking 0 :followup 0 :coverage 0 :fingerprints []})
+    ;; Simulate a reviewer killed after the new pass is durably written to the
+    ;; temp file but before it is published — the exact window lock/acquire!
+    ;; can interrupt by killing a superseded reviewer mid-run.
+    (with-redefs [ledger/atomic-replace! (fn [_ _] (throw (ex-info "simulated crash before publish" {})))]
+      (is (thrown? Exception
+                   (ledger/append-pass! r {:pr 42 :sha "second" :pass 2 :verdict "MERGEABLE"
+                                           :blocking 0 :followup 0 :coverage 0 :fingerprints []}))))
+    (is (= ["first"] (mapv :sha (ledger/read-passes r 42)))
+        "a crash between the temp write and the atomic rename must leave every
+         previously recorded pass intact, not zero the ledger")))
+
+(deftest append-pass-flocks-a-guard-file-not-the-ledger-path
+  (let [r (tmp-repo)
+        seen (atom [])]
+    (with-redefs [flock/with-file-lock (fn [path f] (swap! seen conj path) (f))]
+      (ledger/append-pass! r {:pr 77 :sha "one" :pass 1 :verdict "MERGEABLE"
+                              :blocking 0 :followup 0 :coverage 0 :fingerprints []})
+      (ledger/append-pass! r {:pr 77 :sha "two" :pass 2 :verdict "MERGEABLE"
+                              :blocking 0 :followup 0 :coverage 0 :fingerprints []}))
+    (testing "both sequential appends still land"
+      (is (= ["one" "two"] (mapv :sha (ledger/read-passes r 77)))))
+    (testing "the flock target is a sibling guard file, never the ledger path append-pass! renames over"
+      (is (= [(flock/guard-path (ledger/ledger-path r)) (flock/guard-path (ledger/ledger-path r))]
+             @seen))
+      (is (not-any? #{(ledger/ledger-path r)} @seen)
+          "flocking the path that gets renamed over lets a second process later lock a
+           different inode after the rename and run concurrently with this one — the
+           exact defect this test guards against"))))
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
@@ -360,6 +400,48 @@ count — is the correct pre-implementation failure.
 
 - [ ] **Step 3: Write the implementation**
 
+`hooks/pr_review/flock.clj`:
+
+```clojure
+(ns pr-review.flock
+  "Cross-process mutual exclusion via an OS-level file lock.
+
+   Shared by pr-review.ledger and pr-review.lock so both modules serialize
+   through the same mechanism instead of each hand-rolling file locking.
+
+   Invariant: never flock a path that the locked operation itself renames or
+   replaces (e.g. an atomic-rename publish). A rename swaps the inode at
+   that path, so a `RandomAccessFile` opened and locked before the rename
+   still refers to the old, now-orphaned inode — a second process that
+   opens the same path afterwards locks a *different* inode and proceeds
+   concurrently, breaking mutual exclusion exactly when it matters most.
+   Always flock a sibling guard file (`guard-path`) that the locked
+   operation never touches instead."
+  (:require [babashka.fs :as fs])
+  (:import [java.io RandomAccessFile]))
+
+(defn guard-path
+  "Sibling path to flock when serializing an operation that renames or
+   replaces `path` itself. Never flock `path` directly in that case — see
+   the namespace docstring. Just appends \".guard\" to `path`."
+  [path]
+  (str path ".guard"))
+
+(defn with-file-lock
+  "Run `f` (a no-arg function) while holding an exclusive lock on `path`,
+   creating `path` and its parent directories first if missing. Returns
+   `f`'s return value.
+
+   The lock is released by closing the channel, not by calling .release —
+   babashka does not allow sun.nio.ch.FileLockImpl.release."
+  [path f]
+  (fs/create-dirs (fs/parent path))
+  (when-not (fs/exists? path) (spit path ""))
+  (with-open [raf (RandomAccessFile. (str path) "rw")]
+    (.lock (.getChannel raf))
+    (f)))
+```
+
 `hooks/pr_review/ledger.clj`:
 
 ```clojure
@@ -371,8 +453,9 @@ count — is the correct pre-implementation failure.
    precedent as Claude Code's own .git/claude-trailers."
   (:require [babashka.fs :as fs]
             [cheshire.core :as json]
-            [clojure.string :as str])
-  (:import [java.io RandomAccessFile]))
+            [clojure.string :as str]
+            [pr-review.flock :as flock])
+  (:import [java.nio.file CopyOption Files StandardCopyOption]))
 
 (def max-passes
   "Hard cap on review passes per PR. Ported from a real incident: a sibling
@@ -388,18 +471,6 @@ count — is the correct pre-implementation failure.
 (defn ledger-path
   [repo-root]
   (str repo-root "/.git/pr-review-ledger.jsonl"))
-
-(defn- with-file-lock
-  "Run `f` while holding an exclusive lock on `path`.
-
-   The lock is released by closing the channel, not by calling .release —
-   babashka does not allow sun.nio.ch.FileLockImpl.release."
-  [path f]
-  (fs/create-dirs (fs/parent path))
-  (when-not (fs/exists? path) (spit path ""))
-  (with-open [raf (RandomAccessFile. (str path) "rw")]
-    (.lock (.getChannel raf))
-    (f)))
 
 (defn- parse-line
   [line]
@@ -434,20 +505,42 @@ count — is the correct pre-implementation failure.
   (count (filter #(contains? (set (:fingerprints %)) fingerprint)
                  (read-passes repo-root pr-number))))
 
+(defn- atomic-replace!
+  "Atomically replace `path`'s content with `tmp`'s.
+
+   Renamed into place rather than written in place: `spit` truncates on
+   open, so a process killed between truncate and flush would zero the
+   entire ledger — exactly what lock/acquire! does to a superseded
+   reviewer mid-run. Same filesystem (tmp is a sibling of path), so
+   ATOMIC_MOVE is a real rename, not a copy."
+  [tmp path]
+  (Files/move (fs/path tmp) (fs/path path)
+              (into-array CopyOption [StandardCopyOption/ATOMIC_MOVE])))
+
 (defn append-pass!
   "Append one pass entry, stamping :ts. Trims to `max-lines` under the same
-   lock so concurrent triggers cannot interleave a read-trim-write."
+   lock so concurrent triggers cannot interleave a read-trim-write. Writes
+   the full trimmed content to a temp file and renames it into place, so a
+   process killed mid-write can never truncate the previously recorded
+   passes — it only ever loses its own not-yet-published entry.
+
+   Flocks `(flock/guard-path p)`, never `p` itself: `p` is the path this
+   function renames over, and a lock held on a path that gets renamed away
+   from under it stops protecting anything the instant the rename happens.
+   See pr-review.flock's namespace docstring."
   [repo-root entry]
   (let [entry (assoc entry :ts (System/currentTimeMillis))
-        p     (ledger-path repo-root)]
-    (with-file-lock p
+        p (ledger-path repo-root)]
+    (flock/with-file-lock (flock/guard-path p)
       (fn []
         (let [existing (if (fs/exists? p)
                          (vec (remove str/blank? (str/split-lines (slurp p))))
                          [])
-              lines    (conj existing (json/generate-string entry))
-              kept     (vec (take-last max-lines lines))]
-          (spit p (str (str/join "\n" kept) "\n")))))
+              lines (conj existing (json/generate-string entry))
+              kept (vec (take-last max-lines lines))
+              tmp (str p ".tmp")]
+          (spit tmp (str (str/join "\n" kept) "\n"))
+          (atomic-replace! tmp p))))
     entry))
 ```
 
@@ -462,7 +555,7 @@ Expected: PASS, `Ran 9 tests`.
 
 ```bash
 cd ~/.nixpkgs/claude-code-plugins
-git add hooks/pr_review/ledger.clj test/pr_review/ledger_test.clj
+git add hooks/pr_review/flock.clj hooks/pr_review/ledger.clj test/pr_review/ledger_test.clj
 git commit -qm "feat: per-clone review pass ledger under .git/"
 ```
 
@@ -493,6 +586,7 @@ git commit -qm "feat: per-clone review pass ledger under .git/"
   (:require [babashka.fs :as fs]
             [cheshire.core :as json]
             [clojure.test :refer [deftest is testing]]
+            [pr-review.flock :as flock]
             [pr-review.lock :as lock]))
 
 (defn- tmp-repo []
@@ -558,6 +652,28 @@ git commit -qm "feat: per-clone review pass ledger under .git/"
     (lock/acquire! r {:pr 1 :sha "s"} {:pid 7})
     (lock/release! r)
     (is (nil? (lock/read-lock r)))))
+
+(deftest acquire-runs-under-the-shared-flock-on-the-guard-path
+  (let [r (tmp-repo)
+        seen (atom nil)]
+    (with-redefs [flock/with-file-lock (fn [path f] (reset! seen path) (f))]
+      (is (= :acquired (:status (lock/acquire! r {:pr 1 :sha "s"} {:pid 9})))))
+    (is (some? @seen)
+        "acquire! must run its read-check-write through pr-review.flock/with-file-lock")
+    (is (= (flock/guard-path (lock/lock-path r)) @seen)
+        "acquire! must flock the sibling guard path")
+    (is (not= (lock/lock-path r) @seen)
+        "acquire! must never flock the lock record path itself: acquire! rewrites
+         that path, so a lock held on it would stop protecting anything the moment
+         it's rewritten")))
+
+(deftest acquire-on-lock-missing-pid-is-acquired-not-an-npe
+  (let [r (tmp-repo)]
+    (spit (lock/lock-path r) "{}")
+    (is (= :acquired (:status (lock/acquire! r {:pr 1 :sha "s"} {:pid 10})))
+        "a lock record that is valid JSON but missing :pid must read as free, not
+         throw: read-lock returning {} truthy would send (alive? nil) into
+         (long nil), an NPE")))
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
@@ -579,20 +695,24 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/lock`, exi
    already stale — the newer push kills the older reviewer and takes over."
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [pr-review.flock :as flock]))
 
 (defn lock-path
   [repo-root]
   (str repo-root "/.git/pr-review.lock"))
 
 (defn read-lock
-  "Current lock record, or nil when absent or unparseable. A corrupt lock
-   reads as free: a half-written file must not wedge the loop forever."
+  "Current lock record, or nil when absent, unparseable, or missing a
+   usable :pid. A corrupt or incomplete lock reads as free: a half-written
+   file must not wedge the loop forever."
   [repo-root]
   (let [p (lock-path repo-root)]
     (when (fs/exists? p)
-      (try (json/parse-string (slurp p) true)
-           (catch Exception _ nil)))))
+      (let [parsed (try (json/parse-string (slurp p) true)
+                        (catch Exception _ nil))]
+        (when (:pid parsed)
+          parsed)))))
 
 (defn alive?
   [pid]
@@ -615,23 +735,35 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/lock`, exi
 
    :duplicate  — a live reviewer already holds this exact SHA. Caller exits 0.
    :superseded — a live reviewer held an older SHA; it was killed. Proceed.
-   :acquired   — the lock was free, corrupt, or held by a dead process."
+   :acquired   — the lock was free, corrupt, or held by a dead process.
+
+   The whole read-check-write runs under a shared flock on
+   `(flock/guard-path (lock-path repo-root))`, never on the lock path
+   itself: acquire! rewrites (and release! deletes) that path, so a lock
+   held on it would stop protecting anything the instant it's rewritten.
+   A guard file that acquire! never touches keeps the flock's identity
+   independent of the record's lifecycle, so two concurrent triggers in
+   the same clone cannot both observe a free or dead lock and both
+   proceed."
   [repo-root {:keys [pr sha]} {:keys [pid kill-fn]}]
-  (let [pid     (or pid (.pid (java.lang.ProcessHandle/current)))
-        kill-fn (or kill-fn default-kill!)
-        held    (read-lock repo-root)]
-    (cond
-      (and held (alive? (:pid held)) (= sha (:sha held)))
-      {:status :duplicate}
+  (flock/with-file-lock
+    (flock/guard-path (lock-path repo-root))
+    (fn []
+      (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))
+            kill-fn (or kill-fn default-kill!)
+            held (read-lock repo-root)]
+        (cond
+          (and held (alive? (:pid held)) (= sha (:sha held)))
+          {:status :duplicate}
 
-      (and held (alive? (:pid held)))
-      (do (kill-fn (:pid held))
-          (write-lock! repo-root {:pid pid :pr pr :sha sha})
-          {:status :superseded :killed-pid (:pid held)})
+          (and held (alive? (:pid held)))
+          (do (kill-fn (:pid held))
+              (write-lock! repo-root {:pid pid :pr pr :sha sha})
+              {:status :superseded :killed-pid (:pid held)})
 
-      :else
-      (do (write-lock! repo-root {:pid pid :pr pr :sha sha})
-          {:status :acquired}))))
+          :else
+          (do (write-lock! repo-root {:pid pid :pr pr :sha sha})
+              {:status :acquired}))))))
 
 (defn release!
   [repo-root]
