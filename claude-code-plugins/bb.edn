@@ -1,0 +1,31 @@
+{:paths ["hooks" "test"]
+ :tasks
+ {review-trigger {:doc  "PostToolUse hook entrypoint. Reads hook JSON on stdin."
+                  :task (exec 'pr-review.trigger/-main)}
+
+  test {:doc "Run every test namespace whose file exists."
+        :requires ([babashka.fs :as fs] [clojure.test])
+        :task (let [nses '[pr-review.version-test
+                           pr-review.ledger-test
+                           pr-review.lock-test
+                           pr-review.gh-test
+                           pr-review.context-test
+                           pr-review.prompt-test
+                           pr-review.reviewer-test
+                           pr-review.trigger-test]
+                    ;; Select on FILE EXISTENCE, never on whether `require`
+                    ;; succeeds: a namespace with a compile error would be
+                    ;; silently skipped, and a green `bb test` would then be
+                    ;; hiding a broken test file.
+                    present (filterv
+                             (fn [ns-sym]
+                               (fs/exists?
+                                (str "test/"
+                                     (-> (name ns-sym)
+                                         (clojure.string/replace "-" "_")
+                                         (clojure.string/replace "." "/"))
+                                     ".clj")))
+                             nses)]
+                (apply require present)
+                (let [{:keys [fail error]} (apply clojure.test/run-tests present)]
+                  (System/exit (if (pos? (+ fail error)) 1 0))))}}}

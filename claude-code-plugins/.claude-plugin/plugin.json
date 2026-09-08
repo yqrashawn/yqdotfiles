@@ -1,0 +1,8 @@
+{
+  "name": "pr-review-loop",
+  "version": "0.1.0",
+  "description": "Local PR review loop. A PostToolUse hook spawns an independent reviewer on push and wakes the session with its findings.",
+  "author": { "name": "yqrashawn" },
+  "skills": ["./skills/pr-review-loop"],
+  "commands": ["./commands"]
+}
