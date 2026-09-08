@@ -478,40 +478,31 @@
             (is (not= :review (:action c))
                 "if this were :review the fixture would be proving nothing")))))))
 
-(deftest a-push-that-finds-no-open-pr-wakes-the-session-instead-of-going-quiet
-  (testing "silence and a broken plugin are indistinguishable from agent A's
-            side — the cwd defect cost a whole live session exactly that way.
-            A command that clearly pushed must report where it looked"
+(deftest a-push-that-finds-no-open-pr-stays-silent
+  (testing "fix wave 2 turned this into an exit-2 diagnostic naming the
+            directory and branch checked, reasoning that silence and a
+            broken plugin are indistinguishable. Deliberately reverted: `if`
+            is documented best-effort and fails open (C7), so a single
+            undeterminable command fired all four `hooks.json` entries and
+            each one produced the diagnostic — four wakes for one push. The
+            known cost is back: a push that reviews nothing is once again
+            indistinguishable from a broken plugin"
     (let [[r g] (tmp-repo)
           d (trigger/decide {:cwd r :tool_input {:command "git push -u origin feat/x"}}
                             (opts r g :pr nil))]
-      (is (= :no-pr (:action d)))
-      (is (str/includes? (:reason d) r) "the diagnostic names the directory it checked")
-      (is (str/includes? (:reason d) "feat/x") "and the branch it found there")
+      (is (= :silent (:action d)))
       (let [res (#'trigger/respond d {})]
-        (is (= 2 (:exit res))
-            "exit 2 or agent A never hears it: exit 0 is silence and any other
-             code prints `Failed with non-blocking status code:`")
-        (is (str/starts-with? (:message res) "pr-review-loop")
-            "the harness wrapper is fixed and useless, so the line must
-             introduce itself")))))
-
-(deftest an-unresolvable-push-directory-says-so-in-the-diagnostic
-  (testing "when the command's directory could not be parsed the session cwd
-            was a guess, and agent A cannot tell a real `no PR` from a review
-            aimed at the wrong checkout unless the message admits it"
-    (let [[r g] (tmp-repo)
-          d (trigger/decide
-             {:cwd r :tool_input {:command "cd \"$(pwd)/wt\" && git push"}}
-             (opts r g :pr nil))]
-      (is (= :no-pr (:action d)))
-      (is (str/includes? (:reason d) "could not determine the push directory")))))
+        (is (= 0 (:exit res)))
+        (is (nil? (:message res))
+            "no message either — printing one here recreates the four-wakes
+             defect this reversion exists to remove")))))
 
 (deftest a-command-with-no-trigger-verb-is-still-silent
   (testing "the `if` rules are best-effort — C7 runs the hook anyway when it
             cannot determine the command — so a command that never pushed
-            does reach here. Waking agent A for those turns the diagnostic
-            into noise and buries the pushes that matter"
+            does reach here too, and must be exactly as silent as the
+            trigger-verb case above: there is no diagnostic left to gate on
+            the verb"
     (let [[r g] (tmp-repo)
           d (trigger/decide {:cwd r :tool_input {:command "git status --short"}}
                             (opts r g :pr nil))]
