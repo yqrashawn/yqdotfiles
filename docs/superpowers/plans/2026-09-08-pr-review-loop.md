@@ -832,6 +832,18 @@ git commit -qm "feat: reviewer lock with stale-SHA supersede"
 
 ### Task 4: git and gh shell layer
 
+> **Shipped code is authoritative for this task.** A fix round hardened it after
+> the blocks below were written: `gh/diff` now bypasses `ok-out` so the diff is
+> returned byte-untouched, and `:diff-bytes` is read from the file with
+> `fs/size` rather than counting UTF-16 code units. The shipped
+> `context_test.clj` also carries a seventh test,
+> `build-through-real-defaults-keeps-real-diff-bytes`, that the Step 1 block
+> below does not — it is the only test exercising `build!`'s real wiring into
+> `gh.clj`, and it is what guards this exact defect class. Read
+> `claude-code-plugins/hooks/pr_review/{gh,context}.clj` and
+> `claude-code-plugins/test/pr_review/{gh,context}_test.clj` as built, and see
+> commit `d5e7d7d81`.
+
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/gh.clj`
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/gh_test.clj`
@@ -1031,6 +1043,18 @@ git commit -qm "feat: injectable git/gh shell layer"
 ---
 
 ### Task 5: Context builder
+
+> **Shipped code is authoritative for this task.** A fix round hardened it after
+> the blocks below were written: `gh/diff` now bypasses `ok-out` so the diff is
+> returned byte-untouched, and `:diff-bytes` is read from the file with
+> `fs/size` rather than counting UTF-16 code units. The shipped
+> `context_test.clj` also carries a seventh test,
+> `build-through-real-defaults-keeps-real-diff-bytes`, that the Step 1 block
+> below does not — it is the only test exercising `build!`'s real wiring into
+> `gh.clj`, and it is what guards this exact defect class. Read
+> `claude-code-plugins/hooks/pr_review/{gh,context}.clj` and
+> `claude-code-plugins/test/pr_review/{gh,context}_test.clj` as built, and see
+> commit `d5e7d7d81`.
 
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/context.clj`
