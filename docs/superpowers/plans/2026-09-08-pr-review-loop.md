@@ -568,7 +568,7 @@ git commit -qm "feat: per-clone review pass ledger under .git/"
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/lock_test.clj`
 
 **Interfaces:**
-- Consumes: nothing
+- Consumes: `pr-review.flock/{with-file-lock,guard-path}` — created alongside Task 2, so Task 2 must land before this task.
 - Produces:
   - `(lock-path repo-root)` → String, `<repo-root>/.git/pr-review.lock`
   - `(read-lock repo-root)` → nil or `{:pid long :pr long :sha String :started long}`
