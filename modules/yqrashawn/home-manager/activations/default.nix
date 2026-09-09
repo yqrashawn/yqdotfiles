@@ -127,6 +127,66 @@
         echo 'rtk init --global --auto-patch'
         rtk init --global --auto-patch
     fi
+    # pr-review-loop: `rtk init --global --auto-patch` above regenerates rtk's own
+    # Bash PreToolUse hook and re-registers it, which silently undoes this swap on
+    # every rebuild. The push-directory recorder needs the wrapper in that slot
+    # instead: it delegates to rtk-rewrite.sh unchanged, then wraps a `git push` /
+    # `gh pr create` subcommand in `{ recorder; push; }` so the shell itself
+    # reports the directory the push really ran in -- the hook payload never
+    # carries it. See .superpowers/sdd/2026-09-08-pr-review-loop/wrapper-v2-report.md.
+    # Deliberately not nested in the `command -v rtk` guard above:
+    # ~/.claude/settings.json is Dropbox-synced, so the entry is worth keeping
+    # correct even on a machine that has no rtk.
+    prl_src=~/.nixpkgs/claude-code-plugins/hooks/rtk-rewrite-wrapper.sh
+    prl_dst=~/.claude/hooks/rtk-rewrite-wrapper.sh
+    prl_settings=~/.claude/settings.json
+    prl_jq="$(command -v jq || true)"
+    [ -x "$prl_jq" ] || prl_jq=/etc/profiles/per-user/"$cuser"/bin/jq
+    prl_count='[.hooks.PreToolUse[]?.hooks[]?|select((.command // "")|endswith($s))]|length'
+    if [ ! -f "$prl_src" ]; then
+        echo "WARNING: pr-review-loop: tracked wrapper $prl_src is missing. rtk's own hook stays registered and push directories will NOT be recorded." >&2
+    elif [ ! -d ~/.claude/hooks ]; then
+        echo "WARNING: pr-review-loop: ~/.claude/hooks does not exist yet, so the wrapper cannot be installed. Expected only before the ~/.claude symlinks below have ever been created -- re-run the activation." >&2
+    elif [ ! -f "$prl_settings" ]; then
+        echo "WARNING: pr-review-loop: $prl_settings not found, so the PreToolUse hook cannot be re-pointed. Push directories will NOT be recorded." >&2
+    elif [ ! -x "$prl_jq" ]; then
+        echo "WARNING: pr-review-loop: no jq on PATH nor at $prl_jq, so the PreToolUse hook cannot be re-pointed. Push directories will NOT be recorded." >&2
+    else
+        # cp through the symlink, never ln -s: ~/.claude/hooks points into Dropbox
+        # and other machines read this file. cmp first so an unchanged wrapper
+        # does not churn Dropbox on every rebuild.
+        if ! cmp -s "$prl_src" "$prl_dst"; then
+            echo 'install ~/.claude/hooks/rtk-rewrite-wrapper.sh'
+            cp -f "$prl_src" "$prl_dst"
+            chmod +x "$prl_dst"
+        fi
+        prl_w="$("$prl_jq" --arg s rtk-rewrite-wrapper.sh "$prl_count" "$prl_settings" 2>/dev/null || echo -1)"
+        prl_r="$("$prl_jq" --arg s rtk-rewrite.sh "$prl_count" "$prl_settings" 2>/dev/null || echo -1)"
+        if [ "$prl_w" = -1 ] || [ "$prl_r" = -1 ]; then
+            echo "WARNING: pr-review-loop: could not read hooks.PreToolUse out of $prl_settings. Push directories will NOT be recorded." >&2
+        elif [ "$prl_w" -gt 1 ] || [ "$prl_r" -gt 1 ]; then
+            echo "WARNING: pr-review-loop: $prl_settings registers $prl_w rtk-rewrite-wrapper.sh and $prl_r rtk-rewrite.sh PreToolUse entries; at most one of each is expected. Fix it by hand -- the hook is running more than once per Bash call." >&2
+        elif [ "$prl_w" = 1 ] && [ "$prl_r" = 0 ]; then
+            : # already swapped
+        elif [ "$prl_w" = 0 ] && [ "$prl_r" = 0 ]; then
+            echo "WARNING: pr-review-loop: no hooks.PreToolUse entry in $prl_settings ends in rtk-rewrite.sh (rtk's, to be replaced) or rtk-rewrite-wrapper.sh (already swapped). The hook layout changed; push directories will NOT be recorded." >&2
+        else
+            if [ "$prl_w" = 1 ]; then
+                # wrapper still registered, so rtk spliced a duplicate entry: drop rtk's
+                prl_new="$("$prl_jq" '.hooks.PreToolUse |= (map(.hooks |= map(select((.command // "")|endswith("rtk-rewrite.sh")|not))) | map(select((.hooks|length) > 0)))' "$prl_settings" || true)"
+            else
+                # rtk took the slot back: re-point that entry at the wrapper, in place
+                prl_new="$("$prl_jq" --arg w "$prl_dst" '.hooks.PreToolUse |= map(.hooks |= map(if (.command // "")|endswith("rtk-rewrite.sh") then .command = $w else . end))' "$prl_settings" || true)"
+            fi
+            # write only when the result really does register the wrapper exactly once and rtk's hook not at all
+            if [ -n "$prl_new" ] && printf '%s' "$prl_new" | "$prl_jq" -e --arg w "$prl_dst" '([.hooks.PreToolUse[]?.hooks[]?|select(.command == $w)]|length) == 1 and ([.hooks.PreToolUse[]?.hooks[]?|select((.command // "")|endswith("rtk-rewrite.sh"))]|length) == 0' > /dev/null; then
+                printf '%s\n' "$prl_new" > "$prl_settings"
+                echo 'pr-review-loop: re-pointed the Bash PreToolUse hook at rtk-rewrite-wrapper.sh'
+            else
+                echo "WARNING: pr-review-loop: jq could not rewrite $prl_settings. rtk's own hook stays registered and push directories will NOT be recorded." >&2
+            fi
+        fi
+    fi
     if command -v ~/.asdf/shims/clojure &> /dev/null; then
         ~/.asdf/shims/clojure -Ttools install-latest :lib io.github.bhauman/clojure-mcp :as mcp                        
     fi
