@@ -89,12 +89,15 @@ on darwin 24.3.0. Confidence noted per item.
 | C39 | Two PreToolUse hooks both returning `updatedInput` contend: last writer wins. A plugin hook runs **before** settings hooks, so rtk always clobbers a plugin's rewrite. Only a settings-level wrapper that delegates to rtk can add to the command. | confirmed — measured the suffix vanishing |
 | C40 | Introducing a `$(…)` command substitution into `updatedInput.command` makes Claude Code permission-check the new subcommands. In a session with `--permission-prompt-tool`, that invoked the tool with a payload it rejected and every push-shaped Bash call failed. A substitution-free recorder does not. | confirmed — reproduced and fixed |
 | C41 | `vcs_state_changed` carries the true `cwd` but is a **stream-json system event**, not a hook event — no hook receives it. It is persisted only for sessions whose stream a supervisor consumes (130 rows over 62 sessions in cchp's DB), so it is not a universal source. | confirmed |
+| C42 | On this workflow a PR is opened by **two** Bash calls: `git push` creates the branch (no PR exists yet, so the trigger is correctly silent), then a separate `gh pr create` opens it. `gh pr create` is therefore the critical trigger, and its `--body "$(cat <<'EOF' … EOF)"` carries a command substitution, a backtick and a heredoc. | confirmed — the two real commands, 19.9 s apart |
+| C43 | A recorder spliced as `{ recorder; CMD; }` needs the push segment's **end**, which requires modelling everything to its right — so `$()`, backticks and heredocs must be refused, and C42's command with them. Splicing it **ahead** of the head as `{ recorder; } && CMD` needs only where the head begins, so the scan returns at the head and never reads what follows. | confirmed — 25 classification + 5 execution tests |
+| C44 | The glue must be `&&`, not `;`. The real command is `cd "$WT" && gh pr create …`; with `;` a failed `cd` would no longer stop it and the PR would be opened from the session directory. The recorder ends in `\|\| :` so it can never itself stop a push. Splicing to the right of `\|` or `\|\|` changes the list instead (`(a \| recorder) && git push` loses the push's stdin), so those segments stay declined. | confirmed — negative control: `;` fails the cd test |
 
 ## Requirements
 
 | # | Requirement | Done when |
 |---|---|---|
-| R1 | Fires on agent-A push to a PR branch and on agent-A PR creation | A pushes to a branch with an open PR; the ledger gains a pass entry |
+| R1 | Fires on agent-A push to a PR branch and on agent-A PR creation | A pushes to a branch with an open PR; the ledger gains a pass entry. **Both** trigger commands are recorded, `gh pr create` included (C42–C44) |
 | R2 | Never fires on a human push from a terminal with no Claude session | `git push` from a bare shell leaves the ledger unchanged |
 | R3 | Works in any repo with no per-repo installation | The loop runs in a repo that has no `.claude/` directory at all |
 | R4 | A is never blocked by the review | A's turn ends before the review does, measurable in the transcript |
