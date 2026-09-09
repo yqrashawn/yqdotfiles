@@ -111,19 +111,30 @@ fi
 # Any early return from here on must reproduce rtk-alone behaviour exactly.
 passthrough() { [ -n "$RTK_OUT" ] && printf '%s\n' "$RTK_OUT"; exit 0; }
 
-# rtk emitting NOTHING is rtk saying something, and this wrapper does not get to
-# second-guess which thing. "No rtk equivalent" (its exit 1), "a deny rule
-# matched" (its exit 2) and "already in rtk form" all produce empty stdout and
-# are indistinguishable from here. So: emit nothing, and rewrite nothing.
+# rtk emitting NOTHING, having exited 0, is rtk DECLINING to rewrite: the
+# command will run exactly as the user wrote it. That is a placeable case, so
+# the recorder is still spliced in -- the wrapper just has no rtk output to
+# merge with.
 #
-# Rewriting the command while emitting no decision -- which is what this used to
-# do -- is the trap: Claude Code's native deny rule would then be matched
-# against a command the user never wrote. Silence in, silence out.
+# An earlier revision returned silence for silence here, on the stated grounds
+# that empty stdout was ambiguous between "no rtk equivalent" (exit 1), "a deny
+# rule matched" (exit 2) and "already in rtk form". That reasoning was wrong:
+# non-zero exits are RELAYED above and never reach this line, so only exit 0
+# arrives, and a hook cannot deny silently -- a deny is either a non-zero exit
+# or a `permissionDecision` in JSON, and both are handled elsewhere.
 #
-# The cost is a missing record for a push already written as `rtk git push`, and
-# on any machine where rtk declines to rewrite `git push` at all. Both fall back
-# to `pr-review.workdir`'s command parsing, which is its designed job.
-[ -n "$RTK_OUT" ] || passthrough
+# The cost of being wrong about that was the whole feature: rtk bails on any
+# command containing a HEREDOC, and `gh pr create --body "$(cat <<EOF ...)"` is
+# how a PR body is written. So rtk is silent on essentially every real
+# PR-creation command -- the one command the loop most needs recorded.
+#
+# What this does NOT do is supply a permissionDecision (see step 5). Claude Code
+# therefore permission-checks the rewritten command. Relative to declining, the
+# only new subcommands it sees are the recorder's `mkdir` and `printf`; the
+# command being checked is otherwise the one it was about to run anyway. The
+# failure mode is over-blocking, never a widened permission.
+RTK_SILENT=0
+[ -n "$RTK_OUT" ] || RTK_SILENT=1
 
 command -v jq >/dev/null 2>&1 || passthrough
 
@@ -141,8 +152,14 @@ esac
 [ ${#TOOL_USE_ID} -le 128 ] || passthrough
 
 # Non-empty but non-JSON stdout from rtk: unexpected -> hands off entirely.
-printf '%s' "$RTK_OUT" | jq -e . >/dev/null 2>&1 || passthrough
-RTK_JSON=$RTK_OUT
+# When rtk declined outright there is nothing to merge, and `{}` makes step 5's
+# `// {}` fallbacks resolve to the payload's own tool_input.
+if [ "$RTK_SILENT" -eq 1 ]; then
+  RTK_JSON='{}'
+else
+  printf '%s' "$RTK_OUT" | jq -e . >/dev/null 2>&1 || passthrough
+  RTK_JSON=$RTK_OUT
+fi
 
 BASE=$(printf '%s' "$RTK_JSON" | jq -r '.hookSpecificOutput.updatedInput.command // empty' 2>/dev/null)
 [ -n "$BASE" ] || BASE=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
@@ -367,11 +384,11 @@ parses_clean "$NEW" || passthrough
 # Code prompts, and this wrapper never widens a permission. It only ever adds a
 # recorder to a command rtk already decided to rewrite.
 #
-# An earlier revision defaulted this to "allow" and was wrong to. A deny is
-# indistinguishable from a passthrough from here (see the RTK_OUT guard above),
-# so defaulting to "allow" could override a deny rule -- and it was not needed:
+# An earlier revision defaulted this to "allow" and was wrong to. Supplying a
+# decision rtk did not make is what widens a permission, and it was not needed:
 # the `--permission-prompt-tool` failure this was chasing came from the `$(...)`
-# the recorder used to inject, which is gone.
+# the recorder used to inject, which is gone. When rtk declined entirely there
+# is no decision to copy, so none is emitted and Claude Code decides.
 OUT=$(jq -n \
   --argjson payload "$INPUT" \
   --argjson rtk "$RTK_JSON" \
