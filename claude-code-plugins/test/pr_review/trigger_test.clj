@@ -360,6 +360,33 @@
     (is (= "MERGEABLE" (:verdict (first (ledger/read-passes g 370)))))
     (is (nil? (lock/read-lock g 370)) "the lock is released on the success path")))
 
+(deftest the-findings-text-is-written-where-another-session-can-read-it
+  (testing "the findings lived only in the wake. The ledger keeps verdict,
+            counts and fingerprints — enough to DECIDE, not enough to READ —
+            so a review whose wake was lost, or one run by hand in a different
+            session, could not be handed to whoever is working the PR"
+    (let [[r g] (tmp-repo)
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
+          result (#'trigger/review! d (review-opts))
+          path (trigger/findings-path g 370)]
+      (is (fs/exists? path) "no findings file was written")
+      (is (= (:message result) (slurp path))
+          "the file must hold exactly what the wake said, or the handoff is lossy")
+      (is (str/includes? (slurp path) "PR #370"))
+      (testing "and the wake points at it, so agent A can hand the path on"
+        (is (str/includes? (:message result) path))))))
+
+(deftest a-refused-review-writes-no-findings-file
+  ;; A stale file from an earlier pass must not be mistaken for this one's.
+  (let [[r g] (tmp-repo)
+        d {:repo-root r :git-dir g :pr 371 :pass 1 :sha "headsha0123456"
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}]
+    (#'trigger/review! d (review-opts :checkout :none))
+    (is (not (fs/exists? (trigger/findings-path g 371))))))
+
 (deftest the-ledger-row-records-the-reconciled-verdict-not-the-claimed-one
   (testing "mergeable? had zero production call sites: any output whose count
             block contradicted its verdict line yielded a MERGEABLE headline

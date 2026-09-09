@@ -1,58 +1,93 @@
-# claude-code-plugins
+# pr-review-loop
 
-Claude Code plugins maintained in `~/.nixpkgs`. This directory doubles as a
-local plugin marketplace. It is **not** a separate git repo — it is tracked
-content of `~/.nixpkgs`, and a local-directory marketplace does not require a
-repo of its own.
+An independent reviewer runs on every agent push to a PR, in a worktree pinned
+to that commit, and wakes the pushing session with its findings.
 
-## Install
+## If it did not review something — check in this order
 
-```bash
-claude plugin marketplace add ~/.nixpkgs/claude-code-plugins
-claude plugin install pr-review-loop@nixpkgs-plugins
-```
-
-Then start a **new** `claude` session — plugin hooks do not hot-load.
-
-## Updating
-
-`claude plugin update` is a no-op unless the version string changes. Bump
-`version` in `.claude-plugin/plugin.json` **and** `plugin-version` in
-`hooks/pr_review/version.clj` (a test enforces they agree), commit, then:
+Each step's command answers one question. Stop at the first that is wrong.
 
 ```bash
-claude plugin uninstall pr-review-loop@nixpkgs-plugins
-claude plugin install pr-review-loop@nixpkgs-plugins
+R=/path/to/the/clone            # the clone that was PUSHED FROM
+G=$(git -C "$R" rev-parse --path-format=absolute --git-common-dir)
+
+# 1. Was the push recorded, and by an agent? (`-` in the 3rd field = a human)
+tail -5 "${XDG_CACHE_HOME:-$HOME/.cache}/pr-review-loop/pushes.log"
+
+# 2. Did git see it land? (no entry = the push was rejected)
+tail -3 "$G/logs/refs/remotes/origin/<branch>"
+
+# 3. Is the pushed sha the PR's head? (must match, or nothing fires)
+gh pr view <N> --repo <owner/repo> --json headRefOid
+
+# 4. Was it already reviewed? (a row for that sha means: correctly silent)
+grep '<sha>' "$G/pr-review-ledger.jsonl"
+
+# 5. Is a review running, or did one die? (a lock whose pid is dead = killed)
+ls "$G"/pr-review.*.lock && cat "$G"/pr-review.*.lock
+cat "$G/pr-review.<N>.stderr"          # what the reviewer said before dying
 ```
 
-Uninstall leaves `~/.claude/plugins/cache/nixpkgs-plugins` behind; remove it
-by hand if you want it gone.
-
-## Tests
+A killed review is retried by the next trigger in that clone. If nothing will
+push again, review it by hand:
 
 ```bash
-cd ~/.nixpkgs/claude-code-plugins && bb test
+bb --config ~/.nixpkgs/claude-code-plugins/bb.edn review-pr <N>
 ```
 
-## pr-review-loop
+Findings from any review are also left at `$G/pr-review.<N>.findings.md`, so a
+session that did not receive the wake can be pointed at that path.
 
-Reviews a PR in the background whenever this machine's Claude session pushes to
-it, and wakes the session with the findings. See
-`~/.nixpkgs/docs/superpowers/specs/2026-09-08-pr-review-loop.md`.
+## How it decides
 
-Per-repo state, all under the clone's *shared* git directory — what
-`git rev-parse --git-common-dir` prints, which is `<repo>/.git` in an ordinary
-clone and the main clone's `.git` from every linked worktree, so all worktrees
-of one repository share one ledger, one lock and one cap. Safe to delete:
+One question, for both `git push` and `gh pr create`:
 
-| Path | Purpose |
+> is there a push, **made by an agent** and **landed**, whose sha is the head
+> of an open PR with **no ledger row**?
+
+- **made by an agent** — the `pre-push` hook records `CLAUDE_CODE_SESSION_ID`;
+  a human's terminal push records `-`. This is R2, and it is why `git -C /x
+  push` and aliases work where matching the command text did not.
+- **landed** — git's own remote-tracking reflog, written only on success.
+- The command text is *not* consulted for anything but choosing the lookback
+  window. Reading it to find the working directory produced five defects and
+  still missed 25 of 260 real push commands; that whole approach is withdrawn.
+
+## Where things are
+
+| what | where |
 |---|---|
-| `<git-common-dir>/pr-review-ledger.jsonl` | pass history, drives the 10-pass cap and the one-re-raise rule |
-| `<git-common-dir>/pr-review.lock` | at most one live reviewer per clone |
-| `<git-common-dir>/pr-review-context/<sha>.diff` | the untruncated diff the reviewer reads |
-| `<git-common-dir>/pr-review-hint` | one-shot note to the next review; consumed on read |
+| binding design, constraints C1–C54 | `docs/superpowers/specs/2026-09-08-pr-review-loop.md` |
+| what agent A does with findings | `skills/pr-review-loop/SKILL.md` |
+| reviewing by hand | `commands/review.md` |
+| the reviewer's own prompt | `hooks/review_core.md`, plus `<repo>/.claude/pr-review.md` per repo |
+| per-clone state | `<git-common-dir>/pr-review*` — ledger, locks, context diffs, findings, stderr |
+| push provenance | `${XDG_CACHE_HOME:-~/.cache}/pr-review-loop/pushes.log` |
 
-Optional per-repo prompt overlay: `<repo>/.claude/pr-review.md`.
+Namespaces, one line each — read the docstring, they carry the reasoning:
 
-It only runs in **interactive** sessions. In `-p` mode Claude Code kills async
-hooks at teardown, so nothing is reviewed and nothing warns you.
+```
+attempts    who pushed which clone, from the pre-push hook   (R2)
+pushlog     what landed, from git's remote-tracking reflog
+trigger     the decision, and the PostToolUse entrypoint
+manual      the same review, for a PR named directly
+checkout    the throwaway worktree pinned to the reviewed sha
+reviewer    spawns claude -p, and parses its reply
+ledger      passes, the 10-pass cap, and the re-raise rules
+lock        one per PR; a dead pid means a killed review to retry
+context     the unified diff the reviewer reads
+hookinstall installs the pre-push hook, honouring core.hooksPath
+```
+
+## Invariants worth not breaking
+
+- The `pre-push` hook must never fail a push. A non-zero exit aborts it.
+- The trigger must exit **0 or 2**, never anything else — any other code makes
+  Claude Code report a failed hook and the pass is lost.
+- `--disallowedTools` is the reviewer's only real sandbox. `--allowedTools` is
+  a pre-approval list and restricts nothing under `bypassPermissions`.
+- Bash is granted to the reviewer; containment is the throwaway worktree, not
+  the tool list. `git push`, `git commit`, `gh pr`, `rm`, `sudo`, `curl` are
+  denied as command shapes.
+
+`bb test` from this directory runs everything.

@@ -236,12 +236,18 @@
        :reason (str "none of " (count cands)
                     " agent pushes is an unreviewed open-PR head")})))
 
+(defn findings-path
+  "Where the latest pass's findings text is kept, so a session that did not
+   receive the wake can still read it."
+  [git-dir pr]
+  (str git-dir "/pr-review." pr ".findings.md"))
+
 (defn findings-message
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
    wrapper and ignores rewakeMessage for third-party plugins, so this string
    has to introduce itself."
   ([d parsed] (findings-message d parsed nil))
-  ([{:keys [branch pr pass retry?]} parsed warnings]
+  ([{:keys [branch pr pass retry? git-dir]} parsed warnings]
    (str "pr-review-loop — " branch
         " PR #" pr ", pass " pass
         (when retry? " (retried after an interrupted review)")
@@ -249,6 +255,8 @@
         (:body parsed)
         (when (seq warnings)
           (str "\n\n" (str/join "\n" warnings)))
+        "\n\nThese findings are also at " (findings-path git-dir pr)
+        " — point another session at that path rather than re-running the review."
         "\n\nNext: use the pr-review-loop skill — it covers this whole loop,"
         " not just the fixing: verify each [correctness/blocking] finding"
         " against the source before changing anything, push fixes onto THIS"
@@ -363,8 +371,16 @@
                 :coverage (get (:counts parsed) "coverage" 0)
                 :fingerprints (:fingerprints parsed)})
               (context/prune! git-dir context-keep)
-              {:exit 2 :message (findings-message
-                                 d parsed (reviewer/parse-warnings parsed))}))))))
+              (let [msg (findings-message d parsed (reviewer/parse-warnings parsed))]
+                ;; The findings text lived only in the wake. The ledger keeps
+                ;; verdict, counts and fingerprints -- enough to decide, not
+                ;; enough to READ -- so a review whose wake was lost, or one
+                ;; run by hand in a different session, could not be handed to
+                ;; whoever is working the PR. Latest pass only: handing off
+                ;; wants the current findings, and history is the ledger plus
+                ;; the summary comment.
+                (spit (findings-path git-dir pr) msg)
+                {:exit 2 :message msg})))))))
 
 (defn- run-review!
   "Pins a worktree to the reviewed sha and reviews that, removing it however
