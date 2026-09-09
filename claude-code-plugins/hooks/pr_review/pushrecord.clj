@@ -3,13 +3,26 @@
    command text.
 
    A `PreToolUse` wrapper around rtk (`~/.claude/hooks/rtk-rewrite-wrapper.sh`)
-   appends a recorder to push-shaped commands, so the shell that ran the push
-   reports its own `$PWD` into a file named for that call's `tool_use_id`:
+   locates the push subcommand and replaces it, in place, with a brace group
+   that runs a recorder first:
+
+       cd /x && git push -u origin b
+       cd /x && { <recorder>; git push -u origin b; }
+
+   So the recorder runs AT the push, inside whatever subshell or background job
+   the push is in, and reports that shell's own `$PWD` into a file named for
+   the call's `tool_use_id`:
 
        tool_use_id=toolu_015WAZ23TGGJVjNWCm9P4Yn1
        pwd=/private/tmp/.../scratchpad/prod/wt
-       branch=wire-check
-       ts=1788913860
+
+   Two fields, and only two. `branch=` and `ts=` were recorded by an earlier
+   revision and are gone: `pr-review.trigger` derives the branch itself with
+   `gh/current-branch`, `prune-records!` ages records off the file's mtime, and
+   writing either one needed a `$(...)` in the rewritten command — which
+   Claude Code's permission analysis descends into, so it turned every push
+   into a command carrying subcommands the user never wrote. `parse` below
+   still accepts both keys, so a record written before that change reads fine.
 
    `tool_use_id` is carried by both the PreToolUse and the PostToolUse payload
    and correlates between them, so the lookup is exact — never \"the most
@@ -19,22 +32,19 @@
    namespace is only the reader and the janitor; all the parsing stays over
    there, and stays the fallback for every call the recorder never saw.
 
-   KNOWN LIMITATION, documented and not solved: the recorder reads the `$PWD`
-   of the shell it was appended to, so any shape that moves somewhere without
-   moving *that* shell records the OUTER directory — `(cd /x && git push)` in
-   a subshell, `git -C /x push`, and a trailing `&`, which runs the whole
-   and-list in a subshell of its own. The record is then plausible-looking and
-   wrong, and there is nothing to cross-check it against. `pr-review.workdir`
-   reads the subshell shape as \"never moved\" and is wrong the same way;
-   `git -C /x push` never produces a record at all, because the wrapper's gate
-   greps for the literal `git push` and that command does not contain it, so
-   the parser is consulted as usual. The one shape where the record is wrong
-   and the parser would have been right is `cd /x && git push &` — the record
-   still wins there, deliberately: one authoritative source beats a tie-break
-   rule that nothing can adjudicate. What catches every one of them is the
-   open-PR gate downstream. The outer directory's branch has no open PR, so
-   `decide` finds nothing and the loop goes silent, which is the failure this
-   plugin is built to prefer."
+   BECAUSE THE RECORDER MOVES WITH THE PUSH, the shapes that used to record the
+   outer directory no longer do: `(cd /x && git push)` in a subshell and
+   `cd /x && git push &` both record `/x`, measured. What remains is not a
+   wrong record but NO record — the wrapper refuses to rewrite a command whose
+   boundaries it cannot place exactly, and refusing costs nothing, because this
+   namespace then returns nil and `pr-review.workdir` is consulted as usual.
+   It refuses any command containing `$(...)`, a backtick, a heredoc, process
+   substitution, or an unterminated quote; and it declines any push whose
+   simple-command head is not literally `git push` / `gh pr create` (bare or
+   `rtk`-prefixed) — so `git -C /x push`, `env FOO=1 git push`, and a push
+   under `then`/`do` inside an `if`/`for` produce no record either. `git -C /x
+   push` is the honest one of those: no `$PWD`-based recorder could ever get it
+   right."
   (:require [babashka.fs :as fs]
             [clojure.string :as str]))
 
@@ -73,9 +83,10 @@
 (defn- parse
   "The recorder's `key=value` lines, keeping only the keys this namespace
    promises. A line with no `=`, an unknown key and a blank value are all
-   dropped rather than reported: the recorder is a shell one-liner that fills
-   `branch=` with the empty string outside a repository, and a key whose
-   value says nothing is worse than an absent one."
+   dropped rather than reported: the recorder is a shell one-liner, and a key
+   whose value says nothing is worse than an absent one. `branch` and `ts` are
+   still accepted although the current recorder writes neither (see the ns
+   docstring) — a record left over from an older wrapper must keep reading."
   [text]
   (reduce
    (fn [m line]

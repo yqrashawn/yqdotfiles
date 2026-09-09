@@ -61,17 +61,30 @@ set -u
 # below, so a wrong path here degrades instead of exploding.
 RTK_HOOK=${PRL_RTK_HOOK:-${HOME:-}/.claude/hooks/rtk-rewrite.sh}
 
-# The recorder, as shell source. Single-quoted: ${TMPDIR}, $PWD and the two
-# command substitutions must be resolved by the shell that runs the push, not
-# by this hook process. @ID@ is replaced with the tool_use_id, which is
-# whitelisted to [A-Za-z0-9_-] before it is ever interpolated.
+# The recorder, as shell source. Single-quoted: ${TMPDIR} and $PWD must be
+# resolved by the shell that runs the push, not by this hook process. @ID@ is
+# replaced with the tool_use_id, which is whitelisted to [A-Za-z0-9_-] before
+# it is ever interpolated.
 #   * a subshell, so __prl_d does not leak into the caller's environment
 #   * </dev/null so it can never eat stdin the push was going to read
 #   * >/dev/null 2>&1 so it can never write into a pipe the push feeds
 #   * || : so a failing recorder cannot abort the group under `set -e`
 # `__prl_d` doubles as the idempotency marker (see the guard below).
+#
+# NO COMMAND SUBSTITUTION, AND NO BACKTICKS -- this is a hard constraint, not a
+# style choice. Claude Code's permission analysis inspects the commands inside
+# `$(...)` and backticks, so a substitution here becomes an extra subcommand to
+# permission-check on a command the user never wrote; in a session configured
+# with `--permission-prompt-tool` that was observed to fail the Bash call
+# outright. `${TMPDIR:-/tmp}` and `"$PWD"` are parameter expansions, not
+# commands, and are fine. Earlier revisions also recorded `branch=` (via
+# `$(git rev-parse ...)`) and `ts=` (via `$(date ...)`); both were dead weight
+# -- `pr-review.trigger` derives the branch itself with `gh/current-branch`,
+# and `prune-records!` ages records off their file mtime -- so the record is
+# now the one field the consumer actually reads, plus the key it is filed
+# under. `pr-review.pushrecord` drops absent keys, so this stays compatible.
 # shellcheck disable=SC2016
-RECORDER_TMPL='( __prl_d="${TMPDIR:-/tmp}/pr-review-pushdir"; mkdir -p "$__prl_d" && printf '\''tool_use_id=%s\npwd=%s\nbranch=%s\nts=%s\n'\'' '\''@ID@'\'' "$PWD" "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" "$(date -u +%s 2>/dev/null)" >"$__prl_d/@ID@" ) </dev/null >/dev/null 2>&1 || :'
+RECORDER_TMPL='( __prl_d="${TMPDIR:-/tmp}/pr-review-pushdir"; mkdir -p "$__prl_d" && printf '\''tool_use_id=%s\npwd=%s\n'\'' '\''@ID@'\'' "$PWD" >"$__prl_d/@ID@" ) </dev/null >/dev/null 2>&1 || :'
 
 # --- 1. read the payload; keep it byte-for-byte for the delegate ------------
 INPUT=$(cat 2>/dev/null) || exit 0
@@ -312,9 +325,27 @@ parses_clean "$NEW" || passthrough
 
 # --- 5. emit merged JSON ---------------------------------------------------
 # updatedInput keeps every other tool_input field (description, timeout, ...).
-# permissionDecision / permissionDecisionReason are copied verbatim, and only
-# when rtk actually set them -- their absence is what makes Claude Code prompt
-# for rtk's "ask" rules, so it must stay absent.
+#
+# permissionDecision is rtk's when rtk set one, and "allow" otherwise -- rtk
+# only ever sets "allow", so in practice a command this wrapper rewrites is
+# ALWAYS allowed. That is a deliberate change, authorised by the user, and it
+# is the whole point: rtk emits nothing at all for a command that is already
+# `rtk git push`, and an ABSENT decision makes Claude Code run its permission
+# flow, which in a session started with `--permission-prompt-tool` invokes that
+# tool and was observed to fail the Bash call outright. A rewritten command the
+# user never typed should not be the thing that triggers a prompt.
+#
+# THE ONE THING THIS GIVES UP: rtk signals "a deny rule matched" by emitting
+# nothing (its exit 2), which is indistinguishable here from "no rewrite
+# available" (its exit 1). So a deny rule matching a `git push` / `gh pr
+# create` command would now be overridden by this "allow". Measured before
+# making the change: permissions.deny and permissions.ask are both empty and
+# defaultMode is bypassPermissions, so nothing is being bypassed today. If deny
+# rules are ever added for a push-shaped command, this line must go back to
+# copying the decision only when rtk set one.
+#
+# This only affects commands the wrapper actually WRAPS. Every other command
+# returns rtk's stdout byte-identical long before reaching this point.
 OUT=$(jq -n \
   --argjson payload "$INPUT" \
   --argjson rtk "$RTK_JSON" \
@@ -322,12 +353,11 @@ OUT=$(jq -n \
   (($rtk // {}).hookSpecificOutput // {}) as $h
   | (($h.updatedInput // $payload.tool_input // {}) | .command = $cmd) as $ui
   | { hookSpecificOutput:
-        ( { hookEventName: "PreToolUse" }
-          + (if ($h.permissionDecision // null) != null
-             then { permissionDecision: $h.permissionDecision } else {} end)
-          + (if ($h.permissionDecisionReason // null) != null
-             then { permissionDecisionReason: $h.permissionDecisionReason } else {} end)
-          + { updatedInput: $ui } ) }
+        { hookEventName: "PreToolUse",
+          permissionDecision: ($h.permissionDecision // "allow"),
+          permissionDecisionReason:
+            ($h.permissionDecisionReason // "pr-review-loop push recorder"),
+          updatedInput: $ui } }
 ' 2>/dev/null) || passthrough
 [ -n "$OUT" ] || passthrough
 
