@@ -121,7 +121,7 @@ on darwin 24.3.0. Confidence noted per item.
 | R12 | Loop terminates | Pass 11 on one PR does not spawn a reviewer |
 | R13 | One summary comment lands on the PR before merge | The merged PR has exactly one `pr-review-loop` summary comment |
 | R14 | Two rapid pushes do not run two reviewers on stale SHAs | The older reviewer is killed; only the newer SHA is reviewed |
-| R15 | Survives a nix rebuild | `rtk init --auto-patch` runs; the plugin still triggers (guaranteed by C22) |
+| R15 | Survives a nix rebuild, and a NEW machine | Activation installs the plugin cache when it does not already hold the source's version, and warns loudly when `bb`, `claude` or the manifest is missing. Everything else already travels: source by git, marketplace and `enabledPlugins` by the Dropbox symlinks, the `pre-push` hook by SessionStart |
 
 ## Options considered
 

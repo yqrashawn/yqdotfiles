@@ -141,5 +141,43 @@
         ln -s ~/Dropbox/sync/claude-plugins/installed_plugins.json ~/.claude/plugins/installed_plugins.json
         ln -s ~/Dropbox/sync/claude-plugins/known_marketplaces.json ~/.claude/plugins/known_marketplaces.json
     fi
+
+    # pr-review-loop: the plugin's SOURCE travels with this repo, and
+    # settings.json enables it, but the plugin CACHE that Claude Code actually
+    # loads is per-machine and nothing else populates it. Without this a fresh
+    # machine has the loop enabled and silently reviews nothing -- which is
+    # the failure mode this whole plugin exists to stop having.
+    #
+    # Deliberately AFTER the ~/.claude symlink block above: `claude plugin
+    # marketplace add` writes ~/.claude/plugins/known_marketplaces.json, and a
+    # real file there would make that block's `ln -s` fail.
+    if ! command -v bb &> /dev/null; then
+        echo "WARNING: pr-review-loop: no bb (babashka) on PATH. hooks.json runs a bare \`bb\`, so every review would fail silently. Install it with asdf." >&2
+    fi
+    prl_dir=~/.nixpkgs/claude-code-plugins
+    prl_manifest="$prl_dir/.claude-plugin/plugin.json"
+    if [ ! -f "$prl_manifest" ]; then
+        echo "WARNING: pr-review-loop: $prl_manifest is missing, so the plugin cannot be installed." >&2
+    elif ! command -v claude &> /dev/null; then
+        echo "WARNING: pr-review-loop: no claude on PATH, so the plugin cache cannot be populated. The loop will not run." >&2
+    else
+        prl_ver=$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$prl_manifest" | head -1)
+        prl_cached=~/.claude/plugins/cache/nixpkgs-plugins/pr-review-loop/"$prl_ver"
+        if [ -z "$prl_ver" ]; then
+            echo "WARNING: pr-review-loop: no version in $prl_manifest, so the cache cannot be checked. Skipping." >&2
+        elif [ -d "$prl_cached" ]; then
+            : # the cache already holds this exact version
+        else
+            echo "pr-review-loop: installing $prl_ver"
+            # add is a no-op when the marketplace is known; install is a no-op
+            # when already installed but does NOT upgrade, so update follows it.
+            claude plugin marketplace add "$prl_dir" > /dev/null 2>&1 || true
+            claude plugin install pr-review-loop@nixpkgs-plugins > /dev/null 2>&1 || true
+            claude plugin update pr-review-loop > /dev/null 2>&1 || true
+            if [ ! -d "$prl_cached" ]; then
+                echo "WARNING: pr-review-loop: $prl_ver is still not in the plugin cache after install and update. The review loop will not run on this machine." >&2
+            fi
+        fi
+    fi
   '';
 }
