@@ -1,5 +1,6 @@
 (ns pr-review.manual-test
   (:require [babashka.fs :as fs]
+            [babashka.process :as p]
             [cheshire.core :as json]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
@@ -112,3 +113,53 @@
                  (manual/decide {:dir r :pr 401}
                                 (opts :repo r :git-dir g :branch "feat/a"
                                       :prs {401 (a-pr 401 "sha-new")})))))))
+
+;; ------------------------------------------------------------- the bb task
+
+(def ^:private bb-config
+  (str (fs/path (or (some-> (System/getProperty "babashka.config") fs/parent str)
+                    (System/getProperty "user.dir"))
+                "bb.edn")))
+
+(defn- run-task
+  "Invokes `bb review-pr` the way a person or an agent does, with a `gh` stub
+   on PATH so nothing reaches the network."
+  [dir & args]
+  (let [bin (str (fs/path (fs/create-temp-dir {:prefix "prl-stub-bin"}) ))
+        gh  (fs/path bin "gh")]
+    (fs/create-dirs bin)
+    (spit (str gh) "#!/bin/sh\nexit 1\n")
+    (fs/set-posix-file-permissions gh "rwxr-xr-x")
+    (p/sh (into ["bb" "--config" bb-config "review-pr"] args)
+          {:dir dir
+           :extra-env {"PATH" (str bin ":" (System/getenv "PATH"))}})))
+
+(deftest the-bb-task-actually-runs
+  (testing "this is the wiring the unit tests could not see, and it was broken
+            on EVERY invocation: the task used `(exec 'pr-review.manual/-main)`,
+            which hands the fn a babashka.cli options MAP and discards bare
+            positionals — so `review-pr 402` arrived as `{}` and `str/trim`
+            threw. Measured: `(exec 'f)` + `402` gives `({})`, `+ --pr 402`
+            gives `({:pr 402})`, while `apply *command-line-args*` gives
+            `(\"402\")`. So `exec` could not have supported the documented
+            positional at all"
+    (let [d (str (fs/create-temp-dir {:prefix "prl-task"}))]
+      (p/sh ["git" "init" "-q" "--initial-branch=main" d])
+      (testing "with a PR number"
+        (let [{:keys [exit out err]} (run-task d "999")]
+          (is (zero? exit) (str "the task must not crash; stderr: " err))
+          (is (not (str/includes? (str out err) "ClassCastException")))
+          (is (str/includes? out "PR #999")
+              "the positional must reach -main, or the documented CLI is a lie")))
+      (testing "with no argument at all — it also threw before the fix"
+        (let [{:keys [exit out err]} (run-task d)]
+          (is (zero? exit) (str "stderr: " err))
+          (is (not (str/includes? (str out err) "ClassCastException")))
+          (is (str/includes? out "no review ran")))))))
+
+(deftest the-bb-task-outside-a-repository-says-so
+  (let [d (str (fs/create-temp-dir {:prefix "prl-task-norepo"}))
+        {:keys [exit out]} (run-task d "1")]
+    (is (zero? exit))
+    (is (str/includes? out "not a git repository"))))
+

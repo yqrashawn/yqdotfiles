@@ -5,7 +5,14 @@
 
   review-pr {:doc  "Review a PR now, without a push. Optional PR number;
                      defaults to the current branch's open PR."
-             :task (exec 'pr-review.manual/-main)}
+             ;; NOT `exec`: it hands the fn a babashka.cli options MAP and
+             ;; DISCARDS bare positionals, so `review-pr 402` arrived as `{}`
+             ;; and `str/trim` on a map threw on every invocation, with or
+             ;; without an argument. Measured: `(exec 'f)` + `402` -> `({})`,
+             ;; `+ --pr 402` -> `({:pr 402})`. The other two tasks take no
+             ;; arguments, so `exec` is harmless for them.
+             :requires ([pr-review.manual])
+             :task (apply pr-review.manual/-main *command-line-args*)}
 
   install-push-hook {:doc  "SessionStart entrypoint. Installs the git pre-push
                             hook that names the pushed clone."
