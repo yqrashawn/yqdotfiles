@@ -13,6 +13,19 @@
   ["correctness/blocking" "correctness/followup" "coverage"
    "docs-accuracy" "style"])
 
+(def reviewer-env-var
+  "Set in the reviewer's environment so the trigger can recognise its own
+   grandchildren and refuse to act.
+
+   The reviewer is a plain `claude -p`, so it loads the user's settings AND
+   every enabled plugin -- including this one. Measured: a `review-trigger`
+   process spawns inside the reviewer on its Bash calls, and the reviewer uses
+   Bash heavily now (it runs test suites). Most of those triggers go silent,
+   but the abandoned-review path is deliberately neither session-scoped nor
+   verb-gated, so one of them can find outstanding work and start a REVIEW
+   INSIDE A REVIEW -- a grandchild that dies when the outer reviewer exits."
+  "PR_REVIEW_LOOP_REVIEWER")
+
 (def denied-tools
   "The reviewer's sandbox. THIS list is the mechanism; `--allowedTools` is
    not — see `claude-argv`.
@@ -145,10 +158,12 @@
     (let [f (io/file err-file)
           _ (io/make-parents f)
           {:keys [exit out]} (p/sh argv {:dir dir :in prompt
+                                         :extra-env {reviewer-env-var "1"}
                                          :err :write :err-file f})]
       {:exit exit :out (or out "")
        :err (try (slurp f) (catch Exception _ ""))})
-    (let [{:keys [exit out err]} (p/sh argv {:dir dir :in prompt})]
+    (let [{:keys [exit out err]} (p/sh argv {:dir dir :in prompt
+                                             :extra-env {reviewer-env-var "1"}})]
       {:exit exit :out (or out "") :err (or err "")})))
 
 (defn run!

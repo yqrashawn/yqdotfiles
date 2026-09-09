@@ -420,3 +420,21 @@
       (is (= 2 (count (:fingerprints p))))
       (is (= 1 (get (:counts p) "correctness/blocking"))))))
 
+(deftest the-reviewer-marks-its-own-environment
+  (testing "so the trigger can recognise its own grandchildren. Without it,
+            every Bash call the reviewer makes fires this plugin's PostToolUse
+            hook — measured, a review-trigger process spawning inside the
+            reviewer — and the abandoned path can start a review inside a
+            review"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-env"}) "e.stderr"))
+          spawn @#'reviewer/default-spawn
+          res (spawn ["sh" "-c" (str "printf %s \"$" reviewer/reviewer-env-var "\"")]
+                     "" "." f)]
+      (is (= "1" (:out res))
+          (str reviewer/reviewer-env-var " must reach the reviewer's environment")))
+    (testing "on the no-err-file path too"
+      (let [spawn @#'reviewer/default-spawn
+            res (spawn ["sh" "-c" (str "printf %s \"$" reviewer/reviewer-env-var "\"")]
+                       "" "." nil)]
+        (is (= "1" (:out res)))))))
+

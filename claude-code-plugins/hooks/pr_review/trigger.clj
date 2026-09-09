@@ -243,27 +243,7 @@
                   (assoc c :repo-root root :pr-info pr :passes passes))))))
         cands))
 
-(defn decide
-  "Pure decision from the hook input. No side effects, no spawning.
-
-   One question, asked the same way for both trigger commands: is there a push
-   whose new sha is the head of an open PR with no ledger row?
-
-   Nothing here reads the payload's `cwd`, and nothing parses the command for
-   a directory. Both were tried. `cwd` is the SESSION's directory, and an
-   agent that pushes from a worktree is on another branch of another checkout;
-   parsing the command to find that worktree produced five separate defects
-   and still missed 25 of 260 real push commands. Git knows, so git is asked.
-
-   A candidate must have BOTH landed and been made by an agent: git's reflog
-   proves the first, the `pre-push` hook's session id the second. That is R2
-   without consulting the command text, so `git -C /x push` and any alias or
-   script are caught, and the user's own terminal push never is.
-
-   `:trigger` and `:candidates` ride on every decision, silent ones included:
-   which lookback a review came through, and how many agent pushes were in
-   scope, are the first things to ask when one lands on the wrong PR or on
-   none."
+(defn- decide-outside-a-reviewer
   [input opts]
   (let [verb (trigger-verb (get-in input [:tool_input :command]))
         now ((or (:now-fn opts) #(System/currentTimeMillis)))
@@ -289,6 +269,40 @@
       {:action :silent :trigger verb :candidates (count cands)
        :reason (str "none of " (count cands)
                     " agent pushes is an unreviewed open-PR head")})))
+
+(defn decide
+  "Pure decision from the hook input. No side effects, no spawning.
+
+   One question, asked the same way for both trigger commands: is there a push
+   whose new sha is the head of an open PR with no ledger row?
+
+   Nothing here reads the payload's `cwd`, and nothing parses the command for
+   a directory. Both were tried. `cwd` is the SESSION's directory, and an
+   agent that pushes from a worktree is on another branch of another checkout;
+   parsing the command to find that worktree produced five separate defects
+   and still missed 25 of 260 real push commands. Git knows, so git is asked.
+
+   A candidate must have BOTH landed and been made by an agent: git's reflog
+   proves the first, the `pre-push` hook's session id the second. That is R2
+   without consulting the command text, so `git -C /x push` and any alias or
+   script are caught, and the user's own terminal push never is.
+
+   `:trigger` and `:candidates` ride on every decision, silent ones included:
+   which lookback a review came through, and how many agent pushes were in
+   scope, are the first things to ask when one lands on the wrong PR or on
+   none."
+  [input opts]
+  (if ((or (:reviewer-env-fn opts) #(System/getenv reviewer/reviewer-env-var)))
+    ;; Inside a reviewer. It is a plain `claude -p`, so it loads this very
+    ;; plugin and its Bash calls fire this hook -- measured, a review-trigger
+    ;; process spawning inside the reviewer. Most such triggers would go
+    ;; silent, but the abandoned-review path is deliberately neither
+    ;; session-scoped nor verb-gated, so one can find outstanding work and
+    ;; start a REVIEW INSIDE A REVIEW: a grandchild that dies when the outer
+    ;; reviewer exits, leaving a dead lock and a leaked worktree.
+    {:action :silent :trigger nil
+     :reason "running inside a reviewer; a review must not review"}
+    (decide-outside-a-reviewer input opts)))
 
 (defn findings-path
   "Where the latest pass's findings text is kept, so a session that did not

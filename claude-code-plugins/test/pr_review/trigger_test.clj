@@ -50,6 +50,7 @@
      ;; catch up, and a suite that pays that is a suite nobody runs.
      :sleep-fn         (fn [_] nil)
      :rand-fn          (fn [_] 0)
+     :reviewer-env-fn  (constantly nil)
      :now-fn           (constantly (or now 1000000))}))
 
 (defn- an-attempt
@@ -157,6 +158,41 @@
                         "git status" nil}]
       (testing cmd
         (is (= verb (:trigger (trigger/decide (input cmd) o))))))))
+
+(deftest a-review-must-not-review
+  (testing "the reviewer is a plain `claude -p`, so it loads this very plugin
+            and its Bash calls fire this hook. Measured: a review-trigger
+            process spawns inside the reviewer, and the reviewer uses Bash
+            heavily now — it runs test suites.
+
+            Most of those triggers would go silent, but the abandoned-review
+            path is deliberately neither session-scoped nor verb-gated, so one
+            can find outstanding work and start a REVIEW INSIDE A REVIEW: a
+            grandchild that dies when the outer reviewer exits, leaving a dead
+            lock and a leaked worktree. PR #406's worktree was last written at
+            21:11:33 and PR #405's review completed at 21:11:35"
+    (let [o (assoc (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                         :prs {"feat/x" (a-pr 370 "newsha")})
+                   :reviewer-env-fn (constantly "1"))
+          d (trigger/decide (input) o)]
+      (is (= :silent (:action d)))
+      (is (str/includes? (:reason d) "inside a reviewer")))
+    (testing "and it refuses before doing ANY work — no git, no gh, no ledger"
+      (let [touched (atom [])
+            o (assoc (opts) :reviewer-env-fn (constantly "1")
+                     :attempts-fn (fn [& _] (swap! touched conj :attempts) [])
+                     :pushes-fn (fn [& _] (swap! touched conj :pushes) [])
+                     :clones-fn (fn [& _] (swap! touched conj :clones) [])
+                     :abandoned-fn (fn [& _] (swap! touched conj :abandoned) []))]
+        (trigger/decide (input) o)
+        (is (empty? @touched))))))
+
+(deftest outside-a-reviewer-the-marker-is-absent-and-work-proceeds
+  ;; Guards the default: reading the env var wrongly would make the loop inert
+  ;; everywhere, which is the failure mode that costs the most and shows least.
+  (let [o (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                :prs {"feat/x" (a-pr 370 "newsha")})]
+    (is (= :review (:action (trigger/decide (input) o))))))
 
 ;; ------------------------------------------------------------- the window
 
