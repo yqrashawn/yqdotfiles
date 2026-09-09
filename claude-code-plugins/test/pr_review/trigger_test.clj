@@ -49,6 +49,7 @@
      ;; Never really sleep in tests: the sha-mismatch path waits for GitHub to
      ;; catch up, and a suite that pays that is a suite nobody runs.
      :sleep-fn         (fn [_] nil)
+     :rand-fn          (fn [_] 0)
      :now-fn           (constantly (or now 1000000))}))
 
 (defn- an-attempt
@@ -215,6 +216,34 @@
       (is (= 3 @calls) "it must re-ask, not accept the first answer")
       (is (pos? @slept) "and wait between asks"))))
 
+(deftest the-wait-backs-off-and-is-jittered
+  (testing "a fixed delay BEFORE asking — the obvious alternative — pays its
+            full cost on every trigger including those with nothing to review,
+            and still drops the push whenever GitHub takes longer than the
+            guess. Backing off costs nothing when the head is already right
+            and returns as soon as GitHub catches up.
+
+            The jitter is for concurrent pushes, which this workflow does
+            constantly: three sessions pushing within a minute would otherwise
+            line their retries up and ask GitHub in lockstep"
+    (let [waits (atom [])
+          o (assoc (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]})
+                   :open-pr-fn (fn [_ _ _] (a-pr 370 "never-matches"))
+                   :sleep-fn (fn [ms] (swap! waits conj ms))
+                   :rand-fn (constantly 0))]
+      (trigger/decide (input) o)
+      (is (= [1000 2000 4000 8000 8000] @waits)
+          "exponential from 1s, capped at 8s")
+      (is (= 23000 (reduce + @waits)) "about 23s of patience, plus jitter"))
+    (testing "and the jitter really is added"
+      (let [waits (atom [])
+            o (assoc (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]})
+                     :open-pr-fn (fn [_ _ _] (a-pr 370 "never-matches"))
+                     :sleep-fn (fn [ms] (swap! waits conj ms))
+                     :rand-fn (constantly 777))]
+        (trigger/decide (input) o)
+        (is (every? #(= 777 (mod % 1000)) @waits))))))
+
 (deftest a-superseded-push-is-dropped-once-the-attempts-run-out
   (testing "the same mismatch has two causes needing opposite handling —
             GitHub has not caught up (wait) or this push was superseded by a
@@ -225,7 +254,7 @@
                    :open-pr-fn (fn [_ _ _] (swap! calls inc) (a-pr 370 "newer")))
           d (trigger/decide (input) o)]
       (is (= :silent (:action d)))
-      (is (= 5 @calls) "bounded, and it does not spin"))))
+      (is (= 6 @calls) "bounded, and it does not spin"))))
 
 (deftest a-branch-with-no-open-pr-does-not-wait-at-all
   ;; No PR is a final answer, not a lag: waiting on it would put 8 seconds

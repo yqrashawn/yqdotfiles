@@ -34,17 +34,35 @@
   (* 60 1000))
 
 (def ^:private pr-head-attempts
-  "How many times to re-ask GitHub for the PR head when it does not yet match
-   the sha git just recorded.
+  "How many times to ask GitHub for the PR head before giving up on it.
 
    Measured: a push recorded at 20:25:31 had its PostToolUse trigger fire at
    20:25:32, and the PR's `updated_at` shows GitHub only moved the head at
    20:25:34. `gh pr list` takes ~1.3s on top, so the query lands squarely
-   inside the propagation window, and the mismatch made the trigger drop the
-   push in silence -- with no lock written, so nothing retried it either."
-  5)
+   inside the propagation window. The mismatch made the trigger drop the push
+   in silence -- with no lock written, so nothing retried it either.
 
-(def ^:private pr-head-delay-ms 2000)
+   For a push to an EXISTING PR the first ask races every time, by
+   construction: GitHub has to move the head. So this is the normal path, not
+   an exceptional one, and the shape matters. A fixed delay before asking --
+   the obvious alternative -- pays its full cost on every trigger including
+   the ones with nothing to review, and still drops the push whenever GitHub
+   takes longer than the guess. Backing off from a mismatch costs nothing when
+   the head is already right (`gh pr create`, or a trigger that fired late)
+   and returns as soon as GitHub catches up."
+  6)
+
+(defn- pr-head-delay-ms
+  "Exponential from 1s, capped at 8s, plus up to a second of jitter: about 24s
+   of total patience across `pr-head-attempts`.
+
+   The jitter is for concurrent pushes, which this workflow does constantly --
+   three sessions pushing within a minute of each other would otherwise line
+   their retries up and ask GitHub in lockstep."
+  [attempts-left rand-fn]
+  (let [n (- pr-head-attempts attempts-left)]
+    (+ (* 1000 (min 8 (bit-shift-left 1 n)))
+       (rand-fn 1000))))
 
 (def ^:private create-lookback-ms
   "How far back `gh pr create` looks. It pushes nothing, so the entry it needs
@@ -187,13 +205,17 @@
    background hook, and the newer push has its own trigger."
   [root branch sha opts]
   (let [fetch (or (:open-pr-fn opts) gh/open-pr)
-        sleep (or (:sleep-fn opts) #(Thread/sleep %))]
+        sleep (or (:sleep-fn opts) #(Thread/sleep %))
+        rnd   (or (:rand-fn opts) rand-int)]
     (loop [n (or (:pr-head-attempts opts) pr-head-attempts)]
+      ;; `when-let`, not `let`: no PR at all is a final answer, not a lag.
+      ;; Waiting on it would put the whole budget into every Bash call whose
+      ;; branch has no PR, which is most of them.
       (when-let [pr (fetch root branch opts)]
         (cond
           (= sha (:headRefOid pr)) pr
           (<= n 1) nil
-          :else (do (sleep (or (:pr-head-delay-ms opts) pr-head-delay-ms))
+          :else (do (sleep (pr-head-delay-ms n rnd))
                     (recur (dec n))))))))
 
 (defn- actionable
