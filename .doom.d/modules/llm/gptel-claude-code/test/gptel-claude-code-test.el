@@ -823,9 +823,10 @@ to avoid duplicate --model flags."
       (let ((args (gptel-claude-code--build-args nil backend)))
         ;; Should contain --mcp-config
         (should (member "--mcp-config" args))
-        ;; Should contain --permission-prompt-tool
-        (should (member "--permission-prompt-tool" args))
-        (should (member "mcp__emacs__permission_prompt" args))))))
+        ;; The emacs permission_prompt tool was removed; the flag must not
+        ;; come back, or Claude Code would block on a tool that no longer
+        ;; exists.
+        (should-not (member "--permission-prompt-tool" args))))))
 
 (ert-deftest gptel-claude-code-test-build-args-session-resume ()
   "Test session args for resume (continue) state."
