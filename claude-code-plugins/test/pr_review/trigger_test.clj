@@ -632,6 +632,53 @@
                      :abandoned-fn (fn [_] [])))]
     (is (= :silent (:action (trigger/decide (input) o))))))
 
+(deftest the-lock-record-carries-the-branch-a-retry-needs
+  (testing "the wiring the stubs hid. `abandoned-candidates` skips any record
+            without a branch — it has no other way to find the PR — so a
+            review! that does not thread :branch into acquire! makes the whole
+            retry path dead code. Measured in production: two killed reviews
+            left locks with branch=null while `lock/abandoned` returned both
+            and `decide` returned 0 candidates.
+
+            The lock is read from INSIDE the reviewer, which is the only
+            moment review! holds it. An earlier version of this test
+            re-acquired the lock itself and so asserted nothing about
+            review!'s own arguments"
+    (let [[r g] (tmp-repo)
+          held (atom :never-ran)
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}]
+      (#'trigger/review!
+       d (assoc (review-opts)
+                :spawn-fn (fn [_ _ _]
+                            (reset! held (lock/read-lock g 370))
+                            {:exit 0 :out (clean-reply) :err ""})))
+      (is (not= :never-ran @held) "the reviewer never ran, so nothing was checked")
+      (is (= "feat/x" (:branch @held))
+          "review! must pass :branch to acquire!, or no killed review is ever retried")
+      (is (= "headsha" (:sha @held)))
+      (is (= 370 (:pr @held))))))
+
+(deftest a-real-abandoned-lock-is-retried-end-to-end
+  (testing "no abandoned-fn stub: a real lock written by the real acquire!,
+            read by the real lock/abandoned, through the real decide"
+    (let [[_ g] (tmp-repo)
+          log (str (fs/path (fs/create-temp-dir {:prefix "pr-review-retrye2e"})
+                            "pushes.log"))]
+      (spit log (format "%d\t%s\tsess-x\n" (quot (System/currentTimeMillis) 1000) g))
+      (lock/acquire! g {:pr 370 :sha "killedsha" :branch "feat/x"} {:pid 999999})
+      (let [d (trigger/decide
+               (input "echo not-a-push")
+               {:log-fn (constantly log)
+                :main-worktree-fn (fn [gd _] (str (fs/parent gd)))
+                :open-pr-fn (fn [_ b _] (when (= "feat/x" b) (a-pr 370 "killedsha")))
+                :now-fn (constantly (System/currentTimeMillis))})]
+        (is (= :review (:action d)))
+        (is (true? (:retry? d)))
+        (is (= 370 (:pr d)))
+        (is (= "feat/x" (:branch d)))))))
+
 ;; -------------------------------------------------------- the real history
 
 (deftest the-two-pushes-the-command-parser-missed-are-reviewable

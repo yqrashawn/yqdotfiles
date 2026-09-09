@@ -380,9 +380,14 @@
    build, the reviewer, the ledger write, the release — may propagate, because
    -main has no try of its own and any other exit code is a silently lost
    pass rather than a loud failure."
-  [{:keys [git-dir pr sha] :as d} opts]
+  [{:keys [git-dir pr sha branch] :as d} opts]
   (try
-    (if (= :duplicate (:status (lock/acquire! git-dir {:pr pr :sha sha} opts)))
+    ;; `:branch` is not decoration. It is the only field in the lock record
+    ;; that lets `abandoned-candidates` rebuild a decision from a killed
+    ;; review, and omitting it made the whole retry path dead code in
+    ;; production while its tests passed on a stub that supplied one.
+    (if (= :duplicate (:status (lock/acquire! git-dir {:pr pr :sha sha
+                                                       :branch branch} opts)))
       {:exit 0 :message nil}
       (try
         (run-review! d opts)
