@@ -13,6 +13,11 @@
                            pr-review.prompt-test
                            pr-review.reviewer-test
                            pr-review.workdir-test
+                           pr-review.hookinstall-test
+                           pr-review.prepush-hook-test
+                           pr-review.checkout-test
+                           pr-review.cloneindex-test
+                           pr-review.pushlog-test
                            pr-review.pushrecord-test
                            pr-review.wrapper-test
                            pr-review.trigger-test]

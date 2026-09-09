@@ -82,11 +82,35 @@
     (when (zero? exit) out)))
 
 (defn open-pr
-  "The open PR whose head is `branch`, or nil. Measured at ~1.3s."
+  "The open PR whose head is `branch`, or nil. Measured at ~1.3s.
+
+   `headRefOid` is requested because the trigger matches it against the sha
+   git recorded in the reflog. A pre-push hook runs before the push, so a
+   rejected push still leaves a reflog-shaped candidate; requiring the PR to
+   actually point at that sha is what proves the push landed."
   [repo-root branch opts]
   (let [res (run opts ["gh" "pr" "list" "--head" branch "--state" "open"
-                       "--json" "number,isDraft,baseRefName"]
+                       "--json" "number,isDraft,baseRefName,headRefOid"]
                  repo-root)]
     (when (zero? (:exit res))
       (try (first (json/parse-string (:out res) true))
            (catch Exception _ nil)))))
+
+(defn main-worktree
+  "The clone's main worktree, given only its git directory, or nil.
+
+   The trigger starts from a git dir — that is what the `pre-push` hook
+   records — and `gh` needs a directory inside a checkout to resolve the
+   remote. `<git-dir>/..` is not that directory in general: with
+   `--separate-git-dir`, or for a git dir that is not named `.git`, it is
+   somewhere else entirely. `worktree list` answers exactly, and its first
+   entry is always the main worktree."
+  [git-dir opts]
+  (let [{:keys [exit out]} (run opts ["git" (str "--git-dir=" git-dir)
+                                      "worktree" "list" "--porcelain"] nil)]
+    (when (zero? exit)
+      (some->> (str/split-lines (str out))
+               (some #(when (str/starts-with? % "worktree ") %))
+               (#(subs % (count "worktree ")))
+               str/trim
+               not-empty))))
