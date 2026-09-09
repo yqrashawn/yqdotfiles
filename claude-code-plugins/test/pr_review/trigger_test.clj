@@ -5,6 +5,7 @@
             [clojure.test :refer [deftest is testing]]
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
+            [pr-review.pushrecord :as pushrecord]
             [pr-review.trigger :as trigger]))
 
 (defn- tmp-repo
@@ -508,3 +509,154 @@
                             (opts r g :pr nil))]
       (is (= :silent (:action d)))
       (is (= 0 (:exit (#'trigger/respond d {})))))))
+
+;; ------------------------------- the directory the pushing SHELL reported
+
+(defn- two-checkouts!
+  "A clone on `docs/x` plus a linked worktree on `feat`. Returns
+   [main wt feat]. Only the network call gets stubbed downstream: repo-root,
+   branch, git-dir and head-sha all run real git against whichever directory
+   `decide` resolved, which is the point — a stub that ignored the directory
+   could not tell the two checkouts apart."
+  []
+  (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-pushrec"}))
+        main (str tmp "/main")
+        wt   (str tmp "/wt")
+        feat "feat/recorded"
+        git! (fn [dir & args]
+               (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
+                 (when-not (zero? exit)
+                   (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
+    (fs/create-dirs main)
+    (git! main "init" "-q")
+    (git! main "config" "user.email" "t@t.t")
+    (git! main "config" "user.name" "t")
+    (spit (str main "/f") "hi")
+    (git! main "add" "f")
+    (git! main "commit" "-qm" "init")
+    (git! main "checkout" "-q" "-b" "docs/x")
+    (git! main "worktree" "add" "-q" wt "-b" feat)
+    [main wt feat]))
+
+(defn- record!
+  "Writes the push record the PreToolUse recorder would have written, and
+   returns the record dir to bind `pushrecord/record-dirs` to."
+  [id pwd branch]
+  (let [d (str (fs/create-temp-dir {:prefix "pr-review-pushdir"}))]
+    (spit (str d "/" id)
+          (str "tool_use_id=" id "\npwd=" pwd "\nbranch=" branch "\nts=1788913860\n"))
+    d))
+
+(deftest the-recorded-push-directory-reviews-that-worktrees-pr
+  (testing "the regression test for the whole push-record change. The command
+            says nothing about a directory, so parsing can only hand back the
+            session cwd — a branch with no PR — and the loop would go silent
+            on a push that really did go out from a worktree with open PR
+            #391. The PreToolUse recorder made the pushing shell write its own
+            $PWD, keyed by a tool_use_id both payloads carry, so the lookup is
+            exact and nothing is inferred"
+    (let [[main wt feat] (two-checkouts!)
+          pr-for (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
+          rec    (record! "toolu_recorded" wt feat)
+          d      (with-redefs [pushrecord/record-dirs (constantly [rec])]
+                   (trigger/decide {:cwd main
+                                    :tool_use_id "toolu_recorded"
+                                    :tool_input {:command "git push"}}
+                                   {:open-pr-fn pr-for}))]
+      (is (= :review (:action d)))
+      (is (= 391 (:pr d)) "the worktree's PR, which is the one that was pushed")
+      (is (= :push-record (:dir-source d))
+          "and the decision must say which source won — the record, not the
+           parse and not the session cwd")
+      (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
+          "the review runs against the worktree the shell reported")
+      (testing "the measured control: the identical payload with no record
+                falls back to parsing, finds nothing in the session cwd, and
+                is silent — which is what shipped before this change"
+        (let [c (trigger/decide {:cwd main
+                                 :tool_use_id "toolu_recorded"
+                                 :tool_input {:command "git push"}}
+                                {:open-pr-fn pr-for})]
+          (is (= :silent (:action c)))
+          (is (= :session-cwd (:dir-source c))))))))
+
+(deftest a-record-naming-a-directory-that-is-gone-falls-back-to-parsing
+  (testing "a worktree can be removed between the push and the hook. An
+            authoritative source that named a directory nothing could have
+            pushed from would be a worse answer than the parser it outranks"
+    (let [[main wt feat] (two-checkouts!)
+          gone   (str (fs/create-temp-dir {:prefix "pr-review-gone"}))
+          _      (fs/delete-tree gone)
+          pr-for (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
+          rec    (record! "toolu_gone" gone feat)
+          d      (with-redefs [pushrecord/record-dirs (constantly [rec])]
+                   (trigger/decide
+                    {:cwd main :tool_use_id "toolu_gone"
+                     :tool_input {:command (str "cd " wt " && git push")}}
+                    {:open-pr-fn pr-for}))]
+      (is (= :review (:action d)))
+      (is (= 391 (:pr d)))
+      (is (= :command (:dir-source d))
+          "the parse resolved it, so the parse must be named as the source"))))
+
+(deftest a-record-naming-a-directory-outside-any-repo-falls-back-to-parsing
+  (let [[main wt feat] (two-checkouts!)
+        outside (str (fs/create-temp-dir {:prefix "pr-review-norepo"}))
+        pr-for  (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
+        rec     (record! "toolu_norepo" outside feat)
+        d       (with-redefs [pushrecord/record-dirs (constantly [rec])]
+                  (trigger/decide
+                   {:cwd main :tool_use_id "toolu_norepo"
+                    :tool_input {:command (str "cd " wt " && git push")}}
+                   {:open-pr-fn pr-for}))]
+    (is (not (fs/exists? (str outside "/.git"))) "fixture precondition")
+    (is (= :review (:action d)))
+    (is (= 391 (:pr d)))
+    (is (= :command (:dir-source d))
+        "an existing directory that is not a checkout is rejected exactly like
+         a missing one — `fs/directory?` alone would have accepted this")))
+
+(deftest with-no-record-at-all-the-decision-is-what-it-was-before
+  (testing "most pushes have no record: the recorder gates on push-shaped
+            commands and only fires where the PreToolUse wrapper is
+            installed. Those calls must behave exactly as they did"
+    (let [[main wt feat] (two-checkouts!)
+          pr-for (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
+          d      (trigger/decide
+                  {:cwd main :tool_input {:command (str "cd " wt " && git push")}}
+                  {:open-pr-fn pr-for})]
+      (is (= :review (:action d)))
+      (is (= 391 (:pr d)))
+      (is (= :command (:dir-source d)))
+      (testing "and a command that never moves is sourced to the session cwd,
+                not miscredited to a parse that resolved nothing"
+        (let [[r g] (tmp-repo)
+              c (trigger/decide {:cwd r :tool_input {:command "git push"}}
+                                (opts r g :pr (a-pr 1)))]
+          (is (= :review (:action c)))
+          (is (= :session-cwd (:dir-source c))))))))
+
+(deftest when-the-record-and-the-parse-disagree-the-record-wins
+  (testing "the parse is inference over command text and imperfect by nature;
+            the record is the shell's own $PWD for this exact tool_use_id.
+            A tie-break that preferred the parse would make the better source
+            unreachable in precisely the case it was added for"
+    (let [[main wt feat] (two-checkouts!)
+          decoy  (str (fs/create-temp-dir {:prefix "pr-review-decoy"}))
+          _      (fs/create-dirs (str decoy "/.git"))
+          pr-for (fn [root branch _opts]
+                   (when (and (= feat branch)
+                              (= (str (fs/real-path wt)) (str (fs/real-path root))))
+                     (a-pr 391)))
+          rec    (record! "toolu_disagree" wt feat)
+          d      (with-redefs [pushrecord/record-dirs (constantly [rec])]
+                   (trigger/decide
+                    {:cwd main :tool_use_id "toolu_disagree"
+                     :tool_input {:command (str "cd " decoy " && git push")}}
+                    {:open-pr-fn pr-for}))]
+      (is (= :push-record (:dir-source d)))
+      (is (= :review (:action d)))
+      (is (= 391 (:pr d)))
+      (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
+          "the decoy the command names is a real checkout and would have
+           resolved cleanly — the record has to outrank it anyway"))))

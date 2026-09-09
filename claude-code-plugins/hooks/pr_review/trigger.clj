@@ -19,10 +19,17 @@
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.prompt :as prompt]
+            [pr-review.pushrecord :as pushrecord]
             [pr-review.reviewer :as reviewer]
             [pr-review.workdir :as workdir]))
 
 (def ^:private context-keep 5)
+
+(def ^:private record-max-age-ms
+  "How long a push record stays interesting. A PostToolUse hook fires when the
+   Bash call returns, so the record it wants is seconds old; an hour is slack,
+   not a window."
+  (* 60 60 1000))
 
 (defn core-prompt
   "The generic review core, read off the classpath.
@@ -45,21 +52,42 @@
   (or ((or (:git-dir-fn opts) gh/git-common-dir) repo-root opts)
       (str repo-root "/.git")))
 
-(defn decide
-  "Pure decision from the hook input. No side effects, no spawning.
+(defn- recorded-dir
+  "The directory the pushing shell reported for this tool call, or nil.
 
-   Reads the ledger exactly once and hands the result to ledger's pure
-   predicates.
+   Accepted only when it is still a directory inside a git repository. A
+   record can name a worktree that has since been removed, and handing
+   `decide` a directory nothing could have pushed from would make the
+   authoritative source a worse answer than the parser it outranks — so the
+   same admission test `pr-review.workdir` applies to its own guesses applies
+   here too, and a rejected record falls through to parsing."
+  [tool-use-id]
+  (let [pwd (:pwd (pushrecord/read-record tool-use-id))]
+    (when (and pwd (workdir/usable-dir? pwd)) pwd)))
 
-   The directory comes from `tool_input.command` (pr-review.workdir), never
-   from the payload's `cwd` alone: `cwd` is the *session's* directory, and an
-   agent that `cd`s into a worktree and pushes from there is on another
-   branch of another checkout. Measured: `cwd` on `docs/mydeck-design` with
-   no open PR, the worktree the push ran in on a branch with open PR #391."
-  [{:keys [cwd tool_input]} opts]
-  (let [command       (:command tool_input)
-        {:keys [dir]} (workdir/resolve-dir command cwd)
-        repo-root     ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
+(defn- effective-dir
+  "Which directory the push ran in, and which input said so. Highest first:
+
+     :push-record — `pr-review.pushrecord`: a `PreToolUse` recorder made the
+                    shell itself write its `$PWD`, keyed by this call's
+                    `tool_use_id`, which both payloads carry. Nothing is
+                    inferred, so it outranks everything below
+     :command      — `pr-review.workdir`'s reading of `tool_input.command`
+     :session-cwd  — the payload's `cwd`, which is the SESSION's directory
+
+   `:command` is claimed only when parsing actually moved the directory: a
+   command that says nothing about it resolves to the payload cwd, and then
+   cwd is as much the source as the parse was."
+  [{:keys [cwd tool_input tool_use_id]}]
+  (if-let [d (recorded-dir tool_use_id)]
+    {:dir d :source :push-record}
+    (let [{:keys [dir]} (workdir/resolve-dir (:command tool_input) cwd)]
+      {:dir dir :source (if (= dir cwd) :session-cwd :command)})))
+
+(defn- decide-in
+  "The decision proper, for an already-resolved directory."
+  [dir opts]
+  (let [repo-root ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
     (if-not repo-root
       {:action :silent :reason (str "not a git repo: " dir)}
       (let [branch ((or (:branch-fn opts) gh/current-branch) repo-root opts)]
@@ -99,6 +127,27 @@
                    :base-ref (:baseRefName pr)
                    :draft? (boolean (:isDraft pr))
                    :prior-fingerprints (ledger/suppressed-fingerprints passes)})))))))))
+
+(defn decide
+  "Pure decision from the hook input. No side effects, no spawning.
+
+   Reads the ledger exactly once and hands the result to ledger's pure
+   predicates.
+
+   The directory is never the payload's `cwd` alone: `cwd` is the *session's*
+   directory, and an agent that `cd`s into a worktree and pushes from there is
+   on another branch of another checkout. Measured: `cwd` on
+   `docs/mydeck-design` with no open PR, the worktree the push ran in on a
+   branch with open PR #391. See `effective-dir` for the three sources and
+   their order.
+
+   `:dir-source` rides on EVERY decision, the silent ones included. Which
+   input won is the first thing to ask when a review lands on the wrong
+   repository — or on none — and a key present only on `:review` would be
+   missing exactly where it is needed."
+  [input opts]
+  (let [{:keys [dir source]} (effective-dir input)]
+    (assoc (decide-in dir opts) :dir-source source)))
 
 (defn findings-message
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
@@ -249,4 +298,10 @@
         {:keys [exit message]} (respond d {})]
     (when message
       (binding [*out* *err*] (println message) (flush)))
+    ;; Housekeeping, last of all: the wake message is already on stderr and
+    ;; the exit code is already decided, so nothing prune-records! does — or
+    ;; fails to do — can reach the review. It sits outside every branch
+    ;; `decide` can take, so it runs on all of them, and it is the only thing
+    ;; that ever deletes these files.
+    (pushrecord/prune-records! record-max-age-ms)
     (System/exit exit)))

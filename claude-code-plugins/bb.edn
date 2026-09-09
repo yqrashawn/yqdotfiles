@@ -13,6 +13,7 @@
                            pr-review.prompt-test
                            pr-review.reviewer-test
                            pr-review.workdir-test
+                           pr-review.pushrecord-test
                            pr-review.trigger-test]
                     ;; Select on FILE EXISTENCE, never on whether `require`
                     ;; succeeds: a namespace with a compile error would be

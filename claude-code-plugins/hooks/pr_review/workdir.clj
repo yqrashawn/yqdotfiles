@@ -180,7 +180,14 @@
       (fs/exists? (fs/path p ".git")) true
       :else                          (recur (fs/parent p)))))
 
-(defn- usable-dir?
+(defn usable-dir?
+  "True when `dir` is a directory that sits inside a git repository — the two
+   conditions under which some directory could actually have run a push.
+
+   Public because it is the same admission test for a directory this
+   namespace parsed out of a command and for one `pr-review.pushrecord` read
+   off a record the shell wrote: a stale worktree path has to be rejected
+   identically whichever source produced it."
   [dir]
   (and (fs/directory? dir) (in-git-repo? dir)))
 
