@@ -137,3 +137,24 @@
         f (log! d [[1000 g "s"]])]
     (is (= 0 (attempts/prune! f 1000)))
     (is (= "" (slurp f)))))
+
+(deftest pusher-names-the-session-that-pushed-a-sha
+  (testing "a handoff has to be mechanical: a wake goes to whichever session's
+            tool call triggered the review — for a retry, deliberately not the
+            one that pushed — and is dropped entirely if that session's turn
+            has ended. Measured: PR #409's review finished 15 minutes after
+            its session went idle and no session received the wake"
+    (let [d (tmp)
+          g (clone! d "g")
+          f (log! d [[1000 g "sess-a" "refs/heads/feat/x" (sha \a)]
+                     [2000 g "sess-b" "refs/heads/feat/y" (sha \b)]
+                     [3000 g "-"      "refs/heads/feat/z" (sha \c)]])]
+      (is (= "sess-a" (attempts/pusher f g "feat/x" (sha \a))))
+      (is (= "sess-b" (attempts/pusher f g "feat/y" (sha \b))))
+      (is (nil? (attempts/pusher f g "feat/z" (sha \c)))
+          "a human push has no session to hand off to")
+      (is (nil? (attempts/pusher f g "feat/x" (sha \b)))
+          "the sha must match, or it names the wrong push")
+      (is (nil? (attempts/pusher f "/other/.git" "feat/x" (sha \a)))
+          "and so must the clone"))))
+

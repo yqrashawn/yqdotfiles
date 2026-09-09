@@ -448,6 +448,53 @@
            branch, not the clone directory: every review now runs in a
            throwaway checkout whose name says nothing about the work"))))
 
+(deftest a-mergeable-verdict-tells-the-agent-it-may-merge
+  (testing "measured on PR #410: two MERGEABLE passes, both delivered, and the
+            agent fixed the [coverage] finding and pushed again both times
+            instead of merging — because nothing said MERGEABLE meant it may.
+            On a test-only PR every pass finds another coverage nit, and
+            coverage findings are never suppressed by the re-raise rules, so
+            it cannot converge on its own"
+    (let [msg (trigger/findings-message
+               {:branch "test/x" :pr 410 :pass 2 :git-dir "/g"}
+               {:verdict "MERGEABLE" :body "BODY"
+                :counts {"correctness/blocking" 0 "coverage" 1}})]
+      (is (str/includes? msg "you may merge"))
+      (is (str/includes? msg "do NOT block"))
+      (is (str/includes? msg "follow-up PR")
+          "and it must say where the non-blocking findings go instead")
+      (is (str/includes? msg "does not terminate")
+          "the reason another fix push is the wrong move has to be given")
+      (is (not (str/includes? msg "verify each blocking finding"))
+          "the NOT MERGEABLE instruction must not also appear"))))
+
+(deftest the-wake-names-the-session-that-pushed
+  (testing "PR #409's review completed 15 minutes after its session went idle
+            and no session received the wake, so whoever does read the
+            findings has to be told whose PR it is"
+    (let [msg (trigger/findings-message
+               {:branch "test/x" :pr 410 :pass 1 :git-dir "/g"
+                :pushed-by "334b7e62-afb0-44b4-82a1-cff0dc86ff20"}
+               {:verdict "MERGEABLE" :body "BODY" :counts {}})]
+      (is (str/includes? msg "pushed by session 334b7e62-afb0-44b4-82a1-cff0dc86ff20"))
+      (is (str/includes? msg "hand that path over")))
+    (testing "and says nothing misleading when there is no session to name"
+      (let [msg (trigger/findings-message
+                 {:branch "test/x" :pr 410 :pass 1 :git-dir "/g"}
+                 {:verdict "MERGEABLE" :body "BODY" :counts {}})]
+        (is (not (str/includes? msg "pushed by session")))
+        (is (str/includes? msg "/g/pr-review.410.findings.md"))))))
+
+(deftest a-not-mergeable-verdict-tells-the-agent-to-fix-first
+  (let [msg (trigger/findings-message
+             {:branch "test/x" :pr 410 :pass 1 :git-dir "/g"}
+             {:verdict "NOT MERGEABLE" :body "BODY"
+              :counts {"correctness/blocking" 1}})]
+    (is (str/includes? msg "at least one [correctness/blocking] finding stands"))
+    (is (str/includes? msg "fix the class"))
+    (is (not (str/includes? msg "you may merge"))
+        "a blocking finding must never carry a merge instruction")))
+
 (deftest findings-message-carries-parse-warnings
   (let [msg (trigger/findings-message
              {:branch "feat/x" :pr 1 :pass 1}

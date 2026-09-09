@@ -315,7 +315,7 @@
    wrapper and ignores rewakeMessage for third-party plugins, so this string
    has to introduce itself."
   ([d parsed] (findings-message d parsed nil))
-  ([{:keys [branch pr pass retry? git-dir]} parsed warnings]
+  ([{:keys [branch pr pass retry? git-dir pushed-by]} parsed warnings]
    (str "pr-review-loop — " branch
         " PR #" pr ", pass " pass
         (when retry? " (retried after an interrupted review)")
@@ -324,12 +324,32 @@
         (when (seq warnings)
           (str "\n\n" (str/join "\n" warnings)))
         "\n\nThese findings are also at " (findings-path git-dir pr)
-        " — point another session at that path rather than re-running the review."
-        "\n\nNext: use the pr-review-loop skill — it covers this whole loop,"
-        " not just the fixing: verify each [correctness/blocking] finding"
-        " against the source before changing anything, push fixes onto THIS"
-        " PR rather than a new one, and post the single summary comment"
-        " before merging.")))
+        (when pushed-by
+          (str ", and this PR was pushed by session " pushed-by))
+        ". If that is not you, hand that path over rather than acting on it or"
+        " re-running the review."
+        "\n\n"
+        ;; The verdict was reported and then buried. Measured on PR #410: two
+        ;; MERGEABLE passes, both delivered, and the agent fixed the
+        ;; [coverage] finding and pushed again both times instead of merging
+        ;; — because nothing in the message said MERGEABLE means it may. On a
+        ;; test-only PR every pass finds another coverage nit, and coverage
+        ;; findings are never suppressed by the re-raise rules, so it cannot
+        ;; converge by itself. The verdict has to carry its own instruction.
+        (if (= "MERGEABLE" (:verdict parsed))
+          (str "MERGEABLE means you may merge this PR now. The"
+               " [correctness/followup], [coverage], [docs-accuracy] and"
+               " [style] findings above do NOT block it — file them for a"
+               " follow-up PR instead of fixing them here. Pushing another fix"
+               " to this PR earns another pass against the same rules, and on"
+               " a PR whose diff is mostly tests that does not terminate."
+               "\n\nNext: post the single summary comment, then merge. The"
+               " pr-review-loop skill has the summary format.")
+          (str "NOT MERGEABLE means at least one [correctness/blocking]"
+               " finding stands. Next: use the pr-review-loop skill — verify"
+               " each blocking finding against the source before changing"
+               " anything, fix the class rather than the instances, and push"
+               " onto THIS PR rather than a new one.")))))
 
 (defn- unresolved-base-message
   "Names the unresolved ref and the exact fix, so agent A does not have to

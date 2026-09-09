@@ -101,6 +101,23 @@
   [attempt]
   (not= no-session (:session attempt)))
 
+(defn pusher
+  "The Claude session that pushed `sha` to `branch` in `git-dir`, or nil.
+
+   Makes a handoff mechanical rather than a search. A wake is delivered to
+   whichever session's tool call triggered the review, which for a retry is
+   deliberately not the session that made the push — and a wake is dropped
+   entirely if that session's turn has already ended. Either way someone has
+   to be told whose PR it is, and this file already knows."
+  [log git-dir branch sha]
+  (->> (attempts-since log 0)
+       (filter #(and (= git-dir (:git-dir %))
+                     (= branch (:branch %))
+                     (= sha (:sha %))
+                     (by-agent? %)))
+       first
+       :session))
+
 (defn prune!
   "Drops records older than `max-age-ms` from `log`, under its own flock.
 
