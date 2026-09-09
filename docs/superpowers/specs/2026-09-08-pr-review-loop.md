@@ -83,6 +83,12 @@ on darwin 24.3.0. Confidence noted per item.
 | C33 | Observed GH-Action review durations: 1 m 52 s – **5 m 43 s** (343 s), median ≈ 3 m 12 s, n=11. | confirmed |
 | C34 | `~/.nixpkgs/claude-code-plugins` exists, is empty, untracked, and wired to nothing. `install.sh` symlinks only `.doom.d`. | confirmed |
 | C35 | Every other Claude asset (`~/.claude/{agents,skills,hooks,commands,settings.json,CLAUDE.md}`) is a symlink into Dropbox. A plugin in `~/.nixpkgs` propagates on `git pull` + rebuild instead. | confirmed |
+| C36 | `--allowedTools` is a **pre-approval allowlist, not a tool restriction**. With `permissions.defaultMode: "bypassPermissions"` every tool is auto-approved regardless, so a reviewer launched with `--allowedTools "Read,Grep,Glob"` still had Bash and wrote outside the repo. Only `--disallowedTools` actually removes tools. | confirmed — reviewer wrote a file outside every repo; the spec's original R7 rationale was wrong |
+| C37 | Neither the PreToolUse nor the PostToolUse payload carries the tool call's real working directory. Both carry only the **session** `cwd`; the hook process's own `PWD` is the session cwd too. Payload keys: `cwd`, `duration_ms`, `hook_event_name`, `permission_mode`, `prompt_id`, `scratchpad_dir`, `session_id`, `tool_input{command,description}`, `tool_name`, `tool_response`, `tool_use_id`, `transcript_path`. | confirmed — probed a real payload |
+| C38 | `tool_use_id` appears in **both** the Pre and Post payloads and correlates, so a PreToolUse-written record can be read exactly by the matching PostToolUse. | confirmed |
+| C39 | Two PreToolUse hooks both returning `updatedInput` contend: last writer wins. A plugin hook runs **before** settings hooks, so rtk always clobbers a plugin's rewrite. Only a settings-level wrapper that delegates to rtk can add to the command. | confirmed — measured the suffix vanishing |
+| C40 | Introducing a `$(…)` command substitution into `updatedInput.command` makes Claude Code permission-check the new subcommands. In a session with `--permission-prompt-tool`, that invoked the tool with a payload it rejected and every push-shaped Bash call failed. A substitution-free recorder does not. | confirmed — reproduced and fixed |
+| C41 | `vcs_state_changed` carries the true `cwd` but is a **stream-json system event**, not a hook event — no hook receives it. It is persisted only for sessions whose stream a supervisor consumes (130 rows over 62 sessions in cchp's DB), so it is not a universal source. | confirmed |
 
 ## Requirements
 
@@ -142,7 +148,7 @@ tax than the whole locking mechanism it avoids.
 |---|---|
 | B runs `git diff` itself | **Rejected — C19.** Under rtk, B would see 195 bytes instead of 80 KB. Silent, catastrophic quality loss. |
 | B runs `git diff`, spawned with `disableAllHooks: true` | Rejected — also disables the user's `block-suspicious-bash` guard for B, to buy back something option 3 gets for free. |
-| **Hook precomputes context; B gets `Read`, `Grep`, `Glob` only** | **Chosen.** The hook is a plain babashka process, so it is not rtk-rewritten (C16 applies to tool calls, not hook subprocesses). It writes the true diff to a file. B has no Bash, so there is nothing to rewrite and nothing that can mutate the tree. Satisfies R7 and R8 with one decision. |
+| **Hook precomputes context; B gets `Read`, `Grep`, `Glob` only** | **Chosen**, but the stated reason was wrong. The hook is a plain babashka process, so it is not rtk-rewritten (C16 applies to tool calls, not hook subprocesses), and it writes the true diff to a file. The claim that "B has no Bash" did **not** follow from `--allowedTools`: see C36. R7 is satisfied only by the deny list added later. |
 
 Dropping Bash from B deletes two problems at once: the rtk truncation and the
 write risk. It is strictly more capable than the GitHub Action reviewer, which
@@ -167,7 +173,8 @@ A (interactive Claude Code session, any repo, machine M)
          asyncRewake: true, no timeout                          (C1, C6)
          command: bb --config ${CLAUDE_PLUGIN_ROOT}/bb.edn review-trigger   (C13, C29)
            │
-           │ 1. parse hook stdin  → cwd, tool_input.command
+           │ 1. parse hook stdin  → tool_use_id, cwd, tool_input.command
+           │    effective dir: push record → command parse → session cwd  (C37, C38)
            │ 2. repo root, branch → gh pr list --head --state open   (C30)
            │      no open PR                       → exit 0, silent
            │ 3. ledger: passes for this PR ≥ 10    → exit 2 "cap reached"
@@ -179,7 +186,8 @@ A (interactive Claude Code session, any repo, machine M)
            │ 6. prompt: review_core.md + <repo>/.claude/pr-review.md
            │            + .git/pr-review-hint + pass number + context paths
            │ 7. spawn B:  claude -p --model opus
-           │              --allowedTools "Read,Grep,Glob"
+           │              --disallowedTools <deny list>  --strict-mcp-config
+           │              --allowedTools "Read,Grep,Glob"   (C36)
            │      capture stdout
            │ 8. ledger append: {pr, sha, pass, verdict, counts, fingerprints}
            │ 9. release lock
