@@ -53,7 +53,7 @@
                     Bash, `printf x > file` works, so denying Write and Edit
                     is no longer a write barrier. What bounds the damage is
                     the throwaway worktree the review runs in"
-            (is (every? denied ["Write" "Edit" "MultiEdit" "NotebookEdit"]))
+            (is (every? denied ["Write" "Edit" "NotebookEdit"]))
             (is (not (denied "Bash")) "Bash is deliberately granted"))
           (testing "the harms that are known and reachable are still closed,
                     as command shapes. Measured: a denied `rm` came back

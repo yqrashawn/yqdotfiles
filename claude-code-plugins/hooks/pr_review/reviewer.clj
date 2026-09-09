@@ -74,13 +74,22 @@
    at all (ToolSearch, the MCP resource readers), or a place to put a finding
    where the parser will never see it (ReportFindings, Task*).
 
-   MultiEdit no longer exists in Claude Code 2.1.263 — it is kept because an
-   unknown name costs one warning line on stderr, and a reintroduced editing
-   tool would otherwise be granted silently."
+   Every name here must be a tool Claude Code actually has. An unknown one
+   costs a warning line on stderr — `Permission deny rule \"X\" matches no
+   known tool` — and stderr is now the channel a KILLED review leaves its
+   evidence on. A file whose only content is a false positive makes a dead
+   reviewer look like it said something, and it was 76 bytes of it on every
+   review.
+
+   `MultiEdit` was carried here after Claude Code dropped it, on the argument
+   that a reintroduced editing tool would otherwise be granted silently. That
+   argument died when Bash was granted: `printf x > file` writes, measured, so
+   denying editing tools is not a write barrier and guarding a hypothetical
+   one buys nothing Bash does not already allow."
   ["Agent" "Artifact" "ArtifactCheck" "ArtifactComments" "ArtifactData"
    "CronCreate" "CronDelete" "CronList" "DesignSync"
    "Edit" "EnterWorktree" "ExitWorktree" "ListAgents"
-   "ListMcpResourcesTool" "Monitor" "MultiEdit" "NotebookEdit"
+   "ListMcpResourcesTool" "Monitor" "NotebookEdit"
    "PushNotification" "ReadMcpResourceDirTool" "ReadMcpResourceTool"
    "RemoteTrigger" "ReportFindings" "ScheduleWakeup" "SendMessage"
    "SendUserMessage" "ShareOnboardingGuide" "Skill" "Task" "TaskCreate"
