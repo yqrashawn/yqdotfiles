@@ -2563,15 +2563,22 @@ git commit -qm "feat: read-only reviewer spawn and output parsing"
 **Files:**
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/trigger.clj`
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/workdir.clj`
+- Create: `~/.nixpkgs/claude-code-plugins/hooks/pr_review/pushrecord.clj` (0.5.0)
 - Create: `~/.nixpkgs/claude-code-plugins/hooks/hooks.json`
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/trigger_test.clj`
 - Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/workdir_test.clj`
+- Test: `~/.nixpkgs/claude-code-plugins/test/pr_review/pushrecord_test.clj` (0.5.0)
 
 **Interfaces:**
 - Consumes: everything from Tasks 2–7
 - Produces:
+  - `(pushrecord/record-dirs)` → `[String]` — where a push record could be, in search order: `$TMPDIR/pr-review-pushdir` first when TMPDIR is set, then `/tmp/pr-review-pushdir`. Both, always: the recorder expands `${TMPDIR:-/tmp}` in the shell that ran the push and the hook process expands it again, and although the two were measured to agree, nothing enforces it
+  - `(pushrecord/read-record tool-use-id)` → `nil | {:pwd String :branch String :ts long}` — the directory the pushing **shell itself** reported, keyed by a `tool_use_id` that both the PreToolUse and the PostToolUse payload carry, so the lookup is exact and never "the most recent record". A `PreToolUse` wrapper around rtk (`~/.claude/hooks/rtk-rewrite-wrapper.sh`) appends the recorder to push-shaped commands. Never throws — a missing file, a half-written one, a directory where a file should be, and a nil, blank or unshaped id are all `nil` or a partial map. **No side effects**: it must not delete the record it read, because `if` conditions are best-effort and fail open, so one unclassifiable command fires all four `hooks.json` entries and yields four concurrent `decide` calls for the SAME `tool_use_id`; a destructive read would leave three of them silently falling back to parsing and possibly resolving a different directory. The key is unique, so a record can never be picked up by a *later* push and age-based pruning is both sufficient and race-free
+  - `(pushrecord/prune-records! max-age-ms)` → number deleted. The **only** cleanup these files get — nothing else prunes them and `~/.cchp/tmp` is not auto-cleared. Never throws. `-main` calls it once per run at a one-hour age, after the wake message is already on stderr and the exit code already decided, so it sits outside every branch `decide` can take and nothing it does can reach the review
+  - **Known limitation of the record, documented and not solved:** the recorder reads the `$PWD` of the shell it was appended to, so `(cd /x && git push)` in a subshell, `git -C /x push` and a trailing `&` all capture the **outer** directory — plausible-looking and wrong, with nothing to cross-check against (`workdir` gets the subshell shape wrong the same way, and `git -C` never produces a record at all because the wrapper's gate greps for the literal `git push`). The open-PR gate is the backstop: the outer directory's branch has no open PR, so `decide` finds nothing and the loop goes silent
   - `(workdir/resolve-dir command fallback)` → `{:dir String :basis :explicit|:fallback|:ambiguous}` — which directory the command actually ran in. Pure string analysis; the only IO is the existence and repository checks that reject a resolved directory nothing could have pushed from. `:ambiguous` (command substitution, a variable the command never assigned, a glob, a leading `~`) and `:fallback` (the directory does not exist, or is not inside a repository) both hand back `fallback` — unguessed, because reviewing the wrong repository is worse than staying silent. `$VAR` is expanded from the command's own `VAR=value` assignments and **never** from this process's environment
-  - `(decide input opts)` → `{:action :silent|:review|:cap-reached :reason String …}` — pure decision, no side effects. Reads the ledger exactly **once** and hands the result to `ledger`'s pure predicates; a `:review` decision carries `:git-dir`, the resolved shared git directory. Takes the **whole** hook input: the directory comes from `tool_input.command` via `workdir`, not from the payload's `cwd`, which is the *session's* directory and names another branch of another checkout whenever the command `cd`ed first. Every injected collaborator (`:repo-root-fn` `:branch-fn` `:open-pr-fn` `:head-sha-fn` `:git-dir-fn`) is now called **with** its arguments, so a stub can tell two checkouts apart. No open PR is `:silent`, unconditionally — see the 0.4.1 revert note at the end of this task for why there is no `:no-pr` action any more
+  - `(workdir/usable-dir? dir)` → Boolean — a directory that sits inside a git repository, i.e. one that could actually have run a push. Public because it is the same admission test for a directory parsed out of a command and for one read off a push record: a stale worktree path must be rejected identically whichever source produced it
+  - `(decide input opts)` → `{:action :silent|:review|:cap-reached :reason String …}` — pure decision, no side effects. Reads the ledger exactly **once** and hands the result to `ledger`'s pure predicates; a `:review` decision carries `:git-dir`, the resolved shared git directory. Takes the **whole** hook input, `tool_use_id` included. The effective directory is resolved highest-source-first and the winner is recorded on **every** decision — the silent ones too — under `:dir-source`: (1) `:push-record`, `pushrecord/read-record` on this call's `tool_use_id`, accepted only when its `:pwd` is still a directory inside a repository (`workdir/usable-dir?`), because the shell reported it and nothing inferred it; (2) `:command`, the existing `workdir/resolve-dir` parse, unchanged, claimed only when the parse actually moved the directory; (3) `:session-cwd`, the payload's `cwd`, which is the *session's* directory and names another branch of another checkout whenever the command `cd`ed first. Every injected collaborator (`:repo-root-fn` `:branch-fn` `:open-pr-fn` `:head-sha-fn` `:git-dir-fn`) is now called **with** its arguments, so a stub can tell two checkouts apart. No open PR is `:silent`, unconditionally — see the 0.4.1 revert note at the end of this task for why there is no `:no-pr` action any more
   - `(-main & args)` → reads hook JSON on stdin, exits 0 or 2
   - `respond` maps a decision to `{:exit :message}`. Split out of `-main` so the exit-code contract is testable without `System/exit`: an action the `case` never learned falls through to the default and is silently inert, which is the defect class this namespace keeps paying for
   - `review!` returns an `:exit` of 0 or 2 on **every** branch, `lock/acquire!`
@@ -3129,10 +3136,17 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.prompt :as prompt]
+            [pr-review.pushrecord :as pushrecord]
             [pr-review.reviewer :as reviewer]
             [pr-review.workdir :as workdir]))
 
 (def ^:private context-keep 5)
+
+(def ^:private record-max-age-ms
+  "How long a push record stays interesting. A PostToolUse hook fires when the
+   Bash call returns, so the record it wants is seconds old; an hour is slack,
+   not a window."
+  (* 60 60 1000))
 
 (defn core-prompt
   "The generic review core, read off the classpath.
@@ -3155,21 +3169,42 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
   (or ((or (:git-dir-fn opts) gh/git-common-dir) repo-root opts)
       (str repo-root "/.git")))
 
-(defn decide
-  "Pure decision from the hook input. No side effects, no spawning.
+(defn- recorded-dir
+  "The directory the pushing shell reported for this tool call, or nil.
 
-   Reads the ledger exactly once and hands the result to ledger's pure
-   predicates.
+   Accepted only when it is still a directory inside a git repository. A
+   record can name a worktree that has since been removed, and handing
+   `decide` a directory nothing could have pushed from would make the
+   authoritative source a worse answer than the parser it outranks — so the
+   same admission test `pr-review.workdir` applies to its own guesses applies
+   here too, and a rejected record falls through to parsing."
+  [tool-use-id]
+  (let [pwd (:pwd (pushrecord/read-record tool-use-id))]
+    (when (and pwd (workdir/usable-dir? pwd)) pwd)))
 
-   The directory comes from `tool_input.command` (pr-review.workdir), never
-   from the payload's `cwd` alone: `cwd` is the *session's* directory, and an
-   agent that `cd`s into a worktree and pushes from there is on another
-   branch of another checkout. Measured: `cwd` on `docs/mydeck-design` with
-   no open PR, the worktree the push ran in on a branch with open PR #391."
-  [{:keys [cwd tool_input]} opts]
-  (let [command       (:command tool_input)
-        {:keys [dir]} (workdir/resolve-dir command cwd)
-        repo-root     ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
+(defn- effective-dir
+  "Which directory the push ran in, and which input said so. Highest first:
+
+     :push-record — `pr-review.pushrecord`: a `PreToolUse` recorder made the
+                    shell itself write its `$PWD`, keyed by this call's
+                    `tool_use_id`, which both payloads carry. Nothing is
+                    inferred, so it outranks everything below
+     :command      — `pr-review.workdir`'s reading of `tool_input.command`
+     :session-cwd  — the payload's `cwd`, which is the SESSION's directory
+
+   `:command` is claimed only when parsing actually moved the directory: a
+   command that says nothing about it resolves to the payload cwd, and then
+   cwd is as much the source as the parse was."
+  [{:keys [cwd tool_input tool_use_id]}]
+  (if-let [d (recorded-dir tool_use_id)]
+    {:dir d :source :push-record}
+    (let [{:keys [dir]} (workdir/resolve-dir (:command tool_input) cwd)]
+      {:dir dir :source (if (= dir cwd) :session-cwd :command)})))
+
+(defn- decide-in
+  "The decision proper, for an already-resolved directory."
+  [dir opts]
+  (let [repo-root ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
     (if-not repo-root
       {:action :silent :reason (str "not a git repo: " dir)}
       (let [branch ((or (:branch-fn opts) gh/current-branch) repo-root opts)]
@@ -3209,6 +3244,27 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
                    :base-ref (:baseRefName pr)
                    :draft? (boolean (:isDraft pr))
                    :prior-fingerprints (ledger/suppressed-fingerprints passes)})))))))))
+
+(defn decide
+  "Pure decision from the hook input. No side effects, no spawning.
+
+   Reads the ledger exactly once and hands the result to ledger's pure
+   predicates.
+
+   The directory is never the payload's `cwd` alone: `cwd` is the *session's*
+   directory, and an agent that `cd`s into a worktree and pushes from there is
+   on another branch of another checkout. Measured: `cwd` on
+   `docs/mydeck-design` with no open PR, the worktree the push ran in on a
+   branch with open PR #391. See `effective-dir` for the three sources and
+   their order.
+
+   `:dir-source` rides on EVERY decision, the silent ones included. Which
+   input won is the first thing to ask when a review lands on the wrong
+   repository — or on none — and a key present only on `:review` would be
+   missing exactly where it is needed."
+  [input opts]
+  (let [{:keys [dir source]} (effective-dir input)]
+    (assoc (decide-in dir opts) :dir-source source)))
 
 (defn findings-message
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
@@ -3359,6 +3415,12 @@ Expected: FAIL with `java.io.FileNotFoundException` naming `pr_review/trigger`, 
         {:keys [exit message]} (respond d {})]
     (when message
       (binding [*out* *err*] (println message) (flush)))
+    ;; Housekeeping, last of all: the wake message is already on stderr and
+    ;; the exit code is already decided, so nothing prune-records! does — or
+    ;; fails to do — can reach the review. It sits outside every branch
+    ;; `decide` can take, so it runs on all of them, and it is the only thing
+    ;; that ever deletes these files.
+    (pushrecord/prune-records! record-max-age-ms)
     (System/exit exit)))
 ```
 
@@ -3475,6 +3537,23 @@ practice than the silent-inert defect the diagnostic was meant to fix).
 and `trigger_test.clj` blocks above already reflect this. Do not reinstate the
 diagnostic without first solving that multiplication: one decision per push,
 not one per matching `hooks.json` entry.
+
+**Push-record note (0.5.0):** `decide` no longer relies on command parsing
+alone for the effective directory. A `PreToolUse` wrapper around rtk
+(`~/.claude/hooks/rtk-rewrite-wrapper.sh`, live on this machine) appends a
+recorder to push-shaped commands, so the shell that ran the push writes its
+own `$PWD` to `${TMPDIR:-/tmp}/pr-review-pushdir/<tool_use_id>`. Both payloads
+carry `tool_use_id` and it correlates between them, so the lookup is exact —
+never "the most recent record". `pr-review.pushrecord` reads and prunes those
+files and does nothing else; `pr-review.workdir` stays pure string analysis
+and stays the fallback. Precedence is `:push-record` → `:command` →
+`:session-cwd`, recorded on every decision under `:dir-source`. Two rules that
+must not be relaxed: `read-record` has **no side effects** (four concurrent
+`decide` calls per push, one per fail-open `hooks.json` entry, must all see
+the same record), and `prune-records!` is the **only** cleanup these files
+get. The recorder's own blind spot — `(cd /x && git push)` in a subshell,
+`git -C /x push`, a trailing `&` — is documented in the namespace docstring
+and left to the open-PR gate.
 
 ---
 
