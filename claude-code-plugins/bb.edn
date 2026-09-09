@@ -19,7 +19,7 @@
                            pr-review.hookinstall-test
                            pr-review.prepush-hook-test
                            pr-review.checkout-test
-                           pr-review.cloneindex-test
+                           pr-review.attempts-test
                            pr-review.pushlog-test
                            pr-review.trigger-test]
                     ;; Select on FILE EXISTENCE, never on whether `require`

@@ -3,7 +3,6 @@
             [babashka.process :as p]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
-            [pr-review.cloneindex :as cloneindex]
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.trigger :as trigger]))
@@ -29,24 +28,37 @@
 (defn- opts
   "Wire every collaborator `decide` reads to a stub.
 
-   `pushes` maps git-dir -> [push]; `prs` maps branch -> pr. The push stub
-   honours `since` itself, because the lookback window is part of what is
+   `pushes` maps git-dir -> [push]; `prs` maps branch -> pr. `attempts`
+   defaults to one agent attempt per push, from `session`, so the common case
+   stays readable — pass it explicitly to exercise provenance. Both stubs
+   honour `since` themselves, because the lookback window is part of what is
    under test rather than incidental to it."
-  [& {:keys [pushes prs worktree now clones]}]
-  (let [pushes (or pushes {})]
-    {:clone-log-fn     (constantly "/nonexistent/pushes.log")
-     :clones-fn        (fn [_log _since] (or clones (vec (keys pushes))))
+  [& {:keys [pushes prs worktree now attempts session]}]
+  (let [pushes (or pushes {})
+        session (or session "sess-1")
+        atts (or attempts
+                 (vec (for [[gd ps] pushes p ps]
+                        {:ts (:ts p) :git-dir gd :session session
+                         :ref (str "refs/heads/" (:branch p))
+                         :branch (:branch p) :sha (:new-sha p)})))]
+    {:log-fn           (constantly "/nonexistent/pushes.log")
+     :attempts-fn      (fn [_log since] (filterv #(>= (:ts %) since) atts))
      :pushes-fn        (fn [gd since] (filterv #(>= (:ts %) since) (get pushes gd)))
      :main-worktree-fn (fn [gd _] (or worktree gd))
      :open-pr-fn       (fn [_root branch _] (get prs branch))
      :now-fn           (constantly (or now 1000000))}))
+
+(defn- an-attempt
+  [gd branch sha ts & {:keys [session]}]
+  {:ts ts :git-dir gd :session (or session "sess-1")
+   :ref (str "refs/heads/" branch) :branch branch :sha sha})
 
 (defn- input
   "A PostToolUse payload. Only the command and the duration are read now —
    notably NOT `cwd`, which is the session's directory and was the source of
    the defect this design removes."
   ([] (input "git push -u origin feat/x"))
-  ([cmd] {:tool_input {:command cmd} :duration_ms 1000}))
+  ([cmd] {:tool_input {:command cmd} :duration_ms 1000 :session_id "sess-1"}))
 
 (defn- row
   [pr sha n & {:keys [fingerprints verdict]}]
@@ -79,45 +91,68 @@
 
 ;; ------------------------------------------------------------ the R2 gate
 
-(deftest only-a-push-or-pr-create-command-can-trigger-a-review
-  (testing "the `if` filter on the hook entry is documented best-effort and
-            FAIL-OPEN, so the trigger runs on commands matching nothing. Two
-            accidental reviews of PR #395 were traced to exactly that — one
-            from the agent's own `gh pr view ... cd \"$SP/wt-388-followup\"`,
-            one from a diagnostic command of mine. This is the real gate"
+(deftest a-push-no-agent-made-is-never-reviewed
+  (testing "R2, and it no longer rests on command text. The `pre-push` hook
+            records the pushing session, so a push made by the user in a
+            terminal carries none and cannot be attributed to an agent
+            however push-shaped the command that follows it"
     (let [o (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
-                  :prs {"feat/x" (a-pr 370 "newsha")})]
-      (doseq [cmd ["git status"
-                   "gh pr view 395 --json files"
-                   "echo about to git-push"
-                   "grep -r 'git pushed' ."
-                   "cd /x && git log -1"]]
-        (testing cmd
-          (is (= :silent (:action (trigger/decide (input cmd) o))))
-          (is (nil? (:trigger (trigger/decide (input cmd) o))))))
-      (doseq [cmd ["git push"
-                   "git push -u origin feat/x"
-                   "rtk git push -u origin feat/x"
-                   "cd /x && git push 2>&1 | tail -2"
-                   "git  push"]]
-        (testing cmd
-          (is (= :review (:action (trigger/decide (input cmd) o))) cmd)
-          (is (= :push (:trigger (trigger/decide (input cmd) o))))))
-      (doseq [cmd ["gh pr create --base main"
-                   "rtk gh pr create --title x"
-                   "cd /x && gh  pr  create --body y"]]
-        (testing cmd
-          (is (= :create (:trigger (trigger/decide (input cmd) o))) cmd))))))
+                  :prs {"feat/x" (a-pr 370 "newsha")}
+                  :attempts [(an-attempt "/g" "feat/x" "newsha" 999999
+                                         :session "-")])]
+      (is (= :silent (:action (trigger/decide (input) o))))
+      (is (= 0 (:candidates (trigger/decide (input) o)))))))
 
-(deftest a-human-terminal-push-alone-triggers-nothing
-  (testing "R2. Git records a push whoever made it, so the reflog cannot tell
-            the user's terminal push from an agent's — only the command can,
-            and without an agent command there is no command at all"
-    (is (= :silent
-           (:action (trigger/decide
-                     {:tool_input {:command "ls -la"} :duration_ms 5}
-                     (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
-                           :prs {"feat/x" (a-pr 370 "newsha")})))))))
+(deftest an-attempt-with-no-reflog-entry-is-a-push-that-never-landed
+  (testing "a `pre-push` hook runs BEFORE the push, so an attempt proves only
+            that one was tried. Git writes the reflog entry on success alone,
+            which is what makes a rejected push — wrong credentials, a
+            non-fast-forward, a hook further down the chain saying no —
+            unreviewable rather than reviewed as if it had landed"
+    (let [o (opts :pushes {}          ; nothing in any reflog
+                  :prs {"feat/x" (a-pr 370 "newsha")}
+                  :attempts [(an-attempt "/g" "feat/x" "newsha" 999999)])]
+      (is (= :silent (:action (trigger/decide (input) o))))
+      (is (= 0 (:candidates (trigger/decide (input) o)))))))
+
+(deftest an-attempt-at-a-different-sha-than-landed-is-not-a-match
+  (testing "the attempt and the reflog must agree on the sha, or a superseded
+            attempt would vouch for a push it did not make"
+    (let [o (opts :pushes {"/g" [(a-push "feat/x" "landed" 999999)]}
+                  :prs {"feat/x" (a-pr 370 "landed")}
+                  :attempts [(an-attempt "/g" "feat/x" "attempted" 999999)])]
+      (is (= :silent (:action (trigger/decide (input) o)))))))
+
+(deftest a-push-with-no-trigger-verb-is-reviewed-only-for-its-own-session
+  (testing "`git -C /x push` contains no `git push`, and was 1 of 260 real
+            commands lost to that. The session that pushed still gets its
+            review; a different session running an unrelated command does not
+            — two accidental reviews of PR #395 came from exactly that"
+    (let [mk (fn [sess] (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                              :prs {"feat/x" (a-pr 370 "newsha")}
+                              :session sess))
+          cmd (input "git -C /x push")]
+      (is (= :review (:action (trigger/decide cmd (mk "sess-1"))))
+          "the pushing session's own later command still triggers")
+      (is (= :silent (:action (trigger/decide cmd (mk "sess-other"))))
+          "another session's unrelated command must not")
+      (testing "and with a verb present, any agent's push is in scope"
+        (is (= :review (:action (trigger/decide (input "git push")
+                                                (mk "sess-other")))))))))
+
+(deftest the-command-still-selects-the-lookback
+  (let [o (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                :prs {"feat/x" (a-pr 370 "newsha")})]
+    (doseq [[cmd verb] {"git push -u origin feat/x" :push
+                        "rtk git push" :push
+                        "cd /x && git push 2>&1 | tail -2" :push
+                        "git  push" :push
+                        "gh pr create --base main" :create
+                        "rtk gh pr create --title x" :create
+                        "cd /x && gh  pr  create" :create
+                        "git status" nil}]
+      (testing cmd
+        (is (= verb (:trigger (trigger/decide (input cmd) o))))))))
 
 ;; ------------------------------------------------------------- the window
 
@@ -565,10 +600,14 @@
         (spit (str ref)
               (format "%s %s N <a@b> %d +0800\tupdate by push\n"
                       (str/join (repeat 40 \0)) sha (quot now 1000)))
-        (spit log (format "%d\t%s\n" (quot now 1000) g))
+        ;; exactly what the pre-push hook writes: a clone line, then one
+        ;; attempt line per ref, with the pushing session's id
+        (spit log (str (format "%d\t%s\tsess-1\n" (quot now 1000) g)
+                       (format "%d\t%s\tsess-1\trefs/heads/feat/x\t%s\n"
+                               (quot now 1000) g sha)))
         (let [d (trigger/decide
                  (input)
-                 {:clone-log-fn (constantly log)
+                 {:log-fn (constantly log)
                   :open-pr-fn (fn [_ branch _]
                                 (when (= "feat/x" branch) (a-pr 370 sha)))
                   :now-fn (constantly now)})]

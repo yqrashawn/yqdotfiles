@@ -15,7 +15,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]
             [pr-review.checkout :as checkout]
-            [pr-review.cloneindex :as cloneindex]
+            [pr-review.attempts :as attempts]
             [pr-review.context :as context]
             [pr-review.gh :as gh]
             [pr-review.ledger :as ledger]
@@ -55,20 +55,24 @@
     (throw (ex-info "review_core.md not on the classpath" {}))))
 
 (defn- trigger-verb
-  "Which trigger command the agent ran, or nil.
+  "Which trigger command the agent ran, or nil. A CHEAP FILTER ONLY.
 
-   This is the R2 gate, and the only reason it exists. Git records every push
-   including a human's from a terminal, so the reflog alone cannot tell an
-   agent's push from the user's — the command can. It is also a real gate
-   rather than a decoration: the `if` filter on the hook entry is documented
-   best-effort and FAIL-OPEN, so the trigger runs on commands that match
-   nothing, and two accidental reviews were traced to exactly that.
+   R2 no longer rests on this. The `pre-push` hook records the pushing
+   session, so whether a push was made by an agent is decided by what made it
+   rather than by how the command was spelled — which is what lets `git -C /x
+   push`, aliases and scripts through, none of which any command-text match
+   can see. What this still buys is not spawning a reviewer process on every
+   Bash call whose `if` filter fails open, and telling the two lookback
+   windows apart.
 
-   Whitespace-tolerant so `git  push` matches; substring rather than a parse
-   because parsing shell commands is the strategy this design exists to
-   delete. Over-matching is harmless — a command that merely mentions a push
-   finds no fresh reflog entry and goes silent. It under-matches `git -C /x
-   push`, which is 1 command in the 260-command corpus."
+   A command that matches nothing is not refused outright — that is the
+   mistake this design exists to stop making, and it is how `git -C /x push`
+   was lost. It is narrowed instead: with no verb, only a push made by THIS
+   session counts. So the session that actually pushed still gets its review
+   on any later Bash call, while an unrelated session running an unrelated
+   command cannot start one. Two accidental reviews of PR #395 came from
+   exactly that — one from the agent's own `gh pr view`, one from a
+   diagnostic command of mine."
   [command]
   (let [c (str command)]
     (cond
@@ -78,23 +82,58 @@
 
 (defn- lookback-ms
   [verb duration-ms]
-  (if (= :create verb)
-    create-lookback-ms
-    (+ (or duration-ms 0) push-slack-ms)))
+  (if (= :push verb)
+    (+ (or duration-ms 0) push-slack-ms)
+    create-lookback-ms))
+
+(defn- agent-pushed
+  "Index of [git-dir branch sha] -> best attempt, over attempts made from
+   inside a Claude session.
+
+   `best` prefers this session's own attempt, so a review wakes the session
+   that made the push. It does not REQUIRE it: a subagent, or a future change
+   to how the session id is exported, would otherwise silently stop every
+   review — and a review whose wake lands in a sibling session is far better
+   than no review at all."
+  [since session opts]
+  (let [log ((or (:log-fn opts) attempts/default-log))]
+    (->> ((or (:attempts-fn opts) attempts/attempts-since) log since)
+         (filter attempts/by-agent?)
+         (reduce (fn [m {:keys [git-dir branch sha] :as a}]
+                   (let [k [git-dir branch sha]
+                         cur (get m k)]
+                     (if (or (nil? cur)
+                             (and (= session (:session a))
+                                  (not= session (:session cur))))
+                       (assoc m k a)
+                       m)))
+                 {}))))
 
 (defn- candidate-pushes
-  "Every push recorded at or after `since`, across every clone pushed since
-   then, globally newest first.
+  "Pushes that BOTH landed and were made by an agent, globally newest first.
 
-   Two reads, no inference: `cloneindex` says which clones, `pushlog` says
-   what they pushed. The sort is across clones, not within one, because the
-   decision takes the newest candidate overall."
-  [since opts]
-  (let [log ((or (:clone-log-fn opts) cloneindex/default-log))]
-    (->> ((or (:clones-fn opts) cloneindex/clones-since) log since)
+   Three sources, no inference. `pr-review.attempts` says which clones and who
+   pushed; `pr-review.pushlog` reads git's own reflog, which is written only
+   when a push succeeds; the intersection is a push that really happened and
+   really came from an agent. A rejected push leaves an attempt and no reflog
+   entry; a human's leaves both but with no session.
+
+   The sort is across clones, not within one, because the decision takes the
+   newest candidate overall."
+  [since session verb opts]
+  (let [by-agent (agent-pushed since session opts)]
+    (->> (keys by-agent)
+         (map first)
+         distinct
          (mapcat (fn [git-dir]
                    (map #(assoc % :git-dir git-dir)
                         ((or (:pushes-fn opts) pushlog/pushes-since) git-dir since))))
+         (keep (fn [{:keys [git-dir branch new-sha] :as p}]
+                 (when-let [a (get by-agent [git-dir branch new-sha])]
+                   (assoc p :session (:session a)))))
+         ;; No trigger verb in the command: only this session's own push
+         ;; counts. See `trigger-verb`.
+         (filter #(or (some? verb) (= session (:session %))))
          (sort-by :ts >))))
 
 (defn- actionable
@@ -135,35 +174,38 @@
    parsing the command to find that worktree produced five separate defects
    and still missed 25 of 260 real push commands. Git knows, so git is asked.
 
+   A candidate must have BOTH landed and been made by an agent: git's reflog
+   proves the first, the `pre-push` hook's session id the second. That is R2
+   without consulting the command text, so `git -C /x push` and any alias or
+   script are caught, and the user's own terminal push never is.
+
    `:trigger` and `:candidates` ride on every decision, silent ones included:
-   which gate a review came through, and how many pushes were in scope, are
-   the first things to ask when one lands on the wrong PR or on none."
+   which lookback a review came through, and how many agent pushes were in
+   scope, are the first things to ask when one lands on the wrong PR or on
+   none."
   [input opts]
-  (let [verb (trigger-verb (get-in input [:tool_input :command]))]
-    (if-not verb
-      {:action :silent :trigger nil
-       :reason "no git push or gh pr create in the command"}
-      (let [now ((or (:now-fn opts) #(System/currentTimeMillis)))
-            since (- now (lookback-ms verb (:duration_ms input)))
-            cands (candidate-pushes since opts)]
-        (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes]}
-                 (actionable cands opts)]
-          (let [pr-num (:number pr-info)
-                base {:trigger verb :candidates (count cands)
-                      :git-dir git-dir :repo-root repo-root
-                      :branch branch :pr pr-num :sha new-sha}]
-            (if (ledger/cap-reached? passes)
-              (assoc base :action :cap-reached
-                     :reason (str "review cap of " ledger/max-passes
-                                  " passes reached for PR #" pr-num))
-              (assoc base :action :review
-                     :pass (ledger/next-pass-number passes)
-                     :base-ref (:baseRefName pr-info)
-                     :draft? (boolean (:isDraft pr-info))
-                     :prior-fingerprints (ledger/suppressed-fingerprints passes))))
-          {:action :silent :trigger verb :candidates (count cands)
-           :reason (str "none of " (count cands)
-                        " recent pushes is an unreviewed open-PR head")})))))
+  (let [verb (trigger-verb (get-in input [:tool_input :command]))
+        now ((or (:now-fn opts) #(System/currentTimeMillis)))
+        since (- now (lookback-ms verb (:duration_ms input)))
+        cands (candidate-pushes since (:session_id input) verb opts)]
+    (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes]}
+             (actionable cands opts)]
+      (let [pr-num (:number pr-info)
+            base {:trigger verb :candidates (count cands)
+                  :git-dir git-dir :repo-root repo-root
+                  :branch branch :pr pr-num :sha new-sha}]
+        (if (ledger/cap-reached? passes)
+          (assoc base :action :cap-reached
+                 :reason (str "review cap of " ledger/max-passes
+                              " passes reached for PR #" pr-num))
+          (assoc base :action :review
+                 :pass (ledger/next-pass-number passes)
+                 :base-ref (:baseRefName pr-info)
+                 :draft? (boolean (:isDraft pr-info))
+                 :prior-fingerprints (ledger/suppressed-fingerprints passes))))
+      {:action :silent :trigger verb :candidates (count cands)
+       :reason (str "none of " (count cands)
+                    " agent pushes is an unreviewed open-PR head")})))
 
 (defn findings-message
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
@@ -347,5 +389,5 @@
     ;; do — can reach the review. It sits outside every branch
     ;; `decide` can take, so it runs on all of them, and it is the only thing
     ;; that ever deletes these files.
-    (cloneindex/prune! (cloneindex/default-log))
+    (attempts/prune! (attempts/default-log))
     (System/exit exit)))

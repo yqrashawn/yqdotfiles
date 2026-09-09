@@ -8,7 +8,7 @@
             [babashka.process :as p]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
-            [pr-review.cloneindex :as ci]
+            [pr-review.attempts :as attempts]
             [pr-review.hookinstall :as hi]))
 
 (def ^:private hook-source
@@ -43,7 +43,7 @@
           log (str (fs/path cache "pr-review-loop" "pushes.log"))]
       (is (zero? exit) (str "a non-zero pre-push aborts the push; stderr: " err))
       (is (fs/exists? log) "no clone pointer was written")
-      (let [gd (first (ci/clones-since log 0))]
+      (let [gd (first (attempts/clones-since log 0))]
         (is (some? gd) "the pointer names no existing directory")
         (is (= (str (fs/canonicalize (fs/path root ".git")))
                (str (fs/canonicalize gd)))
@@ -65,7 +65,7 @@
             log (str (fs/path cache "pr-review-loop" "pushes.log"))]
         (is (zero? exit))
         (is (= (str (fs/canonicalize (fs/path root ".git")))
-               (str (fs/canonicalize (first (ci/clones-since log 0)))))
+               (str (fs/canonicalize (first (attempts/clones-since log 0)))))
             "recorded the worktree's own gitdir instead of the clone's")))))
 
 (deftest a-chained-hook-keeps-its-veto-and-its-stdin
@@ -86,7 +86,7 @@
       (testing "stdin was spooled and replayed, not consumed"
         (is (= ref-lines (slurp seen))))
       (testing "and the clone was still recorded before handing over"
-        (is (seq (ci/clones-since (str (fs/path cache "pr-review-loop" "pushes.log")) 0)))))))
+        (is (seq (attempts/clones-since (str (fs/path cache "pr-review-loop" "pushes.log")) 0)))))))
 
 (deftest a-chained-hook-that-passes-lets-the-push-through
   (let [root (clone!)

@@ -22,7 +22,7 @@
             [babashka.process :as p]
             [cheshire.core :as json]
             [clojure.string :as str]
-            [pr-review.cloneindex :as cloneindex]
+            [pr-review.attempts :as attempts]
             [pr-review.gh :as gh])
   (:import [java.nio.file CopyOption Files StandardCopyOption]))
 
@@ -108,7 +108,7 @@
         src (hook-source)
         roots (cons (:cwd input)
                     (keep #(gh/main-worktree % {})
-                          (cloneindex/clones-since (cloneindex/default-log) 0)))
+                          (attempts/clones-since (attempts/default-log) 0)))
         results (for [r (distinct (remove nil? roots))]
                   (assoc (try (install! r src {})
                               (catch Exception e {:status :error :path (ex-message e)}))
