@@ -161,7 +161,11 @@
     elif ! command -v claude &> /dev/null; then
         echo "WARNING: pr-review-loop: no claude on PATH, so the plugin cache cannot be populated. The loop will not run." >&2
     else
-        prl_ver=$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$prl_manifest" | head -1)
+        # `|| true` is not sloppiness: home-manager runs this whole script
+        # under `set -eu -o pipefail`, so an unreadable manifest would abort
+        # the ENTIRE activation rather than skip this step. The empty-version
+        # branch below is what reports it.
+        prl_ver=$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$prl_manifest" 2>/dev/null | head -1 || true)
         prl_cached=~/.claude/plugins/cache/nixpkgs-plugins/pr-review-loop/"$prl_ver"
         if [ -z "$prl_ver" ]; then
             echo "WARNING: pr-review-loop: no version in $prl_manifest, so the cache cannot be checked. Skipping." >&2
