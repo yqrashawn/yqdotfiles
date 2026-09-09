@@ -448,6 +448,62 @@
            branch, not the clone directory: every review now runs in a
            throwaway checkout whose name says nothing about the work"))))
 
+(deftest the-trigger-records-that-it-asked-for-a-wake
+  (testing "nothing recorded the trigger's own exit, so a missing wake was
+            indistinguishable between the trigger never getting there and the
+            harness dropping it. Measured on PR #409: the review completed,
+            wrote its ledger row and findings file, and no session's queue
+            ever received the message — while a different review's wake WAS
+            delivered 57 seconds later into the same session, idle since seven
+            minutes before. Both explanations fit, and they need different
+            fixes"
+    (let [[_ g] (tmp-repo)
+          rec (resolve 'pr-review.trigger/record-wake!)]
+      (rec {:git-dir g :pr 409 :action :review :retry? true} 2 "findings" "sess-a")
+      (rec {:git-dir g :pr 410 :action :silent} 0 nil "sess-a")
+      (let [lines (str/split-lines (slurp (trigger/wake-log-path g)))]
+        (is (= 2 (count lines)))
+        (is (str/includes? (first lines) "409\treview\tretry\tsess-a\texit=2\tmsg=8")
+            "exit=2 with a non-zero message length is the trigger saying it
+             asked for a wake")
+        (is (str/includes? (second lines) "410\tsilent\tfresh\tsess-a\texit=0\tmsg=0"))))))
+
+(deftest finish-both-wakes-the-session-and-records-that-it-did
+  (testing "the wiring, not the function: -main calls System/exit so nothing
+            in it is testable, and a control that deleted the wake record from
+            -main failed no test at all. finish! is the seam"
+    (let [[_ g] (tmp-repo)
+          d {:git-dir g :pr 409 :action :review :retry? true}
+          err (java.io.StringWriter.)
+          exit (binding [*err* err]
+                 (trigger/finish! d {:exit 2 :message "FINDINGS"} "sess-a"))]
+      (is (= 2 exit) "the exit code must pass straight through")
+      (is (str/includes? (str err) "FINDINGS")
+          "the wake goes on stderr — the harness discards stdout")
+      (is (str/includes? (slurp (trigger/wake-log-path g)) "exit=2\tmsg=8")
+          "and the same call must record that it asked"))))
+
+(deftest finish-on-a-silent-decision-writes-no-wake-but-still-records
+  (let [[_ g] (tmp-repo)
+        err (java.io.StringWriter.)
+        exit (binding [*err* err]
+               (trigger/finish! {:git-dir g :pr 410 :action :silent}
+                                {:exit 0 :message nil} "sess-a"))]
+    (is (= 0 exit))
+    (is (= "" (str err)) "silence means nothing on stderr")
+    (is (str/includes? (slurp (trigger/wake-log-path g)) "exit=0\tmsg=0")
+        "a silent decision is still worth a line — it says the trigger ran")))
+
+(deftest recording-a-wake-can-never-change-the-exit-code
+  (testing "housekeeping runs after the exit code is decided; a failure here
+            must not become a failed hook, which is how a pass gets lost"
+    (let [rec (resolve 'pr-review.trigger/record-wake!)]
+      (is (nil? (rec {:git-dir "/nonexistent/deep/path" :pr 1 :action :review}
+                     2 "m" "s"))
+          "an unwritable path must be swallowed")
+      (is (nil? (rec {:pr 1 :action :silent} 0 nil nil))
+          "and a decision with no git-dir has nowhere to write, which is fine"))))
+
 (deftest a-mergeable-verdict-tells-the-agent-it-may-merge
   (testing "measured on PR #410: two MERGEABLE passes, both delivered, and the
             agent fixed the [coverage] finding and pushed again both times

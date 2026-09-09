@@ -525,14 +525,63 @@
     :review      (review! d opts)
     {:exit 0 :message nil}))
 
+(defn wake-log-path
+  "Where this process records that it asked for a wake.
+
+   Nothing recorded the trigger's own exit, so a missing wake was
+   indistinguishable between \"the trigger never got there\" and \"the harness
+   dropped it\". Measured on PR #409: the review completed, wrote its ledger
+   row and its findings file, and no session's queue ever received the
+   message — while a different review's wake was delivered 57 seconds later
+   into the same session, idle since seven minutes before. Both explanations
+   fit those facts and they need different fixes."
+  [git-dir]
+  (str git-dir "/pr-review.wake.log"))
+
+(defn- record-wake!
+  "Appends one line recording what this process decided, immediately before it
+   exits. Guarded: housekeeping must never be able to change the exit code.
+
+     <epoch-ms>  <pr>  <action>  fresh|retry  <session>  exit=<n>  msg=<bytes>
+
+   `exit=2` with a non-zero message length says the trigger asked for a wake.
+   If no session then received one, the harness dropped it — which is the
+   distinction PR #409 could not be diagnosed without."
+  [{:keys [git-dir pr action retry?]} exit message session]
+  (try
+    (when git-dir
+      (spit (wake-log-path git-dir)
+            (format "%d\t%s\t%s\t%s\t%s\texit=%d\tmsg=%d\n"
+                    (System/currentTimeMillis)
+                    (or pr "-")
+                    (name (or action :none))
+                    (if retry? "retry" "fresh")
+                    (or session "-")
+                    exit
+                    (count (or message "")))
+            :append true))
+    (catch Exception _ nil)))
+
+(defn finish!
+  "Everything -main does after the decision, except exiting.
+
+   Split out for the same reason `respond` was: -main calls System/exit, so
+   nothing inside it can be tested, and the last thing added there was silently
+   removable — a negative control that deleted the wake record from -main
+   failed no test at all."
+  [d {:keys [exit message]} session]
+  (when message
+    (binding [*out* *err*] (println message) (flush)))
+  (record-wake! d exit message session)
+  exit)
+
 (defn -main
   [& _]
   (let [input (try (json/parse-string (slurp *in*) true)
                    (catch Exception _ nil))
         d     (decide (or input {}) {})
-        {:keys [exit message]} (respond d {})]
-    (when message
-      (binding [*out* *err*] (println message) (flush)))
+        r     (respond d {})
+        exit  (finish! d r (:session_id input))]
     ;; Housekeeping, last of all: the wake message is already on stderr and
     ;; the exit code is already decided, so nothing prune! does — or fails to
     ;; do — can reach the review. It sits outside every branch
