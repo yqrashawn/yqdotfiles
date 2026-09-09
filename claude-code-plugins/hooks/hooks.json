@@ -9,33 +9,65 @@
             "type": "command",
             "if": "Bash(rtk git push:*)",
             "command": "bb",
-            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "args": [
+              "--config",
+              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
+              "review-trigger"
+            ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the pushed commits…"
+            "statusMessage": "Reviewing the pushed commits\u2026"
           },
           {
             "type": "command",
             "if": "Bash(git push:*)",
             "command": "bb",
-            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "args": [
+              "--config",
+              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
+              "review-trigger"
+            ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the pushed commits…"
+            "statusMessage": "Reviewing the pushed commits\u2026"
           },
           {
             "type": "command",
             "if": "Bash(rtk gh pr create:*)",
             "command": "bb",
-            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "args": [
+              "--config",
+              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
+              "review-trigger"
+            ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the new PR…"
+            "statusMessage": "Reviewing the new PR\u2026"
           },
           {
             "type": "command",
             "if": "Bash(gh pr create:*)",
             "command": "bb",
-            "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/bb.edn", "review-trigger"],
+            "args": [
+              "--config",
+              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
+              "review-trigger"
+            ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the new PR…"
+            "statusMessage": "Reviewing the new PR\u2026"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bb",
+            "args": [
+              "--config",
+              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
+              "install-push-hook"
+            ],
+            "statusMessage": "Installing the pr-review pre-push hook\u2026"
           }
         ]
       }

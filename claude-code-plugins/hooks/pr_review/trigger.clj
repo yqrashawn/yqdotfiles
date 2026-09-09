@@ -14,21 +14,32 @@
             [cheshire.core :as json]
             [clojure.java.io :as io]
             [clojure.string :as str]
+            [pr-review.checkout :as checkout]
+            [pr-review.cloneindex :as cloneindex]
             [pr-review.context :as context]
             [pr-review.gh :as gh]
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.prompt :as prompt]
-            [pr-review.pushrecord :as pushrecord]
-            [pr-review.reviewer :as reviewer]
-            [pr-review.workdir :as workdir]))
+            [pr-review.pushlog :as pushlog]
+            [pr-review.reviewer :as reviewer]))
 
 (def ^:private context-keep 5)
 
-(def ^:private record-max-age-ms
-  "How long a push record stays interesting. A PostToolUse hook fires when the
-   Bash call returns, so the record it wants is seconds old; an hour is slack,
-   not a window."
+(def ^:private push-slack-ms
+  "Added to the tool call's own duration when looking back for the push it
+   made. A PostToolUse hook fires when the Bash call returns, so the reflog
+   entry it wants is seconds old; this is slack for clock granularity — the
+   reflog stores whole seconds — not a window."
+  (* 60 1000))
+
+(def ^:private create-lookback-ms
+  "How far back `gh pr create` looks. It pushes nothing, so the entry it needs
+   belongs to the push that created the branch — measured at 29s and 69s
+   before the create in the two real cases. An hour is generous because the
+   ledger, not this window, is what stops a sha being reviewed twice; the
+   window's only job is R2, keeping a human's terminal push from being
+   attributed to an agent."
   (* 60 60 1000))
 
 (defn core-prompt
@@ -43,119 +54,124 @@
     (slurp r)
     (throw (ex-info "review_core.md not on the classpath" {}))))
 
-(defn- resolve-git-dir
-  "The clone's shared git directory, or `<repo-root>/.git` when git cannot
-   say. Resolved once per decision and threaded into every state module: all
-   of them used to assume `<repo-root>/.git`, which is a *file* in a linked
-   worktree."
-  [repo-root opts]
-  (or ((or (:git-dir-fn opts) gh/git-common-dir) repo-root opts)
-      (str repo-root "/.git")))
+(defn- trigger-verb
+  "Which trigger command the agent ran, or nil.
 
-(defn- recorded-dir
-  "The directory the pushing shell reported for this tool call, or nil.
+   This is the R2 gate, and the only reason it exists. Git records every push
+   including a human's from a terminal, so the reflog alone cannot tell an
+   agent's push from the user's — the command can. It is also a real gate
+   rather than a decoration: the `if` filter on the hook entry is documented
+   best-effort and FAIL-OPEN, so the trigger runs on commands that match
+   nothing, and two accidental reviews were traced to exactly that.
 
-   Accepted only when it is still a directory inside a git repository. A
-   record can name a worktree that has since been removed, and handing
-   `decide` a directory nothing could have pushed from would make the
-   authoritative source a worse answer than the parser it outranks — so the
-   same admission test `pr-review.workdir` applies to its own guesses applies
-   here too, and a rejected record falls through to parsing."
-  [tool-use-id]
-  (let [pwd (:pwd (pushrecord/read-record tool-use-id))]
-    (when (and pwd (workdir/usable-dir? pwd)) pwd)))
+   Whitespace-tolerant so `git  push` matches; substring rather than a parse
+   because parsing shell commands is the strategy this design exists to
+   delete. Over-matching is harmless — a command that merely mentions a push
+   finds no fresh reflog entry and goes silent. It under-matches `git -C /x
+   push`, which is 1 command in the 260-command corpus."
+  [command]
+  (let [c (str command)]
+    (cond
+      (re-find #"\bgh\s+pr\s+create\b" c) :create
+      (re-find #"\bgit\s+push\b" c)        :push
+      :else nil)))
 
-(defn- effective-dir
-  "Which directory the push ran in, and which input said so. Highest first:
+(defn- lookback-ms
+  [verb duration-ms]
+  (if (= :create verb)
+    create-lookback-ms
+    (+ (or duration-ms 0) push-slack-ms)))
 
-     :push-record — `pr-review.pushrecord`: a `PreToolUse` recorder made the
-                    shell itself write its `$PWD`, keyed by this call's
-                    `tool_use_id`, which both payloads carry. Nothing is
-                    inferred, so it outranks everything below
-     :command      — `pr-review.workdir`'s reading of `tool_input.command`
-     :session-cwd  — the payload's `cwd`, which is the SESSION's directory
+(defn- candidate-pushes
+  "Every push recorded at or after `since`, across every clone pushed since
+   then, globally newest first.
 
-   `:command` is claimed only when parsing actually moved the directory: a
-   command that says nothing about it resolves to the payload cwd, and then
-   cwd is as much the source as the parse was."
-  [{:keys [cwd tool_input tool_use_id]}]
-  (if-let [d (recorded-dir tool_use_id)]
-    {:dir d :source :push-record}
-    (let [{:keys [dir]} (workdir/resolve-dir (:command tool_input) cwd)]
-      {:dir dir :source (if (= dir cwd) :session-cwd :command)})))
+   Two reads, no inference: `cloneindex` says which clones, `pushlog` says
+   what they pushed. The sort is across clones, not within one, because the
+   decision takes the newest candidate overall."
+  [since opts]
+  (let [log ((or (:clone-log-fn opts) cloneindex/default-log))]
+    (->> ((or (:clones-fn opts) cloneindex/clones-since) log since)
+         (mapcat (fn [git-dir]
+                   (map #(assoc % :git-dir git-dir)
+                        ((or (:pushes-fn opts) pushlog/pushes-since) git-dir since))))
+         (sort-by :ts >))))
 
-(defn- decide-in
-  "The decision proper, for an already-resolved directory."
-  [dir opts]
-  (let [repo-root ((or (:repo-root-fn opts) gh/repo-root) dir opts)]
-    (if-not repo-root
-      {:action :silent :reason (str "not a git repo: " dir)}
-      (let [branch ((or (:branch-fn opts) gh/current-branch) repo-root opts)]
-        (if-not branch
-          {:action :silent :reason "detached HEAD, no branch to match a PR"}
-          (let [pr ((or (:open-pr-fn opts) gh/open-pr) repo-root branch opts)]
-            (if-not pr
-              {:action :silent :reason (str "no open PR for branch " branch)}
-              (let [pr-num  (:number pr)
-                    sha     ((or (:head-sha-fn opts) gh/head-sha) repo-root opts)
-                    git-dir (resolve-git-dir repo-root opts)
-                    passes  (ledger/read-passes git-dir pr-num)]
-                (cond
-                  ;; Idempotence, before the cap: repeat pushes of one commit
-                  ;; are ordinary (`git push` twice, `--tags`, `--dry-run`,
-                  ;; `--delete` all match `Bash(git push:*)`), and re-reviewing
-                  ;; an already-reviewed SHA tells agent A nothing new while
-                  ;; spending a cap slot for it.
-                  (ledger/reviewed-sha? passes sha)
-                  {:action :silent
-                   :reason (str "PR #" pr-num " already has a recorded pass at "
-                                sha)}
+(defn- actionable
+  "The newest candidate that has an open PR at its pushed sha AND no ledger
+   row for that sha, with the clone's main worktree, the PR and the already
+   read passes attached. nil if none is.
 
-                  (ledger/cap-reached? passes)
-                  {:action :cap-reached
-                   :repo-root repo-root :git-dir git-dir :pr pr-num
-                   :reason (str "review cap of " ledger/max-passes
-                                " passes reached for PR #" pr-num)}
+   The sha equality is load-bearing twice over. It proves the push actually
+   landed — a rejected push leaves no reflog entry at all, but a superseded
+   one leaves a stale entry whose sha the PR no longer points at — and it
+   makes `gh pr create` need no special case, since the branch's earlier push
+   entry becomes reviewable the moment the PR exists.
 
-                  :else
-                  {:action :review
-                   :repo-root repo-root
-                   :git-dir git-dir
-                   :pr pr-num
-                   :pass (ledger/next-pass-number passes)
-                   :sha sha
-                   :base-ref (:baseRefName pr)
-                   :draft? (boolean (:isDraft pr))
-                   :prior-fingerprints (ledger/suppressed-fingerprints passes)})))))))))
+   An already-reviewed candidate is SKIPPED rather than ending the search.
+   Two branches are routinely pushed before either PR is opened, so the newest
+   push is frequently one already reviewed while an older one is not; stopping
+   at the newest would leave that PR unreviewed for good. This is why the
+   ledger is read here and threaded out, rather than consulted afterwards."
+  [cands opts]
+  (some (fn [{:keys [git-dir branch new-sha] :as c}]
+          (when-let [root ((or (:main-worktree-fn opts) gh/main-worktree) git-dir opts)]
+            (when-let [pr ((or (:open-pr-fn opts) gh/open-pr) root branch opts)]
+              (when (= new-sha (:headRefOid pr))
+                (let [passes (ledger/read-passes git-dir (:number pr))]
+                  (when-not (ledger/reviewed-sha? passes new-sha)
+                    (assoc c :repo-root root :pr-info pr :passes passes)))))))
+        cands))
 
 (defn decide
   "Pure decision from the hook input. No side effects, no spawning.
 
-   Reads the ledger exactly once and hands the result to ledger's pure
-   predicates.
+   One question, asked the same way for both trigger commands: is there a push
+   whose new sha is the head of an open PR with no ledger row?
 
-   The directory is never the payload's `cwd` alone: `cwd` is the *session's*
-   directory, and an agent that `cd`s into a worktree and pushes from there is
-   on another branch of another checkout. Measured: `cwd` on
-   `docs/mydeck-design` with no open PR, the worktree the push ran in on a
-   branch with open PR #391. See `effective-dir` for the three sources and
-   their order.
+   Nothing here reads the payload's `cwd`, and nothing parses the command for
+   a directory. Both were tried. `cwd` is the SESSION's directory, and an
+   agent that pushes from a worktree is on another branch of another checkout;
+   parsing the command to find that worktree produced five separate defects
+   and still missed 25 of 260 real push commands. Git knows, so git is asked.
 
-   `:dir-source` rides on EVERY decision, the silent ones included. Which
-   input won is the first thing to ask when a review lands on the wrong
-   repository — or on none — and a key present only on `:review` would be
-   missing exactly where it is needed."
+   `:trigger` and `:candidates` ride on every decision, silent ones included:
+   which gate a review came through, and how many pushes were in scope, are
+   the first things to ask when one lands on the wrong PR or on none."
   [input opts]
-  (let [{:keys [dir source]} (effective-dir input)]
-    (assoc (decide-in dir opts) :dir-source source)))
+  (let [verb (trigger-verb (get-in input [:tool_input :command]))]
+    (if-not verb
+      {:action :silent :trigger nil
+       :reason "no git push or gh pr create in the command"}
+      (let [now ((or (:now-fn opts) #(System/currentTimeMillis)))
+            since (- now (lookback-ms verb (:duration_ms input)))
+            cands (candidate-pushes since opts)]
+        (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes]}
+                 (actionable cands opts)]
+          (let [pr-num (:number pr-info)
+                base {:trigger verb :candidates (count cands)
+                      :git-dir git-dir :repo-root repo-root
+                      :branch branch :pr pr-num :sha new-sha}]
+            (if (ledger/cap-reached? passes)
+              (assoc base :action :cap-reached
+                     :reason (str "review cap of " ledger/max-passes
+                                  " passes reached for PR #" pr-num))
+              (assoc base :action :review
+                     :pass (ledger/next-pass-number passes)
+                     :base-ref (:baseRefName pr-info)
+                     :draft? (boolean (:isDraft pr-info))
+                     :prior-fingerprints (ledger/suppressed-fingerprints passes))))
+          {:action :silent :trigger verb :candidates (count cands)
+           :reason (str "none of " (count cands)
+                        " recent pushes is an unreviewed open-PR head")})))))
 
 (defn findings-message
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
    wrapper and ignores rewakeMessage for third-party plugins, so this string
    has to introduce itself."
   ([d parsed] (findings-message d parsed nil))
-  ([{:keys [repo-root pr pass]} parsed warnings]
-   (str "pr-review-loop — " (fs/file-name repo-root)
+  ([{:keys [branch pr pass]} parsed warnings]
+   (str "pr-review-loop — " branch
         " PR #" pr ", pass " pass ": " (:verdict parsed) "\n\n"
         (:body parsed)
         (when (seq warnings)
@@ -166,8 +182,8 @@
 (defn- unresolved-base-message
   "Names the unresolved ref and the exact fix, so agent A does not have to
    guess why a branch with a real diff came back with nothing to say."
-  [{:keys [repo-root pr pass base-ref]}]
-  (str "pr-review-loop — " (fs/file-name repo-root)
+  [{:keys [branch pr pass base-ref]}]
+  (str "pr-review-loop — " branch
        " PR #" pr ", pass " pass
        ": could not diff against base ref \"" base-ref "\" — this clone likely"
        " never fetched it, so the diff command itself failed rather than"
@@ -178,8 +194,8 @@
   "A review that produced no findings still has to wake agent A — the real
    diagnosis is sitting unread in the reviewer's stderr — but it must say
    plainly that no slot was spent, because none was."
-  [{:keys [repo-root pr pass]} parsed res]
-  (str "pr-review-loop — " (fs/file-name repo-root)
+  [{:keys [branch pr pass]} parsed res]
+  (str "pr-review-loop — " branch
        " PR #" pr ", pass " pass ": review did not complete ("
        (:verdict parsed) ")"
        "\n\nreviewer process exited " (:exit res) ": " (:err res)
@@ -189,9 +205,22 @@
        " the " ledger/max-passes " review slots for PR #" pr
        ". Fix the cause and push again."))
 
+(defn- no-checkout-message
+  "A review that could not be pinned to its sha is refused, not downgraded to
+   the agent's live tree. Reading that tree is the defect this checkout
+   exists to remove — the agent is still editing it — so falling back would
+   quietly restore it and spend a ledger slot on a review of whatever the
+   files happened to say."
+  [{:keys [branch pr pass sha]}]
+  (str "pr-review-loop — " branch
+       " PR #" pr ", pass " pass
+       ": could not check out " (subs sha 0 (min 12 (count sha)))
+       " into a review worktree, so no review ran. No ledger row was written."
+       " Fix: `git worktree prune`, then push again."))
+
 (defn- crash-message
-  [{:keys [repo-root pr pass]} e]
-  (str "pr-review-loop — " (fs/file-name repo-root)
+  [{:keys [branch pr pass]} e]
+  (str "pr-review-loop — " branch
        " PR #" pr ", pass " pass " crashed: " (ex-message e)))
 
 (defn- release-quietly!
@@ -204,11 +233,12 @@
   [git-dir opts]
   (try (lock/release! git-dir opts) (catch Exception _ nil)))
 
-(defn- run-review!
-  "The reviewer pass proper, with the lock already held."
-  [{:keys [repo-root git-dir pr pass sha base-ref draft? prior-fingerprints] :as d}
-   opts]
-  (let [ctx (context/build! repo-root git-dir
+(defn- review-in!
+  "The reviewer pass proper, against `review-root` — a checkout pinned to the
+   reviewed sha, never the agent's live worktree."
+  [{:keys [git-dir pr pass sha base-ref draft? prior-fingerprints] :as d}
+   review-root opts]
+  (let [ctx (context/build! review-root git-dir
                             {:pr pr :sha sha :base-ref base-ref} opts)]
     (if (:diff-failed? ctx)
       ;; The diff command itself failed — almost always an unresolved base
@@ -219,10 +249,10 @@
       ;; nothing — the PR would still owe a real review even after the cap.
       {:exit 2 :message (unresolved-base-message d)}
       (let [text   (prompt/build {:core (core-prompt)
-                                  :repo-root repo-root :git-dir git-dir
+                                  :repo-root review-root :git-dir git-dir
                                   :ctx ctx :pr pr :pass pass :draft? draft?
                                   :prior-fingerprints prior-fingerprints})
-            res    (reviewer/run! text repo-root opts)
+            res    (reviewer/run! text review-root opts)
             ;; reconcile is mergeable? wired in: a count block that
             ;; contradicts the verdict line loses, here, once, so both the
             ;; headline and the ledger row carry the same reconciled verdict.
@@ -254,6 +284,20 @@
               (context/prune! git-dir context-keep)
               {:exit 2 :message (findings-message
                                  d parsed (reviewer/parse-warnings parsed))}))))))
+
+(defn- run-review!
+  "Pins a worktree to the reviewed sha and reviews that, removing it however
+   the pass ends."
+  [{:keys [git-dir sha] :as d} opts]
+  ((or (:with-checkout-fn opts) checkout/with-checkout)
+    git-dir sha
+    (or (:checkout-parent opts)
+        (str (fs/path (fs/temp-dir) "pr-review-worktrees")))
+    opts
+    (fn [review-root]
+      (if review-root
+        (review-in! d review-root opts)
+        {:exit 2 :message (no-checkout-message d)}))))
 
 (defn- review!
   "Always returns an :exit of 0 or 2. Nothing inside — acquire!, the context
@@ -299,9 +343,9 @@
     (when message
       (binding [*out* *err*] (println message) (flush)))
     ;; Housekeeping, last of all: the wake message is already on stderr and
-    ;; the exit code is already decided, so nothing prune-records! does — or
-    ;; fails to do — can reach the review. It sits outside every branch
+    ;; the exit code is already decided, so nothing prune! does — or fails to
+    ;; do — can reach the review. It sits outside every branch
     ;; `decide` can take, so it runs on all of them, and it is the only thing
     ;; that ever deletes these files.
-    (pushrecord/prune-records! record-max-age-ms)
+    (cloneindex/prune! (cloneindex/default-log))
     (System/exit exit)))

@@ -20,7 +20,10 @@
    directory problem lived, so that is the property being relied on."
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
-            [clojure.string :as str])
+            [cheshire.core :as json]
+            [clojure.string :as str]
+            [pr-review.cloneindex :as cloneindex]
+            [pr-review.gh :as gh])
   (:import [java.nio.file CopyOption Files StandardCopyOption]))
 
 (def marker
@@ -83,3 +86,37 @@
             (fs/set-posix-file-permissions (fs/path dir chained-name) "rwxr-xr-x")
             (write! :chained))))
     {:status :no-repo :path nil}))
+
+(defn hook-source
+  "The tracked hook body, next to this namespace's parent directory."
+  []
+  (str (fs/path (or (some-> (System/getenv "CLAUDE_PLUGIN_ROOT") str)
+                    (some-> (System/getProperty "babashka.config") fs/parent str)
+                    (System/getProperty "user.dir"))
+                "hooks" "pr-push-hook.sh")))
+
+(defn -main
+  "SessionStart entrypoint. Installs into the session's own clone, and
+   refreshes every clone already known to have pushed.
+
+   Exits 0 unconditionally and says nothing on success. A SessionStart hook
+   that fails, or that prints, does so at the top of every session in every
+   directory — including the many that are not clones at all — so the only
+   thing worth reporting is a refusal the user has to act on."
+  [& _]
+  (let [input (try (json/parse-string (slurp *in*) true) (catch Exception _ nil))
+        src (hook-source)
+        roots (cons (:cwd input)
+                    (keep #(gh/main-worktree % {})
+                          (cloneindex/clones-since (cloneindex/default-log) 0)))
+        results (for [r (distinct (remove nil? roots))]
+                  (assoc (try (install! r src {})
+                              (catch Exception e {:status :error :path (ex-message e)}))
+                         :root r))]
+    (doseq [{:keys [status root path]} results]
+      (when (= :conflict status)
+        (binding [*out* *err*]
+          (println (str "pr-review-loop: " root " already has a pre-push hook and "
+                        path ".pr-review-chained is taken, so nothing was changed."
+                        " Chain it by hand, or move the parked file aside.")))))
+    (System/exit 0)))

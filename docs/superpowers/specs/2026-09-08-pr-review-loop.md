@@ -95,18 +95,22 @@ on darwin 24.3.0. Confidence noted per item.
 | C45 | rtk bails on any command containing a HEREDOC -- exit 0, zero bytes on stdout and stderr. Neither size, backticks nor `$(` change that. Since `--body "$(cat <<'EOF' ... EOF)"` is how a PR body is written, rtk is silent on essentially every PR-creation command. | confirmed — measured against the real 5808-byte command |
 | C46 | The wrapper relays rtk's non-zero exits before its empty-stdout check, so only exit 0 reaches it, and a hook cannot deny silently (a deny is a non-zero exit or a `permissionDecision` in JSON). Empty stdout there therefore means rtk DECLINED, not that its meaning is ambiguous — the earlier "silence in, silence out" rule rested on an ambiguity that does not exist, and cost C45's trigger. | confirmed — corrected in 0.7.0 |
 | C47 | R9's hint is written as `> "$(git rev-parse --git-common-dir)/pr-review-hint"`, and A naturally puts it in the SAME command as the push it hints about. A blanket `$(...)` refusal in the scanner therefore drops the record on precisely the hinted pushes. Skipping the substitution whole (depth-counted close) is required, not optional. | confirmed — observed on the PR #397 push |
+| C48 | The whole command-reading approach is **withdrawn**. Git records every push in the remote-tracking reflog — old sha, new sha, branch, timestamp — written only on success, and `update by push` excludes every fetch (72 push against 297 fetch entries across 439 files in cchp). C42–C47 describe a mechanism that no longer exists; they stand as the record of why it was abandoned. | confirmed — both pushes the parser missed are plainly in the reflog |
+| C49 | The one fact the reflog cannot supply is which clone to read, because the PostToolUse hook has no working directory of its own (C37). A `pre-push` hook records that and nothing else. It cannot describe a push that failed — the reflog gains no entry — and it is built so it cannot fail one: stdin spooled not consumed, every step guarded, status 0 unless a chained hook objects. | confirmed — 4 negative controls |
+| C50 | `git rev-parse --git-path hooks` asked from a linked worktree answers the MAIN clone's hooks directory, so one install covers every worktree of a clone, and it honours `core.hooksPath` — which cchp sets explicitly, so assuming `<root>/.git/hooks` would have installed somewhere git never looks, silently. | confirmed — measured from wt-388-followup |
+| C51 | A remote-tracking reflog lives exactly as long as its ref. Merging a PR deletes the branch, git prunes ref and reflog together, and the record disappears — precisely when there is nothing left to review. Measured on PR #396: merged, branch gone, reflog gone, while both open PRs kept theirs. | confirmed |
 
 ## Requirements
 
 | # | Requirement | Done when |
 |---|---|---|
-| R1 | Fires on agent-A push to a PR branch and on agent-A PR creation | A pushes to a branch with an open PR; the ledger gains a pass entry. **Both** trigger commands are recorded, `gh pr create` included (C42–C44) |
+| R1 | Fires on agent-A push to a PR branch and on agent-A PR creation | A pushes to a branch with an open PR; the ledger gains a pass entry. Both commands reduce to one rule — is there a push whose new sha is the head of an open PR with no ledger row (C48–C51) — so `gh pr create`, which pushes nothing, needs no special case |
 | R2 | Never fires on a human push from a terminal with no Claude session | `git push` from a bare shell leaves the ledger unchanged |
 | R3 | Works in any repo with no per-repo installation | The loop runs in a repo that has no `.claude/` directory at all |
 | R4 | A is never blocked by the review | A's turn ends before the review does, measurable in the transcript |
 | R5 | A cannot silently skip the review | The wake arrives without A choosing to act |
 | R6 | Findings reach A even if A's turn already ended | Wake arrives while the session is idle (C2) |
-| R7 | Reviewer has fresh context, cannot mutate the tree | B's tool list contains no Edit/Write/Bash |
+| R7 | Reviewer has fresh context, cannot mutate the tree | B's tool list contains no Edit/Write/Bash, and B reads a detached worktree pinned to the reviewed sha rather than A's live tree, which A is still editing |
 | R8 | Reviewer sees the true, untruncated diff | The diff B reads is byte-identical to `git diff <base>...<head>` |
 | R9 | A can pass a hint to the reviewer | A writes `.git/pr-review-hint`; that text appears in B's prompt |
 | R10 | Drafts are reviewed | A PR with `isDraft: true` gets a pass entry |

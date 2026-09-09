@@ -3,9 +3,9 @@
             [babashka.process :as p]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
+            [pr-review.cloneindex :as cloneindex]
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
-            [pr-review.pushrecord :as pushrecord]
             [pr-review.trigger :as trigger]))
 
 (defn- tmp-repo
@@ -16,22 +16,37 @@
     (fs/create-dirs g)
     [d g]))
 
+(defn- a-push
+  [branch new-sha ts]
+  {:remote "origin" :branch branch :old-sha "oldsha" :new-sha new-sha :ts ts})
+
+(defn- a-pr
+  "`head` is the PR's headRefOid, which `decide` matches against the sha git
+   recorded — so it is required, not defaulted."
+  [n head & {:keys [draft?]}]
+  {:number n :isDraft (boolean draft?) :baseRefName "main" :headRefOid head})
+
 (defn- opts
-  "Wire every collaborator to a stub so `decide` is exercised in isolation.
+  "Wire every collaborator `decide` reads to a stub.
 
-   :branch is read via `contains?`, not `(or branch \"feat/x\")`: the latter
-   cannot distinguish an explicit `:branch nil` (simulating detached HEAD)
-   from the key being omitted (the normal-branch default), so a caller
-   passing `:branch nil` would silently get \"feat/x\" back instead of nil."
-  [repo git-dir & {:keys [pr sha] :as kvs}]
-  {:repo-root-fn (constantly repo)
-   :git-dir-fn   (constantly git-dir)
-   :branch-fn    (constantly (if (contains? kvs :branch) (:branch kvs) "feat/x"))
-   :head-sha-fn  (constantly (or sha "headsha"))
-   :open-pr-fn   (constantly pr)})
+   `pushes` maps git-dir -> [push]; `prs` maps branch -> pr. The push stub
+   honours `since` itself, because the lookback window is part of what is
+   under test rather than incidental to it."
+  [& {:keys [pushes prs worktree now clones]}]
+  (let [pushes (or pushes {})]
+    {:clone-log-fn     (constantly "/nonexistent/pushes.log")
+     :clones-fn        (fn [_log _since] (or clones (vec (keys pushes))))
+     :pushes-fn        (fn [gd since] (filterv #(>= (:ts %) since) (get pushes gd)))
+     :main-worktree-fn (fn [gd _] (or worktree gd))
+     :open-pr-fn       (fn [_root branch _] (get prs branch))
+     :now-fn           (constantly (or now 1000000))}))
 
-(defn- a-pr [n & {:keys [draft?]}]
-  {:number n :isDraft (boolean draft?) :baseRefName "main"})
+(defn- input
+  "A PostToolUse payload. Only the command and the duration are read now —
+   notably NOT `cwd`, which is the session's directory and was the source of
+   the defect this design removes."
+  ([] (input "git push -u origin feat/x"))
+  ([cmd] {:tool_input {:command cmd} :duration_ms 1000}))
 
 (defn- row
   [pr sha n & {:keys [fingerprints verdict]}]
@@ -49,157 +64,248 @@
        "  [style]                 none\n"))
 
 (defn- review-opts
-  "opts for `review!`: a stubbed diff and a stubbed reviewer, so nothing
-   shells out to a real `claude -p`."
-  [& {:keys [out exit err pid spawn-fn]}]
-  (cond-> {:merge-base-fn (constantly "basesha")
-           :diff-fn (constantly "diff --git a/a b/a\n")
-           :pid (or pid 4242)
-           :spawn-fn (or spawn-fn
-                         (fn [_ _ _] {:exit (or exit 0)
-                                      :out (or out (clean-reply))
-                                      :err (or err "")}))}
-    true identity))
+  "opts for `review!`: a stubbed diff, a stubbed reviewer and a stubbed
+   checkout, so nothing shells out to a real `claude -p` or `git worktree`."
+  [& {:keys [out exit err pid spawn-fn checkout]}]
+  {:merge-base-fn (constantly "basesha")
+   :diff-fn (constantly "diff --git a/a b/a\n")
+   :pid (or pid 4242)
+   :with-checkout-fn (fn [_gd _sha _parent _opts f]
+                       (f (if (contains? #{:none} checkout) nil (or checkout "/review-root"))))
+   :spawn-fn (or spawn-fn
+                 (fn [_ _ _] {:exit (or exit 0)
+                              :out (or out (clean-reply))
+                              :err (or err "")}))})
 
-;; ----------------------------------------------------------------- decide
+;; ------------------------------------------------------------ the R2 gate
 
-(deftest no-repo-is-silent
-  (let [d (trigger/decide {:cwd "/tmp"}
-                          (assoc (opts nil nil) :repo-root-fn (constantly nil)))]
-    (is (= :silent (:action d)))
-    (is (str/includes? (:reason d) "not a git repo"))))
+(deftest only-a-push-or-pr-create-command-can-trigger-a-review
+  (testing "the `if` filter on the hook entry is documented best-effort and
+            FAIL-OPEN, so the trigger runs on commands matching nothing. Two
+            accidental reviews of PR #395 were traced to exactly that — one
+            from the agent's own `gh pr view ... cd \"$SP/wt-388-followup\"`,
+            one from a diagnostic command of mine. This is the real gate"
+    (let [o (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                  :prs {"feat/x" (a-pr 370 "newsha")})]
+      (doseq [cmd ["git status"
+                   "gh pr view 395 --json files"
+                   "echo about to git-push"
+                   "grep -r 'git pushed' ."
+                   "cd /x && git log -1"]]
+        (testing cmd
+          (is (= :silent (:action (trigger/decide (input cmd) o))))
+          (is (nil? (:trigger (trigger/decide (input cmd) o))))))
+      (doseq [cmd ["git push"
+                   "git push -u origin feat/x"
+                   "rtk git push -u origin feat/x"
+                   "cd /x && git push 2>&1 | tail -2"
+                   "git  push"]]
+        (testing cmd
+          (is (= :review (:action (trigger/decide (input cmd) o))) cmd)
+          (is (= :push (:trigger (trigger/decide (input cmd) o))))))
+      (doseq [cmd ["gh pr create --base main"
+                   "rtk gh pr create --title x"
+                   "cd /x && gh  pr  create --body y"]]
+        (testing cmd
+          (is (= :create (:trigger (trigger/decide (input cmd) o))) cmd))))))
 
-(deftest detached-head-is-silent
-  (let [[r g] (tmp-repo)
-        d (trigger/decide {:cwd r} (opts r g :branch nil))]
-    (is (= :silent (:action d)))
-    (is (str/includes? (:reason d) "detached HEAD")
-        "must name detached HEAD specifically: this fixture's :open-pr-fn is
-         already nil, so deleting the detached-HEAD branch of `decide` would
-         still fall through to :silent via the no-open-PR branch, and this
-         test would not catch it without a :reason assertion")))
+(deftest a-human-terminal-push-alone-triggers-nothing
+  (testing "R2. Git records a push whoever made it, so the reflog cannot tell
+            the user's terminal push from an agent's — only the command can,
+            and without an agent command there is no command at all"
+    (is (= :silent
+           (:action (trigger/decide
+                     {:tool_input {:command "ls -la"} :duration_ms 5}
+                     (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                           :prs {"feat/x" (a-pr 370 "newsha")})))))))
 
-(deftest no-open-pr-is-silent
-  (let [[r g] (tmp-repo)
-        d (trigger/decide {:cwd r} (opts r g :pr nil))]
-    (is (= :silent (:action d)))
-    (is (str/includes? (:reason d) "no open PR")
-        "a push to a branch with no PR is the human's normal workflow, not an error")))
+;; ------------------------------------------------------------- the window
+
+(deftest a-push-older-than-the-tool-call-window-is-not-attributed-to-it
+  (let [o (fn [ts] (opts :pushes {"/g" [(a-push "feat/x" "newsha" ts)]}
+                         :prs {"feat/x" (a-pr 370 "newsha")}
+                         :now 1000000))]
+    (is (= :review (:action (trigger/decide (input) (o 999000))))
+        "a push seconds before the call returned is this call's push")
+    (is (= :silent (:action (trigger/decide (input) (o 800000))))
+        "a push three minutes earlier is not")))
+
+(deftest gh-pr-create-looks-back-past-its-own-tool-call
+  (testing "`gh pr create` pushes nothing, so the entry it needs belongs to
+            the push that made the branch — measured at 29s and 69s earlier in
+            the two real cases. Without the longer lookback, PR creation could
+            never be reviewed at all"
+    (let [o (opts :pushes {"/g" [(a-push "feat/x" "newsha" 900000)]}
+                  :prs {"feat/x" (a-pr 370 "newsha")}
+                  :now 1000000)]
+      (is (= :silent (:action (trigger/decide (input "git push") o)))
+          "100s is outside a push's own window")
+      (is (= :review (:action (trigger/decide (input "gh pr create") o)))
+          "but well inside the create lookback"))))
+
+;; ------------------------------------------------------------- the match
+
+(deftest a-pushed-sha-that-is-not-the-prs-head-is-not-reviewed
+  (testing "this is the `verify the sha reached the remote` test. A rejected
+            push leaves no reflog entry, but a SUPERSEDED one leaves a stale
+            entry whose sha the PR no longer points at — reviewing it would
+            record a pass against a commit the PR does not contain"
+    (is (= :silent
+           (:action (trigger/decide
+                     (input)
+                     (opts :pushes {"/g" [(a-push "feat/x" "stalesha" 999999)]}
+                           :prs {"feat/x" (a-pr 370 "differentsha")})))))))
+
+(deftest a-branch-with-no-open-pr-is-silent
+  (is (= :silent
+         (:action (trigger/decide
+                   (input)
+                   (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                         :prs {}))))))
+
+(deftest with-no-recorded-push-at-all-nothing-happens
+  (testing "before the pre-push hook is installed anywhere, or in a clone that
+            has never pushed"
+    (let [d (trigger/decide (input) (opts))]
+      (is (= :silent (:action d)))
+      (is (= 0 (:candidates d))))))
+
+(deftest the-newest-push-across-every-clone-wins
+  (testing "two clones of the same repo push independently; the decision takes
+            the newest candidate overall, not the first clone's"
+    (let [d (trigger/decide
+             (input)
+             (opts :pushes {"/g1" [(a-push "feat/old" "oldest" 999000)]
+                            "/g2" [(a-push "feat/new" "newest" 999900)]}
+                   :prs {"feat/old" (a-pr 1 "oldest")
+                         "feat/new" (a-pr 2 "newest")}))]
+      (is (= :review (:action d)))
+      (is (= 2 (:pr d)))
+      (is (= "feat/new" (:branch d)))
+      (is (= "/g2" (:git-dir d)) "the ledger must live in the pushing clone")
+      (is (= 2 (:candidates d))))))
+
+(deftest the-decision-carries-the-clone-that-pushed-not-the-session
+  (testing "the whole point. The ledger, lock and context all live under the
+            git dir the push came from; two days of defects were this value
+            being the session's repository instead"
+    (let [d (trigger/decide (input)
+                            (opts :pushes {"/pushed/.git" [(a-push "feat/x" "s" 999999)]}
+                                  :prs {"feat/x" (a-pr 370 "s")}
+                                  :worktree "/pushed"))]
+      (is (= "/pushed/.git" (:git-dir d)))
+      (is (= "/pushed" (:repo-root d))))))
+
+;; ---------------------------------------------------------- ledger policy
 
 (deftest open-pr-yields-a-review-with-pass-one
-  (let [[r g] (tmp-repo)
-        d (trigger/decide {:cwd r} (opts r g :pr (a-pr 370)))]
+  (let [d (trigger/decide (input)
+                          (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                                :prs {"feat/x" (a-pr 370 "newsha")}))]
     (is (= :review (:action d)))
     (is (= 370 (:pr d)))
     (is (= 1 (:pass d)))
-    (is (= "headsha" (:sha d)))
+    (is (= "newsha" (:sha d)))
     (is (= "main" (:base-ref d)))
-    (is (false? (:draft? d)))
-    (is (= g (:git-dir d))
-        "the decision carries the resolved git dir; every state module reads
-         it instead of assuming <repo-root>/.git")))
+    (is (false? (:draft? d)))))
 
 (deftest drafts-are-reviewed
-  (let [[r g] (tmp-repo)
-        d (trigger/decide {:cwd r} (opts r g :pr (a-pr 9 :draft? true)))]
-    (is (= :review (:action d)))
-    (is (true? (:draft? d)))))
+  (is (= :review
+         (:action (trigger/decide
+                   (input)
+                   (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                         :prs {"feat/x" (a-pr 370 "newsha" :draft? true)}))))))
 
 (deftest pass-number-comes-from-the-ledger
-  (let [[r g] (tmp-repo)]
-    (doseq [n [1 2]] (ledger/append-pass! g (row 370 (str n) n)))
-    (is (= 3 (:pass (trigger/decide {:cwd r} (opts r g :pr (a-pr 370))))))))
+  (let [[_ g] (tmp-repo)]
+    (ledger/append-pass! g (row 370 "sha1" 1))
+    (ledger/append-pass! g (row 370 "sha2" 2))
+    (is (= 3 (:pass (trigger/decide
+                     (input)
+                     (opts :pushes {g [(a-push "feat/x" "sha3" 999999)]}
+                           :prs {"feat/x" (a-pr 370 "sha3")})))))))
 
 (deftest cap-stops-the-loop
-  (let [[r g] (tmp-repo)]
+  (let [[_ g] (tmp-repo)]
     (doseq [n (range 1 (inc ledger/max-passes))]
-      (ledger/append-pass! g (row 370 (str n) n)))
-    (let [d (trigger/decide {:cwd r} (opts r g :pr (a-pr 370)))]
-      (is (= :cap-reached (:action d)))
-      (is (str/includes? (:reason d) "10")))))
+      (ledger/append-pass! g (row 370 (str "sha" n) n)))
+    (is (= :cap-reached
+           (:action (trigger/decide
+                     (input)
+                     (opts :pushes {g [(a-push "feat/x" "shaN" 999999)]}
+                           :prs {"feat/x" (a-pr 370 "shaN")})))))))
 
 (deftest an-already-reviewed-sha-is-silent
   (testing "repeat pushes of one commit are ordinary — `git push` twice,
-            `--tags`, `--dry-run` and `--delete` all match
-            `Bash(git push:*)`. Counting rows and never consulting the :sha
-            the ledger faithfully records re-reviewed the same commit on every
-            one of them, one cap slot each"
-    (let [[r g] (tmp-repo)]
-      (ledger/append-pass! g (row 370 "headsha" 1))
-      (let [d (trigger/decide {:cwd r} (opts r g :pr (a-pr 370)))]
+            `--tags`, `--dry-run` — and re-reviewing tells agent A nothing
+            while spending a cap slot"
+    (let [[_ g] (tmp-repo)]
+      (ledger/append-pass! g (row 370 "samesha" 1))
+      (let [d (trigger/decide (input)
+                              (opts :pushes {g [(a-push "feat/x" "samesha" 999999)]}
+                                    :prs {"feat/x" (a-pr 370 "samesha")}))]
         (is (= :silent (:action d)))
-        (is (str/includes? (:reason d) "headsha")
-            "the reason must name the SHA that was already reviewed"))
-      (testing "a new commit on the same PR still gets reviewed"
-        (is (= :review (:action (trigger/decide
-                                 {:cwd r} (opts r g :pr (a-pr 370) :sha "newsha")))))))))
+        (is (= 1 (:candidates d))
+            "the push was seen, and rejected on the ledger rather than lost")))))
 
 (deftest twice-raised-followup-fingerprints-are-carried-into-the-decision
-  (let [[r g] (tmp-repo)
+  (let [[_ g] (tmp-repo)
         fp "src/a.clj:1:correctness/followup"]
-    (doseq [n [1 2]]
-      (ledger/append-pass! g (row 370 (str n) n :fingerprints [fp] :verdict "MERGEABLE")))
+    (ledger/append-pass! g (row 370 "s1" 1 :fingerprints [fp]))
+    (ledger/append-pass! g (row 370 "s2" 2 :fingerprints [fp]))
     (is (= [fp] (:prior-fingerprints
-                 (trigger/decide {:cwd r} (opts r g :pr (a-pr 370) :sha "s3")))))))
+                 (trigger/decide (input)
+                                 (opts :pushes {g [(a-push "feat/x" "s3" 999999)]}
+                                       :prs {"feat/x" (a-pr 370 "s3")})))))))
 
 (deftest a-blocking-finding-is-never-put-on-the-do-not-re-raise-list
-  (testing "the filter used to key on the raise count alone, and the prompt
-            then told the reviewer not to report those again. Two pushes that
-            do not close a blocking defect, line number unchanged: pass 3
-            reports MERGEABLE and the skill merges broken code"
-    (let [[r g] (tmp-repo)
+  (testing "a blocking finding raised twice and still unfixed must keep being
+            raised; suppressing it would emit a positive signal on unreviewed
+            code, which is the worst failure this system has"
+    (let [[_ g] (tmp-repo)
           blocking "src/a.clj:1:correctness/blocking"
-          coverage "src/a.clj:2:coverage"
-          followup "src/a.clj:3:correctness/followup"]
-      (doseq [n [1 2]]
-        (ledger/append-pass!
-         g (row 370 (str n) n :fingerprints [blocking coverage followup])))
+          followup "src/b.clj:2:correctness/followup"]
+      (ledger/append-pass! g (row 370 "s1" 1 :fingerprints [blocking followup]))
+      (ledger/append-pass! g (row 370 "s2" 2 :fingerprints [blocking followup]))
       (let [prior (:prior-fingerprints
-                   (trigger/decide {:cwd r} (opts r g :pr (a-pr 370) :sha "s3")))]
+                   (trigger/decide (input)
+                                   (opts :pushes {g [(a-push "feat/x" "s3" 999999)]}
+                                         :prs {"feat/x" (a-pr 370 "s3")})))]
         (is (= [followup] prior))
-        (is (not-any? #{blocking} prior)
-            "a blocking finding present after two passes has not been fixed")
-        (is (not-any? #{coverage} prior))))))
+        (is (not (some #{blocking} prior)))))))
 
 (deftest decide-reads-the-ledger-once
-  (testing "the one-re-raise filter used to call a per-fingerprint helper
-            that re-slurped the whole ledger, on top of separate reads for
-            the cap and the pass number: 138 full file reads for one decision
-            at nine passes and fifteen findings"
-    (let [[r g] (tmp-repo)
-          fps (mapv #(str "src/f" % ".clj:1:style") (range 15))]
-      (doseq [n (range 1 10)]
-        (ledger/append-pass! g (row 370 (str n) n :fingerprints fps)))
-      (let [reads (atom 0)
-            orig  slurp]
-        (with-redefs [slurp (fn [& args] (swap! reads inc) (apply orig args))]
-          (is (= :review (:action (trigger/decide
-                                   {:cwd r} (opts r g :pr (a-pr 370) :sha "fresh"))))))
-        (is (= 1 @reads)
-            (str "one decision must cost exactly one read of the ledger; got "
-                 @reads))))))
-
-;; ---------------------------------------------------------------- messages
+  (let [[_ g] (tmp-repo)
+        reads (atom 0)]
+    (ledger/append-pass! g (row 370 "s1" 1))
+    (with-redefs [ledger/read-passes (let [orig ledger/read-passes]
+                                       (fn [& args] (swap! reads inc) (apply orig args)))]
+      (trigger/decide (input) (opts :pushes {g [(a-push "feat/x" "s2" 999999)]}
+                                    :prs {"feat/x" (a-pr 370 "s2")})))
+    (is (= 1 @reads)
+        "the policy predicates are pure over an already-read collection; each
+         re-reading the file cost 138 full reads for one decision")))
 
 (deftest findings-message-is-self-describing
   (testing "the harness wrapper text is fixed and useless, so the first line
             must identify repo, PR and pass on its own"
     (let [msg (trigger/findings-message
-               {:repo-root "/r" :pr 370 :pass 2}
+               {:branch "feat/x" :pr 370 :pass 2}
                {:verdict "NOT MERGEABLE" :body "BODY"
                 :counts {"correctness/blocking" 1}})]
       (is (str/starts-with? msg "pr-review-loop"))
       (is (str/includes? msg "PR #370"))
       (is (str/includes? msg "pass 2"))
       (is (str/includes? msg "BODY"))
-      (is (str/includes? msg (str (fs/file-name "/r") " PR #370"))
-          "the repo identifier must appear right before the PR number — a
-           regression that dropped repo-root from the message would still
-           satisfy every assertion above it"))))
+      (is (str/includes? msg "feat/x PR #370")
+          "the branch must appear right before the PR number — a regression
+           that dropped it would still satisfy every assertion above it. The
+           branch, not the clone directory: every review now runs in a
+           throwaway checkout whose name says nothing about the work"))))
 
 (deftest findings-message-carries-parse-warnings
   (let [msg (trigger/findings-message
-             {:repo-root "/r" :pr 1 :pass 1}
+             {:branch "feat/x" :pr 1 :pass 1}
              {:verdict "NOT MERGEABLE" :body "BODY" :counts {}}
              ["PARSE WARNING TEXT"])]
     (is (str/includes? msg "PARSE WARNING TEXT")
@@ -211,7 +317,8 @@
 (deftest a-completed-review-records-one-pass-and-wakes-the-session
   (let [[r g] (tmp-repo)
         d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-           :base-ref "main" :draft? false :prior-fingerprints []}
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}
         result (#'trigger/review! d (review-opts))]
     (is (= 2 (:exit result)))
     (is (= ["headsha"] (mapv :sha (ledger/read-passes g 370))))
@@ -268,7 +375,8 @@
             reviewed nothing; the treatment must be identical"
     (let [[r g] (tmp-repo)
           d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-             :base-ref "main" :draft? false :prior-fingerprints []}
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
           result (#'trigger/review! d (review-opts :exit 1 :out ""
                                                    :err "OAuth token has expired"))]
       (is (= 2 (:exit result)) "agent A must still be woken")
@@ -283,7 +391,8 @@
 (deftest a-malformed-reply-does-not-consume-a-cap-slot
   (let [[r g] (tmp-repo)
         d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-           :base-ref "main" :draft? false :prior-fingerprints []}
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}
         result (#'trigger/review! d (review-opts :out "I could not read the diff"))]
     (is (= 2 (:exit result)))
     (is (str/includes? (:message result) "MALFORMED"))
@@ -316,7 +425,8 @@
     (spit (lock/lock-path g)
           (str "{\"pid\":" self ",\"pr\":370,\"sha\":\"headsha\",\"started\":1}"))
     (let [d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-             :base-ref "main" :draft? false :prior-fingerprints []}
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
           result (#'trigger/review! d (review-opts :pid 1))]
       (is (= 0 (:exit result)))
       (is (empty? (ledger/read-passes g 370))))))
@@ -329,7 +439,8 @@
             non-blocking status code:` and the review pass is silently lost"
     (let [[r g] (tmp-repo)
           d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-             :base-ref "main" :draft? false :prior-fingerprints []}
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
           check (fn [label thunk]
                   (is (contains? #{0 2} (:exit (thunk))) label))]
       (check "clean review" #(#'trigger/review! d (review-opts)))
@@ -355,7 +466,8 @@
 (deftest a-throwing-acquire-still-wakes-the-session-with-the-diagnosis
   (let [[r g] (tmp-repo)
         d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-           :base-ref "main" :draft? false :prior-fingerprints []}
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}
         result (with-redefs [lock/acquire! (fn [& _] (throw (ex-info "flock exploded" {})))]
                  (#'trigger/review! d (review-opts)))]
     (is (= 2 (:exit result))
@@ -367,7 +479,8 @@
 (deftest a-throwing-release-does-not-swallow-a-completed-review
   (let [[r g] (tmp-repo)
         d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
-           :base-ref "main" :draft? false :prior-fingerprints []}
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}
         result (with-redefs [lock/release! (fn [& _] (throw (ex-info "release exploded" {})))]
                  (#'trigger/review! d (review-opts)))]
     (is (= 2 (:exit result)))
@@ -377,286 +490,93 @@
          findings and reports a crash instead")
     (is (= 1 (count (ledger/read-passes g 370))))))
 
-;; ------------------------------------------------------ worktree end to end
 
-(deftest a-worktree-whose-dot-git-is-a-file-still-reviews
-  (testing "the fixture no test had. <repo-root>/.git is a FILE in a linked
-            worktree, so fs/create-dirs on it throws
-            FileAlreadyExistsException — and lock/acquire! used to be
-            evaluated outside review!'s try, so that throw escaped -main and
-            babashka exited 1 on every push from a worktree. Before that,
-            read-passes found no ledger there at all, so neither the cap nor
-            the re-raise rule ever engaged"
-    (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-wt"}))
-          main (str tmp "/main")
-          wt   (str tmp "/wt")
-          git! (fn [dir & args]
-                 (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
-                   (when-not (zero? exit)
-                     (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
-      (fs/create-dirs main)
-      (git! main "init" "-q")
-      (git! main "config" "user.email" "t@t.t")
-      (git! main "config" "user.name" "t")
-      (spit (str main "/f") "hi")
-      (git! main "add" "f")
-      (git! main "commit" "-qm" "init")
-      (git! main "worktree" "add" "-q" wt "-b" "feat")
-      (is (fs/regular-file? (str wt "/.git"))
-          "fixture precondition: a linked worktree's .git is a file")
+;; ------------------------------------------------------ the pinned checkout
 
-      (let [d (trigger/decide
-               {:cwd wt}
-               {:repo-root-fn (constantly wt)
-                :branch-fn (constantly "feat")
-                :head-sha-fn (constantly "wtsha")
-                :open-pr-fn (constantly (a-pr 42))})]
-        (is (= :review (:action d)))
-        (is (fs/directory? (:git-dir d))
-            "the resolved git dir must be a real directory")
-        (is (= (str (fs/real-path (str main "/.git")))
-               (str (fs/real-path (:git-dir d))))
-            "one ledger, one lock and one context dir per repository — a
-             worktree-local pair would make the cap and the lock meaningless
-             across worktrees")
-
-        (let [result (#'trigger/review! d (review-opts))]
-          (is (= 2 (:exit result))
-              "and the whole pass must complete without a throw escaping to a
-               non-2 exit")
-          (is (= ["wtsha"] (mapv :sha (ledger/read-passes (:git-dir d) 42)))
-              "the pass lands in the shared ledger, visible to every worktree")
-          (is (fs/exists? (str (:git-dir d) "/pr-review-context/wtsha.diff"))))))))
-
-;; ------------------------------------- the directory the command ran in
-
-(deftest a-push-from-a-worktree-reviews-that-worktrees-pr-not-the-sessions
-  (testing "the defect the first live push in a real repo found. The payload
-            `cwd` is the SESSION's directory; the push ran in a worktree the
-            command `cd`ed into. Measured on both sides: session cwd on
-            branch docs/mydeck-design with open-pr nil, the worktree on
-            fix/llm-logs-sse-deadline-and-abandoned-tabs with open PR #391.
-            `decide` resolved the repository from `cwd`, correctly-by-its-own-
-            logic found nothing, and exited 0 — so the loop was silently
-            inert for the workflow agents actually use, and a real PR went
-            unreviewed with nothing said about it"
-    (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-cd"}))
-          main (str tmp "/main")
-          wt   (str tmp "/wt-sse-deadline-abandon")
-          feat "fix/llm-logs-sse-deadline-and-abandoned-tabs"
-          git! (fn [dir & args]
-                 (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
-                   (when-not (zero? exit)
-                     (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
-      (fs/create-dirs main)
-      (git! main "init" "-q")
-      (git! main "config" "user.email" "t@t.t")
-      (git! main "config" "user.name" "t")
-      (spit (str main "/f") "hi")
-      (git! main "add" "f")
-      (git! main "commit" "-qm" "init")
-      (git! main "checkout" "-q" "-b" "docs/mydeck-design")
-      (git! main "worktree" "add" "-q" wt "-b" feat)
-
-      ;; Only the network call is stubbed. repo-root, branch, git-dir and
-      ;; head-sha all run real git against whichever directory `decide`
-      ;; resolved, which is the whole point: a stub that ignored the
-      ;; directory could not tell the two checkouts apart.
-      (let [pr-for   (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
-            command  (str "SP=" tmp "; cd \"$SP/wt-sse-deadline-abandon\""
-                          " && git push -u origin " feat " 2>&1 | tail -2"
-                          "; grep -aE 'a;b' /dev/null")
-            d        (trigger/decide {:cwd main :tool_input {:command command}}
-                                     {:open-pr-fn pr-for})]
-        (is (= :review (:action d)))
-        (is (= 391 (:pr d)) "the worktree's PR, which is the one that was pushed")
-        (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
-            "and the review runs against the worktree, not the session cwd")
-        (testing "the same payload with a command that never leaves the
-                  session directory is the measured control: no PR there"
-          (let [c (trigger/decide {:cwd main :tool_input {:command "git push"}}
-                                  {:open-pr-fn pr-for})]
-            (is (not= :review (:action c))
-                "if this were :review the fixture would be proving nothing")))))))
-
-(deftest a-push-that-finds-no-open-pr-stays-silent
-  (testing "fix wave 2 turned this into an exit-2 diagnostic naming the
-            directory and branch checked, reasoning that silence and a
-            broken plugin are indistinguishable. Deliberately reverted: `if`
-            is documented best-effort and fails open (C7), so a single
-            undeterminable command fired all four `hooks.json` entries and
-            each one produced the diagnostic — four wakes for one push. The
-            known cost is back: a push that reviews nothing is once again
-            indistinguishable from a broken plugin"
+(deftest a-review-that-cannot-be-pinned-to-its-sha-is-refused
+  (testing "falling back to the agent's live worktree is the defect the
+            checkout exists to remove — the agent is still editing it — so a
+            failed checkout must refuse rather than quietly restore it, and
+            must not spend a ledger slot"
     (let [[r g] (tmp-repo)
-          d (trigger/decide {:cwd r :tool_input {:command "git push -u origin feat/x"}}
-                            (opts r g :pr nil))]
-      (is (= :silent (:action d)))
-      (let [res (#'trigger/respond d {})]
-        (is (= 0 (:exit res)))
-        (is (nil? (:message res))
-            "no message either — printing one here recreates the four-wakes
-             defect this reversion exists to remove")))))
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha0123456"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
+          result (#'trigger/review! d (review-opts :checkout :none))]
+      (is (= 2 (:exit result)) "agent A still has to be told")
+      (is (str/includes? (:message result) "could not check out"))
+      (is (str/includes? (:message result) "No ledger row"))
+      (is (empty? (ledger/read-passes g 370)))
+      (is (nil? (lock/read-lock g)) "and the lock is still released"))))
 
-(deftest a-command-with-no-trigger-verb-is-still-silent
-  (testing "the `if` rules are best-effort — C7 runs the hook anyway when it
-            cannot determine the command — so a command that never pushed
-            does reach here too, and must be exactly as silent as the
-            trigger-verb case above: there is no diagnostic left to gate on
-            the verb"
-    (let [[r g] (tmp-repo)
-          d (trigger/decide {:cwd r :tool_input {:command "git status --short"}}
-                            (opts r g :pr nil))]
-      (is (= :silent (:action d)))
-      (is (= 0 (:exit (#'trigger/respond d {})))))))
+(deftest the-reviewer-runs-in-the-checkout-not-the-agents-tree
+  (let [[r g] (tmp-repo)
+        seen (atom nil)
+        d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}]
+    (#'trigger/review! d (assoc (review-opts :checkout "/pinned-tree")
+                                ;; spawn is (argv prompt dir)
+                                :spawn-fn (fn [_argv _prompt dir]
+                                            (reset! seen dir)
+                                            {:exit 0 :out (clean-reply) :err ""})))
+    (is (= "/pinned-tree" @seen)
+        "the reviewer was pointed at the agent's worktree, which mutates
+         under it — two runs of one pass were not reproducible")))
 
-;; ------------------------------- the directory the pushing SHELL reported
+;; -------------------------------------------------------- the real history
 
-(defn- two-checkouts!
-  "A clone on `docs/x` plus a linked worktree on `feat`. Returns
-   [main wt feat]. Only the network call gets stubbed downstream: repo-root,
-   branch, git-dir and head-sha all run real git against whichever directory
-   `decide` resolved, which is the point — a stub that ignored the directory
-   could not tell the two checkouts apart."
-  []
-  (let [tmp  (str (fs/create-temp-dir {:prefix "pr-review-pushrec"}))
-        main (str tmp "/main")
-        wt   (str tmp "/wt")
-        feat "feat/recorded"
-        git! (fn [dir & args]
-               (let [{:keys [exit err]} (p/sh (into ["git"] args) {:dir dir})]
-                 (when-not (zero? exit)
-                   (throw (ex-info (str "fixture git failed: " args " " err) {})))))]
-    (fs/create-dirs main)
-    (git! main "init" "-q")
-    (git! main "config" "user.email" "t@t.t")
-    (git! main "config" "user.name" "t")
-    (spit (str main "/f") "hi")
-    (git! main "add" "f")
-    (git! main "commit" "-qm" "init")
-    (git! main "checkout" "-q" "-b" "docs/x")
-    (git! main "worktree" "add" "-q" wt "-b" feat)
-    [main wt feat]))
+(deftest the-two-pushes-the-command-parser-missed-are-reviewable
+  (testing "verbatim from claude-code-http-proxy. Both pushes resolved to the
+            wrong repository under command parsing and went unreviewed; both
+            match their PR head exactly, which is all this rule asks"
+    (let [[_ g] (tmp-repo)
+          pr395 "ceab8f69668700036cd8e7c6ebe9705b02437f30"
+          pr397 "0993247b000000000000000000000000000000aa"
+          o (opts :pushes {g [(a-push "fix/slack-per-file-hold-attempts" pr395 999900)
+                              (a-push "fix/finish-the-monotonic-sweep" pr397 999800)]}
+                  :prs {"fix/slack-per-file-hold-attempts" (a-pr 395 pr395)
+                        "fix/finish-the-monotonic-sweep" (a-pr 397 pr397)})]
+      (let [d (trigger/decide (input) o)]
+        (is (= :review (:action d)))
+        (is (= 395 (:pr d)) "the newest push is #395's")
+        (is (= pr395 (:sha d))))
+      (testing "and once #395 has a row, the next trigger takes #397"
+        (ledger/append-pass! g (row 395 pr395 1))
+        (let [d (trigger/decide (input) o)]
+          (is (= :review (:action d)))
+          (is (= 397 (:pr d)))
+          (is (= pr397 (:sha d))))))))
 
-(defn- record!
-  "Writes the push record the PreToolUse recorder would have written, and
-   returns the record dir to bind `pushrecord/record-dirs` to."
-  [id pwd branch]
-  (let [d (str (fs/create-temp-dir {:prefix "pr-review-pushdir"}))]
-    (spit (str d "/" id)
-          (str "tool_use_id=" id "\npwd=" pwd "\nbranch=" branch "\nts=1788913860\n"))
-    d))
+;; --------------------------------------------------------------- end to end
 
-(deftest the-recorded-push-directory-reviews-that-worktrees-pr
-  (testing "the regression test for the whole push-record change. The command
-            says nothing about a directory, so parsing can only hand back the
-            session cwd — a branch with no PR — and the loop would go silent
-            on a push that really did go out from a worktree with open PR
-            #391. The PreToolUse recorder made the pushing shell write its own
-            $PWD, keyed by a tool_use_id both payloads carry, so the lookup is
-            exact and nothing is inferred"
-    (let [[main wt feat] (two-checkouts!)
-          pr-for (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
-          rec    (record! "toolu_recorded" wt feat)
-          d      (with-redefs [pushrecord/record-dirs (constantly [rec])]
-                   (trigger/decide {:cwd main
-                                    :tool_use_id "toolu_recorded"
-                                    :tool_input {:command "git push"}}
-                                   {:open-pr-fn pr-for}))]
-      (is (= :review (:action d)))
-      (is (= 391 (:pr d)) "the worktree's PR, which is the one that was pushed")
-      (is (= :push-record (:dir-source d))
-          "and the decision must say which source won — the record, not the
-           parse and not the session cwd")
-      (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
-          "the review runs against the worktree the shell reported")
-      (testing "the measured control: the identical payload with no record
-                falls back to parsing, finds nothing in the session cwd, and
-                is silent — which is what shipped before this change"
-        (let [c (trigger/decide {:cwd main
-                                 :tool_use_id "toolu_recorded"
-                                 :tool_input {:command "git push"}}
-                                {:open-pr-fn pr-for})]
-          (is (= :silent (:action c)))
-          (is (= :session-cwd (:dir-source c))))))))
-
-(deftest a-record-naming-a-directory-that-is-gone-falls-back-to-parsing
-  (testing "a worktree can be removed between the push and the hook. An
-            authoritative source that named a directory nothing could have
-            pushed from would be a worse answer than the parser it outranks"
-    (let [[main wt feat] (two-checkouts!)
-          gone   (str (fs/create-temp-dir {:prefix "pr-review-gone"}))
-          _      (fs/delete-tree gone)
-          pr-for (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
-          rec    (record! "toolu_gone" gone feat)
-          d      (with-redefs [pushrecord/record-dirs (constantly [rec])]
-                   (trigger/decide
-                    {:cwd main :tool_use_id "toolu_gone"
-                     :tool_input {:command (str "cd " wt " && git push")}}
-                    {:open-pr-fn pr-for}))]
-      (is (= :review (:action d)))
-      (is (= 391 (:pr d)))
-      (is (= :command (:dir-source d))
-          "the parse resolved it, so the parse must be named as the source"))))
-
-(deftest a-record-naming-a-directory-outside-any-repo-falls-back-to-parsing
-  (let [[main wt feat] (two-checkouts!)
-        outside (str (fs/create-temp-dir {:prefix "pr-review-norepo"}))
-        pr-for  (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
-        rec     (record! "toolu_norepo" outside feat)
-        d       (with-redefs [pushrecord/record-dirs (constantly [rec])]
-                  (trigger/decide
-                   {:cwd main :tool_use_id "toolu_norepo"
-                    :tool_input {:command (str "cd " wt " && git push")}}
-                   {:open-pr-fn pr-for}))]
-    (is (not (fs/exists? (str outside "/.git"))) "fixture precondition")
-    (is (= :review (:action d)))
-    (is (= 391 (:pr d)))
-    (is (= :command (:dir-source d))
-        "an existing directory that is not a checkout is rejected exactly like
-         a missing one — `fs/directory?` alone would have accepted this")))
-
-(deftest with-no-record-at-all-the-decision-is-what-it-was-before
-  (testing "most pushes have no record: the recorder gates on push-shaped
-            commands and only fires where the PreToolUse wrapper is
-            installed. Those calls must behave exactly as they did"
-    (let [[main wt feat] (two-checkouts!)
-          pr-for (fn [_root branch _opts] (when (= feat branch) (a-pr 391)))
-          d      (trigger/decide
-                  {:cwd main :tool_input {:command (str "cd " wt " && git push")}}
-                  {:open-pr-fn pr-for})]
-      (is (= :review (:action d)))
-      (is (= 391 (:pr d)))
-      (is (= :command (:dir-source d)))
-      (testing "and a command that never moves is sourced to the session cwd,
-                not miscredited to a parse that resolved nothing"
-        (let [[r g] (tmp-repo)
-              c (trigger/decide {:cwd r :tool_input {:command "git push"}}
-                                (opts r g :pr (a-pr 1)))]
-          (is (= :review (:action c)))
-          (is (= :session-cwd (:dir-source c))))))))
-
-(deftest when-the-record-and-the-parse-disagree-the-record-wins
-  (testing "the parse is inference over command text and imperfect by nature;
-            the record is the shell's own $PWD for this exact tool_use_id.
-            A tie-break that preferred the parse would make the better source
-            unreachable in precisely the case it was added for"
-    (let [[main wt feat] (two-checkouts!)
-          decoy  (str (fs/create-temp-dir {:prefix "pr-review-decoy"}))
-          _      (fs/create-dirs (str decoy "/.git"))
-          pr-for (fn [root branch _opts]
-                   (when (and (= feat branch)
-                              (= (str (fs/real-path wt)) (str (fs/real-path root))))
-                     (a-pr 391)))
-          rec    (record! "toolu_disagree" wt feat)
-          d      (with-redefs [pushrecord/record-dirs (constantly [rec])]
-                   (trigger/decide
-                    {:cwd main :tool_use_id "toolu_disagree"
-                     :tool_input {:command (str "cd " decoy " && git push")}}
-                    {:open-pr-fn pr-for}))]
-      (is (= :push-record (:dir-source d)))
-      (is (= :review (:action d)))
-      (is (= 391 (:pr d)))
-      (is (= (str (fs/real-path wt)) (str (fs/real-path (:repo-root d))))
-          "the decoy the command names is a real checkout and would have
-           resolved cleanly — the record has to outrank it anyway"))))
+(deftest a-real-clone-with-a-real-reflog-decides-a-review
+  (testing "no stubs between the reflog and the decision: a real clone, a real
+            pre-push-shaped reflog entry, and a real clone index"
+    (let [root (str (fs/create-temp-dir {:prefix "pr-review-e2e"}))]
+      (p/sh ["git" "init" "-q" "--initial-branch=main" root])
+      (let [g (str (fs/path root ".git"))
+            sha (str/join (repeat 40 \a))
+            ref (fs/path g "logs" "refs" "remotes" "origin" "feat" "x")
+            log (str (fs/path (fs/create-temp-dir {:prefix "pr-review-e2e-log"})
+                              "pushes.log"))
+            now (System/currentTimeMillis)]
+        (fs/create-dirs (fs/parent ref))
+        (spit (str ref)
+              (format "%s %s N <a@b> %d +0800\tupdate by push\n"
+                      (str/join (repeat 40 \0)) sha (quot now 1000)))
+        (spit log (format "%d\t%s\n" (quot now 1000) g))
+        (let [d (trigger/decide
+                 (input)
+                 {:clone-log-fn (constantly log)
+                  :open-pr-fn (fn [_ branch _]
+                                (when (= "feat/x" branch) (a-pr 370 sha)))
+                  :now-fn (constantly now)})]
+          (is (= :review (:action d)))
+          (is (= 370 (:pr d)))
+          (is (= "feat/x" (:branch d)))
+          (is (= sha (:sha d)))
+          (is (= (str (fs/canonicalize g)) (str (fs/canonicalize (:git-dir d))))
+              "git-dir must be the clone the index named")
+          (is (= (str (fs/canonicalize root)) (str (fs/canonicalize (:repo-root d))))
+              "repo-root must come from `git worktree list`, not <git-dir>/.."))))))
