@@ -153,12 +153,16 @@
           pdir (parent)
           leaked (co/add! git-dir first pdir {})]
       (is (some? leaked))
-      ;; the kill: directory gone, registration left behind, seconds old
-      (fs/delete-tree leaked)
+      ;; The kill, as it actually happens: the process dies, so nothing
+      ;; unregisters the worktree AND the directory is still on disk. Deleting
+      ;; the directory here would make it the prunable case `prune!` already
+      ;; handles, and the test would pass with or without the fix -- which is
+      ;; what the first version of it did.
+      (is (fs/exists? leaked) "the directory must survive for this to test anything")
       (is (str/includes? (str (:out (p/sh ["git" (str "--git-dir=" git-dir)
                                            "worktree" "list"] {})))
                          "pr-review-")
-          "the stale registration must still be there for this to test anything")
+          "and the registration must still be there")
       (let [again (atom :never-ran)]
         (co/with-checkout git-dir first pdir {} (fn [d] (reset! again d)))
         (is (some? @again) "the retry must reclaim the path, not refuse")
