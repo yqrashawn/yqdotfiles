@@ -33,6 +33,19 @@
    reflog stores whole seconds — not a window."
   (* 60 1000))
 
+(def ^:private pr-head-attempts
+  "How many times to re-ask GitHub for the PR head when it does not yet match
+   the sha git just recorded.
+
+   Measured: a push recorded at 20:25:31 had its PostToolUse trigger fire at
+   20:25:32, and the PR's `updated_at` shows GitHub only moved the head at
+   20:25:34. `gh pr list` takes ~1.3s on top, so the query lands squarely
+   inside the propagation window, and the mismatch made the trigger drop the
+   push in silence -- with no lock written, so nothing retried it either."
+  5)
+
+(def ^:private pr-head-delay-ms 2000)
+
 (def ^:private create-lookback-ms
   "How far back `gh pr create` looks. It pushes nothing, so the entry it needs
    belongs to the push that created the branch — measured at 29s and 69s
@@ -163,6 +176,26 @@
                     :ts (or started 0) :retry? true})))
          (sort-by :ts >))))
 
+(defn- pr-at-sha
+  "The open PR for `branch` once its head is `sha`, or nil.
+
+   Re-asks on a mismatch rather than treating it as an answer. A mismatch has
+   two causes and they need opposite handling: GitHub has not caught up yet
+   (wait), or this push was superseded by a newer one (drop). Only time tells
+   them apart, so it waits a bounded amount and then drops -- a superseded
+   push costs at most `pr-head-attempts` * `pr-head-delay-ms` of sleep in a
+   background hook, and the newer push has its own trigger."
+  [root branch sha opts]
+  (let [fetch (or (:open-pr-fn opts) gh/open-pr)
+        sleep (or (:sleep-fn opts) #(Thread/sleep %))]
+    (loop [n (or (:pr-head-attempts opts) pr-head-attempts)]
+      (when-let [pr (fetch root branch opts)]
+        (cond
+          (= sha (:headRefOid pr)) pr
+          (<= n 1) nil
+          :else (do (sleep (or (:pr-head-delay-ms opts) pr-head-delay-ms))
+                    (recur (dec n))))))))
+
 (defn- actionable
   "The newest candidate that has an open PR at its pushed sha AND no ledger
    row for that sha, with the clone's main worktree, the PR and the already
@@ -182,11 +215,10 @@
   [cands opts]
   (some (fn [{:keys [git-dir branch new-sha] :as c}]
           (when-let [root ((or (:main-worktree-fn opts) gh/main-worktree) git-dir opts)]
-            (when-let [pr ((or (:open-pr-fn opts) gh/open-pr) root branch opts)]
-              (when (= new-sha (:headRefOid pr))
-                (let [passes (ledger/read-passes git-dir (:number pr))]
-                  (when-not (ledger/reviewed-sha? passes new-sha)
-                    (assoc c :repo-root root :pr-info pr :passes passes)))))))
+            (when-let [pr (pr-at-sha root branch new-sha opts)]
+              (let [passes (ledger/read-passes git-dir (:number pr))]
+                (when-not (ledger/reviewed-sha? passes new-sha)
+                  (assoc c :repo-root root :pr-info pr :passes passes))))))
         cands))
 
 (defn decide

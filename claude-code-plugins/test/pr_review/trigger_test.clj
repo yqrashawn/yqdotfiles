@@ -46,6 +46,9 @@
      :pushes-fn        (fn [gd since] (filterv #(>= (:ts %) since) (get pushes gd)))
      :main-worktree-fn (fn [gd _] (or worktree gd))
      :open-pr-fn       (fn [_root branch _] (get prs branch))
+     ;; Never really sleep in tests: the sha-mismatch path waits for GitHub to
+     ;; catch up, and a suite that pays that is a suite nobody runs.
+     :sleep-fn         (fn [_] nil)
      :now-fn           (constantly (or now 1000000))}))
 
 (defn- an-attempt
@@ -190,6 +193,48 @@
                      (input)
                      (opts :pushes {"/g" [(a-push "feat/x" "stalesha" 999999)]}
                            :prs {"feat/x" (a-pr 370 "differentsha")})))))))
+
+(deftest a-lagging-pr-head-is-waited-for-not-dropped
+  (testing "measured: a push recorded at 20:25:31 had its trigger fire at
+            20:25:32, and the PR's updated_at shows GitHub moved the head at
+            20:25:34. `gh pr list` takes ~1.3s on top, so the query lands
+            inside the propagation window. The mismatch made the trigger drop
+            the push in silence — and with no lock written, nothing retried it,
+            so agent A's `pass 2 will run on it` never happened"
+    (let [calls (atom 0)
+          slept (atom 0)
+          o (assoc (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]})
+                   ;; GitHub answers with the OLD head twice, then catches up
+                   :open-pr-fn (fn [_ _ _]
+                                 (swap! calls inc)
+                                 (a-pr 370 (if (< @calls 3) "oldsha" "newsha")))
+                   :sleep-fn (fn [ms] (swap! slept + ms)))
+          d (trigger/decide (input) o)]
+      (is (= :review (:action d)))
+      (is (= "newsha" (:sha d)))
+      (is (= 3 @calls) "it must re-ask, not accept the first answer")
+      (is (pos? @slept) "and wait between asks"))))
+
+(deftest a-superseded-push-is-dropped-once-the-attempts-run-out
+  (testing "the same mismatch has two causes needing opposite handling —
+            GitHub has not caught up (wait) or this push was superseded by a
+            newer one (drop). Only time tells them apart, so it waits a
+            bounded amount and then drops; the newer push has its own trigger"
+    (let [calls (atom 0)
+          o (assoc (opts :pushes {"/g" [(a-push "feat/x" "stalesha" 999999)]})
+                   :open-pr-fn (fn [_ _ _] (swap! calls inc) (a-pr 370 "newer")))
+          d (trigger/decide (input) o)]
+      (is (= :silent (:action d)))
+      (is (= 5 @calls) "bounded, and it does not spin"))))
+
+(deftest a-branch-with-no-open-pr-does-not-wait-at-all
+  ;; No PR is a final answer, not a lag: waiting on it would put 8 seconds
+  ;; into every Bash call whose branch has no PR.
+  (let [slept (atom 0)
+        o (assoc (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]} :prs {})
+                 :sleep-fn (fn [ms] (swap! slept + ms)))]
+    (is (= :silent (:action (trigger/decide (input) o))))
+    (is (zero? @slept))))
 
 (deftest a-branch-with-no-open-pr-is-silent
   (is (= :silent
