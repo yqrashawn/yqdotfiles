@@ -90,10 +90,24 @@
 
 (defn add!
   "Checks `sha` out into a fresh directory under `parent`. Returns the path,
-   or nil if git refused."
+   or nil if git refused.
+
+   The target path is RECLAIMED first, unconditionally. Deleting the directory
+   is not enough: git keeps its administrative entry under
+   `.git/worktrees/<name>` and refuses to add a worktree whose path it still
+   believes it owns. Since the path is derived from the sha, a killed review
+   blocks every later review of that same sha -- and a retry of a killed
+   review is by definition of that same sha, so this is the exact case the
+   retry path hits. Measured: the retry fired for PR #401, found the leaked
+   checkout registered, and reported \"could not check out\".
+
+   `prune-stale!` does not cover this. It is age-based, twelve hours, and a
+   leak minutes old is the one in the way."
   [git-dir sha parent opts]
   (let [dir (str (fs/path parent (str "pr-review-" (subs sha 0 (min 12 (count sha))))))]
+    (git git-dir opts "worktree" "remove" "--force" dir)
     (fs/delete-tree dir)
+    (git git-dir opts "worktree" "prune")
     (when (zero? (:exit (git git-dir opts "worktree" "add" "--detach" "-q" dir sha)))
       dir)))
 

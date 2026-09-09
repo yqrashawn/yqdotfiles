@@ -141,6 +141,29 @@
     (is (= 0 (co/prune-stale! git-dir {})))
     (is (fs/exists? root) "the clone must never be removed by its own pruner")))
 
+(deftest a-leak-at-the-same-sha-does-not-block-a-retry
+  (testing "the case the retry path always hits: a retry is by definition of
+            the same sha the killed review had, the path is derived from the
+            sha, and git refuses a path it still believes it owns even after
+            the directory is deleted. Measured — the retry fired for PR #401,
+            found the leaked checkout registered, and reported \"could not
+            check out\". prune-stale! cannot help: it is age-based at twelve
+            hours and the leak in the way is minutes old"
+    (let [{:keys [git-dir first]} (clone!)
+          pdir (parent)
+          leaked (co/add! git-dir first pdir {})]
+      (is (some? leaked))
+      ;; the kill: directory gone, registration left behind, seconds old
+      (fs/delete-tree leaked)
+      (is (str/includes? (str (:out (p/sh ["git" (str "--git-dir=" git-dir)
+                                           "worktree" "list"] {})))
+                         "pr-review-")
+          "the stale registration must still be there for this to test anything")
+      (let [again (atom :never-ran)]
+        (co/with-checkout git-dir first pdir {} (fn [d] (reset! again d)))
+        (is (some? @again) "the retry must reclaim the path, not refuse")
+        (is (= leaked @again) "and it is the same sha-derived path")))))
+
 (deftest a-live-review-is-never-pruned-by-age
   ;; A review takes about seven minutes against a twelve-hour window; the
   ;; margin is what makes age alone safe, so no lock correlation is needed.
