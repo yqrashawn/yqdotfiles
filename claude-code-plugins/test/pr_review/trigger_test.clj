@@ -358,7 +358,7 @@
     (is (= 2 (:exit result)))
     (is (= ["headsha"] (mapv :sha (ledger/read-passes g 370))))
     (is (= "MERGEABLE" (:verdict (first (ledger/read-passes g 370)))))
-    (is (nil? (lock/read-lock g)) "the lock is released on the success path")))
+    (is (nil? (lock/read-lock g 370)) "the lock is released on the success path")))
 
 (deftest the-ledger-row-records-the-reconciled-verdict-not-the-claimed-one
   (testing "mergeable? had zero production call sites: any output whose count
@@ -451,13 +451,13 @@
       (is (= 0 (:exit result)) "silence, not a wake")
       (is (nil? (:message result)))
       (is (empty? (ledger/read-passes g 370)))
-      (is (= 9999 (:pid (lock/read-lock g)))
+      (is (= 9999 (:pid (lock/read-lock g 370)))
           "and the loser must not have deleted the winner's lock record"))))
 
 (deftest a-duplicate-push-is-silent
   (let [[r g] (tmp-repo)
         self (.pid (java.lang.ProcessHandle/current))]
-    (spit (lock/lock-path g)
+    (spit (lock/lock-path g 370)
           (str "{\"pid\":" self ",\"pr\":370,\"sha\":\"headsha\",\"started\":1}"))
     (let [d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
              :branch "feat/x" :base-ref "main" :draft? false
@@ -542,7 +542,7 @@
       (is (str/includes? (:message result) "could not check out"))
       (is (str/includes? (:message result) "No ledger row"))
       (is (empty? (ledger/read-passes g 370)))
-      (is (nil? (lock/read-lock g)) "and the lock is still released"))))
+      (is (nil? (lock/read-lock g 370)) "and the lock is still released"))))
 
 (deftest the-reviewer-runs-in-the-checkout-not-the-agents-tree
   (let [[r g] (tmp-repo)
@@ -558,6 +558,79 @@
     (is (= "/pinned-tree" @seen)
         "the reviewer was pointed at the agent's worktree, which mutates
          under it — two runs of one pass were not reproducible")))
+
+(deftest a-killed-review-is-retried-outside-every-window
+  (testing "measured: a session restart at 10:36 killed a review started at
+            10:32. It left a lock naming a dead pid, no ledger row and no
+            message, and the PR was never reviewed again because nothing
+            looked for it. The push is minutes or hours old and the session
+            that made it is gone, so any window or session test means it is
+            never retried"
+    (let [o (-> (opts :pushes {}            ; nothing recent in any reflog
+                      :prs {"feat/x" (a-pr 370 "killedsha")})
+                (assoc :clones-fn (fn [_log _since] ["/g"])
+                       :abandoned-fn (fn [_gd]
+                                       [{:pr 370 :sha "killedsha"
+                                         :branch "feat/x" :pid 999999
+                                         :started 1}])))
+          d (trigger/decide (input "git status") o)]
+      (is (= :review (:action d)) "an interrupted review must be picked up")
+      (is (true? (:retry? d)))
+      (is (= 370 (:pr d)))
+      (is (= "killedsha" (:sha d)))
+      (is (= 1 (:pass d)) "and it must still be pass 1 — none was recorded"))))
+
+(deftest a-retry-survives-a-clone-index-entry-days-old
+  (testing "no stubs on the index or the lock: a real pushes.log timestamped
+            three days back and a real lock naming a dead pid. Applying the
+            fresh path's lookback here would mean an interrupted review is
+            never retried, which is the whole defect"
+    (let [[_ g] (tmp-repo)
+          log (str (fs/path (fs/create-temp-dir {:prefix "pr-review-oldidx"})
+                            "pushes.log"))
+          three-days-ago (- (quot (System/currentTimeMillis) 1000) (* 3 86400))]
+      (spit log (format "%d\t%s\tsess-old\n" three-days-ago g))
+      (lock/acquire! g {:pr 370 :sha "killedsha" :branch "feat/x"} {:pid 999999})
+      (let [d (trigger/decide
+               (input "git status")
+               {:log-fn (constantly log)
+                ;; tmp-repo's .git holds no repository, so `git worktree list`
+                ;; cannot answer for it; that resolution is covered by
+                ;; gh-test and by the real-clone end-to-end below.
+                :main-worktree-fn (fn [gd _] (str (fs/parent gd)))
+                :open-pr-fn (fn [_ branch _]
+                              (when (= "feat/x" branch) (a-pr 370 "killedsha")))
+                :now-fn (constantly (System/currentTimeMillis))})]
+        (is (= :review (:action d)))
+        (is (true? (:retry? d)))
+        (is (= 370 (:pr d)))
+        (is (= "killedsha" (:sha d)))))))
+
+(deftest a-retry-is-not-offered-once-the-pr-has-moved-on
+  (testing "an abandoned review is only worth retrying while it is still the
+            PR's head with no ledger row; `actionable` decides that, so the
+            retry path cannot resurrect stale work"
+    (let [[_ g] (tmp-repo)
+          mk (fn [prs] (-> (opts :pushes {} :prs prs)
+                           (assoc :clones-fn (fn [_ _] [g])
+                                  :abandoned-fn (fn [_] [{:pr 370 :sha "killedsha"
+                                                          :branch "feat/x" :pid 999999
+                                                          :started 1}]))))]
+      (is (= :silent (:action (trigger/decide (input) (mk {}))))
+          "the PR was closed")
+      (is (= :silent (:action (trigger/decide (input) (mk {"feat/x" (a-pr 370 "newer")}))))
+          "the PR head moved past the killed review's sha")
+      (ledger/append-pass! g (row 370 "killedsha" 1))
+      (is (= :silent (:action (trigger/decide (input) (mk {"feat/x" (a-pr 370 "killedsha")}))))
+          "the review did in fact complete and record a row"))))
+
+(deftest a-live-review-is-never-treated-as-abandoned
+  ;; `lock/abandoned` filters on pid liveness; this asserts the trigger does
+  ;; not second-guess it into retrying work still in flight.
+  (let [o (-> (opts :pushes {} :prs {"feat/x" (a-pr 370 "sha")})
+              (assoc :clones-fn (fn [_ _] ["/g"])
+                     :abandoned-fn (fn [_] [])))]
+    (is (= :silent (:action (trigger/decide (input) o))))))
 
 ;; -------------------------------------------------------- the real history
 

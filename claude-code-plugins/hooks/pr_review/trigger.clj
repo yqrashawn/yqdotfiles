@@ -136,6 +136,33 @@
          (filter #(or (some? verb) (= session (:session %))))
          (sort-by :ts >))))
 
+(defn- abandoned-candidates
+  "Reviews that started and were killed before writing a ledger row, shaped
+   like reflog candidates so one selection path serves both.
+
+   Deliberately NOT limited by the lookback window, and deliberately NOT
+   scoped to this session. A killed review's push is minutes or hours old and
+   the session that made it is gone — a restart is the commonest way to kill
+   one — so any window or session test would mean it is never retried, which
+   is the defect. R2 is not weakened by that: a lock record exists only
+   because a review already started, so the push behind it was provably an
+   agent's, and `actionable` still requires the PR to be open at that sha with
+   no ledger row.
+
+   Every clone the index knows, with no `since`: the index is pruned at 24h,
+   which is the real bound on how long a retry stays reachable."
+  [opts]
+  (let [log ((or (:log-fn opts) attempts/default-log))]
+    (->> ((or (:clones-fn opts) attempts/clones-since) log 0)
+         (mapcat (fn [git-dir]
+                   (map #(assoc % :git-dir git-dir)
+                        ((or (:abandoned-fn opts) lock/abandoned) git-dir))))
+         (keep (fn [{:keys [branch sha started] :as a}]
+                 (when (and branch sha)
+                   {:git-dir (:git-dir a) :branch branch :new-sha sha
+                    :ts (or started 0) :retry? true})))
+         (sort-by :ts >))))
+
 (defn- actionable
   "The newest candidate that has an open PR at its pushed sha AND no ledger
    row for that sha, with the clone's main worktree, the PR and the already
@@ -187,13 +214,15 @@
   (let [verb (trigger-verb (get-in input [:tool_input :command]))
         now ((or (:now-fn opts) #(System/currentTimeMillis)))
         since (- now (lookback-ms verb (:duration_ms input)))
-        cands (candidate-pushes since (:session_id input) verb opts)]
-    (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes]}
+        cands (concat (candidate-pushes since (:session_id input) verb opts)
+                      (abandoned-candidates opts))]
+    (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes retry?]}
              (actionable cands opts)]
       (let [pr-num (:number pr-info)
-            base {:trigger verb :candidates (count cands)
-                  :git-dir git-dir :repo-root repo-root
-                  :branch branch :pr pr-num :sha new-sha}]
+            base (cond-> {:trigger verb :candidates (count cands)
+                          :git-dir git-dir :repo-root repo-root
+                          :branch branch :pr pr-num :sha new-sha}
+                   retry? (assoc :retry? true))]
         (if (ledger/cap-reached? passes)
           (assoc base :action :cap-reached
                  :reason (str "review cap of " ledger/max-passes
@@ -212,14 +241,19 @@
    wrapper and ignores rewakeMessage for third-party plugins, so this string
    has to introduce itself."
   ([d parsed] (findings-message d parsed nil))
-  ([{:keys [branch pr pass]} parsed warnings]
+  ([{:keys [branch pr pass retry?]} parsed warnings]
    (str "pr-review-loop — " branch
-        " PR #" pr ", pass " pass ": " (:verdict parsed) "\n\n"
+        " PR #" pr ", pass " pass
+        (when retry? " (retried after an interrupted review)")
+        ": " (:verdict parsed) "\n\n"
         (:body parsed)
         (when (seq warnings)
           (str "\n\n" (str/join "\n" warnings)))
-        "\n\nNext: use the pr-review-loop skill. Verify each"
-        " [correctness/blocking] finding against the source before fixing it.")))
+        "\n\nNext: use the pr-review-loop skill — it covers this whole loop,"
+        " not just the fixing: verify each [correctness/blocking] finding"
+        " against the source before changing anything, push fixes onto THIS"
+        " PR rather than a new one, and post the single summary comment"
+        " before merging.")))
 
 (defn- unresolved-base-message
   "Names the unresolved ref and the exact fix, so agent A does not have to
@@ -272,8 +306,8 @@
    route to losing a completed review, and (before `review!` had an outer
    try) to a non-2 exit. A failed release is self-healing anyway: the record
    names a pid, and acquire! treats a dead holder's lock as free."
-  [git-dir opts]
-  (try (lock/release! git-dir opts) (catch Exception _ nil)))
+  [git-dir pr opts]
+  (try (lock/release! git-dir pr opts) (catch Exception _ nil)))
 
 (defn- review-in!
   "The reviewer pass proper, against `review-root` — a checkout pinned to the
@@ -303,7 +337,7 @@
           ;; A newer push superseded this trigger and killed its reviewer
           ;; mid-answer. Recording that truncated output would spend a slot
           ;; and wake agent A with findings for a SHA that is already stale.
-          (lock/superseded? git-dir opts)
+          (lock/superseded? git-dir pr opts)
           {:exit 0 :message nil}
 
           ;; A crashed or unparsed reviewer produced no findings, so it does
@@ -356,7 +390,7 @@
         ;; only deletes the record if its :pid still matches, and a test that
         ;; stubs :pid in opts to acquire! must have that same stub honoured on
         ;; release! or the two would disagree about who holds the lock.
-        (finally (release-quietly! git-dir opts))))
+        (finally (release-quietly! git-dir pr opts))))
     (catch Exception e
       {:exit 2 :message (crash-message d e)})))
 

@@ -303,3 +303,66 @@
                          (reviewer/parse-output
                           (counted "NOT MERGEABLE" 1 (str line "\n"))))))
             (str "the prompt's own example line must parse: " line))))))
+
+(deftest counts-come-from-the-winning-verdicts-own-block
+  (testing "N2. `parse-verdict` takes the LAST verdict at column 0, because
+            reviewers restate the format or recap the previous pass before
+            answering. `parse-counts` took the FIRST count block, so the two
+            could describe different blocks — and a clean pass was reconciled
+            back to NOT MERGEABLE off a recap's counts, so the loop ran
+            another round on a PR that was finished"
+    (let [reply (str "Recap of the previous pass:\n"
+                     "VERDICT: NOT MERGEABLE — the old blocking finding\n"
+                     "  [correctness/blocking]  1 findings\n"
+                     "  [correctness/followup]  0\n"
+                     "  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n"
+                     "  [style]                 0\n"
+                     "\nThat is now fixed. My verdict this pass:\n\n"
+                     "VERDICT: MERGEABLE — 1 follow-up to file\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  1 findings\n"
+                     "  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n"
+                     "  [style]                 0\n"
+                     "\n1. [correctness/followup] src/a.clj:9 — bounded\n")
+          p (reviewer/parse-output reply)]
+      (is (= "MERGEABLE" (:verdict p)))
+      (is (= 0 (get (:counts p) "correctness/blocking"))
+          "the recap's blocking count must not be read as this pass's")
+      (is (= 1 (get (:counts p) "correctness/followup")))
+      (is (true? (reviewer/mergeable? p)))
+      (is (= "MERGEABLE" (:verdict (reviewer/reconcile p)))
+          "a finished PR must be allowed to finish"))))
+
+(deftest a-blocking-count-in-the-real-block-still-overrides-a-clean-claim
+  (testing "the guard the counts exist for must survive the fix: the verdict
+            line is the reviewer's claim, its own counts are the evidence"
+    (let [reply (str "VERDICT: MERGEABLE — nothing to fix\n"
+                     "  [correctness/blocking]  1 findings\n"
+                     "  [correctness/followup]  0\n"
+                     "  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n"
+                     "  [style]                 0\n"
+                     "\n1. [correctness/blocking] src/a.clj:1 — real defect\n")
+          p (reviewer/parse-output reply)]
+      (is (= 1 (get (:counts p) "correctness/blocking")))
+      (is (false? (reviewer/mergeable? p)))
+      (is (= "NOT MERGEABLE" (:verdict (reviewer/reconcile p)))))))
+
+(deftest findings-written-before-the-verdict-are-still-collected
+  (testing "counts are read after the winning verdict; fingerprints are not,
+            deliberately — a reviewer that lists findings then concludes would
+            otherwise lose all of them, which is worse than a wrong count"
+    (let [reply (str "1. [correctness/blocking] src/a.clj:42 — nil deref\n"
+                     "2. [coverage] test/a_test.clj:7 — cannot fail\n"
+                     "\nVERDICT: NOT MERGEABLE — nil deref\n"
+                     "  [correctness/blocking]  1 findings\n"
+                     "  [correctness/followup]  0\n"
+                     "  [coverage]              1 findings\n"
+                     "  [docs-accuracy]         0\n"
+                     "  [style]                 0\n")
+          p (reviewer/parse-output reply)]
+      (is (= 2 (count (:fingerprints p))))
+      (is (= 1 (get (:counts p) "correctness/blocking"))))))
+

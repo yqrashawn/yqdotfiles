@@ -115,6 +115,16 @@
        (keep #(second (re-find #"^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" %)))
        last))
 
+(defn- verdict-index
+  "Index of the line `parse-verdict` chose, or nil. Same rule, same anchor —
+   so the count block can be read from that verdict's own block rather than
+   from whichever one came first."
+  [lines]
+  (->> (map-indexed vector lines)
+       (keep (fn [[i l]]
+               (when (re-find #"^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" l) i)))
+       last))
+
 (defn- parse-counts
   "Read the per-category count block. \"none\" means 0 — a missing key and a
    zero count must not be confusable, or a clean pass reads as an unparsed one.
@@ -175,7 +185,20 @@
         lines (normalized-lines out)]
     (if-let [v (parse-verdict lines)]
       {:verdict v
-       :counts (parse-counts lines)
+       ;; Counts come from AFTER the winning verdict line, not from the first
+       ;; block in the reply. `parse-verdict` takes the LAST verdict at column
+       ;; 0 because reviewers restate the format, or recap the previous pass,
+       ;; before answering; `parse-counts` took the FIRST count block, so the
+       ;; two could describe different blocks. Measured: a reviewer recapping
+       ;; a previous NOT MERGEABLE pass and then reporting MERGEABLE had its
+       ;; clean verdict reconciled back to NOT MERGEABLE off the recap's
+       ;; counts, and the loop ran another round on a PR that was done.
+       ;;
+       ;; Fingerprints deliberately still read the whole reply: the prompt
+       ;; asks for verdict, then counts, then findings, but a reviewer that
+       ;; puts its findings before its final verdict line would lose all of
+       ;; them, and losing findings is worse than the counts being off.
+       :counts (parse-counts (drop (inc (verdict-index lines)) lines))
        :fingerprints (parse-fingerprints lines)
        :body out}
       {:verdict "MALFORMED"

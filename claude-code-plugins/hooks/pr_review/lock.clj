@@ -20,15 +20,26 @@
             [pr-review.flock :as flock]))
 
 (defn lock-path
-  [git-dir]
-  (str git-dir "/pr-review.lock"))
+  "One lock per PR, not per clone.
+
+   A single `<git-dir>/pr-review.lock` made every PR in a clone contend for
+   one reviewer slot, and `acquire!` supersedes on any sha it does not
+   recognise — so pushing PR #397 killed PR #395's running reviewer and
+   dropped that review with no ledger row and no message. A repository with
+   five open PRs does that constantly.
+
+   Superseding is still exactly right WITHIN a PR: two rapid pushes must not
+   run two reviewers on stale shas (R14). Scoping the lock to the PR is what
+   makes those two statements stop contradicting each other."
+  [git-dir pr]
+  (str git-dir "/pr-review." pr ".lock"))
 
 (defn read-lock
   "Current lock record, or nil when absent, unparseable, or missing a
    usable :pid. A corrupt or incomplete lock reads as free: a half-written
    file must not wedge the loop forever."
-  [git-dir]
-  (let [p (lock-path git-dir)]
+  [git-dir pr]
+  (let [p (lock-path git-dir pr)]
     (when (fs/exists? p)
       (let [parsed (try (json/parse-string (slurp p) true)
                         (catch Exception _ nil))]
@@ -65,10 +76,10 @@
     (catch Exception _ nil)))
 
 (defn- write-lock!
-  [git-dir {:keys [pid pr sha]}]
-  (fs/create-dirs (fs/parent (lock-path git-dir)))
-  (spit (lock-path git-dir)
-        (json/generate-string {:pid pid :pr pr :sha sha
+  [git-dir pr-key {:keys [pid pr sha branch]}]
+  (fs/create-dirs (fs/parent (lock-path git-dir pr-key)))
+  (spit (lock-path git-dir pr-key)
+        (json/generate-string {:pid pid :pr pr :sha sha :branch branch
                                :started (System/currentTimeMillis)})))
 
 (defn acquire!
@@ -86,24 +97,24 @@
    independent of the record's lifecycle, so two concurrent triggers in
    the same clone cannot both observe a free or dead lock and both
    proceed."
-  [git-dir {:keys [pr sha]} {:keys [pid kill-fn]}]
+  [git-dir {:keys [pr sha branch]} {:keys [pid kill-fn]}]
   (flock/with-file-lock
-    (flock/guard-path (lock-path git-dir))
+    (flock/guard-path (lock-path git-dir pr))
     (fn []
       (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))
             kill-fn (or kill-fn kill-reviewers!)
-            held (read-lock git-dir)]
+            held (read-lock git-dir pr)]
         (cond
           (and held (alive? (:pid held)) (= sha (:sha held)))
           {:status :duplicate}
 
           (and held (alive? (:pid held)))
           (do (kill-fn (:pid held))
-              (write-lock! git-dir {:pid pid :pr pr :sha sha})
+              (write-lock! git-dir pr {:pid pid :pr pr :sha sha :branch branch})
               {:status :superseded :killed-pid (:pid held)})
 
           :else
-          (do (write-lock! git-dir {:pid pid :pr pr :sha sha})
+          (do (write-lock! git-dir pr {:pid pid :pr pr :sha sha :branch branch})
               {:status :acquired}))))))
 
 (defn superseded?
@@ -120,9 +131,9 @@
    was superseded and the winner has since released, or that something
    outside the loop deleted the record; in both cases the conservative move
    is to stay quiet rather than publish a pass whose lock is gone."
-  [git-dir {:keys [pid]}]
+  [git-dir pr {:keys [pid]}]
   (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))]
-    (not= pid (:pid (read-lock git-dir)))))
+    (not= pid (:pid (read-lock git-dir pr)))))
 
 (defn release!
   "Release the lock, but only when it is still held by `pid` (default this
@@ -138,13 +149,38 @@
    been superseded delete the new holder's record — the lock then reads
    free while a reviewer is actually still running, which is exactly what
    acquire!'s duplicate/superseded logic exists to prevent."
-  ([git-dir] (release! git-dir {}))
-  ([git-dir {:keys [pid]}]
+  ([git-dir pr] (release! git-dir pr {}))
+  ([git-dir pr {:keys [pid]}]
    (let [pid (or pid (.pid (java.lang.ProcessHandle/current)))]
      (flock/with-file-lock
-       (flock/guard-path (lock-path git-dir))
+       (flock/guard-path (lock-path git-dir pr))
        (fn []
-         (let [held (read-lock git-dir)]
+         (let [held (read-lock git-dir pr)]
            (when (= pid (:pid held))
-             (fs/delete-if-exists (lock-path git-dir))))))
+             (fs/delete-if-exists (lock-path git-dir pr))))))
      nil)))
+
+(defn abandoned
+  "Reviews that STARTED and never finished, in `git-dir`: lock records whose
+   holder is no longer alive.
+
+   The signal needs nothing new on disk. `release!` deletes the record on
+   every path a review can finish by, and `acquire!` overwrites it — so a
+   record naming a dead pid can only mean the reviewer was killed mid-run.
+   Measured: a session restart at 10:36 killed a review started at 10:32 and
+   left exactly this, with no ledger row and no message, and the PR was never
+   reviewed again because nothing looked for it.
+
+   `:branch` may be absent on a record written before it was recorded; the
+   caller has to tolerate that rather than skip the retry."
+  [git-dir]
+  (->> (try (fs/list-dir git-dir) (catch Exception _ nil))
+       (keep (fn [f]
+               (let [pr (some-> (re-find #"pr-review\.(\d+)\.lock$"
+                                         (str (fs/file-name f)))
+                                second parse-long)]
+                 (when pr
+                   (when-let [held (read-lock git-dir pr)]
+                     (when-not (alive? (:pid held))
+                       (assoc held :pr pr)))))))
+       (sort-by :started >)))
