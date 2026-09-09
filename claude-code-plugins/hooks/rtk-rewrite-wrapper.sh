@@ -44,7 +44,7 @@
 #   A MISSING RECORD IS HARMLESS -- the consumer (pr-review.pushrecord) falls
 #   back to command parsing and then to the session cwd. A BROKEN COMMAND IS
 #   NOT. So the scanner below models a deliberately small subset of shell
-#   grammar exactly and REFUSES everything else (see `scan_segments`).
+#   grammar exactly and REFUSES everything else (see `find_insert_point`).
 #
 # TRACKED SOURCE
 #   ~/.nixpkgs/claude-code-plugins/hooks/rtk-rewrite-wrapper.sh, installed to
@@ -177,158 +177,182 @@ parses_clean() {
 }
 parses_clean "$BASE" || passthrough
 
-# --- 4. boundary scanner ---------------------------------------------------
-# Splits the command into simple-command SEGMENTS at unquoted control
-# operators, and REFUSES (returns 1) on any construct it does not model
-# exactly. Segment boundaries are: ; & | newline ( ) `{ ` and an unquoted
-# comment, i.e. exactly the places a simple command can end.
+# --- 4. head locator -------------------------------------------------------
+# Walks the command left to right and stops at the FIRST segment whose head is
+# a wrappable push, reporting where that head begins. Segment boundaries are
+# the places a simple command can end: ; & | newline ( ) `{ ` and an unquoted
+# comment.
+#
+# Only the text BEFORE that head is ever analysed -- the walk returns the
+# instant it finds one. That is what lets
+# `gh pr create --body "$(cat <<'EOF' ...)"` be recorded: its command
+# substitution, backtick and heredoc all sit to the RIGHT of the head, where
+# nothing needs to be understood. An earlier revision spliced the recorder in
+# as `{ recorder; CMD; }`, which needed the segment's END as well and so had
+# to model those constructs; it refused them, and therefore refused the one
+# command that actually opens a PR.
 #
 # Modelled: '...', "..." (with \ escapes and ${...} inside), \ escapes,
 #   ${...}, <<< herestrings, >& <& &> >| redirections, # comments.
-# REFUSED outright, because getting them wrong corrupts a command:
+# REFUSED, because misplacing a boundary corrupts a command:
 #   $(...)  `...`   -- command substitution: needs a nesting stack
 #   <<EOF   <<-EOF  -- heredocs: the body is arbitrary text that would be
 #                      scanned as if it were code
 #   >(...)  <(...)  -- process substitution
 #   an unterminated quote or ${
 # Each refusal costs at most one missing record.
-SEG_START=(); SEG_END=()
-scan_segments() {
+#
+# The delimiter that OPENS a segment is classified too, because the recorder
+# becomes a new element of the enclosing list. After `;`, a newline, `&&`, a
+# background `&`, `(` or `{ ` that is transparent. After `|` or `||` it is
+# NOT: `a | git push` would become `(a | recorder) && git push` and the push
+# would lose its stdin. Such segments are skipped -- a later one may match.
+HEAD_POS=-1
+find_insert_point() {
   # Separate `local` statements: bash expands ALL arguments of the builtin
   # before assigning any of them, so `local s=$1 n=${#s}` would read the
   # OUTER s (and, under `set -u`, kill the hook).
   local s=$1
   local n=${#s}
-  local i=0 c nx pv wordstart=1 start=0
-  SEG_START=(); SEG_END=()
-  while [ "$i" -lt "$n" ]; do
-    c=${s:i:1}
-    nx=${s:i+1:1}
-    pv=''; [ "$i" -gt 0 ] && pv=${s:i-1:1}
-    case $c in
-      '\')
-        i=$((i+2)); wordstart=0 ;;
-      "'")
-        i=$((i+1))
-        while [ "$i" -lt "$n" ] && [ "${s:i:1}" != "'" ]; do i=$((i+1)); done
-        [ "$i" -lt "$n" ] || return 1
-        i=$((i+1)); wordstart=0 ;;
-      '"')
-        i=$((i+1))
-        while [ "$i" -lt "$n" ]; do
-          case ${s:i:1} in
-            '\') i=$((i+2)) ;;
-            '`') return 1 ;;
-            '$') [ "${s:i+1:1}" = '(' ] && return 1
+  local i=0 c nx pv wordstart=1 start=0 safe=1 lead hp hit
+  HEAD_POS=-1
+  while :; do
+    # At a segment start, with a list-transparent delimiter behind it.
+    if [ "$safe" -eq 1 ]; then
+      lead=${s:start}
+      lead=${lead%%[![:blank:]]*}
+      hp=$(( start + ${#lead} ))
+      if is_push_head "${s:hp}"; then HEAD_POS=$hp; return 0; fi
+    fi
+    # Advance to the next segment boundary, or run out of command.
+    hit=0
+    while [ "$i" -lt "$n" ]; do
+      c=${s:i:1}
+      nx=${s:i+1:1}
+      pv=''; [ "$i" -gt 0 ] && pv=${s:i-1:1}
+      case $c in
+        '\')
+          i=$((i+2)); wordstart=0 ;;
+        "'")
+          i=$((i+1))
+          while [ "$i" -lt "$n" ] && [ "${s:i:1}" != "'" ]; do i=$((i+1)); done
+          [ "$i" -lt "$n" ] || return 1
+          i=$((i+1)); wordstart=0 ;;
+        '"')
+          i=$((i+1))
+          while [ "$i" -lt "$n" ]; do
+            case ${s:i:1} in
+              '\') i=$((i+2)) ;;
+              '`') return 1 ;;
+              '$') [ "${s:i+1:1}" = '(' ] && return 1
+                   i=$((i+1)) ;;
+              '"') break ;;
+              *)   i=$((i+1)) ;;
+            esac
+          done
+          [ "$i" -lt "$n" ] || return 1
+          i=$((i+1)); wordstart=0 ;;
+        '`')
+          return 1 ;;
+        '$')
+          case $nx in
+            '(') return 1 ;;
+            '{') i=$((i+2))
+                 while [ "$i" -lt "$n" ] && [ "${s:i:1}" != '}' ]; do i=$((i+1)); done
+                 [ "$i" -lt "$n" ] || return 1
                  i=$((i+1)) ;;
-            '"') break ;;
             *)   i=$((i+1)) ;;
           esac
-        done
-        [ "$i" -lt "$n" ] || return 1
-        i=$((i+1)); wordstart=0 ;;
-      '`')
-        return 1 ;;
-      '$')
-        case $nx in
-          '(') return 1 ;;
-          '{') i=$((i+2))
-               while [ "$i" -lt "$n" ] && [ "${s:i:1}" != '}' ]; do i=$((i+1)); done
-               [ "$i" -lt "$n" ] || return 1
-               i=$((i+1)) ;;
-          *)   i=$((i+1)) ;;
-        esac
-        wordstart=0 ;;
-      '<')
-        if [ "$nx" = '<' ]; then
-          [ "${s:i+2:1}" = '<' ] || return 1   # heredoc, not a herestring
-          i=$((i+3))
-        else
-          i=$((i+1))
-        fi
-        wordstart=0 ;;
-      '#')
-        if [ "$wordstart" -eq 1 ]; then
-          SEG_START+=("$start"); SEG_END+=("$i")
-          while [ "$i" -lt "$n" ] && [ "${s:i:1}" != $'\n' ]; do i=$((i+1)); done
-          [ "$i" -lt "$n" ] && i=$((i+1))
-          start=$i; wordstart=1
-        else
-          i=$((i+1)); wordstart=0
-        fi ;;
-      '(' | ')')
-        # `>(` / `<(` is process substitution, not a subshell.
-        { [ "$pv" = '>' ] || [ "$pv" = '<' ]; } && return 1
-        SEG_START+=("$start"); SEG_END+=("$i")
-        i=$((i+1)); start=$i; wordstart=1 ;;
-      '&')
-        if [ "$pv" = '>' ] || [ "$pv" = '<' ] || [ "$nx" = '>' ]; then
-          i=$((i+1)); wordstart=0            # 2>&1, >&2, &>file
-        else
-          SEG_START+=("$start"); SEG_END+=("$i")
-          i=$((i+1)); start=$i; wordstart=1
-        fi ;;
-      '|')
-        if [ "$pv" = '>' ]; then
-          i=$((i+1)); wordstart=0            # >|file
-        else
-          SEG_START+=("$start"); SEG_END+=("$i")
-          i=$((i+1)); start=$i; wordstart=1
-        fi ;;
-      '{')
-        # Only the group-open reserved word splits; `--x={a,b}` must not.
-        if [ "$wordstart" -eq 1 ] && { [ "$nx" = ' ' ] || [ "$nx" = $'\t' ] || [ "$nx" = $'\n' ]; }; then
-          SEG_START+=("$start"); SEG_END+=("$i")
-          i=$((i+1)); start=$i; wordstart=1
-        else
-          i=$((i+1)); wordstart=0
-        fi ;;
-      ';' | $'\n')
-        SEG_START+=("$start"); SEG_END+=("$i")
-        i=$((i+1)); start=$i; wordstart=1 ;;
-      ' ' | $'\t')
-        i=$((i+1)); wordstart=1 ;;
-      *)
-        i=$((i+1)); wordstart=0 ;;
-    esac
+          wordstart=0 ;;
+        '<')
+          if [ "$nx" = '<' ]; then
+            [ "${s:i+2:1}" = '<' ] || return 1   # heredoc, not a herestring
+            i=$((i+3))
+          else
+            i=$((i+1))
+          fi
+          wordstart=0 ;;
+        '#')
+          if [ "$wordstart" -eq 1 ]; then
+            while [ "$i" -lt "$n" ] && [ "${s:i:1}" != $'\n' ]; do i=$((i+1)); done
+            [ "$i" -lt "$n" ] && i=$((i+1))
+            start=$i; wordstart=1; safe=1; hit=1; break
+          else
+            i=$((i+1)); wordstart=0
+          fi ;;
+        '(' | ')')
+          # `>(` / `<(` is process substitution, not a subshell.
+          { [ "$pv" = '>' ] || [ "$pv" = '<' ]; } && return 1
+          i=$((i+1)); start=$i; wordstart=1; hit=1
+          [ "$c" = '(' ] && safe=1 || safe=0
+          break ;;
+        '&')
+          if [ "$pv" = '>' ] || [ "$pv" = '<' ] || [ "$nx" = '>' ]; then
+            i=$((i+1)); wordstart=0            # 2>&1, >&2, &>file
+          else
+            # `&&`: the FIRST & opens an empty segment, the SECOND opens the
+            # right-hand command -- and that one is list-transparent. A lone
+            # `&` is a plain list separator, so it is transparent too.
+            if [ "$nx" = '&' ]; then safe=0; else safe=1; fi
+            i=$((i+1)); start=$i; wordstart=1; hit=1; break
+          fi ;;
+        '|')
+          if [ "$pv" = '>' ]; then
+            i=$((i+1)); wordstart=0            # >|file
+          else
+            i=$((i+1)); start=$i; wordstart=1; safe=0; hit=1; break
+          fi ;;
+        '{')
+          # Only the group-open reserved word splits; `--x={a,b}` must not.
+          if [ "$wordstart" -eq 1 ] && { [ "$nx" = ' ' ] || [ "$nx" = $'\t' ] || [ "$nx" = $'\n' ]; }; then
+            i=$((i+1)); start=$i; wordstart=1; safe=1; hit=1; break
+          else
+            i=$((i+1)); wordstart=0
+          fi ;;
+        ';' | $'\n')
+          i=$((i+1)); start=$i; wordstart=1; safe=1; hit=1; break ;;
+        ' ' | $'\t')
+          i=$((i+1)); wordstart=1 ;;
+        *)
+          i=$((i+1)); wordstart=0 ;;
+      esac
+    done
+    [ "$hit" -eq 1 ] || return 1
   done
-  SEG_START+=("$start"); SEG_END+=("$n")
-  return 0
 }
 
 # `git push` / `gh pr create`, bare or rtk-prefixed, as the HEAD of the
 # segment. Anything between the words but blanks (`env X=1 git push`,
 # `then git push`, `git -C /x push`) deliberately does not match: those are
 # either unwrappable or would need a real parser to place correctly.
+# The head is matched against the whole REST of the command, not against a
+# pre-cut segment, so the word can also be terminated by the operator that
+# ends its segment -- `{ git push; }` ends at the `;`.
+# Held in variables and used UNQUOTED: a bracket expression written inline in
+# `[[ ... =~ ... ]]` has to survive bash's own parser first, and `)` there is
+# a live metacharacter. Inside the class `; & | )` are all literal, so none of
+# them needs a backslash -- and a backslash would not escape them anyway, it
+# would join the class as a sixth member.
+PUSH_RE='^(rtk[[:space:]]+)?git[[:space:]]+push([[:space:];&|)]|$)'
+PRC_RE='^(rtk[[:space:]]+)?gh[[:space:]]+pr[[:space:]]+create([[:space:];&|)]|$)'
 is_push_head() {
-  [[ $1 =~ ^(rtk[[:blank:]]+)?git[[:blank:]]+push([[:blank:]]|$) ]] && return 0
-  [[ $1 =~ ^(rtk[[:blank:]]+)?gh[[:blank:]]+pr[[:blank:]]+create([[:blank:]]|$) ]] && return 0
+  [[ $1 =~ $PUSH_RE ]] && return 0
+  [[ $1 =~ $PRC_RE ]] && return 0
   return 1
 }
 
-scan_segments "$BASE" || passthrough
+find_insert_point "$BASE" || passthrough
 
 RECORDER=${RECORDER_TMPL//@ID@/$TOOL_USE_ID}
 
-# Right to left, so an earlier segment's offsets are still valid after a later
-# one has been rewritten. Two pushes in one command therefore both get wrapped.
-NEW=$BASE
-WRAPPED=0
-k=$(( ${#SEG_START[@]} - 1 ))
-while [ "$k" -ge 0 ]; do
-  st=${SEG_START[$k]}
-  en=${SEG_END[$k]}
-  seg=${BASE:st:en-st}
-  lead=${seg%%[![:blank:]]*}
-  head=$(( st + ${#lead} ))
-  if is_push_head "${seg:${#lead}}"; then
-    NEW="${NEW:0:head}{ ${RECORDER}; ${NEW:head:en-head}; } ${NEW:en}"
-    WRAPPED=1
-  fi
-  k=$((k-1))
-done
-
-[ "$WRAPPED" -eq 1 ] || passthrough
+# Spliced in as its own list element AHEAD of the push, glued with `&&` so a
+# `cd "$WT" && git push` keeps its conditionality: were this a `;`, a failed
+# `cd` would no longer stop the push and it would run in the wrong directory.
+# The recorder ends in `|| :`, so it can never be the thing that stops a push.
+#
+# Only the FIRST push in a command is recorded. The record file is keyed by
+# tool_use_id, so a second recorder could only overwrite the first.
+NEW="${BASE:0:HEAD_POS}{ ${RECORDER}; } && ${BASE:HEAD_POS}"
 
 # Belt and braces: if the rewrite does not parse cleanly, ship rtk's output
 # alone. This is the net under every scanner assumption above.
