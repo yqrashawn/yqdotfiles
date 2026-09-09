@@ -93,7 +93,8 @@
   (let [[r g] (tmp-repo)
         payload "diff --git a/café.clj b/café.clj\n@@ -1 +1 @@\n-(def café 1)\n+(def café 2)\n"
         responses {["git" "merge-base"] {:exit 0 :out "basesha\n" :err ""}
-                   ["git" "diff"]       {:exit 0 :out payload :err ""}}
+                   ;; gh/diff now runs `git --no-pager diff --no-ext-diff ...`
+                   ["git" "--no-pager"]  {:exit 0 :out payload :err ""}}
         sh (fn [args _dir]
              (get responses (vec (take 2 args)) {:exit 1 :out "" :err "unstubbed"}))
         res (context/build! r g {:pr 1 :sha "s" :base-ref "main"} {:sh sh})

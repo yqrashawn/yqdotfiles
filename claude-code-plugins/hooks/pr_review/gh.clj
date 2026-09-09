@@ -78,7 +78,19 @@
    work, not everything that landed on the base since it forked."
   [repo-root base sha opts]
   ;; Bypasses ok-out on purpose: the reviewer trusts these bytes unseen, so trimming git's trailing newline here would silently corrupt the one file the whole module exists to keep faithful.
-  (let [{:keys [exit out]} (run opts ["git" "diff" (str base "..." sha)] repo-root)]
+  ;;
+  ;; --no-ext-diff and --no-color, because the user's git decides the format
+  ;; otherwise and this repo's `diff.external` is difftastic side-by-side.
+  ;; Every review before this flag read that instead of a unified diff:
+  ;; measured, the real context diff for PR #395 held 0 `diff --git` lines, so
+  ;; `changed-files` was always empty and the prompt's "Changed files" section
+  ;; always blank. The prompt tells the reviewer it is reading a diff and the
+  ;; fingerprint identity across passes is `path:line`, so the format is not
+  ;; cosmetic. --no-pager as well: a configured pager would be a second way
+  ;; for a machine-read diff to acquire decoration.
+  (let [{:keys [exit out]} (run opts ["git" "--no-pager" "diff" "--no-ext-diff"
+                                      "--no-color" (str base "..." sha)]
+                                repo-root)]
     (when (zero? exit) out)))
 
 (defn open-pr

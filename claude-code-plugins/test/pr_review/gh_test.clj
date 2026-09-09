@@ -58,12 +58,22 @@
     (is (nil? (gh/open-pr "/repo" "feat/x" {:sh sh}))
         "an unauthenticated gh must degrade to silence, never crash the hook")))
 
-(deftest diff-asks-for-the-three-dot-range
+(deftest diff-asks-git-for-a-plain-unified-three-dot-diff
   (let [calls (atom [])
-        sh (stub {["git" "diff"] {:exit 0 :out "DIFFTEXT" :err ""}} calls)]
+        sh (stub {["git" "--no-pager"] {:exit 0 :out "DIFFTEXT" :err ""}} calls)]
     (is (= "DIFFTEXT" (gh/diff "/repo" "base1" "head1" {:sh sh})))
-    (is (= ["git" "diff" "base1...head1"] (first @calls))
-        "three-dot compares against the merge base, which is what a review wants")))
+    (is (= ["git" "--no-pager" "diff" "--no-ext-diff" "--no-color" "base1...head1"]
+           (first @calls)))
+    (testing "three-dot compares against the merge base, which is what a
+              review wants"
+      (is (some #{"base1...head1"} (first @calls))))
+    (testing "--no-ext-diff, or the user's git decides the format. This repo
+              sets diff.external to difftastic side-by-side, and every review
+              before this flag read that instead of a unified diff: the real
+              context diff for PR #395 held 0 `diff --git` lines, so
+              context/changed-files was always empty and the prompt's
+              \"Changed files\" section always blank"
+      (is (some #{"--no-ext-diff"} (first @calls))))))
 
 (deftest diff-distinguishes-a-failure-from-a-real-empty-diff
   (is (nil? (gh/diff "/repo" "origin/main" "headsha"
