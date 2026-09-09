@@ -111,6 +111,20 @@ fi
 # Any early return from here on must reproduce rtk-alone behaviour exactly.
 passthrough() { [ -n "$RTK_OUT" ] && printf '%s\n' "$RTK_OUT"; exit 0; }
 
+# rtk emitting NOTHING is rtk saying something, and this wrapper does not get to
+# second-guess which thing. "No rtk equivalent" (its exit 1), "a deny rule
+# matched" (its exit 2) and "already in rtk form" all produce empty stdout and
+# are indistinguishable from here. So: emit nothing, and rewrite nothing.
+#
+# Rewriting the command while emitting no decision -- which is what this used to
+# do -- is the trap: Claude Code's native deny rule would then be matched
+# against a command the user never wrote. Silence in, silence out.
+#
+# The cost is a missing record for a push already written as `rtk git push`, and
+# on any machine where rtk declines to rewrite `git push` at all. Both fall back
+# to `pr-review.workdir`'s command parsing, which is its designed job.
+[ -n "$RTK_OUT" ] || passthrough
+
 command -v jq >/dev/null 2>&1 || passthrough
 
 # --- 3. parse payload + rtk output; decide the base command ----------------
@@ -126,12 +140,9 @@ case $TOOL_USE_ID in
 esac
 [ ${#TOOL_USE_ID} -le 128 ] || passthrough
 
-RTK_JSON=null
-if [ -n "$RTK_OUT" ]; then
-  # Non-empty but non-JSON stdout from rtk: unexpected -> hands off entirely.
-  printf '%s' "$RTK_OUT" | jq -e . >/dev/null 2>&1 || passthrough
-  RTK_JSON=$RTK_OUT
-fi
+# Non-empty but non-JSON stdout from rtk: unexpected -> hands off entirely.
+printf '%s' "$RTK_OUT" | jq -e . >/dev/null 2>&1 || passthrough
+RTK_JSON=$RTK_OUT
 
 BASE=$(printf '%s' "$RTK_JSON" | jq -r '.hookSpecificOutput.updatedInput.command // empty' 2>/dev/null)
 [ -n "$BASE" ] || BASE=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
@@ -326,26 +337,17 @@ parses_clean "$NEW" || passthrough
 # --- 5. emit merged JSON ---------------------------------------------------
 # updatedInput keeps every other tool_input field (description, timeout, ...).
 #
-# permissionDecision is rtk's when rtk set one, and "allow" otherwise -- rtk
-# only ever sets "allow", so in practice a command this wrapper rewrites is
-# ALWAYS allowed. That is a deliberate change, authorised by the user, and it
-# is the whole point: rtk emits nothing at all for a command that is already
-# `rtk git push`, and an ABSENT decision makes Claude Code run its permission
-# flow, which in a session started with `--permission-prompt-tool` invokes that
-# tool and was observed to fail the Bash call outright. A rewritten command the
-# user never typed should not be the thing that triggers a prompt.
+# permissionDecision / permissionDecisionReason are copied VERBATIM, and only
+# when rtk actually set them. Their absence is not an oversight to be filled in:
+# rtk omits them on its exit 3 ("an ask rule matched") precisely so that Claude
+# Code prompts, and this wrapper never widens a permission. It only ever adds a
+# recorder to a command rtk already decided to rewrite.
 #
-# THE ONE THING THIS GIVES UP: rtk signals "a deny rule matched" by emitting
-# nothing (its exit 2), which is indistinguishable here from "no rewrite
-# available" (its exit 1). So a deny rule matching a `git push` / `gh pr
-# create` command would now be overridden by this "allow". Measured before
-# making the change: permissions.deny and permissions.ask are both empty and
-# defaultMode is bypassPermissions, so nothing is being bypassed today. If deny
-# rules are ever added for a push-shaped command, this line must go back to
-# copying the decision only when rtk set one.
-#
-# This only affects commands the wrapper actually WRAPS. Every other command
-# returns rtk's stdout byte-identical long before reaching this point.
+# An earlier revision defaulted this to "allow" and was wrong to. A deny is
+# indistinguishable from a passthrough from here (see the RTK_OUT guard above),
+# so defaulting to "allow" could override a deny rule -- and it was not needed:
+# the `--permission-prompt-tool` failure this was chasing came from the `$(...)`
+# the recorder used to inject, which is gone.
 OUT=$(jq -n \
   --argjson payload "$INPUT" \
   --argjson rtk "$RTK_JSON" \
@@ -353,11 +355,12 @@ OUT=$(jq -n \
   (($rtk // {}).hookSpecificOutput // {}) as $h
   | (($h.updatedInput // $payload.tool_input // {}) | .command = $cmd) as $ui
   | { hookSpecificOutput:
-        { hookEventName: "PreToolUse",
-          permissionDecision: ($h.permissionDecision // "allow"),
-          permissionDecisionReason:
-            ($h.permissionDecisionReason // "pr-review-loop push recorder"),
-          updatedInput: $ui } }
+        ( { hookEventName: "PreToolUse" }
+          + (if ($h.permissionDecision // null) != null
+             then { permissionDecision: $h.permissionDecision } else {} end)
+          + (if ($h.permissionDecisionReason // null) != null
+             then { permissionDecisionReason: $h.permissionDecisionReason } else {} end)
+          + { updatedInput: $ui } ) }
 ' 2>/dev/null) || passthrough
 [ -n "$OUT" ] || passthrough
 
