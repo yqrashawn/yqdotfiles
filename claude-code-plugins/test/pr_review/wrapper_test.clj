@@ -152,7 +152,17 @@
    ;; never rises above 1, which is no test of it at all.
    "nested substitutions, unquoted" "X=$(echo $(date)); cd /tmp && git push"
    "nested substitutions, quoted"  "cd \"$(dirname \"$(git rev-parse --git-dir)\")\" && git push"
-   "paren inside a quoted sub"     "X=\"$(echo \")\")\"; git push"})
+   "paren inside a quoted sub"     "X=\"$(echo \")\")\"; git push"
+   ;; Heredocs before the head are skipped, not refused. A commit message or
+   ;; PR body written with one, pushed in the same command, is the normal
+   ;; shape -- refusing it lost the record on exactly those pushes.
+   "heredoc before the head"       "cat <<EOF\nx\nEOF\ngit push"
+   "quoted delimiter"              "cat > /tmp/m <<'EOF'\nmsg\nEOF\ngit push origin HEAD"
+   "tab-stripped delimiter"        "cat <<-EOF\n\tmsg\n\tEOF\ngit push"
+   "delimiter after a space"       "cat << EOF\nmsg\nEOF\ngit push"
+   "two heredocs on one line"      "cat <<A <<B\na\nA\nb\nB\ngit push"
+   "heredoc then more code, then push"
+   "cd /tmp && cat > /tmp/m <<'EOF' && true\nmsg\nEOF\ngit commit -F /tmp/m && git push"})
 
 (deftest wraps-what-it-can-place
   (with-tmp
@@ -176,7 +186,6 @@
    "backtick before the head"      "X=`date`; git push"
    "unterminated $("               "cd \"$(git rev-parse\" && git push"
    "heredoc inside a substitution" "X=\"$(cat <<EOF\n)\nEOF\n)\"; git push"
-   "heredoc before the head"       "cat <<EOF\nx\nEOF\ngit push"
    "process substitution"          "diff <(a) <(b) && git push"
    "unterminated quote"            "git push \"abc"
    ;; Not a placeable head.
@@ -188,6 +197,32 @@
    "create is a prefix only"       "gh pr createx"
    ;; Idempotency: a command already carrying a recorder.
    "already recorded"              "x; ( __prl_d=1 ); git push"})
+
+(deftest a-push-inside-a-heredoc-body-is-not-the-head
+  ;; The hazard that made refusing heredocs look right: a BODY line reading
+  ;; `git push` is file content, not a command. Scanning the body as code would
+  ;; splice the recorder into the middle of the text being written.
+  (with-tmp
+    (fn [d]
+      (let [body "git push origin decoy"
+            cmd (str "cat > /tmp/prl-test-msg <<'EOF'\n" body "\nEOF\ngit push origin real")
+            out (run-wrapper {:cmd cmd :id "toolu_HDB" :rtk (fake-rtk d)})]
+        (is (some? out) "should record the real push")
+        (when out
+          (is (str/includes? out (str "<<'EOF'\n" body "\nEOF"))
+              "the heredoc body was rewritten")
+          (is (< (str/index-of out body) (str/index-of out "__prl_d"))
+              "the recorder was spliced into the heredoc body")
+          (is (str/includes? out "} && git push origin real")
+              "the recorder did not land on the real push"))))))
+
+(deftest an-unterminated-heredoc-is-refused
+  ;; No terminator line means the body has no end to skip to, and `bash -n`
+  ;; only warns rather than failing, so the scanner has to catch it itself.
+  (with-tmp
+    (fn [d]
+      (is (nil? (run-wrapper {:cmd "cat <<EOF\nx\ngit push"
+                              :id "toolu_HDU" :rtk (fake-rtk d)}))))))
 
 (deftest a-push-inside-a-command-substitution-is-not-the-head
   ;; Placing the substitution's close by DEPTH is what keeps the splice outside

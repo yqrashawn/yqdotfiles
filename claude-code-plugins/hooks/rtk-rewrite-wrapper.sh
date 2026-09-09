@@ -215,12 +215,15 @@ parses_clean "$BASE" || passthrough
 # reviewer hint with `> "$(git rev-parse --git-common-dir)/pr-review-hint"`, and
 # putting that in the same command as the push -- which is the natural way to
 # write it -- used to cost the record for that push.
+# Skipped whole (`read_heredoc_delim` + `skip_heredoc_bodies`): <<EOF / <<-EOF
+# before the head. Commit messages and PR bodies are written with heredocs and
+# pushed in the same command, so refusing them lost the record on exactly the
+# pushes that carry one.
 # REFUSED, because misplacing a boundary corrupts a command:
 #   `...`           -- backticks do not nest, so the close cannot be placed
-#   <<EOF   <<-EOF  -- heredocs: the body is arbitrary text that would be
-#                      scanned as if it were code
 #   >(...)  <(...)  -- process substitution
-#   an unterminated quote, ${ or $(
+#   a heredoc inside $(...), whose body may hold an unbalanced `)`
+#   an unterminated quote, heredoc, ${ or $(
 # Each refusal costs at most one missing record.
 #
 # The delimiter that OPENS a segment is classified too, because the recorder
@@ -228,6 +231,105 @@ parses_clean "$BASE" || passthrough
 # background `&`, `(` or `{ ` that is transparent. After `|` or `||` it is
 # NOT: `a | git push` would become `(a | recorder) && git push` and the push
 # would lose its stdin. Such segments are skipped -- a later one may match.
+# --- heredocs ---------------------------------------------------------------
+# A heredoc is the one construct whose BODY is arbitrary text rather than
+# code, so scanning it as code is how a boundary gets misplaced -- a body line
+# reading `git push` would be taken for a command head and the recorder
+# spliced into the middle of a file's contents.
+#
+# It cannot simply be refused, though. `git commit -F -` bodies, PR bodies and
+# commit messages are written with heredocs, and a push in the same command as
+# one is the normal shape, not an exotic one. Refusing meant the record was
+# lost on exactly those pushes.
+#
+# So the body is SKIPPED, deterministically: `<<WORD` queues WORD, the rest of
+# the line keeps being scanned as code, and at the newline every queued body
+# is consumed up to its terminator line. That is bash's own rule, and it needs
+# no understanding of the body at all. A missing terminator is a refusal.
+#
+# HD_COUNT rather than ${#HD_DELIM[@]}: under `set -u` an empty array's length
+# is an unbound-variable error on bash 3.2, and this file must not depend on
+# which bash the hook runs under.
+HD_DELIM=(); HD_STRIP=(); HD_COUNT=0
+HD_WORD_END=-1
+HD_END=-1
+
+# Reads the delimiter of the heredoc whose `<<` starts at $2, queues it, and
+# sets HD_WORD_END past the word. `<<-` strips leading tabs from the
+# terminator; quoting the word only affects expansion inside the body, which
+# is text either way, so the quotes are simply removed.
+read_heredoc_delim() {
+  local s=$1
+  local n=${#s}
+  local i=$2
+  local strip=0 w='' c
+  i=$((i+2))
+  if [ "${s:i:1}" = '-' ]; then strip=1; i=$((i+1)); fi
+  while [ "$i" -lt "$n" ]; do
+    c=${s:i:1}
+    { [ "$c" = ' ' ] || [ "$c" = $'\t' ]; } || break
+    i=$((i+1))
+  done
+  while [ "$i" -lt "$n" ]; do
+    c=${s:i:1}
+    case $c in
+      "'")
+        i=$((i+1))
+        while [ "$i" -lt "$n" ] && [ "${s:i:1}" != "'" ]; do w=$w${s:i:1}; i=$((i+1)); done
+        [ "$i" -lt "$n" ] || return 1
+        i=$((i+1)) ;;
+      '"')
+        i=$((i+1))
+        while [ "$i" -lt "$n" ] && [ "${s:i:1}" != '"' ]; do w=$w${s:i:1}; i=$((i+1)); done
+        [ "$i" -lt "$n" ] || return 1
+        i=$((i+1)) ;;
+      '\')
+        i=$((i+1)); w=$w${s:i:1}; i=$((i+1)) ;;
+      ' ' | $'\t' | $'\n' | ';' | '&' | '|' | '<' | '>' | '(' | ')')
+        break ;;
+      *)
+        w=$w$c; i=$((i+1)) ;;
+    esac
+  done
+  [ -n "$w" ] || return 1
+  HD_DELIM[$HD_COUNT]=$w
+  HD_STRIP[$HD_COUNT]=$strip
+  HD_COUNT=$((HD_COUNT+1))
+  HD_WORD_END=$i
+  return 0
+}
+
+# Consumes every queued heredoc body starting at $2 (just past the newline),
+# in queue order, setting HD_END past the last terminator line.
+skip_heredoc_bodies() {
+  local s=$1
+  local n=${#s}
+  local i=$2
+  local k=0 line nl
+  while [ "$k" -lt "$HD_COUNT" ]; do
+    while :; do
+      [ "$i" -lt "$n" ] || return 1
+      nl=$i
+      while [ "$nl" -lt "$n" ] && [ "${s:nl:1}" != $'\n' ]; do nl=$((nl+1)); done
+      line=${s:i:nl-i}
+      if [ "${HD_STRIP[$k]}" = 1 ]; then
+        while [ "${line:0:1}" = $'\t' ]; do line=${line:1}; done
+      fi
+      if [ "$line" = "${HD_DELIM[$k]}" ]; then
+        i=$nl
+        [ "$i" -lt "$n" ] && i=$((i+1))
+        break
+      fi
+      [ "$nl" -lt "$n" ] || return 1
+      i=$((nl+1))
+    done
+    k=$((k+1))
+  done
+  HD_DELIM=(); HD_STRIP=(); HD_COUNT=0
+  HD_END=$i
+  return 0
+}
+
 # Advances past a `$( ... )` command substitution. $1 is the command, $2 the
 # index of its `(`; on success CMDSUB_END is the index just past the matching
 # `)`. Returns 1 whenever the close cannot be placed exactly.
@@ -296,6 +398,7 @@ find_insert_point() {
   local n=${#s}
   local i=0 c nx pv wordstart=1 start=0 safe=1 lead hp hit
   HEAD_POS=-1
+  HD_DELIM=(); HD_STRIP=(); HD_COUNT=0
   while :; do
     # At a segment start, with a list-transparent delimiter behind it.
     if [ "$safe" -eq 1 ]; then
@@ -351,8 +454,12 @@ find_insert_point() {
           wordstart=0 ;;
         '<')
           if [ "$nx" = '<' ]; then
-            [ "${s:i+2:1}" = '<' ] || return 1   # heredoc, not a herestring
-            i=$((i+3))
+            if [ "${s:i+2:1}" = '<' ]; then
+              i=$((i+3))                          # <<< herestring
+            else
+              read_heredoc_delim "$s" "$i" || return 1
+              i=$HD_WORD_END
+            fi
           else
             i=$((i+1))
           fi
@@ -394,8 +501,16 @@ find_insert_point() {
           else
             i=$((i+1)); wordstart=0
           fi ;;
-        ';' | $'\n')
+        ';')
           i=$((i+1)); start=$i; wordstart=1; safe=1; hit=1; break ;;
+        $'\n')
+          # The newline both ends a command AND begins any queued heredoc body.
+          i=$((i+1))
+          if [ "$HD_COUNT" -gt 0 ]; then
+            skip_heredoc_bodies "$s" "$i" || return 1
+            i=$HD_END
+          fi
+          start=$i; wordstart=1; safe=1; hit=1; break ;;
         ' ' | $'\t')
           i=$((i+1)); wordstart=1 ;;
         *)

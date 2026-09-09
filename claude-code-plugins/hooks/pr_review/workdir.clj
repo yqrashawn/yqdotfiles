@@ -95,23 +95,6 @@
   [tok]
   (when-let [[_ k v] (re-matches assignment-re tok)] [k v]))
 
-(defn- assignments
-  "Simple leading `VAR=value` assignments, literal values only.
-
-   A non-literal value maps its name to ::unresolvable rather than being
-   dropped: a shell expands an unset variable to the empty string, and
-   silently turning `cd \"$SP/wt\"` into `cd /wt` is exactly the guess this
-   namespace exists to refuse."
-  [segs]
-  (reduce (fn [m seg]
-            (reduce (fn [m tok]
-                      (if-let [[k v] (assignment tok)]
-                        (assoc m k (if (literal? v) v ::unresolvable))
-                        ;; leading only — the first real word ends the run
-                        (reduced m)))
-                    m seg))
-          {} segs))
-
 (defn- expand
   "`$VAR` / `${VAR}` substituted from `vars` **only** — never from the real
    process environment, which belongs to this hook process and not to the
@@ -120,6 +103,37 @@
   (let [refs (map (fn [[_ braced bare]] (or braced bare)) (re-seq var-re s))]
     (when (every? #(string? (get vars %)) refs)
       (str/replace s var-re (fn [[_ braced bare]] (get vars (or braced bare)))))))
+
+(defn- assignments
+  "Simple leading `VAR=value` assignments, resolved in command order.
+
+   A non-literal value is expanded against the assignments ALREADY seen, so
+   `SP=/a; WT=\"$SP/b\"; cd \"$WT\"` resolves to /a/b. That two-level form is
+   the agent's habitual shape, and treating it as unresolvable cost the
+   directory on real pushes. Chaining is unbounded because the reduce runs in
+   order; only names this function resolved itself are ever substituted.
+
+   No `literal?` re-check on the expanded value: `dir-signal` already applies
+   one to the `cd` target it resolves, so a glob or backtick surviving
+   expansion is refused there. Measured — with and without a second check,
+   basis and directory are identical even for a glob that exists as a real
+   directory name.
+
+   A value that still cannot be resolved maps its name to ::unresolvable
+   rather than being dropped: a shell expands an unset variable to the empty
+   string, and silently turning `cd \"$SP/wt\"` into `cd /wt` is exactly the
+   guess this namespace exists to refuse."
+  [segs]
+  (reduce (fn [m seg]
+            (reduce (fn [m tok]
+                      (if-let [[k v] (assignment tok)]
+                        (assoc m k (if (literal? v)
+                                     v
+                                     (or (expand v m) ::unresolvable)))
+                        ;; leading only — the first real word ends the run
+                        (reduced m)))
+                    m seg))
+          {} segs))
 
 ;; ------------------------------------------------------------- dir signals
 

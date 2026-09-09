@@ -49,6 +49,46 @@
            through the quote or dropping the assignment both lose the
            worktree"))))
 
+(deftest a-chain-of-assignments-resolves-in-order
+  (testing "the second real shape, measured on the PR #395 push: `SP=<path>`
+            on its own line, then `WT=\"$SP/wt-...\"`, then `cd \"$WT\"`.
+            Treating a non-literal value as unresolvable stopped at WT, the
+            directory fell back to the session cwd on a branch with no PR, and
+            the push went unreviewed"
+    (let [r  (repo)
+          wt (str r "/wt-388-followup")]
+      (fs/create-dirs wt)
+      (is (= wt (dir-of
+                 (str "SP=" r "\nWT=\"$SP/wt-388-followup\"; cd \"$WT\""
+                      " && git add -A && git push -q origin HEAD")
+                 r))
+          "WT is one level removed from a literal, not two")
+      (is (= wt (dir-of
+                 (str "A=" r "; B=\"$A/wt\"; C=\"$B\"; D=\"$C-388-followup\";"
+                      " cd \"$D\" && git push")
+                 r))
+          "chaining is unbounded because the reduce runs in command order"))))
+
+(deftest an-unresolvable-link-in-the-chain-stays-unresolvable
+  (testing "the safety property the chaining must not cost: a shell expands an
+            unset variable to the empty string, so a name that cannot be
+            resolved must poison everything derived from it rather than
+            silently shortening the path"
+    (let [r (repo)]
+      (is (= r (dir-of "WT=\"$NOPE/wt\"; cd \"$WT\" && git push" r))
+          "an unset base must not collapse to /wt")
+      (is (= r (dir-of (str "SP=$(pwd); WT=\"$SP/wt\"; cd \"$WT\" && git push") r))
+          "a command substitution must not become resolvable by being assigned")
+      (is (= r (dir-of (str "SP=" r "; WT=\"$SP/$OTHER\"; cd \"$WT\" && git push") r))
+          "one resolvable reference does not make the whole value resolvable")
+      ;; Expansion succeeding is not the same as the RESULT being a path. The
+      ;; substituted name is literal by construction, but the rest of the
+      ;; value is not, so the expanded string has to be re-checked.
+      (is (= r (dir-of (str "SP=" r "; WT=\"$SP/wt-*\"; cd \"$WT\" && git push") r))
+          "a glob survived expansion and was taken for a path")
+      (is (= r (dir-of (str "SP=" r "; WT=\"$SP/`date`\"; cd \"$WT\" && git push") r))
+          "a backtick survived expansion and was taken for a path"))))
+
 (deftest the-last-cd-wins-and-relative-targets-resolve-against-the-current-one
   (let [r (repo)]
     (fs/create-dirs (str r "/a/b"))
