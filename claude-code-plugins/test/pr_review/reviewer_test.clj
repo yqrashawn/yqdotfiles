@@ -1,5 +1,6 @@
 (ns pr-review.reviewer-test
-  (:require [clojure.java.io :as io]
+  (:require [babashka.fs :as fs]
+            [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
             [pr-review.reviewer :as reviewer]))
@@ -93,15 +94,40 @@
 
 (deftest run-passes-the-prompt-and-cwd-to-the-spawner
   (let [seen (atom nil)
-        spawn (fn [argv prompt dir] (reset! seen {:argv argv :prompt prompt :dir dir})
+        spawn (fn [argv prompt dir err-file]
+                (reset! seen {:argv argv :prompt prompt :dir dir :err-file err-file})
                 {:exit 0 :out "VERDICT: MERGEABLE — 0 follow-ups to file" :err ""})
         res (reviewer/run! "PROMPT" "/repo" {:spawn-fn spawn})]
     (is (= 0 (:exit res)))
     (is (= "PROMPT" (:prompt @seen)))
-    (is (= "/repo" (:dir @seen)) "the reviewer must run in the repo it is reviewing")))
+    (is (= "/repo" (:dir @seen)) "the reviewer must run in the repo it is reviewing")
+    (is (nil? (:err-file @seen)) "no err-file unless the caller asks for one")))
+
+(deftest default-spawn-streams-stderr-to-the-file-as-it-runs
+  (testing "the point is the case where nothing is RETURNED: two reviews were
+            killed mid-run after 5m48s and 7m33s and the loop had discarded
+            everything the reviewer said. Streaming means a SIGKILL still
+            leaves whatever reached the file, and parents are created because
+            the path is under a git dir that may not have it yet"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-err"}) "deep" "r.stderr"))
+          spawn @#'reviewer/default-spawn
+          res (spawn ["sh" "-c" "echo diagnosis >&2; echo reply; exit 7"] "" "." f)]
+      (is (= 7 (:exit res)))
+      (is (= "reply" (str/trim (:out res))))
+      (is (= "diagnosis" (str/trim (:err res)))
+          ":err must still behave as before, read back from the file")
+      (is (= "diagnosis" (str/trim (slurp f)))
+          "and the file must hold it, which is what survives a kill"))))
+
+(deftest the-err-file-path-reaches-the-spawner
+  (let [seen (atom nil)
+        spawn (fn [_ _ _ err-file] (reset! seen err-file) {:exit 0 :out "" :err ""})]
+    (reviewer/run! "P" "/repo" {:spawn-fn spawn :err-file "/tmp/x.stderr"})
+    (is (= "/tmp/x.stderr" @seen)
+        "or a killed reviewer leaves nothing behind to explain itself")))
 
 (deftest run-never-throws-even-if-the-spawner-does
-  (let [spawn (fn [_ _ _] (throw (ex-info "boom" {})))
+  (let [spawn (fn [_ _ _ _] (throw (ex-info "boom" {})))
         res (reviewer/run! "PROMPT" "/repo" {:spawn-fn spawn})]
     (is (not (zero? (:exit res)))
         "a spawn failure must surface as a result, never propagate as an exception")

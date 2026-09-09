@@ -3,6 +3,10 @@
  {review-trigger {:doc  "PostToolUse hook entrypoint. Reads hook JSON on stdin."
                   :task (exec 'pr-review.trigger/-main)}
 
+  review-pr {:doc  "Review a PR now, without a push. Optional PR number;
+                     defaults to the current branch's open PR."
+             :task (exec 'pr-review.manual/-main)}
+
   install-push-hook {:doc  "SessionStart entrypoint. Installs the git pre-push
                             hook that names the pushed clone."
                      :task (exec 'pr-review.hookinstall/-main)}
@@ -20,6 +24,7 @@
                            pr-review.prepush-hook-test
                            pr-review.checkout-test
                            pr-review.attempts-test
+                           pr-review.manual-test
                            pr-review.pushlog-test
                            pr-review.trigger-test]
                     ;; Select on FILE EXISTENCE, never on whether `require`

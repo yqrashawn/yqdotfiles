@@ -85,7 +85,7 @@
    :with-checkout-fn (fn [_gd _sha _parent _opts f]
                        (f (if (contains? #{:none} checkout) nil (or checkout "/review-root"))))
    :spawn-fn (or spawn-fn
-                 (fn [_ _ _] {:exit (or exit 0)
+                 (fn [_ _ _ _] {:exit (or exit 0)
                               :out (or out (clean-reply))
                               :err (or err "")}))})
 
@@ -444,8 +444,8 @@
           d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "old"
              :base-ref "main" :draft? false :prior-fingerprints []}
           ;; A newer push takes the lock while our reviewer is running.
-          steal (fn [_ _ _]
-                  (lock/acquire! g {:pr 370 :sha "new"} {:pid 9999})
+          steal (fn [_ _ _ _]
+                  (lock/acquire! g {:pr 370 :sha "new" :branch "feat/x"} {:pid 9999})
                   {:exit 143 :out "" :err "terminated"})
           result (#'trigger/review! d (review-opts :spawn-fn steal))]
       (is (= 0 (:exit result)) "silence, not a wake")
@@ -552,7 +552,7 @@
            :prior-fingerprints []}]
     (#'trigger/review! d (assoc (review-opts :checkout "/pinned-tree")
                                 ;; spawn is (argv prompt dir)
-                                :spawn-fn (fn [_argv _prompt dir]
+                                :spawn-fn (fn [_argv _prompt dir _err]
                                             (reset! seen dir)
                                             {:exit 0 :out (clean-reply) :err ""})))
     (is (= "/pinned-tree" @seen)
@@ -651,7 +651,7 @@
              :prior-fingerprints []}]
       (#'trigger/review!
        d (assoc (review-opts)
-                :spawn-fn (fn [_ _ _]
+                :spawn-fn (fn [_ _ _ _]
                             (reset! held (lock/read-lock g 370))
                             {:exit 0 :out (clean-reply) :err ""})))
       (is (not= :never-ran @held) "the reviewer never ran, so nothing was checked")

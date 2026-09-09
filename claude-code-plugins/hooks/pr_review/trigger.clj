@@ -328,7 +328,12 @@
                                   :repo-root review-root :git-dir git-dir
                                   :ctx ctx :pr pr :pass pass :draft? draft?
                                   :prior-fingerprints prior-fingerprints})
-            res    (reviewer/run! text review-root opts)
+            ;; A killed reviewer used to leave nothing behind to explain
+            ;; itself. This file survives a SIGKILL, and the next pass
+            ;; overwrites it, so it is always about the most recent attempt.
+            res    (reviewer/run! text review-root
+                                  (assoc opts :err-file
+                                         (str git-dir "/pr-review." pr ".stderr")))
             ;; reconcile is mergeable? wired in: a count block that
             ;; contradicts the verdict line loses, here, once, so both the
             ;; headline and the ledger row carry the same reconciled verdict.

@@ -6,6 +6,7 @@
    granted Read, Grep, Glob and Bash, in a throwaway worktree — so what it runs cannot be
    rewritten by rtk and nothing it does can touch the tree."
   (:require [babashka.process :as p]
+            [clojure.java.io :as io]
             [clojure.string :as str]))
 
 (def categories
@@ -110,9 +111,23 @@
    "--allowedTools" "Read,Grep,Glob,Bash"])
 
 (defn- default-spawn
-  [argv prompt dir]
-  (let [{:keys [exit out err]} (p/sh argv {:dir dir :in prompt})]
-    {:exit exit :out (or out "") :err (or err "")}))
+  "Runs the reviewer. `err-file`, when given, receives stderr AS IT IS WRITTEN
+   and is read back afterwards, so `:err` behaves as before.
+
+   Streaming rather than capturing, because the interesting case is the one
+   where nothing is returned at all: two reviews were killed mid-run after 5m48s
+   and 7m33s, and the loop had discarded everything the reviewer said, so there
+   was no way to tell why. A SIGKILL leaves whatever reached the file."
+  [argv prompt dir err-file]
+  (if err-file
+    (let [f (io/file err-file)
+          _ (io/make-parents f)
+          {:keys [exit out]} (p/sh argv {:dir dir :in prompt
+                                         :err :write :err-file f})]
+      {:exit exit :out (or out "")
+       :err (try (slurp f) (catch Exception _ ""))})
+    (let [{:keys [exit out err]} (p/sh argv {:dir dir :in prompt})]
+      {:exit exit :out (or out "") :err (or err "")})))
 
 (defn run!
   "Run the reviewer with `prompt` on stdin, in `repo-root`.
@@ -120,7 +135,7 @@
    :err, so the caller can still tell the author what happened."
   [prompt repo-root opts]
   (let [spawn (or (:spawn-fn opts) default-spawn)]
-    (try (spawn (claude-argv) prompt repo-root)
+    (try (spawn (claude-argv) prompt repo-root (:err-file opts))
          (catch Exception e {:exit 127 :out "" :err (str (ex-message e))}))))
 
 (defn- strip-emphasis
