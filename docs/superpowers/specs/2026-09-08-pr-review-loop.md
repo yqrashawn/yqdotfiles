@@ -102,6 +102,8 @@ on darwin 24.3.0. Confidence noted per item.
 | C52 | `--disallowedTools` accepts COMMAND SHAPES, not only tool names, and they are enforced under `bypassPermissions`: a denied `rm` returned "Denied by user" while `git log` and a `printf >` ran in the same session. So Bash can be granted while specific harms stay closed — unlike `--allowedTools`, which restricts nothing (C36). | confirmed — measured both directions |
 | C53 | A push made by the reviewer would carry the PARENT session's `CLAUDE_CODE_SESSION_ID`, because the reviewer is a grandchild of agent A's Bash call. The `pre-push` hook would record it as an agent push and the loop would review the reviewer's own commit. `Bash(git push:*)` and `Bash(git commit:*)` are denied for that reason, not for tidiness. | confirmed by construction — the env inheritance is measured (C52 session) |
 | C54 | Granting Bash leaves two hazards open that no deny list closes: the production nREPL on port 8034 is reachable by any spelling `nc` does not cover, and the test suite can now be run, which may touch a shared database. The prompt asks the reviewer not to; that is guidance, not enforcement. | acknowledged, not mitigated |
+| C55 | The reviewer could not see the PR description by ANY route: not in the diff, not in the prompt, and `gh pr view` was refused because `Bash(gh pr:*)` is a PREFIX match that blocks reads as well as writes. So every review judged the change with no statement of intent to check it against — most of what `[docs-accuracy]` exists for. | confirmed — measured, "Refused." |
+| C56 | `gh` is now unrestricted, on the author's instruction, and the prompt carries the PR url plus `gh pr view <n> --repo <slug> --comments`. The url comes from `open-pr`, not from the checkout: `gh` cannot infer a remote from a detached review worktree. This also lets the reviewer merge or comment on the PR it is reviewing, reversing R13; the prompt asks it not to, which is guidance, not enforcement. | acknowledged, not mitigated |
 
 ## Requirements
 
@@ -119,7 +121,7 @@ on darwin 24.3.0. Confidence noted per item.
 | R10 | Drafts are reviewed | A PR with `isDraft: true` gets a pass entry |
 | R11 | Pass number and re-raise ledger survive session restart and compaction | Ledger entries persist across `claude` restarts |
 | R12 | Loop terminates | Pass 11 on one PR does not spawn a reviewer |
-| R13 | One summary comment lands on the PR before merge | The merged PR has exactly one `pr-review-loop` summary comment |
+| R13 | One summary comment lands on the PR before merge | The merged PR has exactly one `pr-review-loop` summary comment. Agent A posts it; the reviewer is asked not to comment but is no longer prevented from it (C56) |
 | R14 | Two rapid pushes do not run two reviewers on stale SHAs | The older reviewer is killed; only the newer SHA is reviewed |
 | R15 | Survives a nix rebuild, and a NEW machine | Activation installs the plugin cache when it does not already hold the source's version, and warns loudly when `bb`, `claude` or the manifest is missing. Everything else already travels: source by git, marketplace and `enabledPlugins` by the Dropbox symlinks, the `pre-push` hook by SessionStart |
 

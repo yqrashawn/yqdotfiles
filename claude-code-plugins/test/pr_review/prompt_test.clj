@@ -81,3 +81,35 @@
   (let [out (prompt/build (assoc-in (base-args (tmp-repo)) [:ctx :diff-bytes] 0))]
     (is (str/includes? out "empty")
         "an empty diff must be stated, or the reviewer invents findings")))
+
+(deftest the-prompt-points-the-reviewer-at-the-pr
+  (testing "the reviewer had no access to the PR description by ANY route: not
+            in the diff, not in the prompt, and `gh pr view` was refused by
+            the `Bash(gh pr:*)` prefix. It reviewed with no statement of
+            intent to check the change against, which is most of what
+            [docs-accuracy] is for"
+    (let [out (prompt/build {:core "CORE" :repo-root "/r" :git-dir "/r/.git"
+                             :ctx {:sha "s" :base "b" :diff-bytes 10
+                                   :diff-path "/d" :changed-files ["a"]}
+                             :pr 401 :pass 1
+                             :pr-url "https://github.com/yqrashawn/cchp/pull/401"})]
+      (is (str/includes? out "https://github.com/yqrashawn/cchp/pull/401"))
+      (testing "with the exact command, repo included: gh cannot infer the
+                remote from a detached worktree"
+        (is (str/includes? out "gh pr view 401 --repo yqrashawn/cchp --comments")))
+      (testing "framed as a claim to CHECK — the description is written by the
+                agent under review"
+        (is (str/includes? out "not ground truth"))
+        (is (str/includes? out "[docs-accuracy]")))
+      (testing "and before the diff instructions, so it knows the claim first"
+        (is (< (str/index-of out "author says this change does")
+               (str/index-of out "How to read the change")))))))
+
+(deftest a-pr-with-no-url-adds-no-section
+  ;; An empty heading would read as "the author said nothing", which is a
+  ;; different claim from "this was not available".
+  (let [out (prompt/build {:core "CORE" :repo-root "/r" :git-dir "/r/.git"
+                           :ctx {:sha "s" :base "b" :diff-bytes 10
+                                 :diff-path "/d" :changed-files []}
+                           :pr 1 :pass 1})]
+    (is (not (str/includes? out "author says this change does")))))

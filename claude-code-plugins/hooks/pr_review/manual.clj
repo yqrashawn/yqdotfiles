@@ -23,7 +23,7 @@
   [repo-root n opts]
   (let [{:keys [exit out]} ((or (:sh opts) gh/default-sh)
                             ["gh" "pr" "view" (str n) "--json"
-                             "number,isDraft,baseRefName,headRefOid,headRefName,state"]
+                             "number,isDraft,baseRefName,headRefOid,headRefName,state,url"]
                             repo-root)]
     (when (zero? exit)
       (let [pr (try (json/parse-string out true) (catch Exception _ nil))]
@@ -72,6 +72,7 @@
                    :pass (ledger/next-pass-number passes)
                    :base-ref (:baseRefName info)
                    :draft? (boolean (:isDraft info))
+                   :pr-url (:url info)
                    :prior-fingerprints (ledger/suppressed-fingerprints passes))))))
     {:action :silent :reason (str "not a git repository: " dir)}))
 

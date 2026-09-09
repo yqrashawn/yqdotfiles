@@ -96,13 +96,18 @@
 (defn open-pr
   "The open PR whose head is `branch`, or nil. Measured at ~1.3s.
 
+   `url` is requested so the prompt can point the reviewer at the PR and let
+   it read the description and comments itself. Not the title and body: the
+   reviewer has `gh pr view`, and a copy in the prompt would be a second,
+   staler source of the same text.
+
    `headRefOid` is requested because the trigger matches it against the sha
    git recorded in the reflog. A pre-push hook runs before the push, so a
    rejected push still leaves a reflog-shaped candidate; requiring the PR to
    actually point at that sha is what proves the push landed."
   [repo-root branch opts]
   (let [res (run opts ["gh" "pr" "list" "--head" branch "--state" "open"
-                       "--json" "number,isDraft,baseRefName,headRefOid"]
+                       "--json" "number,isDraft,baseRefName,headRefOid,url"]
                  repo-root)]
     (when (zero? (:exit res))
       (try (first (json/parse-string (:out res) true))

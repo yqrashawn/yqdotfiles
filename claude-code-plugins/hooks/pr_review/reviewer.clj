@@ -44,8 +44,18 @@
                        CLAUDE_CODE_SESSION_ID, so the pre-push hook would
                        record it as an agent push and the loop would review
                        the reviewer's own commit
-     gh pr             commenting, merging and closing are agent A's job; the
-                       ledger is the only channel this reviewer has
+   `gh` IS NOT RESTRICTED AT ALL, on the author's instruction, so the reviewer
+   can read the PR the prompt points it at. What that also allows, stated
+   rather than left to be discovered:
+
+     * `gh pr merge` -- it can merge the PR it is reviewing.
+     * `gh pr comment`, `gh pr review` -- it can comment, which reverses R13:
+       the ledger was its only channel and agent A posted the one summary.
+     * `gh api` -- anything the token reaches, including other repositories.
+
+   The prompt asks it to do none of these and says the ledger is its only
+   output. That is guidance, not enforcement. `curl`/`wget`/`nc` stay denied:
+   `gh` reaches GitHub with a known token, those reach anywhere
      curl, wget, nc    WebFetch and WebSearch are denied for being a route
                        off this machine; leaving these open reopens it
 
@@ -78,7 +88,10 @@
    "WebSearch" "Workflow" "Write"
    ;; Command shapes, not tools. See the docstring for why each is here.
    "Bash(rm:*)" "Bash(sudo:*)"
-   "Bash(git push:*)" "Bash(git commit:*)" "Bash(gh pr:*)"
+   "Bash(git push:*)" "Bash(git commit:*)"
+   ;; `gh` is NOT restricted, on the author's instruction. The reviewer can
+   ;; read the PR, its description and its comments -- and can also comment on
+   ;; it, merge it, or reach anything else the token allows. See the docstring.
    "Bash(curl:*)" "Bash(wget:*)" "Bash(nc:*)"])
 
 (defn claude-argv

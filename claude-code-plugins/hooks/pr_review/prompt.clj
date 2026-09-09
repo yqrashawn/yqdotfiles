@@ -28,13 +28,19 @@
         (fs/delete-if-exists p)
         (when-not (str/blank? s) s)))))
 
+(defn- repo-slug
+  "`owner/repo` out of a PR url, so the reviewer's `gh` call works from a
+   worktree whose remote gh cannot infer."
+  [url]
+  (or (second (re-find #"github\.com/([^/]+/[^/]+)/pull/" (str url))) ""))
+
 (defn- section
   [title body]
   (when-not (str/blank? (str body))
     (str "\n## " title "\n\n" body "\n")))
 
 (defn build
-  [{:keys [core repo-root git-dir ctx pr pass draft? prior-fingerprints]}]
+  [{:keys [core repo-root git-dir ctx pr pass draft? prior-fingerprints pr-url]}]
   (let [overlay (when (fs/exists? (overlay-path repo-root))
                   (slurp (overlay-path repo-root)))
         hint    (read-hint! git-dir)
@@ -53,14 +59,30 @@
                           true   (conj (if (zero? (:diff-bytes ctx))
                                          "DIFF: empty — report that and stop; do not invent findings"
                                          (str "DIFF: " (:diff-bytes ctx) " bytes"))))))
+     ;; The URL rather than a copy of the description. The reviewer has
+     ;; `gh pr view`, so pasting the text in would be a second and staler
+     ;; source of it -- and it can read the comments too, which a paste
+     ;; cannot carry. Placed before the diff instructions so the reviewer
+     ;; knows what the change CLAIMS before it starts reading what it does.
+     (section "What the author says this change does"
+              (when (seq (str pr-url))
+                (str "Read the description and the comments before the diff:\n\n"
+                     "    gh pr view " pr " --repo " (repo-slug pr-url)
+                     " --comments\n\n"
+                     pr-url "\n\n"
+                     "That is the author's claim, not a finding and not ground"
+                     " truth. Check the diff against it: a claim the change"
+                     " does not deliver, or scope the body says was deferred"
+                     " and was not, is a [docs-accuracy] finding.")))
      (section "How to read the change"
               (str "The complete, untruncated diff is on disk. Read it first:\n\n"
                    "    " (:diff-path ctx) "\n\n"
                    "Then read the surrounding source under the repo root for context.\n"
                    "You have Read, Grep, Glob and Bash, in a throwaway worktree checked\n"
                    "out at the commit under review and deleted when this review ends.\n"
-                   "Inspect the change however is useful; `git push`, `git commit` and\n"
-                   "`gh pr` are refused, because altering the PR is not your job."))
+                   "Inspect the change however is useful. `git push` and `git commit`\n"
+                   "are refused; `gh` is not, so do not comment on, merge or close the\n"
+                   "PR -- your findings are the output and the author decides."))
      (section "Changed files"
               (if (seq (:changed-files ctx))
                 (str/join "\n" (map #(str "- " %) (:changed-files ctx)))

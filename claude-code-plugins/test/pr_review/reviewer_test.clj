@@ -66,8 +66,13 @@
                 "a push from the reviewer would carry the PARENT session's
                  CLAUDE_CODE_SESSION_ID, so the pre-push hook would record it
                  as an agent push and the loop would review the reviewer")
-            (is (denied "Bash(gh pr:*)")
-                "commenting, merging and closing are agent A's job")
+            (testing "gh is NOT restricted at all, on the author's
+                      instruction, so the reviewer can read the PR the prompt
+                      points it at. That also lets it merge the PR, comment on
+                      it — reversing R13, where the ledger was its only
+                      channel — and reach anything `gh api` can. The prompt
+                      asks it not to; that is guidance, not enforcement"
+              (is (empty? (filter #(str/includes? % "gh") denied))))
             (is (every? denied ["Bash(curl:*)" "Bash(wget:*)" "Bash(nc:*)"])
                 "WebFetch and WebSearch are denied for being a route off this
                  machine; leaving these open reopens it"))

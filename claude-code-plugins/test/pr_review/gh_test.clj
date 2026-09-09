@@ -1,6 +1,8 @@
 (ns pr-review.gh-test
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
+            [cheshire.core :as json]
+            [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
             [pr-review.gh :as gh]))
 
@@ -137,3 +139,16 @@
              (str (fs/real-path (gh/git-common-dir wt {}))))
           "a worktree must resolve to the main clone's .git so both share one
            ledger, one lock and one context directory"))))
+
+(deftest open-pr-asks-for-the-url
+  (testing "the prompt points the reviewer at the PR with it, and `gh` cannot
+            infer the remote from a detached review worktree, so the url has
+            to come from here"
+    (let [calls (atom [])
+          pr {:number 401 :isDraft false :baseRefName "main" :headRefOid "sha"
+              :url "https://github.com/o/r/pull/401"}
+          sh (stub {["gh" "pr"] {:exit 0 :out (json/generate-string [pr]) :err ""}} calls)
+          res (gh/open-pr "/repo" "feat/x" {:sh sh})]
+      (is (str/includes?
+           (nth (first @calls) (inc (.indexOf (first @calls) "--json"))) "url"))
+      (is (= "https://github.com/o/r/pull/401" (:url res))))))

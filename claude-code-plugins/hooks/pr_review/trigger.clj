@@ -320,7 +320,7 @@
 (defn- review-in!
   "The reviewer pass proper, against `review-root` — a checkout pinned to the
    reviewed sha, never the agent's live worktree."
-  [{:keys [git-dir pr pass sha base-ref draft? prior-fingerprints] :as d}
+  [{:keys [git-dir pr pass sha base-ref draft? prior-fingerprints pr-url] :as d}
    review-root opts]
   (let [ctx (context/build! review-root git-dir
                             {:pr pr :sha sha :base-ref base-ref} opts)]
@@ -335,6 +335,7 @@
       (let [text   (prompt/build {:core (core-prompt)
                                   :repo-root review-root :git-dir git-dir
                                   :ctx ctx :pr pr :pass pass :draft? draft?
+                                  :pr-url pr-url
                                   :prior-fingerprints prior-fingerprints})
             ;; A killed reviewer used to leave nothing behind to explain
             ;; itself. This file survives a SIGKILL, and the next pass
