@@ -57,9 +57,10 @@
               (str "The complete, untruncated diff is on disk. Read it first:\n\n"
                    "    " (:diff-path ctx) "\n\n"
                    "Then read the surrounding source under the repo root for context.\n"
-                   "You have Read, Grep and Glob. You have no shell and no test runner —\n"
-                   "this review is a reading, not a run. Do not enumerate the tools you\n"
-                   "lack; a list of absent capabilities is not a finding."))
+                   "You have Read, Grep, Glob and Bash, in a throwaway worktree checked\n"
+                   "out at the commit under review and deleted when this review ends.\n"
+                   "Inspect the change however is useful; `git push`, `git commit` and\n"
+                   "`gh pr` are refused, because altering the PR is not your job."))
      (section "Changed files"
               (if (seq (:changed-files ctx))
                 (str/join "\n" (map #(str "- " %) (:changed-files ctx)))

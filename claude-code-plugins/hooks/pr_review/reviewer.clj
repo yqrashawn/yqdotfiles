@@ -3,7 +3,7 @@
 
    The reviewer is a separate `claude -p` process: fresh context window, none
    of agent A's conversation history, the same machine and working tree. It is
-   confined to Read, Grep and Glob — no shell, so nothing it runs can be
+   granted Read, Grep, Glob and Bash, in a throwaway worktree — so what it runs cannot be
    rewritten by rtk and nothing it does can touch the tree."
   (:require [babashka.process :as p]
             [clojure.string :as str]))
@@ -16,29 +16,69 @@
   "The reviewer's sandbox. THIS list is the mechanism; `--allowedTools` is
    not — see `claude-argv`.
 
-   Grouped by what each entry would buy an escaped reviewer: a shell or a
-   writer (Bash, Write, Edit, MultiEdit, NotebookEdit, Notebook*, Bash*),
-   another agent to do it for it (Agent, Task, TaskStop, SendMessage,
-   SendUserMessage, ListAgents), a route off this machine (WebFetch,
-   WebSearch, Artifact* — Artifact publishes to the web, PushNotification,
-   RemoteTrigger, Monitor, DesignSync, ShareOnboardingGuide), a way to make
-   work happen later (Cron*, ScheduleWakeup, Workflow, Skill), a way to
-   reach a tool not in this list at all (ToolSearch, the MCP resource
-   readers), or a place to put a finding where the parser will never see it
-   (ReportFindings, Task*).
+   BASH IS GRANTED, on the author's instruction, so the reviewer can inspect
+   the change the way it wants rather than only through a precomputed diff.
+   That is a deliberate reversal of R7's original wording and it costs real
+   containment, so state the position plainly rather than imply otherwise:
+
+     * Write and Edit are still denied, but that is no longer a write
+       barrier. `printf x > file` works — measured. What actually bounds the
+       damage is that the reviewer runs in a THROWAWAY detached worktree
+       pinned to the reviewed sha (`pr-review.checkout`), which is removed
+       when the pass ends, so anything it does to its own tree is discarded.
+     * Nothing bounds it outside that tree. The user's settings.json sets
+       `permissions.defaultMode: \"bypassPermissions\"`, so a shell is a
+       shell.
+
+   The `Bash(...)` entries are therefore not a sandbox; they close the
+   specific harms that are known and reachable. Measured to work: a denied
+   `rm` came back \"Denied by user\" while `git log` and a `printf >` in the
+   same session both ran, so specifier denies are enforced even under
+   bypassPermissions.
+
+     rm, sudo          irreversible or privileged, and never needed to read a
+                       change
+     git push, commit  the reviewer must not alter the PR it is reviewing —
+                       and a push from here would carry the PARENT session's
+                       CLAUDE_CODE_SESSION_ID, so the pre-push hook would
+                       record it as an agent push and the loop would review
+                       the reviewer's own commit
+     gh pr             commenting, merging and closing are agent A's job; the
+                       ledger is the only channel this reviewer has
+     curl, wget, nc    WebFetch and WebSearch are denied for being a route
+                       off this machine; leaving these open reopens it
+
+   NOT closed, and worth knowing: the production nREPL on port 8034 is
+   reachable from a shell by any spelling `nc` does not cover, and the test
+   suite can now be run — which may touch a database. The prompt asks the
+   reviewer not to, which is guidance, not enforcement.
+
+   The tool entries are grouped by what each would buy an escaped reviewer:
+   a writer (Write, Edit, MultiEdit, NotebookEdit), another agent to act for
+   it (Agent, Task, TaskStop, SendMessage, SendUserMessage, ListAgents), a
+   route off this machine (WebFetch, WebSearch, Artifact* — Artifact
+   publishes to the web, PushNotification, RemoteTrigger, Monitor,
+   DesignSync, ShareOnboardingGuide), a way to make work happen later (Cron*,
+   ScheduleWakeup, Workflow, Skill), a way to reach a tool not in this list
+   at all (ToolSearch, the MCP resource readers), or a place to put a finding
+   where the parser will never see it (ReportFindings, Task*).
 
    MultiEdit no longer exists in Claude Code 2.1.263 — it is kept because an
    unknown name costs one warning line on stderr, and a reintroduced editing
    tool would otherwise be granted silently."
   ["Agent" "Artifact" "ArtifactCheck" "ArtifactComments" "ArtifactData"
-   "Bash" "BashOutput" "CronCreate" "CronDelete" "CronList" "DesignSync"
-   "Edit" "EnterWorktree" "ExitWorktree" "KillShell" "ListAgents"
+   "CronCreate" "CronDelete" "CronList" "DesignSync"
+   "Edit" "EnterWorktree" "ExitWorktree" "ListAgents"
    "ListMcpResourcesTool" "Monitor" "MultiEdit" "NotebookEdit"
    "PushNotification" "ReadMcpResourceDirTool" "ReadMcpResourceTool"
    "RemoteTrigger" "ReportFindings" "ScheduleWakeup" "SendMessage"
    "SendUserMessage" "ShareOnboardingGuide" "Skill" "Task" "TaskCreate"
    "TaskGet" "TaskList" "TaskStop" "TaskUpdate" "ToolSearch" "WebFetch"
-   "WebSearch" "Workflow" "Write"])
+   "WebSearch" "Workflow" "Write"
+   ;; Command shapes, not tools. See the docstring for why each is here.
+   "Bash(rm:*)" "Bash(sudo:*)"
+   "Bash(git push:*)" "Bash(git commit:*)" "Bash(gh pr:*)"
+   "Bash(curl:*)" "Bash(wget:*)" "Bash(nc:*)"])
 
 (defn claude-argv
   []
@@ -67,7 +107,7 @@
    "--strict-mcp-config"
    ;; Kept for intent, and harmless: it documents the three tools the review
    ;; is supposed to need. It restricts nothing.
-   "--allowedTools" "Read,Grep,Glob"])
+   "--allowedTools" "Read,Grep,Glob,Bash"])
 
 (defn- default-spawn
   [argv prompt dir]

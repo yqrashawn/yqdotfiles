@@ -45,8 +45,31 @@
       (let [i (.indexOf argv "--disallowedTools")]
         (is (nat-int? i))
         (let [denied (set (str/split (nth argv (inc i)) #","))]
-          (testing "a shell or a writer"
-            (is (every? denied ["Bash" "Write" "Edit" "MultiEdit" "NotebookEdit"])))
+          (testing "a writer — but NOT a shell. Bash is granted on purpose, so
+                    the reviewer can inspect the change the way it wants
+                    rather than only through a precomputed diff. That reverses
+                    R7's original wording and costs real containment: with
+                    Bash, `printf x > file` works, so denying Write and Edit
+                    is no longer a write barrier. What bounds the damage is
+                    the throwaway worktree the review runs in"
+            (is (every? denied ["Write" "Edit" "MultiEdit" "NotebookEdit"]))
+            (is (not (denied "Bash")) "Bash is deliberately granted"))
+          (testing "the harms that are known and reachable are still closed,
+                    as command shapes. Measured: a denied `rm` came back
+                    \"Denied by user\" while `git log` and a `printf >` in the
+                    same session both ran, so specifier denies are enforced
+                    even under bypassPermissions"
+            (is (every? denied ["Bash(rm:*)" "Bash(sudo:*)"])
+                "irreversible or privileged, and never needed to read a change")
+            (is (every? denied ["Bash(git push:*)" "Bash(git commit:*)"])
+                "a push from the reviewer would carry the PARENT session's
+                 CLAUDE_CODE_SESSION_ID, so the pre-push hook would record it
+                 as an agent push and the loop would review the reviewer")
+            (is (denied "Bash(gh pr:*)")
+                "commenting, merging and closing are agent A's job")
+            (is (every? denied ["Bash(curl:*)" "Bash(wget:*)" "Bash(nc:*)"])
+                "WebFetch and WebSearch are denied for being a route off this
+                 machine; leaving these open reopens it"))
           (testing "another agent to do it instead"
             (is (every? denied ["Agent" "Task" "SendMessage"])))
           (testing "a route off this machine — Artifact publishes to the web"
@@ -66,7 +89,7 @@
     (testing "--allowedTools is kept for intent; it restricts nothing"
       (let [i (.indexOf argv "--allowedTools")]
         (is (nat-int? i))
-        (is (= "Read,Grep,Glob" (nth argv (inc i))))))))
+        (is (= "Read,Grep,Glob,Bash" (nth argv (inc i))))))))
 
 (deftest run-passes-the-prompt-and-cwd-to-the-spawner
   (let [seen (atom nil)

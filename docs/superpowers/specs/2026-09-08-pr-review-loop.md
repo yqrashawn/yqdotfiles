@@ -99,6 +99,9 @@ on darwin 24.3.0. Confidence noted per item.
 | C49 | The one fact the reflog cannot supply is which clone to read, because the PostToolUse hook has no working directory of its own (C37). A `pre-push` hook records that and nothing else. It cannot describe a push that failed — the reflog gains no entry — and it is built so it cannot fail one: stdin spooled not consumed, every step guarded, status 0 unless a chained hook objects. | confirmed — 4 negative controls |
 | C50 | `git rev-parse --git-path hooks` asked from a linked worktree answers the MAIN clone's hooks directory, so one install covers every worktree of a clone, and it honours `core.hooksPath` — which cchp sets explicitly, so assuming `<root>/.git/hooks` would have installed somewhere git never looks, silently. | confirmed — measured from wt-388-followup |
 | C51 | A remote-tracking reflog lives exactly as long as its ref. Merging a PR deletes the branch, git prunes ref and reflog together, and the record disappears — precisely when there is nothing left to review. Measured on PR #396: merged, branch gone, reflog gone, while both open PRs kept theirs. | confirmed |
+| C52 | `--disallowedTools` accepts COMMAND SHAPES, not only tool names, and they are enforced under `bypassPermissions`: a denied `rm` returned "Denied by user" while `git log` and a `printf >` ran in the same session. So Bash can be granted while specific harms stay closed — unlike `--allowedTools`, which restricts nothing (C36). | confirmed — measured both directions |
+| C53 | A push made by the reviewer would carry the PARENT session's `CLAUDE_CODE_SESSION_ID`, because the reviewer is a grandchild of agent A's Bash call. The `pre-push` hook would record it as an agent push and the loop would review the reviewer's own commit. `Bash(git push:*)` and `Bash(git commit:*)` are denied for that reason, not for tidiness. | confirmed by construction — the env inheritance is measured (C52 session) |
+| C54 | Granting Bash leaves two hazards open that no deny list closes: the production nREPL on port 8034 is reachable by any spelling `nc` does not cover, and the test suite can now be run, which may touch a shared database. The prompt asks the reviewer not to; that is guidance, not enforcement. | acknowledged, not mitigated |
 
 ## Requirements
 
@@ -110,7 +113,7 @@ on darwin 24.3.0. Confidence noted per item.
 | R4 | A is never blocked by the review | A's turn ends before the review does, measurable in the transcript |
 | R5 | A cannot silently skip the review | The wake arrives without A choosing to act |
 | R6 | Findings reach A even if A's turn already ended | Wake arrives while the session is idle (C2) |
-| R7 | Reviewer has fresh context, cannot mutate the tree | B's tool list contains no Edit/Write/Bash, and B reads a detached worktree pinned to the reviewed sha rather than A's live tree, which A is still editing |
+| R7 | Reviewer has fresh context, cannot mutate the tree **that matters** | B is granted Bash on the author's instruction (C52), so this is no longer a tool restriction: containment is the throwaway detached worktree pinned to the reviewed sha, removed when the pass ends. Edit/Write stay denied but a shell writes files, so what actually holds is that B's tree is discarded and `git push`/`git commit`/`gh pr` are refused |
 | R8 | Reviewer sees the true, untruncated diff | The diff B reads is byte-identical to `git diff <base>...<head>` |
 | R9 | A can pass a hint to the reviewer | A writes `.git/pr-review-hint`; that text appears in B's prompt |
 | R10 | Drafts are reviewed | A PR with `isDraft: true` gets a pass entry |
