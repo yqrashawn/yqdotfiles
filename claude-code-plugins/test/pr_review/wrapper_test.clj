@@ -138,7 +138,21 @@
    ;; The whole point of scanning left-to-right and stopping at the head: all
    ;; three refused constructs sit to the RIGHT of it.
    "gh pr create, heredoc body"    "cd /tmp && gh pr create --body \"$(cat <<EOF\nhi\nEOF\n)\""
-   "backtick to the right"         "cd /tmp && gh pr create --title `date`"})
+   "backtick to the right"         "cd /tmp && gh pr create --title `date`"
+   ;; `$( ... )` BEFORE the head is skipped whole rather than refused. The
+   ;; reviewer hint (R9) is written exactly this way, and A naturally puts it
+   ;; in the same command as the push it is hinting about.
+   "hint redirect, then push"      "cd /tmp && printf x > \"$(git rev-parse --git-common-dir)/pr-review-hint\"; git push origin HEAD"
+   "cd through a substitution"     "cd \"$(git rev-parse --show-toplevel)\" && git push"
+   ;; A `;` or `&&` inside the substitution must not read as a top-level
+   ;; boundary -- if it did, the head would be placed in the wrong segment.
+   "operators inside the sub"      "X=\"$(a; b && c | d)\"; cd /tmp && git push"
+   ;; Nested UNQUOTED, so the depth counter is what places the close -- nested
+   ;; inside quotes the inner `)` is swallowed by the quote skipper and depth
+   ;; never rises above 1, which is no test of it at all.
+   "nested substitutions, unquoted" "X=$(echo $(date)); cd /tmp && git push"
+   "nested substitutions, quoted"  "cd \"$(dirname \"$(git rev-parse --git-dir)\")\" && git push"
+   "paren inside a quoted sub"     "X=\"$(echo \")\")\"; git push"})
 
 (deftest wraps-what-it-can-place
   (with-tmp
@@ -159,7 +173,9 @@
    "|| before the push"            "false || git push"
    ;; Refused constructs to the LEFT of the head: boundaries before it cannot
    ;; be placed without a real parser.
-   "$() before the head"           "cd \"$(git rev-parse --show-toplevel)\" && git push"
+   "backtick before the head"      "X=`date`; git push"
+   "unterminated $("               "cd \"$(git rev-parse\" && git push"
+   "heredoc inside a substitution" "X=\"$(cat <<EOF\n)\nEOF\n)\"; git push"
    "heredoc before the head"       "cat <<EOF\nx\nEOF\ngit push"
    "process substitution"          "diff <(a) <(b) && git push"
    "unterminated quote"            "git push \"abc"
@@ -172,6 +188,23 @@
    "create is a prefix only"       "gh pr createx"
    ;; Idempotency: a command already carrying a recorder.
    "already recorded"              "x; ( __prl_d=1 ); git push"})
+
+(deftest a-push-inside-a-command-substitution-is-not-the-head
+  ;; Placing the substitution's close by DEPTH is what keeps the splice outside
+  ;; it. Closing at the first `)` would end the substitution early, leaving
+  ;; `&& git push origin b)` looking like top-level code -- and the recorder
+  ;; would be spliced INSIDE the substitution, corrupting it.
+  (with-tmp
+    (fn [d]
+      (let [sub "$(echo $(date) && git push origin b)"
+            cmd (str "X=" sub "; cd /tmp && git push origin c")
+            out (run-wrapper {:cmd cmd :id "toolu_SUB" :rtk (fake-rtk d)})]
+        (is (some? out) "should still record the outer push")
+        (when out
+          (is (str/includes? out sub)
+              "the command substitution was rewritten")
+          (is (< (str/index-of out sub) (str/index-of out "__prl_d"))
+              "the recorder was spliced inside the substitution"))))))
 
 (deftest declines-what-it-cannot-place
   (with-tmp
@@ -337,6 +370,26 @@
           (is (zero? exit))
           (is (= (str "PUSH-RAN pwd=" wt) out)
               "tail received something other than the push's last line"))))))
+
+(deftest the-hint-redirect-runs-and-the-push-is-still-recorded
+  ;; The exact shape A produces: write the R9 reviewer hint through
+  ;; `$(git rev-parse ...)`, then push, in ONE command. Placing the recorder
+  ;; wrongly here would either lose the record or corrupt the redirect.
+  (with-tmp
+    (fn [d]
+      (let [wt (str (fs/path d "wt"))
+            hint (str (fs/path d "hint.txt"))]
+        (fs/create-dirs wt)
+        (let [{:keys [exit out record]}
+              (exec-rewrite {:cmd (str "cd " wt " && printf 'look here' > \"$(echo " hint ")\""
+                                       " && git push origin HEAD")
+                             :id "toolu_HINT" :dir d})]
+          (is (zero? exit))
+          (is (str/includes? out "PUSH-RAN"))
+          (is (= "look here" (slurp hint)) "the hint redirect was corrupted")
+          (is (some? record) "the push was not recorded")
+          (when record
+            (is (str/includes? record (str "pwd=" wt)))))))))
 
 (deftest gh-pr-create-with-a-heredoc-body-is-recorded
   ;; The command that actually opens a PR. It carries `$(`, a backtick and a

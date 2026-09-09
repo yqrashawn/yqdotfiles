@@ -211,12 +211,16 @@ parses_clean "$BASE" || passthrough
 #
 # Modelled: '...', "..." (with \ escapes and ${...} inside), \ escapes,
 #   ${...}, <<< herestrings, >& <& &> >| redirections, # comments.
+# Skipped whole (`skip_cmdsub`): $(...) before the head. A is told to write its
+# reviewer hint with `> "$(git rev-parse --git-common-dir)/pr-review-hint"`, and
+# putting that in the same command as the push -- which is the natural way to
+# write it -- used to cost the record for that push.
 # REFUSED, because misplacing a boundary corrupts a command:
-#   $(...)  `...`   -- command substitution: needs a nesting stack
+#   `...`           -- backticks do not nest, so the close cannot be placed
 #   <<EOF   <<-EOF  -- heredocs: the body is arbitrary text that would be
 #                      scanned as if it were code
 #   >(...)  <(...)  -- process substitution
-#   an unterminated quote or ${
+#   an unterminated quote, ${ or $(
 # Each refusal costs at most one missing record.
 #
 # The delimiter that OPENS a segment is classified too, because the recorder
@@ -224,6 +228,65 @@ parses_clean "$BASE" || passthrough
 # background `&`, `(` or `{ ` that is transparent. After `|` or `||` it is
 # NOT: `a | git push` would become `(a | recorder) && git push` and the push
 # would lose its stdin. Such segments are skipped -- a later one may match.
+# Advances past a `$( ... )` command substitution. $1 is the command, $2 the
+# index of its `(`; on success CMDSUB_END is the index just past the matching
+# `)`. Returns 1 whenever the close cannot be placed exactly.
+#
+# The substitution's CONTENTS are not code this wrapper has to understand -- it
+# only has to find the end, so that a `;` or `&&` inside cannot be mistaken for
+# a top-level segment boundary. Nesting is a depth counter; quotes and escapes
+# are skipped so a `)` inside them does not close early. A heredoc or backtick
+# inside is still refused: a heredoc body is arbitrary text that may contain an
+# unbalanced `)`, and backticks do not nest at all.
+CMDSUB_END=-1
+skip_cmdsub() {
+  local s=$1
+  local n=${#s}
+  local i=$2
+  local depth=0 c
+  while [ "$i" -lt "$n" ]; do
+    c=${s:i:1}
+    case $c in
+      '\')
+        i=$((i+2)) ;;
+      "'")
+        i=$((i+1))
+        while [ "$i" -lt "$n" ] && [ "${s:i:1}" != "'" ]; do i=$((i+1)); done
+        [ "$i" -lt "$n" ] || return 1
+        i=$((i+1)) ;;
+      '"')
+        i=$((i+1))
+        while [ "$i" -lt "$n" ]; do
+          case ${s:i:1} in
+            '\') i=$((i+2)) ;;
+            '`') return 1 ;;
+            '"') break ;;
+            *)   i=$((i+1)) ;;
+          esac
+        done
+        [ "$i" -lt "$n" ] || return 1
+        i=$((i+1)) ;;
+      '`')
+        return 1 ;;
+      '<')
+        if [ "${s:i+1:1}" = '<' ]; then
+          [ "${s:i+2:1}" = '<' ] || return 1   # heredoc, not a herestring
+          i=$((i+3))
+        else
+          i=$((i+1))
+        fi ;;
+      '(')
+        depth=$((depth+1)); i=$((i+1)) ;;
+      ')')
+        depth=$((depth-1)); i=$((i+1))
+        if [ "$depth" -le 0 ]; then CMDSUB_END=$i; return 0; fi ;;
+      *)
+        i=$((i+1)) ;;
+    esac
+  done
+  return 1
+}
+
 HEAD_POS=-1
 find_insert_point() {
   # Separate `local` statements: bash expands ALL arguments of the builtin
@@ -261,8 +324,12 @@ find_insert_point() {
             case ${s:i:1} in
               '\') i=$((i+2)) ;;
               '`') return 1 ;;
-              '$') [ "${s:i+1:1}" = '(' ] && return 1
-                   i=$((i+1)) ;;
+              '$') if [ "${s:i+1:1}" = '(' ]; then
+                     skip_cmdsub "$s" $((i+1)) || return 1
+                     i=$CMDSUB_END
+                   else
+                     i=$((i+1))
+                   fi ;;
               '"') break ;;
               *)   i=$((i+1)) ;;
             esac
@@ -273,7 +340,8 @@ find_insert_point() {
           return 1 ;;
         '$')
           case $nx in
-            '(') return 1 ;;
+            '(') skip_cmdsub "$s" $((i+1)) || return 1
+                 i=$CMDSUB_END ;;
             '{') i=$((i+2))
                  while [ "$i" -lt "$n" ] && [ "${s:i:1}" != '}' ]; do i=$((i+1)); done
                  [ "$i" -lt "$n" ] || return 1
