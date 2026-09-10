@@ -74,6 +74,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
         output-file claude-json-file))))
 
 (progn
+  (require 'f)
+  (let ((f (expand-file-name "~/.cbm-runtime")))
+    (unless (f-exists? f)
+      (f-mkdir f)))
   (setq!
     mcp-hub-servers
     `(
@@ -234,7 +238,8 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
          (:url "https://scout.rashawn.work/mcp"))
 
        ("codebase-memory-mcp" .
-         (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"))
+         (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"
+           :env (:CBM_RUNTIME_DIR ,(expand-file-name "~/.cbm-runtime"))))
 
        ;; ("slack" .
        ;;  (:url "http://localhost:13080/mcp"))
