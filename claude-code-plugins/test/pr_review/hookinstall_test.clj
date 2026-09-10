@@ -85,7 +85,10 @@
   ;; install! runs from SessionStart, in whatever directory that session sits
   ;; in — frequently not a clone at all.
   (let [d (str (fs/create-temp-dir {:prefix "pr-review-norepo"}))]
-    (is (= {:status :no-repo :path nil} (hi/install! d hook-source {})))
+    (let [r (hi/install! d hook-source {})]
+      (is (= :no-repo (:status r)))
+      (is (nil? (:path r)))
+      (is (empty? (:results r))))
     (is (empty? (fs/list-dir d)))))
 
 (deftest one-install-covers-every-worktree-of-the-clone
@@ -102,6 +105,90 @@
       (is (= :installed (:status (hi/install! root hook-source {}))))
       (is (= :current (:status (hi/install! wt hook-source {})))
           "installing from the worktree must find the hook already there"))))
+
+(defn- commit-all! [root msg]
+  (p/sh ["git" "add" "-A"] {:dir root})
+  (p/sh ["git" "-c" "user.email=t@t" "-c" "user.name=t" "commit" "-qm" msg] {:dir root}))
+
+(deftest a-relative-hookspath-is-installed-into-every-worktree
+  (testing "git resolves a RELATIVE core.hooksPath against each working tree,
+            so `.githooks` names a different directory per worktree and a hook
+            in the main tree never runs for a push made from a linked one.
+            Measured: perpdex-chain-scan set `.githooks`, the hook sat in the
+            main tree, a push from its worktree recorded nothing, and PR #66
+            got no review"
+    (let [root (clone!)]
+      (spit (str (fs/path root "f")) "x")
+      (commit-all! root "init")
+      (p/sh ["git" "config" "core.hooksPath" ".githooks"] {:dir root})
+      (let [wt (str (fs/path (fs/parent root) (str (fs/file-name root) "-wt")))]
+        (p/sh ["git" "worktree" "add" "-q" "--detach" wt] {:dir root})
+        (testing "the two trees really do resolve to different directories"
+          (is (not= (hi/hooks-dir root {}) (hi/hooks-dir wt {})))
+          (is (= 2 (count (hi/hooks-dirs root {})))))
+        (let [r (hi/install! root hook-source {})]
+          (is (= 2 (count (:results r))))
+          (is (every? #{:installed} (map :status (:results r))))
+          (is (fs/exists? (fs/path root ".githooks" "pre-push")))
+          (is (fs/exists? (fs/path wt ".githooks" "pre-push"))
+              "the worktree is where the push comes from"))))))
+
+(deftest the-default-hooks-path-is-still-installed-only-once
+  ;; $GIT_DIR/hooks is shared, so the per-worktree walk must not write it twice
+  ;; or report two results for one directory.
+  (let [root (clone!)]
+    (spit (str (fs/path root "f")) "x")
+    (commit-all! root "init")
+    (let [wt (str (fs/path (fs/parent root) (str (fs/file-name root) "-wt2")))]
+      (p/sh ["git" "worktree" "add" "-q" "--detach" wt] {:dir root})
+      (is (= 1 (count (hi/hooks-dirs root {}))))
+      (is (= 1 (count (:results (hi/install! root hook-source {}))))))))
+
+(deftest a-hooks-dir-inside-the-working-tree-does-not-pollute-git-status
+  (testing "a relative core.hooksPath puts our hook in the user's working tree,
+            where it showed up as `?? .githooks/pre-push` — one `git add -A`
+            from being committed into their repository"
+    (let [root (clone!)]
+      (spit (str (fs/path root "f")) "x")
+      ;; A tracked file alongside, as the real repo has: without one git
+      ;; collapses the whole untracked directory to `?? .githooks/` and the
+      ;; assertions below would be testing a different report than the one
+      ;; that was actually seen.
+      (fs/create-dirs (fs/path root ".githooks"))
+      (spit (str (fs/path root ".githooks" "pre-commit")) "#!/bin/sh\nexit 0\n")
+      (commit-all! root "init")
+      (p/sh ["git" "config" "core.hooksPath" ".githooks"] {:dir root})
+      (hi/install! root hook-source {})
+      (is (= "" (str/trim (str (:out (p/sh ["git" "status" "--short"] {:dir root})))))
+          "the working tree must be clean after installing")
+      (is (str/includes? (slurp (str (fs/path root ".git" "info" "exclude")))
+                         ".githooks/pre-push"))
+      (testing "and a hook left by an OLDER version, which never excluded, is
+                excluded on the next run — it is already current, so nothing is
+                written, and excluding only on write would leave it showing
+                forever. That is the state the real repository was found in"
+        (fs/delete-if-exists (fs/path root ".git" "info" "exclude"))
+        (is (str/includes? (str (:out (p/sh ["git" "status" "--short"] {:dir root})))
+                           ".githooks/pre-push")
+            "the setup must actually reproduce the dirty state")
+        (is (= :current (:status (hi/install! root hook-source {})))
+            "nothing is written on this run")
+        (is (= "" (str/trim (str (:out (p/sh ["git" "status" "--short"] {:dir root})))))
+            "and it is excluded anyway")))))
+
+(deftest a-tracked-hook-file-is-never-overwritten
+  (testing "a hooks directory in the working tree can hold files git TRACKS.
+            Writing over one shows as a modification and could be committed"
+    (let [root (clone!)]
+      (fs/create-dirs (fs/path root ".githooks"))
+      (spit (str (fs/path root ".githooks" "pre-push")) "#!/bin/sh\ntheirs\n")
+      (commit-all! root "their tracked hook")
+      (p/sh ["git" "config" "core.hooksPath" ".githooks"] {:dir root})
+      (let [r (hi/install! root hook-source {})]
+        (is (= :tracked (:status r)))
+        (is (= "#!/bin/sh\ntheirs\n" (slurp (str (fs/path root ".githooks" "pre-push"))))
+            "their tracked hook must be left exactly as it was")
+        (is (= "" (str/trim (str (:out (p/sh ["git" "status" "--short"] {:dir root}))))))))))
 
 (deftest core-hookspath-is-honoured-not-guessed
   ;; This clone sets core.hooksPath explicitly. Hardcoding <root>/.git/hooks
