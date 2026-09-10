@@ -5,7 +5,8 @@
    of agent A's conversation history, the same machine and working tree. It is
    granted Read, Grep, Glob and Bash, in a throwaway worktree — so what it runs cannot be
    rewritten by rtk and nothing it does can touch the tree."
-  (:require [babashka.process :as p]
+  (:require [babashka.fs :as fs]
+            [babashka.process :as p]
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
@@ -145,6 +146,45 @@
    ;; is supposed to need. It restricts nothing.
    "--allowedTools" "Read,Grep,Glob,Bash"])
 
+(def default-token-file
+  "Where the reviewer's own OAuth token lives, if it has one.
+
+   A separate credential on purpose: the reviewer is a `claude -p` the loop
+   spawns with nobody watching, and pinning it to one token keeps its usage
+   attributable and independent of however the session that triggered it
+   happens to be authenticated."
+  (str (fs/path (System/getProperty "user.home")
+                "Library" "CloudStorage" "Dropbox" "sync" "default-cc-token")))
+
+(defn oauth-token
+  "The token to run the reviewer with, or nil to leave authentication alone.
+
+   Trimmed: the file ends with a newline, and a token carrying one is not the
+   token. Absent, empty or unreadable all mean nil rather than an error —
+   losing a review is worse than running it as whoever the parent is, and this
+   must never be the thing that stops a review starting."
+  ([] (oauth-token default-token-file))
+  ([path]
+   (try
+     (when (and path (fs/regular-file? path))
+       (let [t (str/trim (slurp (str path)))]
+         (when (seq t) t)))
+     (catch Exception _ nil))))
+
+(defn spawn-env
+  "The environment the reviewer runs with.
+
+   `reviewer-env-var` is not optional and must survive every future addition
+   here: it is what stops a review triggering a review inside itself.
+
+   The token is added only when there is one. `:extra-env` MERGES into the
+   inherited environment, so setting CLAUDE_CODE_OAUTH_TOKEN to an empty
+   string would replace working credentials with a blank one — absent has to
+   mean absent."
+  []
+  (cond-> {reviewer-env-var "1"}
+    (oauth-token) (assoc "CLAUDE_CODE_OAUTH_TOKEN" (oauth-token))))
+
 (defn- default-spawn
   "Runs the reviewer. `err-file`, when given, receives stderr AS IT IS WRITTEN
    and is read back afterwards, so `:err` behaves as before.
@@ -154,17 +194,15 @@
    and 7m33s, and the loop had discarded everything the reviewer said, so there
    was no way to tell why. A SIGKILL leaves whatever reached the file."
   [argv prompt dir err-file]
-  (if err-file
-    (let [f (io/file err-file)
-          _ (io/make-parents f)
-          {:keys [exit out]} (p/sh argv {:dir dir :in prompt
-                                         :extra-env {reviewer-env-var "1"}
-                                         :err :write :err-file f})]
-      {:exit exit :out (or out "")
-       :err (try (slurp f) (catch Exception _ ""))})
-    (let [{:keys [exit out err]} (p/sh argv {:dir dir :in prompt
-                                             :extra-env {reviewer-env-var "1"}})]
-      {:exit exit :out (or out "") :err (or err "")})))
+  (let [base {:dir dir :in prompt :extra-env (spawn-env)}]
+    (if err-file
+      (let [f (io/file err-file)
+            _ (io/make-parents f)
+            {:keys [exit out]} (p/sh argv (assoc base :err :write :err-file f))]
+        {:exit exit :out (or out "")
+         :err (try (slurp f) (catch Exception _ ""))})
+      (let [{:keys [exit out err]} (p/sh argv base)]
+        {:exit exit :out (or out "") :err (or err "")}))))
 
 (defn run!
   "Run the reviewer with `prompt` on stdin, in `repo-root`.

@@ -438,3 +438,82 @@
                        "" "." nil)]
         (is (= "1" (:out res)))))))
 
+
+;; ------------------------------------------------------------- credentials
+
+(deftest the-token-is-read-and-trimmed
+  (testing "the file ends with a newline — 109 bytes, 108 characters of token —
+            and a token carrying one is not the token"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-tok"}) "t"))]
+      (spit f "sk-fake-token-value\n")
+      (is (= "sk-fake-token-value" (reviewer/oauth-token f))))))
+
+(deftest no-usable-token-is-nil-never-an-error
+  (testing "losing a review is worse than running it as whoever the parent is,
+            so nothing here may be the thing that stops a review starting"
+    (let [d (str (fs/create-temp-dir {:prefix "prl-tok"}))]
+      (is (nil? (reviewer/oauth-token (str (fs/path d "absent")))) "missing")
+      (let [empty-f (str (fs/path d "empty"))]
+        (spit empty-f "")
+        (is (nil? (reviewer/oauth-token empty-f)) "empty"))
+      (let [ws (str (fs/path d "ws"))]
+        (spit ws "\n  \n")
+        (is (nil? (reviewer/oauth-token ws)) "whitespace only"))
+      (is (nil? (reviewer/oauth-token d)) "a directory, not a file")
+      (is (nil? (reviewer/oauth-token nil)) "no path at all")
+      ;; The only case the try/catch is for: the file passes
+      ;; `fs/regular-file?` and then `slurp` throws. A Dropbox-synced
+      ;; credential is exactly the kind of file that can be present and
+      ;; momentarily unreadable.
+      (let [locked (str (fs/path d "locked"))]
+        (spit locked "sk-fake\n")
+        (fs/set-posix-file-permissions locked "---------")
+        (try
+          (is (nil? (reviewer/oauth-token locked)) "present but unreadable")
+          (finally (fs/set-posix-file-permissions locked "rw-------")))))))
+
+(deftest the-reviewer-marker-survives-the-token
+  (testing "PR_REVIEW_LOOP_REVIEWER is what stops a review triggering a review
+            inside itself. Adding to :extra-env must never displace it"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-tok"}) "t"))]
+      (spit f "sk-fake\n")
+      (with-redefs [reviewer/default-token-file f]
+        (let [env (reviewer/spawn-env)]
+          (is (= "1" (get env reviewer/reviewer-env-var)))
+          (is (= "sk-fake" (get env "CLAUDE_CODE_OAUTH_TOKEN")))))
+      (with-redefs [reviewer/default-token-file (str f ".absent")]
+        (let [env (reviewer/spawn-env)]
+          (is (= "1" (get env reviewer/reviewer-env-var)))
+          (is (not (contains? env "CLAUDE_CODE_OAUTH_TOKEN"))
+              "absent must mean ABSENT: :extra-env merges into the inherited
+               environment, so an empty string would replace working
+               credentials with a blank one"))))))
+
+(deftest the-token-reaches-the-spawned-process
+  (testing "the wiring, through the real spawner and a real child process"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-tok"}) "t"))
+          spawn @#'reviewer/default-spawn]
+      (spit f "sk-fake-reaches-child\n")
+      (with-redefs [reviewer/default-token-file f]
+        (let [res (spawn ["sh" "-c" "echo \"$CLAUDE_CODE_OAUTH_TOKEN|$PR_REVIEW_LOOP_REVIEWER\""]
+                         "" "." nil)]
+          (is (= "sk-fake-reaches-child|1" (str/trim (:out res))))))
+      (with-redefs [reviewer/default-token-file (str f ".absent")]
+        (let [res (spawn ["sh" "-c" "echo \"[$CLAUDE_CODE_OAUTH_TOKEN]|$PR_REVIEW_LOOP_REVIEWER\""]
+                         "" "." nil)]
+          (is (= "[]|1" (str/trim (:out res)))
+              "with no token the variable must be unset, not empty"))))))
+
+(deftest the-token-never-appears-in-what-the-loop-records
+  (testing "the reviewer's stderr is streamed to a file the author reads, and
+            findings are written to disk. Neither may carry the credential"
+    (let [dir (str (fs/create-temp-dir {:prefix "prl-tok"}))
+          f (str (fs/path dir "t"))
+          errf (str (fs/path dir "err"))
+          spawn @#'reviewer/default-spawn]
+      (spit f "sk-fake-must-not-leak\n")
+      (with-redefs [reviewer/default-token-file f]
+        (let [res (spawn ["sh" "-c" "echo out; echo err >&2"] "" "." errf)]
+          (is (not (str/includes? (:out res) "sk-fake-must-not-leak")))
+          (is (not (str/includes? (:err res) "sk-fake-must-not-leak")))
+          (is (not (str/includes? (slurp errf) "sk-fake-must-not-leak"))))))))
