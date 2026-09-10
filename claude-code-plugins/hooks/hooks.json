@@ -15,7 +15,8 @@
               "review-trigger"
             ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the pushed commits\u2026"
+            "statusMessage": "Reviewing the pushed commits\u2026",
+            "timeout": 1800
           },
           {
             "type": "command",
@@ -27,7 +28,8 @@
               "review-trigger"
             ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the pushed commits\u2026"
+            "statusMessage": "Reviewing the pushed commits\u2026",
+            "timeout": 1800
           },
           {
             "type": "command",
@@ -39,7 +41,8 @@
               "review-trigger"
             ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the new PR\u2026"
+            "statusMessage": "Reviewing the new PR\u2026",
+            "timeout": 1800
           },
           {
             "type": "command",
@@ -51,7 +54,8 @@
               "review-trigger"
             ],
             "asyncRewake": true,
-            "statusMessage": "Reviewing the new PR\u2026"
+            "statusMessage": "Reviewing the new PR\u2026",
+            "timeout": 1800
           }
         ]
       }
