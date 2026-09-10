@@ -516,9 +516,17 @@
                {:verdict "MERGEABLE" :body "BODY"
                 :counts {"correctness/blocking" 0 "coverage" 1}})]
       (is (str/includes? msg "you may merge"))
-      (is (str/includes? msg "do NOT block"))
-      (is (str/includes? msg "follow-up PR")
-          "and it must say where the non-blocking findings go instead")
+      (is (str/includes? msg "Only correctness findings are work you owe")
+          "the categories are not equal, and saying so is what ends the loop")
+      (is (str/includes? msg "your judgment")
+          "coverage, docs and style are offered, not assigned")
+      (is (str/includes? msg "No follow-up PR is owed")
+          "or A carries every nit forward forever instead of dropping it")
+      (is (str/includes? msg "follow-up PR; do not fix it here")
+          "correctness/followup is the one that DOES oblige a new PR")
+      (is (str/includes? msg "certifies a property it does not check")
+          "the carve-out: a test that cannot fail emits a false safety
+           signal, so that coverage finding is not merely optional")
       (is (str/includes? msg "does not terminate")
           "the reason another fix push is the wrong move has to be given")
       (is (not (str/includes? msg "verify each blocking finding"))

@@ -337,12 +337,20 @@
         ;; findings are never suppressed by the re-raise rules, so it cannot
         ;; converge by itself. The verdict has to carry its own instruction.
         (if (= "MERGEABLE" (:verdict parsed))
-          (str "MERGEABLE means you may merge this PR now. The"
-               " [correctness/followup], [coverage], [docs-accuracy] and"
-               " [style] findings above do NOT block it — file them for a"
-               " follow-up PR instead of fixing them here. Pushing another fix"
-               " to this PR earns another pass against the same rules, and on"
-               " a PR whose diff is mostly tests that does not terminate."
+          (str "MERGEABLE means you may merge this PR now. Only correctness"
+               " findings are work you owe:"
+               "\n  [correctness/followup] — real but bounded. Open a"
+               " follow-up PR; do not fix it here."
+               "\n  [coverage] [docs-accuracy] [style] — your judgment. Fix"
+               " one only if you independently agree it is worth a commit;"
+               " otherwise say you are dropping it. No follow-up PR is owed."
+               "\n  The one exception: a [coverage] finding saying a test"
+               " certifies a property it does not check is worth acting on,"
+               " because a test that cannot fail emits a false safety signal."
+               "\n\nPushing another fix to this PR earns another pass against"
+               " the same rules, and on a PR whose diff is mostly tests that"
+               " does not terminate — coverage findings are never suppressed"
+               " by the re-raise rules, so there is always another one."
                "\n\nNext: post the single summary comment, then merge. The"
                " pr-review-loop skill has the summary format.")
           (str "NOT MERGEABLE means at least one [correctness/blocking]"

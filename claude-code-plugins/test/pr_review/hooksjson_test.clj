@@ -3,6 +3,7 @@
    behaviour, because nothing else does and its defaults are invisible."
   (:require [babashka.fs :as fs]
             [cheshire.core :as json]
+            [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]))
 
 (def ^:private manifest
@@ -38,3 +39,25 @@
     (doseq [h (post-tool-use)]
       (is (true? (:asyncRewake h)))
       (is (not (:async h)) "plain async would never wake an idle session"))))
+
+(deftest the-skill-and-the-wake-agree-on-what-each-category-obliges
+  (testing "A reads both. They disagreed: SKILL.md said to defer
+            [docs-accuracy] and [style] 'until the PR is otherwise mergeable'
+            and never mentioned [coverage] at all, while the wake said all
+            four go to a follow-up PR. The unstated coverage disposition is
+            why PR #410 kept fixing coverage nits and pushing instead of
+            merging"
+    (let [skill (slurp (str (fs/path (or (some-> (System/getProperty "babashka.config") fs/parent str)
+                                         (System/getProperty "user.dir"))
+                                     "skills" "pr-review-loop" "SKILL.md")))]
+      (is (str/includes? skill "Only **correctness** findings are work you owe"))
+      (is (str/includes? skill "[coverage]") "coverage must have a stated disposition")
+      (is (str/includes? skill "your judgment"))
+      (is (str/includes? skill "No follow-up PR is owed"))
+      (is (str/includes? skill "does not actually check")
+          "the carve-out has to survive in the skill too")
+      (testing "and the skill must not still claim the reviewer has no shell"
+        (is (not (str/includes? skill "No shell")))
+        (is (str/includes? skill "and `Bash`")
+            "A was told the reviewer could not run tests while its findings
+             said 'Verified by RUNNING'")))))
