@@ -53,6 +53,10 @@
       (is (str/includes? skill "Only **correctness** findings are work you owe"))
       (is (str/includes? skill "[coverage]") "coverage must have a stated disposition")
       (is (str/includes? skill "your judgment"))
+      (is (str/includes? skill "agree STRONGLY")
+          "the bar is not mere agreement: a reviewer nit A merely concedes is
+           still a commit, another pass, and another nit — the loop only ends
+           if the default for these categories is to drop them")
       (is (str/includes? skill "No follow-up PR is owed"))
       (is (str/includes? skill "does not actually check")
           "the carve-out has to survive in the skill too")

@@ -20,7 +20,7 @@ one at a time never ends.
 | `[correctness/blocking]` | verify, then fix on this PR. The verdict is NOT MERGEABLE until it is closed |
 | `[correctness/followup]` | real but bounded. Open a follow-up PR — do not fix it here |
 | `[coverage]` | your judgment. See the carve-out below |
-| `[docs-accuracy]`, `[style]` | your judgment. Fix it only if you independently agree it is worth a commit; otherwise say you are dropping it and move on. No follow-up PR is owed |
+| `[docs-accuracy]`, `[style]` | your judgment. Fix it only if you independently agree STRONGLY that it is worth a commit; otherwise say you are dropping it and move on. No follow-up PR is owed |
 
 **The one coverage carve-out.** A `[coverage]` finding saying a test certifies
 a property it does not actually check is worth acting on even under a

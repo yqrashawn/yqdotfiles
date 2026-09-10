@@ -520,6 +520,9 @@
           "the categories are not equal, and saying so is what ends the loop")
       (is (str/includes? msg "your judgment")
           "coverage, docs and style are offered, not assigned")
+      (is (str/includes? msg "agree STRONGLY")
+          "mere agreement is too low a bar — conceding a nit still costs a
+           commit and earns another pass carrying the next one")
       (is (str/includes? msg "No follow-up PR is owed")
           "or A carries every nit forward forever instead of dropping it")
       (is (str/includes? msg "follow-up PR; do not fix it here")
