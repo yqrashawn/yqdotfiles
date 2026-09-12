@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "nixpkgs-plugins",
+  "description": "Local plugins maintained in ~/.nixpkgs.",
+  "owner": { "name": "yqrashawn" },
+  "plugins": [
+    {
+      "name": "pr-review-loop",
+      "description": "Local PR review loop replacing the GitHub Actions reviewer.",
+      "source": "./",
+      "category": "workflow"
+    }
+  ]
+}

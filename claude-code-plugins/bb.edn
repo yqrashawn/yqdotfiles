@@ -1,0 +1,54 @@
+{:paths ["hooks" "test"]
+ :tasks
+ {review-trigger {:doc  "PostToolUse hook entrypoint. Reads hook JSON on stdin."
+                  :task (exec 'pr-review.trigger/-main)}
+
+  review-pr {:doc  "Review a PR now, without a push. Optional PR number;
+                     defaults to the current branch's open PR."
+             ;; NOT `exec`: it hands the fn a babashka.cli options MAP and
+             ;; DISCARDS bare positionals, so `review-pr 402` arrived as `{}`
+             ;; and `str/trim` on a map threw on every invocation, with or
+             ;; without an argument. Measured: `(exec 'f)` + `402` -> `({})`,
+             ;; `+ --pr 402` -> `({:pr 402})`. The other two tasks take no
+             ;; arguments, so `exec` is harmless for them.
+             :requires ([pr-review.manual])
+             :task (apply pr-review.manual/-main *command-line-args*)}
+
+  install-push-hook {:doc  "SessionStart entrypoint. Installs the git pre-push
+                            hook that names the pushed clone."
+                     :task (exec 'pr-review.hookinstall/-main)}
+
+  test {:doc "Run every test namespace whose file exists."
+        :requires ([babashka.fs :as fs] [clojure.test])
+        :task (let [nses '[pr-review.version-test
+                           pr-review.ledger-test
+                           pr-review.lock-test
+                           pr-review.gh-test
+                           pr-review.context-test
+                           pr-review.prompt-test
+                           pr-review.reviewer-test
+                           pr-review.hookinstall-test
+                           pr-review.prepush-hook-test
+                           pr-review.checkout-test
+                           pr-review.atomicfile-test
+                           pr-review.attempts-test
+                           pr-review.hooksjson-test
+                           pr-review.manual-test
+                           pr-review.pushlog-test
+                           pr-review.trigger-test]
+                    ;; Select on FILE EXISTENCE, never on whether `require`
+                    ;; succeeds: a namespace with a compile error would be
+                    ;; silently skipped, and a green `bb test` would then be
+                    ;; hiding a broken test file.
+                    present (filterv
+                             (fn [ns-sym]
+                               (fs/exists?
+                                (str "test/"
+                                     (-> (name ns-sym)
+                                         (clojure.string/replace "-" "_")
+                                         (clojure.string/replace "." "/"))
+                                     ".clj")))
+                             nses)]
+                (apply require present)
+                (let [{:keys [fail error]} (apply clojure.test/run-tests present)]
+                  (System/exit (if (pos? (+ fail error)) 1 0))))}}}

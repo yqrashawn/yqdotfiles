@@ -29,3 +29,8 @@ __pycache__/
 /.agent-shell/
 /.doom.d/modules/llm/gptel-claude-code/*.elc
 /.claude/worktrees
+
+.superpowers/
+
+claude-code-plugins/.cpcache/
+claude-code-plugins/.clj-kondo/.cache/

@@ -1,4 +1,4 @@
-;;; gptel-claude-code-mcp.el --- MCP session routing & permission prompt for Claude Code  -*- lexical-binding: t; -*-
+;;; gptel-claude-code-mcp.el --- MCP session routing for Claude Code  -*- lexical-binding: t; -*-
 
 ;; Author: yqrashawn
 ;; Keywords: tools, convenience
@@ -7,11 +7,8 @@
 
 ;; Provides:
 ;; 1. Session map (session-id → buffer) and session-cwd lookup.
-;; 2. A permission_prompt MCP tool that shows a popup buffer when
-;;    Claude Code asks the user a question.
-;; 3. MCP config JSON builder for --mcp-config and --permission-prompt-tool
-;;    CLI args.
-;; 4. Session-aware default-directory function for MCP tool calls.
+;; 2. MCP config JSON builder for the --mcp-config CLI arg.
+;; 3. Session-aware default-directory function for MCP tool calls.
 ;;
 ;; The session-scoped HTTP endpoint (/mcp/v1/sessions/{id}/messages) lives
 ;; in mcp-server-lib-http.el.  This module provides the session-id → cwd
@@ -19,14 +16,8 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-(require 'json)
 (require 'mcp-server-lib)
 (require 'mcp-server-lib-http)
-
-;; Forward declarations
-(declare-function mcp-server-lib-register-tool "mcp-server-lib")
-(defvar json-encoding-pretty-print)
 
 
 ;;; ---- Session Map ----
@@ -60,234 +51,6 @@ PORT is the MCP HTTP server port."
   (format "{\"mcpServers\":{\"emacs\":{\"type\":\"http\",\"url\":\"http://localhost:%d/mcp/v1/sessions/%s/messages\"}}}"
           port session-id))
 
-;;; ---- Permission Prompt Tool ----
-
-(defvar gptel-claude-code--permission-buffer-name "*gptel-permission*"
-  "Buffer name for the permission prompt popup.")
-
-(defvar gptel-claude-code--permission-pending nil
-  "Pending permission prompt state for deferred answering.
-When non-nil, a plist with:
-  :tool-name      - name of the tool requesting permission
-  :tool-input     - original tool input alist (for updatedInput in allow response)
-  :input-summary  - human-readable summary of tool input
-  :callback       - the MCP async callback")
-
-(defvar gptel-claude-code--permission-in-recursive-edit nil
-  "Non-nil when inside a `recursive-edit' for permission prompt.
-Used to prevent nested recursive-edits.")
-
-(defun gptel-claude-code--format-tool-input-summary (tool-name tool-input)
-  "Format a human-readable summary of TOOL-INPUT for TOOL-NAME."
-  (cond
-   ((and (equal tool-name "Bash")
-         (plist-get tool-input :command))
-    (format "$ %s" (plist-get tool-input :command)))
-   ((and (member tool-name '("Write" "Read" "Edit"))
-         (plist-get tool-input :file_path))
-    (plist-get tool-input :file_path))
-   ((and (equal tool-name "Agent")
-         (plist-get tool-input :description))
-    (format "[%s] %s"
-            (or (plist-get tool-input :subagent_type) "agent")
-            (plist-get tool-input :description)))
-   ((and (equal tool-name "Skill")
-         (plist-get tool-input :skill))
-    (plist-get tool-input :skill))
-   (tool-input
-    (let ((json-encoding-pretty-print t))
-      (condition-case nil
-          (json-encode tool-input)
-        (error (format "%S" tool-input)))))
-   (t "")))
-
-(defun gptel-claude-code--permission-build-response (behavior &optional tool-input)
-  "Build the JSON response string for permission BEHAVIOR and TOOL-INPUT.
-BEHAVIOR is \"allow\" or \"deny\".
-TOOL-INPUT is the original tool input alist — required for \"allow\",
-ignored for \"deny\".
-
-The MCP tool response is parsed directly by Claude Code as a flat object.
-For allow: {behavior: \"allow\", updatedInput: {...original tool input...}}
-For deny:  {behavior: \"deny\", message: \"reason\"}
-No hookSpecificOutput wrapping — that format is for shell hooks, not MCP tools."
-  (json-encode
-   (if (string= behavior "allow")
-       `((behavior . "allow")
-         (updatedInput . ,(or tool-input (make-hash-table))))
-     `((behavior . "deny")
-       (message . "Denied by user")))))
-
-(defun gptel-claude-code--permission-respond (allowed)
-  "Respond to the pending permission prompt.
-ALLOWED is non-nil to allow, nil to deny.
-Calls the stored MCP async callback, then `exit-recursive-edit'
-to return control to the handler."
-  (unless gptel-claude-code--permission-pending
-    (user-error "No pending permission prompt"))
-  (let ((callback (plist-get gptel-claude-code--permission-pending :callback))
-        (tool-input (plist-get gptel-claude-code--permission-pending :tool-input))
-        (behavior (if allowed "allow" "deny")))
-    (setq gptel-claude-code--permission-pending nil)
-    (gptel-claude-code--cleanup-permission-buffer)
-    (message "Permission %s" (if allowed "allowed" "denied"))
-    (funcall callback
-             (gptel-claude-code--permission-build-response behavior tool-input))
-    ;; exit-recursive-edit throws (non-local exit), so this must be last.
-    (when gptel-claude-code--permission-in-recursive-edit
-      (exit-recursive-edit))))
-
-(defun gptel-claude-code--permission-allow ()
-  "Allow the pending permission request."
-  (interactive)
-  (gptel-claude-code--permission-respond t))
-
-(defun gptel-claude-code--permission-deny ()
-  "Deny the pending permission request."
-  (interactive)
-  (gptel-claude-code--permission-respond nil))
-
-(defvar gptel-claude-code--permission-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "a" #'gptel-claude-code--permission-allow)
-    (define-key map "d" #'gptel-claude-code--permission-deny)
-    (define-key map "q" #'gptel-claude-code--permission-deny)
-    map)
-  "Keymap for the permission prompt buffer.")
-
-(define-minor-mode gptel-claude-code--permission-mode
-  "Minor mode for interacting with permission prompt buffers.
-Press `a' to allow, `d' or `q' to deny."
-  :lighter " Perm"
-  :keymap gptel-claude-code--permission-mode-map)
-
-(defun gptel-claude-code--handle-permission-prompt (callback &rest args)
-  "Handle permission_prompt tool call from Claude Code.
-
-Claude Code sends a PermissionRequest hook event with fields:
-  session_id, transcript_path, cwd, permission_mode,
-  hook_event_name, tool_name, tool_input, permission_suggestions.
-
-CALLBACK is the MCP async callback (first arg due to :async t).
-ARGS are the parameter values passed positionally by mcp-server-lib.
-
-This handler runs on the main thread (the HTTP route uses
-`run-at-time 0' instead of `make-thread').  It shows a popup
-buffer and enters `recursive-edit' to block until the user
-responds with a/d/q.  `recursive-edit' starts a nested command
-loop that processes keyboard input, timers, and network I/O,
-keeping Emacs fully responsive.
-
-When the user presses a key, the keybinding handler calls the
-callback and `exit-recursive-edit' to return control here."
-  (let* ((param-names '(session_id transcript_path cwd permission_mode
-                        hook_event_name tool_name tool_input
-                        permission_suggestions))
-         (params (cl-mapcar #'cons param-names args))
-         (tool-name (or (cdr (assq 'tool_name params)) "unknown"))
-         (tool-input (cdr (assq 'tool_input params)))
-         (tool-input-plist
-          (when tool-input
-            (if (and (consp tool-input) (consp (car tool-input)))
-                (cl-loop for (k . v) in tool-input
-                         append (list (intern (format ":%s" k)) v))
-              tool-input)))
-         (input-summary (gptel-claude-code--format-tool-input-summary
-                         tool-name tool-input-plist)))
-    ;; Store state for keybinding handlers
-    (setq gptel-claude-code--permission-pending
-          (list :tool-name tool-name
-                :tool-input tool-input
-                :input-summary input-summary
-                :callback callback))
-    ;; Show popup directly (we're on the main thread)
-    (gptel-claude-code--show-permission-popup tool-name input-summary)
-    (message "Permission requested for %s. Press `a' to allow, `d' to deny in *gptel-permission* buffer."
-             tool-name)
-    ;; Enter recursive-edit — blocks here but keeps Emacs responsive.
-    ;; The user can interact freely; pressing a/d/q calls the callback
-    ;; and exit-recursive-edit to return control here.
-    ;; Guard against nesting (e.g. if ask_user_question is also active).
-    (unless gptel-claude-code--permission-in-recursive-edit
-      (setq gptel-claude-code--permission-in-recursive-edit t)
-      (unwind-protect
-          (recursive-edit)
-        (setq gptel-claude-code--permission-in-recursive-edit nil)
-        ;; If user hit C-g without responding, send deny
-        (when gptel-claude-code--permission-pending
-          (let ((cb (plist-get gptel-claude-code--permission-pending :callback)))
-            (setq gptel-claude-code--permission-pending nil)
-            (gptel-claude-code--cleanup-permission-buffer)
-            (message "Permission denied (cancelled)")
-            (ignore-errors
-              (funcall cb (gptel-claude-code--permission-build-response "deny")))))))))
-
-(defun gptel-claude-code--cleanup-permission-buffer ()
-  "Kill the permission popup buffer and its window."
-  (when-let* ((buf (get-buffer gptel-claude-code--permission-buffer-name)))
-    (when-let* ((win (get-buffer-window buf)))
-      (delete-window win))
-    (kill-buffer buf)))
-
-(defun gptel-claude-code--show-permission-popup (tool-name input-summary)
-  "Show permission popup for TOOL-NAME with INPUT-SUMMARY.
-Uses `display-buffer' (not `pop-to-buffer') to avoid selecting
-the buffer from a thread context."
-  (let ((buf (get-buffer-create gptel-claude-code--permission-buffer-name)))
-    (with-current-buffer buf
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (insert (propertize "Permission Request" 'face 'bold) "\n\n")
-        (insert (format "Claude Code wants to use: %s\n\n"
-                        (propertize tool-name 'face 'font-lock-function-name-face)))
-        (when (and input-summary (not (string-empty-p input-summary)))
-          (insert input-summary "\n\n"))
-        (insert (propertize "Keys: " 'face 'font-lock-comment-face)
-                (propertize "[a]" 'face 'bold) " allow  "
-                (propertize "[d]" 'face 'bold) " deny  "
-                (propertize "[q]" 'face 'bold) " deny (cancel)\n"))
-      (setq buffer-read-only t)
-      (goto-char (point-min))
-      (gptel-claude-code--permission-mode 1))
-    (display-buffer buf
-                    '((display-buffer-reuse-window display-buffer-below-selected)
-                      (window-height . fit-window-to-buffer)))))
-
-;;; ---- Tool Registration ----
-
-(defun gptel-claude-code-mcp-register-tools ()
-  "Register the permission_prompt MCP tool with mcp-server-lib."
-  (mcp-server-lib-register-tool
-   #'gptel-claude-code--handle-permission-prompt
-   :id "permission_prompt"
-   :async t
-   :description "Handle permission prompts from Claude Code. Shows a popup for user to allow or deny tool execution."
-   :args (list '(:name "session_id"
-                 :type string
-                 :description "Claude Code session identifier")
-               '(:name "transcript_path"
-                 :type string
-                 :description "Path to the session transcript file")
-               '(:name "cwd"
-                 :type string
-                 :description "Current working directory")
-               '(:name "permission_mode"
-                 :type string
-                 :description "Current permission mode")
-               '(:name "hook_event_name"
-                 :type string
-                 :description "Hook event name (PermissionRequest)")
-               '(:name "tool_name"
-                 :type string
-                 :description "Name of the tool requesting permission")
-               '(:name "tool_input"
-                 :type object
-                 :description "The tool input parameters")
-               '(:name "permission_suggestions"
-                 :type array
-                 :description "Suggested permission options"
-                 :optional t))))
-
 ;;; ---- Session-aware default-directory ----
 
 (defun gptel-claude-code--mcp-default-directory (session-id)
@@ -297,13 +60,6 @@ SESSION-ID is passed by `mcp-server-lib--handle-tools-call-apply'
 from `mcp-server-lib--request-session-id'."
   (when session-id
     (gptel-claude-code--session-cwd session-id)))
-
-;;; ---- Auto-register on load ----
-
-;; Register MCP tools when this module is loaded, so the permission_prompt
-;; tool is available before Claude Code tries to use it.
-
-(gptel-claude-code-mcp-register-tools)
 
 ;; Example: Set session-aware default-directory for MCP tool calls
 ;; (setq mcp-server-lib-default-directory-function

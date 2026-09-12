@@ -455,10 +455,7 @@ We use `with-current-buffer' to ensure correct context."
             (setq args (append args
                                (list "--mcp-config"
                                      (gptel-claude-code--mcp-config-json
-                                      effective-sid mcp-port))))
-            (setq args (append args
-                               (list "--permission-prompt-tool"
-                                     "mcp__emacs__permission_prompt"))))))
+                                      effective-sid mcp-port)))))))
       ;; extra-args from backend
       (when-let* ((extra (gptel-claude-code-extra-args backend)))
         (setq args (append args extra)))

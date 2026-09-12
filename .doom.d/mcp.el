@@ -74,6 +74,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
         output-file claude-json-file))))
 
 (progn
+  (require 'f)
+  (let ((f (expand-file-name "~/.cbm-runtime")))
+    (unless (f-exists? f)
+      (f-mkdir f)))
   (setq!
     mcp-hub-servers
     `(
@@ -173,6 +177,9 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                    "matryoshka-rlm@latest"
                    "lattice-mcp"
                    "--dangerously-skip-cwd-checking")))
+       ("lemmalog" .
+         (:command "/Users/yqrashawn/Library/CloudStorage/Dropbox/sync/lemmalog/target/release/lemmalog-mcp"
+           :env (:LEMMALOG_MCP_PATH "/Users/yqrashawn/.local/share/lemmalog/memory.snapshot")))
 
        ;; ("chiasmus" .
        ;;  (:command "bunx"
@@ -231,7 +238,8 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
          (:url "https://scout.rashawn.work/mcp"))
 
        ("codebase-memory-mcp" .
-         (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"))
+         (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"
+           :env (:CBM_RUNTIME_DIR ,(expand-file-name "~/.cbm-runtime"))))
 
        ;; ("slack" .
        ;;  (:url "http://localhost:13080/mcp"))
