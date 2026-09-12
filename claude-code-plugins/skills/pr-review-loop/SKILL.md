@@ -78,6 +78,7 @@ checks. Its output says which findings it verified by RUNNING something and
 which are a reading of the source — trust that distinction and re-verify the
 readings, not the runs.
 
-It cannot alter the PR: `git push`, `git commit` and `gh pr` are refused, and
+It cannot alter the PR: `git push`, `git commit` and the mutating `gh pr`
+subcommands are refused (it may `gh pr view` to read it), and
 it has no network. Nothing it did to its own tree survives, so no finding is
 ever accompanied by a fix.

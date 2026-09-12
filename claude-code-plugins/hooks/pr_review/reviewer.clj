@@ -8,7 +8,8 @@
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
             [clojure.java.io :as io]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [pr-review.atomicfile :as atomicfile]))
 
 (def categories
   ["correctness/blocking" "correctness/followup" "coverage"
@@ -111,6 +112,14 @@
    "WebSearch" "Workflow" "Write"
    ;; Command shapes, not tools. See the docstring for why each is here.
    "Bash(rm:*)" "Bash(sudo:*)"
+   ;; The MUTATING gh subcommands only. A blanket `Bash(gh pr:*)` is wrong now:
+   ;; the prompt tells the reviewer to run `gh pr view` to read the PR it is
+   ;; reviewing. These are the ones that would let it act on the PR instead —
+   ;; commenting, merging and closing are agent A's job, and the ledger plus
+   ;; the one posted review are this reviewer's only channels.
+   "Bash(gh pr merge:*)" "Bash(gh pr close:*)" "Bash(gh pr edit:*)"
+   "Bash(gh pr comment:*)" "Bash(gh pr review:*)" "Bash(gh pr ready:*)"
+   "Bash(gh pr reopen:*)" "Bash(gh api:*)"
    "Bash(git push:*)" "Bash(git commit:*)"
    ;; `gh` is NOT restricted, on the author's instruction. The reviewer can
    ;; read the PR, its description and its comments -- and can also comment on
@@ -185,6 +194,24 @@
   (cond-> {reviewer-env-var "1"}
     (oauth-token) (assoc "CLAUDE_CODE_OAUTH_TOKEN" (oauth-token))))
 
+(defn redact
+  "Replace the reviewer's own credential with a marker.
+
+   Everything the reviewer prints is recorded and republished: `:out` becomes
+   the PR comment and the findings file, `:err` is streamed to a file the
+   author reads. The reviewer runs with an OAuth token in its environment and
+   has an unrestricted shell, so `env`, a stray `echo $CLAUDE_CODE_OAUTH_TOKEN`
+   while debugging, or a tool dumping its environment on error all put the
+   credential into that stream.
+
+   Nothing else redacted: a value we do not know cannot be matched, and
+   guessing at shapes would give false confidence. This covers the one secret
+   this process is known to hold."
+  [text token]
+  (if (and (string? text) (string? token) (>= (count token) 8))
+    (str/replace text token "[redacted]")
+    text))
+
 (defn- default-spawn
   "Runs the reviewer. `err-file`, when given, receives stderr AS IT IS WRITTEN
    and is read back afterwards, so `:err` behaves as before.
@@ -209,9 +236,22 @@
    Never throws: a spawn failure becomes a non-zero exit with the message in
    :err, so the caller can still tell the author what happened."
   [prompt repo-root opts]
-  (let [spawn (or (:spawn-fn opts) default-spawn)]
-    (try (spawn (claude-argv) prompt repo-root (:err-file opts))
-         (catch Exception e {:exit 127 :out "" :err (str (ex-message e))}))))
+  (let [spawn (or (:spawn-fn opts) default-spawn)
+        token ((or (:token-fn opts) oauth-token))
+        scrub #(redact % token)]
+    (try
+      (let [res (spawn (claude-argv) prompt repo-root (:err-file opts))]
+        ;; Redacted here, at the one place every caller goes through, rather
+        ;; than at each of the three places the text is republished — the PR
+        ;; comment, the findings file and the streamed stderr. The stderr FILE
+        ;; is rewritten too: it is on disk for the author to read, and it is
+        ;; the copy that survives a kill.
+        (when-let [f (:err-file opts)]
+          (when (and token (fs/exists? f))
+            (let [raw (slurp f) clean (scrub raw)]
+              (when (not= raw clean) (atomicfile/spit! f clean)))))
+        (-> res (update :out scrub) (update :err scrub)))
+      (catch Exception e {:exit 127 :out "" :err (scrub (str (ex-message e)))}))))
 
 (defn- strip-emphasis
   "Remove inline markdown emphasis so one parser handles every shape a model

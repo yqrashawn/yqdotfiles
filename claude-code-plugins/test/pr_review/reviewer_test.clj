@@ -66,13 +66,22 @@
                 "a push from the reviewer would carry the PARENT session's
                  CLAUDE_CODE_SESSION_ID, so the pre-push hook would record it
                  as an agent push and the loop would review the reviewer")
-            (testing "gh is NOT restricted at all, on the author's
-                      instruction, so the reviewer can read the PR the prompt
-                      points it at. That also lets it merge the PR, comment on
-                      it — reversing R13, where the ledger was its only
-                      channel — and reach anything `gh api` can. The prompt
-                      asks it not to; that is guidance, not enforcement"
-              (is (empty? (filter #(str/includes? % "gh") denied))))
+          (testing "gh READ is allowed and gh WRITE is not. The prompt points
+                    the reviewer at `gh pr view` to read the PR it is
+                    reviewing, so a blanket Bash(gh pr:*) would break that —
+                    but the mutating subcommands would let it act ON the PR,
+                    and commenting, merging and closing are agent A's job.
+                    Before this, nothing gh-shaped was denied at all while
+                    README and SKILL.md both told the author it was."
+            (is (every? denied ["Bash(gh pr merge:*)" "Bash(gh pr close:*)"
+                                "Bash(gh pr comment:*)" "Bash(gh pr review:*)"
+                                "Bash(gh pr edit:*)" "Bash(gh pr reopen:*)"
+                                "Bash(gh pr ready:*)"]))
+            (is (denied "Bash(gh api:*)")
+                "gh api reaches anything the token reaches, including other
+                 repositories")
+            (is (not (some #(str/includes? % "gh pr view") denied))
+                "reading the PR is what the prompt asks for"))
             (is (every? denied ["Bash(curl:*)" "Bash(wget:*)" "Bash(nc:*)"])
                 "WebFetch and WebSearch are denied for being a route off this
                  machine; leaving these open reopens it"))
@@ -505,18 +514,42 @@
               "with no token the variable must be unset, not empty"))))))
 
 (deftest the-token-never-appears-in-what-the-loop-records
-  (testing "the reviewer's stderr is streamed to a file the author reads, and
-            findings are written to disk. Neither may carry the credential"
-    (let [dir (str (fs/create-temp-dir {:prefix "prl-tok"}))
-          f (str (fs/path dir "t"))
-          errf (str (fs/path dir "err"))
-          spawn @#'reviewer/default-spawn]
-      (spit f "sk-fake-must-not-leak\n")
-      (with-redefs [reviewer/default-token-file f]
-        (let [res (spawn ["sh" "-c" "echo out; echo err >&2"] "" "." errf)]
-          (is (not (str/includes? (:out res) "sk-fake-must-not-leak")))
-          (is (not (str/includes? (:err res) "sk-fake-must-not-leak")))
-          (is (not (str/includes? (slurp errf) "sk-fake-must-not-leak"))))))))
+  (testing "the previous version of this test could not fail: its stub child
+            was `echo out; echo err >&2`, which had no reason to print the
+            token, and there was no redaction anywhere in the tree. The child
+            here PRINTS the credential — which is exactly what `env`, a stray
+            `echo $CLAUDE_CODE_OAUTH_TOKEN` while debugging, or a tool dumping
+            its environment on error would do, from a reviewer that has an
+            unrestricted shell.
+
+            All three sinks are checked because all three are republished:
+            `:out` becomes the PR comment and the findings file, `:err` and the
+            streamed file are read by the author."
+    (let [d (str (fs/create-temp-dir {:prefix "prl-tok"}))
+          errf (str (fs/path d "err"))
+          tok "sk-ant-oat01-THIS-MUST-NOT-LEAK"
+          res (reviewer/run!
+               "P" "."
+               {:token-fn (constantly tok)
+                :err-file errf
+                :spawn-fn (fn [_ _ _ ef]
+                            (spit ef (str "debug: CLAUDE_CODE_OAUTH_TOKEN=" tok "\n"))
+                            {:exit 0
+                             :out (str "VERDICT: MERGEABLE — token is " tok)
+                             :err (str "stderr had " tok)})})]
+      (is (not (str/includes? (:out res) tok)) "the PR comment and findings file")
+      (is (not (str/includes? (:err res) tok)) "the failure message")
+      (is (not (str/includes? (slurp errf) tok))
+          "and the streamed file, which is the copy that survives a kill")
+      (is (str/includes? (:out res) "[redacted]")
+          "redacted, not merely absent — or the test passes on an empty reply"))))
+
+(deftest redaction-leaves-everything-else-alone
+  (let [tok "sk-ant-oat01-abcdefgh"]
+    (is (= "no secret here" (reviewer/redact "no secret here" tok)))
+    (is (= "x" (reviewer/redact "x" nil)) "no token, nothing to do")
+    (is (= "short" (reviewer/redact "short" "abc"))
+        "a too-short token would match everywhere; refuse rather than mangle")))
 
 (deftest a-quoted-prior-review-is-not-parsed-as-this-one
   (testing "the false clean this branch created. It posts every pass as a PR

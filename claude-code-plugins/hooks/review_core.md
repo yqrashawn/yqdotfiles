@@ -91,7 +91,8 @@ Four limits, and they are limits on purpose:
 - **Running the test suite is allowed but rarely worth it.** It is slow, it
   can touch shared state, and a red suite you cannot attribute to the diff is
   not a finding. Prefer reading the test to running it.
-- **Do not read CI.** You have no network.
+- **Do not read CI.** Build logs are out of scope for this review — you have
+  `gh`, so this is a rule, not a limit.
 
 Say once, in your output, which findings you verified by RUNNING something and
 which are a reading of the source — the distinction matters to the author and

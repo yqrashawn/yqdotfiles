@@ -39,10 +39,21 @@
    the defect still in the tree, and the loop then merges broken code."
   #{"correctness/followup" "docs-accuracy" "style"})
 
-(def ^:private max-lines
-  "Ledger is trimmed to this many lines under the write lock. At ~200 bytes a
-   line this bounds the file at ~100KB."
-  500)
+(def ^:private max-passes-kept
+  "How many passes are kept PER PR, not per file.
+
+   A global line cap loses history for whichever PRs are oldest, and all three
+   readers of this file need a PR's OWN rows: `reviewed-sha?` (drop one and a
+   reviewed sha is reviewed again, spending a cap slot), `cap-reached?` (drop
+   one and the cap under-counts, so the loop never terminates) and
+   `suppressed-fingerprints` (drop one and a finding raised twice is raised a
+   third time). Measured when this was found: a 500-line global cap against
+   ~50 rows per repo per three days, so a still-open PR would start silently
+   losing its cap count inside a month.
+
+   `max-passes` is 10, so 12 keeps every row a live decision can ask for plus
+   slack for a PR that was capped and then force-pushed."
+  12)
 
 (defn ledger-path
   [git-dir]
@@ -134,8 +145,25 @@
   (Files/move (fs/path tmp) (fs/path path)
               (into-array CopyOption [StandardCopyOption/ATOMIC_MOVE])))
 
+(defn- trim-per-pr
+  "Keep the newest `max-passes-kept` rows for each PR, in file order.
+
+   Rows that do not parse are kept: they are not ours to drop, and a parse
+   failure must never become a silent deletion."
+  [lines]
+  (let [pr-of (fn [l] (try (:pr (json/parse-string l true))
+                           (catch Exception _ ::unparsed)))
+        keep? (->> (map-indexed vector lines)
+                   (group-by (fn [[_ l]] (pr-of l)))
+                   (mapcat (fn [[pr idxs]]
+                             (if (= ::unparsed pr)
+                               (map first idxs)
+                               (map first (take-last max-passes-kept idxs)))))
+                   set)]
+    (vec (keep-indexed (fn [i l] (when (keep? i) l)) lines))))
+
 (defn append-pass!
-  "Append one pass entry, stamping :ts. Trims to `max-lines` under the same
+  "Append one pass entry, stamping :ts. Trims per PR under the same
    lock so concurrent triggers cannot interleave a read-trim-write. Writes
    the full trimmed content to a temp file and renames it into place, so a
    process killed mid-write can never truncate the previously recorded
@@ -154,7 +182,7 @@
                          (vec (remove str/blank? (str/split-lines (slurp p))))
                          [])
               lines (conj existing (json/generate-string entry))
-              kept (vec (take-last max-lines lines))
+              kept (trim-per-pr lines)
               tmp (str p ".tmp")]
           (spit tmp (str (str/join "\n" kept) "\n"))
           (atomic-replace! tmp p))))

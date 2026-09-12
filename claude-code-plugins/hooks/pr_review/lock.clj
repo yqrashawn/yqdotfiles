@@ -51,6 +51,32 @@
   (let [h (java.lang.ProcessHandle/of (long pid))]
     (and (.isPresent h) (.isAlive (.get h)))))
 
+(defn started-at-of
+  "The process's own start instant in milliseconds, or nil.
+
+   A pid alone does not identify a process: the OS recycles them, so a dead
+   reviewer's pid can belong to something else entirely by the time a later
+   trigger reads the lock. `alive?` would say yes and `kill-reviewers!` would
+   then SIGTERM that stranger's whole subtree. Pid plus start time is the
+   standard identity, and the kernel supplies it."
+  [pid]
+  (try
+    (let [h (java.lang.ProcessHandle/of (long pid))]
+      (when (.isPresent h)
+        (let [i (.startInstant (.info (.get h)))]
+          (when (.isPresent i) (.toEpochMilli (.get i))))))
+    (catch Exception _ nil)))
+
+(defn same-process?
+  "True when `pid` is still the process the lock recorded.
+
+   A record with no `:started-at` predates this check; it is trusted, because
+   refusing would wedge every lock written by an older version."
+  [{:keys [pid started-at] :as held}]
+  (and held
+       (alive? pid)
+       (or (nil? started-at) (= started-at (started-at-of pid)))))
+
 (defn kill-reviewers!
   "SIGTERM the whole process subtree *below* `pid`, and not `pid` itself.
 
@@ -79,7 +105,8 @@
   [git-dir pr-key {:keys [pid pr sha branch]}]
   (fs/create-dirs (fs/parent (lock-path git-dir pr-key)))
   (spit (lock-path git-dir pr-key)
-        (json/generate-string {:pid pid :pr pr :sha sha :branch branch
+        (json/generate-string {:pid pid :started-at (started-at-of pid)
+                               :pr pr :sha sha :branch branch
                                :started (System/currentTimeMillis)})))
 
 (defn acquire!
@@ -105,10 +132,13 @@
             kill-fn (or kill-fn kill-reviewers!)
             held (read-lock git-dir pr)]
         (cond
-          (and held (alive? (:pid held)) (= sha (:sha held)))
+          (and (same-process? held) (= sha (:sha held)))
           {:status :duplicate}
 
-          (and held (alive? (:pid held)))
+          ;; `same-process?`, not `alive?`: the OS recycles pids, so a dead
+          ;; reviewer's pid can belong to a stranger by now, and killing on
+          ;; liveness alone would SIGTERM that stranger's whole subtree.
+          (same-process? held)
           (do (kill-fn (:pid held))
               (write-lock! git-dir pr {:pid pid :pr pr :sha sha :branch branch})
               {:status :superseded :killed-pid (:pid held)})
@@ -181,6 +211,6 @@
                                 second parse-long)]
                  (when pr
                    (when-let [held (read-lock git-dir pr)]
-                     (when-not (alive? (:pid held))
+                     (when-not (same-process? held)
                        (assoc held :pr pr)))))))
        (sort-by :started >)))

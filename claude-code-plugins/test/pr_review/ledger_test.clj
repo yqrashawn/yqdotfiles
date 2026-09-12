@@ -1,5 +1,7 @@
 (ns pr-review.ledger-test
   (:require [babashka.fs :as fs]
+            [cheshire.core]
+            [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
             [pr-review.flock :as flock]
             [pr-review.ledger :as ledger]))
@@ -167,3 +169,58 @@
           "flocking the path that gets renamed over lets a second process later lock a
            different inode after the rename and run concurrently with this one — the
            exact defect this test guards against"))))
+
+(deftest an-old-prs-history-survives-a-busy-ledger
+  (testing "retention is PER PR, not a global line cap. A global cap drops the
+            OLDEST rows, and all three readers need a PR's own: reviewed-sha?
+            (drop one and a reviewed sha is reviewed again), cap-reached? (drop
+            one and the cap under-counts, so the loop never terminates) and
+            suppressed-fingerprints. Measured when found: a 500-line global cap
+            against ~50 rows per repo per three days — a still-open PR would
+            start losing its cap count inside a month.
+
+            The file is seeded directly rather than appended row by row, so the
+            fixture actually EXCEEDS the old global cap; at 68 rows nothing was
+            trimmed and the test could not fail."
+    (let [g (tmp-git-dir)
+          fp "src/a.clj:1:correctness/followup"
+          row (fn [pr sha pass fps]
+                (cheshire.core/generate-string
+                 {:pr pr :sha sha :pass pass :verdict "MERGEABLE" :ts 1
+                  :blocking 0 :followup 1 :coverage 0 :fingerprints fps}))
+          old-pr (for [n (range 1 (inc ledger/max-passes))]
+                   (row 1 (str "old" n) n [fp]))
+          filler (for [n (range 600)] (row (+ 2 n) (str "s" n) 1 []))]
+      ;; oldest first: PR 1's rows are exactly what a global tail-cap discards
+      (spit (ledger/ledger-path g) (str (str/join "\n" (concat old-pr filler)) "\n"))
+      (ledger/append-pass! g {:pr 999 :sha "new" :pass 1 :verdict "MERGEABLE"
+                              :blocking 0 :followup 0 :coverage 0 :fingerprints []})
+      (let [passes (ledger/read-passes g 1)]
+        (is (= ledger/max-passes (count passes))
+            "the old PR must keep every pass a live decision can ask for")
+        (is (true? (ledger/cap-reached? passes))
+            "or the cap silently stops firing and the loop never terminates")
+        (is (true? (ledger/reviewed-sha? passes "old3"))
+            "or a reviewed sha is reviewed again, spending a slot")
+        (is (some #{fp} (ledger/suppressed-fingerprints passes))
+            "or a finding raised twice is raised a third time")))))
+
+(deftest a-single-prs-rows-are-still-bounded
+  (let [g (tmp-git-dir)]
+    (doseq [n (range 1 40)]
+      (ledger/append-pass! g {:pr 7 :sha (str "s" n) :pass n :verdict "MERGEABLE"
+                              :blocking 0 :followup 0 :coverage 0 :fingerprints []}))
+    (let [passes (ledger/read-passes g 7)]
+      (is (<= (count passes) 12) "retention must still bound one PR's rows")
+      (is (>= (count passes) ledger/max-passes)
+          "and must never drop below what the cap needs"))))
+
+(deftest an-unparsable-row-is-never-silently-dropped
+  (let [g (tmp-git-dir)
+        p (ledger/ledger-path g)]
+    (spit p "{not json\n")
+    (ledger/append-pass! g {:pr 1 :sha "s" :pass 1 :verdict "MERGEABLE"
+                            :blocking 0 :followup 0 :coverage 0 :fingerprints []})
+    (is (str/includes? (slurp p) "{not json")
+        "a parse failure is not ours to turn into a deletion")))
+

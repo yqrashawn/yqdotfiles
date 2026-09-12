@@ -256,3 +256,50 @@
         "no record can only mean this trigger was superseded and the winner
          has since released, or that something outside the loop deleted it;
          publishing a pass whose lock is gone is the riskier of the two")))
+
+(deftest a-recycled-pid-is-not-mistaken-for-the-old-holder
+  (testing "a pid alone does not identify a process — the OS recycles them, so
+            a dead reviewer's pid can belong to a stranger by the time a later
+            trigger reads the lock. Killing on `alive?` alone would SIGTERM
+            that stranger's whole subtree. Pid plus start instant is the
+            identity, and the kernel supplies it"
+    (let [g (tmp-git-dir)
+          self (.pid (java.lang.ProcessHandle/current))
+          killed (atom [])
+          kill (fn [pid] (swap! killed conj pid))]
+      ;; a lock naming a LIVE pid, but not the process that wrote it
+      (write-lock! g 1 {:pid self :started-at 1 :pr 1 :sha "old"})
+      (let [r (lock/acquire! g {:pr 1 :sha "new" :branch "b"}
+                             {:pid 4242 :kill-fn kill})]
+        (is (= :acquired (:status r))
+            "a recycled pid must read as free, not as a live holder")
+        (is (empty? @killed)
+            "and nothing may be killed — that subtree is not ours"))))
+
+  (testing "the same pid WITH the matching start instant is the real holder"
+    (let [g (tmp-git-dir)
+          self (.pid (java.lang.ProcessHandle/current))
+          killed (atom [])]
+      (write-lock! g 2 {:pid self :started-at (lock/started-at-of self)
+                        :pr 2 :sha "old"})
+      (let [r (lock/acquire! g {:pr 2 :sha "new" :branch "b"}
+                             {:pid 4242 :kill-fn (fn [pid] (swap! killed conj pid))})]
+        (is (= :superseded (:status r)))
+        (is (= [self] @killed))))))
+
+(deftest a-lock-written-before-identity-was-recorded-still-works
+  (testing "records with no :started-at predate the check; refusing them would
+            wedge every lock an older version wrote"
+    (let [g (tmp-git-dir)
+          self (.pid (java.lang.ProcessHandle/current))]
+      (write-lock! g 3 {:pid self :pr 3 :sha "old"})
+      (is (= :duplicate (:status (lock/acquire! g {:pr 3 :sha "old" :branch "b"}
+                                                {:pid 4242 :kill-fn (fn [_])})))))))
+
+(deftest acquire-records-the-holders-identity
+  (let [g (tmp-git-dir)
+        self (.pid (java.lang.ProcessHandle/current))]
+    (lock/acquire! g {:pr 4 :sha "s" :branch "b"} {:pid self})
+    (is (= (lock/started-at-of self) (:started-at (lock/read-lock g 4)))
+        "or the next trigger has nothing to validate against")))
+

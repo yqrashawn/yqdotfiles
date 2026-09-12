@@ -1,15 +1,17 @@
 #!/usr/bin/env sh
 # PR_REVIEW_LOOP_PRE_PUSH v1
 #
-# Records WHICH CLONE was pushed, and deliberately nothing else.
+# Records which clone was pushed, who pushed it, and which refs were attempted.
 #
-# What was pushed is read afterwards from git's own remote-tracking reflog
-# (see pr-review.pushlog), which git writes only when a push SUCCEEDS. A
-# pre-push hook runs BEFORE the push and cannot know that, so recording refs
-# or shas here would mean recording pushes that were then rejected. The one
-# fact the reflog cannot supply is which clone's .git to read, because the
-# PostToolUse hook that later asks has no working directory of its own — so
-# that is the one fact this hook writes.
+# These are ATTEMPTS, not outcomes: a pre-push hook runs BEFORE the push and
+# cannot know it succeeded. What actually LANDED is read afterwards from git's
+# own remote-tracking reflog (see pr-review.pushlog), which git writes only on
+# success, and a candidate must appear in both at the same sha. So a rejected
+# push leaves a line here and no reflog entry, and is correctly never reviewed.
+#
+# The two facts the reflog cannot supply are which clone's .git to read — the
+# PostToolUse hook that later asks has no working directory of its own — and
+# who pushed, which is what keeps a human's terminal push out of the loop.
 #
 # IT MUST NEVER FAIL A PUSH. A non-zero pre-push aborts the push, so every
 # step is guarded and the status is 0 unless a chained hook says otherwise.

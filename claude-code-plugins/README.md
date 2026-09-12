@@ -39,7 +39,7 @@ Every pass is also posted to the PR as a comment, and left at
 `$G/pr-review.<N>.findings.md` — so a review can be read on GitHub, or a
 session that did not receive the wake can be pointed at that path. The
 *trigger* posts it, never the reviewer: the reviewer generates its review once
-and has `Bash(gh pr:*)` denied.
+and has the MUTATING gh subcommands denied — `gh pr merge|close|comment|review|edit|reopen|ready` and `gh api` — while `gh pr view` stays available, because the prompt points it at the PR to read.
 
 ## How it decides
 
@@ -91,7 +91,8 @@ hookinstall installs the pre-push hook, honouring core.hooksPath
 - `--disallowedTools` is the reviewer's only real sandbox. `--allowedTools` is
   a pre-approval list and restricts nothing under `bypassPermissions`.
 - Bash is granted to the reviewer; containment is the throwaway worktree, not
-  the tool list. `git push`, `git commit`, `gh pr`, `rm`, `sudo`, `curl` are
-  denied as command shapes.
+  the tool list. Denied as command shapes: `git push`, `git commit`, `rm`,
+  `sudo`, `curl`, `wget`, `nc`, the mutating `gh pr` subcommands and `gh api`.
+  `gh pr view` is allowed — the reviewer is told to read the PR.
 
 `bb test` from this directory runs everything.
