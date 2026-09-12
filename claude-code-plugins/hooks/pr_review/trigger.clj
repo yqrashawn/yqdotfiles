@@ -26,6 +26,17 @@
 
 (def ^:private context-keep 5)
 
+(def ^:private abandoned-artifact-ms
+  "How long a per-PR artifact outlives its last write. Every retention rule
+   here became per PR — the lock, the checkout, the diff — and nothing bounds
+   the number of PRs, so a merged PR's files stayed forever: measured, 33 PRs
+   in one clone, five diffs each, this PR's diff alone 667 KB.
+
+   Two weeks is far longer than any review takes and longer than a PR stays
+   active here, and everything swept is rewritten by the next pass if the PR
+   comes back."
+  (* 14 24 60 60 1000))
+
 (def ^:private push-slack-ms
   "Added to the tool call's own duration when looking back for the push it
    made. A PostToolUse hook fires when the Bash call returns, so the reflog
@@ -326,6 +337,25 @@
      :reason "running inside a reviewer; a review must not review"}
     (decide-outside-a-reviewer input opts)))
 
+(defn- sweep-abandoned-artifacts!
+  "Delete per-PR files nothing will write again. Returns how many were removed.
+
+   `context/prune!` bounds a LIVE PR's diffs; this bounds the PRs. Age-based
+   rather than PR-state-based, so it needs no GitHub call and cannot reach a
+   running review's file — those are minutes old, not weeks.
+
+   Best effort: housekeeping must never fail a review."
+  [git-dir]
+  (try
+    (let [cutoff (- (System/currentTimeMillis) abandoned-artifact-ms)
+          stale  (->> (concat (fs/glob (context/context-dir git-dir) "*.diff")
+                              (fs/glob git-dir "pr-review.*.findings.md")
+                              (fs/glob git-dir "pr-review.*.stderr"))
+                      (filter #(< (.toMillis (fs/last-modified-time %)) cutoff)))]
+      (doseq [f stale] (fs/delete-if-exists f))
+      (count stale))
+    (catch Exception _ 0)))
+
 (defn findings-path
   "Where the latest pass's findings text is kept, so a session that did not
    receive the wake can still read it."
@@ -514,6 +544,7 @@
                 :coverage (get (:counts parsed) "coverage" 0)
                 :fingerprints (:fingerprints parsed)})
               (context/prune! git-dir pr context-keep)
+              (sweep-abandoned-artifacts! git-dir)
               (let [warnings (reviewer/parse-warnings parsed)
                     msg (findings-message d parsed warnings)]
                 ;; The findings text lived only in the wake. The ledger keeps

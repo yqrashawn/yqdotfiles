@@ -3,6 +3,7 @@
             [babashka.process :as p]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
+            [pr-review.context :as context]
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
             [pr-review.trigger :as trigger]))
@@ -928,6 +929,38 @@
         (is (true? (:retry? d)))
         (is (= 370 (:pr d)))
         (is (= "killedsha" (:sha d)))))))
+
+(deftest abandoned-per-pr-artifacts-are-swept-and-live-ones-are-not
+  (testing "every retention rule here became per PR — the lock, the checkout,
+            the diff, the ledger rows — and nothing bounds the number of PRs.
+            `context/prune!` globbed `*.diff` before this branch and bounded the
+            whole directory at 5; per PR it keeps 5 for each PR that ever ran,
+            forever. Measured: 33 PRs in one clone, this PR's own diff 667 KB.
+            The findings and stderr files are per PR and nothing deleted them at
+            all.
+
+            Age, not PR state: a running review's files are minutes old, so the
+            sweep cannot reach one, and it needs no GitHub call to decide."
+    (let [[_ g] (tmp-repo)
+          ctx (context/context-dir g)
+          old (- (System/currentTimeMillis) (* 20 24 60 60 1000))
+          write! (fn [path stale?]
+                   (fs/create-dirs (fs/parent path))
+                   (spit path "x")
+                   (when stale? (fs/set-last-modified-time path old))
+                   path)
+          dead-diff  (write! (str ctx "/370-abc.diff") true)
+          dead-find  (write! (str g "/pr-review.370.findings.md") true)
+          dead-err   (write! (str g "/pr-review.370.stderr") true)
+          live-diff  (write! (str ctx "/402-def.diff") false)
+          live-find  (write! (str g "/pr-review.402.findings.md") false)
+          keep-other (write! (str g "/some-other-file") true)]
+      (is (= 3 (#'trigger/sweep-abandoned-artifacts! g)))
+      (is (not-any? fs/exists? [dead-diff dead-find dead-err]))
+      (is (every? fs/exists? [live-diff live-find])
+          "a PR still being reviewed must keep the files its prompt names")
+      (is (fs/exists? keep-other)
+          "and the sweep must only touch files this loop owns"))))
 
 (deftest a-retry-names-the-session-that-pushed
   (testing "the retry path is the ONE that needs `:pushed-by`, and it was the

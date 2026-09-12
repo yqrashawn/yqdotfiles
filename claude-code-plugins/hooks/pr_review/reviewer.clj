@@ -334,12 +334,24 @@
    pass alone and asks for `VERDICT[<tag>]:`. A quoted verdict carries an
    earlier pass's tag or none, so it cannot win.
 
-   Untagged is still parsed, and still by the last-at-column-0 rule. A reviewer
-   that ignores the tag must not become unreviewable; it just gets the older,
-   weaker rule, which is what every pass before the tag had."
+   When a tag was asked for and none came back, the reply is parsed only if it
+   is UNAMBIGUOUS — exactly one verdict at column 0. The defect needs two, one
+   of them quoted, so one verdict cannot be it, and that is the overwhelming
+   majority of a reviewer's format slips. Two untagged verdicts with the tag
+   ignored is the open half of the class, and falling back to last-at-column-0
+   there is the same false clean by another route. It parses as MALFORMED
+   instead, which costs a RETRY and not a pass: trigger.clj writes no ledger
+   row for a MALFORMED review, so the sha stays unreviewed and re-triggerable.
+
+   With no tag at all — `parse-output`'s 1-arity, which nothing in the loop
+   uses — the old last-at-column-0 rule stands unchanged."
   [lines tag]
-  (let [hits (verdict-hits lines tag)]
-    (last (if (seq hits) hits (verdict-hits lines nil)))))
+  (let [tagged (when tag (verdict-hits lines tag))
+        bare   (verdict-hits lines nil)]
+    (cond
+      (seq tagged)                 (last tagged)
+      (and tag (< 1 (count bare))) nil
+      :else                        (last bare))))
 
 (defn- parse-counts
   "Read the per-category count block. \"none\" means 0 — a missing key and a

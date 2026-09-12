@@ -633,11 +633,12 @@
       (is (= 0 (get (:counts p) "correctness/blocking")))
       (is (true? (reviewer/mergeable? p)) "a finished PR must be allowed to finish"))))
 
-(deftest a-reviewer-that-ignores-the-tag-is-still-parsed
-  (testing "the tag is an override, not a requirement. A reply with no tagged
-            verdict falls back to the last-at-column-0 rule every pass before
-            the tag used — a reviewer that drops it must not become
-            unreviewable, which would cost a whole pass for a formatting slip."
+(deftest a-reviewer-that-ignores-the-tag-is-still-parsed-when-unambiguous
+  (testing "the tag is an override, not a requirement — for a reply that says
+            one thing. One verdict at column 0 cannot be the defect, which needs
+            two, one of them quoted. Making every untagged reply MALFORMED would
+            spend a reviewer run on a formatting slip that says exactly what it
+            means."
     (let [reply (str "VERDICT: NOT MERGEABLE — real\n\n"
                      "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
                      "  [coverage]              0\n  [docs-accuracy]         0\n"
@@ -646,6 +647,49 @@
           p (reviewer/parse-output reply "a1b2c3d4")]
       (is (= "NOT MERGEABLE" (:verdict p)))
       (is (= 1 (get (:counts p) "correctness/blocking"))))))
+
+(deftest an-ambiguous-reply-that-ignores-the-tag-is-malformed
+  (testing "the open half of the class the tag closed. The tag discriminates
+            only replies that carry it; with it ignored, a plainly quoted prior
+            MERGEABLE beat this pass's own NOT MERGEABLE by the same
+            last-at-column-0 rule, and the ledger recorded a clean pass over a
+            blocking finding. Not exotic: review_core.md's own format examples
+            show the untagged spelling, and every pass before the tag emitted it.
+
+            MALFORMED is the right answer rather than a guess because it costs a
+            RETRY, not a pass — trigger.clj writes no ledger row for one, so the
+            sha stays unreviewed and re-triggerable."
+    (let [reply (str "VERDICT: NOT MERGEABLE — nil deref\n\n"
+                     "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
+                     "  [coverage]              0\n  [docs-accuracy]         0\n"
+                     "  [style]                 0\n\n"
+                     "1. [correctness/blocking] src/a.clj:42 — nil deref\n\n"
+                     "### Closure of the previous pass\n\n"
+                     "Pass 2 ended with, verbatim:\n\n"
+                     "VERDICT: MERGEABLE — 2 follow-ups to file\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  2\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n")
+          p (reviewer/parse-output reply "a1b2c3d4")]
+      (is (= "MALFORMED" (:verdict p))
+          "guessing between them is how the false clean got through")
+      (is (false? (reviewer/mergeable? p)))
+      (is (= "MALFORMED" (:verdict (reviewer/reconcile p)))))))
+
+(deftest with-no-tag-at-all-the-old-rule-stands
+  (testing "`parse-output`'s 1-arity, which nothing in the loop uses. Tightening
+            it would change what a caller that never asked for a tag gets back."
+    (let [reply (str "Recap of the previous pass:\n"
+                     "VERDICT: NOT MERGEABLE — the old blocking finding\n"
+                     "  [correctness/blocking]  1 findings\n"
+                     "  [correctness/followup]  0\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n\n"
+                     "That is now fixed. My verdict this pass:\n\n"
+                     "VERDICT: MERGEABLE — clean\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  0\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n")]
+      (is (= "MERGEABLE" (:verdict (reviewer/parse-output reply)))))))
 
 (deftest a-fenced-code-excerpt-inside-a-finding-keeps-the-finding
   ;; Blanking fenced regions must not eat the finding line that introduces one.

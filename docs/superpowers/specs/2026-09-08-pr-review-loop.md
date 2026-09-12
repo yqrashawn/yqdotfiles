@@ -203,10 +203,10 @@ A (interactive Claude Code session, any repo, machine M)
            │ 2. repo root, branch → gh pr list --head --state open   (C30)
            │      no open PR                       → exit 0, silent
            │ 3. ledger: passes for this PR ≥ 10    → exit 2 "cap reached"
-           │ 4. lock .git/pr-review.lock
+           │ 4. lock .git/pr-review.<pr>.lock
            │      same SHA in flight               → exit 0, duplicate
            │      older SHA in flight              → kill it, take lock  (R14)
-           │ 5. context: base SHA, full diff → .git/pr-review-context/<sha>.diff
+           │ 5. context: base SHA, full diff → .git/pr-review-context/<pr>-<sha>.diff
            │      changed-file list, PR metadata
            │ 6. prompt: review_core.md + <repo>/.claude/pr-review.md
            │            + .git/pr-review-hint + pass number + context paths
@@ -245,10 +245,10 @@ A (interactive Claude Code session, any repo, machine M)
 - invariant: append-only; monotonic `pass` per `pr`; capped at 500 lines with locked read-GC-write
 - violation: two concurrent appends interleaving → the cap and re-raise logic misread. Blame: missing lock.
 
-**Lock** (`.git/pr-review.lock`)
+**Lock** (`.git/pr-review.<pr>.lock`)
 - pre: none
 - post: held for the reviewer's lifetime, released on every exit path including error
-- invariant: at most one live reviewer per repo; the holder's SHA is always the newest pushed SHA
+- invariant: at most one live reviewer PER PR; the holder's SHA is always the newest pushed SHA for that PR. Per PR, not per repo, since C55b — two open PRs in one clone are independent work and one must not block the other
 - violation: a stale lock from a killed process blocks all future reviews. Mitigation: the lock records a PID and is treated as free when that PID is dead.
 
 **Reviewer** (B)
