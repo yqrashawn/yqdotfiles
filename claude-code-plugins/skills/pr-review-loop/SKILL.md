@@ -79,6 +79,7 @@ which are a reading of the source — trust that distinction and re-verify the
 readings, not the runs.
 
 It cannot alter the PR: `git push`, `git commit` and the mutating `gh pr`
-subcommands are refused (it may `gh pr view` to read it), and
-it has no network. Nothing it did to its own tree survives, so no finding is
-ever accompanied by a fix.
+subcommands are refused (it may `gh pr view` to read it). Its reach off this
+machine is narrow, not absent — `curl`, `wget`, `nc`, WebFetch and WebSearch
+are denied, but `gh` and `git fetch` are not. Nothing it did to its own tree
+survives, so no finding is ever accompanied by a fix.

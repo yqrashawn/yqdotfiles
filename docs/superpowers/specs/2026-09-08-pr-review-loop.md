@@ -125,7 +125,7 @@ on darwin 24.3.0. Confidence noted per item.
 | R4 | A is never blocked by the review | A's turn ends before the review does, measurable in the transcript |
 | R5 | A cannot silently skip the review | The wake arrives without A choosing to act |
 | R6 | Findings reach A even if A's turn already ended | Wake arrives while the session is idle (C2) |
-| R7 | Reviewer has fresh context, cannot mutate the tree **that matters** | B is granted Bash on the author's instruction (C52), so this is no longer a tool restriction: containment is the throwaway detached worktree pinned to the reviewed sha, removed when the pass ends. Edit/Write stay denied but a shell writes files, so what actually holds is that B's tree is discarded and `git push`/`git commit`/`gh pr` are refused |
+| R7 | Reviewer has fresh context, cannot mutate the tree **that matters** | B is granted Bash on the author's instruction (C52), so this is no longer a tool restriction: containment is the throwaway detached worktree pinned to the reviewed sha, removed when the pass ends. Edit/Write stay denied but a shell writes files, so what actually holds is that B's tree is discarded and `git push`, `git commit` and the mutating `gh pr` subcommands are refused (C56b — `gh pr view` is not) |
 | R8 | Reviewer sees the true, untruncated diff | The diff B reads is byte-identical to `git diff <base>...<head>` |
 | R9 | A can pass a hint to the reviewer | A writes `.git/pr-review-hint`; that text appears in B's prompt |
 | R10 | Drafts are reviewed | A PR with `isDraft: true` gets a pass entry |

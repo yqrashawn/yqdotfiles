@@ -269,7 +269,7 @@
    dropped so line positions still line up with the reply.
 
    A fence does not indent, so a quoted prior review inside one carries its
-   `VERDICT:` at column 0 — and `parse-verdict` takes the LAST such line. This
+   `VERDICT:` at column 0 — and `winning-verdict` reads those lines. This
    branch made that reachable: it posts every pass as a PR comment, tells the
    reviewer to read them, and tells a re-review to verify closure against the
    previous pass. Measured: a reply whose own verdict is NOT MERGEABLE with one
@@ -295,10 +295,22 @@
   [out]
   (mapv strip-emphasis (unfenced (str/split-lines out))))
 
-(defn- parse-verdict
-  "The LAST line that starts a verdict at column 0.
+(defn- verdict-hits
+  "Every column-0 verdict line as `[index verdict]`, tagged ones only when
+   `tag` is given."
+  [lines tag]
+  (let [re (if tag
+             (re-pattern (str "^VERDICT\\[" (java.util.regex.Pattern/quote (str tag))
+                              "\\]:\\s*(MERGEABLE|NOT MERGEABLE)"))
+             #"^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)")]
+    (->> (map-indexed vector lines)
+         (keep (fn [[i l]]
+                 (when-let [v (second (re-find re l))] [i v]))))))
 
-   Two rules, each closing a different false-clean path.
+(defn- winning-verdict
+  "`[index verdict]` for the verdict this reply actually gives, or nil.
+
+   Three rules, each closing a different false-clean path.
 
    Column 0: leading whitespace means the line is quoted or indented — an
    echoed copy of the core prompt's own format example, say — not a real
@@ -308,21 +320,26 @@
 
    Last, not first: a reviewer that restates the required format unindented
    before reviewing anything used to have that restatement parsed as its
-   answer. The real verdict is the one it ends on."
-  [lines]
-  (->> lines
-       (keep #(second (re-find #"^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" %)))
-       last))
+   answer. The real verdict is the one it ends on.
 
-(defn- verdict-index
-  "Index of the line `parse-verdict` chose, or nil. Same rule, same anchor —
-   so the count block can be read from that verdict's own block rather than
-   from whichever one came first."
-  [lines]
-  (->> (map-indexed vector lines)
-       (keep (fn [[i l]]
-               (when (re-find #"^VERDICT:\s*(MERGEABLE|NOT MERGEABLE)" l) i)))
-       last))
+   A PASS TAG BEATS BOTH. `unfenced` closed the fenced spelling of a quoted
+   prior verdict, not the class, and position cannot close the rest of it: the
+   two failing shapes are mirror images. Measured in production, a reviewer
+   recapping the previous pass's NOT MERGEABLE before giving its own MERGEABLE
+   — where LAST is right. Reproduced here, a reviewer giving its own NOT
+   MERGEABLE and then quoting the previous pass's MERGEABLE while verifying
+   closure, which review_core.md asks it to do — where LAST is a false clean
+   that told the author to merge. No rule over order or value separates them,
+   so the parse stops guessing: `prompt/build` states a tag minted for this
+   pass alone and asks for `VERDICT[<tag>]:`. A quoted verdict carries an
+   earlier pass's tag or none, so it cannot win.
+
+   Untagged is still parsed, and still by the last-at-column-0 rule. A reviewer
+   that ignores the tag must not become unreviewable; it just gets the older,
+   weaker rule, which is what every pass before the tag had."
+  [lines tag]
+  (let [hits (verdict-hits lines tag)]
+    (last (if (seq hits) hits (verdict-hits lines nil)))))
 
 (defn- parse-counts
   "Read the per-category count block. \"none\" means 0 — a missing key and a
@@ -379,15 +396,19 @@
        vec))
 
 (defn parse-output
-  [out]
-  (let [out   (or out "")
-        lines (normalized-lines out)]
-    (if-let [v (parse-verdict lines)]
+  "`tag` is the pass tag `prompt/build` asked the reviewer to write on its
+   verdict line; nil parses by position alone. See `winning-verdict`."
+  ([out] (parse-output out nil))
+  ([out tag]
+   (let [out   (or out "")
+         lines (normalized-lines out)
+         [vi v] (winning-verdict lines tag)]
+    (if v
       {:verdict v
        ;; Counts come from AFTER the winning verdict line, not from the first
-       ;; block in the reply. `parse-verdict` takes the LAST verdict at column
-       ;; 0 because reviewers restate the format, or recap the previous pass,
-       ;; before answering; `parse-counts` took the FIRST count block, so the
+       ;; block in the reply. `winning-verdict` does not take the FIRST verdict
+       ;; at column 0 because reviewers restate the format, or recap the previous
+       ;; pass, before answering; `parse-counts` took the FIRST count block, so the
        ;; two could describe different blocks. Measured: a reviewer recapping
        ;; a previous NOT MERGEABLE pass and then reporting MERGEABLE had its
        ;; clean verdict reconciled back to NOT MERGEABLE off the recap's
@@ -397,13 +418,13 @@
        ;; asks for verdict, then counts, then findings, but a reviewer that
        ;; puts its findings before its final verdict line would lose all of
        ;; them, and losing findings is worse than the counts being off.
-       :counts (parse-counts (drop (inc (verdict-index lines)) lines))
+       :counts (parse-counts (drop (inc vi) lines))
        :fingerprints (parse-fingerprints lines)
        :body out}
       {:verdict "MALFORMED"
        :counts (zipmap categories (repeat 0))
        :fingerprints []
-       :body (str/trim out)})))
+       :body (str/trim out)}))))
 
 (defn mergeable?
   "MERGEABLE means exactly: the reviewer said so, and its own count block

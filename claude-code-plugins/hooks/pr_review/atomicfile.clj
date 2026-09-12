@@ -15,8 +15,38 @@
    This does NOT make a read-modify-write safe against a concurrent writer —
    the read can still go stale before the rename. Callers that
    read-modify-write must hold a lock as well; see `pr-review.flock`."
-  (:require [babashka.fs :as fs])
+  (:require [babashka.fs :as fs]
+            [clojure.string :as str])
   (:import [java.nio.file CopyOption Files StandardCopyOption]))
+
+(def ^:private stale-temp-ms
+  "How old a leftover temp must be before a later write removes it. Far longer
+   than any write here takes, so a temp another process is mid-write on is
+   never in range."
+  (* 60 60 1000))
+
+(defn- sweep-stale-temps!
+  "Delete this path's abandoned temps.
+
+   The `finally` below covers the exception path; it cannot cover the one this
+   namespace exists for. A SIGKILL between the write and the rename leaves a
+   temp with no writer that will ever reuse it — the fixed name it replaced was
+   self-healing there, the unique name is not. That matters where the hooks
+   directory is inside a working tree, which a relative `core.hooksPath` such
+   as `.githooks` makes it: `exclude-locally!` excludes `pre-push` and nothing
+   else, so each leftover shows in the user's `git status` forever.
+
+   Best effort, and never fatal: this is housekeeping in front of a write that
+   must succeed."
+  [path]
+  (try
+    (let [prefix (str (fs/file-name path) ".tmp.")
+          cutoff (- (System/currentTimeMillis) stale-temp-ms)]
+      (doseq [f (fs/list-dir (fs/parent path))
+              :when (and (str/starts-with? (str (fs/file-name f)) prefix)
+                         (< (.toMillis (fs/last-modified-time f)) cutoff))]
+        (fs/delete-if-exists f)))
+    (catch Exception _ nil)))
 
 (defn spit!
   "Write `content` to `path` atomically. `mode` is an optional POSIX string
@@ -35,6 +65,7 @@
          ;; thing its header forbids by name.
          tmp (str path ".tmp." (System/nanoTime) "." (rand-int 1000000))]
      (fs/create-dirs (fs/parent path))
+     (sweep-stale-temps! path)
      (try
        (spit tmp content)
        (when mode (fs/set-posix-file-permissions tmp mode))
@@ -43,6 +74,7 @@
        path
        (finally
          ;; A unique name cannot be reused, so a failed write would litter the
-         ;; directory forever instead of being overwritten by the next attempt.
-         ;; After a successful move there is nothing left to delete.
+         ;; directory instead of being overwritten by the next attempt. This
+         ;; covers the exception path only — a kill cannot run it, which is what
+         ;; `sweep-stale-temps!` is for.
          (fs/delete-if-exists tmp))))))

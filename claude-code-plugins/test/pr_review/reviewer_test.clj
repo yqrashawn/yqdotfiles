@@ -579,6 +579,74 @@
       (is (= ["src/a.clj:42:correctness/blocking"] (:fingerprints p))
           "a quoted review carries findings too; they are not this pass's"))))
 
+(deftest an-unfenced-quote-of-a-prior-verdict-loses-to-the-pass-tag
+  (testing "the fence was one spelling, not the class. review_core.md asks a
+            re-review to verify closure against the previous pass, and nothing
+            makes it fence what it quotes: plain, unindented, AFTER this pass's
+            own verdict, the quote beat it under the last-at-column-0 rule.
+            Reproduced: own NOT MERGEABLE with 1 blocking parsed as MERGEABLE
+            with 0, reconcile confirmed it, and findings-message told the
+            author `MERGEABLE means you may merge this PR now`.
+
+            Position cannot fix it -- the working shape
+            (`counts-come-from-the-winning-verdicts-own-block`) is this one's
+            mirror image, recap first and own verdict last. The tag is the
+            discriminator: minted per pass, so a quoted verdict carries an
+            older one or none."
+    (let [reply (str "VERDICT[a1b2c3d4]: NOT MERGEABLE — nil deref\n\n"
+                     "  [correctness/blocking]  1\n"
+                     "  [correctness/followup]  0\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n\n"
+                     "1. [correctness/blocking] src/a.clj:42 — nil deref\n\n"
+                     "### Closure of the previous pass\n\n"
+                     "Pass 2 ended with, verbatim:\n\n"
+                     "VERDICT: MERGEABLE — 2 follow-ups to file\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  2\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n\n"
+                     "which this pass overturns.\n")
+          p (reviewer/parse-output reply "a1b2c3d4")]
+      (is (= "NOT MERGEABLE" (:verdict p)))
+      (is (= 1 (get (:counts p) "correctness/blocking"))
+          "and the counts must come from the tagged verdict's block, not the quote")
+      (is (false? (reviewer/mergeable? p)))
+      (is (= "NOT MERGEABLE" (:verdict (reviewer/reconcile p)))))))
+
+(deftest the-tag-beats-position-in-the-other-direction-too
+  (testing "the mirror shape, which `counts-come-from-the-winning-verdicts-own-block`
+            covers untagged: recap of the previous pass's NOT MERGEABLE first,
+            this pass's MERGEABLE last. Measured in production. A tag that
+            only ever pushed toward NOT MERGEABLE would re-open it — the loop
+            would run another round on a PR that was finished."
+    (let [reply (str "Recap of the previous pass:\n"
+                     "VERDICT: NOT MERGEABLE — the old blocking finding\n"
+                     "  [correctness/blocking]  1 findings\n"
+                     "  [correctness/followup]  0\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n\n"
+                     "That is now fixed. My verdict this pass:\n\n"
+                     "VERDICT[a1b2c3d4]: MERGEABLE — 1 follow-up to file\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  1 findings\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n")
+          p (reviewer/parse-output reply "a1b2c3d4")]
+      (is (= "MERGEABLE" (:verdict p)))
+      (is (= 0 (get (:counts p) "correctness/blocking")))
+      (is (true? (reviewer/mergeable? p)) "a finished PR must be allowed to finish"))))
+
+(deftest a-reviewer-that-ignores-the-tag-is-still-parsed
+  (testing "the tag is an override, not a requirement. A reply with no tagged
+            verdict falls back to the last-at-column-0 rule every pass before
+            the tag used — a reviewer that drops it must not become
+            unreviewable, which would cost a whole pass for a formatting slip."
+    (let [reply (str "VERDICT: NOT MERGEABLE — real\n\n"
+                     "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
+                     "  [coverage]              0\n  [docs-accuracy]         0\n"
+                     "  [style]                 0\n\n"
+                     "1. [correctness/blocking] src/a.clj:42 — real\n")
+          p (reviewer/parse-output reply "a1b2c3d4")]
+      (is (= "NOT MERGEABLE" (:verdict p)))
+      (is (= 1 (get (:counts p) "correctness/blocking"))))))
+
 (deftest a-fenced-code-excerpt-inside-a-finding-keeps-the-finding
   ;; Blanking fenced regions must not eat the finding line that introduces one.
   (let [reply (str "VERDICT: NOT MERGEABLE — real\n\n"

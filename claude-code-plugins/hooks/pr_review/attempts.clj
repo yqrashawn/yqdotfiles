@@ -136,6 +136,8 @@
    whichever session's tool call triggered the review, which for a retry is
    deliberately not the session that made the push — and a wake is dropped
    entirely if that session's turn has already ended. Either way someone has
+   to be told whose PR it is, and this file already knows.
+
    `since-ms` 0 deliberately. The caller is the retry path, whose whole point
    is that it is not time-scoped — a killed review is retried however old its
    push is — and `tail-lines` already bounds how much file that reads."

@@ -54,6 +54,33 @@
       (is (= ["target"] (mapv (comp str fs/file-name) (fs/list-dir (fs/parent f))))
           "no temp may survive the storm"))))
 
+(deftest a-temp-abandoned-by-a-kill-is-swept-by-the-next-write
+  (testing "the `finally` covers the exception path; it cannot cover the one
+            this namespace exists for. A SIGKILL between the write and the
+            rename leaves a temp no writer will ever reuse — the fixed name it
+            replaced was self-healing there, a unique name is not. Where
+            `core.hooksPath` is relative (`.githooks`) the hooks directory is
+            inside the working tree and `exclude-locally!` excludes `pre-push`
+            and nothing else, so each leftover sits in the user's `git status`
+            forever.
+
+            A temp young enough to belong to a live writer must survive: this
+            runs in front of a write, concurrently with other writers."
+    (let [f (tmp-file "original")
+          dead (str f ".tmp.111.222")
+          live (str f ".tmp.333.444")
+          other (str (fs/path (fs/parent f) "unrelated.tmp.555.666"))]
+      (spit dead "half a hook")
+      (spit live "another writer, mid-write")
+      (spit other "not this path's")
+      (fs/set-last-modified-time dead (- (System/currentTimeMillis) (* 25 60 60 1000)))
+      (fs/set-last-modified-time other (- (System/currentTimeMillis) (* 25 60 60 1000)))
+      (atomicfile/spit! f "new")
+      (is (= "new" (slurp f)))
+      (is (not (fs/exists? dead)) "the abandoned temp must be gone")
+      (is (fs/exists? live) "a live writer's temp must not be deleted under it")
+      (is (fs/exists? other) "and only THIS path's temps are swept"))))
+
 (deftest the-replacement-lands-whole
   (let [f (tmp-file "old")]
     (atomicfile/spit! f "new content")

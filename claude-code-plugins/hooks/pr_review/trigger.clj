@@ -468,10 +468,16 @@
       ;; review, and refuse to spend a ledger slot on a pass that reviewed
       ;; nothing — the PR would still owe a real review even after the cap.
       {:exit 2 :message (unresolved-base-message d)}
-      (let [text   (prompt/build {:core (core-prompt)
+      (let [;; Minted here, used twice and never reused: the prompt asks for it
+            ;; on the verdict line and the parser accepts only that spelling, so
+            ;; a verdict quoted from an earlier pass — which review_core.md asks
+            ;; a re-review to do while verifying closure — carries an older tag
+            ;; and cannot be read as this pass's answer.
+            tag    ((or (:verdict-tag-fn opts) #(subs (str (random-uuid)) 0 8)))
+            text   (prompt/build {:core (core-prompt)
                                   :repo-root review-root :git-dir git-dir
                                   :ctx ctx :pr pr :pass pass :draft? draft?
-                                  :pr-url pr-url
+                                  :pr-url pr-url :verdict-tag tag
                                   :prior-fingerprints prior-fingerprints})
             ;; A killed reviewer used to leave nothing behind to explain
             ;; itself. This file survives a SIGKILL, and the next pass
@@ -482,7 +488,7 @@
             ;; reconcile is mergeable? wired in: a count block that
             ;; contradicts the verdict line loses, here, once, so both the
             ;; headline and the ledger row carry the same reconciled verdict.
-            parsed (reviewer/reconcile (reviewer/parse-output (:out res)))]
+            parsed (reviewer/reconcile (reviewer/parse-output (:out res) tag))]
         (cond
           ;; A newer push superseded this trigger and killed its reviewer
           ;; mid-answer. Recording that truncated output would spend a slot
@@ -507,7 +513,7 @@
                 :followup (get (:counts parsed) "correctness/followup" 0)
                 :coverage (get (:counts parsed) "coverage" 0)
                 :fingerprints (:fingerprints parsed)})
-              (context/prune! git-dir context-keep)
+              (context/prune! git-dir pr context-keep)
               (let [warnings (reviewer/parse-warnings parsed)
                     msg (findings-message d parsed warnings)]
                 ;; The findings text lived only in the wake. The ledger keeps
@@ -644,9 +650,4 @@
         d     (decide (or input {}) {})
         r     (respond d {})
         exit  (finish! d r (:session_id input))]
-    ;; Housekeeping, last of all: the wake message is already on stderr and
-    ;; the exit code is already decided, so nothing prune! does — or fails to
-    ;; do — can reach the review. It sits outside every branch
-    ;; `decide` can take, so it runs on all of them, and it is the only thing
-    ;; that ever deletes these files.
     (System/exit exit)))

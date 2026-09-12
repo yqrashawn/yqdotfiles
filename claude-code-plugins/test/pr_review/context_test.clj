@@ -44,14 +44,31 @@
          point of precomputing it is that B never runs a truncating rtk git diff")
     (is (= (count sample-diff) (:diff-bytes res)))))
 
-(deftest diff-path-is-namespaced-by-sha
-  (let [[r g] (tmp-repo)
-        res (context/build! r g {:pr 370 :sha "abc123" :base-ref "main"}
-                            {:merge-base-fn (constantly "b") :diff-fn (constantly "d")
-                             :sh stub-sh})]
-    (is (= (str (context/context-dir g) "/abc123.diff") (:diff-path res))
-        "one file per SHA so a superseded reviewer's diff is never overwritten
-         under it mid-read")))
+(deftest diff-path-is-namespaced-by-pr-and-sha
+  (testing "one file per PR AND sha. Keyed by sha alone the safety property the
+            name claims -- a reviewer's diff is never overwritten under it
+            mid-read -- was false in exactly the case that matters: two open PRs
+            can share a head sha, and since the lock became per PR their reviews
+            run concurrently, so the second build! replaced the file the first
+            reviewer had been pointed at. It then read the other PR's diff while
+            its own prompt still listed this PR's changed files.
+
+            The old test passed :pr 370 into build!, which ignored it."
+    (let [[r g] (tmp-repo)
+          one (context/build! r g {:pr 370 :sha "abc123" :base-ref "main"}
+                              {:merge-base-fn (constantly "b")
+                               :diff-fn (constantly "diff for 370")
+                               :sh stub-sh})
+          two (context/build! r g {:pr 402 :sha "abc123" :base-ref "main"}
+                              {:merge-base-fn (constantly "b")
+                               :diff-fn (constantly "diff for 402")
+                               :sh stub-sh})]
+      (is (= (str (context/context-dir g) "/370-abc123.diff") (:diff-path one)))
+      (is (not= (:diff-path one) (:diff-path two))
+          "two open PRs at one sha must not share a file")
+      (is (= "diff for 370" (slurp (:diff-path one)))
+          "and the first reviewer's diff must still be its own after the second
+           review starts"))))
 
 (deftest changed-files-are-extracted-from-the-diff
   (let [[r g] (tmp-repo)
@@ -86,8 +103,24 @@
                       {:merge-base-fn (constantly "b") :diff-fn (constantly "d")
                        :sh stub-sh})
       (Thread/sleep 5))
-    (is (= 2 (context/prune! g 2)))
+    (is (= 2 (context/prune! g 1 2)))
     (is (= 2 (count (fs/glob (context/context-dir g) "*.diff"))))))
+
+(deftest prune-does-not-reach-another-prs-context
+  (testing "pruning across the whole clone let a review that FINISHED delete
+            the diff file a concurrently running review's prompt names -- the
+            reviewer then reads a path that no longer exists. Five passes on a
+            busy PR is enough to push another PR's live file out of the window."
+    (let [[r g] (tmp-repo)
+          o {:merge-base-fn (constantly "b") :diff-fn (constantly "d")
+             :sh stub-sh}
+          live (:diff-path (context/build! r g {:pr 402 :sha "live" :base-ref "main"} o))]
+      (doseq [n ["a" "b" "c" "d" "e" "f"]]
+        (context/build! r g {:pr 370 :sha n :base-ref "main"} o)
+        (Thread/sleep 5))
+      (is (= 1 (context/prune! g 370 5)))
+      (is (fs/exists? live)
+          "PR 402's running review must still have the file its prompt names"))))
 
 (deftest build-through-real-defaults-keeps-real-diff-bytes
   (let [[r g] (tmp-repo)
