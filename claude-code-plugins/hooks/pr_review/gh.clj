@@ -113,6 +113,34 @@
       (try (first (json/parse-string (:out res) true))
            (catch Exception _ nil)))))
 
+(def comment-limit
+  "GitHub rejects a comment body over 65536 characters. A review with many
+   findings gets close, so it is truncated here rather than lost to a 422."
+  65000)
+
+(defn post-comment!
+  "Posts `body` as a comment on PR `n`. Returns the comment URL, or nil.
+
+   `--body-file -` so the body travels on STDIN: a review runs to tens of
+   kilobytes and an argv has a hard limit that a long one would hit.
+
+   The caller must treat nil as cosmetic. This runs after the ledger row and
+   the findings file are already written, so a failure here costs the
+   convenience of reading the review on GitHub and nothing else."
+  [repo-root n body opts]
+  (let [sh (or (:sh-in opts)
+               (fn [args dir in] (p/sh args {:dir dir :in in})))
+        body (if (> (count body) comment-limit)
+               (str (subs body 0 comment-limit)
+                    "\n\n_[truncated — the full review is in the clone at"
+                    " `.git/pr-review." n ".findings.md`]_")
+               body)
+        {:keys [exit out]} (try (sh ["gh" "pr" "comment" (str n) "--body-file" "-"]
+                                    repo-root body)
+                                (catch Exception e {:exit 127 :out (ex-message e)}))]
+    (when (zero? exit)
+      (some-> out str str/trim not-empty))))
+
 (defn main-worktree
   "The clone's main worktree, given only its git directory, or nil.
 

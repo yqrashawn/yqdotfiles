@@ -310,6 +310,22 @@
   [git-dir pr]
   (str git-dir "/pr-review." pr ".findings.md"))
 
+(defn findings-comment
+  "What gets posted to the PR: the review, and nothing addressed to agent A.
+
+   Deliberately not `findings-message`. That one ends with instructions for
+   the session being woken — use the skill, hand the path over, do not act on
+   someone else's PR — which is noise to anyone reading the PR on GitHub, and
+   in the ownership line's case actively confusing."
+  [{:keys [pass sha retry?]} parsed warnings]
+  (str "## pr-review-loop — pass " pass
+       (when retry? " (retried after an interrupted review)")
+       "\n\n`" (subs (str sha) 0 (min 12 (count (str sha)))) "` — **"
+       (:verdict parsed) "**\n\n"
+       (:body parsed)
+       (when (seq warnings)
+         (str "\n\n" (str/join "\n" warnings)))))
+
 (defn findings-message
   "The text agent A will see. The harness prefixes it with a fixed, unhelpful
    wrapper and ignores rewakeMessage for third-party plugins, so this string
@@ -417,7 +433,8 @@
 (defn- review-in!
   "The reviewer pass proper, against `review-root` — a checkout pinned to the
    reviewed sha, never the agent's live worktree."
-  [{:keys [git-dir pr pass sha base-ref draft? prior-fingerprints pr-url] :as d}
+  [{:keys [git-dir repo-root pr pass sha base-ref draft? prior-fingerprints
+           pr-url] :as d}
    review-root opts]
   (let [ctx (context/build! review-root git-dir
                             {:pr pr :sha sha :base-ref base-ref} opts)]
@@ -469,7 +486,8 @@
                 :coverage (get (:counts parsed) "coverage" 0)
                 :fingerprints (:fingerprints parsed)})
               (context/prune! git-dir context-keep)
-              (let [msg (findings-message d parsed (reviewer/parse-warnings parsed))]
+              (let [warnings (reviewer/parse-warnings parsed)
+                    msg (findings-message d parsed warnings)]
                 ;; The findings text lived only in the wake. The ledger keeps
                 ;; verdict, counts and fingerprints -- enough to decide, not
                 ;; enough to READ -- so a review whose wake was lost, or one
@@ -478,7 +496,20 @@
                 ;; wants the current findings, and history is the ledger plus
                 ;; the summary comment.
                 (spit (findings-path git-dir pr) msg)
-                {:exit 2 :message msg})))))))
+                ;; Posted by the TRIGGER, never by the reviewer: the review is
+                ;; generated once, and `Bash(gh pr:*)` stays denied to it.
+                ;; Last, and after both the ledger row and the findings file
+                ;; are on disk, so a GitHub failure costs the convenience of
+                ;; reading the review there and nothing else.
+                (let [url ((or (:post-comment-fn opts) gh/post-comment!)
+                           repo-root pr (findings-comment d parsed warnings)
+                           opts)]
+                  {:exit 2
+                   :message (if url
+                              (str msg "\n\nPosted to the PR: " url)
+                              (str msg "\n\nPosting this review to the PR"
+                                   " FAILED — it exists only in the ledger"
+                                   " and at the path above."))}))))))))
 
 (defn- run-review!
   "Pins a worktree to the reviewed sha and reviews that, removing it however

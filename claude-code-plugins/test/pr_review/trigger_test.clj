@@ -84,7 +84,9 @@
   "opts for `review!`: a stubbed diff, a stubbed reviewer and a stubbed
    checkout, so nothing shells out to a real `claude -p` or `git worktree`."
   [& {:keys [out exit err pid spawn-fn checkout]}]
-  {:merge-base-fn (constantly "basesha")
+  {:post-comment-fn (fn [_root n _body _opts]
+                      (str "https://github.com/o/r/pull/" n "#issuecomment-1"))
+   :merge-base-fn (constantly "basesha")
    :diff-fn (constantly "diff --git a/a b/a\n")
    :pid (or pid 4242)
    :with-checkout-fn (fn [_gd _sha _parent _opts f]
@@ -596,11 +598,66 @@
           result (#'trigger/review! d (review-opts))
           path (trigger/findings-path g 370)]
       (is (fs/exists? path) "no findings file was written")
-      (is (= (:message result) (slurp path))
-          "the file must hold exactly what the wake said, or the handoff is lossy")
+      (is (str/starts-with? (:message result) (slurp path))
+          "the file must hold what the wake said, or the handoff is lossy —
+           the wake adds only where the review was posted, which is about this
+           machine rather than about the review")
       (is (str/includes? (slurp path) "PR #370"))
       (testing "and the wake points at it, so agent A can hand the path on"
         (is (str/includes? (:message result) path))))))
+
+(deftest the-review-is-posted-to-the-pr-by-the-trigger
+  (testing "the reviewer generates the review once and never posts it —
+            `Bash(gh pr:*)` is denied to it — so the trigger posts, after the
+            ledger row and the findings file are already on disk"
+    (let [[r g] (tmp-repo)
+          seen (atom nil)
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha0123456"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
+          result (#'trigger/review!
+                  d (assoc (review-opts)
+                           :post-comment-fn (fn [root n body _]
+                                              (reset! seen {:root root :n n :body body})
+                                              "https://x/1")))]
+      (is (= r (:root @seen)) "posted from the clone, not the throwaway checkout")
+      (is (= 370 (:n @seen)))
+      (is (str/includes? (:body @seen) "MERGEABLE") "the verdict must be in it")
+      (is (str/includes? (:body @seen) "headsha01234")
+          "and the sha, so a reader knows which push this reviewed")
+      (is (str/includes? (:body @seen) "pass 1"))
+      (testing "and the comment carries none of the wake's instructions to A"
+        (is (not (str/includes? (:body @seen) "pr-review-loop skill")))
+        (is (not (str/includes? (:body @seen) "hand that path over"))))
+      (testing "the wake reports where it went"
+        (is (str/includes? (:message result) "https://x/1"))))))
+
+(deftest a-failed-post-does-not-lose-the-review
+  (testing "posting is last and cosmetic: the ledger row and the findings file
+            are already written, so a GitHub outage costs the convenience of
+            reading the review there and nothing else"
+    (let [[r g] (tmp-repo)
+          d {:repo-root r :git-dir g :pr 370 :pass 1 :sha "headsha"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}
+          result (#'trigger/review!
+                  d (assoc (review-opts) :post-comment-fn (fn [& _] nil)))]
+      (is (= 2 (:exit result)) "agent A is still woken")
+      (is (= 1 (count (ledger/read-passes g 370))) "the pass still counts")
+      (is (fs/exists? (trigger/findings-path g 370)))
+      (is (str/includes? (:message result) "FAILED")
+          "and A is told the comment is not there, rather than assuming it is"))))
+
+(deftest a-refused-review-posts-nothing
+  ;; No ledger row means no pass happened; a comment would claim otherwise.
+  (let [[r g] (tmp-repo)
+        posted (atom 0)
+        d {:repo-root r :git-dir g :pr 371 :pass 1 :sha "headsha0123456"
+           :branch "feat/x" :base-ref "main" :draft? false
+           :prior-fingerprints []}]
+    (#'trigger/review! d (assoc (review-opts :checkout :none)
+                                :post-comment-fn (fn [& _] (swap! posted inc) "u")))
+    (is (zero? @posted))))
 
 (deftest a-refused-review-writes-no-findings-file
   ;; A stale file from an earlier pass must not be mistaken for this one's.

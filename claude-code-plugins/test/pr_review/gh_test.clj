@@ -152,3 +152,50 @@
       (is (str/includes?
            (nth (first @calls) (inc (.indexOf (first @calls) "--json"))) "url"))
       (is (= "https://github.com/o/r/pull/401" (:url res))))))
+
+;; ---------------------------------------------------------- posting a review
+
+(deftest a-review-is-posted-on-stdin-not-on-argv
+  (testing "a review runs to tens of kilobytes and argv has a hard limit, so
+            --body-file - is not a style choice"
+    (let [seen (atom nil)
+          url (gh/post-comment! "/repo" 401 "REVIEW BODY"
+                                {:sh-in (fn [args dir in]
+                                          (reset! seen {:args args :dir dir :in in})
+                                          {:exit 0 :out "https://x/1\n"})})]
+      (is (= ["gh" "pr" "comment" "401" "--body-file" "-"] (:args @seen)))
+      (is (= "REVIEW BODY" (:in @seen)) "the body must travel on stdin")
+      (is (= "/repo" (:dir @seen)))
+      (is (= "https://x/1" url) "the URL is what the wake shows agent A"))))
+
+(deftest a-body-over-github-s-limit-is-truncated-not-lost
+  (testing "GitHub rejects a body over 65536 with a 422, which would lose the
+            comment entirely"
+    (let [seen (atom nil)
+          body (str/join (repeat 70000 "x"))]
+      (gh/post-comment! "/repo" 401 body
+                        {:sh-in (fn [_ _ in] (reset! seen in) {:exit 0 :out "u"})})
+      (is (< (count @seen) 65536) "still over the limit")
+      (is (str/starts-with? @seen (subs body 0 100)) "the head of the review survives")
+      (is (str/includes? @seen "truncated"))
+      (is (str/includes? @seen "pr-review.401.findings.md")
+          "and it says where the untruncated review is"))))
+
+(deftest a-body-under-the-limit-is-sent-verbatim
+  (let [seen (atom nil)
+        body "short review\n\nwith a blank line"]
+    (gh/post-comment! "/repo" 401 body
+                      {:sh-in (fn [_ _ in] (reset! seen in) {:exit 0 :out "u"})})
+    (is (= body @seen) "no header, no footer, no reflowing")))
+
+(deftest a-failed-post-returns-nil-rather-than-throwing
+  (testing "posting is cosmetic and runs after the ledger row is written; a
+            throw here would lose a pass that already happened"
+    (is (nil? (gh/post-comment! "/repo" 401 "B"
+                                {:sh-in (fn [_ _ _] {:exit 1 :out "" :err "no auth"})})))
+    (is (nil? (gh/post-comment! "/repo" 401 "B"
+                                {:sh-in (fn [_ _ _] (throw (ex-info "boom" {})))})))
+    (is (nil? (gh/post-comment! "/repo" 401 "B"
+                                {:sh-in (fn [_ _ _] {:exit 0 :out "   "})}))
+        "exit 0 with no URL is not a success worth reporting")))
+

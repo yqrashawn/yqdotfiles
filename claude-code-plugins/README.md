@@ -35,8 +35,11 @@ push again, review it by hand:
 bb --config ~/.nixpkgs/claude-code-plugins/bb.edn review-pr <N>
 ```
 
-Findings from any review are also left at `$G/pr-review.<N>.findings.md`, so a
-session that did not receive the wake can be pointed at that path.
+Every pass is also posted to the PR as a comment, and left at
+`$G/pr-review.<N>.findings.md` — so a review can be read on GitHub, or a
+session that did not receive the wake can be pointed at that path. The
+*trigger* posts it, never the reviewer: the reviewer generates its review once
+and has `Bash(gh pr:*)` denied.
 
 ## How it decides
 
@@ -63,6 +66,7 @@ One question, for both `git push` and `gh pr create`:
 | the reviewer's own prompt | `hooks/review_core.md`, plus `<repo>/.claude/pr-review.md` per repo |
 | per-clone state | `<git-common-dir>/pr-review*` — ledger, locks, context diffs, findings, stderr |
 | push provenance | `${XDG_CACHE_HOME:-~/.cache}/pr-review-loop/pushes.log` |
+| the review, on GitHub | one comment per pass, posted by the trigger |
 
 Namespaces, one line each — read the docstring, they carry the reasoning:
 
