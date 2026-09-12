@@ -633,20 +633,51 @@
       (is (= 0 (get (:counts p) "correctness/blocking")))
       (is (true? (reviewer/mergeable? p)) "a finished PR must be allowed to finish"))))
 
-(deftest a-reviewer-that-ignores-the-tag-is-still-parsed-when-unambiguous
-  (testing "the tag is an override, not a requirement — for a reply that says
-            one thing. One verdict at column 0 cannot be the defect, which needs
-            two, one of them quoted. Making every untagged reply MALFORMED would
-            spend a reviewer run on a formatting slip that says exactly what it
-            means."
+(deftest one-column-0-verdict-can-itself-be-the-quoted-one
+  (testing "the premise that let the untagged fallback survive: \"the defect
+            needs two verdicts, one of them quoted, so one cannot be it.\" False.
+            When the reviewer's OWN verdict misses the tagged column-0 form —
+            a list marker here, and review_core.md enumerates five such
+            spellings because each has been seen — the quoted one is the only
+            verdict at column 0, and a single formatting slip produces the same
+            false clean.
+
+            `reconcile` cannot catch it either: the counts come from after the
+            winning verdict, so the quoted block supplies them too, and reconcile
+            only ever flips MERGEABLE to NOT MERGEABLE."
+    (let [reply (str "### Closure of the previous pass\n\n"
+                     "Pass 4 ended with, verbatim:\n\n"
+                     "VERDICT: MERGEABLE — clean\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  2\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n\n"
+                     "My verdict this pass:\n\n"
+                     "- VERDICT[a1b2c3d4]: NOT MERGEABLE — nil deref\n\n"
+                     "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
+                     "  [coverage]              0\n  [docs-accuracy]         0\n"
+                     "  [style]                 0\n\n"
+                     "1. [correctness/blocking] src/a.clj:42 — nil deref\n")
+          p (reviewer/parse-output reply "a1b2c3d4")]
+      (is (= "MALFORMED" (:verdict p))
+          "the quoted verdict must not become this pass's answer")
+      (is (false? (reviewer/mergeable? p)))
+      (is (= "MALFORMED" (:verdict (reviewer/reconcile p)))))))
+
+(deftest an-untagged-reply-is-malformed-even-when-it-is-unambiguous
+  (testing "a tag was asked for and none came back, so nothing in the reply is
+            evidence the reviewer wrote the verdict line — which is the only
+            property the parse needs. Every proxy for it has failed in turn:
+            fences, position, and the count of column-0 verdicts.
+
+            MALFORMED costs a retry, not a pass: trigger.clj writes no ledger
+            row for one, so the sha stays unreviewed and re-triggerable."
     (let [reply (str "VERDICT: NOT MERGEABLE — real\n\n"
                      "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
                      "  [coverage]              0\n  [docs-accuracy]         0\n"
                      "  [style]                 0\n\n"
                      "1. [correctness/blocking] src/a.clj:42 — real\n")
           p (reviewer/parse-output reply "a1b2c3d4")]
-      (is (= "NOT MERGEABLE" (:verdict p)))
-      (is (= 1 (get (:counts p) "correctness/blocking"))))))
+      (is (= "MALFORMED" (:verdict p))))))
 
 (deftest an-ambiguous-reply-that-ignores-the-tag-is-malformed
   (testing "the open half of the class the tag closed. The tag discriminates

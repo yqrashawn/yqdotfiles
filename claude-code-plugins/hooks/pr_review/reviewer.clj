@@ -191,10 +191,16 @@
    The token is added only when there is one. `:extra-env` MERGES into the
    inherited environment, so setting CLAUDE_CODE_OAUTH_TOKEN to an empty
    string would replace working credentials with a blank one — absent has to
-   mean absent."
+   mean absent.
+
+   ONE read, not two. Testing with `(oauth-token)` and then reading it again
+   for the value meant a file removed, emptied or briefly unreadable between
+   the two calls put a nil into the child's environment — the exact state the
+   paragraph above rules out."
   []
-  (cond-> {reviewer-env-var "1"}
-    (oauth-token) (assoc "CLAUDE_CODE_OAUTH_TOKEN" (oauth-token))))
+  (let [token (oauth-token)]
+    (cond-> {reviewer-env-var "1"}
+      (seq (str token)) (assoc "CLAUDE_CODE_OAUTH_TOKEN" token))))
 
 (defn redact
   "Replace the reviewer's own credential with a marker.
@@ -334,24 +340,30 @@
    pass alone and asks for `VERDICT[<tag>]:`. A quoted verdict carries an
    earlier pass's tag or none, so it cannot win.
 
-   When a tag was asked for and none came back, the reply is parsed only if it
-   is UNAMBIGUOUS — exactly one verdict at column 0. The defect needs two, one
-   of them quoted, so one verdict cannot be it, and that is the overwhelming
-   majority of a reviewer's format slips. Two untagged verdicts with the tag
-   ignored is the open half of the class, and falling back to last-at-column-0
-   there is the same false clean by another route. It parses as MALFORMED
-   instead, which costs a RETRY and not a pass: trigger.clj writes no ledger
-   row for a MALFORMED review, so the sha stays unreviewed and re-triggerable.
+   When a tag was asked for, ONLY a tagged verdict can win. Nothing else is
+   evidence that the reviewer wrote the line: the property the parse needs is
+   provenance, and every proxy for it has failed in turn. `unfenced` fell to an
+   unfenced quote. Position fell to the two orderings being mirror images. The
+   count of column-0 verdicts fell too — it assumed the defect needs two, one
+   of them quoted, but ONE is enough when the quoted verdict is the only one at
+   column 0, which happens whenever the reviewer's own verdict misses the form
+   in any of the five ways this file's format section already enumerates:
+   leading whitespace, quoting, a list marker, a fence, or the missing tag
+   itself. Measured on all three spellings: the quoted `MERGEABLE` won, and its
+   block supplied the counts, so `reconcile` confirmed the clean verdict rather
+   than catching it — it only ever flips MERGEABLE to NOT MERGEABLE, never the
+   reverse, so a quoted verdict LINE is the one route it cannot cover.
+
+   An untagged reply is therefore MALFORMED, which costs a RETRY and not a
+   pass: trigger.clj writes no ledger row for one, so the sha stays unreviewed
+   and re-triggerable. `parse-warnings` says so in the wake.
 
    With no tag at all — `parse-output`'s 1-arity, which nothing in the loop
    uses — the old last-at-column-0 rule stands unchanged."
   [lines tag]
-  (let [tagged (when tag (verdict-hits lines tag))
-        bare   (verdict-hits lines nil)]
-    (cond
-      (seq tagged)                 (last tagged)
-      (and tag (< 1 (count bare))) nil
-      :else                        (last bare))))
+  (if tag
+    (last (verdict-hits lines tag))
+    (last (verdict-hits lines nil))))
 
 (defn- parse-counts
   "Read the per-category count block. \"none\" means 0 — a missing key and a
@@ -434,6 +446,15 @@
        :fingerprints (parse-fingerprints lines)
        :body out}
       {:verdict "MALFORMED"
+       ;; Say WHY when the cause is the one the loop introduced. An untagged
+       ;; verdict is the difference between "the reviewer crashed" and "the
+       ;; reviewer answered in a shape that cannot be told from a quotation",
+       ;; and only the second is fixed by the reviewer's own formatting.
+       :reason (when (and tag (seq (verdict-hits lines nil)))
+                 (str "The reply has a verdict at column 0, but not the tagged"
+                      " form `VERDICT[" tag "]:` this pass asked for. Only the"
+                      " tag distinguishes your own verdict from one quoted from"
+                      " an earlier pass, so an untagged verdict is not read."))
        :counts (zipmap categories (repeat 0))
        :fingerprints []
        :body (str/trim out)}))))

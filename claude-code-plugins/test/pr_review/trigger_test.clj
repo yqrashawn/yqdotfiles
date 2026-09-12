@@ -71,10 +71,16 @@
   {:pr pr :sha sha :pass n :verdict (or verdict "NOT_MERGEABLE")
    :blocking 1 :followup 0 :coverage 0 :fingerprints (vec fingerprints)})
 
+(def ^:private test-tag
+  "The pass tag `review-opts` injects. A reply without it is MALFORMED, which
+   is the point of the tag: only a verdict the reviewer was asked for this pass
+   can be its answer."
+  "testtag0")
+
 (defn- clean-reply
   "A well-formed reviewer reply with no findings."
   []
-  (str "VERDICT: MERGEABLE — nothing to fix\n\n"
+  (str "VERDICT[" test-tag "]: MERGEABLE — nothing to fix\n\n"
        "  [correctness/blocking]  none\n"
        "  [correctness/followup]  none\n"
        "  [coverage]              none\n"
@@ -89,6 +95,7 @@
   [& {:keys [out exit err pid spawn-fn checkout]}]
   {:post-comment-fn (fn [_root n _body _opts]
                       (str "https://github.com/o/r/pull/" n "#issuecomment-1"))
+   :verdict-tag-fn (constantly test-tag)
    :merge-base-fn (constantly "basesha")
    :diff-fn (constantly "diff --git a/a b/a\n")
    :pid (or pid 4242)
@@ -682,7 +689,7 @@
             and a self-contradictory ledger row (verdict MERGEABLE,
             blocking 1)"
     (let [[r g] (tmp-repo)
-          contradictory (str "VERDICT: MERGEABLE — nothing to fix\n\n"
+          contradictory (str "VERDICT[" test-tag "]: MERGEABLE — nothing to fix\n\n"
                              "  [correctness/blocking]  1\n"
                              "  [correctness/followup]  none\n"
                              "  [coverage]              none\n"

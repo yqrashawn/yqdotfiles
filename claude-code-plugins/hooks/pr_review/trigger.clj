@@ -447,6 +447,7 @@
   (str "pr-review-loop — " branch
        " PR #" pr ", pass " pass ": review did not complete ("
        (:verdict parsed) ")"
+       (when-let [why (:reason parsed)] (str "\n\n" why))
        "\n\nreviewer process exited " (:exit res) ": " (:err res)
        (when-not (str/blank? (str (:body parsed)))
          (str "\n\n" (:body parsed)))

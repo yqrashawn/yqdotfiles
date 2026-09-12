@@ -38,15 +38,15 @@ never as your actual, final verdict. If you echo any part of this prompt back,
 that echo stays indented and is not mistaken for your answer.
 
 The "Your verdict line" section below gives a tag minted for this pass and asks
-you to write `VERDICT[<tag>]:`. Use it: it is what separates your answer from a
-previous pass's verdict you quote while verifying closure, which you are asked
-to do. If you write no tagged verdict, the LAST line at column 0 starting with
-`VERDICT:` is taken as your answer — so do not restate the required format
-flush left before reviewing, and do not quote a previous verdict flush left
-after answering.
+you to write `VERDICT[<tag>]:`. It is REQUIRED, and it is the only thing that
+separates your answer from a previous pass's verdict you quote while verifying
+closure, which you are asked to do. **A reply with no tagged verdict at column 0
+is discarded** — the whole review is thrown away and re-run, however good the
+findings were. If more than one tagged verdict appears, the last is taken, so do
+not restate the format with the tag before reviewing.
 
-    VERDICT: MERGEABLE — N follow-ups to file
-    VERDICT: NOT MERGEABLE — <shortest statement of the blocking finding>
+    VERDICT[<tag>]: MERGEABLE — N follow-ups to file
+    VERDICT[<tag>]: NOT MERGEABLE — <shortest statement of the blocking finding>
 
       [correctness/blocking]  N findings
       [correctness/followup]  N findings
