@@ -76,8 +76,9 @@
 
    NOT closed, and worth knowing: the production nREPL on port 8034 is
    reachable from a shell by any spelling `nc` does not cover, and the test
-   suite can now be run — which may touch a database. The prompt asks the
-   reviewer not to, which is guidance, not enforcement.
+   suite can be run — which may touch a database. review_core.md permits
+   running it and discourages it -- `allowed but rarely worth it` -- which is
+   guidance, not enforcement.
 
    The tool entries are grouped by what each would buy an escaped reviewer:
    a writer (Write, Edit, MultiEdit, NotebookEdit), another agent to act for
@@ -121,9 +122,10 @@
    "Bash(gh pr comment:*)" "Bash(gh pr review:*)" "Bash(gh pr ready:*)"
    "Bash(gh pr reopen:*)" "Bash(gh api:*)"
    "Bash(git push:*)" "Bash(git commit:*)"
-   ;; `gh` is NOT restricted, on the author's instruction. The reviewer can
-   ;; read the PR, its description and its comments -- and can also comment on
-   ;; it, merge it, or reach anything else the token allows. See the docstring.
+   ;; Read-only `gh` is NOT restricted: the reviewer can read the PR, its
+   ;; description and its comments. Only the mutating subcommands above are
+   ;; refused, and `gh api` with them -- it is the spelling that reaches every
+   ;; one of them again.
    "Bash(curl:*)" "Bash(wget:*)" "Bash(nc:*)"])
 
 (defn claude-argv

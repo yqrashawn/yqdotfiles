@@ -25,10 +25,24 @@
   ([path content] (spit! path content nil))
   ([path content mode]
    (let [path (str path)
-         tmp (str path ".tmp")]
+         ;; A UNIQUE temp, not a fixed `<path>.tmp`. `hookinstall/-main` loops
+         ;; over every known clone from SessionStart, so two sessions starting
+         ;; at once write the same hook: with a shared temp name one truncates
+         ;; it between the other's write and its rename, and a PARTIAL pre-push
+         ;; gets renamed into place. That file runs under `set -u` with its
+         ;; record block inside `{ … }`, so a cut mid-brace is a shell syntax
+         ;; error and a non-zero pre-push aborts the user's push — the one
+         ;; thing its header forbids by name.
+         tmp (str path ".tmp." (System/nanoTime) "." (rand-int 1000000))]
      (fs/create-dirs (fs/parent path))
-     (spit tmp content)
-     (when mode (fs/set-posix-file-permissions tmp mode))
-     (Files/move (fs/path tmp) (fs/path path)
-                 (into-array CopyOption [StandardCopyOption/ATOMIC_MOVE]))
-     path)))
+     (try
+       (spit tmp content)
+       (when mode (fs/set-posix-file-permissions tmp mode))
+       (Files/move (fs/path tmp) (fs/path path)
+                   (into-array CopyOption [StandardCopyOption/ATOMIC_MOVE]))
+       path
+       (finally
+         ;; A unique name cannot be reused, so a failed write would litter the
+         ;; directory forever instead of being overwritten by the next attempt.
+         ;; After a successful move there is nothing left to delete.
+         (fs/delete-if-exists tmp))))))

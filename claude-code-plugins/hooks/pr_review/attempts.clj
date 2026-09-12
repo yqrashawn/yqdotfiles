@@ -36,12 +36,6 @@
   (:require [babashka.fs :as fs]
             [clojure.string :as str]))
 
-(def ^:private max-age-ms
-  "How long a record stays interesting. Long enough to span the gap between
-   pushing a branch and opening its PR — the `gh pr create` path reads these —
-   and short enough that the log stays small."
-  (* 24 60 60 1000))
-
 (def no-session
   "What the hook writes when CLAUDE_CODE_SESSION_ID is unset: a human push."
   "-")
@@ -142,7 +136,9 @@
    whichever session's tool call triggered the review, which for a retry is
    deliberately not the session that made the push — and a wake is dropped
    entirely if that session's turn has already ended. Either way someone has
-   to be told whose PR it is, and this file already knows."
+   `since-ms` 0 deliberately. The caller is the retry path, whose whole point
+   is that it is not time-scoped — a killed review is retried however old its
+   push is — and `tail-lines` already bounds how much file that reads."
   [log git-dir branch sha]
   (->> (attempts-since log 0)
        (filter #(and (= git-dir (:git-dir %))

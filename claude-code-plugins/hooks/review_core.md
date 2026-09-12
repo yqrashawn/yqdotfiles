@@ -81,10 +81,11 @@ Four limits, and they are limits on purpose:
 
 - **Do not alter the pull request.** `git push` and `git commit` are refused
   outright — a push from here would be recorded as the author's own and this
-  loop would end up reviewing your commit. `gh` is *not* refused, so you could
-  comment on, merge or close the PR. Do not. Your findings are the output; the
-  author decides what happens to the PR, and a comment from you would collide
-  with the single summary the author posts before merging.
+  loop would end up reviewing your commit. Read-only `gh` works — use `gh pr
+  view` to read the PR — but every subcommand that changes it (`merge`, `close`,
+  `edit`, `comment`, `review`, `ready`, `reopen`) is refused, as is `gh api`.
+  Your findings are the output; the author decides what happens to the PR, and
+  the single summary comment is posted for you.
 - **Do not start servers or connect to running services.** A development
   process on a port belongs to the author's session, and a database or REPL
   you reach is shared, not yours.

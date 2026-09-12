@@ -80,6 +80,8 @@
        "  [docs-accuracy]         none\n"
        "  [style]                 none\n"))
 
+(def ^:private last-checkout-pr (atom ::never-called))
+
 (defn- review-opts
   "opts for `review!`: a stubbed diff, a stubbed reviewer and a stubbed
    checkout, so nothing shells out to a real `claude -p` or `git worktree`."
@@ -89,7 +91,12 @@
    :merge-base-fn (constantly "basesha")
    :diff-fn (constantly "diff --git a/a b/a\n")
    :pid (or pid 4242)
-   :with-checkout-fn (fn [_gd _pr _sha _parent _opts f]
+   :with-checkout-fn (fn [_gd pr _sha _parent _opts f]
+                       ;; the PR is RECORDED, not discarded. Discarding it is
+                       ;; why `run-review!` passing an unbound `pr` — which
+                       ;; resolved to clojure.core/pr — went unseen by a green
+                       ;; suite while two PRs at one sha shared a directory.
+                       (reset! last-checkout-pr pr)
                        (f (if (contains? #{:none} checkout) nil (or checkout "/review-root"))))
    :spawn-fn (or spawn-fn
                  (fn [_ _ _ _] {:exit (or exit 0)
@@ -901,7 +908,15 @@
       (lock/acquire! g {:pr 370 :sha "killedsha" :branch "feat/x"} {:pid 999999})
       (let [d (trigger/decide
                (input "git status")
-               {:log-fn (constantly log)
+               {;; :reviewer-env-fn is not optional here. Without it `decide`
+                ;; short-circuits to :silent whenever
+                ;; PR_REVIEW_LOOP_REVIEWER is set in the AMBIENT
+                ;; environment — which it is inside this loop's own
+                ;; reviewer, and review_core.md permits that reviewer
+                ;; to run the suite. It then gets a red suite it is
+                ;; told not to attribute to the diff.
+                :reviewer-env-fn (constantly nil)
+                :log-fn (constantly log)
                 ;; tmp-repo's .git holds no repository, so `git worktree list`
                 ;; cannot answer for it; that resolution is covered by
                 ;; gh-test and by the real-clone end-to-end below.
@@ -913,6 +928,38 @@
         (is (true? (:retry? d)))
         (is (= 370 (:pr d)))
         (is (= "killedsha" (:sha d)))))))
+
+(deftest a-retry-names-the-session-that-pushed
+  (testing "the retry path is the ONE that needs `:pushed-by`, and it was the
+            one path that never set it. A reflog candidate already carries the
+            session that pushed; a retry is deliberately delivered to whichever
+            session is running, which is routinely not the one whose PR it is,
+            so without this the wake says only 'a PR needs attention' to a
+            session that has never heard of it.
+
+            Real pushes.log, real lock, no stub between them: `attempts/pusher`
+            had zero call sites and this is the caller it was written for."
+    (let [[_ g] (tmp-repo)
+          log (str (fs/path (fs/create-temp-dir {:prefix "pr-review-pusher"})
+                            "pushes.log"))
+          sha (apply str (repeat 40 "a"))
+          three-days-ago (- (quot (System/currentTimeMillis) 1000) (* 3 86400))]
+      (spit log (format "%d\t%s\tsess-pushed-it\trefs/heads/feat/x\t%s\n"
+                        three-days-ago g sha))
+      (lock/acquire! g {:pr 370 :sha sha :branch "feat/x"} {:pid 999999})
+      (let [d (trigger/decide
+               (input "git status")
+               {:reviewer-env-fn (constantly nil)
+                :log-fn (constantly log)
+                :main-worktree-fn (fn [gd _] (str (fs/parent gd)))
+                :open-pr-fn (fn [_ branch _]
+                              (when (= "feat/x" branch) (a-pr 370 sha)))
+                :now-fn (constantly (System/currentTimeMillis))})]
+        (is (= :review (:action d)))
+        (is (true? (:retry? d)))
+        (is (= "sess-pushed-it" (:pushed-by d))
+            "or the wake cannot say whose PR it is — on the only path where the
+             woken session is not the pusher")))))
 
 (deftest a-retry-is-not-offered-once-the-pr-has-moved-on
   (testing "an abandoned review is only worth retrying while it is still the
@@ -978,7 +1025,15 @@
       (lock/acquire! g {:pr 370 :sha "killedsha" :branch "feat/x"} {:pid 999999})
       (let [d (trigger/decide
                (input "echo not-a-push")
-               {:log-fn (constantly log)
+               {;; :reviewer-env-fn is not optional here. Without it `decide`
+                ;; short-circuits to :silent whenever
+                ;; PR_REVIEW_LOOP_REVIEWER is set in the AMBIENT
+                ;; environment — which it is inside this loop's own
+                ;; reviewer, and review_core.md permits that reviewer
+                ;; to run the suite. It then gets a red suite it is
+                ;; told not to attribute to the diff.
+                :reviewer-env-fn (constantly nil)
+                :log-fn (constantly log)
                 :main-worktree-fn (fn [gd _] (str (fs/parent gd)))
                 :open-pr-fn (fn [_ b _] (when (= "feat/x" b) (a-pr 370 "killedsha")))
                 :now-fn (constantly (System/currentTimeMillis))})]
@@ -1035,7 +1090,15 @@
                                (quot now 1000) g sha)))
         (let [d (trigger/decide
                  (input)
-                 {:log-fn (constantly log)
+                 {;; :reviewer-env-fn is not optional here. Without it `decide`
+                ;; short-circuits to :silent whenever
+                ;; PR_REVIEW_LOOP_REVIEWER is set in the AMBIENT
+                ;; environment — which it is inside this loop's own
+                ;; reviewer, and review_core.md permits that reviewer
+                ;; to run the suite. It then gets a red suite it is
+                ;; told not to attribute to the diff.
+                :reviewer-env-fn (constantly nil)
+                :log-fn (constantly log)
                   :open-pr-fn (fn [_ branch _]
                                 (when (= "feat/x" branch) (a-pr 370 sha)))
                   :now-fn (constantly now)})]
@@ -1085,4 +1148,25 @@
       (is (= :cap-reached (:action d)))
       (is (= "https://github.com/o/r/pull/370" (:pr-url d)))
       (is (= "sess-pusher" (:pushed-by d))))))
+
+(deftest run-review-passes-the-real-pr-to-the-checkout
+  (testing "the wiring, not the function. `run-review!` destructured
+            {:keys [git-dir sha]} and then passed a bare `pr`, which is not
+            bound there and resolved to clojure.core/pr — the path became
+            `pr-review-sci.impl.io$pr@78cc4ec-<sha>`, identical for every PR.
+            Two PRs at one sha shared a directory exactly as before, and the
+            name no longer matched `review-dir-re`, so `prune-stale!` could
+            never reclaim a real checkout either.
+
+            The suite stayed green because the stub discarded the argument and
+            checkout_test called `add!` with literal PR numbers — the property
+            was certified on a path production never takes."
+    (let [[r g] (tmp-repo)
+          d {:repo-root r :git-dir g :pr 401 :pass 1 :sha "headsha"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :prior-fingerprints []}]
+      (reset! last-checkout-pr ::never-called)
+      (#'trigger/review! d (review-opts))
+      (is (= 401 @last-checkout-pr)
+          "the checkout must be told which PR it is for"))))
 

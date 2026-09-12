@@ -180,18 +180,30 @@
    agent's, and `actionable` still requires the PR to be open at that sha with
    no ledger row.
 
-   Every clone the index knows, with no `since`: the index is pruned at 24h,
-   which is the real bound on how long a retry stays reachable."
+   Every clone the log knows, with no `since`. There is no time bound here on
+   purpose — a killed review is retried however old its push is — and none is
+   needed: `attempts/tail-lines` caps the bytes read, and what comes back is
+   distinct directories that still exist, measured at 4.
+
+   `:session` is filled from the push log rather than left out. It is what
+   becomes `:pushed-by`, and this is the ONE path that needs it: a reflog
+   candidate already carries the session that pushed, while a retry is
+   deliberately delivered to whichever session happens to be running, which is
+   routinely not the one whose PR it is."
   [opts]
-  (let [log ((or (:log-fn opts) attempts/default-log))]
+  (let [log ((or (:log-fn opts) attempts/default-log))
+        pusher-of (or (:pusher-fn opts) attempts/pusher)]
     (->> ((or (:clones-fn opts) attempts/clones-since) log 0)
          (mapcat (fn [git-dir]
                    (map #(assoc % :git-dir git-dir)
                         ((or (:abandoned-fn opts) lock/abandoned) git-dir))))
          (keep (fn [{:keys [branch sha started] :as a}]
                  (when (and branch sha)
-                   {:git-dir (:git-dir a) :branch branch :new-sha sha
-                    :ts (or started 0) :retry? true})))
+                   (let [git-dir (:git-dir a)
+                         who (pusher-of log git-dir branch sha)]
+                     (cond-> {:git-dir git-dir :branch branch :new-sha sha
+                              :ts (or started 0) :retry? true}
+                       who (assoc :session who))))))
          (sort-by :ts >))))
 
 (defn- pr-at-sha
@@ -507,7 +519,7 @@
                 ;; the summary comment.
                 (spit (findings-path git-dir pr) msg)
                 ;; Posted by the TRIGGER, never by the reviewer: the review is
-                ;; generated once, and `Bash(gh pr:*)` stays denied to it.
+                ;; generated once, and `Bash(gh pr comment:*)` stays denied to it.
                 ;; Last, and after both the ledger row and the findings file
                 ;; are on disk, so a GitHub failure costs the convenience of
                 ;; reading the review there and nothing else.
@@ -524,7 +536,7 @@
 (defn- run-review!
   "Pins a worktree to the reviewed sha and reviews that, removing it however
    the pass ends."
-  [{:keys [git-dir sha] :as d} opts]
+  [{:keys [git-dir pr sha] :as d} opts]
   ((or (:with-checkout-fn opts) checkout/with-checkout)
     git-dir pr sha
     (or (:checkout-parent opts)
