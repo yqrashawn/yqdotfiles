@@ -23,6 +23,8 @@
             [cheshire.core :as json]
             [clojure.string :as str]
             [pr-review.attempts :as attempts]
+            [pr-review.atomicfile :as atomicfile]
+            [pr-review.flock :as flock]
             [pr-review.gh :as gh])
   (:import [java.nio.file CopyOption Files StandardCopyOption]))
 
@@ -104,14 +106,21 @@
         common (when (zero? (:exit ce)) (str/trim (str (:out ce))))]
     (when (and top common (str/starts-with? (str path) (str top "/")))
       (let [rel (subs (str path) (inc (count top)))
-            f (fs/path common "info" "exclude")
-            current (if (fs/exists? f) (slurp (str f)) "")]
-        (when-not (some #{rel} (str/split-lines current))
-          (fs/create-dirs (fs/parent f))
-          (spit (str f)
-                (str current
-                     (when (and (seq current) (not (str/ends-with? current "\n"))) "\n")
-                     rel "\n")))
+            f (fs/path common "info" "exclude")]
+        ;; Under the lock AND atomic: a read-modify-write of a file the USER
+        ;; owns and keeps their own entries in. `-main` loops over every known
+        ;; clone, so two SessionStarts can interleave here, and a kill mid-spit
+        ;; would truncate their excludes, not just drop our line.
+        (flock/with-file-lock
+          (flock/guard-path (str f))
+          (fn []
+            (let [current (if (fs/exists? f) (slurp (str f)) "")]
+              (when-not (some #{rel} (str/split-lines current))
+                (atomicfile/spit!
+                 (str f)
+                 (str current
+                      (when (and (seq current) (not (str/ends-with? current "\n"))) "\n")
+                      rel "\n"))))))
         rel))))
 
 (defn- ours? [f]
@@ -127,8 +136,10 @@
         wanted (slurp hook-source)
         write! (fn [status]
                  (fs/create-dirs dir)
-                 (spit (str target) wanted)
-                 (fs/set-posix-file-permissions target "rwxr-xr-x")
+                 ;; Mode set on the temp, before the rename: `spit` then
+                 ;; `chmod` leaves a window where the hook exists and is not
+                 ;; executable, and a kill inside it leaves a truncated one.
+                 (atomicfile/spit! (str target) wanted "rwxr-xr-x")
                  {:status status :path (str target)})]
     ;; Before the cond, not inside `write!`: a hook that is already current is
     ;; never written, and it still has to be excluded — otherwise the first
@@ -160,7 +171,11 @@
       :else
       (do (Files/move (fs/path target) (fs/path dir chained-name)
                       (into-array CopyOption [StandardCopyOption/ATOMIC_MOVE]))
-          (fs/set-posix-file-permissions (fs/path dir chained-name) "rwxr-xr-x")
+          ;; No chmod after the move. `Files/move` preserves the mode, and
+          ;; forcing "rwxr-xr-x" would rewrite it — including making a hook
+          ;; EXECUTABLE that the user had deliberately chmod'd non-executable
+          ;; to turn it off. Ours execs the chained hook only when it is `-x`,
+          ;; so preserving the mode preserves the user's decision either way.
           (write! :chained)))))
 
 (defn install!

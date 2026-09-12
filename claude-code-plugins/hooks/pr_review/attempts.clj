@@ -26,13 +26,15 @@
      <ts>\\t<git-dir>\\t<session>                     a clone was pushed
      <ts>\\t<git-dir>\\t<session>\\t<ref>\\t<sha>        one ref of that push
 
+   Append-only: nothing in this namespace ever rewrites the file. See
+   `tail-lines` for why.
+
    Under XDG_CACHE_HOME rather than TMPDIR, deliberately: TMPDIR measured at
    three distinct values on this machine, and the git hook runs outside any
    session, so a temp path is a place the writer and the reader would never
    meet."
   (:require [babashka.fs :as fs]
-            [clojure.string :as str]
-            [pr-review.flock :as flock]))
+            [clojure.string :as str]))
 
 (def ^:private max-age-ms
   "How long a record stays interesting. Long enough to span the gap between
@@ -72,9 +74,41 @@
                :sha sha
                :branch (str/replace-first ref #"^refs/heads/" ""))))))
 
+(def ^:private max-read-bytes
+  "How much of the tail to read. Measured: 140 bytes a line, ~68 pushes a day,
+   so 4MB is roughly a year of history and far more than any `since-ms` window
+   asks for."
+  (* 4 1024 1024))
+
+(defn- tail-lines
+  "The file's last `max-read-bytes`, split into whole lines.
+
+   Reading the tail rather than the whole file is what lets this log have NO
+   truncating writer. There used to be a `prune!` that rewrote it in place with
+   `spit`, under a flock the POSIX `pre-push` hook's bare `>>` never takes:
+   measured, 156 of 400 concurrent appends destroyed, and every lost record is
+   a push that can no longer match a reflog entry and is silently never
+   reviewed. An atomic rename would not have fixed it either — an append
+   between the read and the rename lands on the inode the rename replaces.
+
+   So the writer is append-only, forever, and the reader bounds its own work.
+   `records-since` already filters by timestamp, so nothing needed the file to
+   be short."
+  [log]
+  (let [size (fs/size log)]
+    (if (<= size max-read-bytes)
+      (str/split-lines (slurp log))
+      (with-open [raf (java.io.RandomAccessFile. (str log) "r")]
+        (.seek raf (- size max-read-bytes))
+        (let [buf (byte-array max-read-bytes)
+              n (.read raf buf)
+              text (String. buf 0 (max n 0) "UTF-8")]
+          ;; the first line is probably half a record
+          (rest (str/split-lines text)))))))
+
 (defn- records-since [log since-ms]
   (when (fs/exists? log)
-    (->> (str/split-lines (slurp log))
+    (->> (tail-lines log)
          (keep parse-line)
          (filter #(>= (:ts %) since-ms))
          (sort-by :ts >))))
@@ -117,22 +151,3 @@
                      (by-agent? %)))
        first
        :session))
-
-(defn prune!
-  "Drops records older than `max-age-ms` from `log`, under its own flock.
-
-   Called from the trigger rather than the hook: the hook must stay incapable
-   of failing a push, and rewriting a file it holds open is exactly the kind of
-   step that could."
-  ([log] (prune! log max-age-ms))
-  ([log age-ms]
-   (when (fs/exists? log)
-     (flock/with-file-lock
-       (flock/guard-path log)
-       (fn []
-         (let [cutoff (- (System/currentTimeMillis) age-ms)
-               kept (->> (str/split-lines (slurp log))
-                         (filter #(when-let [{:keys [ts]} (parse-line %)]
-                                    (>= ts cutoff))))]
-           (spit log (if (seq kept) (str (str/join "\n" kept) "\n") ""))
-           (count kept)))))))

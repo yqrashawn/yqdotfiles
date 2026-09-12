@@ -208,3 +208,48 @@
              (str (fs/canonicalize path))))
       (is (not (fs/exists? (fs/path root ".git" "hooks" "pre-push")))
           "nothing may be written to the directory git is ignoring"))))
+
+(deftest a-disabled-foreign-hook-stays-disabled
+  (testing "chmodding the moved hook to rwxr-xr-x would rewrite the user's mode
+            — including making EXECUTABLE a pre-push they had deliberately
+            chmod'd non-executable to turn off. Files/move preserves it, and
+            ours execs the chained hook only when it is -x, so preserving the
+            mode preserves their decision either way"
+    (let [root (clone!)
+          dir (hooks-of root)
+          theirs (str (fs/path dir "pre-push"))]
+      (fs/create-dirs dir)
+      (spit theirs "#!/bin/sh\nexit 1\n")
+      (fs/set-posix-file-permissions theirs "rw-r--r--")   ; disabled on purpose
+      (is (= :chained (:status (hi/install! root hook-source {}))))
+      (let [perms (fs/posix-file-permissions (fs/path dir hi/chained-name))]
+        (is (not (contains? perms java.nio.file.attribute.PosixFilePermission/OWNER_EXECUTE))
+            "we must not enable a hook the user turned off")))))
+
+(deftest the-installed-hook-is-executable-and-leaves-no-temp
+  (testing "end state only — the atomicity itself is covered by
+            pr-review.atomicfile-test, which is the only place it can be
+            distinguished from a plain spit"
+    (let [root (clone!)
+          {:keys [path]} (hi/install! root hook-source {})]
+      (is (= (slurp hook-source) (slurp path)))
+      (is (contains? (fs/posix-file-permissions path)
+                     java.nio.file.attribute.PosixFilePermission/OWNER_EXECUTE))
+      (is (not (fs/exists? (str path ".tmp"))) "the temp must not be left behind"))))
+
+(deftest the-users-own-excludes-survive-our-entry
+  ;; info/exclude is a read-modify-write of a file the user keeps their own
+  ;; entries in; a truncating write would take those with it.
+  (let [root (clone!)
+        common (str/trim (:out (p/sh ["git" "rev-parse" "--path-format=absolute"
+                                      "--git-common-dir"] {:dir root})))
+        f (str (fs/path common "info" "exclude"))]
+    (fs/create-dirs (fs/parent f))
+    (spit f "# theirs\nsecret.env\nbuild/\n")
+    (p/sh ["git" "config" "core.hooksPath" ".githooks"] {:dir root})
+    (hi/install! root hook-source {})
+    (let [now (slurp f)]
+      (is (str/includes? now "secret.env") "the user's entries must survive")
+      (is (str/includes? now "build/"))
+      (is (str/includes? now ".githooks/pre-push") "and ours must be added"))))
+

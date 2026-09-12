@@ -517,3 +517,55 @@
           (is (not (str/includes? (:out res) "sk-fake-must-not-leak")))
           (is (not (str/includes? (:err res) "sk-fake-must-not-leak")))
           (is (not (str/includes? (slurp errf) "sk-fake-must-not-leak"))))))))
+
+(deftest a-quoted-prior-review-is-not-parsed-as-this-one
+  (testing "the false clean this branch created. It posts every pass as a PR
+            comment, tells the reviewer to read them, and tells a re-review to
+            verify closure against the previous pass — so quoting the prior
+            comment is the expected shape. A fence does not indent, and
+            parse-verdict takes the LAST column-0 verdict, so the quote won.
+            Measured before the fix: NOT MERGEABLE with 1 blocking parsed as
+            MERGEABLE with 0, reconcile confirmed it, and agent A was told it
+            could merge"
+    (let [reply (str "VERDICT: NOT MERGEABLE — nil deref on every request\n\n"
+                     "  [correctness/blocking]  1\n"
+                     "  [correctness/followup]  0\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n\n"
+                     "1. [correctness/blocking] src/a.clj:42 — nil deref\n\n"
+                     "For reference, pass 1 said:\n\n```\n"
+                     "VERDICT: MERGEABLE — 2 follow-ups to file\n"
+                     "  [correctness/blocking]  none\n"
+                     "  [correctness/followup]  2\n  [coverage]              0\n"
+                     "  [docs-accuracy]         0\n  [style]                 0\n"
+                     "2. [correctness/followup] src/quoted.clj:9 — from the quote\n"
+                     "```\n")
+          p (reviewer/parse-output reply)]
+      (is (= "NOT MERGEABLE" (:verdict p)))
+      (is (= 1 (get (:counts p) "correctness/blocking")))
+      (is (= "NOT MERGEABLE" (:verdict (reviewer/reconcile p))))
+      (is (= ["src/a.clj:42:correctness/blocking"] (:fingerprints p))
+          "a quoted review carries findings too; they are not this pass's"))))
+
+(deftest a-fenced-code-excerpt-inside-a-finding-keeps-the-finding
+  ;; Blanking fenced regions must not eat the finding line that introduces one.
+  (let [reply (str "VERDICT: NOT MERGEABLE — real\n\n"
+                   "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
+                   "  [coverage]              0\n  [docs-accuracy]         0\n"
+                   "  [style]                 0\n\n"
+                   "1. [correctness/blocking] src/a.clj:42 — here is the code:\n"
+                   "```clj\n(defn broken [] nil)\n```\n")
+        p (reviewer/parse-output reply)]
+    (is (= ["src/a.clj:42:correctness/blocking"] (:fingerprints p)))
+    (is (= 1 (get (:counts p) "correctness/blocking")))))
+
+(deftest fences-are-stripped-before-emphasis-not-after
+  ;; strip-emphasis deletes every backtick, so an emphasis-first pipeline sees
+  ;; a ``` line as "" and detects no fence at all. That ordering bug made the
+  ;; first version of this fix inert.
+  (let [reply (str "VERDICT: NOT MERGEABLE — real\n\n"
+                   "  [correctness/blocking]  1\n  [correctness/followup]  0\n"
+                   "  [coverage]              0\n  [docs-accuracy]         0\n"
+                   "  [style]                 0\n\n"
+                   "```\nVERDICT: MERGEABLE — quoted\n```\n")]
+    (is (= "NOT MERGEABLE" (:verdict (reviewer/parse-output reply))))))
+

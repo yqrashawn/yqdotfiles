@@ -30,6 +30,7 @@
                            pr-review.hookinstall-test
                            pr-review.prepush-hook-test
                            pr-review.checkout-test
+                           pr-review.atomicfile-test
                            pr-review.attempts-test
                            pr-review.hooksjson-test
                            pr-review.manual-test

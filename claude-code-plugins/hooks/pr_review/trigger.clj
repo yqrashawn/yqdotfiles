@@ -627,5 +627,4 @@
     ;; do — can reach the review. It sits outside every branch
     ;; `decide` can take, so it runs on all of them, and it is the only thing
     ;; that ever deletes these files.
-    (attempts/prune! (attempts/default-log))
     (System/exit exit)))

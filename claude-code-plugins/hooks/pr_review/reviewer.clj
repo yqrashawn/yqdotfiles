@@ -222,9 +222,36 @@
   [line]
   (str/replace line #"[`*]" ""))
 
+(defn- unfenced
+  "Lines outside every ``` fenced block, with fenced lines blanked rather than
+   dropped so line positions still line up with the reply.
+
+   A fence does not indent, so a quoted prior review inside one carries its
+   `VERDICT:` at column 0 — and `parse-verdict` takes the LAST such line. This
+   branch made that reachable: it posts every pass as a PR comment, tells the
+   reviewer to read them, and tells a re-review to verify closure against the
+   previous pass. Measured: a reply whose own verdict is NOT MERGEABLE with one
+   blocking finding, quoting pass 1's MERGEABLE comment in a fence, parsed as
+   MERGEABLE with 0 blocking — `reconcile` confirmed it, the ledger recorded a
+   clean pass, and agent A was told it could merge a PR with a blocking defect.
+
+   Blanking the whole fenced region, not just verdict lines: a quoted review
+   carries counts and finding lines too, and each of those is parsed."
+  [lines]
+  (first
+   (reduce (fn [[acc in-fence?] line]
+             (if (re-find #"^\s*```" line)
+               [(conj acc "") (not in-fence?)]
+               [(conj acc (if in-fence? "" line)) in-fence?]))
+           [[] false]
+           lines)))
+
 (defn- normalized-lines
+  "Fences are stripped BEFORE emphasis, not after: `strip-emphasis` deletes
+   every backtick, so a ``` line reaches an emphasis-first pipeline as an empty
+   string and no fence is ever detected."
   [out]
-  (mapv strip-emphasis (str/split-lines out)))
+  (mapv strip-emphasis (unfenced (str/split-lines out))))
 
 (defn- parse-verdict
   "The LAST line that starts a verdict at column 0.

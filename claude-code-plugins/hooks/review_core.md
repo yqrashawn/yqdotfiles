@@ -25,7 +25,10 @@ below: say whether the trigger is traced through the source or hypothesised.
 
 Begin with a verdict line, then a count block, then a single numbered list of
 every finding. Write your real verdict line flush left, starting at column 0
-with no leading whitespace, no quoting and no list marker. The parser only
+with no leading whitespace, no quoting, no list marker and NOT inside a ```
+fence. Everything inside a fence is treated as quoted material and is not
+parsed — so quoting a previous pass's comment is safe, and fencing your own
+verdict means it is never read. The parser only
 accepts a verdict at column 0 on purpose: an indented line reads as a quoted
 or illustrative example — including the two example lines immediately below —
 never as your actual, final verdict. If you echo any part of this prompt back,

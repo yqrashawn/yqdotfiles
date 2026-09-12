@@ -1,5 +1,6 @@
 (ns pr-review.attempts-test
   (:require [babashka.fs :as fs]
+            [babashka.process :as p]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
             [pr-review.attempts :as attempts]))
@@ -114,47 +115,47 @@
 (deftest a-log-that-does-not-exist-is-empty-not-an-error
   (let [absent (str (fs/path (tmp) "absent.log"))]
     (is (empty? (attempts/clones-since absent 0)))
-    (is (empty? (attempts/attempts-since absent 0)))
-    (is (nil? (attempts/prune! absent 1000)))))
+    (is (empty? (attempts/attempts-since absent 0)))))
 
-;; ------------------------------------------------------------------ prune
+;; ---------------------------------------------------- append-only, by design
 
-(deftest prune-drops-old-records-and-keeps-recent-ones
-  (let [d (tmp)
-        g (clone! d "g")
-        now (quot (System/currentTimeMillis) 1000)
-        f (log! d [[(- now 100000) g "s" "refs/heads/old" (sha \a)]
-                   [(- now 10) g "s" "refs/heads/new" (sha \b)]])]
-    (is (= 1 (attempts/prune! f (* 60 1000))))
-    (is (= [(sha \b)] (map :sha (attempts/attempts-since f 0))))
-    (testing "the surviving line keeps its trailing newline, so the hook's
-              next append starts a line rather than joining onto this one"
-      (is (str/ends-with? (slurp f) "\n")))))
-
-(deftest pruning-everything-leaves-an-empty-file-the-hook-can-append-to
-  (let [d (tmp)
-        g (clone! d "g")
-        f (log! d [[1000 g "s"]])]
-    (is (= 0 (attempts/prune! f 1000)))
-    (is (= "" (slurp f)))))
-
-(deftest pusher-names-the-session-that-pushed-a-sha
-  (testing "a handoff has to be mechanical: a wake goes to whichever session's
-            tool call triggered the review — for a retry, deliberately not the
-            one that pushed — and is dropped entirely if that session's turn
-            has ended. Measured: PR #409's review finished 15 minutes after
-            its session went idle and no session received the wake"
+(deftest a-concurrent-append-is-never-lost
+  (testing "the log has NO truncating writer, and this is why. `prune!` used to
+            rewrite it in place with `spit` under a flock the POSIX pre-push
+            hook's bare `>>` never takes — measured, 156 of 400 concurrent
+            appends destroyed, each one a push that can no longer match a
+            reflog entry and is silently never reviewed. An atomic rename would
+            not have fixed it either: an append between the read and the rename
+            lands on the inode the rename replaces"
     (let [d (tmp)
           g (clone! d "g")
-          f (log! d [[1000 g "sess-a" "refs/heads/feat/x" (sha \a)]
-                     [2000 g "sess-b" "refs/heads/feat/y" (sha \b)]
-                     [3000 g "-"      "refs/heads/feat/z" (sha \c)]])]
-      (is (= "sess-a" (attempts/pusher f g "feat/x" (sha \a))))
-      (is (= "sess-b" (attempts/pusher f g "feat/y" (sha \b))))
-      (is (nil? (attempts/pusher f g "feat/z" (sha \c)))
-          "a human push has no session to hand off to")
-      (is (nil? (attempts/pusher f g "feat/x" (sha \b)))
-          "the sha must match, or it names the wrong push")
-      (is (nil? (attempts/pusher f "/other/.git" "feat/x" (sha \a)))
-          "and so must the clone"))))
+          f (str (fs/path d "pushes.log"))
+          now (quot (System/currentTimeMillis) 1000)
+          n 400]
+      (spit f (apply str (for [i (range 2000)]
+                           (format "%d\t%s\t-\n" (- now 999999) g))))
+      (let [appender (p/process
+                      ["sh" "-c" (format "i=0; while [ $i -lt %d ]; do printf '%%s\\t%s\\tsess\\n' %d >> %s; i=$((i+1)); done"
+                                         n g now f)])]
+        (Thread/sleep 5)
+        (dotimes [_ 20] (attempts/clones-since f 0))
+        @appender)
+      (is (= n (count (filter #(str/includes? % "\tsess")
+                              (str/split-lines (slurp f)))))
+          "every appended record must survive a concurrent reader"))))
+
+(deftest a-huge-log-is-read-from-the-tail-not-whole
+  (testing "removing the truncating writer means the file grows forever, so the
+            READER bounds its own work instead"
+    (let [d (tmp)
+          g (clone! d "g")
+          f (str (fs/path d "pushes.log"))
+          now (quot (System/currentTimeMillis) 1000)]
+      (with-open [w (clojure.java.io/writer f)]
+        (dotimes [_ 40000] (.write w (format "%d\t%s\t-\n" (- now 99999) g)))
+        (.write w (format "%d\t%s\tsess\trefs/heads/x\t%s\n" now g (sha \a))))
+      (is (> (fs/size f) 1000000) "the fixture must actually be large")
+      (let [r (attempts/attempts-since f (* 1000 (- now 10)))]
+        (is (= 1 (count r)))
+        (is (= (sha \a) (:sha (first r))))))))
 
