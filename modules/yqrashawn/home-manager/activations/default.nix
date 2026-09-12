@@ -169,8 +169,8 @@
         prl_cached=~/.claude/plugins/cache/nixpkgs-plugins/pr-review-loop/"$prl_ver"
         if [ -z "$prl_ver" ]; then
             echo "WARNING: pr-review-loop: no version in $prl_manifest, so the cache cannot be checked. Skipping." >&2
-        elif [ -d "$prl_cached" ]; then
-            : # the cache already holds this exact version
+        elif [ -d "$prl_cached" ] && grep -q "\"pr-review-loop@nixpkgs-plugins\"" ~/.claude/plugins/installed_plugins.json 2>/dev/null; then
+            : # the cache holds this exact version AND the plugin is registered
         else
             echo "pr-review-loop: installing $prl_ver"
             # add is a no-op when the marketplace is known; install is a no-op

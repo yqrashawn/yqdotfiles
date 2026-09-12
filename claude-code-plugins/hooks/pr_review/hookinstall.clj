@@ -101,8 +101,8 @@
   (let [{:keys [exit out]} (run opts ["git" "rev-parse" "--path-format=absolute"
                                       "--show-toplevel"] repo-root)
         top (when (zero? exit) (str/trim (str out)))
-        {:keys [exit out] :as ce} (run opts ["git" "rev-parse" "--path-format=absolute"
-                                             "--git-common-dir"] repo-root)
+        ce (run opts ["git" "rev-parse" "--path-format=absolute"
+                      "--git-common-dir"] repo-root)
         common (when (zero? (:exit ce)) (str/trim (str (:out ce))))]
     (when (and top common (str/starts-with? (str path) (str top "/")))
       (let [rel (subs (str path) (inc (count top)))

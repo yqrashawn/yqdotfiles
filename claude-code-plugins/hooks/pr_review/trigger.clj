@@ -250,12 +250,22 @@
         since (- now (lookback-ms verb (:duration_ms input)))
         cands (concat (candidate-pushes since (:session_id input) verb opts)
                       (abandoned-candidates opts))]
-    (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes retry?]}
+    (if-let [{:keys [git-dir repo-root branch new-sha pr-info passes retry? session]}
              (actionable cands opts)]
       (let [pr-num (:number pr-info)
+            ;; :pr-url and :pushed-by ride on the decision, not just the
+            ;; manual path. Without them the prompt's "What the author says
+            ;; this change does" section was silently absent on EVERY
+            ;; hook-triggered review (prompt.clj gates on :pr-url), and the
+            ;; wake never named the pushing session — which matters because
+            ;; `abandoned-candidates` is deliberately neither session- nor
+            ;; verb-scoped, so a wake routinely lands somewhere that did not
+            ;; push. `gh/open-pr` already requests `url` for exactly this.
             base (cond-> {:trigger verb :candidates (count cands)
                           :git-dir git-dir :repo-root repo-root
-                          :branch branch :pr pr-num :sha new-sha}
+                          :branch branch :pr pr-num :sha new-sha
+                          :pr-url (:url pr-info)}
+                   session (assoc :pushed-by session)
                    retry? (assoc :retry? true))]
         (if (ledger/cap-reached? passes)
           (assoc base :action :cap-reached
@@ -516,7 +526,7 @@
    the pass ends."
   [{:keys [git-dir sha] :as d} opts]
   ((or (:with-checkout-fn opts) checkout/with-checkout)
-    git-dir sha
+    git-dir pr sha
     (or (:checkout-parent opts)
         (str (fs/path (fs/temp-dir) "pr-review-worktrees")))
     opts

@@ -46,13 +46,13 @@
   (* 12 60 60 1000))
 
 (def ^:private review-dir-re
-  "Exactly what `add!` names its checkouts: `pr-review-` and the sha prefix.
+  "Exactly what `add!` names its checkouts: `pr-review-`, the PR, the sha.
 
    Not a bare `pr-review-` prefix test. That also matched a clone whose own
    directory happened to start with those characters — caught by a test whose
    temp clone was named `pr-review-checkout...`, which would have made the
    MAIN worktree a pruning candidate."
-  #"^pr-review-[0-9a-f]{1,40}$")
+  #"^pr-review-[0-9]+-[0-9a-f]{1,40}$")
 
 (defn- review-worktrees
   "Registered worktree paths this namespace created, from `worktree list`.
@@ -92,6 +92,11 @@
   "Checks `sha` out into a fresh directory under `parent`. Returns the path,
    or nil if git refused.
 
+   The PR is in the path, not just the sha. Two open PRs can share a head sha —
+   one branch cut from another, or the same commit pushed to both — and since
+   the lock is per PR their reviews now run CONCURRENTLY, so a sha-only path
+   would have one review delete the other's tree mid-run.
+
    The target path is RECLAIMED first, unconditionally. Deleting the directory
    is not enough: git keeps its administrative entry under
    `.git/worktrees/<name>` and refuses to add a worktree whose path it still
@@ -103,8 +108,9 @@
 
    `prune-stale!` does not cover this. It is age-based, twelve hours, and a
    leak minutes old is the one in the way."
-  [git-dir sha parent opts]
-  (let [dir (str (fs/path parent (str "pr-review-" (subs sha 0 (min 12 (count sha))))))]
+  [git-dir pr sha parent opts]
+  (let [dir (str (fs/path parent (str "pr-review-" pr "-"
+                                      (subs sha 0 (min 12 (count sha))))))]
     (git git-dir opts "worktree" "remove" "--force" dir)
     (fs/delete-tree dir)
     (git git-dir opts "worktree" "prune")
@@ -131,9 +137,9 @@
    directory is gone, `prune-stale!` for leaked checkouts whose directory
    survives. The path is derived from the sha, so a previous killed run at
    the same sha would otherwise own it forever."
-  [git-dir sha parent opts f]
+  [git-dir pr sha parent opts f]
   (prune! git-dir opts)
   (prune-stale! git-dir opts)
-  (let [dir (add! git-dir sha parent opts)]
+  (let [dir (add! git-dir pr sha parent opts)]
     (try (f dir)
          (finally (when dir (remove! git-dir dir opts))))))

@@ -29,7 +29,7 @@
   ;; whatever the agent's tree currently holds.
   (let [{:keys [git-dir first head]} (clone!)
         seen (atom nil)]
-    (co/with-checkout git-dir first (parent) {}
+    (co/with-checkout git-dir 370 first (parent) {}
       (fn [dir]
         (reset! seen {:dir dir
                       :content (slurp (str (fs/path dir "a.txt")))
@@ -42,7 +42,7 @@
   (let [{:keys [git-dir first]} (clone!)
         pdir (parent)
         captured (atom nil)]
-    (co/with-checkout git-dir first pdir {} (fn [dir] (reset! captured dir)))
+    (co/with-checkout git-dir 370 first pdir {} (fn [dir] (reset! captured dir)))
     (is (some? @captured))
     (is (not (fs/exists? @captured)) "the checkout leaked")
     (is (empty? (fs/list-dir pdir)) "the parent must be left clean")))
@@ -54,7 +54,7 @@
         pdir (parent)
         captured (atom nil)]
     (is (thrown? Exception
-                 (co/with-checkout git-dir first pdir {}
+                 (co/with-checkout git-dir 370 first pdir {}
                    (fn [dir] (reset! captured dir) (throw (ex-info "boom" {}))))))
     (is (not (fs/exists? @captured)))))
 
@@ -64,7 +64,7 @@
   ;; merely a missed review.
   (let [{:keys [git-dir]} (clone!)
         seen (atom :untouched)]
-    (co/with-checkout git-dir (str/join (repeat 40 \e)) (parent) {}
+    (co/with-checkout git-dir 370 (str/join (repeat 40 \e)) (parent) {}
       (fn [dir] (reset! seen dir)))
     (is (nil? @seen))))
 
@@ -75,9 +75,9 @@
   (let [{:keys [git-dir first]} (clone!)
         pdir (parent)
         leaked (atom nil)]
-    (co/with-checkout git-dir first pdir {} (fn [dir] (reset! leaked dir)))
+    (co/with-checkout git-dir 370 first pdir {} (fn [dir] (reset! leaked dir)))
     ;; re-add, then simulate the kill: tree gone, admin entry still registered
-    (let [dir (co/add! git-dir first pdir {})]
+    (let [dir (co/add! git-dir 370 first pdir {})]
       (is (some? dir))
       (fs/delete-tree dir)
       (is (str/includes? (str (:out (p/sh ["git" (str "--git-dir=" git-dir)
@@ -85,7 +85,7 @@
                          "prunable")
           "the stale entry should still be registered"))
     (let [second-try (atom :untouched)]
-      (co/with-checkout git-dir first pdir {} (fn [dir] (reset! second-try dir)))
+      (co/with-checkout git-dir 370 first pdir {} (fn [dir] (reset! second-try dir)))
       (is (some? @second-try) "a stale entry blocked a later review of that sha"))))
 
 (deftest a-leaked-checkout-whose-directory-survives-is-reclaimed
@@ -96,7 +96,7 @@
             kept refusing to reuse that path"
     (let [{:keys [git-dir first]} (clone!)
           pdir (parent)
-          dir (co/add! git-dir first pdir {})]
+          dir (co/add! git-dir 370 first pdir {})]
       (is (some? dir))
       ;; the kill: nothing unregisters it, and the tree is still on disk
       (co/prune! git-dir {})                       ; finds nothing to do
@@ -122,11 +122,11 @@
             this system — there is nothing else to hang periodic cleanup on"
     (let [{:keys [git-dir first head]} (clone!)
           pdir (parent)
-          leaked (co/add! git-dir first pdir {})]
+          leaked (co/add! git-dir 370 first pdir {})]
       (is (some? leaked))
       (fs/set-last-modified-time
        leaked (- (System/currentTimeMillis) (+ co/stale-after-ms 60000)))
-      (co/with-checkout git-dir head pdir {}
+      (co/with-checkout git-dir 370 head pdir {}
         (fn [dir]
           (is (some? dir) "the new review still gets its own checkout")
           (is (not (fs/exists? leaked))
@@ -151,7 +151,7 @@
             hours and the leak in the way is minutes old"
     (let [{:keys [git-dir first]} (clone!)
           pdir (parent)
-          leaked (co/add! git-dir first pdir {})]
+          leaked (co/add! git-dir 370 first pdir {})]
       (is (some? leaked))
       ;; The kill, as it actually happens: the process dies, so nothing
       ;; unregisters the worktree AND the directory is still on disk. Deleting
@@ -164,7 +164,7 @@
                          "pr-review-")
           "and the registration must still be there")
       (let [again (atom :never-ran)]
-        (co/with-checkout git-dir first pdir {} (fn [d] (reset! again d)))
+        (co/with-checkout git-dir 370 first pdir {} (fn [d] (reset! again d)))
         (is (some? @again) "the retry must reclaim the path, not refuse")
         (is (= leaked @again) "and it is the same sha-derived path")))))
 
@@ -174,7 +174,7 @@
   (let [{:keys [git-dir first]} (clone!)
         pdir (parent)
         seen (atom nil)]
-    (co/with-checkout git-dir first pdir {}
+    (co/with-checkout git-dir 370 first pdir {}
       (fn [dir]
         (reset! seen dir)
         (is (= 0 (co/prune-stale! git-dir {}))
@@ -199,7 +199,7 @@
   ;; anyway, or the sha-derived path stays occupied.
   (let [{:keys [git-dir first]} (clone!)
         pdir (parent)
-        dir (co/add! git-dir first pdir {})]
+        dir (co/add! git-dir 370 first pdir {})]
     (is (some? dir))
     (co/remove! git-dir dir {:sh (fn [_ _] {:exit 1 :out "" :err "refused"})})
     (is (not (fs/exists? dir)))))
@@ -208,10 +208,27 @@
   ;; Two PRs in one clone review at once; the path is per-sha for exactly this.
   (let [{:keys [git-dir first head]} (clone!)
         pdir (parent)
-        a (co/add! git-dir first pdir {})
-        b (co/add! git-dir head pdir {})]
+        a (co/add! git-dir 370 first pdir {})
+        b (co/add! git-dir 370 head pdir {})]
     (is (some? a)) (is (some? b))
     (is (not= a b))
     (is (= "first\n" (slurp (str (fs/path a "a.txt")))))
     (is (= "second\n" (slurp (str (fs/path b "a.txt")))))
     (co/remove! git-dir a {}) (co/remove! git-dir b {})))
+
+(deftest two-prs-reviewing-the-same-sha-do-not-share-a-directory
+  (testing "two open PRs can share a head sha — one branch cut from another, or
+            the same commit pushed to both — and since the lock is per PR their
+            reviews run CONCURRENTLY. A sha-only path had one review delete the
+            other's tree mid-run"
+    (let [{:keys [git-dir first]} (clone!)
+          pdir (parent)
+          a (co/add! git-dir 401 first pdir {})
+          b (co/add! git-dir 402 first pdir {})]
+      (is (some? a))
+      (is (some? b) "the second PR must get its own checkout, not be refused")
+      (is (not= a b))
+      (is (fs/exists? a) "and the first must still be there")
+      (is (fs/exists? b))
+      (co/remove! git-dir a {}) (co/remove! git-dir b {}))))
+

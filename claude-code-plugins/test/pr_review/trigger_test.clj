@@ -89,7 +89,7 @@
    :merge-base-fn (constantly "basesha")
    :diff-fn (constantly "diff --git a/a b/a\n")
    :pid (or pid 4242)
-   :with-checkout-fn (fn [_gd _sha _parent _opts f]
+   :with-checkout-fn (fn [_gd _pr _sha _parent _opts f]
                        (f (if (contains? #{:none} checkout) nil (or checkout "/review-root"))))
    :spawn-fn (or spawn-fn
                  (fn [_ _ _ _] {:exit (or exit 0)
@@ -1047,3 +1047,42 @@
               "git-dir must be the clone the index named")
           (is (= (str (fs/canonicalize root)) (str (fs/canonicalize (:repo-root d))))
               "repo-root must come from `git worktree list`, not <git-dir>/.."))))))
+
+(deftest the-automatic-path-carries-the-pr-url-and-the-pusher
+  (testing "both were wired only in manual.clj, so on EVERY hook-triggered
+            review the prompt's \"What the author says this change does\"
+            section was silently absent (prompt/build gates on :pr-url) and the
+            wake never named the pushing session. The tests that claimed to
+            cover them passed the keys straight to prompt/build and
+            findings-message, so neither could fail for the reason it claimed.
+
+            :pushed-by matters more than it looks: abandoned-candidates is
+            deliberately neither session- nor verb-scoped, so a wake routinely
+            lands in a session that did not push"
+    (let [d (trigger/decide
+             (input)
+             (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
+                   :prs {"feat/x" (assoc (a-pr 370 "newsha")
+                                         :url "https://github.com/o/r/pull/370")}
+                   :session "sess-pusher"))]
+      (is (= :review (:action d)))
+      (is (= "https://github.com/o/r/pull/370" (:pr-url d))
+          "or the reviewer is never told where to read the PR")
+      (is (= "sess-pusher" (:pushed-by d))
+          "or a wake cannot say whose push it was"))))
+
+(deftest a-capped-decision-carries-them-too
+  ;; :cap-reached wakes the author as well; it must not lose the metadata.
+  (let [[_ g] (tmp-repo)]
+    (doseq [n (range 1 (inc ledger/max-passes))]
+      (ledger/append-pass! g (row 370 (str "sha" n) n)))
+    (let [d (trigger/decide
+             (input)
+             (opts :pushes {g [(a-push "feat/x" "shaN" 999999)]}
+                   :prs {"feat/x" (assoc (a-pr 370 "shaN")
+                                         :url "https://github.com/o/r/pull/370")}
+                   :session "sess-pusher"))]
+      (is (= :cap-reached (:action d)))
+      (is (= "https://github.com/o/r/pull/370" (:pr-url d)))
+      (is (= "sess-pusher" (:pushed-by d))))))
+
