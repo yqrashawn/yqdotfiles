@@ -22,7 +22,6 @@ in
           "${home}/Dropbox/sync/scripts/mcp"
           "${home}/Library/CloudStorage/Dropbox/sync/scripts/mcp"
           "${home}/.local/share/buildkite-agent/builds"
-          "/opt/homebrew/var/buildkite-agent/builds"
         ];
         exact = [ "${home}/miniser" ];
       };
