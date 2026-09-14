@@ -187,3 +187,13 @@
           (spit tmp (str (str/join "\n" kept) "\n"))
           (atomic-replace! tmp p))))
     entry))
+
+(defn last-reviewed-sha
+  "The sha of the newest recorded pass, or nil on a first review.
+
+   The base for the re-review's incremental diff. Newest by `:pass` rather
+   than by file order: the ledger is append-only and ordered, but a row is
+   published by an atomic rename, so ordering is a property worth asking for
+   rather than assuming."
+  [passes]
+  (some->> (seq passes) (sort-by :pass) last :sha))

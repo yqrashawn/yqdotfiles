@@ -296,6 +296,10 @@
                               " passes reached for PR #" pr-num))
           (assoc base :action :review
                  :pass (ledger/next-pass-number passes)
+                 ;; The base for the re-review's incremental diff. Without it
+                 ;; the hook path -- every real review -- builds only the full
+                 ;; diff, and the increment exists solely on the manual path.
+                 :since-sha (ledger/last-reviewed-sha passes)
                  :base-ref (:baseRefName pr-info)
                  :draft? (boolean (:isDraft pr-info))
                  :prior-fingerprints (ledger/suppressed-fingerprints passes))))
@@ -487,10 +491,11 @@
   "The reviewer pass proper, against `review-root` — a checkout pinned to the
    reviewed sha, never the agent's live worktree."
   [{:keys [git-dir repo-root pr pass sha base-ref draft? prior-fingerprints
-           pr-url] :as d}
+           pr-url since-sha] :as d}
    review-root opts]
   (let [ctx (context/build! review-root git-dir
-                            {:pr pr :sha sha :base-ref base-ref} opts)]
+                            {:pr pr :sha sha :base-ref base-ref
+                             :since-sha since-sha} opts)]
     (if (:diff-failed? ctx)
       ;; The diff command itself failed — almost always an unresolved base
       ;; ref. A 0-byte diff here looks exactly like a real empty one, so

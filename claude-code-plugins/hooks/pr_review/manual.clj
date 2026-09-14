@@ -70,6 +70,7 @@
             :else
             (assoc base :action :review
                    :pass (ledger/next-pass-number passes)
+                   :since-sha (ledger/last-reviewed-sha passes)
                    :base-ref (:baseRefName info)
                    :draft? (boolean (:isDraft info))
                    :pr-url (:url info)

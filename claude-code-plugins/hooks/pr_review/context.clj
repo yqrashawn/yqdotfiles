@@ -58,7 +58,7 @@
 
    opts may override :merge-base-fn and :diff-fn for testing; both default to
    the real git calls in pr-review.gh."
-  [repo-root git-dir {:keys [pr sha base-ref]} opts]
+  [repo-root git-dir {:keys [pr sha base-ref since-sha]} opts]
   (let [merge-base-fn (or (:merge-base-fn opts)
                           #(gh/merge-base repo-root base-ref opts))
         diff-fn       (or (:diff-fn opts)
@@ -68,15 +68,41 @@
         diff-failed?  (nil? diff-result)
         diff-text     (or diff-result "")
         dir           (context-dir git-dir)
-        path          (diff-path git-dir pr sha)]
+        path          (diff-path git-dir pr sha)
+        ;; On a re-review, ALSO write the diff of just the new commits.
+        ;; Measured on PR #478: ten passes on a 1801-line change, each one
+        ;; finding a real defect in the PREVIOUS pass's fix -- "a number that
+        ;; parses is not a port", "the fail-closed unset was itself inside a
+        ;; guard that failed". So the next defect lives in the fix just made,
+        ;; which is exactly what this file shows, and reading 1801 lines again
+        ;; to find it is what made each round trip cost a full pass.
+        ;;
+        ;; The same three-dot form the full diff uses, with the previously
+        ;; reviewed sha as the base. For sequential pushes that sha is an
+        ;; ancestor, so three-dot and two-dot are byte-identical -- measured,
+        ;; 2092 bytes either way -- and when the branch was force-pushed
+        ;; three-dot is the safer of the two, since two-dot would render the
+        ;; whole rebase as change.
+        ;;
+        ;; The full diff is still written and still named in the prompt. This
+        ;; narrows what the reviewer reads FIRST, never what it may read.
+        incr-result   (when (and since-sha (not= since-sha sha))
+                        (diff-fn since-sha sha))
+        incr-path     (when incr-result
+                        (str (fs/strip-ext path) ".since-"
+                             (subs since-sha 0 (min 12 (count since-sha))) ".diff"))]
     (fs/create-dirs dir)
     (spit path diff-text)
-    {:diff-path     path
-     :changed-files (changed-files diff-text)
-     :base          base
-     :sha           sha
-     :diff-bytes    (fs/size path)
-     :diff-failed?  diff-failed?}))
+    (when incr-path (spit incr-path incr-result))
+    (cond-> {:diff-path     path
+             :changed-files (changed-files diff-text)
+             :base          base
+             :sha           sha
+             :diff-bytes    (fs/size path)
+             :diff-failed?  diff-failed?}
+      incr-path (assoc :incr-path incr-path
+                       :incr-bytes (fs/size incr-path)
+                       :since-sha since-sha))))
 
 (defn prune!
   "Delete all but the `keep` newest .diff files OF THIS PR. Returns how many
@@ -86,9 +112,21 @@
    a review that finished delete the diff file a concurrently running review's
    prompt names, and five passes on a busy PR was enough to do it."
   [git-dir pr keep]
-  (let [files (->> (fs/glob (context-dir git-dir) (str pr "-*.diff"))
-                   (sort-by #(fs/last-modified-time %))
-                   reverse
-                   (drop keep))]
-    (doseq [f files] (fs/delete-if-exists f))
-    (count files)))
+  (let [;; Grouped by SHA, because a re-review writes TWO files for one pass --
+        ;; the full diff and the increment since the last pass. Counting files
+        ;; made `keep` mean two and a half passes, and with a small keep it
+        ;; deleted the FULL diff while keeping the increment, which is the one
+        ;; the prompt tells the reviewer to open for closure-verification.
+        by-sha (->> (fs/glob (context-dir git-dir) (str pr "-*.diff"))
+                    (group-by #(-> (str (fs/file-name %))
+                                   (subs (inc (count (str pr))))
+                                   (str/split #"\.")
+                                   first)))
+        newest (fn [fs] (apply max (map #(.toMillis (fs/last-modified-time %)) fs)))
+        doomed (->> by-sha
+                    (sort-by (comp newest val))
+                    reverse
+                    (drop keep)
+                    (mapcat val))]
+    (doseq [f doomed] (fs/delete-if-exists f))
+    (count doomed)))

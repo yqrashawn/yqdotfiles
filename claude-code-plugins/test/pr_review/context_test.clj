@@ -1,5 +1,6 @@
 (ns pr-review.context-test
   (:require [babashka.fs :as fs]
+            [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
             [pr-review.context :as context]))
 
@@ -167,3 +168,65 @@
     (is (false? (:diff-failed? res))
         "a real empty diff (exit 0, no output) is not a failure — flagging
          it too would make the flag meaningless")))
+
+;; ------------------------------------------------ the re-review increment
+
+(deftest a-first-pass-writes-only-the-full-diff
+  (let [[r g] (tmp-repo)
+        c (context/build! r g {:pr 478 :sha "s1" :base-ref "main"}
+                          {:merge-base-fn (constantly "b") :diff-fn (constantly "D")})]
+    (is (nil? (:incr-path c)))
+    (is (nil? (:incr-bytes c)))
+    (is (fs/exists? (:diff-path c)))))
+
+(deftest a-re-review-also-writes-the-diff-since-the-last-pass
+  (testing "measured on PR #478: ten passes on a 1801-line change, each finding
+            a real defect in the PREVIOUS pass's fix. The next defect lives in
+            the new commits, and the full diff for that pass was 100292 bytes
+            against 2092 for the increment — a 48x difference in what has to be
+            read to reach it"
+    (let [[r g] (tmp-repo)
+          seen (atom [])
+          c (context/build! r g {:pr 478 :sha "s2" :base-ref "main" :since-sha "s1"}
+                            {:merge-base-fn (constantly "b")
+                             :diff-fn (fn [base sha]
+                                        (swap! seen conj [base sha])
+                                        (if (= base "s1") "SMALL" "FULLFULLFULL"))})]
+      (is (= [["b" "s2"] ["s1" "s2"]] @seen)
+          "the full diff is taken from the merge base, the increment from the
+           previously reviewed sha")
+      (is (= "FULLFULLFULL" (slurp (:diff-path c))))
+      (is (= "SMALL" (slurp (:incr-path c))))
+      (is (= 5 (:incr-bytes c)))
+      (is (= "s1" (:since-sha c)))
+      (is (str/includes? (str (:incr-path c)) "since-s1")
+          "the base is in the name, so two passes cannot collide"))))
+
+(deftest a-re-push-of-the-same-sha-writes-no-increment
+  ;; since-sha = sha means nothing changed; an empty increment would read as
+  ;; "nothing to review" rather than "this is the whole change".
+  (let [[r g] (tmp-repo)
+        c (context/build! r g {:pr 478 :sha "s1" :base-ref "main" :since-sha "s1"}
+                          {:merge-base-fn (constantly "b") :diff-fn (constantly "D")})]
+    (is (nil? (:incr-path c)))))
+
+(deftest prune-keeps-whole-passes-not-whole-files
+  (testing "a re-review writes TWO files for one pass. Counting files made
+            `keep` mean two and a half passes, and with a small keep it deleted
+            the FULL diff while keeping the increment — the one the prompt
+            tells the reviewer to open when verifying closure"
+    (let [[_ g] (tmp-repo)
+          d (context/context-dir g)]
+      (fs/create-dirs d)
+      (doseq [n ["478-aaa.diff" "478-aaa.since-zzz.diff"
+                 "478-bbb.diff" "478-bbb.since-aaa.diff"
+                 "479-ccc.diff"]]
+        (spit (str d "/" n) "x")
+        (Thread/sleep 5))
+      (is (= 2 (context/prune! g 478 1)))
+      (let [left (set (map (comp str fs/file-name) (fs/list-dir d)))]
+        (is (contains? left "478-bbb.diff") "the newest pass's full diff must survive")
+        (is (contains? left "478-bbb.since-aaa.diff") "and its increment")
+        (is (not (contains? left "478-aaa.diff")))
+        (is (contains? left "479-ccc.diff") "another PR is never touched")))))
+

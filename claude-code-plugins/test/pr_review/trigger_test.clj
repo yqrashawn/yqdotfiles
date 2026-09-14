@@ -601,6 +601,43 @@
     (is (= "MERGEABLE" (:verdict (first (ledger/read-passes g 370)))))
     (is (nil? (lock/read-lock g 370)) "the lock is released on the success path")))
 
+(deftest a-re-review-decision-carries-the-previously-reviewed-sha
+  (testing "the wiring, not the function. The first attempt at this patch
+            missed by two spaces of indentation and reported nothing, so the
+            hook path -- every real review -- would have built only the full
+            diff while the increment existed solely on the manual path"
+    (let [[_ g] (tmp-repo)]
+      (ledger/append-pass! g (row 370 "sha-one" 1))
+      (let [d (trigger/decide (input)
+                              (opts :pushes {g [(a-push "feat/x" "sha-two" 999999)]}
+                                    :prs {"feat/x" (a-pr 370 "sha-two")}))]
+        (is (= :review (:action d)))
+        (is (= "sha-one" (:since-sha d)))))))
+
+(deftest a-first-pass-decision-has-no-since-sha
+  (let [[_ g] (tmp-repo)
+        d (trigger/decide (input)
+                          (opts :pushes {g [(a-push "feat/x" "sha-one" 999999)]}
+                                :prs {"feat/x" (a-pr 370 "sha-one")}))]
+    (is (= :review (:action d)))
+    (is (nil? (:since-sha d)))))
+
+(deftest review-asks-git-for-the-increment-as-well-as-the-full-diff
+  (testing "review-in! must forward :since-sha to context/build!, or the file
+            is never written however well decide computed it"
+    (let [[r g] (tmp-repo)
+          seen (atom [])
+          d {:repo-root r :git-dir g :pr 370 :pass 2 :sha "sha-two"
+             :branch "feat/x" :base-ref "main" :draft? false
+             :since-sha "sha-one" :prior-fingerprints []}]
+      (#'trigger/review! d (assoc (review-opts)
+                                  :diff-fn (fn [base sha]
+                                             (swap! seen conj [base sha])
+                                             "D")))
+      (is (= [["basesha" "sha-two"] ["sha-one" "sha-two"]] @seen)
+          "the full diff from the merge base, then the increment since the
+           previously reviewed sha"))))
+
 (deftest the-findings-text-is-written-where-another-session-can-read-it
   (testing "the findings lived only in the wake. The ledger keeps verdict,
             counts and fingerprints — enough to DECIDE, not enough to READ —

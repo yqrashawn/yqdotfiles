@@ -113,3 +113,26 @@
                                  :diff-path "/d" :changed-files []}
                            :pr 1 :pass 1})]
     (is (not (str/includes? out "author says this change does")))))
+
+(deftest a-re-review-is-pointed-at-the-increment-first
+  (let [ctx {:diff-path "/ctx/full.diff" :diff-bytes 100292
+             :incr-path "/ctx/since.diff" :incr-bytes 2092
+             :since-sha "b76af74e5f00" :changed-files ["a.clj"]
+             :base "b" :sha "ccde"}
+        t (prompt/build {:core "CORE" :repo-root "/r" :git-dir "/g" :ctx ctx
+                         :pr 478 :pass 2 :draft? false :prior-fingerprints []})]
+    (is (< (str/index-of t "/ctx/since.diff") (str/index-of t "/ctx/full.diff"))
+        "the increment must come first — it is where a defect in the last fix is")
+    (is (str/includes? t "2092 bytes"))
+    (is (str/includes? t "/ctx/full.diff")
+        "the full diff must still be named; verifying closure needs it")
+    (is (str/includes? t "b76af74e5f00"))))
+
+(deftest a-first-pass-prompt-names-only-the-full-diff
+  (let [ctx {:diff-path "/ctx/full.diff" :diff-bytes 500 :changed-files ["a.clj"]
+             :base "b" :sha "s"}
+        t (prompt/build {:core "CORE" :repo-root "/r" :git-dir "/g" :ctx ctx
+                         :pr 478 :pass 1 :draft? false :prior-fingerprints []})]
+    (is (str/includes? t "/ctx/full.diff"))
+    (is (not (str/includes? t "re-review. Read what changed")))))
+

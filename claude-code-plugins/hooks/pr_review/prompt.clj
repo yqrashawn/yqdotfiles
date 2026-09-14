@@ -96,8 +96,27 @@
               " a\n``` fence, which is never parsed. Never write this tag on"
               " any line but your\nown final verdict."))) 
      (section "How to read the change"
-              (str "The complete, untruncated diff is on disk. Read it first:\n\n"
-                   "    " (:diff-path ctx) "\n\n"
+              (str (if (:incr-path ctx)
+                     ;; Re-review: lead with what changed since the last pass.
+                     ;; Measured on PR #478 -- ten passes on a 1801-line change,
+                     ;; each finding a real defect in the PREVIOUS pass's fix --
+                     ;; so the next defect is in the new commits, and re-reading
+                     ;; 1801 lines to reach 2092 bytes of them is what made every
+                     ;; round trip cost a full pass.
+                     (str "This is a re-review. Read what changed SINCE THE LAST"
+                          " PASS first — it is\nwhere a defect introduced by the"
+                          " last fix will be:\n\n"
+                          "    " (:incr-path ctx) "\n"
+                          "    (" (:incr-bytes ctx) " bytes, since "
+                          (subs (str (:since-sha ctx)) 0 (min 12 (count (str (:since-sha ctx)))))
+                          ")\n\n"
+                          "The complete diff for the whole PR is also on disk. Read"
+                          " it when you need\nthe surrounding change — verifying"
+                          " that a previous finding is closed usually\ndoes:\n\n"
+                          "    " (:diff-path ctx) "\n"
+                          "    (" (:diff-bytes ctx) " bytes)\n\n")
+                     (str "The complete, untruncated diff is on disk. Read it first:\n\n"
+                          "    " (:diff-path ctx) "\n\n"))
                    "Then read the surrounding source under the repo root for context.\n"
                    "You have Read, Grep, Glob and Bash, in a throwaway worktree checked\n"
                    "out at the commit under review and deleted when this review ends.\n"
