@@ -106,6 +106,38 @@ in
         };
       };
     })
+    # buildkite-agent v4 - nixpkgs (incl. master) is still on the 3.13x line and
+    # carries no v4 at all, so the agent comes from the upstream release tarball
+    # rather than an overridden nixpkgs derivation. Overriding the attribute name
+    # itself is deliberate: the launchd module and common.nix systemPackages both
+    # read `pkgs.buildkite-agent`, and they must not diverge from each other.
+    (final: prev: {
+      buildkite-agent = prev.stdenv.mkDerivation rec {
+        pname = "buildkite-agent";
+        version = "4.0.3";
+        src = prev.fetchurl {
+          url = "https://github.com/buildkite/agent/releases/download/v${version}/buildkite-agent-darwin-${
+            if prev.stdenv.hostPlatform.isAarch64 then "arm64" else "amd64"
+          }-${version}.tar.gz";
+          hash =
+            if prev.stdenv.hostPlatform.isAarch64 then
+              "sha256-zIYSwXcQSgXqSv69GraHe35b0oejDcKzdnrbCnFdMac="
+            else
+              "sha256-LuHIn7pgMyl7FU4G8FgvSBpS9EHWZY7r8sQGxEp49uI=";
+        };
+        sourceRoot = ".";
+        dontBuild = true;
+        installPhase = ''
+          install -Dm755 buildkite-agent $out/bin/buildkite-agent
+        '';
+        meta = with prev.lib; {
+          description = "Buildkite agent - runs CI jobs on self-hosted machines";
+          homepage = "https://github.com/buildkite/agent";
+          platforms = platforms.darwin;
+          mainProgram = "buildkite-agent";
+        };
+      };
+    })
     # loki-mcp: MCP server for Loki
     (final: prev: {
       loki-mcp = prev.buildGoModule rec {
