@@ -114,6 +114,7 @@ on darwin 24.3.0. Confidence noted per item.
 | C62 | Claude Code **enforces `timeout` on an `asyncRewake` hook**, unlike a plain `async` one where it explicitly does not, and the default for a `command` hook is **600 s**. `hooks.json` set none, so every review ran against a 600 s budget nobody chose — measured at 390–497 s from context diff to ledger row, plus setup, and growing because the reviewer runs test suites. | confirmed — hooks.md, "Run hooks in the background" |
 | C63 | The documented contract is that an `asyncRewake` hook exiting 2 **wakes Claude immediately even when the session is idle** — the stated exception to async output waiting for the next turn. So a dropped wake is a violated precondition or a harness bug, NOT a property of the design. Three observed drops (#409, #412, and one more) remain unexplained; duration does not separate them, since a 495 s review was delivered and a 497 s one was not. | confirmed — hooks.md; drops unexplained |
 | C64 | The hook payload's `cwd` **follows Claude** into a worktree and after a `cd`, per hooks.md — which contradicts C37, measured earlier as session-cwd-only. Not re-litigated: the reflog design does not read `cwd` at all and covers pushes made by any tool, not only a Bash `cd`. Worth knowing if `cwd` is ever wanted again. | doc says so; C37 was measured — unresolved conflict |
+| C65 | An `asyncRewake` hook does **not** background under `claude -p`. The CLI gates backgrounding on `!oneShotPrint() ‖ hasStreamingInput()`; a one-shot `--print` session with no `--input-format stream-json` fails both, so the hook runs **inline and blocks the tool call**, and its exit-2 stderr comes back as that call's `hook_blocking_error` attachment in the same turn. C3 therefore never reaches `asyncRewake` — nothing is backgrounded for teardown to kill — and C3 was re-tested on its own branch and still holds there: a `sleep 30` hook declared `async: true` was killed 4.7 s after its `-p` session exited, `timeout: 120` notwithstanding. Two consequences the design assumed away: R4 is violated under `-p`, and R14's `lock/superseded?` is unreachable there because a blocked A cannot issue the second push. | confirmed — 5 runs on CLI 2.1.268 (4 `asyncRewake`, 1 `async`), plus mydeck production transcripts (`entrypoint: sdk-clojure`, passes 1–3 of PR #452 and #456) |
 
 ## Requirements
 
@@ -122,7 +123,7 @@ on darwin 24.3.0. Confidence noted per item.
 | R1 | Fires on agent-A push to a PR branch and on agent-A PR creation | A pushes to a branch with an open PR; the ledger gains a pass entry. Both commands reduce to one rule — is there a push whose new sha is the head of an open PR with no ledger row (C48–C51) — so `gh pr create`, which pushes nothing, needs no special case |
 | R2 | Never fires on a human push from a terminal with no Claude session | `git push` from a bare shell leaves the ledger unchanged |
 | R3 | Works in any repo with no per-repo installation | The loop runs in a repo that has no `.claude/` directory at all |
-| R4 | A is never blocked by the review | A's turn ends before the review does, measurable in the transcript |
+| R4 | A is never blocked by the review | A's turn ends before the review does, measurable in the transcript. **Interactive A only.** Under `claude -p` (C65) the hook runs inline, so A is blocked inside its own `git push` for the review's full duration — 390–497 s measured (C62), bounded only by the 1800 s `timeout`. Violated there by construction, not by a defect, and the hook-vs-subagent table below still scores this row as `0` on C1 |
 | R5 | A cannot silently skip the review | The wake arrives without A choosing to act |
 | R6 | Findings reach A even if A's turn already ended | Wake arrives while the session is idle (C2) |
 | R7 | Reviewer has fresh context, cannot mutate the tree **that matters** | B is granted Bash on the author's instruction (C52), so this is no longer a tool restriction: containment is the throwaway detached worktree pinned to the reviewed sha, removed when the pass ends. Edit/Write stay denied but a shell writes files, so what actually holds is that B's tree is discarded and `git push`, `git commit` and the mutating `gh pr` subcommands are refused (C56b — `gh pr view` is not) |
@@ -305,7 +306,17 @@ The design is wrong if any of these turn out true:
 
 ## Risks
 
-1. **Interactive sessions only.** C3 — a `claude -p` wrapper around A would silently review nothing. There is no warning for this.
+1. **`-p` reviews, but blocks A while it does.** Superseded reading: C3 was taken
+   to mean a `claude -p` wrapper around A would silently review nothing. It does
+   not. C65 — `asyncRewake` never backgrounds in a one-shot `--print` session, so
+   the review runs inline inside the `git push` tool call and A waits out its full
+   duration (R4). C3 itself is still true, just only of a plain `async: true` hook.
+   What this costs under `-p`: the block is bounded by nothing but `timeout`
+   (1800 s, raised by C62 to stop reviews being killed — which triples the worst
+   case here); `lock/superseded?` (R14) can never fire from the blocked session;
+   and C60's review-inside-a-review nests a second block rather than orphaning a
+   worktree, so 1800 s can sit inside 1800 s. What it buys: the wake cannot be
+   dropped (C63) and cannot arrive mid-turn (F1, risk 6).
 2. **`if` is fail-open** (C7). The in-hook `gh pr list --head` gate is load-bearing, not redundant.
 3. **rtk registry drift.** C17 is rtk 0.34.3, pinned in `common.nix:327`. A `nix flake update` can change which subcommands are rewritten, silently changing which `if` rule matches. C25 gives a way to detect it.
 4. **Session restart** needed to pick up the plugin, and again after every `version` bump (C10, C27).
