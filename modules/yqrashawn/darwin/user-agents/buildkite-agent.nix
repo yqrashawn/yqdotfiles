@@ -40,6 +40,25 @@ let
   '';
 
   startScript = pkgs.writeShellScript "buildkite-agent-start" ''
+    # Rotating the token must restart the agent, and nothing else makes it.
+    # The token is read ONCE, here, into the process environment; `tokenPath`
+    # is a fixed path, so a new value leaves this script — and therefore the
+    # launchd plist — byte-identical, and launchd has no reason to reload. The
+    # agent then keeps serving the old organisation until something unrelated
+    # happens to change the plist.
+    #
+    # Measured: an agent registered at 21:15 kept the old token while sops
+    # rendered the new one at 22:02, and it was still in the old org 50
+    # minutes later. The version bump in the same series DID restart it, which
+    # is exactly why the symptom looked like "the rebuild worked but the org
+    # did not change".
+    #
+    # This is the ENCRYPTED file's store path, and a store path is
+    # content-addressed — verified: one byte changes 034i62x3... to
+    # a6cwx0c9.... So a rotation changes this script, the plist, and the
+    # service restarts. No plaintext is embedded; the ciphertext is already a
+    # store dependency of the system.
+    # token-rotation trigger: ${config.sops.secrets.buildkite-agent-token.sopsFile}
     export BUILDKITE_AGENT_TOKEN="$(cat ${tokenPath})"
     mkdir -p ${buildDir} ${hooksDir} ${pluginsDir}
     ln -sf ${environmentHook} ${hooksDir}/environment
