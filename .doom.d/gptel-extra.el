@@ -332,7 +332,8 @@ Also extracts session_id from SSE chunks for ccl session resume."
   (add-hook 'org-mode-hook #'+gptel-auto-enable-in-org)
 
   ;; Start the idle buffer cleanup timer
-  (+gptel-start-idle-timer))
+  ;; (+gptel-start-idle-timer)
+  )
 
 ;;; Inject message into running Claude Code turn
 
