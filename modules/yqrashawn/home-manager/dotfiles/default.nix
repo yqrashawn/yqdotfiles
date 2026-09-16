@@ -127,20 +127,36 @@
         # answering before it unlinks its sockets, and a replacement started in
         # that window has its sockets unlinked by the agent that is still
         # shutting down. Every step is bounded by timeout and guarded, so a
-        # wedged agent cannot hang or abort the activation.
-        gpgAgentPid=$(${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpg-connect-agent \
-          --no-autostart 'GETINFO pid' /bye 2>/dev/null \
-          | ${pkgs.gawk}/bin/awk '/^D /{print $2; exit}' || true)
+        # wedged agent cannot hang or abort the activation. `kill` is left
+        # unqualified on purpose: the bash builtin needs no PATH, which
+        # home-manager's activation script does not provide.
+        gpgAgentPid() {
+          ${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpg-connect-agent \
+            --no-autostart 'GETINFO pid' /bye 2>/dev/null \
+            | { read -r tag pid _ && [ "$tag" = D ] && echo "$pid"; } || true
+        }
+        gpgAgentOld=$(gpgAgentPid)
         ${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true
-        if [ -n "$gpgAgentPid" ]; then
+        if [ -n "$gpgAgentOld" ]; then
           gpgAgentWaited=0
-          while kill -0 "$gpgAgentPid" 2>/dev/null && [ "$gpgAgentWaited" -lt 50 ]; do
+          while kill -0 "$gpgAgentOld" 2>/dev/null && [ "$gpgAgentWaited" -lt 50 ]; do
             ${pkgs.coreutils}/bin/sleep 0.1
             gpgAgentWaited=$((gpgAgentWaited + 1))
           done
+        else
+          # The probe failed, which does not mean no agent: it may be wedged or
+          # already refusing connections while its sockets are still bound.
+          # Give the kill a moment rather than racing it with zero delay.
+          ${pkgs.coreutils}/bin/sleep 1
         fi
-        ${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null 2>&1 \
-          || echo "warning: gpg-agent did not restart; run 'gpgconf --kill gpg-agent' by hand" >&2
+        ${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null 2>&1 || true
+        # An agent answering is not proof of a restart — the old one may have
+        # outlived the wait and taken this connection. Compare pids.
+        gpgAgentNew=$(gpgAgentPid)
+        if [ -z "$gpgAgentNew" ] || [ "$gpgAgentNew" = "$gpgAgentOld" ]; then
+          echo "warning: gpg-agent still running the old config; run" \
+            "'gpgconf --kill gpg-agent && gpg-connect-agent /bye' once it is idle" >&2
+        fi
       '';
     };
     lein = {
