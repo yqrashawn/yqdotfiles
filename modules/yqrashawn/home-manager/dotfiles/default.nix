@@ -119,15 +119,24 @@
       target = ".gnupg/gpg-agent.conf";
       # A full restart, not reloadagent: SIGHUP does not apply every option in
       # this file (allow-loopback-pinentry among them). Killing is the whole
-      # hook — the next gpg command autostarts the agent with the new config.
-      # Nothing here needs it back sooner: this conf sets no
-      # enable-ssh-support, and SSH_AUTH_SOCK is pointed at prezto's own
-      # ssh-agent socket (cli/prezto.nix), not at gpg-agent's.
-      # Bounded and guarded so a wedged agent can neither hang nor abort the
-      # activation.
+      # hook; the agent is autostarted again by the next gpg command, or by the
+      # next shell (nix-darwin's extraInit runs updatestartuptty).
+      #
+      # Nothing needs it back sooner *because this conf omits
+      # enable-ssh-support*: with no ssh socket, prezto's fallback wins and
+      # SSH_AUTH_SOCK ends up on its own agent. Add enable-ssh-support here and
+      # that inverts — SSH_AUTH_SOCK resolves to gpg-agent (set-environment
+      # exports it, since darwin/core.nix sets enableSSHSupport), and killing
+      # without restarting would break ssh in already-open shells.
+      #
+      # gpgconf --kill returns when the agent acknowledges, not when it has
+      # exited, so a shell starting in that sub-millisecond window can autostart
+      # a replacement whose socket the dying agent then unlinks. Self-healing on
+      # the next gpg call; not worth a wait loop (see #160-#163).
       onChange = ''
-        ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 \
-          || echo "warning: could not kill gpg-agent; it keeps the old config until it exits" >&2
+        ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null \
+          || echo "warning: could not kill gpg-agent (exit $?; 124 means it hung)." \
+            "It keeps the old config until it exits — retry 'gpgconf --kill gpg-agent'." >&2
       '';
     };
     lein = {
