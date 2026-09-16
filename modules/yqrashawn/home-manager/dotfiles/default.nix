@@ -124,6 +124,15 @@
       # Guarded so a failure here cannot abort the activation.
       onChange = ''
         ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true
+        # --kill returns once the agent acknowledges KILLAGENT, not once it has
+        # exited and unlinked its sockets, so wait for it to actually go away
+        # before starting a new one on the same homedir.
+        waited=0
+        while [ "$waited" -lt 50 ]; do
+          ${pkgs.gnupg}/bin/gpg-connect-agent --no-autostart /bye >/dev/null 2>&1 || break
+          ${pkgs.coreutils}/bin/sleep 0.1
+          waited=$((waited + 1))
+        done
         ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null 2>&1 || true
       '';
     };

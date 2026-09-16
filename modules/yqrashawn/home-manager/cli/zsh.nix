@@ -17,6 +17,12 @@ let
       fi
     fi
     export PNPM_HOME="$HOME/.local/share/pnpm"
+    # Pick curses pinentry over the GUI one for anything run over SSH. Set here
+    # in .zshenv, not .zshrc, so non-interactive remote commands
+    # (ssh host 'gpg -d ...') get it too — they never source .zshrc.
+    if [[ -n "$SSH_CONNECTION" ]]; then
+      export PINENTRY_USER_DATA="USE_CURSES=1"
+    fi
   '';
   zshProfileExtra = ''
     fpath=($HOME/.zfunc $fpath)
@@ -173,7 +179,8 @@ in
 
         # When SSH'd in without a display, tell gpg-agent to use curses pinentry
         if [[ -n "$SSH_CONNECTION" ]]; then
-          export PINENTRY_USER_DATA="USE_CURSES=1"
+          # PINENTRY_USER_DATA itself is exported from .zshenv, so it also
+          # covers non-interactive remote commands.
           # Tell running gpg-agent to use this TTY for pinentry.
           # PINENTRY_USER_DATA only works for gpg CLI calls (passed via Assuan),
           # but SSH-via-gpg-agent doesn't pass it — updatestartuptty makes
