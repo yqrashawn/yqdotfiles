@@ -99,8 +99,6 @@
       source = pkgs.writeShellScript "pinentry-auto" ''
         if echo "''${PINENTRY_USER_DATA:-}" | grep -q "USE_CURSES=1"; then
           exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
-        elif [ -t 0 ]; then
-          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
         else
           exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"
         fi
@@ -120,9 +118,14 @@
       };
       target = ".gnupg/gpg-agent.conf";
       # A full restart, not reloadagent: SIGHUP does not apply every option in
-      # this file (allow-loopback-pinentry among them). The agent is autostarted
-      # on next use. Guarded so a failure here cannot abort the activation.
-      onChange = "${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true";
+      # this file (allow-loopback-pinentry among them). The agent is started
+      # again right away rather than left to autostart, so the ssh socket that
+      # SSH_AUTH_SOCK points at in already-open shells comes back immediately.
+      # Guarded so a failure here cannot abort the activation.
+      onChange = ''
+        ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true
+        ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null 2>&1 || true
+      '';
     };
     lein = {
       source = ./.lein;
