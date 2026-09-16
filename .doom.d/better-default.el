@@ -764,9 +764,15 @@ used in the POST request made to the LanguageTool server."
   :config
   ;; Async: gpg-connect-agent has no read timeout, so a wedged agent would
   ;; hang the whole init if this ran synchronously. Nothing here needs its
-  ;; result.
-  (start-process-shell-command
-   "gpg-updatestartuptty" nil "gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1")
+  ;; result. The timer is the bound the `timeout' wrapper gives the shell call
+  ;; sites — without it a wedged agent leaves the process around until logout.
+  (let ((proc (start-process-shell-command
+               "gpg-updatestartuptty" nil
+               "gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1")))
+    (run-at-time 5 nil
+                 (lambda ()
+                   (when (process-live-p proc)
+                     (kill-process proc)))))
   ;; (shell-command "gpgconf --reload gpg-agent >/dev/null" nil nil)
   )
 
