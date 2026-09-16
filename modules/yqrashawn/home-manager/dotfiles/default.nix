@@ -105,46 +105,61 @@
       '';
       target = ".gnupg/pinentry-auto";
     };
-    gpg-agent-conf = {
-      source = pkgs.writeTextFile {
-        name = "gpg-agent.conf";
-        text = ''
-          default-cache-ttl 5184000
-          max-cache-ttl 5184000
-          # Same 60 days for keys served over the ssh-agent protocol. Inert
-          # until enable-ssh-support is added to this file: without it gpg-agent
-          # serves no ssh socket, and SSH_AUTH_SOCK falls through to prezto's
-          # own ssh-agent (cli/prezto.nix).
-          default-cache-ttl-ssh 5184000
-          max-cache-ttl-ssh 5184000
-          allow-emacs-pinentry
-          allow-loopback-pinentry
-          pinentry-program ${config.home.homeDirectory}/.gnupg/pinentry-auto
+    gpg-agent-conf =
+      let
+        # 60 days. One binding for all four caches: the ssh pair sat at
+        # gpg-agent's 1800s/7200s defaults for a while precisely because the
+        # gpg pair was a literal that got edited on its own.
+        cacheTtl = "5184000";
+      in
+      {
+        source = pkgs.writeTextFile {
+          name = "gpg-agent.conf";
+          text = ''
+            default-cache-ttl ${cacheTtl}
+            max-cache-ttl ${cacheTtl}
+            # Same TTL for keys served over the ssh-agent protocol. Inert until
+            # enable-ssh-support is added to this file: without it gpg-agent
+            # serves no ssh socket. (SSH_AUTH_SOCK still points at that missing
+            # socket in every shell, because nix-darwin's extraInit exports it
+            # whenever darwin/core.nix sets enableSSHSupport; prezto's ssh
+            # module then overrides it, but only in interactive zsh.)
+            #
+            # Before adding enable-ssh-support: with these TTLs and no confirm
+            # flag on any ~/.gnupg/sshcontrol entry, every listed key becomes
+            # usable by any local process without a prompt for the full 60
+            # days. Add the confirm flag to sshcontrol in the same change.
+            default-cache-ttl-ssh ${cacheTtl}
+            max-cache-ttl-ssh ${cacheTtl}
+            allow-emacs-pinentry
+            allow-loopback-pinentry
+            pinentry-program ${config.home.homeDirectory}/.gnupg/pinentry-auto
+          '';
+        };
+        target = ".gnupg/gpg-agent.conf";
+        # A full restart, not reloadagent: SIGHUP does not apply every option in
+        # this file (allow-loopback-pinentry among them). Killing is the whole
+        # hook; the agent is autostarted again by the next gpg command, or by the
+        # next shell (nix-darwin's extraInit runs updatestartuptty).
+        #
+        # Nothing needs it back sooner *because this conf omits
+        # enable-ssh-support*: gpg-agent serves no ssh socket, so the
+        # SSH_AUTH_SOCK that set-environment exports points at nothing and
+        # prezto's ssh module overrides it (interactive zsh only). Add
+        # enable-ssh-support here and that inverts — the socket becomes real,
+        # prezto stops overriding, and killing without restarting would break
+        # ssh in already-open shells.
+        #
+        # gpgconf --kill returns when the agent acknowledges, not when it has
+        # exited, so a shell starting in that sub-millisecond window can autostart
+        # a replacement whose socket the dying agent then unlinks. Self-healing on
+        # the next gpg call; not worth a wait loop (see #160-#163).
+        onChange = ''
+          ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null \
+            || echo "warning: could not kill gpg-agent (exit $?; 124 means it hung)." \
+              "It keeps the old config until it exits — retry 'gpgconf --kill gpg-agent'." >&2
         '';
       };
-      target = ".gnupg/gpg-agent.conf";
-      # A full restart, not reloadagent: SIGHUP does not apply every option in
-      # this file (allow-loopback-pinentry among them). Killing is the whole
-      # hook; the agent is autostarted again by the next gpg command, or by the
-      # next shell (nix-darwin's extraInit runs updatestartuptty).
-      #
-      # Nothing needs it back sooner *because this conf omits
-      # enable-ssh-support*: with no ssh socket, prezto's fallback wins and
-      # SSH_AUTH_SOCK ends up on its own agent. Add enable-ssh-support here and
-      # that inverts — SSH_AUTH_SOCK resolves to gpg-agent (set-environment
-      # exports it, since darwin/core.nix sets enableSSHSupport), and killing
-      # without restarting would break ssh in already-open shells.
-      #
-      # gpgconf --kill returns when the agent acknowledges, not when it has
-      # exited, so a shell starting in that sub-millisecond window can autostart
-      # a replacement whose socket the dying agent then unlinks. Self-healing on
-      # the next gpg call; not worth a wait loop (see #160-#163).
-      onChange = ''
-        ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null \
-          || echo "warning: could not kill gpg-agent (exit $?; 124 means it hung)." \
-            "It keeps the old config until it exits — retry 'gpgconf --kill gpg-agent'." >&2
-      '';
-    };
     lein = {
       source = ./.lein;
       target = ".lein";
