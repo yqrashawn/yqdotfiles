@@ -185,7 +185,9 @@ in
           # PINENTRY_USER_DATA only works for gpg CLI calls (passed via Assuan),
           # but SSH-via-gpg-agent doesn't pass it — updatestartuptty makes
           # gpg-agent use the current TTY/PINENTRY_USER_DATA for all operations.
-          gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+          # timeout: gpg-connect-agent has no read timeout of its own, and a
+          # wedged agent would otherwise hang every new remote shell.
+          ${pkgs.coreutils}/bin/timeout 5 gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
         fi
 
         # Load ssh passphrases stored in the macOS login keychain. Nix's ssh
