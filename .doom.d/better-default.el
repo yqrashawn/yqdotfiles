@@ -762,7 +762,6 @@ used in the POST request made to the LanguageTool server."
          epg-gpg-home-directory (expand-file-name "~/.gnupg"))
   ;; (setq! epg-debug t)
   :config
-  (shell-command "gpg-connect-agent reloadagent /bye >/dev/null")
   (shell-command "gpg-connect-agent updatestartuptty /bye >/dev/null")
   ;; (shell-command "gpgconf --reload gpg-agent >/dev/null" nil nil)
   )

@@ -119,6 +119,7 @@
           '';
         };
         target = ".gnupg/gpg-agent.conf";
+        onChange = "${pkgs.gnupg}/bin/gpg-connect-agent reloadagent /bye >/dev/null";
       };
     lein = {
       source = ./.lein;
