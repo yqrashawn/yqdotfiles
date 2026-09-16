@@ -111,6 +111,12 @@
         text = ''
           default-cache-ttl 5184000
           max-cache-ttl 5184000
+          # Same 60 days for keys served over the ssh-agent protocol. Inert
+          # until enable-ssh-support is added to this file: without it gpg-agent
+          # serves no ssh socket, and SSH_AUTH_SOCK falls through to prezto's
+          # own ssh-agent (cli/prezto.nix).
+          default-cache-ttl-ssh 5184000
+          max-cache-ttl-ssh 5184000
           allow-emacs-pinentry
           allow-loopback-pinentry
           pinentry-program ${config.home.homeDirectory}/.gnupg/pinentry-auto
