@@ -95,32 +95,35 @@
       source = ./shadow-cljs.edn;
       target = ".shadow-cljs/config.edn";
     };
-    gpg-agent-conf =
-      let
-        pinentry-auto = pkgs.writeShellScript "pinentry-auto" ''
-          if echo "''${PINENTRY_USER_DATA:-}" | grep -q "USE_CURSES=1"; then
-            exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
-          elif [ -t 0 ]; then
-            exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
-          else
-            exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"
-          fi
+    gpg-pinentry-auto = {
+      source = pkgs.writeShellScript "pinentry-auto" ''
+        if echo "''${PINENTRY_USER_DATA:-}" | grep -q "USE_CURSES=1"; then
+          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+        elif [ -t 0 ]; then
+          exec ${pkgs.pinentry-curses}/bin/pinentry-curses "$@"
+        else
+          exec ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac "$@"
+        fi
+      '';
+      target = ".gnupg/pinentry-auto";
+    };
+    gpg-agent-conf = {
+      source = pkgs.writeTextFile {
+        name = "gpg-agent.conf";
+        text = ''
+          default-cache-ttl 5184000
+          max-cache-ttl 5184000
+          allow-emacs-pinentry
+          allow-loopback-pinentry
+          pinentry-program ${config.home.homeDirectory}/.gnupg/pinentry-auto
         '';
-      in
-      {
-        source = pkgs.writeTextFile {
-          name = "gpg-agent.conf";
-          text = ''
-            default-cache-ttl 5184000
-            max-cache-ttl 5184000
-            allow-emacs-pinentry
-            allow-loopback-pinentry
-            pinentry-program ${pinentry-auto}
-          '';
-        };
-        target = ".gnupg/gpg-agent.conf";
-        onChange = "${pkgs.gnupg}/bin/gpg-connect-agent reloadagent /bye >/dev/null";
       };
+      target = ".gnupg/gpg-agent.conf";
+      # A full restart, not reloadagent: SIGHUP does not apply every option in
+      # this file (allow-loopback-pinentry among them). The agent is autostarted
+      # on next use. Guarded so a failure here cannot abort the activation.
+      onChange = "${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true";
+    };
     lein = {
       source = ./.lein;
       target = ".lein";
