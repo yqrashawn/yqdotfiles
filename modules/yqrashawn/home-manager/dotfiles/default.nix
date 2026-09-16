@@ -118,19 +118,16 @@
       };
       target = ".gnupg/gpg-agent.conf";
       # A full restart, not reloadagent: SIGHUP does not apply every option in
-      # this file (allow-loopback-pinentry among them). The agent is started
-      # again right away rather than left to autostart, so the ssh socket that
-      # SSH_AUTH_SOCK points at in already-open shells comes back immediately.
-      #
-      # --launch rather than a hand-rolled kill/wait/verify cycle: it is
-      # idempotent and does the waiting itself, which removes the window where
-      # a replacement binds sockets that the still-dying agent then unlinks.
-      # Both calls are bounded and guarded so a wedged agent can neither hang
-      # nor abort the activation.
+      # this file (allow-loopback-pinentry among them). Killing is the whole
+      # hook — the next gpg command autostarts the agent with the new config.
+      # Nothing here needs it back sooner: this conf sets no
+      # enable-ssh-support, and SSH_AUTH_SOCK is pointed at prezto's own
+      # ssh-agent socket (cli/prezto.nix), not at gpg-agent's.
+      # Bounded and guarded so a wedged agent can neither hang nor abort the
+      # activation.
       onChange = ''
-        ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true
-        ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent >/dev/null 2>&1 \
-          || echo "warning: gpg-agent did not come back; run 'gpgconf --launch gpg-agent'" >&2
+        ${pkgs.coreutils}/bin/timeout 10 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 \
+          || echo "warning: could not kill gpg-agent; it keeps the old config until it exits" >&2
       '';
     };
     lein = {
