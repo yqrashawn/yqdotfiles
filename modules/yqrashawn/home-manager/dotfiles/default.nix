@@ -123,17 +123,24 @@
       # SSH_AUTH_SOCK points at in already-open shells comes back immediately.
       # Guarded so a failure here cannot abort the activation.
       onChange = ''
-        ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true
-        # --kill returns once the agent acknowledges KILLAGENT, not once it has
-        # exited and unlinked its sockets, so wait for it to actually go away
-        # before starting a new one on the same homedir.
-        waited=0
-        while [ "$waited" -lt 50 ]; do
-          ${pkgs.gnupg}/bin/gpg-connect-agent --no-autostart /bye >/dev/null 2>&1 || break
-          ${pkgs.coreutils}/bin/sleep 0.1
-          waited=$((waited + 1))
-        done
-        ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null 2>&1 || true
+        # Wait on the pid, not on socket reachability: gpg-agent stops
+        # answering before it unlinks its sockets, and a replacement started in
+        # that window has its sockets unlinked by the agent that is still
+        # shutting down. Every step is bounded by timeout and guarded, so a
+        # wedged agent cannot hang or abort the activation.
+        gpgAgentPid=$(${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpg-connect-agent \
+          --no-autostart 'GETINFO pid' /bye 2>/dev/null \
+          | ${pkgs.gawk}/bin/awk '/^D /{print $2; exit}' || true)
+        ${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpgconf --kill gpg-agent >/dev/null 2>&1 || true
+        if [ -n "$gpgAgentPid" ]; then
+          gpgAgentWaited=0
+          while kill -0 "$gpgAgentPid" 2>/dev/null && [ "$gpgAgentWaited" -lt 50 ]; do
+            ${pkgs.coreutils}/bin/sleep 0.1
+            gpgAgentWaited=$((gpgAgentWaited + 1))
+          done
+        fi
+        ${pkgs.coreutils}/bin/timeout 5 ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null 2>&1 \
+          || echo "warning: gpg-agent did not restart; run 'gpgconf --kill gpg-agent' by hand" >&2
       '';
     };
     lein = {
