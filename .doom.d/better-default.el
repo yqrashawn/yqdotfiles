@@ -762,7 +762,11 @@ used in the POST request made to the LanguageTool server."
          epg-gpg-home-directory (expand-file-name "~/.gnupg"))
   ;; (setq! epg-debug t)
   :config
-  (shell-command "gpg-connect-agent updatestartuptty /bye >/dev/null")
+  ;; Async: gpg-connect-agent has no read timeout, so a wedged agent would
+  ;; hang the whole init if this ran synchronously. Nothing here needs its
+  ;; result.
+  (start-process-shell-command
+   "gpg-updatestartuptty" nil "gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1")
   ;; (shell-command "gpgconf --reload gpg-agent >/dev/null" nil nil)
   )
 
