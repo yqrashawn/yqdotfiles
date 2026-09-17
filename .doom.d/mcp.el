@@ -93,6 +93,10 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
            ("@upstash/context7-mcp"
              "--api-key"
              ,+context-7-api-key)))
+       ("aside" .
+         (:command ,(expand-file-name "~/.local/bin/aside")
+           :args
+           ("mcp")))
 
        ;; ("nextjs-devtools" .
        ;;  (:command "npx"
