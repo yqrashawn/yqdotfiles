@@ -107,9 +107,9 @@
     };
     gpg-agent-conf =
       let
-        # 60 days. One binding for all four caches: the ssh pair sat at
-        # gpg-agent's 1800s/7200s defaults for a while precisely because the
-        # gpg pair was a literal that got edited on its own.
+        # 60 days, one binding for all four caches. The ssh pair was simply
+        # missing until #167, so it ran on gpg-agent's 1800s/7200s defaults;
+        # binding the value once at least keeps the four from diverging.
         cacheTtl = "5184000";
       in
       {
@@ -118,17 +118,17 @@
           text = ''
             default-cache-ttl ${cacheTtl}
             max-cache-ttl ${cacheTtl}
-            # Same TTL for keys served over the ssh-agent protocol. Inert until
-            # enable-ssh-support is added to this file: without it gpg-agent
-            # serves no ssh socket. (SSH_AUTH_SOCK still points at that missing
-            # socket in every shell, because nix-darwin's extraInit exports it
-            # whenever darwin/core.nix sets enableSSHSupport; prezto's ssh
-            # module then overrides it, but only in interactive zsh.)
+            # Same TTL for keys served over the ssh-agent protocol. These are
+            # live, not theoretical: gpg-agent serves ssh on
+            # ~/.gnupg/S.gpg-agent.ssh even with no enable-ssh-support line
+            # (verified with lsof on the running agent and ssh-add -l over that
+            # socket), and ~/.cache/prezto/ssh-agent.sock is a hand-made
+            # symlink to it, so interactive shells reach gpg-agent too.
             #
-            # Before adding enable-ssh-support: with these TTLs and no confirm
-            # flag on any ~/.gnupg/sshcontrol entry, every listed key becomes
-            # usable by any local process without a prompt for the full 60
-            # days. Add the confirm flag to sshcontrol in the same change.
+            # That means every key listed in ~/.gnupg/sshcontrol is usable by
+            # any local process without a prompt for the full 60 days, and
+            # none of those entries carries the confirm flag. sshcontrol is
+            # not managed by this repo; adding confirm there is a manual edit.
             default-cache-ttl-ssh ${cacheTtl}
             max-cache-ttl-ssh ${cacheTtl}
             allow-emacs-pinentry
@@ -142,13 +142,12 @@
         # hook; the agent is autostarted again by the next gpg command, or by the
         # next shell (nix-darwin's extraInit runs updatestartuptty).
         #
-        # Nothing needs it back sooner *because this conf omits
-        # enable-ssh-support*: gpg-agent serves no ssh socket, so the
-        # SSH_AUTH_SOCK that set-environment exports points at nothing and
-        # prezto's ssh module overrides it (interactive zsh only). Add
-        # enable-ssh-support here and that inverts — the socket becomes real,
-        # prezto stops overriding, and killing without restarting would break
-        # ssh in already-open shells.
+        # The kill costs more than the gpg cache: this agent also serves ssh
+        # (see above), so it drops the ssh key cache and removes the socket
+        # that SSH_AUTH_SOCK names in already-open shells until something
+        # autostarts the agent again. Accepted because the config has to take
+        # effect and reloadagent cannot apply all of it; the window is a single
+        # autostart, and every shell's rc runs gpg-connect-agent anyway.
         #
         # gpgconf --kill returns when the agent acknowledges, not when it has
         # exited, so a shell starting in that sub-millisecond window can autostart
