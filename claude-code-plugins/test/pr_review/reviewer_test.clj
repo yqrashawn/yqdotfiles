@@ -2,9 +2,13 @@
   (:require [babashka.fs :as fs]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.test :refer [deftest is testing]]
+            [clojure.test :refer [deftest is testing use-fixtures]]
             [pr-review.reviewer :as reviewer]
+            [pr-review.test-env :as test-env]
             [pr-review.tokens :as tokens]))
+
+(use-fixtures :once test-env/hermetic-tokens)
+
 
 (def ^:private good-output
   (str "VERDICT: NOT MERGEABLE — retry loop drops the last attempt\n"

@@ -56,19 +56,30 @@
 (defn- unquote-value
   "A shell assignment's value, as `source` would see it.
 
-   Quoted: the quotes come off and the rest is literal. Unquoted: an
-   unescaped ` #` starts a comment, so `FOO=a,b # note` is `a,b` — matching
-   what cchp gets, since cchp reads this same file by sourcing it."
+   A QUOTED value ends at its closing quote and whatever follows it —
+   including a ` # comment` — is not part of the value. An UNQUOTED one ends
+   at the first unescaped ` #`.
+
+   Written as one scan over the two cases rather than as two independent
+   rules, because two independent rules is what the first version was and it
+   handled quotes OR a comment, never both: `CLAUDE_TOKENS=\"a,b\" # jason`
+   came back as `[\"\\\"a\" \"b\\\"\"]` — a non-empty pool of mangled
+   credentials, which is worse than an empty one. `pool` non-empty means
+   `select!` returns something, and `(or (tokens/select!) (oauth-token))`
+   short-circuits, so the pinned-file fallback never runs and every review
+   authenticates with a quote-mangled token. The file this reads is documented
+   as carrying comments on exactly these lines."
   [v]
-  (let [v (str/trim v)]
-    (cond
-      (and (>= (count v) 2) (str/starts-with? v "'") (str/ends-with? v "'"))
-      (subs v 1 (dec (count v)))
-
-      (and (>= (count v) 2) (str/starts-with? v "\"") (str/ends-with? v "\""))
-      (subs v 1 (dec (count v)))
-
-      :else
+  (let [v (str/trim v)
+        q (first v)]
+    (if (and (seq v) (or (= \' q) (= \" q)))
+      (let [rest-of (subs v 1)
+            close (str/index-of rest-of (str q))]
+        (if close
+          (subs rest-of 0 close)
+          ;; An unterminated quote is not a value `source` would accept
+          ;; either. Return what is there minus the opener rather than guess.
+          rest-of))
       (str/trim (str/replace v #"\s+#.*$" "")))))
 
 (defn env-file-var
@@ -240,11 +251,18 @@
    pattern it started with silently stopped matching. Same two shapes:
    personal/subscription, and the org seat's monthly spend limit.
 
+   ONE DELIBERATE DIVERGENCE: the qualifier is `[\\w-]+` where cchp's is
+   `\\w+`, so a hyphenated window — a `5-hour` limit — matches. That wording
+   is not in the sample cchp's set was derived from, and the asymmetry decides
+   it: an unmatched banner hands a spent token straight back out on the next
+   rotation and every review keeps failing until the account resets, where a
+   pattern one word too wide costs at most one token parked for an hour.
+
    The org pattern is assembled from two halves at load time, and the banner
    is written out contiguously nowhere in this file — for cchp's reason, which
    applies here too: the reviewer reads this repository, and a file containing
    a banner verbatim matches its own pattern."
-  [#"You've hit your (?:\w+ )?limit · resets \d{1,2}(?::\d{2})?(?:a|p)m \("
+  [#"You've hit your (?:[\w-]+ )?limit · resets \d{1,2}(?::\d{2})?(?:a|p)m \("
    (re-pattern (str "You've hit your org" "'s monthly spend limit"))])
 
 (defn limited?

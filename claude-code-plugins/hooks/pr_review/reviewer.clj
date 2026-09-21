@@ -240,10 +240,11 @@
    environment is then not the one `run!` redacts. `*token*` is the single
    selection; this function only reads it.
 
-   CLAUDE_TOKENS is stripped from the child. The reviewer is itself a Claude
-   Code session, so it inherits the pool cchp passes down, and a reviewer that
-   can see the pool is a reviewer that can print it — and unlike its own
-   credential, `redact` scrubs only the one token it was given."
+   CLAUDE_TOKENS is BLANKED in the child, not removed — a nil in `:extra-env`
+   leaves the variable present with an empty value, measured. Either way the
+   pool is out of the child's environment, which is the point: the reviewer is
+   itself a Claude Code session and inherits the pool cchp passes down, and a
+   reviewer that can see the pool is a reviewer that can print it."
   []
   (let [token (if (= ::unset *token*) (select-token) *token*)]
     (cond-> {reviewer-env-var "1"
@@ -257,7 +258,7 @@
       (seq (str token)) (assoc "CLAUDE_CODE_OAUTH_TOKEN" token))))
 
 (defn redact
-  "Replace the reviewer's own credential with a marker.
+  "Replace every credential this process knows about with a marker.
 
    Everything the reviewer prints is recorded and republished: `:out` becomes
    the PR comment and the findings file, `:err` is streamed to a file the
@@ -266,13 +267,25 @@
    while debugging, or a tool dumping its environment on error all put the
    credential into that stream.
 
+   THE WHOLE POOL, not only the token this run selected. The reviewer is
+   granted Read, Grep, Glob and Bash, `pr-review.tokens` names the pool's file
+   path in source it is routinely asked to read, and a reviewer that `cat`s
+   that file while checking the parser puts every OTHER account's credential
+   into the PR comment — none of which the selected token's own scrub would
+   touch. `tokens/pool` is a read with no state behind it, so asking again
+   here costs nothing.
+
    Nothing else redacted: a value we do not know cannot be matched, and
-   guessing at shapes would give false confidence. This covers the one secret
+   guessing at shapes would give false confidence. This covers the secrets
    this process is known to hold."
   [text token]
-  (if (and (string? text) (string? token) (>= (count token) 8))
-    (str/replace text token "[redacted]")
-    text))
+  (let [secrets (->> (conj (vec (try (tokens/pool) (catch Exception _ nil))) token)
+                     (filter string?)
+                     (filter #(>= (count %) 8))
+                     distinct)]
+    (if (string? text)
+      (reduce (fn [t s] (str/replace t s "[redacted]")) text secrets)
+      text)))
 
 (defn- default-spawn
   "Runs the reviewer. `err-file`, when given, receives stderr AS IT IS WRITTEN
@@ -322,7 +335,10 @@
         ;; is rewritten too: it is on disk for the author to read, and it is
         ;; the copy that survives a kill.
         (when-let [f (:err-file opts)]
-          (when (and token (fs/exists? f))
+          ;; NOT gated on `token` any more: `redact` now also scrubs the rest
+          ;; of the pool, which is present whether or not this run selected
+          ;; anything, and a nil selection used to leave that file unscrubbed.
+          (when (fs/exists? f)
             (let [raw (slurp f) clean (scrub raw)]
               (when (not= raw clean) (atomicfile/spit! f clean)))))
         (-> res (update :out scrub) (update :err scrub)))
@@ -444,7 +460,7 @@
   (into {}
         (map (fn [cat]
                (let [re (re-pattern (str "(?i)^\\s*\\[" cat "\\]\\s+(none|\\d+)"))
-                     n (->> lines (keep #(second (re-find re %))) first)]
+                     n  (->> lines (keep #(second (re-find re %))) first)]
                  [cat (cond (nil? n) 0
                             (= "none" (str/lower-case n)) 0
                             :else (parse-long n))])))
@@ -491,11 +507,11 @@
    verdict line; nil parses by position alone. See `winning-verdict`."
   ([out] (parse-output out nil))
   ([out tag]
-   (let [out (or out "")
+   (let [out   (or out "")
          lines (normalized-lines out)
          [vi v] (winning-verdict lines tag)]
-     (if v
-       {:verdict v
+    (if v
+      {:verdict v
        ;; Counts come from AFTER the winning verdict line, not from the first
        ;; block in the reply. `winning-verdict` does not take the FIRST verdict
        ;; at column 0 because reviewers restate the format, or recap the previous
@@ -509,22 +525,22 @@
        ;; asks for verdict, then counts, then findings, but a reviewer that
        ;; puts its findings before its final verdict line would lose all of
        ;; them, and losing findings is worse than the counts being off.
-        :counts (parse-counts (drop (inc vi) lines))
-        :fingerprints (parse-fingerprints lines)
-        :body out}
-       {:verdict "MALFORMED"
+       :counts (parse-counts (drop (inc vi) lines))
+       :fingerprints (parse-fingerprints lines)
+       :body out}
+      {:verdict "MALFORMED"
        ;; Say WHY when the cause is the one the loop introduced. An untagged
        ;; verdict is the difference between "the reviewer crashed" and "the
        ;; reviewer answered in a shape that cannot be told from a quotation",
        ;; and only the second is fixed by the reviewer's own formatting.
-        :reason (when (and tag (seq (verdict-hits lines nil)))
-                  (str "The reply has a verdict at column 0, but not the tagged"
-                       " form `VERDICT[" tag "]:` this pass asked for. Only the"
-                       " tag distinguishes your own verdict from one quoted from"
-                       " an earlier pass, so an untagged verdict is not read."))
-        :counts (zipmap categories (repeat 0))
-        :fingerprints []
-        :body (str/trim out)}))))
+       :reason (when (and tag (seq (verdict-hits lines nil)))
+                 (str "The reply has a verdict at column 0, but not the tagged"
+                      " form `VERDICT[" tag "]:` this pass asked for. Only the"
+                      " tag distinguishes your own verdict from one quoted from"
+                      " an earlier pass, so an untagged verdict is not read."))
+       :counts (zipmap categories (repeat 0))
+       :fingerprints []
+       :body (str/trim out)}))))
 
 (defn mergeable?
   "MERGEABLE means exactly: the reviewer said so, and its own count block

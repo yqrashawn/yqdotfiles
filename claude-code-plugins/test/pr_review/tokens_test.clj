@@ -1,9 +1,12 @@
 (ns pr-review.tokens-test
   (:require [babashka.fs :as fs]
             [clojure.string :as str]
-            [clojure.test :refer [deftest is testing]]
+            [clojure.test :refer [deftest is testing use-fixtures]]
             [pr-review.reviewer :as reviewer]
+            [pr-review.test-env :as test-env]
             [pr-review.tokens :as tokens]))
+
+(use-fixtures :once test-env/hermetic-tokens)
 
 (defn- tmp-state
   "A state path of this test's own. Every stateful test redefs `state-path` to
@@ -47,6 +50,29 @@
             thing that stops a review starting"
     (is (nil? (tokens/env-file-var "/no/such/file" "CLAUDE_TOKENS")))
     (is (= [] (tokens/pool {:env-file "/no/such/file"})))))
+
+(deftest a-quoted-value-with-a-trailing-comment-is-still-the-value
+  (testing "quotes AND a comment on one line. Handled as two independent
+            rules, `CLAUDE_TOKENS=\"a,b\" # jason` parsed to [\"\\\"a\"
+            \"b\\\"\"] — and a mangled pool is worse than none: it is
+            non-empty, so `select!` returns a token, `(or (select!)
+            (oauth-token))` short-circuits, the pinned-file fallback never
+            runs, and every review authenticates with a broken credential.
+            The file this reads is documented as carrying exactly these
+            comments"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-env"}) ".env.local"))]
+      (spit f (str "DQ=\"a,b\" # jason, 0g\n"
+                   "SQ='c,d' # personal\n"
+                   "BARE=e,f # jason\n"))
+      (is (= "a,b" (tokens/env-file-var f "DQ")) "double-quoted, then a comment")
+      (is (= "c,d" (tokens/env-file-var f "SQ")) "single-quoted, then a comment")
+      (is (= "e,f" (tokens/env-file-var f "BARE")) "unquoted, then a comment")))
+
+  (testing "and the pool that comes out of it holds no quote characters —
+            a token with a stray quote is a token that does not authenticate"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-env"}) ".env.local"))]
+      (spit f "CLAUDE_TOKENS=\"tok-aaaa,tok-bbbb\" # jason, 0g\n")
+      (is (= ["tok-aaaa" "tok-bbbb"] (tokens/pool {:env-file f}))))))
 
 (deftest a-blank-pool-is-empty-not-a-one-token-pool
   (testing "`(str/split \"\" #\",\")` is [\"\"] — an empty CLAUDE_TOKENS that
@@ -100,7 +126,7 @@
   (testing "it is a plain file in the user's cache. The token has exactly one
             home; a second copy is a second place to leak it from"
     (let [path (tmp-state)
-          tok  "sk-ant-oat01-SECRET-VALUE"]
+          tok "sk-ant-oat01-SECRET-VALUE"]
       (with-redefs [tokens/state-path (constantly path)]
         (tokens/select! [tok "other"] 0)
         (tokens/park! tok 0)
@@ -126,6 +152,10 @@
   (is (tokens/limited?
        "You've hit your session limit · resets 8:30pm (Asia/Shanghai)")
       "the session-window variant: one extra word, and minutes in the time")
+  (is (tokens/limited?
+       "You've hit your 5-hour limit · resets 3am (Asia/Shanghai)")
+      "a HYPHENATED window. cchp's `\\w+` does not match this one, and an
+       unmatched banner hands the spent token back out on the next rotation")
   (is (tokens/limited?
        (str "You've hit your org" "'s monthly spend limit. Ask an admin."))
       "the org seat banner")
@@ -155,13 +185,56 @@
   (testing "the reviewer is itself a Claude Code session and would inherit the
             pool cchp passes down. `redact` scrubs only the ONE token it was
             given, so every other token in the pool would be unredacted in
-            anything the reviewer printed"
+            anything the reviewer printed.
+
+            Asserted on the MAP, not on what a child prints. The earlier
+            version ran `echo \"[$CLAUDE_TOKENS]\"` and expected `[]` — which
+            is also what a child prints when the strip is DELETED and the test
+            process has no CLAUDE_TOKENS of its own, which is every plain
+            shell. Measured: with the strip removed, that assertion passed
+            unset and failed only when the variable was set, so the one check
+            guarding pool isolation was decided by the tester's environment.
+            A child probe cannot fix that from in here — a process cannot add
+            CLAUDE_TOKENS to its OWN environment to be inherited — and
+            `spawn-env` is where the decision is made anyway."
     (with-redefs [tokens/state-path (constantly (tmp-state))
                   tokens/pool (constantly ["tok-one-aaaaaaaa" "tok-two-bbbbbbbb"])]
-      (let [spawn @#'reviewer/default-spawn
-            res (binding [reviewer/*token* "tok-one-aaaaaaaa"]
-                  (spawn ["sh" "-c" "echo \"[$CLAUDE_TOKENS]\""] "" "." nil))]
-        (is (= "[]" (str/trim (:out res))))))))
+      (let [env (binding [reviewer/*token* "tok-one-aaaaaaaa"] (reviewer/spawn-env))]
+        (is (contains? env "CLAUDE_TOKENS")
+            "the key must be PRESENT: `:extra-env` overrides only what the map
+             names, so an absent key passes the inherited pool straight through")
+        (is (nil? (get env "CLAUDE_TOKENS"))
+            "and nil, which `:extra-env` gives the child as an empty value —
+             measured, it does not drop the variable")))))
+
+(deftest a-pool-token-this-run-did-not-select-is-redacted-too
+  (testing "the reviewer has Read, Grep, Glob and Bash, and `pr-review.tokens`
+            puts the pool's FILE PATH into source it is routinely asked to
+            read. A reviewer that `cat`s that file while checking the parser
+            prints every account's credential, and scrubbing only the selected
+            one leaves the other N-1 in the PR comment, the findings file and
+            the streamed stderr — all three of which are republished"
+    (let [selected "tok-selected-aaaaaaaa"
+          other "tok-other-bbbbbbbb"
+          d (str (fs/create-temp-dir {:prefix "prl-red"}))
+          errf (str (fs/path d "err"))]
+      (with-redefs [tokens/state-path (constantly (tmp-state))
+                    tokens/pool (constantly [selected other])]
+        (let [res (reviewer/run!
+                   "P" "."
+                   {:token-fn (constantly selected)
+                    :err-file errf
+                    :spawn-fn (fn [_ _ _ ef]
+                                (spit ef (str "cat .env.local: " other "\n"))
+                                {:exit 0
+                                 :out (str "the pool is " selected " and " other)
+                                 :err (str "stderr had " other)})})]
+          (is (not (str/includes? (:out res) other)) "the PR comment")
+          (is (not (str/includes? (:err res) other)) "the failure message")
+          (is (not (str/includes? (slurp errf) other))
+              "and the streamed file, the copy that survives a kill")
+          (is (= "the pool is [redacted] and [redacted]" (:out res))
+              "both, and redacted rather than merely absent"))))))
 
 (deftest with-no-pool-the-pinned-file-still-runs-the-review
   (testing "every installation without a CLAUDE_TOKENS pool keeps the
