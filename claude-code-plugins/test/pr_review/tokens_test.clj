@@ -183,9 +183,9 @@
 
 (deftest the-pool-does-not-reach-the-child
   (testing "the reviewer is itself a Claude Code session and would inherit the
-            pool cchp passes down. `redact` scrubs only the ONE token it was
-            given, so every other token in the pool would be unredacted in
-            anything the reviewer printed.
+            pool cchp passes down. Keeping it out of the child is the first
+            line: `redact` covers what is PRINTED, and a variable the child
+            never has is one the child cannot print.
 
             Asserted on the MAP, not on what a child prints. The earlier
             version ran `echo \"[$CLAUDE_TOKENS]\"` and expected `[]` — which
@@ -219,7 +219,7 @@
           d (str (fs/create-temp-dir {:prefix "prl-red"}))
           errf (str (fs/path d "err"))]
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/pool (constantly [selected other])]
+                    tokens/known-tokens (constantly [selected other])]
         (let [res (reviewer/run!
                    "P" "."
                    {:token-fn (constantly selected)
@@ -236,6 +236,53 @@
           (is (= "the pool is [redacted] and [redacted]" (:out res))
               "both, and redacted rather than merely absent"))))))
 
+(deftest a-disabled-pool-in-the-env-file-is-still-a-live-credential
+  (testing "`pool` skips comment lines, and rightly — a disabled line must not
+            be authenticated with. But those lines hold PRIOR pools: live
+            tokens for real accounts. `known-tokens` answers the other
+            question, which strings would be a leak if printed, and one `cat`
+            of a path this source names prints every one of them"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-known"}) ".env.local"))]
+      (spit f (str "# jason, 0g\n"
+                   "# CLAUDE_TOKENS=tok-retired-aaaa,tok-retired-bbbb\n"
+                   "#CLAUDE_TOKENS=tok-retired-cccc\n"
+                   "CLAUDE_TOKENS=tok-live-dddd,tok-live-eeee\n"))
+      (is (= ["tok-live-dddd" "tok-live-eeee"] (tokens/pool {:env-file f}))
+          "the POOL is the live line only — nothing else may be used to log in")
+      (is (= #{"tok-retired-aaaa" "tok-retired-bbbb" "tok-retired-cccc"
+               "tok-live-dddd" "tok-live-eeee"}
+             (set (tokens/known-tokens f)))
+          "the MARKER SET is every one of them, `#` or not"))))
+
+(deftest a-retired-token-the-reviewer-prints-is-redacted
+  (testing "the whole point of the marker set, through `run!`: the reviewer
+            `cat`s the env file while checking the parser and prints a pool
+            that is no longer in use"
+    (let [retired "tok-retired-aaaaaaaa"
+          f (str (fs/path (fs/create-temp-dir {:prefix "prl-known"}) ".env.local"))
+          _ (spit f (str "# CLAUDE_TOKENS=" retired "\n"
+                         "CLAUDE_TOKENS=tok-live-bbbbbbbb\n"))
+          ;; the VALUE, read AFTER the file exists and BEFORE the redef.
+          ;; Read before the spit it is empty; read lazily inside the stub it
+          ;; calls itself, and that is a StackOverflowError, which
+          ;; `credentials`' `(catch Exception)` does not catch — both
+          ;; measured, one as a green-looking failure and one as an uncaught
+          ;; test error
+          from-file (tokens/known-tokens f)]
+      (is (some #{retired} from-file)
+          "the fixture must actually contain the retired token, or the
+           assertion below passes on an empty marker set")
+      (with-redefs [tokens/state-path (constantly (tmp-state))
+                    tokens/known-tokens (constantly from-file)
+                    reviewer/default-token-file "/no/such/pinned/file"]
+        (let [res (reviewer/run!
+                   "P" "."
+                   {:token-fn (constantly "tok-live-bbbbbbbb")
+                    :spawn-fn (fn [_ _ _ _]
+                                {:exit 0
+                                 :out (str "cat .env.local: " retired)})})]
+          (is (= "cat .env.local: [redacted]" (:out res))))))))
+
 (deftest the-pinned-fallback-token-is-redacted-even-when-the-pool-is-used
   (testing "a REGRESSION introduced by rotation, not a pre-existing gap:
             before it, the selected token always WAS the pinned one, so it was
@@ -249,7 +296,7 @@
           selected "tok-selected-aaaaaaaa"]
       (spit f (str pinned "\n"))
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/pool (constantly [selected "tok-other-bbbbbbbb"])
+                    tokens/known-tokens (constantly [selected "tok-other-bbbbbbbb"])
                     reviewer/default-token-file f]
         (let [res (reviewer/run!
                    "P" "."
@@ -267,7 +314,7 @@
     (let [departing "tok-departing-aaaaaaaa"
           live (atom [departing "tok-staying-bbbbbbbb"])]
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/pool (fn [& _] @live)
+                    tokens/known-tokens (fn [& _] @live)
                     reviewer/default-token-file "/no/such/pinned/file"]
         (let [res (reviewer/run!
                    "P" "."

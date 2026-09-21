@@ -263,10 +263,13 @@
    Three sources, and leaving any of them out has been a live gap:
 
    - `selected`, the token this run is spawning with.
-   - the pool, because the reviewer has Read, Grep, Glob and Bash and
-     `pr-review.tokens` names the pool's file path in source it is routinely
-     asked to read; a `cat` of that file prints every account's credential,
-     and scrubbing only `selected` left the other N-1 in the PR comment.
+   - every token `tokens/known-tokens` can see, which is the live pool AND the
+     disabled CLAUDE_TOKENS lines in the env file. The reviewer has Read,
+     Grep, Glob and Bash and `pr-review.tokens` names that file's path in
+     source it is routinely asked to read, so one `cat` prints all of them —
+     the prior pools included, which are live tokens for real accounts.
+     Scrubbing only `selected` left the other N-1 in the PR comment, and
+     scrubbing only the live pool left the disabled ones.
    - the PINNED `default-token-file`, which is the same story one file over.
      Before rotation it needed no mention because `selected` always WAS the
      pinned token; with a non-empty pool it is in neither of the first two, so
@@ -276,10 +279,12 @@
    time: a pool edited mid-review would otherwise leave the departed members
    unmarked in the output of the review still running on them.
 
-   Too-short values are dropped here rather than at each use: a marker for
-   something under 8 characters would match ordinary prose everywhere."
+   Values under 8 characters are dropped: a marker for something that short
+   would match ordinary prose everywhere. `redact` applies the same floor to
+   whatever it is handed, so neither end has to trust the other — this is not
+   the single owner of that rule and no longer claims to be."
   [selected]
-  (->> (conj (vec (try (tokens/pool) (catch Exception _ nil)))
+  (->> (conj (vec (try (tokens/known-tokens) (catch Exception _ nil)))
              selected
              (oauth-token))
        (filter string?)

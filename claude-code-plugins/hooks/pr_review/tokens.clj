@@ -143,6 +143,58 @@
 
 ;;; Cross-process rotation state
 
+(defn known-tokens
+  "EVERY token in the env file, including the ones on commented-out lines,
+   plus whatever the environment holds. Not a pool — a marker set.
+
+   `pool` answers \"which token do I authenticate with\", and for that,
+   skipping comments and preferring the environment are both right. This
+   answers a different question: which strings, if the reviewer printed them,
+   would be a leaked credential. The disabled CLAUDE_TOKENS lines this file is
+   documented as carrying are prior pools — live tokens for real accounts —
+   and the live file line is still a credential on a run where the inherited
+   environment won instead. Neither reaches `redact` through `pool`, and one
+   `cat` of a path this source names prints all of them.
+
+   So: every assignment in the file, commented or not, and — on the no-argument
+   arity only — the environment's too. Order is meaningless here and nothing
+   authenticates with the result.
+
+   An EXPLICIT `path` is the file alone, for the same reason `pool`'s explicit
+   `:env-file` is: naming a file is the caller saying which one it means, and
+   an ambient variable winning over it makes the argument a no-op wherever it
+   happens to be set — which is every reviewer cchp spawns, and every run of
+   this namespace's own tests.
+
+   Never throws — an unreadable file means whatever the environment gave."
+  ([] (vec (distinct (concat (known-tokens (or (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")
+                                               default-env-file))
+                             (->> (str/split (str (System/getenv "CLAUDE_TOKENS")) #",")
+                                  (map str/trim)
+                                  (remove str/blank?))))))
+  ([path]
+   (let [lines (try
+                 (when (and path (fs/regular-file? path))
+                   (str/split-lines (slurp (str path))))
+                 (catch Exception _ nil))
+         assignments (->> lines
+                          (keep (fn [line]
+                                  ;; the comment marker is STRIPPED rather than
+                                  ;; used to skip the line: a disabled pool is
+                                  ;; exactly what this is here for
+                                  (let [l (-> (str/triml line)
+                                              (str/replace #"^#+\s*" "")
+                                              (str/replace-first #"^export\s+" ""))
+                                        [k v] (str/split l #"=" 2)]
+                                    (when (and v (= "CLAUDE_TOKENS" (str/trim (str k))))
+                                      (unquote-value v))))))]
+     (->> assignments
+          (mapcat #(str/split (str %) #","))
+          (map str/trim)
+          (remove str/blank?)
+          distinct
+          vec))))
+
 (defn state-path
   "Where the cursor and the parked set live.
 
