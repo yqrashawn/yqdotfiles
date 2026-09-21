@@ -236,6 +236,48 @@
           (is (= "the pool is [redacted] and [redacted]" (:out res))
               "both, and redacted rather than merely absent"))))))
 
+(deftest the-pinned-fallback-token-is-redacted-even-when-the-pool-is-used
+  (testing "a REGRESSION introduced by rotation, not a pre-existing gap:
+            before it, the selected token always WAS the pinned one, so it was
+            always in the marker set. With a non-empty pool the pinned file is
+            in neither the pool nor the selection, and it became the one
+            credential this process holds and does not scrub — reachable by
+            the same route as the pool, since `reviewer/default-token-file`
+            builds its path in source the reviewer is asked to read"
+    (let [pinned "sk-ant-oat01-PINNED-SECRET"
+          f (str (fs/path (fs/create-temp-dir {:prefix "prl-pin"}) "t"))
+          selected "tok-selected-aaaaaaaa"]
+      (spit f (str pinned "\n"))
+      (with-redefs [tokens/state-path (constantly (tmp-state))
+                    tokens/pool (constantly [selected "tok-other-bbbbbbbb"])
+                    reviewer/default-token-file f]
+        (let [res (reviewer/run!
+                   "P" "."
+                   {:token-fn (constantly selected)
+                    :spawn-fn (fn [_ _ _ _]
+                                {:exit 0
+                                 :out (str "cat default-cc-token: " pinned)})})]
+          (is (= "cat default-cc-token: [redacted]" (:out res))))))))
+
+(deftest a-pool-edited-mid-review-does-not-unmark-the-token-in-flight
+  (testing "the secrets are computed ONCE, at the start of the run. Read again
+            at redaction time, a pool the operator edited while the review ran
+            — minutes, for a real one — would leave the departed member
+            verbatim in the output of the review still running on it"
+    (let [departing "tok-departing-aaaaaaaa"
+          live (atom [departing "tok-staying-bbbbbbbb"])]
+      (with-redefs [tokens/state-path (constantly (tmp-state))
+                    tokens/pool (fn [& _] @live)
+                    reviewer/default-token-file "/no/such/pinned/file"]
+        (let [res (reviewer/run!
+                   "P" "."
+                   {:token-fn (constantly "tok-staying-bbbbbbbb")
+                    :spawn-fn (fn [_ _ _ _]
+                                ;; the operator edits .env.local mid-review
+                                (reset! live ["tok-staying-bbbbbbbb"])
+                                {:exit 0 :out (str "leaked " departing)})})]
+          (is (= "leaked [redacted]" (:out res))))))))
+
 (deftest with-no-pool-the-pinned-file-still-runs-the-review
   (testing "every installation without a CLAUDE_TOKENS pool keeps the
             behaviour it had before rotation existed"

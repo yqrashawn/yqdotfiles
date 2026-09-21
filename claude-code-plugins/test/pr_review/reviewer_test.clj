@@ -555,9 +555,10 @@
 
 (deftest redaction-leaves-everything-else-alone
   (let [tok "sk-ant-oat01-abcdefgh"]
-    (is (= "no secret here" (reviewer/redact "no secret here" tok)))
-    (is (= "x" (reviewer/redact "x" nil)) "no token, nothing to do")
-    (is (= "short" (reviewer/redact "short" "abc"))
+    (is (= "no secret here" (reviewer/redact "no secret here" [tok])))
+    (is (= "x" (reviewer/redact "x" nil)) "no secrets, nothing to do")
+    (is (= "y" (reviewer/redact "y" [nil])) "and a nil among them is skipped")
+    (is (= "short" (reviewer/redact "short" ["abc"]))
         "a too-short token would match everywhere; refuse rather than mangle")))
 
 (deftest a-quoted-prior-review-is-not-parsed-as-this-one

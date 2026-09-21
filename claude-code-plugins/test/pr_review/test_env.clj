@@ -10,8 +10,14 @@
 
    Naming those call sites one by one is the fix that goes stale: the next
    test to call `run!` is written without knowing any of this. The seam is
-   `tokens/state-path` and `tokens/pool`, so the default is closed HERE and a
-   test that wants a pool opens it locally — an inner `with-redefs` wins.
+   `tokens/state-path`, so it is closed HERE, once, for every test in the
+   namespace.
+
+   The POOL is deliberately left alone, and a fixtured test does still read
+   the operator's live `CLAUDE_TOKENS`. That read mutates nothing, and with
+   the cursor pointed at a scratch file it cannot move the real rotation on.
+   A test that needs a particular pool redefs it locally, where an inner
+   `with-redefs` wins.
 
    `:once`, and `with-redefs` rather than `binding`, because `with-redefs`
    alters the root: a `:each` fixture would re-enter it per var for no gain,
