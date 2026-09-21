@@ -35,6 +35,7 @@
                            pr-review.hooksjson-test
                            pr-review.manual-test
                            pr-review.pushlog-test
+                           pr-review.tokens-test
                            pr-review.trigger-test]
                     ;; Select on FILE EXISTENCE, never on whether `require`
                     ;; succeeds: a namespace with a compile error would be

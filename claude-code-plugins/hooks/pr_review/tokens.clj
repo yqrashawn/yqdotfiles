@@ -1,0 +1,294 @@
+(ns pr-review.tokens
+  "A pool of Claude credentials for the reviewer, rotated across runs.
+
+   The reviewer used to run on ONE pinned token (`reviewer/default-token-file`).
+   One token is one account's limit: when it is spent every review fails
+   `MALFORMED (exited 1)` until it resets, which on an org seat's monthly
+   spend limit is days. cchp already load-balances the same kind of pool for
+   the sessions it spawns (`cchp.module.claude-code.token-manager`), and this
+   is that idea for the reviewer.
+
+   WHAT IS NOT SHARED WITH cchp: its rotation state is an in-process atom in a
+   long-lived JVM. The reviewer is a fresh babashka process per review, so
+   nothing in memory survives to the next one and the two processes cannot see
+   each other's parks. The cursor and the parked set therefore live in a file
+   (`state-path`), under a flock, and the clock is WALL CLOCK — cchp uses a
+   monotonic reading precisely because it never leaves its process, and a
+   monotonic reading means nothing to the process that reads this file next.
+   The cost is the one cchp's monotonic.clj documents: an NTP step or a
+   suspended host mis-times a park. A park is a one-hour guess either way, and
+   the next rejection re-parks it.
+
+   ATTRIBUTION. `reviewer/default-token-file`'s docstring argues for one pinned
+   credential so reviewer spend stays attributable. Rotating gives that up on
+   purpose: spend now lands on whichever pool account answered. The pool is the
+   same one cchp draws from, so it is the same set of accounts either way."
+  (:require [babashka.fs :as fs]
+            [clojure.edn :as edn]
+            [clojure.string :as str]
+            [pr-review.atomicfile :as atomicfile]
+            [pr-review.flock :as flock]))
+
+(def default-env-file
+  "Where the pool is read from when it is not already in the environment.
+
+   cchp's `.env.local`, because that is the file the operator edits when they
+   change the pool — it holds several commented-out CLAUDE_TOKENS lines and one
+   live one, and keeping a second copy anywhere else would mean a swap that
+   takes effect for sessions and not for reviews. Overridable with
+   PR_REVIEW_TOKENS_ENV_FILE."
+  (str (fs/path (System/getProperty "user.home")
+                "workspace" "home" "claude-code-http-proxy" ".env.local")))
+
+(def ^:private park-ms
+  "How long a token is skipped after it answered with a limit banner: 1 hour.
+
+   A guess, and the same one cchp's token-manager makes for the same reason —
+   the banner states a reset it does not always give in a parseable form, and
+   `claude -p` gives us prose rather than the CLI's structured
+   `rate_limit_event`, so there is no `resetsAt` to believe. Short on purpose:
+   a token parked past its reset is idle capacity, and a token retried early
+   costs one failed review pass, which `MALFORMED` already treats as free."
+  (* 60 60 1000))
+
+;;; Where the pool comes from
+
+(defn- unquote-value
+  "A shell assignment's value, as `source` would see it.
+
+   A QUOTED value ends at its closing quote and whatever follows it —
+   including a ` # comment` — is not part of the value. An UNQUOTED one ends
+   at the first unescaped ` #`.
+
+   Written as one scan over the two cases rather than as two independent
+   rules, because two independent rules is what the first version was and it
+   handled quotes OR a comment, never both: `CLAUDE_TOKENS=\"a,b\" # jason`
+   came back as `[\"\\\"a\" \"b\\\"\"]` — a non-empty pool of mangled
+   credentials, which is worse than an empty one. `pool` non-empty means
+   `select!` returns something, and `(or (tokens/select!) (oauth-token))`
+   short-circuits, so the pinned-file fallback never runs and every review
+   authenticates with a quote-mangled token. The file this reads is documented
+   as carrying comments on exactly these lines."
+  [v]
+  (let [v (str/trim v)
+        q (first v)]
+    (if (and (seq v) (or (= \' q) (= \" q)))
+      (let [rest-of (subs v 1)
+            close (str/index-of rest-of (str q))]
+        (if close
+          (subs rest-of 0 close)
+          ;; An unterminated quote is not a value `source` would accept
+          ;; either. Return what is there minus the opener rather than guess.
+          rest-of))
+      (str/trim (str/replace v #"\s+#.*$" "")))))
+
+(defn env-file-var
+  "The value of `var-name` in a dotenv-style `path`, or nil.
+
+   The LAST assignment wins, because `source` runs the file top to bottom and
+   that is which line cchp ends up with. Comment lines are skipped, which is
+   what makes the several disabled CLAUDE_TOKENS pools in that file stay
+   disabled here too.
+
+   Never throws: an unreadable or absent file means nil, and the caller falls
+   back to the single pinned token. Losing rotation is survivable; a review
+   that cannot start is not."
+  [path var-name]
+  (try
+    (when (and path (fs/regular-file? path))
+      (->> (str/split-lines (slurp (str path)))
+           (keep (fn [line]
+                   (let [l (str/triml line)]
+                     (when-not (str/starts-with? l "#")
+                       (let [l (str/replace-first l #"^export\s+" "")
+                             [k v] (str/split l #"=" 2)]
+                         (when (and v (= var-name (str/trim (str k))))
+                           (unquote-value v)))))))
+           last))
+    (catch Exception _ nil)))
+
+(defn pool
+  "The ordered token pool, or an empty vector.
+
+   Precedence, and why:
+
+   1. CLAUDE_TOKENS in this process's environment. cchp passes it through to
+      everything it spawns on purpose (`cchp.child-env`), so a reviewer
+      triggered from a mydeck Run already has the live pool — no file, no path
+      to keep in step.
+   2. CLAUDE_TOKENS in `default-env-file`, or in PR_REVIEW_TOKENS_ENV_FILE.
+      The reviewer also runs from the user's own terminal, where nothing has
+      sourced that file.
+
+   An EXPLICIT `:env-file` skips the environment and reads that file. Naming a
+   file is the caller saying which pool it means, and the environment silently
+   winning over it makes the argument a no-op wherever the variable happens to
+   be set — which is every reviewer cchp spawns, and was every run of this
+   namespace's own tests until they said so.
+
+   An empty result is the signal to fall back to the single pinned token, so
+   it must be empty rather than nil-vs-empty ambiguous."
+  ([] (pool {}))
+  ([{:keys [env-file]}]
+   (let [raw (if env-file
+               (env-file-var env-file "CLAUDE_TOKENS")
+               (or (some-> (System/getenv "CLAUDE_TOKENS") not-empty)
+                   (env-file-var (or (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")
+                                     default-env-file)
+                                 "CLAUDE_TOKENS")))]
+     (->> (str/split (str raw) #",")
+          (map str/trim)
+          (remove str/blank?)
+          vec))))
+
+;;; Cross-process rotation state
+
+(defn state-path
+  "Where the cursor and the parked set live.
+
+   Under XDG_CACHE_HOME beside `attempts/default-log`, for the reason stated
+   there: TMPDIR measured at three different values on this machine, so a temp
+   path is a place two reviewer processes would never meet."
+  []
+  (str (fs/path (or (System/getenv "XDG_CACHE_HOME")
+                    (str (fs/path (System/getProperty "user.home") ".cache")))
+                "pr-review-loop" "tokens.edn")))
+
+(defn token-key
+  "A token's identity in the state file: a SHA-256 prefix, never the token.
+
+   The file is a plain-text cache under the user's home and the token already
+   has exactly one home (`.env.local`, or the environment). A second copy is a
+   second place to leak it from, and identity is all this file needs."
+  [token]
+  (let [md (java.security.MessageDigest/getInstance "SHA-256")
+        bs (.digest md (.getBytes (str token) "UTF-8"))]
+    (->> (take 12 bs)
+         (map #(format "%02x" %))
+         (apply str))))
+
+(defn- read-state [path]
+  (try
+    (if (fs/exists? path)
+      (let [s (edn/read-string (slurp path))]
+        (if (map? s) s {}))
+      {})
+    (catch Exception _ {})))
+
+(defn- write-state! [path state]
+  (fs/create-dirs (fs/parent path))
+  (atomicfile/spit! path (pr-str state)))
+
+(defn- prune
+  "Drop parks that have expired. Keeps the file from growing a row per token
+   the pool has ever held, and makes `available?` a plain lookup."
+  [parked now-ms]
+  (into {} (remove (fn [[_ until]] (<= (long until) now-ms)) parked)))
+
+(defn- available? [parked now-ms token]
+  (let [until (get parked (token-key token))]
+    (or (nil? until) (<= (long until) now-ms))))
+
+(defn choose
+  "Pure core of `select!`: the token to use, and the state to store.
+
+   Round-robin from `:cursor`, skipping parked tokens. Returns
+   `{:token t :state s}`, or nil when `tokens` is empty.
+
+   WHEN EVERY TOKEN IS PARKED it still returns one — the one whose park ends
+   soonest. A park is a guess (see `park-ms`); refusing to run would turn a
+   guess into a review that never happens, and the caller has no other
+   credential to offer. Getting it wrong costs one `MALFORMED` attempt, which
+   the ledger does not charge a pass for."
+  [tokens state now-ms]
+  (when (seq tokens)
+    (let [parked (prune (:parked state {}) now-ms)
+          n (count tokens)
+          start (mod (long (:cursor state 0)) n)
+          order (map #(nth tokens (mod (+ start %) n)) (range n))
+          token (or (first (filter #(available? parked now-ms %) order))
+                     ;; every one parked: the earliest to come back
+                    (first (sort-by #(get parked (token-key %) 0) tokens)))
+          idx (.indexOf ^java.util.List (vec tokens) token)]
+      {:token token
+       :state (assoc state :parked parked :cursor (inc idx))})))
+
+(defn select!
+  "Pick this run's token and advance the cursor, or nil when the pool is empty.
+
+   Read and write happen under ONE flock: two reviews can start within the same
+   second (a push to two branches), and a read-then-write without the lock
+   hands both the same token and loses one increment — which is the whole
+   mechanism.
+
+   The lock is taken on a guard file, never on the state file itself:
+   `write-state!` publishes by atomic rename, and flocking a path that is about
+   to be renamed locks an orphaned inode (see `pr-review.flock`)."
+  ([] (select! (pool) (System/currentTimeMillis)))
+  ([tokens now-ms]
+   (when (seq tokens)
+     (let [path (state-path)]
+       (try
+         (fs/create-dirs (fs/parent path))
+         (flock/with-file-lock
+           (flock/guard-path path)
+           (fn []
+             (let [{:keys [token state]} (choose tokens (read-state path) now-ms)]
+               (write-state! path state)
+               token)))
+         ;; A cache directory that cannot be written must not cost a review:
+         ;; fall back to the first token, which is the pinned-token behaviour
+         ;; the reviewer had before rotation existed.
+         (catch Exception _ (first tokens)))))))
+
+;;; Parking a spent token
+
+(def limit-patterns
+  "CLI limit banners that mean \"this account is spent\".
+
+   Copied from cchp's `claude-code.query/rate-limit-patterns`, which was
+   derived from banners in llm_request_logs and rewritten once because the one
+   pattern it started with silently stopped matching. Same two shapes:
+   personal/subscription, and the org seat's monthly spend limit.
+
+   ONE DELIBERATE DIVERGENCE: the qualifier is `[\\w-]+` where cchp's is
+   `\\w+`, so a hyphenated window — a `5-hour` limit — matches. That wording
+   is not in the sample cchp's set was derived from, and the asymmetry decides
+   it: an unmatched banner hands a spent token straight back out on the next
+   rotation and every review keeps failing until the account resets, where a
+   pattern one word too wide costs at most one token parked for an hour.
+
+   The org pattern is assembled from two halves at load time, and the banner
+   is written out contiguously nowhere in this file — for cchp's reason, which
+   applies here too: the reviewer reads this repository, and a file containing
+   a banner verbatim matches its own pattern."
+  [#"You've hit your (?:[\w-]+ )?limit · resets \d{1,2}(?::\d{2})?(?:a|p)m \("
+   (re-pattern (str "You've hit your org" "'s monthly spend limit"))])
+
+(defn limited?
+  "True when `text` carries a limit banner."
+  [text]
+  (boolean (and (string? text) (some #(re-find % text) limit-patterns))))
+
+(defn park!
+  "Mark `token` unusable for `park-ms`. No-op without a token.
+
+   Best-effort by design: a failure to record a park costs the next review one
+   wasted attempt against a spent token, where throwing here would cost the
+   CURRENT review its result, which has already been paid for."
+  ([token] (park! token (System/currentTimeMillis)))
+  ([token now-ms]
+   (when (seq (str token))
+     (let [path (state-path)]
+       (try
+         (fs/create-dirs (fs/parent path))
+         (flock/with-file-lock
+           (flock/guard-path path)
+           (fn []
+             (let [state (read-state path)
+                   parked (-> (:parked state {})
+                              (prune now-ms)
+                              (assoc (token-key token) (+ now-ms park-ms)))]
+               (write-state! path (assoc state :parked parked)))))
+         (catch Exception _ nil))))
+   nil))

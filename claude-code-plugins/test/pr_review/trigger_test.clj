@@ -2,11 +2,15 @@
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
             [clojure.string :as str]
-            [clojure.test :refer [deftest is testing]]
+            [clojure.test :refer [deftest is testing use-fixtures]]
             [pr-review.context :as context]
             [pr-review.ledger :as ledger]
             [pr-review.lock :as lock]
+            [pr-review.test-env :as test-env]
             [pr-review.trigger :as trigger]))
+
+(use-fixtures :once test-env/hermetic-tokens)
+
 
 (defn- tmp-repo
   "Returns [repo-root git-dir] for an ordinary clone."

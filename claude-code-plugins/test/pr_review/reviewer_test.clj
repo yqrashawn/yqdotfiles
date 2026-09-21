@@ -2,8 +2,13 @@
   (:require [babashka.fs :as fs]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.test :refer [deftest is testing]]
-            [pr-review.reviewer :as reviewer]))
+            [clojure.test :refer [deftest is testing use-fixtures]]
+            [pr-review.reviewer :as reviewer]
+            [pr-review.test-env :as test-env]
+            [pr-review.tokens :as tokens]))
+
+(use-fixtures :once test-env/hermetic-tokens)
+
 
 (def ^:private good-output
   (str "VERDICT: NOT MERGEABLE — retry loop drops the last attempt\n"
@@ -486,11 +491,13 @@
             inside itself. Adding to :extra-env must never displace it"
     (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-tok"}) "t"))]
       (spit f "sk-fake\n")
-      (with-redefs [reviewer/default-token-file f]
+      (with-redefs [tokens/pool (constantly [])
+                    reviewer/default-token-file f]
         (let [env (reviewer/spawn-env)]
           (is (= "1" (get env reviewer/reviewer-env-var)))
           (is (= "sk-fake" (get env "CLAUDE_CODE_OAUTH_TOKEN")))))
-      (with-redefs [reviewer/default-token-file (str f ".absent")]
+      (with-redefs [tokens/pool (constantly [])
+                    reviewer/default-token-file (str f ".absent")]
         (let [env (reviewer/spawn-env)]
           (is (= "1" (get env reviewer/reviewer-env-var)))
           (is (not (contains? env "CLAUDE_CODE_OAUTH_TOKEN"))
@@ -503,11 +510,13 @@
     (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-tok"}) "t"))
           spawn @#'reviewer/default-spawn]
       (spit f "sk-fake-reaches-child\n")
-      (with-redefs [reviewer/default-token-file f]
+      (with-redefs [tokens/pool (constantly [])
+                    reviewer/default-token-file f]
         (let [res (spawn ["sh" "-c" "echo \"$CLAUDE_CODE_OAUTH_TOKEN|$PR_REVIEW_LOOP_REVIEWER\""]
                          "" "." nil)]
           (is (= "sk-fake-reaches-child|1" (str/trim (:out res))))))
-      (with-redefs [reviewer/default-token-file (str f ".absent")]
+      (with-redefs [tokens/pool (constantly [])
+                    reviewer/default-token-file (str f ".absent")]
         (let [res (spawn ["sh" "-c" "echo \"[$CLAUDE_CODE_OAUTH_TOKEN]|$PR_REVIEW_LOOP_REVIEWER\""]
                          "" "." nil)]
           (is (= "[]|1" (str/trim (:out res)))

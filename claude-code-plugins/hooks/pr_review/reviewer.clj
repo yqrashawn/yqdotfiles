@@ -9,7 +9,8 @@
             [babashka.process :as p]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [pr-review.atomicfile :as atomicfile]))
+            [pr-review.atomicfile :as atomicfile]
+            [pr-review.tokens :as tokens]))
 
 (def categories
   ["correctness/blocking" "correctness/followup" "coverage"
@@ -160,10 +161,16 @@
 (def default-token-file
   "Where the reviewer's own OAuth token lives, if it has one.
 
-   A separate credential on purpose: the reviewer is a `claude -p` the loop
-   spawns with nobody watching, and pinning it to one token keeps its usage
+   The FALLBACK since `pr-review.tokens` — reached when there is no
+   CLAUDE_TOKENS pool to rotate through, which is every installation that has
+   not set one up.
+
+   It used to be the whole mechanism, and for the opposite reason: a separate
+   credential on purpose, because the reviewer is a `claude -p` the loop spawns
+   with nobody watching, and pinning it to one token kept its usage
    attributable and independent of however the session that triggered it
-   happens to be authenticated."
+   happens to be authenticated. A pool gives that up — `pr-review.tokens` says
+   what rotating costs and why it is taken anyway."
   (str (fs/path (System/getProperty "user.home")
                 "Library" "CloudStorage" "Dropbox" "sync" "default-cc-token")))
 
@@ -182,6 +189,38 @@
          (when (seq t) t)))
      (catch Exception _ nil))))
 
+(def ^:dynamic *token*
+  "The credential THIS run chose, bound by `run!` for the duration of the spawn.
+
+   A var rather than an argument because `spawn-env` is reached through
+   `:spawn-fn`, whose 4-argument shape is fixed by every caller and every test
+   stub.
+
+   It exists because selection stopped being idempotent. `oauth-token` read one
+   pinned file, so `run!` (for redaction) and `spawn-env` (for the child) could
+   each call it and agree. `select-token` ROTATES: two calls return two
+   different tokens, the child would run on one and the redactor would scrub
+   the other, and the token actually in the child's environment would be the
+   one left unredacted in the PR comment. One selection per run, and both
+   readers take it from here.
+
+   `::unset` rather than nil as the default: nil is a legitimate selection —
+   it means \"no credential, inherit the parent's\" — and must not be
+   indistinguishable from \"nobody has chosen yet\"."
+  ::unset)
+
+(defn select-token
+  "The token to run this review with, or nil to leave authentication alone.
+
+   The pool first, one token per review, round-robin across runs and skipping
+   any parked by an earlier review's limit banner. `default-token-file` when
+   there is no pool, which is the behaviour every review had before rotation.
+   Nil when there is neither, and `spawn-env` then omits the variable so the
+   reviewer inherits whoever the parent is — losing a review is worse than
+   running it as the wrong account."
+  []
+  (or (tokens/select!) (oauth-token)))
+
 (defn spawn-env
   "The environment the reviewer runs with.
 
@@ -193,17 +232,33 @@
    string would replace working credentials with a blank one — absent has to
    mean absent.
 
-   ONE read, not two. Testing with `(oauth-token)` and then reading it again
-   for the value meant a file removed, emptied or briefly unreadable between
-   the two calls put a nil into the child's environment — the exact state the
-   paragraph above rules out."
+   ONE selection, not two. Testing with `(oauth-token)` and then reading it
+   again for the value meant a file removed, emptied or briefly unreadable
+   between the two calls put a nil into the child's environment — the exact
+   state the paragraph above rules out. With a rotating pool the same shape is
+   worse: a second call returns a DIFFERENT token, and the one in the child's
+   environment is then not the one `run!` redacts. `*token*` is the single
+   selection; this function only reads it.
+
+   CLAUDE_TOKENS is BLANKED in the child, not removed — a nil in `:extra-env`
+   leaves the variable present with an empty value, measured. Either way the
+   pool is out of the child's environment, which is the point: the reviewer is
+   itself a Claude Code session and inherits the pool cchp passes down, and a
+   reviewer that can see the pool is a reviewer that can print it."
   []
-  (let [token (oauth-token)]
-    (cond-> {reviewer-env-var "1"}
+  (let [token (if (= ::unset *token*) (select-token) *token*)]
+    (cond-> {reviewer-env-var "1"
+             ;; Measured, not assumed: a nil in `:extra-env` does NOT drop the
+             ;; variable — the child still has `CLAUDE_TOKENS=` in its `env`,
+             ;; with an empty value. That is what is wanted here and the
+             ;; opposite of what CLAUDE_CODE_OAUTH_TOKEN needs: an empty pool
+             ;; parses to no tokens, where an empty credential would replace a
+             ;; working one.
+             "CLAUDE_TOKENS" nil}
       (seq (str token)) (assoc "CLAUDE_CODE_OAUTH_TOKEN" token))))
 
 (defn redact
-  "Replace the reviewer's own credential with a marker.
+  "Replace every credential this process knows about with a marker.
 
    Everything the reviewer prints is recorded and republished: `:out` becomes
    the PR comment and the findings file, `:err` is streamed to a file the
@@ -212,13 +267,25 @@
    while debugging, or a tool dumping its environment on error all put the
    credential into that stream.
 
+   THE WHOLE POOL, not only the token this run selected. The reviewer is
+   granted Read, Grep, Glob and Bash, `pr-review.tokens` names the pool's file
+   path in source it is routinely asked to read, and a reviewer that `cat`s
+   that file while checking the parser puts every OTHER account's credential
+   into the PR comment — none of which the selected token's own scrub would
+   touch. `tokens/pool` is a read with no state behind it, so asking again
+   here costs nothing.
+
    Nothing else redacted: a value we do not know cannot be matched, and
-   guessing at shapes would give false confidence. This covers the one secret
+   guessing at shapes would give false confidence. This covers the secrets
    this process is known to hold."
   [text token]
-  (if (and (string? text) (string? token) (>= (count token) 8))
-    (str/replace text token "[redacted]")
-    text))
+  (let [secrets (->> (conj (vec (try (tokens/pool) (catch Exception _ nil))) token)
+                     (filter string?)
+                     (filter #(>= (count %) 8))
+                     distinct)]
+    (if (string? text)
+      (reduce (fn [t s] (str/replace t s "[redacted]")) text secrets)
+      text)))
 
 (defn- default-spawn
   "Runs the reviewer. `err-file`, when given, receives stderr AS IT IS WRITTEN
@@ -245,17 +312,33 @@
    :err, so the caller can still tell the author what happened."
   [prompt repo-root opts]
   (let [spawn (or (:spawn-fn opts) default-spawn)
-        token ((or (:token-fn opts) oauth-token))
+        token ((or (:token-fn opts) select-token))
         scrub #(redact % token)]
     (try
-      (let [res (spawn (claude-argv) prompt repo-root (:err-file opts))]
+      ;; The binding covers the spawn, which is where `spawn-env` reads it.
+      ;; Everything after it works on text, and `token` is already in hand.
+      (let [res (binding [*token* token]
+                  (spawn (claude-argv) prompt repo-root (:err-file opts)))]
+        ;; Park a spent credential so the NEXT review skips it. Gated on a
+        ;; non-zero exit, which is both true of every limit banner seen (the
+        ;; CLI prints it and exits 1) and the thing that keeps this from
+        ;; reading a successful review's own prose: the reviewer reads
+        ;; repositories and quotes what it finds, and a review of this plugin
+        ;; that quoted `tokens/limit-patterns` back would otherwise park a
+        ;; working token for an hour.
+        (when (and token (not (zero? (:exit res 0)))
+                   (or (tokens/limited? (:out res)) (tokens/limited? (:err res))))
+          (tokens/park! token))
         ;; Redacted here, at the one place every caller goes through, rather
         ;; than at each of the three places the text is republished — the PR
         ;; comment, the findings file and the streamed stderr. The stderr FILE
         ;; is rewritten too: it is on disk for the author to read, and it is
         ;; the copy that survives a kill.
         (when-let [f (:err-file opts)]
-          (when (and token (fs/exists? f))
+          ;; NOT gated on `token` any more: `redact` now also scrubs the rest
+          ;; of the pool, which is present whether or not this run selected
+          ;; anything, and a nil selection used to leave that file unscrubbed.
+          (when (fs/exists? f)
             (let [raw (slurp f) clean (scrub raw)]
               (when (not= raw clean) (atomicfile/spit! f clean)))))
         (-> res (update :out scrub) (update :err scrub)))
