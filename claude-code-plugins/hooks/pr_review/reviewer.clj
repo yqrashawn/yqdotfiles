@@ -9,7 +9,8 @@
             [babashka.process :as p]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [pr-review.atomicfile :as atomicfile]))
+            [pr-review.atomicfile :as atomicfile]
+            [pr-review.tokens :as tokens]))
 
 (def categories
   ["correctness/blocking" "correctness/followup" "coverage"
@@ -160,10 +161,16 @@
 (def default-token-file
   "Where the reviewer's own OAuth token lives, if it has one.
 
-   A separate credential on purpose: the reviewer is a `claude -p` the loop
-   spawns with nobody watching, and pinning it to one token keeps its usage
+   The FALLBACK since `pr-review.tokens` — reached when there is no
+   CLAUDE_TOKENS pool to rotate through, which is every installation that has
+   not set one up.
+
+   It used to be the whole mechanism, and for the opposite reason: a separate
+   credential on purpose, because the reviewer is a `claude -p` the loop spawns
+   with nobody watching, and pinning it to one token kept its usage
    attributable and independent of however the session that triggered it
-   happens to be authenticated."
+   happens to be authenticated. A pool gives that up — `pr-review.tokens` says
+   what rotating costs and why it is taken anyway."
   (str (fs/path (System/getProperty "user.home")
                 "Library" "CloudStorage" "Dropbox" "sync" "default-cc-token")))
 
@@ -182,6 +189,38 @@
          (when (seq t) t)))
      (catch Exception _ nil))))
 
+(def ^:dynamic *token*
+  "The credential THIS run chose, bound by `run!` for the duration of the spawn.
+
+   A var rather than an argument because `spawn-env` is reached through
+   `:spawn-fn`, whose 4-argument shape is fixed by every caller and every test
+   stub.
+
+   It exists because selection stopped being idempotent. `oauth-token` read one
+   pinned file, so `run!` (for redaction) and `spawn-env` (for the child) could
+   each call it and agree. `select-token` ROTATES: two calls return two
+   different tokens, the child would run on one and the redactor would scrub
+   the other, and the token actually in the child's environment would be the
+   one left unredacted in the PR comment. One selection per run, and both
+   readers take it from here.
+
+   `::unset` rather than nil as the default: nil is a legitimate selection —
+   it means \"no credential, inherit the parent's\" — and must not be
+   indistinguishable from \"nobody has chosen yet\"."
+  ::unset)
+
+(defn select-token
+  "The token to run this review with, or nil to leave authentication alone.
+
+   The pool first, one token per review, round-robin across runs and skipping
+   any parked by an earlier review's limit banner. `default-token-file` when
+   there is no pool, which is the behaviour every review had before rotation.
+   Nil when there is neither, and `spawn-env` then omits the variable so the
+   reviewer inherits whoever the parent is — losing a review is worse than
+   running it as the wrong account."
+  []
+  (or (tokens/select!) (oauth-token)))
+
 (defn spawn-env
   "The environment the reviewer runs with.
 
@@ -193,13 +232,28 @@
    string would replace working credentials with a blank one — absent has to
    mean absent.
 
-   ONE read, not two. Testing with `(oauth-token)` and then reading it again
-   for the value meant a file removed, emptied or briefly unreadable between
-   the two calls put a nil into the child's environment — the exact state the
-   paragraph above rules out."
+   ONE selection, not two. Testing with `(oauth-token)` and then reading it
+   again for the value meant a file removed, emptied or briefly unreadable
+   between the two calls put a nil into the child's environment — the exact
+   state the paragraph above rules out. With a rotating pool the same shape is
+   worse: a second call returns a DIFFERENT token, and the one in the child's
+   environment is then not the one `run!` redacts. `*token*` is the single
+   selection; this function only reads it.
+
+   CLAUDE_TOKENS is stripped from the child. The reviewer is itself a Claude
+   Code session, so it inherits the pool cchp passes down, and a reviewer that
+   can see the pool is a reviewer that can print it — and unlike its own
+   credential, `redact` scrubs only the one token it was given."
   []
-  (let [token (oauth-token)]
-    (cond-> {reviewer-env-var "1"}
+  (let [token (if (= ::unset *token*) (select-token) *token*)]
+    (cond-> {reviewer-env-var "1"
+             ;; Measured, not assumed: a nil in `:extra-env` does NOT drop the
+             ;; variable — the child still has `CLAUDE_TOKENS=` in its `env`,
+             ;; with an empty value. That is what is wanted here and the
+             ;; opposite of what CLAUDE_CODE_OAUTH_TOKEN needs: an empty pool
+             ;; parses to no tokens, where an empty credential would replace a
+             ;; working one.
+             "CLAUDE_TOKENS" nil}
       (seq (str token)) (assoc "CLAUDE_CODE_OAUTH_TOKEN" token))))
 
 (defn redact
@@ -245,10 +299,23 @@
    :err, so the caller can still tell the author what happened."
   [prompt repo-root opts]
   (let [spawn (or (:spawn-fn opts) default-spawn)
-        token ((or (:token-fn opts) oauth-token))
+        token ((or (:token-fn opts) select-token))
         scrub #(redact % token)]
     (try
-      (let [res (spawn (claude-argv) prompt repo-root (:err-file opts))]
+      ;; The binding covers the spawn, which is where `spawn-env` reads it.
+      ;; Everything after it works on text, and `token` is already in hand.
+      (let [res (binding [*token* token]
+                  (spawn (claude-argv) prompt repo-root (:err-file opts)))]
+        ;; Park a spent credential so the NEXT review skips it. Gated on a
+        ;; non-zero exit, which is both true of every limit banner seen (the
+        ;; CLI prints it and exits 1) and the thing that keeps this from
+        ;; reading a successful review's own prose: the reviewer reads
+        ;; repositories and quotes what it finds, and a review of this plugin
+        ;; that quoted `tokens/limit-patterns` back would otherwise park a
+        ;; working token for an hour.
+        (when (and token (not (zero? (:exit res 0)))
+                   (or (tokens/limited? (:out res)) (tokens/limited? (:err res))))
+          (tokens/park! token))
         ;; Redacted here, at the one place every caller goes through, rather
         ;; than at each of the three places the text is republished — the PR
         ;; comment, the findings file and the streamed stderr. The stderr FILE
@@ -377,7 +444,7 @@
   (into {}
         (map (fn [cat]
                (let [re (re-pattern (str "(?i)^\\s*\\[" cat "\\]\\s+(none|\\d+)"))
-                     n  (->> lines (keep #(second (re-find re %))) first)]
+                     n (->> lines (keep #(second (re-find re %))) first)]
                  [cat (cond (nil? n) 0
                             (= "none" (str/lower-case n)) 0
                             :else (parse-long n))])))
@@ -424,11 +491,11 @@
    verdict line; nil parses by position alone. See `winning-verdict`."
   ([out] (parse-output out nil))
   ([out tag]
-   (let [out   (or out "")
+   (let [out (or out "")
          lines (normalized-lines out)
          [vi v] (winning-verdict lines tag)]
-    (if v
-      {:verdict v
+     (if v
+       {:verdict v
        ;; Counts come from AFTER the winning verdict line, not from the first
        ;; block in the reply. `winning-verdict` does not take the FIRST verdict
        ;; at column 0 because reviewers restate the format, or recap the previous
@@ -442,22 +509,22 @@
        ;; asks for verdict, then counts, then findings, but a reviewer that
        ;; puts its findings before its final verdict line would lose all of
        ;; them, and losing findings is worse than the counts being off.
-       :counts (parse-counts (drop (inc vi) lines))
-       :fingerprints (parse-fingerprints lines)
-       :body out}
-      {:verdict "MALFORMED"
+        :counts (parse-counts (drop (inc vi) lines))
+        :fingerprints (parse-fingerprints lines)
+        :body out}
+       {:verdict "MALFORMED"
        ;; Say WHY when the cause is the one the loop introduced. An untagged
        ;; verdict is the difference between "the reviewer crashed" and "the
        ;; reviewer answered in a shape that cannot be told from a quotation",
        ;; and only the second is fixed by the reviewer's own formatting.
-       :reason (when (and tag (seq (verdict-hits lines nil)))
-                 (str "The reply has a verdict at column 0, but not the tagged"
-                      " form `VERDICT[" tag "]:` this pass asked for. Only the"
-                      " tag distinguishes your own verdict from one quoted from"
-                      " an earlier pass, so an untagged verdict is not read."))
-       :counts (zipmap categories (repeat 0))
-       :fingerprints []
-       :body (str/trim out)}))))
+        :reason (when (and tag (seq (verdict-hits lines nil)))
+                  (str "The reply has a verdict at column 0, but not the tagged"
+                       " form `VERDICT[" tag "]:` this pass asked for. Only the"
+                       " tag distinguishes your own verdict from one quoted from"
+                       " an earlier pass, so an untagged verdict is not read."))
+        :counts (zipmap categories (repeat 0))
+        :fingerprints []
+        :body (str/trim out)}))))
 
 (defn mergeable?
   "MERGEABLE means exactly: the reviewer said so, and its own count block
