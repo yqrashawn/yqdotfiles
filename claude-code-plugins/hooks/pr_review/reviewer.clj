@@ -257,8 +257,38 @@
              "CLAUDE_TOKENS" nil}
       (seq (str token)) (assoc "CLAUDE_CODE_OAUTH_TOKEN" token))))
 
+(defn credentials
+  "Every credential this process knows about, as one collection, computed ONCE.
+
+   Three sources, and leaving any of them out has been a live gap:
+
+   - `selected`, the token this run is spawning with.
+   - the pool, because the reviewer has Read, Grep, Glob and Bash and
+     `pr-review.tokens` names the pool's file path in source it is routinely
+     asked to read; a `cat` of that file prints every account's credential,
+     and scrubbing only `selected` left the other N-1 in the PR comment.
+   - the PINNED `default-token-file`, which is the same story one file over.
+     Before rotation it needed no mention because `selected` always WAS the
+     pinned token; with a non-empty pool it is in neither of the first two, so
+     it became the one credential this process holds and does not scrub.
+
+   Computed once, at the start of the run, rather than read again at redaction
+   time: a pool edited mid-review would otherwise leave the departed members
+   unmarked in the output of the review still running on them.
+
+   Too-short values are dropped here rather than at each use: a marker for
+   something under 8 characters would match ordinary prose everywhere."
+  [selected]
+  (->> (conj (vec (try (tokens/pool) (catch Exception _ nil)))
+             selected
+             (oauth-token))
+       (filter string?)
+       (filter #(>= (count %) 8))
+       distinct
+       vec))
+
 (defn redact
-  "Replace every credential this process knows about with a marker.
+  "Replace each of `secrets` with a marker.
 
    Everything the reviewer prints is recorded and republished: `:out` becomes
    the PR comment and the findings file, `:err` is streamed to a file the
@@ -267,25 +297,19 @@
    while debugging, or a tool dumping its environment on error all put the
    credential into that stream.
 
-   THE WHOLE POOL, not only the token this run selected. The reviewer is
-   granted Read, Grep, Glob and Bash, `pr-review.tokens` names the pool's file
-   path in source it is routinely asked to read, and a reviewer that `cat`s
-   that file while checking the parser puts every OTHER account's credential
-   into the PR comment — none of which the selected token's own scrub would
-   touch. `tokens/pool` is a read with no state behind it, so asking again
-   here costs nothing.
+   Takes a COLLECTION, not one token. WHICH credentials are at risk is
+   `credentials`' question, and it has now been answered wrong twice by being
+   answered here instead — once for the pool, once for the pinned file.
 
    Nothing else redacted: a value we do not know cannot be matched, and
    guessing at shapes would give false confidence. This covers the secrets
    this process is known to hold."
-  [text token]
-  (let [secrets (->> (conj (vec (try (tokens/pool) (catch Exception _ nil))) token)
-                     (filter string?)
-                     (filter #(>= (count %) 8))
-                     distinct)]
-    (if (string? text)
-      (reduce (fn [t s] (str/replace t s "[redacted]")) text secrets)
-      text)))
+  [text secrets]
+  (if (string? text)
+    (reduce (fn [t s] (str/replace t s "[redacted]"))
+            text
+            (filter #(and (string? %) (>= (count %) 8)) secrets))
+    text))
 
 (defn- default-spawn
   "Runs the reviewer. `err-file`, when given, receives stderr AS IT IS WRITTEN
@@ -313,7 +337,11 @@
   [prompt repo-root opts]
   (let [spawn (or (:spawn-fn opts) default-spawn)
         token ((or (:token-fn opts) select-token))
-        scrub #(redact % token)]
+        ;; Once, here, and every scrub below closes over it. Asking again at
+        ;; each sink is how the pinned token came to be the one credential
+        ;; this process holds and does not scrub.
+        secrets (credentials token)
+        scrub #(redact % secrets)]
     (try
       ;; The binding covers the spawn, which is where `spawn-env` reads it.
       ;; Everything after it works on text, and `token` is already in hand.
