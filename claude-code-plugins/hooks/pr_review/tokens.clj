@@ -374,14 +374,16 @@
   (try
     (let [zone (java.time.ZoneId/of tz)
           h12 (parse-long hh)
-          ;; 1-12 or nothing. The CLI prints a valid 12-hour clock, so this is
-          ;; only reachable from text the reviewer quoted — but there it was
-          ;; reachable: `0am` parsed as midnight and `13am` as 13:00, and only
-          ;; `>= 14` was rejected downstream by `LocalTime/of`. Under the
-          ;; earliest rule a bogus hour SHORTENS a park below what the banner
-          ;; asked, which is the direction that costs a review.
-          _ (when-not (<= 1 h12 12) (throw (ex-info "not a 12-hour hour" {})))
-          hour (cond (and (= "a" ap) (= 12 h12)) 0
+          ;; 1-12 or nothing. The CLI prints a valid 12-hour clock, so a
+          ;; bogus hour is only reachable from text the reviewer quoted — but
+          ;; there it WAS reachable, and `LocalTime/of` caught far less of it
+          ;; than it looks: measured by running the old mapping, `am` passed
+          ;; everything up to 23 (`14am` gave 14:00) and was first rejected at
+          ;; 24, while `pm` was first rejected at 13. `0am` gave midnight.
+          ;; A bogus hour shortens a park below what the banner asked, which
+          ;; is the direction that costs a review.
+          hour (cond (not (<= 1 h12 12)) (throw (ex-info "not a 12-hour hour" {}))
+                     (and (= "a" ap) (= 12 h12)) 0
                      (= "a" ap) h12
                      (= 12 h12) 12
                      :else (+ 12 h12))
