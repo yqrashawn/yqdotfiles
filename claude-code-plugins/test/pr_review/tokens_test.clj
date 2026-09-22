@@ -112,10 +112,11 @@
                        "b"))))))
 
 (deftest every-token-parked-still-returns-one
-  (testing "a park is a one-hour GUESS — the CLI's prose banner carries no
-            reset this can parse. Refusing to run would turn that guess into a
-            review that never happens, and a wrong guess costs one MALFORMED
-            attempt, which the ledger charges no pass for"
+  (testing "a park can be wrong in either direction — a parsed reset from
+            another machine's clock, or `park-ms` when the prose named none.
+            Refusing to run would turn that into a review that never happens,
+            and a wrong park costs one MALFORMED attempt, which the ledger
+            charges no pass for"
     (let [path (tmp-state)]
       (with-redefs [tokens/state-path (constantly path)]
         (tokens/park! "a" 1000)
@@ -177,7 +178,14 @@
       (is (= (shanghai-ms 2026 9 21 0 0)
              (tokens/reset-at-ms "resets 12am (Asia/Shanghai)"
                                  (shanghai-ms 2026 9 20 13 0)))
-          "and the previous midnight for a caller a day earlier")))
+          "the NEXT midnight for a caller a day earlier — never a past one,
+           which the `.isAfter` filter makes impossible")
+      (is (= (shanghai-ms 2026 9 22 12 0)
+             (tokens/reset-at-ms "resets 12pm (Asia/Shanghai)" now))
+          "12pm is NOON, hour 12 — tomorrow's, since `now` is 13:00 and noon
+           today is past. The other end of the clock, and the branch that
+           stayed untested while this block's own description claimed both:
+           mapping 12pm to hour 0 would give 2026-09-22T00:00 here")))
 
   (testing "a DATED reset, which the org banner uses, and which carries no year"
     (let [now (shanghai-ms 2026 9 21 22 24)]
@@ -203,6 +211,39 @@
       (is (nil? (tokens/reset-at-ms nil now)))
       (is (nil? (tokens/reset-at-ms "resets 99am (Asia/Shanghai)" now))
           "not an hour"))))
+
+(deftest quoted-prose-cannot-lengthen-a-park
+  (testing "what arrives at `reset-at-ms` is the reviewer's WHOLE output, and
+            the reviewer reads repositories and quotes what it finds —
+            including, on this repository, the fixtures in this file. Taking
+            the FIRST `resets …` let a quotation decide the park: measured, a
+            quoted `Sep 28 at 3am` above a genuine `resets 3am` gave a
+            138.7-hour park where the banner said 18.7, and nothing can
+            correct it — there is no unpark and `park!` refuses to shorten.
+
+            So the rule is the EARLIEST of every match, which makes a quoted
+            instant able only to SHORTEN a park. Both orderings are asserted:
+            `re-find` takes the first, so a quotation BELOW the banner passes
+            even with the defect armed."
+    (let [now (shanghai-ms 2026 9 21 22 24)
+          real (shanghai-ms 2026 9 22 3 0)
+          banner "You have hit it · resets 3am (Asia/Shanghai)"
+          far "the diff quotes resets Sep 28 at 3am (Asia/Shanghai)"]
+      (is (= real (tokens/reset-at-ms (str far "\n" banner) now))
+          "quotation ABOVE the banner")
+      (is (= real (tokens/reset-at-ms (str banner "\n" far) now))
+          "and BELOW it")
+      (is (= real (tokens/reset-at-ms banner now))
+          "and the banner alone is unchanged")))
+
+  (testing "a quoted EARLIER instant may shorten the park, which is the
+            deliberate direction: it costs one retry, which re-parks"
+    (let [now (shanghai-ms 2026 9 21 22 24)
+          soon (shanghai-ms 2026 9 21 23 0)]
+      (is (= soon (tokens/reset-at-ms
+                   (str "quoting resets 11pm (Asia/Shanghai)\n"
+                        "You have hit it · resets 3am (Asia/Shanghai)")
+                   now))))))
 
 (deftest a-park-lasts-until-the-stated-reset
   (let [path (tmp-state)

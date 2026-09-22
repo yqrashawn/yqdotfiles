@@ -16,8 +16,11 @@
    monotonic reading precisely because it never leaves its process, and a
    monotonic reading means nothing to the process that reads this file next.
    The cost is the one cchp's monotonic.clj documents: an NTP step or a
-   suspended host mis-times a park. A park is a one-hour guess either way, and
-   the next rejection re-parks it.
+   suspended host mis-times a park. A park runs to the reset its banner states
+   (`reset-at-ms`) and falls back to `park-ms` when the prose names none, so a
+   mis-timed park is bounded by `max-park-ms` rather than by the hour it used
+   to be — and `park!` will not shorten one, so a park too long is not
+   corrected by the next rejection. Issue #175.
 
    ATTRIBUTION. `reviewer/default-token-file`'s docstring argues for one pinned
    credential so reviewer spend stays attributable. Rotating gives that up on
@@ -41,14 +44,18 @@
                 "workspace" "home" "claude-code-http-proxy" ".env.local")))
 
 (def ^:private park-ms
-  "How long a token is skipped after it answered with a limit banner: 1 hour.
+  "The FALLBACK park, for a rejection whose prose names no reset this can
+   place on a clock: 1 hour.
 
-   A guess, and the same one cchp's token-manager makes for the same reason —
-   the banner states a reset it does not always give in a parseable form, and
-   `claude -p` gives us prose rather than the CLI's structured
-   `rate_limit_event`, so there is no `resetsAt` to believe. Short on purpose:
-   a token parked past its reset is idle capacity, and a token retried early
-   costs one failed review pass, which `MALFORMED` already treats as free."
+   Not the usual case any more — `reset-at-ms` parses the reset out of the
+   banner and `park!` runs the park to that instant. This is what is left when
+   it cannot: the same guess cchp's token-manager makes, for a reason that
+   still holds here, since `claude -p` gives prose and not the CLI's
+   structured `rate_limit_event` with its `resetsAt`.
+
+   Short on purpose: a token parked past its reset is idle capacity, and a
+   token retried early costs one failed review pass, which `MALFORMED` already
+   treats as free."
   (* 60 60 1000))
 
 ;;; Where the pool comes from
@@ -248,8 +255,9 @@
    `{:token t :state s}`, or nil when `tokens` is empty.
 
    WHEN EVERY TOKEN IS PARKED it still returns one — the one whose park ends
-   soonest. A park is a guess (see `park-ms`); refusing to run would turn a
-   guess into a review that never happens, and the caller has no other
+   soonest. A park is a stated reset at best and `park-ms` at worst, and
+   either can be wrong; refusing to run would turn that into a review that
+   never happens, and the caller has no other
    credential to offer. Getting it wrong costs one `MALFORMED` attempt, which
    the ledger does not charge a pass for."
   [tokens state now-ms]
@@ -308,7 +316,8 @@
    is not in the sample cchp's set was derived from, and the asymmetry decides
    it: an unmatched banner hands a spent token straight back out on the next
    rotation and every review keeps failing until the account resets, where a
-   pattern one word too wide costs at most one token parked for an hour.
+   pattern one word too wide costs one token parked until whatever reset the
+   text names — `park-ms` if it names none, and at most `max-park-ms`.
 
    The org pattern is assembled from two halves at load time, and the banner
    is written out contiguously nowhere in this file — for cchp's reason, which
@@ -346,6 +355,66 @@
    where falling back to the hour costs one retry to find out."
   (* 8 24 60 60 1000))
 
+(defn- reset-candidate
+  "One `resets …` match placed on a clock, in epoch ms, or nil.
+
+   nil for anything not clearly in the future and within `max-park-ms`: a
+   reset already past says nothing about when the next one is.
+
+   Undated means the next occurrence of that time, which for a weekly window
+   is a LOWER bound — and a lower bound is the right error here, for the
+   reason `reset-at-ms` gives.
+
+   A dated reset carries no year, so the years either side of now are tried
+   too: a December banner naming January is next year, and `max-park-ms`
+   rejects whatever is absurd. `Month/valueOf` wants the full name, and
+   `java.time` has no three-letter parse that does not also drag in a
+   locale."
+  [mon day hh mm ap tz now-ms]
+  (try
+    (let [zone (java.time.ZoneId/of tz)
+          h12 (parse-long hh)
+          hour (cond (and (= "a" ap) (= 12 h12)) 0
+                     (= "a" ap) h12
+                     (= 12 h12) 12
+                     :else (+ 12 h12))
+          time (java.time.LocalTime/of hour (if mm (parse-long mm) 0))
+          now (java.time.Instant/ofEpochMilli now-ms)
+          candidates
+          (if mon
+            (let [month (.getValue (java.time.Month/valueOf
+                                    (str/upper-case
+                                     (case (str/lower-case mon)
+                                       "jan" "january" "feb" "february"
+                                       "mar" "march" "apr" "april"
+                                       "may" "may" "jun" "june"
+                                       "jul" "july" "aug" "august"
+                                       "sep" "september" "oct" "october"
+                                       "nov" "november" "dec" "december"
+                                       mon))))
+                  y (.getYear (java.time.ZonedDateTime/ofInstant now zone))]
+              (keep (fn [yy]
+                      (try
+                        (-> (java.time.LocalDate/of yy month (parse-long day))
+                            (.atTime time)
+                            (.atZone zone)
+                            .toInstant)
+                        (catch Exception _ nil)))
+                    [(dec y) y (inc y)]))
+            (let [today (-> (java.time.ZonedDateTime/ofInstant now zone)
+                            (.with time))]
+              [(.toInstant today) (.toInstant (.plusDays today 1))]))]
+      (when-let [i (->> candidates
+                        (filter #(.isAfter ^java.time.Instant % now))
+                        sort
+                        first)]
+        (let [ms (.toEpochMilli ^java.time.Instant i)]
+          (when (<= (- ms now-ms) max-park-ms) ms))))
+    ;; A malformed zone, an impossible date, a number that is not one: the
+    ;; caller has an hour to fall back on, and losing a park is survivable
+    ;; where losing the review that is already paid for is not.
+    (catch Exception _ nil)))
+
 (defn reset-at-ms
   "The instant `banner` says the limit resets, in epoch ms, or nil.
 
@@ -359,61 +428,30 @@
    re-parks it; that rejection is a review that did not happen, because a
    MALFORMED attempt is not retried automatically.
 
-   Three shapes, all seen: a bare `3am`, minutes as in `8:30pm`, and a dated
-   `Sep 15 at 3am`. Undated means the next occurrence of that time — which is
-   a LOWER bound for a weekly window, and a lower bound is the right error to
-   make here.
+   THE EARLIEST of every `resets …` in `banner`, not the first. What arrives
+   here is the reviewer's whole output, and the reviewer reads repositories
+   and quotes what it finds — on this repository, including the fixtures in
+   this namespace's own tests. Taking the first match let quoted prose above a
+   real banner decide the park: measured, a quoted `Sep 28 at 3am` above a
+   genuine `resets 3am` gave a 138.7-hour park where the banner said 18.7.
 
-   nil, deliberately, for anything not clearly in the future and within
-   `max-park-ms`: a reset already past says nothing about when the next one
-   is, and the caller then falls back to the hour."
+   Earliest, rather than trying to identify which match is the banner: there
+   is no reliable way to tell a quotation from the real thing in a text the
+   reviewer composed, and the two errors are not symmetric. Parking too
+   briefly costs one retry, which re-parks. Parking too long cannot be
+   corrected at all — there is no unpark, and `park!` refuses to shorten. So
+   under this rule a quoted instant can only ever make the park SHORTER than
+   the banner asked, never longer, and the worst a forged one can do is what
+   no banner at all already does.
+
+   nil when nothing parses, and the caller then falls back to the hour."
   [banner now-ms]
   (try
-    (when-let [[_ mon day hh mm ap tz] (and (string? banner) (re-find reset-re banner))]
-      (let [zone (java.time.ZoneId/of tz)
-            h12 (parse-long hh)
-            hour (cond (and (= "a" ap) (= 12 h12)) 0
-                       (= "a" ap) h12
-                       (= 12 h12) 12
-                       :else (+ 12 h12))
-            time (java.time.LocalTime/of hour (if mm (parse-long mm) 0))
-            now (java.time.Instant/ofEpochMilli now-ms)
-            candidates (if mon
-                         ;; A dated reset carries no year. Try the years
-                         ;; around now rather than assuming this one: a
-                         ;; December banner naming January is next year, and
-                         ;; `max-park-ms` below rejects whatever is absurd.
-                         (let [month (.getValue (java.time.Month/valueOf
-                                                 (clojure.string/upper-case
-                                                  (case (clojure.string/lower-case mon)
-                                                    "jan" "january" "feb" "february"
-                                                    "mar" "march" "apr" "april"
-                                                    "may" "may" "jun" "june"
-                                                    "jul" "july" "aug" "august"
-                                                    "sep" "september" "oct" "october"
-                                                    "nov" "november" "dec" "december"
-                                                    mon))))
-                               y (.getYear (java.time.ZonedDateTime/ofInstant now zone))]
-                           (keep (fn [yy]
-                                   (try
-                                     (-> (java.time.LocalDate/of yy month (parse-long day))
-                                         (.atTime time)
-                                         (.atZone zone)
-                                         .toInstant)
-                                     (catch Exception _ nil)))
-                                 [(dec y) y (inc y)]))
-                         (let [today (-> (java.time.ZonedDateTime/ofInstant now zone)
-                                         (.with time))]
-                           [(.toInstant today) (.toInstant (.plusDays today 1))]))]
-        (when-let [i (->> candidates
-                          (filter #(.isAfter ^java.time.Instant % now))
-                          (sort)
-                          first)]
-          (let [ms (.toEpochMilli ^java.time.Instant i)]
-            (when (<= (- ms now-ms) max-park-ms) ms)))))
-    ;; A malformed zone, an impossible date, a number that is not one: the
-    ;; caller has an hour to fall back on, and losing a park is survivable
-    ;; where losing the review that is already paid for is not.
+    (->> (when (string? banner) (re-seq reset-re banner))
+         (keep (fn [[_ mon day hh mm ap tz]]
+                 (reset-candidate mon day hh mm ap tz now-ms)))
+         sort
+         first)
     (catch Exception _ nil)))
 
 (defn park!
