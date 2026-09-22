@@ -190,51 +190,72 @@
    `.env.local` and that file holds far more than Claude tokens."
   #"sk-ant-[A-Za-z0-9_-]{16,}|sk-[A-Za-z0-9]{20,}|xox[abeoprs]-[A-Za-z0-9-]{10,}|gh[pousr]_[A-Za-z0-9]{20,}")
 
+(def placeholder-words
+  "The words a value uses to ANNOUNCE it is not a credential.
+
+   This is a list, and a list is what #173 says cannot converge — but the
+   direction decides it. Every previous rule here was STRUCTURAL (shouting
+   case, a `/`, a `[A-Z0-9_]+` shape) and each one, on the next pass, turned
+   out to describe real credentials too: an AWS key id, a base64 secret
+   carrying `/`, a connection URL with the password in it, an upper-case
+   UUID. A structural rule that is wrong drops a credential out of BOTH
+   layers, which is the failure this whole mechanism exists to prevent.
+
+   A word list is wrong in the other direction. To be excluded, a value has
+   to SAY it is a placeholder, and a random credential containing one of
+   these as a substring is the only way to lose one: for a 40-character
+   base64 secret, on the order of 1e-6. Over-redaction is the cost that
+   remains, and it is the cost worth paying."
+  ["REPLACE" "CHANGEME" "CHANGE_ME" "CHANGE-ME" "PLACEHOLDER" "YOUR_" "YOUR-"
+   "TODO" "FIXME" "FILL_IN" "FILL-IN" "FILLME" "DUMMY" "XXXX"])
+
 (defn marker-worthy?
   "Whether `v`, read out of a credential file, may become a redaction marker.
 
    `redact` substitutes a marker EVERYWHERE it appears, so a marker that is
    also ordinary text garbles the review. Credential files are exactly where
    placeholders live — `# CLAUDE_TOKENS=REPLACE_ME_WITH_TOKEN` is a comment in
-   the kind of file this reads — and marking every assignment without a filter
-   turns each placeholder into a substitution over unrelated prose.
+   the kind of file this reads — and marking every assignment without any
+   filter turns each placeholder into a substitution over unrelated prose.
 
-   Three rules, none of them an enumeration of placeholders:
+   THE INVARIANT, after two passes of getting it wrong from both sides: a
+   value is a marker unless it ANNOUNCES that it is not a credential. Nothing
+   here describes what a credential looks like, because every attempt to do
+   that excluded a real one — shouting case excluded an AWS key id and a
+   base32 TOTP secret, and `/` excluded a base64 secret key and a
+   `postgres://user:password@host/db` URL. A rule that is wrong in that
+   direction drops the value out of BOTH layers, and `credential-shape-re`
+   does not cover any of those four.
+
+   So, two rules:
 
    - 16 characters and no whitespace. Shorter matches prose everywhere.
      `reviewer/credentials` keeps its own 8-character floor for the values
-     this process KNOWS are credentials; this is the higher bar a value has to
-     clear to be GUESSED into the set.
-   - SHOUTING SEGMENTS are a placeholder: `REPLACE_ME_WITH_TOKEN`,
-     `YOUR_TOKEN_HERE`, `REPLACE-ME-WITH-YOUR-TOKEN`. Upper-case WORDS joined
-     by `_` or `-` is the convention for \"fill this in\". A single upper-case
-     run is NOT covered, on purpose: `AKIAIOSFODNN7EXAMPLE` (an AWS key id)
-     and a base32 TOTP secret are both spelled that way, and an earlier
-     version of this rule rejected every `[A-Z0-9_]+` value — which took both
-     of those out of the marker set while `credential-shape-re` does not
-     cover them either, so neither layer held them. `<…>` is the other
-     placeholder convention and goes with this rule.
-   - A `/` means a URL or a path, not a credential.
+     this process KNOWS are credentials; this is the higher bar a value has
+     to clear to be GUESSED into the set.
+   - `placeholder-words`, or `<…>`, anywhere in the value. Both are ways of
+     saying \"fill this in\".
 
-   WHAT IT STILL ADMITS, stated rather than implied: any other ≥16-character
-   configuration value in the file — a model id, a client id, a hostname —
-   becomes a marker and is substituted wherever it appears in the review. That
-   is the deliberate direction of error. A word redacted out of a review costs
-   a reread; a credential left unmarked costs the credential, and the three
-   passes this replaces were all the second kind.
+   WHAT THIS ADMITS, stated rather than implied: every other ≥16-character
+   value in the file — a URL, a path, a model id, a client id — becomes a
+   marker and is substituted wherever it appears in the review output. A word
+   redacted out of a review costs a reread; a credential left unmarked costs
+   the credential, and every finding this mechanism has answered was the
+   second kind.
 
    A value matching `credential-shape-re` passes regardless — a known
-   credential shape outranks every rule here, and that is what keeps the shape
-   floor from being weakened by this gate."
+   credential shape outranks the rules here, so the gate can never weaken the
+   floor."
   [v]
   (boolean
    (and (string? v)
-        (let [v (str/trim v)]
+        (let [v (str/trim v)
+              upper (str/upper-case v)]
           (and (>= (count v) 16)
                (not (re-find #"\s" v))
                (or (re-find credential-shape-re v)
-                   (and (not (re-matches #"[A-Z0-9]+(?:[_-][A-Z0-9]+)+" v))
-                        (not (re-find #"[<>/]" v)))))))))
+                   (and (not (re-find #"[<>]" v))
+                        (not-any? #(str/includes? upper %) placeholder-words))))))))
 
 (defn env-secrets
   "The pool in THIS process's environment, split.

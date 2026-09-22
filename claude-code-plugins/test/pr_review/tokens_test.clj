@@ -1,7 +1,7 @@
 (ns pr-review.tokens-test
   (:require [babashka.fs :as fs]
+            [babashka.process :as p]
             [clojure.edn :as edn]
-            [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [pr-review.reviewer :as reviewer]
@@ -9,15 +9,6 @@
             [pr-review.tokens :as tokens]))
 
 (use-fixtures :once test-env/hermetic-tokens)
-
-(defn- plugin-root
-  "This plugin's directory, found through the classpath rather than through
-   the working directory: `bb test` runs here, but the suite is runnable from
-   the repo root too, and a relative `slurp` errors there rather than
-   failing."
-  []
-  (-> (io/resource "pr_review/tokens.clj") .getPath fs/path
-      fs/parent fs/parent fs/parent))
 
 (defn- tmp-state
   "A state path of this test's own. Every stateful test redefs `state-path` to
@@ -626,11 +617,23 @@
            rejecting every `[A-Z0-9_]+` value took them out of the marker set
            while `credential-shape-re` does not cover them either — neither
            layer held them")
-      (is (not-any? tokens/marker-worthy?
-                    ["https://api.anthropic.com/v1"
-                     "/Users/x/workspace/home/claude-code-http-proxy"])
-          "a URL or a path is configuration, and a marker is substituted
-           everywhere it appears")
+      (is (every? tokens/marker-worthy?
+                  ["wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+                   "postgres://revieweruser:s3cr3tPassw0rd@db.internal:5432/app"
+                   "550E8400-E29B-41D4-A716-446655440000"])
+          "and neither is a `/` a reliable sign of configuration: a base64
+           secret key carries one, and a connection URL carries the password
+           itself. A rule excluding them took all three out of BOTH layers,
+           which is the failure the whole mechanism exists to prevent")
+      (is (every? tokens/marker-worthy?
+                  ["https://api.anthropic.com/v1"
+                   "/Users/x/workspace/home/claude-code-http-proxy"
+                   "claude-sonnet-4-5-20250929"])
+          "the cost of that, stated as a test rather than left in a
+           docstring: ordinary configuration in the same file IS marked, and
+           a URL or a model id in the review comes back `[redacted]`. A word
+           redacted costs a reread; a credential unmarked costs the
+           credential")
       (is (= "keep REPLACE_ME_WITH_TOKEN and <your-token-here-goes>"
              (reviewer/redact "keep REPLACE_ME_WITH_TOKEN and <your-token-here-goes>"
                               (tokens/known-secrets f)))
@@ -650,19 +653,33 @@
       (is (= "a review that discusses sk-ant- prefixes is untouched"
              (reviewer/redact "a review that discusses sk-ant- prefixes is untouched" []))
           "the prefix alone is prose: the shape needs a credential-length tail")
-      (is (empty? (->> (fs/glob (plugin-root) "**/*.{clj,edn,md}")
-                       (filter #(re-find tokens/credential-shape-re (slurp (str %))))
-                       (map str)))
-          "and nothing in this plugin matches the pattern — not just the two
-           hook files. The reviewer reads the REPOSITORY, so a fixture that
-           matches comes back as `[redacted]` in a review of this tree, and a
-           test fixture that the shape floor scrubs cannot guard the named
-           layer (which is how three tests here came to pass on the floor
-           alone). #176 was the same mistake with worse consequences.
-
-           Anchored on `plugin-root`, not on the working directory: this
-           suite is runnable from the repo root, where a relative path errors
-           rather than fails."))))
+      ;; Every file, the way `no-plugin-file-matches-a-limit-banner` does it,
+      ;; and with its two guards: a `**/*.{clj,edn,md}` glob skipped every
+      ;; depth-0 file — `README.md` and `bb.edn`, which are the extensions it
+      ;; named — and an empty glob result would have made the whole assertion
+      ;; vacuous. Measured: a planted match in `README.md` left the suite
+      ;; green.
+      (let [root (plugin-root)
+            files (->> (fs/glob root "**")
+                       (filter fs/regular-file?)
+                       (remove #(str/includes? (str %) "/.git/")))]
+        (is (fs/directory? (fs/path root "hooks" "pr_review"))
+            (str root " is not the plugin root — this test would scan the"
+                 " wrong tree and pass on it"))
+        (is (< 20 (count files))
+            (str "only " (count files) " files found under " root))
+        (is (empty? (when (fs/directory? (fs/path root "hooks" "pr_review"))
+                      (->> files
+                           (filter #(re-find tokens/credential-shape-re
+                                             (try (slurp (str %))
+                                                  (catch Exception _ ""))))
+                           (map str))))
+            "nothing in this plugin matches the pattern. The reviewer reads
+             the REPOSITORY, so a file that matches comes back `[redacted]`
+             in a review of this tree — and a test fixture the shape floor
+             scrubs cannot guard the NAMED layer, which is how three tests
+             here came to pass on the floor alone. #176 was the same mistake
+             with worse consequences.")))))
 
 (deftest the-marker-set-covers-every-named-file-not-one-of-them
   (testing "the override says which file the POOL comes from. It does not make
@@ -676,6 +693,32 @@
         "an empty override is not a path — `or` read it as one and dropped the
          default file")
     (is (= [tokens/default-env-file] (tokens/secret-files nil)))))
+
+(deftest an-empty-override-does-not-cost-the-pool-in-a-real-process
+  (testing "the WIRING, which the rule test below cannot reach: `pool` reads
+            PR_REVIEW_TOKENS_ENV_FILE from the environment, and a process
+            cannot set a variable in its own environment for its own
+            `System/getenv`. Measured on the version this replaces: putting
+            the bare `or` back at `pool`'s call site left the whole suite
+            green, so the fix had a test for the rule and none for the defect.
+
+            A CHILD process is the only seam that reaches it. It costs a JVM
+            start; the property is that a review silently falls back to the
+            pinned token, which is what `pool-file` exists to prevent."
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-empty"}) ".env.local"))
+          code (str "(require '[pr-review.tokens :as t])"
+                    " (with-redefs [t/default-env-file \"" f "\"]"
+                    " (prn (t/pool)))")]
+      (spit f "CLAUDE_TOKENS=tok-from-the-default-file\n")
+      (let [{:keys [out exit]}
+            (p/sh ["bb" "-e" code]
+                  {:dir (plugin-root)
+                   :extra-env {"PR_REVIEW_TOKENS_ENV_FILE" ""
+                               "CLAUDE_TOKENS" nil}})]
+        (is (zero? exit) out)
+        (is (= ["tok-from-the-default-file"] (edn/read-string out))
+            "an empty override is not a path: read as one, the default file
+             is never consulted and the pool comes back empty")))))
 
 (deftest the-pool-reads-one-file-and-an-empty-override-is-not-one
   (testing "`pool` picks ONE file, where `secret-files` marks both — the pool
