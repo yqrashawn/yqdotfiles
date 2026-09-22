@@ -361,7 +361,10 @@
         ;; working token for an hour.
         (when (and token (not (zero? (:exit res 0)))
                    (or (tokens/limited? (:out res)) (tokens/limited? (:err res))))
-          (tokens/park! token))
+          ;; The banner goes with it: it usually STATES the reset, and an hour
+          ;; is measurably the wrong guess for the limit that actually bit.
+          (tokens/park! token (System/currentTimeMillis)
+                        (str (:out res) "\n" (:err res))))
         ;; Redacted here, at the one place every caller goes through, rather
         ;; than at each of the three places the text is republished — the PR
         ;; comment, the findings file and the streamed stderr. The stderr FILE

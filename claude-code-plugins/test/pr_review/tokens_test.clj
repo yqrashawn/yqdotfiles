@@ -1,5 +1,6 @@
 (ns pr-review.tokens-test
   (:require [babashka.fs :as fs]
+            [clojure.edn :as edn]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [pr-review.reviewer :as reviewer]
@@ -142,6 +143,134 @@
       (is (= "a" (tokens/select! ["a" "b"] 0)))))
   (testing "and an empty pool is nil, the signal to use the pinned file"
     (is (nil? (tokens/select! [] 0)))))
+
+;;; How long a park lasts
+
+(defn- shanghai-ms
+  "An epoch-ms for a wall-clock instant in Asia/Shanghai, so these tests do
+   not depend on the machine's zone."
+  [y m d hh mm]
+  (-> (java.time.LocalDate/of y m d)
+      (.atTime (java.time.LocalTime/of hh mm))
+      (.atZone (java.time.ZoneId/of "Asia/Shanghai"))
+      .toInstant
+      .toEpochMilli))
+
+(deftest a-park-runs-to-the-reset-the-banner-states
+  (testing "the measured case, which is why this exists: an org seat parked at
+            22:24 on a banner saying `resets 3am` came back into rotation at
+            23:24 — 3h36m before the account was actually live again. One hour
+            is a guess; the banner is not"
+    (let [now (shanghai-ms 2026 9 21 22 24)]
+      (is (= (shanghai-ms 2026 9 22 3 0)
+             (tokens/reset-at-ms "resets 3am (Asia/Shanghai)" now))
+          "the NEXT 3am, not today's, which is already past")))
+
+  (testing "minutes, and the two ends of the 12-hour clock, which is where an
+            am/pm conversion goes wrong"
+    (let [now (shanghai-ms 2026 9 21 13 0)]
+      (is (= (shanghai-ms 2026 9 21 20 30)
+             (tokens/reset-at-ms "resets 8:30pm (Asia/Shanghai)" now)))
+      (is (= (shanghai-ms 2026 9 22 0 0)
+             (tokens/reset-at-ms "resets 12am (Asia/Shanghai)" now))
+          "12am is midnight, hour 0 — not hour 12")
+      (is (= (shanghai-ms 2026 9 21 0 0)
+             (tokens/reset-at-ms "resets 12am (Asia/Shanghai)"
+                                 (shanghai-ms 2026 9 20 13 0)))
+          "and the previous midnight for a caller a day earlier")))
+
+  (testing "a DATED reset, which the org banner uses, and which carries no year"
+    (let [now (shanghai-ms 2026 9 21 22 24)]
+      (is (= (shanghai-ms 2026 9 25 3 0)
+             (tokens/reset-at-ms "resets Sep 25 at 3am (Asia/Shanghai)" now)))))
+
+  (testing "the ZONE is the CLI's, not this machine's"
+    (let [now (shanghai-ms 2026 9 22 8 0)]
+      (is (= (shanghai-ms 2026 9 22 15 0)
+             (tokens/reset-at-ms "resets 3am (America/New_York)" now))
+          "3am New York is 3pm Shanghai the same day")))
+
+  (testing "nil for anything that cannot be placed on a clock, or that lands
+            outside the window any real limit uses. The caller has the hour to
+            fall back on, and a park of years is how reviews stop with nothing
+            in the logs to say why"
+    (let [now (shanghai-ms 2026 9 21 22 24)]
+      (is (nil? (tokens/reset-at-ms "resets Dec 25 at 3am (Asia/Shanghai)" now))
+          "beyond 8 days: disbelieved, not clamped")
+      (is (nil? (tokens/reset-at-ms "resets 3am (Mars/Olympus)" now))
+          "not a zone")
+      (is (nil? (tokens/reset-at-ms "the limit resets eventually" now)))
+      (is (nil? (tokens/reset-at-ms nil now)))
+      (is (nil? (tokens/reset-at-ms "resets 99am (Asia/Shanghai)" now))
+          "not an hour"))))
+
+(deftest a-park-lasts-until-the-stated-reset
+  (let [path (tmp-state)
+        now (shanghai-ms 2026 9 21 22 24)
+        reset (shanghai-ms 2026 9 22 3 0)]
+    (with-redefs [tokens/state-path (constantly path)]
+      (tokens/park! "a" now "You've hit it · resets 3am (Asia/Shanghai)")
+      (is (= "b" (tokens/select! ["a" "b"] (+ now (* 2 60 60 1000))))
+          "two hours later — an hour-long park would have handed `a` back")
+      (is (= "b" (tokens/select! ["a" "b"] (- reset 60000)))
+          "and a minute before the stated reset")
+      (is (= "a" (tokens/select! ["a" "b"] (+ reset 60000)))
+          "but after it, `a` is back"))))
+
+(deftest a-second-park-never-shortens-the-first
+  (testing "a banner-less rejection while a parsed park is still running would
+            otherwise replace a multi-day park with an hour and hand the spent
+            account straight back out.
+
+            Asserted on the STORED INSTANT, not through `select!`: with both
+            tokens available `select!` returns whichever the cursor is on, so
+            `(= \"b\" (select! …))` is satisfied by cursor position and passed
+            with the shortening bug armed — measured. And in its OWN state
+            file with no `select!` before it, because `select!` prunes: a
+            select after the reset drops the park, and then there is nothing
+            left for a later park to shorten — which is how the first version
+            of this test failed for a reason that was not the bug."
+    (let [path (tmp-state)
+          now (shanghai-ms 2026 9 21 22 24)
+          reset (shanghai-ms 2026 9 22 3 0)]
+      (with-redefs [tokens/state-path (constantly path)]
+        (tokens/park! "a" now "You've hit it · resets 3am (Asia/Shanghai)")
+        (tokens/park! "a" (+ now 60000) nil)
+        (let [stored (get-in (edn/read-string (slurp path))
+                             [:parked (tokens/token-key "a")])]
+          (is (= reset (long stored))
+              "the stated reset, not (+ now 60000 one-hour)")
+          (is (> (long stored) (+ now 60000 (* 60 60 1000)))
+              "and strictly later than what the second park alone would give"))))))
+
+(deftest the-banner-reaches-park-through-run
+  (testing "the wiring, which is the part no unit test above covers: `run!`
+            must hand the reviewer's OUTPUT to `park!`, or the parse has
+            nothing to read and every park is the one-hour guess again"
+    (let [path (tmp-state)
+          selected "tok-selected-aaaaaaaa"]
+      (with-redefs [tokens/state-path (constantly path)
+                    tokens/known-tokens (constantly [selected])
+                    reviewer/default-token-file "/no/such/pinned/file"]
+        (let [before (System/currentTimeMillis)
+              _ (reviewer/run!
+                 "P" "."
+                 {:token-fn (constantly selected)
+                  ;; what a spent account actually returns: exit 1, banner on
+                  ;; stdout. The park is gated on the non-zero exit.
+                  :spawn-fn (fn [_ _ _ _]
+                              {:exit 1
+                               :out "You've hit your limit · resets 3am (Asia/Shanghai)"
+                               :err ""})})
+              stored (get-in (edn/read-string (slurp path))
+                             [:parked (tokens/token-key selected)])]
+          (is stored "the token was parked at all")
+          (is (= (long stored)
+                 (tokens/reset-at-ms "resets 3am (Asia/Shanghai)" before))
+              "to the instant the banner named — not to now + one hour")
+          (is (not= (long stored) (+ before (* 60 60 1000)))
+              "stated differently, because the two are only equal if the
+               banner never arrived"))))))
 
 ;;; Limit banners
 
