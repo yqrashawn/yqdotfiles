@@ -203,8 +203,11 @@
 
    A word list is wrong in the other direction. To be excluded, a value has
    to SAY it is a placeholder, and a random credential containing one of
-   these as a substring is the only way to lose one: for a 40-character
-   base64 secret, on the order of 1e-6. Over-redaction is the cost that
+   these as a substring is the only way to lose one. Worked, because this
+   number is the argument: the shortest words here are 4 characters and the
+   value is upper-cased first, so each character matches at 2/64 and a given
+   offset at (1/32)^4 ≈ 9.5e-7; over the ~37 offsets in a 40-character base64
+   secret and both 4-letter words, ≈ 7e-5. Over-redaction is the cost that
    remains, and it is the cost worth paying."
   ["REPLACE" "CHANGEME" "CHANGE_ME" "CHANGE-ME" "PLACEHOLDER" "YOUR_" "YOUR-"
    "TODO" "FIXME" "FILL_IN" "FILL-IN" "FILLME" "DUMMY" "XXXX"])
@@ -233,15 +236,24 @@
      `reviewer/credentials` keeps its own 8-character floor for the values
      this process KNOWS are credentials; this is the higher bar a value has
      to clear to be GUESSED into the set.
-   - `placeholder-words`, or `<…>`, anywhere in the value. Both are ways of
-     saying \"fill this in\".
+   - `placeholder-words`, or a `<…>` PAIR, anywhere in the value. Both are
+     ways of saying \"fill this in\". The pair, not a lone `<` or `>`: a bare
+     angle bracket is the last structural rule that survived the inversion
+     above, and it ran the same fatal direction — a password carrying one in
+     a connection URL would fall out of this layer, and
+     `credential-shape-re` does not hold that shape either.
 
    WHAT THIS ADMITS, stated rather than implied: every other ≥16-character
    value in the file — a URL, a path, a model id, a client id — becomes a
-   marker and is substituted wherever it appears in the review output. A word
-   redacted out of a review costs a reread; a credential left unmarked costs
-   the credential, and every finding this mechanism has answered was the
-   second kind.
+   marker and is substituted wherever it appears in the review output — as a
+   SUBSTRING, so a home directory or repo path assigned in that file rewrites
+   every absolute path in the review to `[redacted]/…`. And the redacted
+   stream is the PARSED one: `run!` scrubs `:out`, which is both the PR
+   comment and the text the loop reads the verdict and each `path:line` out
+   of. So the cost is a garbled finding, not only a garbled sentence.
+
+   It is still the direction to fail in. A credential left unmarked costs the
+   credential, and every finding this mechanism has answered was that kind.
 
    A value matching `credential-shape-re` passes regardless — a known
    credential shape outranks the rules here, so the gate can never weaken the
@@ -254,7 +266,7 @@
           (and (>= (count v) 16)
                (not (re-find #"\s" v))
                (or (re-find credential-shape-re v)
-                   (and (not (re-find #"[<>]" v))
+                   (and (not (re-find #"<[^>]*>" v))
                         (not-any? #(str/includes? upper %) placeholder-words))))))))
 
 (defn env-secrets

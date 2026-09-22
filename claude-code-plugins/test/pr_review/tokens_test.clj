@@ -286,10 +286,12 @@
             and the org pattern needs only its clause. Both are what a
             quotation would carry.
 
-            Every file a recursive `fs/glob` reaches under the plugin — 41
-            of them,
-            which is everything but the hidden `.claude-plugin/` entries the
-            glob skips by default. Not just the two `.clj` directories a
+            Every file under the plugin — 43 of them, `:hidden true`
+            included, because `fs/glob` skips dot-entries by default and
+            `.claude-plugin/plugin.json` is a file the reviewer reads like
+            any other. Measured on the version without the option: a planted
+            match there left the suite green. Not just the two `.clj`
+            directories a
             narrower version globbed: `review_core.md` is the review prompt
             itself, and `commands/` and `skills/` are read and quoted as
             readily as source is.
@@ -298,7 +300,7 @@
             was asserted and not kept: on the commit this PR branched from,
             `limited?` on this file returned TRUE."
     (let [root (plugin-root)
-          files (->> (fs/glob root "**")
+          files (->> (fs/glob root "**" {:hidden true})
                      (filter fs/regular-file?)
                      (remove #(str/includes? (str %) "/.git/")))]
       ;; Both guards, because the failure to avoid is a PASS that checked
@@ -617,6 +619,12 @@
            rejecting every `[A-Z0-9_]+` value took them out of the marker set
            while `credential-shape-re` does not cover them either — neither
            layer held them")
+      (is (tokens/marker-worthy? "postgres://u:p<ss@h.internal/db-aaaa")
+          "a LONE angle bracket is not the placeholder convention — the pair
+           is. Rejecting either character was the last structural rule left,
+           and it ran the same direction as the two before it: a password
+           carrying one falls out of this layer, and `credential-shape-re`
+           does not hold that shape either")
       (is (every? tokens/marker-worthy?
                   ["wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
                    "postgres://revieweruser:s3cr3tPassw0rd@db.internal:5432/app"
@@ -654,20 +662,24 @@
              (reviewer/redact "a review that discusses sk-ant- prefixes is untouched" []))
           "the prefix alone is prose: the shape needs a credential-length tail")
       ;; Every file, the way `no-plugin-file-matches-a-limit-banner` does it,
-      ;; and with its two guards: a `**/*.{clj,edn,md}` glob skipped every
-      ;; depth-0 file — `README.md` and `bb.edn`, which are the extensions it
-      ;; named — and an empty glob result would have made the whole assertion
-      ;; vacuous. Measured: a planted match in `README.md` left the suite
-      ;; green.
+      ;; and with its two guards. The narrowing this replaces was
+      ;; `**/*.{clj,edn,md}`, which matches nothing at depth 0 — `README.md`
+      ;; and `bb.edn` were exempt from a pattern naming their own extensions,
+      ;; and a planted match in `README.md` left the suite green. `:hidden
+      ;; true` because the default skips `.claude-plugin/plugin.json`, where
+      ;; a planted match ALSO left it green: same hole, one option key over.
+      ;; An empty glob would make the whole assertion vacuous, hence the
+      ;; count guard.
       (let [root (plugin-root)
-            files (->> (fs/glob root "**")
+            files (->> (fs/glob root "**" {:hidden true})
                        (filter fs/regular-file?)
                        (remove #(str/includes? (str %) "/.git/")))]
         (is (fs/directory? (fs/path root "hooks" "pr_review"))
             (str root " is not the plugin root — this test would scan the"
                  " wrong tree and pass on it"))
-        (is (< 20 (count files))
-            (str "only " (count files) " files found under " root))
+        (is (< 40 (count files))
+            (str "only " (count files) " files found under " root
+                 " — the glob is not reaching the whole plugin"))
         (is (empty? (when (fs/directory? (fs/path root "hooks" "pr_review"))
                       (->> files
                            (filter #(re-find tokens/credential-shape-re
