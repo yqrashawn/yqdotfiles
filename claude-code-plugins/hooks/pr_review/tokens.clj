@@ -16,8 +16,11 @@
    monotonic reading precisely because it never leaves its process, and a
    monotonic reading means nothing to the process that reads this file next.
    The cost is the one cchp's monotonic.clj documents: an NTP step or a
-   suspended host mis-times a park. A park is a one-hour guess either way, and
-   the next rejection re-parks it.
+   suspended host mis-times a park. A park runs to the reset its banner states
+   (`reset-at-ms`) and falls back to `park-ms` when the prose names none, so a
+   mis-timed park is bounded by `max-park-ms` rather than by the hour it used
+   to be — and `park!` will not shorten one, so a park too long is not
+   corrected by the next rejection. Issue #175.
 
    ATTRIBUTION. `reviewer/default-token-file`'s docstring argues for one pinned
    credential so reviewer spend stays attributable. Rotating gives that up on
@@ -41,14 +44,18 @@
                 "workspace" "home" "claude-code-http-proxy" ".env.local")))
 
 (def ^:private park-ms
-  "How long a token is skipped after it answered with a limit banner: 1 hour.
+  "The FALLBACK park, for a rejection whose prose names no reset this can
+   place on a clock: 1 hour.
 
-   A guess, and the same one cchp's token-manager makes for the same reason —
-   the banner states a reset it does not always give in a parseable form, and
-   `claude -p` gives us prose rather than the CLI's structured
-   `rate_limit_event`, so there is no `resetsAt` to believe. Short on purpose:
-   a token parked past its reset is idle capacity, and a token retried early
-   costs one failed review pass, which `MALFORMED` already treats as free."
+   Not the usual case any more — `reset-at-ms` parses the reset out of the
+   banner and `park!` runs the park to that instant. This is what is left when
+   it cannot: the same guess cchp's token-manager makes, for a reason that
+   still holds here, since `claude -p` gives prose and not the CLI's
+   structured `rate_limit_event` with its `resetsAt`.
+
+   Short on purpose: a token parked past its reset is idle capacity, and a
+   token retried early costs one failed review pass, which `MALFORMED` already
+   treats as free."
   (* 60 60 1000))
 
 ;;; Where the pool comes from
@@ -248,8 +255,9 @@
    `{:token t :state s}`, or nil when `tokens` is empty.
 
    WHEN EVERY TOKEN IS PARKED it still returns one — the one whose park ends
-   soonest. A park is a guess (see `park-ms`); refusing to run would turn a
-   guess into a review that never happens, and the caller has no other
+   soonest. A park is a stated reset at best and `park-ms` at worst, and
+   either can be wrong; refusing to run would turn that into a review that
+   never happens, and the caller has no other
    credential to offer. Getting it wrong costs one `MALFORMED` attempt, which
    the ledger does not charge a pass for."
   [tokens state now-ms]
@@ -308,7 +316,8 @@
    is not in the sample cchp's set was derived from, and the asymmetry decides
    it: an unmatched banner hands a spent token straight back out on the next
    rotation and every review keeps failing until the account resets, where a
-   pattern one word too wide costs at most one token parked for an hour.
+   pattern one word too wide costs one token parked until whatever reset the
+   text names — `park-ms` if it names none, and at most `max-park-ms`.
 
    The org pattern is assembled from two halves at load time, and the banner
    is written out contiguously nowhere in this file — for cchp's reason, which
@@ -322,14 +331,193 @@
   [text]
   (boolean (and (string? text) (some #(re-find % text) limit-patterns))))
 
+(def ^:private reset-re
+  "The `resets …` tail of a limit banner, with the parts needed to place it on
+   a clock: an optional month and day, a 12-hour time with optional minutes,
+   and the zone the CLI printed it in.
+
+   Only the TAIL. The banner's opening clause is `limit-patterns`' job, and a
+   file that contains a whole banner matches its own pattern — this fragment
+   does not, which is why the two are separate and why `limited?` still
+   decides whether there is a limit at all."
+  #"resets (?:(\p{Alpha}{3}) (\d{1,2}) at )?(\d{1,2})(?::(\d{2}))?(a|p)m \(([^)]{1,60})\)")
+
+(def ^:private max-park-ms
+  "How far ahead a parsed reset may point and still be believed: 8 days, one
+   day past the longest window the CLI reports.
+
+   cchp's `max-rate-limit-duration-ms` with cchp's reasoning, which applies to
+   a parsed instant as much as to a reported one: the number comes from
+   another machine's clock, and a skewed or misread value would otherwise park
+   an account for years — the failure where reviews stop and nothing says why.
+   A value beyond this is not clamped but DISBELIEVED: clamping would still
+   park for 8 days on the strength of a number already known to be wrong,
+   where falling back to the hour costs one retry to find out."
+  (* 8 24 60 60 1000))
+
+(defn- reset-candidate
+  "One `resets …` match placed on a clock, in epoch ms, or nil.
+
+   nil for anything not clearly in the future and within `max-park-ms`: a
+   reset already past says nothing about when the next one is.
+
+   Undated means the next occurrence of that time, which for a weekly window
+   is a LOWER bound — and a lower bound is the right error here, for the
+   reason `reset-at-ms` gives.
+
+   A dated reset carries no year, so the years either side of now are tried
+   too: a December banner naming January is next year, and `max-park-ms`
+   rejects whatever is absurd. `Month/valueOf` wants the full name, and
+   `java.time` has no three-letter parse that does not also drag in a
+   locale."
+  [mon day hh mm ap tz now-ms]
+  (try
+    (let [zone (java.time.ZoneId/of tz)
+          h12 (parse-long hh)
+          ;; 1-12 or nothing. The CLI prints a valid 12-hour clock, so this is
+          ;; only reachable from text the reviewer quoted — but there it was
+          ;; reachable: `0am` parsed as midnight and `13am` as 13:00, and only
+          ;; `>= 14` was rejected downstream by `LocalTime/of`. Under the
+          ;; earliest rule a bogus hour SHORTENS a park below what the banner
+          ;; asked, which is the direction that costs a review.
+          _ (when-not (<= 1 h12 12) (throw (ex-info "not a 12-hour hour" {})))
+          hour (cond (and (= "a" ap) (= 12 h12)) 0
+                     (= "a" ap) h12
+                     (= 12 h12) 12
+                     :else (+ 12 h12))
+          time (java.time.LocalTime/of hour (if mm (parse-long mm) 0))
+          now (java.time.Instant/ofEpochMilli now-ms)
+          candidates
+          (if mon
+            (let [month (.getValue (java.time.Month/valueOf
+                                    (str/upper-case
+                                     (case (str/lower-case mon)
+                                       "jan" "january" "feb" "february"
+                                       "mar" "march" "apr" "april"
+                                       "may" "may" "jun" "june"
+                                       "jul" "july" "aug" "august"
+                                       "sep" "september" "oct" "october"
+                                       "nov" "november" "dec" "december"
+                                       mon))))
+                  y (.getYear (java.time.ZonedDateTime/ofInstant now zone))]
+              (keep (fn [yy]
+                      (try
+                        (-> (java.time.LocalDate/of yy month (parse-long day))
+                            (.atTime time)
+                            (.atZone zone)
+                            .toInstant)
+                        (catch Exception _ nil)))
+                    [(dec y) y (inc y)]))
+            (let [today (-> (java.time.ZonedDateTime/ofInstant now zone)
+                            (.with time))]
+              [(.toInstant today) (.toInstant (.plusDays today 1))]))]
+      (when-let [i (->> candidates
+                        (filter #(.isAfter ^java.time.Instant % now))
+                        sort
+                        first)]
+        (let [ms (.toEpochMilli ^java.time.Instant i)]
+          (when (<= (- ms now-ms) max-park-ms) ms))))
+    ;; A malformed zone, an impossible date, a number that is not one: the
+    ;; caller has an hour to fall back on, and losing a park is survivable
+    ;; where losing the review that is already paid for is not.
+    (catch Exception _ nil)))
+
+(defn- banner-starts
+  "Where each limit banner begins in `text`.
+
+   The anchor the parse needs. `limited?` answers whether there is a banner
+   and throws away WHERE, which is the whole difficulty: what reaches
+   `reset-at-ms` is the reviewer's entire output, and a `resets …` in it may
+   belong to a banner or to prose the reviewer quoted."
+  [text]
+  (sort
+   (mapcat (fn [p]
+             (let [m (re-matcher p text)]
+               (loop [acc []]
+                 (if (.find m) (recur (conj acc (.start m))) acc))))
+           limit-patterns)))
+
+(defn reset-at-ms
+  "The instant `banner` says the limit resets, in epoch ms, or nil.
+
+   This is the difference between a park that is right and a park that is a
+   guess. `park-ms` is one hour because the structured `rate_limit_event` cchp
+   reads is not available to a `claude -p`, only prose — but the prose STATES
+   the reset, and one hour is measurably the wrong number for the limit that
+   actually bit: an org seat parked at 22:24 whose banner said `resets 3am`
+   came back into rotation at 23:24, 3h36m before the account was live again.
+   Under-parking is self-correcting only in the sense that the next rejection
+   re-parks it; that rejection is a review that did not happen, because a
+   MALFORMED attempt is not retried automatically.
+
+   TWO RULES, and both are load-bearing, because what arrives here is the
+   reviewer's whole output and the reviewer reads repositories and quotes what
+   it finds — on this repository, including the fixtures in this namespace's
+   own tests:
+
+   1. ANCHORED TO ONE LINE. A candidate is only read from the LINE a limit
+      banner starts on (`banner-starts` plus the next newline). A `resets …`
+      on any other line is prose, and prose does not park anything. The line,
+      not the rest of the text: anchoring at the banner's start alone still
+      let a quotation three lines below it win, because the org banner's
+      pattern carries no reset tail and the search ran on to the first one it
+      could find — measured at 138.6 h. A banner is one line.
+   2. EARLIEST. Of the candidates that survive, the soonest wins.
+
+   Rule 1 is what defeats quoted prose, and it took two tries to get there.
+   Reading the FIRST match in the whole text let a quotation above the banner
+   win — measured, 138.7 h against a banner saying 18.7 h. Reading from the
+   banner's start but on to the end of the text let a quotation three lines
+   BELOW win whenever the banner's own pattern carries no reset tail, which
+   the org one does not — measured, 138.6 h where the fallback is 1 h. Neither
+   was correctable afterwards: there is no unpark and `park!` refuses to
+   shorten (issue #175).
+
+   Rule 2 is for a different case and is NOT what closed those: output
+   carrying more than one banner line, which a retry or the concatenation of
+   stdout and stderr can produce. The soonest is then the one to believe,
+   because a stale earlier banner must not extend a park. Structural rather
+   than measured — no such output has been seen.
+
+   What remains is a forged WHOLE banner, opening clause and reset on one
+   line, which parks its own instant. That is also what `limited?` needs to
+   be fooled, and `limited?` is the gate: `run!` parks only on a NON-ZERO
+   exit, so the forgery has to arrive from a `claude -p` that also failed.
+
+   nil when nothing parses, and the caller then falls back to the hour."
+  [banner now-ms]
+  (try
+    (when (string? banner)
+      (->> (banner-starts banner)
+           (keep (fn [start]
+                   (let [nl (str/index-of banner "\n" start)
+                         line (subs banner start (or nl (count banner)))]
+                     (when-let [[_ mon day hh mm ap tz] (re-find reset-re line)]
+                       (reset-candidate mon day hh mm ap tz now-ms)))))
+           sort
+           first))
+    (catch Exception _ nil)))
+
 (defn park!
-  "Mark `token` unusable for `park-ms`. No-op without a token.
+  "Mark `token` unusable until the limit lifts. No-op without a token.
+
+   `banner` is the reviewer's output, and when it states a reset (`reset-at-ms`)
+   the park runs to THAT instant. Without one — no banner passed, or prose
+   this cannot place on a clock — it is `park-ms`, one hour, which is a guess
+   and was measurably too short for the limit that actually bit.
+
+   A park never SHORTENS an existing one: two parks on one token mean two
+   rejections, and the later instant is the one both agree on. Without that,
+   a banner-less second rejection would replace a parsed multi-day park with
+   an hour and hand the account straight back out. (cchp's `park-until` makes
+   the same choice for the same reason.)
 
    Best-effort by design: a failure to record a park costs the next review one
    wasted attempt against a spent token, where throwing here would cost the
    CURRENT review its result, which has already been paid for."
-  ([token] (park! token (System/currentTimeMillis)))
-  ([token now-ms]
+  ([token] (park! token (System/currentTimeMillis) nil))
+  ([token now-ms] (park! token now-ms nil))
+  ([token now-ms banner]
    (when (seq (str token))
      (let [path (state-path)]
        (try
@@ -338,9 +526,11 @@
            (flock/guard-path path)
            (fn []
              (let [state (read-state path)
-                   parked (-> (:parked state {})
-                              (prune now-ms)
-                              (assoc (token-key token) (+ now-ms park-ms)))]
+                   k (token-key token)
+                   until (or (reset-at-ms banner now-ms) (+ now-ms park-ms))
+                   pruned (prune (:parked state {}) now-ms)
+                   parked (assoc pruned k (max (long until)
+                                               (long (get pruned k 0))))]
                (write-state! path (assoc state :parked parked)))))
          (catch Exception _ nil))))
    nil))

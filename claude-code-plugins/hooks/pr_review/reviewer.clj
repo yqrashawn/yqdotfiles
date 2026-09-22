@@ -358,10 +358,15 @@
         ;; reading a successful review's own prose: the reviewer reads
         ;; repositories and quotes what it finds, and a review of this plugin
         ;; that quoted `tokens/limit-patterns` back would otherwise park a
-        ;; working token for an hour.
+        ;; working token — until whatever reset the quoted text names, which
+        ;; `tokens/reset-at-ms` bounds by taking the EARLIEST it can see but
+        ;; does not make free.
         (when (and token (not (zero? (:exit res 0)))
                    (or (tokens/limited? (:out res)) (tokens/limited? (:err res))))
-          (tokens/park! token))
+          ;; The banner goes with it: it usually STATES the reset, and an hour
+          ;; is measurably the wrong guess for the limit that actually bit.
+          (tokens/park! token (System/currentTimeMillis)
+                        (str (:out res) "\n" (:err res))))
         ;; Redacted here, at the one place every caller goes through, rather
         ;; than at each of the three places the text is republished — the PR
         ;; comment, the findings file and the streamed stderr. The stderr FILE
