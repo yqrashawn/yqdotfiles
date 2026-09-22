@@ -284,9 +284,11 @@
    would match ordinary prose everywhere. `redact` applies the same floor to
    whatever it is handed, so neither end has to trust the other — this is not
    the single owner of that rule and no longer claims to be.
-   `tokens/marker-worthy?` holds a HIGHER bar (16 characters, not shouting
-   case) on the values that are guessed out of a file rather than known to be
-   this process's own credential.
+   `tokens/marker-worthy?` holds a HIGHER bar — 16 characters, and not a
+   value that announces itself a placeholder — on what is guessed out of a
+   file rather than known to be this process's own credential. It says
+   nothing about what a credential looks like: every rule that tried dropped
+   a real one out of both layers.
 
    Naming values is only the upper layer. `redact` also sweeps
    `tokens/credential-shape-re`, which catches a credential no list here
