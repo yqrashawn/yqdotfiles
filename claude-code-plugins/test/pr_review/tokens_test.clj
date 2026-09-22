@@ -1,6 +1,7 @@
 (ns pr-review.tokens-test
   (:require [babashka.fs :as fs]
             [clojure.edn :as edn]
+            [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [pr-review.reviewer :as reviewer]
@@ -8,6 +9,15 @@
             [pr-review.tokens :as tokens]))
 
 (use-fixtures :once test-env/hermetic-tokens)
+
+(defn- plugin-root
+  "This plugin's directory, found through the classpath rather than through
+   the working directory: `bb test` runs here, but the suite is runnable from
+   the repo root too, and a relative `slurp` errors there rather than
+   failing."
+  []
+  (-> (io/resource "pr_review/tokens.clj") .getPath fs/path
+      fs/parent fs/parent fs/parent))
 
 (defn- tmp-state
   "A state path of this test's own. Every stateful test redefs `state-path` to
@@ -128,7 +138,7 @@
   (testing "it is a plain file in the user's cache. The token has exactly one
             home; a second copy is a second place to leak it from"
     (let [path (tmp-state)
-          tok "sk-ant-oat01-SECRET-VALUE"]
+          tok "state-file-credential-aaaa"]
       (with-redefs [tokens/state-path (constantly path)]
         (tokens/select! [tok "other"] 0)
         (tokens/park! tok 0)
@@ -608,6 +618,19 @@
                    "this line = prose, not an assignment\n"))
       (is (= #{"tok-real-aaaaaaaaaa1"} (set (tokens/known-secrets f)))
           "only the one that could be a credential")
+      (is (every? tokens/marker-worthy?
+                  ["AKIAIOSFODNN7EXAMPLE"
+                   "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP"])
+          "and an upper-case credential is NOT a placeholder: an AWS key id
+           and a base32 TOTP secret are both spelled that way, and a rule
+           rejecting every `[A-Z0-9_]+` value took them out of the marker set
+           while `credential-shape-re` does not cover them either — neither
+           layer held them")
+      (is (not-any? tokens/marker-worthy?
+                    ["https://api.anthropic.com/v1"
+                     "/Users/x/workspace/home/claude-code-http-proxy"])
+          "a URL or a path is configuration, and a marker is substituted
+           everywhere it appears")
       (is (= "keep REPLACE_ME_WITH_TOKEN and <your-token-here-goes>"
              (reviewer/redact "keep REPLACE_ME_WITH_TOKEN and <your-token-here-goes>"
                               (tokens/known-secrets f)))
@@ -627,11 +650,19 @@
       (is (= "a review that discusses sk-ant- prefixes is untouched"
              (reviewer/redact "a review that discusses sk-ant- prefixes is untouched" []))
           "the prefix alone is prose: the shape needs a credential-length tail")
-      (is (empty? (filter #(re-find tokens/credential-shape-re %)
-                          [(slurp "hooks/pr_review/tokens.clj")
-                           (slurp "hooks/pr_review/reviewer.clj")]))
-          "and the pattern does not match its own source — the reviewer reads
-           this repository, and #176 was that mistake once already"))))
+      (is (empty? (->> (fs/glob (plugin-root) "**/*.{clj,edn,md}")
+                       (filter #(re-find tokens/credential-shape-re (slurp (str %))))
+                       (map str)))
+          "and nothing in this plugin matches the pattern — not just the two
+           hook files. The reviewer reads the REPOSITORY, so a fixture that
+           matches comes back as `[redacted]` in a review of this tree, and a
+           test fixture that the shape floor scrubs cannot guard the named
+           layer (which is how three tests here came to pass on the floor
+           alone). #176 was the same mistake with worse consequences.
+
+           Anchored on `plugin-root`, not on the working directory: this
+           suite is runnable from the repo root, where a relative path errors
+           rather than fails."))))
 
 (deftest the-marker-set-covers-every-named-file-not-one-of-them
   (testing "the override says which file the POOL comes from. It does not make
@@ -645,6 +676,16 @@
         "an empty override is not a path — `or` read it as one and dropped the
          default file")
     (is (= [tokens/default-env-file] (tokens/secret-files nil)))))
+
+(deftest the-pool-reads-one-file-and-an-empty-override-is-not-one
+  (testing "`pool` picks ONE file, where `secret-files` marks both — the pool
+            is what this logs in with. But the override was read with a bare
+            `or`, so PR_REVIEW_TOKENS_ENV_FILE=\"\" named a file that does not
+            exist, found no pool in it and fell back to the pinned token
+            without saying so"
+    (is (= "/tmp/override.env" (tokens/pool-file "/tmp/override.env")))
+    (is (= tokens/default-env-file (tokens/pool-file "")) "empty is not a path")
+    (is (= tokens/default-env-file (tokens/pool-file nil)))))
 
 (deftest the-no-argument-marker-set-is-every-file-and-the-environment
   (testing "the arity `credentials` actually calls, which every `run!`-level
@@ -718,7 +759,12 @@
             credential this process holds and does not scrub — reachable by
             the same route as the pool, since `reviewer/default-token-file`
             builds its path in source the reviewer is asked to read"
-    (let [pinned "sk-ant-oat01-PINNED-SECRET"
+    (let [;; NOT `sk-ant-…` shaped, deliberately: `redact`'s shape floor
+          ;; scrubs that whatever `credentials` does, and this test guards
+          ;; the NAMED layer — with a shaped fixture it stayed green with
+          ;; `(oauth-token)` deleted out of `credentials`, which is the exact
+          ;; regression its docstring above describes.
+          pinned "pinned-credential-aaaaaaaa"
           f (str (fs/path (fs/create-temp-dir {:prefix "prl-pin"}) "t"))
           selected "tok-selected-aaaaaaaa"]
       (spit f (str pinned "\n"))

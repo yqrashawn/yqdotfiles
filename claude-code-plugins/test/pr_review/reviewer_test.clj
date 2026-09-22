@@ -536,7 +536,12 @@
             streamed file are read by the author."
     (let [d (str (fs/create-temp-dir {:prefix "prl-tok"}))
           errf (str (fs/path d "err"))
-          tok "sk-ant-oat01-THIS-MUST-NOT-LEAK"
+          ;; NOT `sk-ant-…` shaped: `redact`'s shape floor would scrub it
+          ;; whatever `credentials` returned, and this test is the one that
+          ;; asserts the SELECTED token reaches the redactor at all — with a
+          ;; shaped fixture it stayed green with `selected` dropped from
+          ;; `credentials` entirely.
+          tok "this-must-not-leak-aaaaaaaa"
           res (reviewer/run!
                "P" "."
                {:token-fn (constantly tok)
@@ -554,7 +559,7 @@
           "redacted, not merely absent — or the test passes on an empty reply"))))
 
 (deftest redaction-leaves-everything-else-alone
-  (let [tok "sk-ant-oat01-abcdefgh"]
+  (let [tok "unshaped-token-abcdefgh"]
     (is (= "no secret here" (reviewer/redact "no secret here" [tok])))
     (is (= "x" (reviewer/redact "x" nil)) "no secrets, nothing to do")
     (is (= "y" (reviewer/redact "y" [nil])) "and a nil among them is skipped")

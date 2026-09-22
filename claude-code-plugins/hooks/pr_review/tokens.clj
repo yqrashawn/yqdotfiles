@@ -114,6 +114,22 @@
            last))
     (catch Exception _ nil)))
 
+(defn pool-file
+  "Which file the POOL is read from: the override, else `default-env-file`.
+
+   Precedence, not union — that is the difference from `secret-files`, which
+   marks BOTH because a file's contents do not stop being credentials just
+   because the pool comes from elsewhere.
+
+   `not-empty`, because an empty PR_REVIEW_TOKENS_ENV_FILE is not a path: a
+   bare `or` read it as one, found no pool in it and fell back to the pinned
+   token without saying so. The override arrives as an ARGUMENT on the
+   1-arity for the reason `secret-files` gives — a process cannot set a
+   variable in its own environment for its own `System/getenv`, so the rule
+   is otherwise asserted and never exercised."
+  ([] (pool-file (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")))
+  ([override] (or (not-empty (str override)) default-env-file)))
+
 (defn pool
   "The ordered token pool, or an empty vector.
 
@@ -125,9 +141,8 @@
       to keep in step.
    2. CLAUDE_TOKENS in `default-env-file`, or in PR_REVIEW_TOKENS_ENV_FILE.
       The reviewer also runs from the user's own terminal, where nothing has
-      sourced that file. `not-empty` on the override, because an empty
-      PR_REVIEW_TOKENS_ENV_FILE is not a path: a bare `or` read it as one,
-      found nothing in it, and dropped the pool without saying so.
+      sourced that file. `pool-file` decides which, and says why an empty
+      override is not a path.
 
    An EXPLICIT `:env-file` skips the environment and reads that file. Naming a
    file is the caller saying which pool it means, and the environment silently
@@ -142,10 +157,7 @@
    (let [raw (if env-file
                (env-file-var env-file "CLAUDE_TOKENS")
                (or (some-> (System/getenv "CLAUDE_TOKENS") not-empty)
-                   (env-file-var (or (not-empty
-                                      (str (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")))
-                                     default-env-file)
-                                 "CLAUDE_TOKENS")))]
+                   (env-file-var (pool-file) "CLAUDE_TOKENS")))]
      (->> (str/split (str raw) #",")
           (map str/trim)
           (remove str/blank?)
@@ -187,19 +199,32 @@
    the kind of file this reads — and marking every assignment without a filter
    turns each placeholder into a substitution over unrelated prose.
 
-   Two rules, neither of them an enumeration of placeholders:
+   Three rules, none of them an enumeration of placeholders:
 
    - 16 characters and no whitespace. Shorter matches prose everywhere.
      `reviewer/credentials` keeps its own 8-character floor for the values
      this process KNOWS are credentials; this is the higher bar a value has to
      clear to be GUESSED into the set.
-   - SHOUTING CASE is a placeholder, never a credential: `REPLACE_ME`,
-     `CHANGEME`, `YOUR_TOKEN_HERE`. Upper case and underscores is the
-     convention for \"fill this in\", and no issued credential is spelled that
-     way. `<…>` is the other convention and goes with it.
+   - SHOUTING SEGMENTS are a placeholder: `REPLACE_ME_WITH_TOKEN`,
+     `YOUR_TOKEN_HERE`, `REPLACE-ME-WITH-YOUR-TOKEN`. Upper-case WORDS joined
+     by `_` or `-` is the convention for \"fill this in\". A single upper-case
+     run is NOT covered, on purpose: `AKIAIOSFODNN7EXAMPLE` (an AWS key id)
+     and a base32 TOTP secret are both spelled that way, and an earlier
+     version of this rule rejected every `[A-Z0-9_]+` value — which took both
+     of those out of the marker set while `credential-shape-re` does not
+     cover them either, so neither layer held them. `<…>` is the other
+     placeholder convention and goes with this rule.
+   - A `/` means a URL or a path, not a credential.
+
+   WHAT IT STILL ADMITS, stated rather than implied: any other ≥16-character
+   configuration value in the file — a model id, a client id, a hostname —
+   becomes a marker and is substituted wherever it appears in the review. That
+   is the deliberate direction of error. A word redacted out of a review costs
+   a reread; a credential left unmarked costs the credential, and the three
+   passes this replaces were all the second kind.
 
    A value matching `credential-shape-re` passes regardless — a known
-   credential shape outranks both rules, and that is what keeps the shape
+   credential shape outranks every rule here, and that is what keeps the shape
    floor from being weakened by this gate."
   [v]
   (boolean
@@ -208,8 +233,8 @@
           (and (>= (count v) 16)
                (not (re-find #"\s" v))
                (or (re-find credential-shape-re v)
-                   (and (not (re-matches #"[A-Z0-9_]+" v))
-                        (not (re-find #"[<>]" v)))))))))
+                   (and (not (re-matches #"[A-Z0-9]+(?:[_-][A-Z0-9]+)+" v))
+                        (not (re-find #"[<>/]" v)))))))))
 
 (defn env-secrets
   "The pool in THIS process's environment, split.
