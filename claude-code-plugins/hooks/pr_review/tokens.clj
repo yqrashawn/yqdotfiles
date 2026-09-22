@@ -374,6 +374,13 @@
   (try
     (let [zone (java.time.ZoneId/of tz)
           h12 (parse-long hh)
+          ;; 1-12 or nothing. The CLI prints a valid 12-hour clock, so this is
+          ;; only reachable from text the reviewer quoted — but there it was
+          ;; reachable: `0am` parsed as midnight and `13am` as 13:00, and only
+          ;; `>= 14` was rejected downstream by `LocalTime/of`. Under the
+          ;; earliest rule a bogus hour SHORTENS a park below what the banner
+          ;; asked, which is the direction that costs a review.
+          _ (when-not (<= 1 h12 12) (throw (ex-info "not a 12-hour hour" {})))
           hour (cond (and (= "a" ap) (= 12 h12)) 0
                      (= "a" ap) h12
                      (= 12 h12) 12
@@ -415,6 +422,21 @@
     ;; where losing the review that is already paid for is not.
     (catch Exception _ nil)))
 
+(defn- banner-starts
+  "Where each limit banner begins in `text`.
+
+   The anchor the parse needs. `limited?` answers whether there is a banner
+   and throws away WHERE, which is the whole difficulty: what reaches
+   `reset-at-ms` is the reviewer's entire output, and a `resets …` in it may
+   belong to a banner or to prose the reviewer quoted."
+  [text]
+  (sort
+   (mapcat (fn [p]
+             (let [m (re-matcher p text)]
+               (loop [acc []]
+                 (if (.find m) (recur (conj acc (.start m))) acc))))
+           limit-patterns)))
+
 (defn reset-at-ms
   "The instant `banner` says the limit resets, in epoch ms, or nil.
 
@@ -428,30 +450,52 @@
    re-parks it; that rejection is a review that did not happen, because a
    MALFORMED attempt is not retried automatically.
 
-   THE EARLIEST of every `resets …` in `banner`, not the first. What arrives
-   here is the reviewer's whole output, and the reviewer reads repositories
-   and quotes what it finds — on this repository, including the fixtures in
-   this namespace's own tests. Taking the first match let quoted prose above a
-   real banner decide the park: measured, a quoted `Sep 28 at 3am` above a
-   genuine `resets 3am` gave a 138.7-hour park where the banner said 18.7.
+   TWO RULES, and both are load-bearing, because what arrives here is the
+   reviewer's whole output and the reviewer reads repositories and quotes what
+   it finds — on this repository, including the fixtures in this namespace's
+   own tests:
 
-   Earliest, rather than trying to identify which match is the banner: there
-   is no reliable way to tell a quotation from the real thing in a text the
-   reviewer composed, and the two errors are not symmetric. Parking too
-   briefly costs one retry, which re-parks. Parking too long cannot be
-   corrected at all — there is no unpark, and `park!` refuses to shorten. So
-   under this rule a quoted instant can only ever make the park SHORTER than
-   the banner asked, never longer, and the worst a forged one can do is what
-   no banner at all already does.
+   1. ANCHORED TO ONE LINE. A candidate is only read from the LINE a limit
+      banner starts on (`banner-starts` plus the next newline). A `resets …`
+      on any other line is prose, and prose does not park anything. The line,
+      not the rest of the text: anchoring at the banner's start alone still
+      let a quotation three lines below it win, because the org banner's
+      pattern carries no reset tail and the search ran on to the first one it
+      could find — measured at 138.6 h. A banner is one line.
+   2. EARLIEST. Of the candidates that survive, the soonest wins.
+
+   Rule 1 is what defeats quoted prose, and it took two tries to get there.
+   Reading the FIRST match in the whole text let a quotation above the banner
+   win — measured, 138.7 h against a banner saying 18.7 h. Reading from the
+   banner's start but on to the end of the text let a quotation three lines
+   BELOW win whenever the banner's own pattern carries no reset tail, which
+   the org one does not — measured, 138.6 h where the fallback is 1 h. Neither
+   was correctable afterwards: there is no unpark and `park!` refuses to
+   shorten (issue #175).
+
+   Rule 2 is for a different case and is NOT what closed those: output
+   carrying more than one banner line, which a retry or the concatenation of
+   stdout and stderr can produce. The soonest is then the one to believe,
+   because a stale earlier banner must not extend a park. Structural rather
+   than measured — no such output has been seen.
+
+   What remains is a forged WHOLE banner, opening clause and reset on one
+   line, which parks its own instant. That is also what `limited?` needs to
+   be fooled, and `limited?` is the gate: `run!` parks only on a NON-ZERO
+   exit, so the forgery has to arrive from a `claude -p` that also failed.
 
    nil when nothing parses, and the caller then falls back to the hour."
   [banner now-ms]
   (try
-    (->> (when (string? banner) (re-seq reset-re banner))
-         (keep (fn [[_ mon day hh mm ap tz]]
-                 (reset-candidate mon day hh mm ap tz now-ms)))
-         sort
-         first)
+    (when (string? banner)
+      (->> (banner-starts banner)
+           (keep (fn [start]
+                   (let [nl (str/index-of banner "\n" start)
+                         line (subs banner start (or nl (count banner)))]
+                     (when-let [[_ mon day hh mm ap tz] (re-find reset-re line)]
+                       (reset-candidate mon day hh mm ap tz now-ms)))))
+           sort
+           first))
     (catch Exception _ nil)))
 
 (defn park!

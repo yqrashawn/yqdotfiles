@@ -157,6 +157,22 @@
       .toInstant
       .toEpochMilli))
 
+(defn- banner
+  "A limit banner carrying `tail`. `reset-at-ms` reads a candidate only from
+   the line a BANNER starts on, so a bare `resets …` is prose to it and parses
+   to nil — which is the property, and it means every parser test has to state
+   a banner rather than a tail.
+
+   Two openings because the patterns differ: the subscription one requires a
+   numeric time right after `resets`, so a DATED tail needs the org opening,
+   which matches on its clause alone. Assembled from halves for
+   `limit-patterns`' reason — a file holding a banner contiguously matches its
+   own pattern."
+  [tail]
+  (if (re-find #"^resets \d" tail)
+    (str "You've hit your limit · " tail)
+    (str "You've hit your org" "'s monthly spend limit · " tail)))
+
 (deftest a-park-runs-to-the-reset-the-banner-states
   (testing "the measured case, which is why this exists: an org seat parked at
             22:24 on a banner saying `resets 3am` came back into rotation at
@@ -164,24 +180,24 @@
             is a guess; the banner is not"
     (let [now (shanghai-ms 2026 9 21 22 24)]
       (is (= (shanghai-ms 2026 9 22 3 0)
-             (tokens/reset-at-ms "resets 3am (Asia/Shanghai)" now))
+             (tokens/reset-at-ms (banner "resets 3am (Asia/Shanghai)") now))
           "the NEXT 3am, not today's, which is already past")))
 
   (testing "minutes, and the two ends of the 12-hour clock, which is where an
             am/pm conversion goes wrong"
     (let [now (shanghai-ms 2026 9 21 13 0)]
       (is (= (shanghai-ms 2026 9 21 20 30)
-             (tokens/reset-at-ms "resets 8:30pm (Asia/Shanghai)" now)))
+             (tokens/reset-at-ms (banner "resets 8:30pm (Asia/Shanghai)") now)))
       (is (= (shanghai-ms 2026 9 22 0 0)
-             (tokens/reset-at-ms "resets 12am (Asia/Shanghai)" now))
+             (tokens/reset-at-ms (banner "resets 12am (Asia/Shanghai)") now))
           "12am is midnight, hour 0 — not hour 12")
       (is (= (shanghai-ms 2026 9 21 0 0)
-             (tokens/reset-at-ms "resets 12am (Asia/Shanghai)"
+             (tokens/reset-at-ms (banner "resets 12am (Asia/Shanghai)")
                                  (shanghai-ms 2026 9 20 13 0)))
           "the NEXT midnight for a caller a day earlier — never a past one,
            which the `.isAfter` filter makes impossible")
       (is (= (shanghai-ms 2026 9 22 12 0)
-             (tokens/reset-at-ms "resets 12pm (Asia/Shanghai)" now))
+             (tokens/reset-at-ms (banner "resets 12pm (Asia/Shanghai)") now))
           "12pm is NOON, hour 12 — tomorrow's, since `now` is 13:00 and noon
            today is past. The other end of the clock, and the branch that
            stayed untested while this block's own description claimed both:
@@ -190,12 +206,12 @@
   (testing "a DATED reset, which the org banner uses, and which carries no year"
     (let [now (shanghai-ms 2026 9 21 22 24)]
       (is (= (shanghai-ms 2026 9 25 3 0)
-             (tokens/reset-at-ms "resets Sep 25 at 3am (Asia/Shanghai)" now)))))
+             (tokens/reset-at-ms (banner "resets Sep 25 at 3am (Asia/Shanghai)") now)))))
 
   (testing "the ZONE is the CLI's, not this machine's"
     (let [now (shanghai-ms 2026 9 22 8 0)]
       (is (= (shanghai-ms 2026 9 22 15 0)
-             (tokens/reset-at-ms "resets 3am (America/New_York)" now))
+             (tokens/reset-at-ms (banner "resets 3am (America/New_York)") now))
           "3am New York is 3pm Shanghai the same day")))
 
   (testing "nil for anything that cannot be placed on a clock, or that lands
@@ -203,54 +219,87 @@
             fall back on, and a park of years is how reviews stop with nothing
             in the logs to say why"
     (let [now (shanghai-ms 2026 9 21 22 24)]
-      (is (nil? (tokens/reset-at-ms "resets Dec 25 at 3am (Asia/Shanghai)" now))
+      (is (nil? (tokens/reset-at-ms (banner "resets Dec 25 at 3am (Asia/Shanghai)") now))
           "beyond 8 days: disbelieved, not clamped")
-      (is (nil? (tokens/reset-at-ms "resets 3am (Mars/Olympus)" now))
+      (is (nil? (tokens/reset-at-ms (banner "resets 3am (Mars/Olympus)") now))
           "not a zone")
       (is (nil? (tokens/reset-at-ms "the limit resets eventually" now)))
       (is (nil? (tokens/reset-at-ms nil now)))
-      (is (nil? (tokens/reset-at-ms "resets 99am (Asia/Shanghai)" now))
+      (is (nil? (tokens/reset-at-ms (banner "resets 99am (Asia/Shanghai)") now))
           "not an hour"))))
 
-(deftest quoted-prose-cannot-lengthen-a-park
+(deftest quoted-prose-does-not-set-the-park
   (testing "what arrives at `reset-at-ms` is the reviewer's WHOLE output, and
             the reviewer reads repositories and quotes what it finds —
-            including, on this repository, the fixtures in this file. Taking
-            the FIRST `resets …` let a quotation decide the park: measured, a
-            quoted `Sep 28 at 3am` above a genuine `resets 3am` gave a
-            138.7-hour park where the banner said 18.7, and nothing can
-            correct it — there is no unpark and `park!` refuses to shorten.
-
-            So the rule is the EARLIEST of every match, which makes a quoted
-            instant able only to SHORTEN a park. Both orderings are asserted:
-            `re-find` takes the first, so a quotation BELOW the banner passes
-            even with the defect armed."
+            including, on this repository, the fixtures in this file. A
+            candidate is read only from the LINE a banner starts on, so a
+            quotation anywhere else contributes nothing, whichever side of the
+            banner it is on and whether or not the banner has a reset tail of
+            its own"
     (let [now (shanghai-ms 2026 9 21 22 24)
           real (shanghai-ms 2026 9 22 3 0)
-          banner "You have hit it · resets 3am (Asia/Shanghai)"
-          far "the diff quotes resets Sep 28 at 3am (Asia/Shanghai)"]
-      (is (= real (tokens/reset-at-ms (str far "\n" banner) now))
-          "quotation ABOVE the banner")
-      (is (= real (tokens/reset-at-ms (str banner "\n" far) now))
+          personal "You've hit your limit · resets 3am (Asia/Shanghai)"
+          ;; the org opening clause carries NO reset tail — assembled here for
+          ;; the reason `limit-patterns` gives, so this file does not contain
+          ;; a banner contiguously and match its own pattern
+          org (str "You've hit your org" "'s monthly spend limit · ask an admin")
+          org-full (str org " · your weekly limit resets 3am (Asia/Shanghai)")
+          quoted "review text quoting resets Sep 28 at 3am (Asia/Shanghai)"]
+      (is (= real (tokens/reset-at-ms personal now))
+          "the banner alone")
+      (is (= real (tokens/reset-at-ms (str quoted "\n" personal) now))
+          "a quotation ABOVE it — this is the one taking the first match got
+           wrong, at 138.7h")
+      (is (= real (tokens/reset-at-ms (str personal "\n" quoted) now))
           "and BELOW it")
-      (is (= real (tokens/reset-at-ms banner now))
-          "and the banner alone is unchanged")))
+      (is (= real (tokens/reset-at-ms (str org-full "\n" quoted) now))
+          "the org banner's own tail, not the quotation below it")
+      (is (nil? (tokens/reset-at-ms (str org "\n" quoted) now))
+          "and when the banner has NO tail of its own, the quotation does not
+           stand in for it — nil, so the caller falls back to `park-ms`. This
+           is the one anchoring-without-the-line-bound got wrong, at 138.6h
+           where the fallback is one hour")
+      (is (nil? (tokens/reset-at-ms quoted now))
+          "no banner at all: prose parks nothing")))
 
-  (testing "a quoted EARLIER instant may shorten the park, which is the
-            deliberate direction: it costs one retry, which re-parks"
-    (let [now (shanghai-ms 2026 9 21 22 24)
-          soon (shanghai-ms 2026 9 21 23 0)]
-      (is (= soon (tokens/reset-at-ms
-                   (str "quoting resets 11pm (Asia/Shanghai)\n"
-                        "You have hit it · resets 3am (Asia/Shanghai)")
-                   now))))))
+  (testing "a bogus hour is refused rather than placed on the clock. Only
+            reachable from quoted text, and there it would SHORTEN a park
+            below what the banner asked: `0am` used to parse as midnight and
+            `13am` as 13:00, and only `>= 14` was caught downstream"
+    (let [now (shanghai-ms 2026 9 21 22 24)]
+      (is (nil? (tokens/reset-at-ms
+                 "You've hit your limit · resets 0am (Asia/Shanghai)" now)))
+      (is (nil? (tokens/reset-at-ms
+                 "You've hit your limit · resets 13am (Asia/Shanghai)" now)))))
+
+  (testing "with two banner lines, the SOONEST wins: a stale earlier banner
+            must not extend a park.
+
+            BOTH lines have to be banners the patterns actually match, or
+            there is one candidate and the rule is unexercised — the first
+            version of this used a dated tail behind the subscription opening,
+            which that pattern does not match, and a control swapping
+            `first` for `last` passed."
+    (let [now (shanghai-ms 2026 9 21 22 24)]
+      (is (= (shanghai-ms 2026 9 21 23 0)
+             (tokens/reset-at-ms
+              (str (banner "resets 3am (Asia/Shanghai)") "\n"
+                   (banner "resets 11pm (Asia/Shanghai)"))
+              now))
+          "11pm tonight, not 3am tomorrow")
+      (is (= (shanghai-ms 2026 9 21 23 0)
+             (tokens/reset-at-ms
+              (str (banner "resets 11pm (Asia/Shanghai)") "\n"
+                   (banner "resets 3am (Asia/Shanghai)"))
+              now))
+          "and the same whichever order they arrive in"))))
 
 (deftest a-park-lasts-until-the-stated-reset
   (let [path (tmp-state)
         now (shanghai-ms 2026 9 21 22 24)
         reset (shanghai-ms 2026 9 22 3 0)]
     (with-redefs [tokens/state-path (constantly path)]
-      (tokens/park! "a" now "You've hit it · resets 3am (Asia/Shanghai)")
+      (tokens/park! "a" now (banner "resets 3am (Asia/Shanghai)"))
       (is (= "b" (tokens/select! ["a" "b"] (+ now (* 2 60 60 1000))))
           "two hours later — an hour-long park would have handed `a` back")
       (is (= "b" (tokens/select! ["a" "b"] (- reset 60000)))
@@ -275,7 +324,7 @@
           now (shanghai-ms 2026 9 21 22 24)
           reset (shanghai-ms 2026 9 22 3 0)]
       (with-redefs [tokens/state-path (constantly path)]
-        (tokens/park! "a" now "You've hit it · resets 3am (Asia/Shanghai)")
+        (tokens/park! "a" now (banner "resets 3am (Asia/Shanghai)"))
         (tokens/park! "a" (+ now 60000) nil)
         (let [stored (get-in (edn/read-string (slurp path))
                              [:parked (tokens/token-key "a")])]
@@ -307,7 +356,7 @@
                              [:parked (tokens/token-key selected)])]
           (is stored "the token was parked at all")
           (is (= (long stored)
-                 (tokens/reset-at-ms "resets 3am (Asia/Shanghai)" before))
+                 (tokens/reset-at-ms (banner "resets 3am (Asia/Shanghai)") before))
               "to the instant the banner named — not to now + one hour")
           (is (not= (long stored) (+ before (* 60 60 1000)))
               "stated differently, because the two are only equal if the
