@@ -114,6 +114,22 @@
            last))
     (catch Exception _ nil)))
 
+(defn pool-file
+  "Which file the POOL is read from: the override, else `default-env-file`.
+
+   Precedence, not union — that is the difference from `secret-files`, which
+   marks BOTH because a file's contents do not stop being credentials just
+   because the pool comes from elsewhere.
+
+   `not-empty`, because an empty PR_REVIEW_TOKENS_ENV_FILE is not a path: a
+   bare `or` read it as one, found no pool in it and fell back to the pinned
+   token without saying so. The override arrives as an ARGUMENT on the
+   1-arity for the reason `secret-files` gives — a process cannot set a
+   variable in its own environment for its own `System/getenv`, so the rule
+   is otherwise asserted and never exercised."
+  ([] (pool-file (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")))
+  ([override] (or (not-empty (str override)) default-env-file)))
+
 (defn pool
   "The ordered token pool, or an empty vector.
 
@@ -125,7 +141,8 @@
       to keep in step.
    2. CLAUDE_TOKENS in `default-env-file`, or in PR_REVIEW_TOKENS_ENV_FILE.
       The reviewer also runs from the user's own terminal, where nothing has
-      sourced that file.
+      sourced that file. `pool-file` decides which, and says why an empty
+      override is not a path.
 
    An EXPLICIT `:env-file` skips the environment and reads that file. Naming a
    file is the caller saying which pool it means, and the environment silently
@@ -140,67 +157,180 @@
    (let [raw (if env-file
                (env-file-var env-file "CLAUDE_TOKENS")
                (or (some-> (System/getenv "CLAUDE_TOKENS") not-empty)
-                   (env-file-var (or (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")
-                                     default-env-file)
-                                 "CLAUDE_TOKENS")))]
+                   (env-file-var (pool-file) "CLAUDE_TOKENS")))]
      (->> (str/split (str raw) #",")
           (map str/trim)
           (remove str/blank?)
           vec))))
 
-;;; Cross-process rotation state
+;;; Which strings are credentials
 
-(defn known-tokens
-  "EVERY token in the env file, including the ones on commented-out lines,
-   plus whatever the environment holds. Not a pool — a marker set.
+(def credential-shape-re
+  "What a credential LOOKS like, independent of where it came from.
 
-   `pool` answers \"which token do I authenticate with\", and for that,
-   skipping comments and preferring the environment are both right. This
-   answers a different question: which strings, if the reviewer printed them,
-   would be a leaked credential. The disabled CLAUDE_TOKENS lines this file is
-   documented as carrying are prior pools — live tokens for real accounts —
-   and the live file line is still a credential on a run where the inherited
-   environment won instead. Neither reaches `redact` through `pool`, and one
-   `cat` of a path this source names prints all of them.
+   The FLOOR under the marker set, and a deliberate reversal of what `redact`
+   used to say (\"guessing at shapes would give false confidence\"). Three
+   review passes each found one more source outside the enumerated marker set
+   — the rest of the pool, then the pinned file, then the disabled pools — and
+   enumerating sources cannot converge, because each pass names the next
+   spelling. A shape test does not care where a value came from: a credential
+   in the output is redacted whether this process can name it or not.
 
-   So: every assignment in the file, commented or not, and — on the no-argument
-   arity only — the environment's too. Order is meaningless here and nothing
-   authenticates with the result.
+   It misses whatever does not match, which is why it is a floor and not the
+   whole mechanism. `known-secrets` still names values, and that layer is what
+   covers a credential shaped like nothing in particular.
 
-   An EXPLICIT `path` is the file alone, for the same reason `pool`'s explicit
-   `:env-file` is: naming a file is the caller saying which one it means, and
-   an ambient variable winning over it makes the argument a no-op wherever it
-   happens to be set — which is every reviewer cchp spawns, and every run of
-   this namespace's own tests.
+   WRITTEN NOT TO MATCH ITSELF. Every prefix here is followed by a character
+   class, and `[` is in none of those classes, so this source's own text is
+   not a match — the mistake `limit-patterns` made once (#176). The reviewer
+   reads this repository.
 
-   Never throws — an unreadable file means whatever the environment gave."
-  ([] (vec (distinct (concat (known-tokens (or (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")
-                                               default-env-file))
-                             (->> (str/split (str (System/getenv "CLAUDE_TOKENS")) #",")
-                                  (map str/trim)
-                                  (remove str/blank?))))))
+   Anthropic (`sk-ant-…`, the reviewer's own credential) plus the generic
+   `sk-` key, Slack and GitHub, because the file this reads is cchp's
+   `.env.local` and that file holds far more than Claude tokens."
+  #"sk-ant-[A-Za-z0-9_-]{16,}|sk-[A-Za-z0-9]{20,}|xox[abeoprs]-[A-Za-z0-9-]{10,}|gh[pousr]_[A-Za-z0-9]{20,}")
+
+(defn marker-worthy?
+  "Whether `v`, read out of a credential file, may become a redaction marker.
+
+   `redact` substitutes a marker EVERYWHERE it appears, so a marker that is
+   also ordinary text garbles the review. Credential files are exactly where
+   placeholders live — `# CLAUDE_TOKENS=REPLACE_ME_WITH_TOKEN` is a comment in
+   the kind of file this reads — and marking every assignment without a filter
+   turns each placeholder into a substitution over unrelated prose.
+
+   Three rules, none of them an enumeration of placeholders:
+
+   - 16 characters and no whitespace. Shorter matches prose everywhere.
+     `reviewer/credentials` keeps its own 8-character floor for the values
+     this process KNOWS are credentials; this is the higher bar a value has to
+     clear to be GUESSED into the set.
+   - SHOUTING SEGMENTS are a placeholder: `REPLACE_ME_WITH_TOKEN`,
+     `YOUR_TOKEN_HERE`, `REPLACE-ME-WITH-YOUR-TOKEN`. Upper-case WORDS joined
+     by `_` or `-` is the convention for \"fill this in\". A single upper-case
+     run is NOT covered, on purpose: `AKIAIOSFODNN7EXAMPLE` (an AWS key id)
+     and a base32 TOTP secret are both spelled that way, and an earlier
+     version of this rule rejected every `[A-Z0-9_]+` value — which took both
+     of those out of the marker set while `credential-shape-re` does not
+     cover them either, so neither layer held them. `<…>` is the other
+     placeholder convention and goes with this rule.
+   - A `/` means a URL or a path, not a credential.
+
+   WHAT IT STILL ADMITS, stated rather than implied: any other ≥16-character
+   configuration value in the file — a model id, a client id, a hostname —
+   becomes a marker and is substituted wherever it appears in the review. That
+   is the deliberate direction of error. A word redacted out of a review costs
+   a reread; a credential left unmarked costs the credential, and the three
+   passes this replaces were all the second kind.
+
+   A value matching `credential-shape-re` passes regardless — a known
+   credential shape outranks every rule here, and that is what keeps the shape
+   floor from being weakened by this gate."
+  [v]
+  (boolean
+   (and (string? v)
+        (let [v (str/trim v)]
+          (and (>= (count v) 16)
+               (not (re-find #"\s" v))
+               (or (re-find credential-shape-re v)
+                   (and (not (re-matches #"[A-Z0-9]+(?:[_-][A-Z0-9]+)+" v))
+                        (not (re-find #"[<>/]" v)))))))))
+
+(defn env-secrets
+  "The pool in THIS process's environment, split.
+
+   A function rather than an inline `System/getenv` so a test can say what the
+   environment holds. The property the explicit arity of `known-secrets`
+   carries — an ambient variable must not win over a named file — is otherwise
+   only falsifiable where CLAUDE_TOKENS happens to be set, and `bb test` runs
+   under `env -u CLAUDE_TOKENS`, so it was asserted and never exercised."
+  []
+  (->> (str/split (str (System/getenv "CLAUDE_TOKENS")) #",")
+       (map str/trim)
+       (remove str/blank?)
+       vec))
+
+(defn secret-files
+  "Every credential file this source names a path to.
+
+   BOTH, not either. The marker set used to scan PR_REVIEW_TOKENS_ENV_FILE
+   `or` `default-env-file`, so an override pointed anywhere else left the
+   default file's pools unmarked while its path stayed a literal in this
+   source — one `cat` away from the PR comment. The override says which file
+   the POOL comes from; it does not make the other file's contents stop being
+   credentials.
+
+   `not-empty`, because an empty PR_REVIEW_TOKENS_ENV_FILE is not a path.
+
+   The override arrives as an ARGUMENT on the 1-arity so the rule above is
+   testable: a process cannot set a variable in its own environment for its
+   own `System/getenv` to read, and asserting it against whatever the tester
+   happens to export is how the last version of this property came to be
+   asserted and never exercised."
+  ([] (secret-files (System/getenv "PR_REVIEW_TOKENS_ENV_FILE")))
+  ([override]
+   (->> [(not-empty (str override)) default-env-file]
+        (remove nil?)
+        distinct
+        vec)))
+
+(defn known-secrets
+  "Every string this process can NAME that would be a leaked credential if the
+   reviewer printed it. Not a pool — a marker set, and nothing authenticates
+   with the result.
+
+   `pool` answers \"which token do I log in with\", and for that, skipping
+   comments and preferring the environment are both right. This answers the
+   other question, and it is keyed on the FILE, not on a variable name: every
+   value assigned in every file `secret-files` names, commented or not,
+   whatever the key. Keying on `CLAUDE_TOKENS` cost three review passes, one
+   spelling at a time — `# # CLAUDE_TOKENS=`, `# set CLAUDE_TOKENS=`,
+   `# OLD_CLAUDE_TOKENS=` — while every non-Claude credential in the same file
+   stayed unmarked the whole time. What the reviewer can `cat` is the file;
+   the key inside it is not a boundary.
+
+   `marker-worthy?` decides what may become a marker, because marking every
+   assignment also marks every placeholder.
+
+   Values are kept whole AND split on `,`: a pool is a comma list, and a leak
+   can print one member or the whole line.
+
+   An EXPLICIT `path` is that file alone — no environment, no second file —
+   for the same reason `pool`'s explicit `:env-file` is: naming a file is the
+   caller saying which one it means, and an ambient variable winning over it
+   makes the argument a no-op wherever it is set.
+
+   Never throws: an unreadable file means whatever the rest gave."
+  ([] (vec (distinct (concat (mapcat known-secrets (secret-files))
+                             (env-secrets)))))
   ([path]
    (let [lines (try
                  (when (and path (fs/regular-file? path))
                    (str/split-lines (slurp (str path))))
-                 (catch Exception _ nil))
-         assignments (->> lines
-                          (keep (fn [line]
-                                  ;; the comment marker is STRIPPED rather than
-                                  ;; used to skip the line: a disabled pool is
-                                  ;; exactly what this is here for
-                                  (let [l (-> (str/triml line)
-                                              (str/replace #"^#+\s*" "")
-                                              (str/replace-first #"^export\s+" ""))
-                                        [k v] (str/split l #"=" 2)]
-                                    (when (and v (= "CLAUDE_TOKENS" (str/trim (str k))))
-                                      (unquote-value v))))))]
-     (->> assignments
-          (mapcat #(str/split (str %) #","))
+                 (catch Exception _ nil))]
+     (->> lines
+          (keep (fn [line]
+                  ;; The comment marker is STRIPPED rather than used to skip
+                  ;; the line: a disabled pool is a prior pool, which is a live
+                  ;; credential for a real account. Repeated `#`s and a
+                  ;; `set`/`export` verb strip too — each of those spellings
+                  ;; was measured dropping a credential out of the set.
+                  (let [l (-> (str/triml line)
+                              (str/replace #"^(?:#+\s*)+" "")
+                              (str/replace-first #"^(?:export|set)\s+" ""))
+                        [k v] (str/split l #"=" 2)]
+                    ;; A shell identifier on the left, so a prose line that
+                    ;; happens to carry `=` is not read as an assignment.
+                    (when (and v (re-matches #"[A-Za-z_][A-Za-z0-9_]*"
+                                             (str/trim (str k))))
+                      (unquote-value v)))))
+          (mapcat (fn [v] (cons v (str/split (str v) #","))))
           (map str/trim)
-          (remove str/blank?)
+          (filter marker-worthy?)
           distinct
           vec))))
+
+;;; Cross-process rotation state
 
 (defn state-path
   "Where the cursor and the parked set live.

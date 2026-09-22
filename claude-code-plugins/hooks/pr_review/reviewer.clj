@@ -263,13 +263,14 @@
    Three sources, and leaving any of them out has been a live gap:
 
    - `selected`, the token this run is spawning with.
-   - every token `tokens/known-tokens` can see, which is the live pool AND the
-     disabled CLAUDE_TOKENS lines in the env file. The reviewer has Read,
-     Grep, Glob and Bash and `pr-review.tokens` names that file's path in
-     source it is routinely asked to read, so one `cat` prints all of them —
-     the prior pools included, which are live tokens for real accounts.
-     Scrubbing only `selected` left the other N-1 in the PR comment, and
-     scrubbing only the live pool left the disabled ones.
+   - every value `tokens/known-secrets` can see: every assignment, commented
+     or not, in every credential file `tokens/secret-files` names, plus the
+     pool in this environment. The reviewer has Read, Grep, Glob and Bash and
+     `pr-review.tokens` names those paths in source it is routinely asked to
+     read, so one `cat` prints all of them — the prior pools included, which
+     are live tokens for real accounts, and the non-Claude credentials that
+     share the file. Scrubbing only `selected` left the other N-1 in the PR
+     comment, and scrubbing only CLAUDE_TOKENS-keyed lines left the rest.
    - the PINNED `default-token-file`, which is the same story one file over.
      Before rotation it needed no mention because `selected` always WAS the
      pinned token; with a non-empty pool it is in neither of the first two, so
@@ -282,9 +283,17 @@
    Values under 8 characters are dropped: a marker for something that short
    would match ordinary prose everywhere. `redact` applies the same floor to
    whatever it is handed, so neither end has to trust the other — this is not
-   the single owner of that rule and no longer claims to be."
+   the single owner of that rule and no longer claims to be.
+   `tokens/marker-worthy?` holds a HIGHER bar (16 characters, not shouting
+   case) on the values that are guessed out of a file rather than known to be
+   this process's own credential.
+
+   Naming values is only the upper layer. `redact` also sweeps
+   `tokens/credential-shape-re`, which catches a credential no list here
+   contains — the direction three review passes in a row were spent failing to
+   enumerate."
   [selected]
-  (->> (conj (vec (try (tokens/known-tokens) (catch Exception _ nil)))
+  (->> (conj (vec (try (tokens/known-secrets) (catch Exception _ nil)))
              selected
              (oauth-token))
        (filter string?)
@@ -306,14 +315,28 @@
    `credentials`' question, and it has now been answered wrong twice by being
    answered here instead — once for the pool, once for the pinned file.
 
-   Nothing else redacted: a value we do not know cannot be matched, and
-   guessing at shapes would give false confidence. This covers the secrets
-   this process is known to hold."
+   TWO LAYERS, and the second one is a reversal of what this docstring used to
+   say (\"a value we do not know cannot be matched, and guessing at shapes
+   would give false confidence\"):
+
+   1. The named `secrets`, replaced literally. Precise, and blind to whatever
+      `credentials` did not think to name.
+   2. `tokens/credential-shape-re`, a FLOOR. An issued credential in the
+      output is redacted on its shape alone, from whatever source. This is
+      here because layer 1 was wrong three passes running, each time by one
+      more source nobody had enumerated yet (#173), and enumeration of
+      sources has no last member. The floor misses any credential that does
+      not match a known shape, which is what keeps layer 1 necessary.
+
+   False confidence remains the real cost of layer 2 and is not argued away:
+   a shape list is a list too. It is a floor under layer 1, never a
+   replacement for it."
   [text secrets]
   (if (string? text)
-    (reduce (fn [t s] (str/replace t s "[redacted]"))
-            text
-            (filter #(and (string? %) (>= (count %) 8)) secrets))
+    (-> (reduce (fn [t s] (str/replace t s "[redacted]"))
+                text
+                (filter #(and (string? %) (>= (count %) 8)) secrets))
+        (str/replace tokens/credential-shape-re "[redacted]"))
     text))
 
 (defn- default-spawn
