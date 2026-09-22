@@ -263,7 +263,20 @@
           "and its reset is read out of it — 3am, two segments after the
            clause `limit-patterns` matches, on the same line"))))
 
-(deftest no-source-file-matches-a-limit-banner
+(defn- plugin-root
+  "The plugin directory, however `bb` was invoked. `babashka.config` is the
+   path of the `bb.edn` in use, so its parent is the root whatever the cwd
+   is; `user.dir` is the fallback for a REPL started without one.
+
+   Copied from `hooksjson-test`, which needed it for the same reason, and
+   needed here for a sharper one: a cwd-relative glob that finds nothing
+   returns an empty seq rather than throwing, so the invariant below would
+   PASS by checking zero files."
+  []
+  (or (some-> (System/getProperty "babashka.config") fs/parent str)
+      (System/getProperty "user.dir")))
+
+(deftest no-plugin-file-matches-a-limit-banner
   (testing "the reviewer reads this repository. A file that `limited?` matches
             is a file that, quoted back in a review, says a token is spent —
             and with the reset on the same line, says when it resets too.
@@ -273,15 +286,39 @@
             and the org pattern needs only its clause. Both are what a
             quotation would carry.
 
+            EVERY text file under the plugin, not just the two `.clj`
+            directories a narrower version globbed — `review_core.md` is the
+            review prompt itself, and `commands/` and `skills/` are read and
+            quoted as readily as source is.
+
             An invariant rather than a comment, because the comment version
-            was asserted and not kept: measured before this test existed,
-            `limited?` on this file returned TRUE at seven literals, one of
-            them in `banner` itself."
-    (doseq [f (concat (fs/glob "hooks/pr_review" "*.clj")
-                      (fs/glob "test/pr_review" "*.clj"))]
-      (is (not (tokens/limited? (slurp (str f))))
-          (str f " matches `limited?` — assemble the banner from halves at"
-               " runtime, as `banner` and `real-org-banner` do")))))
+            was asserted and not kept: measured on the parent commit,
+            `limited?` on this file returned TRUE at seven literals."
+    (let [root (plugin-root)
+          files (->> (fs/glob root "**")
+                     (filter fs/regular-file?)
+                     (remove #(str/includes? (str %) "/.git/")))]
+      ;; Both guards, because the failure to avoid is a PASS that checked
+      ;; nothing. A glob that finds no files returns an empty seq rather than
+      ;; throwing, so `doseq` over it is silently vacuous: every per-file
+      ;; assertion disappears and the run still reports 0 failures.
+      ;;
+      ;; The root is asserted to BE the plugin, not merely non-empty: under
+      ;; `bb -cp hooks:test` with no `--config` there is no `babashka.config`
+      ;; and `user.dir` is whatever the caller stood in, which would send this
+      ;; scanning an unrelated tree and passing on it. `bb test` from the
+      ;; repo root cannot reach here at all — the task's own file filter finds
+      ;; nothing and `require` throws — so this covers the eval path.
+      (is (fs/directory? (fs/path root "hooks" "pr_review"))
+          (str root " is not the plugin root — this test would scan the wrong"
+               " tree and pass on it"))
+      (is (< 20 (count files))
+          (str "only " (count files) " files found under " root
+               " — the glob is not reaching the plugin tree"))
+      (doseq [f files]
+        (is (not (tokens/limited? (try (slurp (str f)) (catch Exception _ ""))))
+            (str f " matches `limited?` — assemble the banner from halves at"
+                 " runtime, as `banner` and `real-org-banner` do"))))))
 
 (deftest quoted-prose-does-not-set-the-park
   (testing "what arrives at `reset-at-ms` is the reviewer's WHOLE output, and
@@ -294,11 +331,13 @@
     (let [now (shanghai-ms 2026 9 21 22 24)
           real (shanghai-ms 2026 9 22 3 0)
           personal (banner "resets 3am (Asia/Shanghai)")
-          ;; the org opening clause carries NO reset tail — assembled here for
-          ;; the reason `limit-patterns` gives, so this file does not contain
-          ;; a banner contiguously and match its own pattern
-          org (str "You've hit your org" "'s monthly spend limit · ask an admin")
-          org-full (str org " · your weekly limit resets 3am (Asia/Shanghai)")
+          ;; DERIVED from the captured sample, not rebuilt beside it: a
+          ;; hand-written copy drifts from the real banner, and the whole
+          ;; point of `real-org-banner` is that the shape is not invented.
+          ;; `org-full` IS the sample; `org` is it with the reset segment cut
+          ;; off, which is the clause `limit-patterns` matches on its own.
+          org-full real-org-banner
+          org (subs real-org-banner 0 (str/index-of real-org-banner " · your weekly"))
           quoted "review text quoting resets Sep 28 at 3am (Asia/Shanghai)"]
       (is (= real (tokens/reset-at-ms personal now))
           "the banner alone")
