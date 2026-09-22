@@ -441,7 +441,7 @@
     (let [path (tmp-state)
           selected "tok-selected-aaaaaaaa"]
       (with-redefs [tokens/state-path (constantly path)
-                    tokens/known-tokens (constantly [selected])
+                    tokens/known-secrets (constantly [selected])
                     reviewer/default-token-file "/no/such/pinned/file"]
         (let [before (System/currentTimeMillis)
               _ (reviewer/run!
@@ -539,7 +539,7 @@
           d (str (fs/create-temp-dir {:prefix "prl-red"}))
           errf (str (fs/path d "err"))]
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/known-tokens (constantly [selected other])]
+                    tokens/known-secrets (constantly [selected other])]
         (let [res (reviewer/run!
                    "P" "."
                    {:token-fn (constantly selected)
@@ -559,20 +559,127 @@
 (deftest a-disabled-pool-in-the-env-file-is-still-a-live-credential
   (testing "`pool` skips comment lines, and rightly — a disabled line must not
             be authenticated with. But those lines hold PRIOR pools: live
-            tokens for real accounts. `known-tokens` answers the other
+            tokens for real accounts. `known-secrets` answers the other
             question, which strings would be a leak if printed, and one `cat`
-            of a path this source names prints every one of them"
+            of a path this source names prints every one of them.
+
+            The spellings below are not decoration. Each of `# #`, `set` and
+            an `OLD_` prefix was measured dropping a credential out of a
+            version of this function that matched on the KEY; keying on the
+            file is what makes the list finite."
     (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-known"}) ".env.local"))]
       (spit f (str "# jason, 0g\n"
-                   "# CLAUDE_TOKENS=tok-retired-aaaa,tok-retired-bbbb\n"
-                   "#CLAUDE_TOKENS=tok-retired-cccc\n"
-                   "CLAUDE_TOKENS=tok-live-dddd,tok-live-eeee\n"))
-      (is (= ["tok-live-dddd" "tok-live-eeee"] (tokens/pool {:env-file f}))
+                   "# CLAUDE_TOKENS=tok-retired-aaaaaaaa,tok-retired-bbbbbbbb\n"
+                   "#CLAUDE_TOKENS=tok-retired-cccccccc\n"
+                   "# # CLAUDE_TOKENS=tok-retired-dddddddd\n"
+                   "# set CLAUDE_TOKENS=tok-retired-eeeeeeee\n"
+                   "# OLD_CLAUDE_TOKENS=tok-retired-ffffffff\n"
+                   "ANTHROPIC_API_KEY=key-not-a-claude-token\n"
+                   "export CLAUDE_TOKENS=tok-live-gggggggg,tok-live-hhhhhhhh\n"))
+      (is (= ["tok-live-gggggggg" "tok-live-hhhhhhhh"] (tokens/pool {:env-file f}))
           "the POOL is the live line only — nothing else may be used to log in")
-      (is (= #{"tok-retired-aaaa" "tok-retired-bbbb" "tok-retired-cccc"
-               "tok-live-dddd" "tok-live-eeee"}
-             (set (tokens/known-tokens f)))
-          "the MARKER SET is every one of them, `#` or not"))))
+      (is (= #{"tok-retired-aaaaaaaa" "tok-retired-bbbbbbbb"
+               "tok-retired-aaaaaaaa,tok-retired-bbbbbbbb"
+               "tok-retired-cccccccc" "tok-retired-dddddddd"
+               "tok-retired-eeeeeeee" "tok-retired-ffffffff"
+               "key-not-a-claude-token"
+               "tok-live-gggggggg" "tok-live-hhhhhhhh"
+               "tok-live-gggggggg,tok-live-hhhhhhhh"}
+             (set (tokens/known-secrets f)))
+          "the MARKER SET is every value in the file, `#` or not and whatever
+           the key — including the credential that is not a Claude token, and
+           including each comma list whole, because a leak can print the line")
+      (is (some #{"key-not-a-claude-token"} (tokens/known-secrets f))
+          "stated on its own: keying on CLAUDE_TOKENS left every other
+           credential in this file unmarked, and cchp's `.env.local` holds
+           several"))))
+
+(deftest a-placeholder-in-a-credential-file-is-not-a-marker
+  (testing "the cost of marking every assignment rather than every
+            CLAUDE_TOKENS-keyed one: credential files are where placeholders
+            live, and `redact` substitutes a marker EVERYWHERE it appears, so
+            a placeholder-turned-marker garbles review text that has nothing
+            to do with a credential"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-ph"}) ".env.local"))]
+      (spit f (str "# CLAUDE_TOKENS=REPLACE_ME_WITH_TOKEN\n"
+                   "CLAUDE_TOKENS=<your-token-here-goes>\n"
+                   "SHORT=abc123\n"
+                   "REAL=tok-real-aaaaaaaaaa1\n"
+                   "this line = prose, not an assignment\n"))
+      (is (= #{"tok-real-aaaaaaaaaa1"} (set (tokens/known-secrets f)))
+          "only the one that could be a credential")
+      (is (= "keep REPLACE_ME_WITH_TOKEN and <your-token-here-goes>"
+             (reviewer/redact "keep REPLACE_ME_WITH_TOKEN and <your-token-here-goes>"
+                              (tokens/known-secrets f)))
+          "and the review text is left alone, which is the whole point of the
+           gate"))))
+
+(deftest a-credential-shape-is-redacted-without-being-named
+  (testing "the FLOOR. Three review passes each found one more source outside
+            the named set; a shape does not have a source. This is the
+            reversal `redact`'s docstring states, and it is what makes a
+            fourth unenumerated source not a leak"
+    (let [unknown (str "sk-ant-" "oat01-nEVERnAMEDbyTHISpROCESS0123456789")]
+      (is (str/includes? (reviewer/redact (str "printed " unknown) [])
+                         "[redacted]")
+          "no `secrets` at all, and it is still scrubbed")
+      (is (not (str/includes? (reviewer/redact (str "printed " unknown) []) unknown)))
+      (is (= "a review that discusses sk-ant- prefixes is untouched"
+             (reviewer/redact "a review that discusses sk-ant- prefixes is untouched" []))
+          "the prefix alone is prose: the shape needs a credential-length tail")
+      (is (empty? (filter #(re-find tokens/credential-shape-re %)
+                          [(slurp "hooks/pr_review/tokens.clj")
+                           (slurp "hooks/pr_review/reviewer.clj")]))
+          "and the pattern does not match its own source — the reviewer reads
+           this repository, and #176 was that mistake once already"))))
+
+(deftest the-marker-set-covers-every-named-file-not-one-of-them
+  (testing "the override says which file the POOL comes from. It does not make
+            the other file's contents stop being credentials, and the default
+            file's path is a literal in source the reviewer is asked to read.
+            `or` between the two left one of them unmarked"
+    (is (= ["/tmp/override.env" tokens/default-env-file]
+           (tokens/secret-files "/tmp/override.env"))
+        "BOTH, override first")
+    (is (= [tokens/default-env-file] (tokens/secret-files ""))
+        "an empty override is not a path — `or` read it as one and dropped the
+         default file")
+    (is (= [tokens/default-env-file] (tokens/secret-files nil)))))
+
+(deftest the-no-argument-marker-set-is-every-file-and-the-environment
+  (testing "the arity `credentials` actually calls, which every `run!`-level
+            test stubs away. Both seams are functions so this is falsifiable
+            without the tester's own environment deciding it"
+    (let [d (fs/create-temp-dir {:prefix "prl-two"})
+          f1 (str (fs/path d "one.env"))
+          f2 (str (fs/path d "two.env"))]
+      (spit f1 "CLAUDE_TOKENS=tok-from-file-one-aaaa\n")
+      (spit f2 "# CLAUDE_TOKENS=tok-from-file-two-bbbb\n")
+      (with-redefs [tokens/secret-files (constantly [f1 f2])
+                    tokens/env-secrets (constantly ["tok-from-the-environment"])]
+        (is (= #{"tok-from-file-one-aaaa" "tok-from-file-two-bbbb"
+                 "tok-from-the-environment"}
+               (set (tokens/known-secrets)))
+            "the union, not the first non-empty one"))
+      (with-redefs [tokens/env-secrets (constantly ["tok-from-the-environment"])]
+        (is (= ["tok-from-file-one-aaaa"] (tokens/known-secrets f1))
+            "and an EXPLICIT path is that file alone: an ambient variable
+             winning over the argument makes the argument a no-op wherever it
+             is set, which is every reviewer cchp spawns")))))
+
+(deftest credentials-reads-the-real-marker-set
+  (testing "the seam every other test stubs: `reviewer/credentials` →
+            `tokens/known-secrets` → a file on disk. Stubbed at
+            `known-secrets` everywhere else, so nothing exercised the call
+            itself"
+    (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-seam"}) ".env.local"))]
+      (spit f "# CLAUDE_TOKENS=tok-retired-from-the-file\n")
+      (with-redefs [tokens/secret-files (constantly [f])
+                    tokens/env-secrets (constantly [])
+                    reviewer/default-token-file "/no/such/pinned/file"]
+        (is (some #{"tok-retired-from-the-file"} (reviewer/credentials nil))
+            "the file's value reaches the redactor with nothing stubbed
+             between them")))))
 
 (deftest a-retired-token-the-reviewer-prints-is-redacted
   (testing "the whole point of the marker set, through `run!`: the reviewer
@@ -588,12 +695,12 @@
           ;; `credentials`' `(catch Exception)` does not catch — both
           ;; measured, one as a green-looking failure and one as an uncaught
           ;; test error
-          from-file (tokens/known-tokens f)]
+          from-file (tokens/known-secrets f)]
       (is (some #{retired} from-file)
           "the fixture must actually contain the retired token, or the
            assertion below passes on an empty marker set")
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/known-tokens (constantly from-file)
+                    tokens/known-secrets (constantly from-file)
                     reviewer/default-token-file "/no/such/pinned/file"]
         (let [res (reviewer/run!
                    "P" "."
@@ -616,7 +723,7 @@
           selected "tok-selected-aaaaaaaa"]
       (spit f (str pinned "\n"))
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/known-tokens (constantly [selected "tok-other-bbbbbbbb"])
+                    tokens/known-secrets (constantly [selected "tok-other-bbbbbbbb"])
                     reviewer/default-token-file f]
         (let [res (reviewer/run!
                    "P" "."
@@ -634,7 +741,7 @@
     (let [departing "tok-departing-aaaaaaaa"
           live (atom [departing "tok-staying-bbbbbbbb"])]
       (with-redefs [tokens/state-path (constantly (tmp-state))
-                    tokens/known-tokens (fn [& _] @live)
+                    tokens/known-secrets (fn [& _] @live)
                     reviewer/default-token-file "/no/such/pinned/file"]
         (let [res (reviewer/run!
                    "P" "."
