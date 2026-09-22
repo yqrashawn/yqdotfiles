@@ -167,11 +167,10 @@
    numeric time right after `resets`, so a DATED tail needs the org opening,
    which matches on its clause alone.
 
-   BOTH are assembled from halves, and `no-source-file-matches-a-limit-banner`
-   is what holds that: a file containing a banner contiguously matches its own
-   pattern, and this file is one the reviewer reads. The previous version
-   asserted the discipline in a comment and did not keep it — measured,
-   `limited?` returned true on this file's own text."
+   BOTH are assembled from halves, and the `limited?` invariant below is what
+   holds that: a file `limited?` matches is a file the reviewer can quote back
+   as a live limit, and this file is one the reviewer reads. A comment used to
+   assert the same discipline and did not keep it."
   ([tail]
    (if (re-find #"^resets \d" tail)
      (str "You've hit your" " limit · " tail)
@@ -286,14 +285,17 @@
             and the org pattern needs only its clause. Both are what a
             quotation would carry.
 
-            EVERY text file under the plugin, not just the two `.clj`
-            directories a narrower version globbed — `review_core.md` is the
-            review prompt itself, and `commands/` and `skills/` are read and
-            quoted as readily as source is.
+            Every file a recursive `fs/glob` reaches under the plugin — 41
+            of them,
+            which is everything but the hidden `.claude-plugin/` entries the
+            glob skips by default. Not just the two `.clj` directories a
+            narrower version globbed: `review_core.md` is the review prompt
+            itself, and `commands/` and `skills/` are read and quoted as
+            readily as source is.
 
             An invariant rather than a comment, because the comment version
-            was asserted and not kept: measured on the parent commit,
-            `limited?` on this file returned TRUE at seven literals."
+            was asserted and not kept: on the commit this PR branched from,
+            `limited?` on this file returned TRUE."
     (let [root (plugin-root)
           files (->> (fs/glob root "**")
                      (filter fs/regular-file?)
@@ -315,7 +317,10 @@
       (is (< 20 (count files))
           (str "only " (count files) " files found under " root
                " — the glob is not reaching the plugin tree"))
-      (doseq [f files]
+      ;; `when`, because `is` does not short-circuit: with a wrong root the
+      ;; guard above reports it and the scan then ran anyway — measured at 799
+      ;; assertions over an unrelated tree against 121 here.
+      (doseq [f (when (fs/directory? (fs/path root "hooks" "pr_review")) files)]
         (is (not (tokens/limited? (try (slurp (str f)) (catch Exception _ ""))))
             (str f " matches `limited?` — assemble the banner from halves at"
                  " runtime, as `banner` and `real-org-banner` do"))))))
