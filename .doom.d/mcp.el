@@ -30,6 +30,31 @@ it knows about."
                      (list 'Authorization (concat "Bearer " token))))))
     pairs))
 
+(defun +mcp--write-json (file object &optional pretty)
+  "Write OBJECT to FILE as JSON at mode 600, pretty-printed when PRETTY.
+
+Two traps, both silent.
+
+`json-serialize' returns a UNIBYTE string of UTF-8 bytes. Inserting that into
+a multibyte buffer turns each byte into a raw eight-bit character, and
+`json-pretty-print-buffer' then re-serializes those as literal backslash-octal
+escapes -- so \"5.1 \u00b7 x\" comes back as \"5.1 \\302\\267 x\" and every
+non-ASCII string in the file is quietly mangled. ~/.claude.json has several.
+Decode before inserting.
+
+`set-file-modes' alone leaves a window: a file that does not yet exist is
+created by the write at 0666 & ~umask -- 644 here -- and the credential is
+written before the mode is narrowed. `with-file-modes' covers creation;
+`set-file-modes' is still needed afterwards because `write-region' preserves
+the mode of a file that already existed."
+  (with-file-modes #o600
+    (with-temp-file file
+      (insert (decode-coding-string
+                (json-serialize object :null-object :null :false-object :json-false)
+                'utf-8))
+      (when pretty (json-pretty-print-buffer))))
+  (set-file-modes file #o600))
+
 (defun +gen-mcp-json-conf ()
   "Generate MCP JSON config from `mcp-hub-servers'.
 
@@ -85,16 +110,10 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
                     (setq server-plist (plist-put server-plist :headers headers)))
                   server-plist)))))
     (make-directory (file-name-directory output-file) t)
-    (with-temp-file output-file
-      (insert (json-serialize (list :mcpServers servers-plist)
-                :null-object :null
-                :false-object :json-false)))
-    ;; Both files carry credentials -- context7's :args has held an API key
-    ;; all along, and :token now adds bearer tokens -- so neither may be world
-    ;; readable. write-region keeps an EXISTING file's mode, so the mode here
-    ;; is whatever created the file first and is 644 for a fresh one under the
-    ;; default umask. Set it explicitly rather than inherit it.
-    (set-file-modes output-file #o600)
+    ;; Both files carry credentials -- context7's :args has held an API key all
+    ;; along, and :token now adds bearer tokens -- so neither may be world
+    ;; readable at any point, not merely once the write has finished.
+    (+mcp--write-json output-file (list :mcpServers servers-plist))
     (let ((claude-conf
             (if (file-exists-p claude-json-file)
               (with-temp-buffer
@@ -106,12 +125,7 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
                   :false-object :json-false))
               (list :mcpServers nil))))
       (plist-put claude-conf :mcpServers servers-plist)
-      (with-temp-file claude-json-file
-        (insert (json-serialize claude-conf
-                  :null-object :null
-                  :false-object :json-false))
-        (json-pretty-print-buffer))
-      (set-file-modes claude-json-file #o600)
+      (+mcp--write-json claude-json-file claude-conf t)
       (message "Wrote MCP config to %s and updated %s"
         output-file claude-json-file))))
 
@@ -292,8 +306,19 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
          (:url "http://127.0.0.1:62941/mcp"
            :token ,(lambda ()
                      (let ((path (expand-file-name "~/.pext/mcp-token")))
-                       (when (file-exists-p path)
-                         (string-trim (f-read-text path)))))))
+                       (if (file-exists-p path)
+                         (string-trim (f-read-text path))
+                         ;; Returning nil here drops :headers entirely, and the
+                         ;; entry is still emitted -- so every call 401s with
+                         ;; nothing naming the cause. A warning rather than an
+                         ;; error because this machine is not the only one: on
+                         ;; a host without pext, aborting generation would take
+                         ;; the other twelve servers down with it.
+                         (prog1 nil
+                           (display-warning '+mcp
+                             (format "pext-browser: no token at %s -- its entry will have no auth and every call will 401"
+                               path)
+                             :warning)))))))
 
        ;; The browser wallet, same machine. Listed here because
        ;; `+gen-mcp-json-conf' rebuilds ~/.claude.json's mcpServers object
