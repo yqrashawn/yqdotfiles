@@ -1,9 +1,42 @@
 ;;; .nixpkgs/.doom.d/mcp.el -*- lexical-binding: t; -*-
 
+(defun +mcp-resolve-value (value)
+  "Resolve VALUE the way mcp.el's `mcp--resolve-value' does.
+A function is called, a bound symbol is dereferenced, anything else is itself.
+Duplicated rather than reused because this runs before mcp.el is loaded."
+  (cond
+    ((functionp value) (funcall value))
+    ((and (symbolp value) (boundp value)) (symbol-value value))
+    (value)))
+
+(defun +mcp-server-headers (cfg)
+  "HTTP headers for CFG as a plist ready for `json-serialize', or nil.
+
+Built from :headers (an alist, as mcp.el wants it) and :token, which mcp.el
+turns into an Authorization bearer header itself. Both are resolved, so a
+:token may be a lambda that reads a file -- that keeps the secret out of this
+repo and means rotation needs no edit here.
+
+Without this, every header would be silently dropped from ~/.claude.json: the
+generator below rebuilds each server entry from scratch and keeps only the keys
+it knows about."
+  (let* ((token (+mcp-resolve-value (plist-get cfg :token)))
+          (pairs (append
+                   (cl-loop for (k . v) in (+mcp-resolve-value (plist-get cfg :headers))
+                     for rv = (+mcp-resolve-value v)
+                     when (and rv (not (string-empty-p (format "%s" rv))))
+                     append (list (intern (format "%s" k)) (format "%s" rv)))
+                   (when (and token (not (string-empty-p (format "%s" token))))
+                     (list 'Authorization (concat "Bearer " token))))))
+    pairs))
+
 (defun +gen-mcp-json-conf ()
   "Generate MCP JSON config from `mcp-hub-servers'.
 
-Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.claude.json."
+Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.claude.json.
+
+NOTE: this REPLACES the whole mcpServers object, so a server added with
+`claude mcp add' is erased the next time this runs. Add it here instead."
   (interactive)
   (let* ((output-file (expand-file-name "~/Downloads/mcp.json"))
           (claude-json-file (expand-file-name "~/.claude.json"))
@@ -48,12 +81,18 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                     (setq server-plist (plist-put server-plist :type type)))
                   (when env-plist
                     (setq server-plist (plist-put server-plist :env env-plist)))
+                  (when-let* ((headers (+mcp-server-headers cfg)))
+                    (setq server-plist (plist-put server-plist :headers headers)))
                   server-plist)))))
     (make-directory (file-name-directory output-file) t)
     (with-temp-file output-file
       (insert (json-serialize (list :mcpServers servers-plist)
                 :null-object :null
                 :false-object :json-false)))
+    ;; Both files can carry bearer tokens now, so neither may be world
+    ;; readable. write-region keeps an existing file's mode, which left
+    ;; ~/Downloads/mcp.json at 644 -- set it explicitly instead.
+    (set-file-modes output-file #o600)
     (let ((claude-conf
             (if (file-exists-p claude-json-file)
               (with-temp-buffer
@@ -70,6 +109,7 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
                   :null-object :null
                   :false-object :json-false))
         (json-pretty-print-buffer))
+      (set-file-modes claude-json-file #o600)
       (message "Wrote MCP config to %s and updated %s"
         output-file claude-json-file))))
 
@@ -237,6 +277,28 @@ Writes the config to ~/Downloads/mcp.json and replaces \"mcpServers\" in ~/.clau
 
        ("cchp" .
          (:url "http://localhost:8035/mcp"))
+
+       ;; The real Firefox, driven through pext. Supervised by pm2 as
+       ;; pext-mcp-studio; see ~/workspace/home/pext/docs/agent-browser.md.
+       ;;
+       ;; The daemon requires a bearer token, and this repo is public, so the
+       ;; token is read at generation time rather than written here. It still
+       ;; ends up in ~/.claude.json -- it has to, headers are literals there --
+       ;; but as generated output rather than something pasted by hand, so
+       ;; rotating it is re-running this generator, not `claude mcp add'.
+       ("pext-browser" .
+         (:url "http://127.0.0.1:62941/mcp"
+           :token ,(lambda ()
+                     (let ((path (expand-file-name "~/.pext/mcp-token")))
+                       (when (file-exists-p path)
+                         (string-trim (f-read-text path)))))))
+
+       ;; The browser wallet, same machine. Listed here because this file is
+       ;; the ONLY source of ~/.claude.json's mcpServers -- it rebuilds the
+       ;; whole object, so a server added with `claude mcp add' and not added
+       ;; here disappears the next time Doom loads this file.
+       ("puppetwallet" .
+         (:url "http://127.0.0.1:8777/mcp"))
 
        ("scout" .
          (:url "https://scout.rashawn.work/mcp"))
