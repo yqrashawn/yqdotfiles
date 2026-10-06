@@ -30,6 +30,8 @@ it knows about."
                      (list 'Authorization (concat "Bearer " token))))))
     pairs))
 
+(require 'json)                         ; json-pretty-print-buffer, not autoloaded
+
 (defun +mcp--write-json (file object &optional pretty)
   "Write OBJECT to FILE as JSON at mode 600, pretty-printed when PRETTY.
 
@@ -41,6 +43,11 @@ a multibyte buffer turns each byte into a raw eight-bit character, and
 escapes -- so \"5.1 \u00b7 x\" comes back as \"5.1 \\302\\267 x\" and every
 non-ASCII string in the file is quietly mangled. ~/.claude.json has several.
 Decode before inserting.
+
+`json-pretty-print-buffer' lives in json.el and is not autoloaded, hence the
+`require' above: without it the pretty branch would signal AFTER
+~/Downloads/mcp.json had already been written, leaving the two files out of
+sync.
 
 `set-file-modes' alone leaves a window: a file that does not yet exist is
 created by the write at 0666 & ~umask -- 644 here -- and the credential is
@@ -111,8 +118,10 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
                   server-plist)))))
     (make-directory (file-name-directory output-file) t)
     ;; Both files carry credentials -- context7's :args has held an API key all
-    ;; along, and :token now adds bearer tokens -- so neither may be world
-    ;; readable at any point, not merely once the write has finished.
+    ;; along, and :token now adds bearer tokens -- so neither may be left world
+    ;; readable. See +mcp--write-json for what that does and does not cover: a
+    ;; file that ALREADY exists at 644 keeps that mode through the write and is
+    ;; only narrowed afterwards.
     (+mcp--write-json output-file (list :mcpServers servers-plist))
     (let ((claude-conf
             (if (file-exists-p claude-json-file)

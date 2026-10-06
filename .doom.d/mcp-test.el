@@ -87,9 +87,11 @@ back, modified and rewritten on every run."
 
 (ert-deftest mcp-test-write-json-round-trips-a-whole-config ()
   "Parse, modify, write, parse: the shape survives, including empty objects.
-An empty JSON object parses to nil under :object-type 'plist, which is also
-how nil serializes back -- worth pinning, because the alternative would be an
-empty array."
+
+The empty object is asserted against the FILE TEXT, not against the parse. An
+absent key and an empty object both come back as nil under
+:object-type 'plist, so a `plist-get' assertion would pass even if the key had
+been dropped outright -- a check that cannot fail for the reason it claims."
   (let ((file (make-temp-file "mcp-test-" nil ".json")))
     (unwind-protect
       (let* ((original "{\"keep\":{\"a\":1},\"empty\":{},\"arr\":[1,2],\"no\":false,\"nul\":null,\"uni\":\"·\"}")
@@ -108,7 +110,9 @@ empty array."
                         :null-object :null
                         :false-object :json-false))))
           (should (equal '(:a 1) (plist-get back :keep)))
-          (should (equal nil (plist-get back :empty)))
+          (should (string-match-p "\"empty\": *{}" (with-temp-buffer
+                                                      (insert-file-contents file)
+                                                      (buffer-string))))
           (should (equal [1 2] (plist-get back :arr)))
           (should (equal :json-false (plist-get back :no)))
           (should (equal :null (plist-get back :nul)))
