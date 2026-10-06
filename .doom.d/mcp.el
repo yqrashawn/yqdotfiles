@@ -89,9 +89,11 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
       (insert (json-serialize (list :mcpServers servers-plist)
                 :null-object :null
                 :false-object :json-false)))
-    ;; Both files can carry bearer tokens now, so neither may be world
-    ;; readable. write-region keeps an existing file's mode, which left
-    ;; ~/Downloads/mcp.json at 644 -- set it explicitly instead.
+    ;; Both files carry credentials -- context7's :args has held an API key
+    ;; all along, and :token now adds bearer tokens -- so neither may be world
+    ;; readable. write-region keeps an EXISTING file's mode, so the mode here
+    ;; is whatever created the file first and is 644 for a fresh one under the
+    ;; default umask. Set it explicitly rather than inherit it.
     (set-file-modes output-file #o600)
     (let ((claude-conf
             (if (file-exists-p claude-json-file)
@@ -293,10 +295,13 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
                        (when (file-exists-p path)
                          (string-trim (f-read-text path)))))))
 
-       ;; The browser wallet, same machine. Listed here because this file is
-       ;; the ONLY source of ~/.claude.json's mcpServers -- it rebuilds the
-       ;; whole object, so a server added with `claude mcp add' and not added
-       ;; here disappears the next time Doom loads this file.
+       ;; The browser wallet, same machine. Listed here because
+       ;; `+gen-mcp-json-conf' rebuilds ~/.claude.json's mcpServers object
+       ;; whole, so a server added with `claude mcp add' and not added here
+       ;; disappears the next time that runs. Note that this file is not the
+       ;; only generator: `+gen-mcp-json-conf2' in lisp.el writes the same two
+       ;; files from the same `mcp-hub-servers' and has its own, narrower key
+       ;; whitelist with no :headers/:token branch.
        ("puppetwallet" .
          (:url "http://127.0.0.1:8777/mcp"))
 
