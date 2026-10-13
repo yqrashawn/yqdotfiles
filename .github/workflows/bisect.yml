@@ -12,11 +12,11 @@ jobs:
           - nixosConfigurations.phil.config.system.build.toplevel
           - homeManagerConfigurations.server.activationPackage
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           path: system
       - name: Checkout nixpkgs
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           repository: NixOS/nixpkgs
           fetch-depth: 0
@@ -45,11 +45,11 @@ jobs:
         configuration:
           - darwinConfigurations.yqrashawn.config.system.build.toplevel
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           path: system
       - name: Checkout nixpkgs
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           repository: NixOS/nixpkgs
           fetch-depth: 0
