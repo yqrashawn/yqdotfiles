@@ -341,6 +341,8 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
 
        ("scout" .
          (:url "https://scout.rashawn.work/mcp"))
+       ("notion" .
+         (:url "https://mcp.notion.com/mcp"))
 
        ("codebase-memory-mcp" .
          (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"

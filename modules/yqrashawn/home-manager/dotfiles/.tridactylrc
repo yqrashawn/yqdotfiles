@@ -229,10 +229,7 @@ autocmd DocLoad ^https?:\/\/github\.com\/[\w-\._]+\/[\w-\._]+\/issues\/\d+ js -s
 " autocmd DocLoad ^https:\/\/my\.setapp\.com\/devices\?hostname js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/setapp_devices.js
 
 " Autocontainers
-autocontain ^https?://(www\.)?(\w*\.)*(status\.im|localhost:3449|localhost:4567) status
-autocontain ^https?://(www\.)?(\w*\.)*(scroll\.io) scroll
-autocontain ^https?://(www\.)?(\w*\.)*(donkey-clownfish\.ts\.net|ownmacbook|setapp\.com|adguard-dns\.io|roamresearch\.com|newsblur\.com|github\.com/notifications|fextralife\.com|localhost:6155|zmk\.dev|yqrashawn\.com|github\.com/settings/|melpa\.org|openai\.com|ifttt\.com|gov\.cn|raindrop\.io|kinesiscorporation\.github\.io|tarnished\.dev|github\.com/yqrashawn|\.local) none
-autocontain tridactyl none
+autocontain -s roamresearch\.com p
 
 escapehatch
 
