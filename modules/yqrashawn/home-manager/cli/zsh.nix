@@ -101,6 +101,7 @@ let
     # curl = "httpie";
 
     gfc1 = "git clone --depth 1";
+    gfc2m = "git clone --shallow-since='2 months ago'";
 
     brewh = "brew home";
     brewss = "brew services start";
