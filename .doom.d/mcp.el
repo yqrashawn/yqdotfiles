@@ -322,7 +322,7 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
                          ;; nothing naming the cause. A warning rather than an
                          ;; error because this machine is not the only one: on
                          ;; a host without pext, aborting generation would take
-                         ;; the other twelve servers down with it.
+                         ;; every other server down with it.
                          (prog1 nil
                            (display-warning '+mcp
                              (format "pext-browser: no token at %s -- its entry will have no auth and every call will 401"
