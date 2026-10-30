@@ -343,6 +343,9 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
          (:url "https://scout.rashawn.work/mcp"))
        ("notion" .
          (:url "https://mcp.notion.com/mcp"))
+       ;; OAuth only: /mcp rejects the REST API key (401), so no :token here.
+       ("mobbin" .
+         (:url "https://api.mobbin.com/mcp"))
 
        ("codebase-memory-mcp" .
          (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"
