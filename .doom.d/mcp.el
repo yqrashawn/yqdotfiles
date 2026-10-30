@@ -322,7 +322,7 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
                          ;; nothing naming the cause. A warning rather than an
                          ;; error because this machine is not the only one: on
                          ;; a host without pext, aborting generation would take
-                         ;; the other twelve servers down with it.
+                         ;; every other server down with it.
                          (prog1 nil
                            (display-warning '+mcp
                              (format "pext-browser: no token at %s -- its entry will have no auth and every call will 401"
@@ -343,6 +343,9 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
          (:url "https://scout.rashawn.work/mcp"))
        ("notion" .
          (:url "https://mcp.notion.com/mcp"))
+       ;; OAuth only: /mcp rejects the REST API key (401), so no :token here.
+       ("mobbin" .
+         (:url "https://api.mobbin.com/mcp"))
 
        ("codebase-memory-mcp" .
          (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"
