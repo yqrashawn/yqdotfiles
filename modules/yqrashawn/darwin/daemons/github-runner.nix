@@ -25,6 +25,11 @@ in
     # Run as the main user, like buildkite-agent, so jobs get the user env.
     user = config.user.name;
     extraEnvironment.HOME = homeDir;
+    # GitHub refuses outdated runners ("v2.330.0 is deprecated and cannot
+    # receive messages"); the main nixpkgs pin lags, so take it from small.
+    package = pkgs.small.github-runner;
+    # That package only ships node24; node20 actions (e.g. checkout@v4) fail.
+    nodeRuntimes = [ "node24" ];
   };
 
   # User and system profiles provide the job tools, same as buildkite-agent.
