@@ -15,6 +15,7 @@
     ./darwin/user-agents/bind-nextdns-ip.nix
     ./darwin/user-agents/atuin-server.nix
     ./darwin/user-agents/buildkite-agent.nix
+    ./darwin/daemons/github-runner.nix
     # ./darwin/openclaw.nix
   ];
 }
