@@ -33,8 +33,20 @@ in
   };
 
   # User and system profiles provide the job tools, same as buildkite-agent.
-  launchd.daemons.github-runner-zgh.path = [
-    "/etc/profiles/per-user/${config.user.name}/bin"
-    "/run/current-system/sw/bin"
+  launchd.daemons.github-runner-zgh.path = lib.mkMerge [
+    [
+      "/etc/profiles/per-user/${config.user.name}/bin"
+      "/run/current-system/sw/bin"
+    ]
+    # buildkite-agent also keeps the inherited $PATH, and with it the macOS base
+    # tools; this list replaces PATH outright, so name them. Without /bin a
+    # job has no ps, and zgh's process tests read ps. Last, so Apple's bash 3.2
+    # and git never shadow the runner module's own bash, coreutils and git.
+    (lib.mkAfter [
+      "/usr/bin"
+      "/bin"
+      "/usr/sbin"
+      "/sbin"
+    ])
   ];
 }
