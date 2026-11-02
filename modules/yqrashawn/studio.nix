@@ -3,6 +3,7 @@
 
   imports = [
     ./darwin/daemons/tailscale-utun.nix
+    ./darwin/daemons/github-runner.nix
     ./darwin/user-agents/pextser.nix
     ./darwin/user-agents/miniser-local-jar.nix
     ./darwin/user-agents/buildkite-agent.nix
