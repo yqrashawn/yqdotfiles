@@ -142,6 +142,7 @@ in
         ripgrep
         # ripgrep-all
         ugrep
+        bfs
         woff2
         zola
         git-interactive-rebase-tool
