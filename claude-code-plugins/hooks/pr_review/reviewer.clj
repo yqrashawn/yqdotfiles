@@ -254,7 +254,13 @@
              ;; opposite of what CLAUDE_CODE_OAUTH_TOKEN needs: an empty pool
              ;; parses to no tokens, where an empty credential would replace a
              ;; working one.
-             "CLAUDE_TOKENS" nil}
+             "CLAUDE_TOKENS" nil
+             ;; A review is one -p turn in a fresh session and worktree, so
+             ;; nothing reads its cache after it ends. On a subscription token
+             ;; the CLI defaults to 1-hour writes (2x input vs 1.25x for 5m);
+             ;; over 300 reviews (2026-11-04) the longest gap between two
+             ;; requests was 150 s, with no cache miss.
+             "CLAUDE_CODE_PROMPT_CACHE_TTL" "5m"}
       (seq (str token)) (assoc "CLAUDE_CODE_OAUTH_TOKEN" token))))
 
 (defn credentials
