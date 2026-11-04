@@ -505,6 +505,14 @@
                environment, so an empty string would replace working
                credentials with a blank one"))))))
 
+(deftest the-reviewer-writes-a-5-minute-prompt-cache
+  (testing "a review is one turn in a fresh session: nothing reads its cache
+            after it ends, so the CLI's 1-hour default on a subscription token
+            pays the 1-hour write price for nothing"
+    (with-redefs [tokens/pool (constantly [])
+                  reviewer/default-token-file "/nonexistent/prl-token"]
+      (is (= "5m" (get (reviewer/spawn-env) "CLAUDE_CODE_PROMPT_CACHE_TTL"))))))
+
 (deftest the-token-reaches-the-spawned-process
   (testing "the wiring, through the real spawner and a real child process"
     (let [f (str (fs/path (fs/create-temp-dir {:prefix "prl-tok"}) "t"))
