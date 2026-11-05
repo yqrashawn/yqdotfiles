@@ -3,23 +3,25 @@
 let
   homeDir = "/Users/${config.user.name}";
   hostname = config.networking.hostName;
-in
-{
-  # Self-hosted GitHub Actions runner for 0gfoundation/zgh, named <host>-zgh.
+
+  # Self-hosted GitHub Actions runners for 0gfoundation repos, named
+  # <host>-<attr> (e.g. studio-zgh, studio-cchp-1).
   #
   # tokenFile holds a one-time registration token, not a PAT (the org does not
   # allow fine-grained PATs). It is only read when the runner is not yet
   # registered; afterwards the runner keeps its own credentials in
-  # /var/lib/github-runners/<host>-zgh/.runner. Nothing re-registers on config
+  # /var/lib/github-runners/<host>-<attr>/.runner. Nothing re-registers on config
   # changes: after changing url/name/labels, delete that .runner file, then
-  # write a fresh token (the token file is watched, so the daemon restarts):
-  #   gh api -X POST repos/0gfoundation/zgh/actions/runners/registration-token \
-  #     -q .token | tr -d '\n' > ~/.config/github-runner/zgh.token
-  services.github-runners.zgh = {
+  # write a fresh token (the token file is watched, so every runner of that repo
+  # on the host restarts, killing any job it is running):
+  #   gh api -X POST repos/0gfoundation/<repo>/actions/runners/registration-token \
+  #     -q .token | tr -d '\n' > ~/.config/github-runner/<repo>.token
+  # One token registers any number of runners within its hour, so every runner
+  # of a repo shares that repo's token file.
+  mkRunner = repo: {
     enable = true;
-    url = "https://github.com/0gfoundation/zgh";
-    name = "${hostname}-zgh";
-    tokenFile = "${homeDir}/.config/github-runner/zgh.token";
+    url = "https://github.com/0gfoundation/${repo}";
+    tokenFile = "${homeDir}/.config/github-runner/${repo}.token";
     extraLabels = [ hostname ];
     replace = true;
     # Run as the main user, like buildkite-agent, so jobs get the user env.
@@ -32,21 +34,41 @@ in
     nodeRuntimes = [ "node24" ];
   };
 
+  # cchp runners per host: the always-on desktops take two jobs at once, the
+  # laptop one. Each runner is its own launchd daemon and work dir, and cchp's
+  # `make test-unit-ci` keys its database on the runner name, so two jobs on
+  # one host never share a database.
+  cchpCount = { studio = 2; mini = 2; mbp = 1; }.${hostname} or 0;
+  cchpRunners = lib.listToAttrs (map
+    (i: lib.nameValuePair "cchp-${toString i}"
+      ((mkRunner "cchp") // { name = "${hostname}-cchp-${toString i}"; }))
+    (lib.range 1 cchpCount));
+
+  runners = { zgh = (mkRunner "zgh") // { name = "${hostname}-zgh"; }; } // cchpRunners;
+in
+{
+  services.github-runners = runners;
+
   # User and system profiles provide the job tools, same as buildkite-agent.
-  launchd.daemons.github-runner-zgh.path = lib.mkMerge [
-    [
-      "/etc/profiles/per-user/${config.user.name}/bin"
-      "/run/current-system/sw/bin"
-    ]
-    # buildkite-agent also keeps the inherited $PATH, and with it the macOS base
-    # tools; this list replaces PATH outright, so name them. Without /bin a
-    # job has no ps, and zgh's process tests read ps. Last, so Apple's bash 3.2
-    # and git never shadow the runner module's own bash, coreutils and git.
-    (lib.mkAfter [
-      "/usr/bin"
-      "/bin"
-      "/usr/sbin"
-      "/sbin"
-    ])
-  ];
+  launchd.daemons = lib.mapAttrs'
+    (attr: _: lib.nameValuePair "github-runner-${attr}" {
+      path = lib.mkMerge [
+        [
+          "/etc/profiles/per-user/${config.user.name}/bin"
+          "/run/current-system/sw/bin"
+        ]
+        # buildkite-agent also keeps the inherited $PATH, and with it the macOS
+        # base tools; this list replaces PATH outright, so name them. Without
+        # /bin a job has no ps, and zgh's process tests read ps. Last, so
+        # Apple's bash 3.2 and git never shadow the runner module's own bash,
+        # coreutils and git.
+        (lib.mkAfter [
+          "/usr/bin"
+          "/bin"
+          "/usr/sbin"
+          "/sbin"
+        ])
+      ];
+    })
+    runners;
 }
