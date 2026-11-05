@@ -39,6 +39,7 @@ set escapehatchsidebarhack true
 set visualexitauto true
 set visualenterauto false
 set auconcreatecontainer true
+set autocontainmode relaxed
 set editorcmd /run/current-system/sw/bin/emacsclient -a \"\" -c -e '(progn (find-file "%f") (forward-line (1- %l)) (forward-char %c))'
 
 " Aliases
@@ -47,6 +48,7 @@ alias _global_init_built_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfil
 alias _global_init_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/init_globals.js
 alias _auto_tab_switch_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/auto_switch_tab.js
 alias _cleanup_history_ js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/cleanup_history.js
+alias _pin_container_tabs_ jsb -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/pin_container_tabs.js
 
 " Binds
 bind u scrollpage -0.5
@@ -55,6 +57,7 @@ bind x tabclose
 bind X undo
 bind W js -s ~/.nixpkgs/modules/yqrashawn/home-manager/dotfiles/tridactyl/parse_page.js
 bind t fillcmdline tabopen
+bind ,p _pin_container_tabs_
 bind --mode=visual t composite js document.getSelection().toString() | fillcmdline tabopen
 unbind <C-x>
 unbind <C-a>
@@ -215,9 +218,9 @@ autocmd DocStart figma.app mode ignore
 autocmd DocStart penpot\.app mode ignore
 autocmd DocStart figma\.app mode ignore
 autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
-autocmd TriStart .* source_quiet
-autocmd DocStart .* _global_init_built_
-autocmd DocStart .* _global_init_
+" One command per event+pattern (later autocmd overwrites), so chain with composite
+autocmd TriStart .* composite source_quiet; sleep 5000; _pin_container_tabs_
+autocmd DocStart .* composite _global_init_built_; _global_init_
 " autocmd DocLoad macmini\.donkey-clownfish\.ts\.net:6155/login\.html\?tridactylrctab=\d _auto_tab_switch_
 autocmd DocLoad ^https://discord\.com _cleanup_history_
 autocmd DocLoad ^https://app\.slack\.com _cleanup_history_
