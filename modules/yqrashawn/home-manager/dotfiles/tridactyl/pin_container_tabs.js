@@ -14,10 +14,11 @@
         color: "blue",
         icon: "fingerprint",
       }))
-    const [tab] = await browser.tabs.query({
+    const tabs = await browser.tabs.query({
       cookieStoreId: ci.cookieStoreId,
       url: MATCH,
     })
+    const tab = tabs.find((t) => t.pinned) || tabs[0]
     if (tab) {
       if (!tab.pinned) await browser.tabs.update(tab.id, { pinned: true })
     } else {

@@ -218,10 +218,9 @@ autocmd DocStart figma.app mode ignore
 autocmd DocStart penpot\.app mode ignore
 autocmd DocStart figma\.app mode ignore
 autocmd DocLoad ^https://github.com/tridactyl/tridactyl/issues/new$ issue
-autocmd TriStart .* source_quiet
-autocmd TriStart .* _pin_container_tabs_
-autocmd DocStart .* _global_init_built_
-autocmd DocStart .* _global_init_
+" One command per event+pattern (later autocmd overwrites), so chain with composite
+autocmd TriStart .* composite source_quiet; sleep 5000; _pin_container_tabs_
+autocmd DocStart .* composite _global_init_built_; _global_init_
 " autocmd DocLoad macmini\.donkey-clownfish\.ts\.net:6155/login\.html\?tridactylrctab=\d _auto_tab_switch_
 autocmd DocLoad ^https://discord\.com _cleanup_history_
 autocmd DocLoad ^https://app\.slack\.com _cleanup_history_
