@@ -27,10 +27,14 @@
         color: "blue",
         icon: "fingerprint",
       }))
-    const tabs = (
-      await browser.tabs.query({ cookieStoreId: ci.cookieStoreId, url: MATCH })
-    ).filter((t) => t.url.startsWith(URL))
-    const tab = tabs.find((t) => t.pinned) || tabs[0]
+    const tabs = await browser.tabs.query({
+      cookieStoreId: ci.cookieStoreId,
+      url: MATCH,
+    })
+    // any pinned claude.ai tab counts (user may have navigated inside it);
+    // only adopt an unpinned tab that is on the usage page
+    const tab =
+      tabs.find((t) => t.pinned) || tabs.find((t) => t.url.startsWith(URL))
     if (tab) {
       if (!tab.pinned) await browser.tabs.update(tab.id, { pinned: true })
     } else {
