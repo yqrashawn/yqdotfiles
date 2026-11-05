@@ -12,7 +12,8 @@ let
   # registered; afterwards the runner keeps its own credentials in
   # /var/lib/github-runners/<host>-<attr>/.runner. Nothing re-registers on config
   # changes: after changing url/name/labels, delete that .runner file, then
-  # write a fresh token (the token file is watched, so the daemon restarts):
+  # write a fresh token (the token file is watched, so every runner of that repo
+  # on the host restarts, killing any job it is running):
   #   gh api -X POST repos/0gfoundation/<repo>/actions/runners/registration-token \
   #     -q .token | tr -d '\n' > ~/.config/github-runner/<repo>.token
   # One token registers any number of runners within its hour, so every runner
