@@ -2,13 +2,16 @@
 // Run with jsb (background context).
 ;(async () => {
   const URL = "https://claude.ai/new#settings/usage"
-  // match patterns ignore the #fragment, so filter on the full url below
+  // match patterns ignore the #fragment; full url only matters for unpinned tabs
   const MATCH = "*://claude.ai/*"
   const CONTAINERS = ["p", "Personal", "Work"]
 
-  // Right after browser start, wait for session restore to settle so restored
-  // pinned tabs are found instead of duplicated (tab count stable 3s, max 30s)
-  if (performance.now() < 60000) {
+  // On TriStart (flag set by the autocmd), wait for session restore to settle
+  // so restored pinned tabs are found instead of duplicated (tab count stable
+  // 3s, max 30s)
+  const startup = window.__pinContainerTabsStartup
+  window.__pinContainerTabsStartup = false
+  if (startup) {
     let last = -1
     for (let i = 0, stable = 0; i < 30 && stable < 3; i++) {
       const n = (await browser.tabs.query({})).length
