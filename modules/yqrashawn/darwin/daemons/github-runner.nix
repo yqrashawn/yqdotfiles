@@ -5,7 +5,7 @@ let
   hostname = config.networking.hostName;
 
   # Self-hosted GitHub Actions runners for 0gfoundation repos, named
-  # <host>-<attr> (e.g. studio-zgh, studio-cchp-1).
+  # <host>-<attr> (e.g. mini-zgh, studio-cchp-1).
   #
   # tokenFile holds a one-time registration token, not a PAT (the org does not
   # allow fine-grained PATs). It is only read when the runner is not yet
@@ -44,7 +44,13 @@ let
       ((mkRunner "cchp") // { name = "${hostname}-cchp-${toString i}"; }))
     (lib.range 1 cchpCount));
 
-  runners = { zgh = (mkRunner "zgh") // { name = "${hostname}-zgh"; }; } // cchpRunners;
+  # studio takes no zgh CI: its 32 GB swapped out with a zgh JVM next to the
+  # mydeck agents.
+  zghRunners = lib.optionalAttrs (hostname != "studio") {
+    zgh = (mkRunner "zgh") // { name = "${hostname}-zgh"; };
+  };
+
+  runners = zghRunners // cchpRunners;
 in
 {
   services.github-runners = runners;
