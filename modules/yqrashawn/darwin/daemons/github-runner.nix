@@ -48,10 +48,10 @@ let
 
   # zgh runners per host: zgh's CI is 7 jobs, so two per host on mini and mbp.
   # studio takes one: its 32 GB swapped out with a zgh JVM next to the mydeck
-  # agents. mbpi (Intel, 64 GB, otherwise idle) takes two. The first runner
+  # agents. mbpi (Intel, 64 GB, otherwise idle) takes three. The first runner
   # keeps its old name (<host>-zgh) so it needs no re-registration; the rest
   # are <host>-zgh-<i>.
-  zghCount = { studio = 1; mini = 2; mbp = 2; mbpi = 2; }.${hostname} or 0;
+  zghCount = { studio = 1; mini = 2; mbp = 2; mbpi = 3; }.${hostname} or 0;
   zghRunners = lib.listToAttrs (map
     (i:
       let attr = if i == 1 then "zgh" else "zgh-${toString i}";

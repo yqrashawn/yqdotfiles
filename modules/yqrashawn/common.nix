@@ -69,7 +69,6 @@ in
     systemPackages =
       with pkgs;
       [
-        mitmproxy
         doxygen
         aliyun-cli
         lefthook
@@ -349,6 +348,9 @@ in
         # not available
         # du
       ]
+      # x86_64-darwin (mbpi) builds mitmproxy from source, and its twisted
+      # dependency's test suite times out there
+      ++ pkgs.lib.optionals (!pkgs.stdenv.hostPlatform.isx86_64) [ mitmproxy ]
       ++ masters
       ++ stables
       ++ darwins
