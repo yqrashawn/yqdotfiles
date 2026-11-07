@@ -37,10 +37,10 @@ let
   };
 
   # cchp runners per host: the always-on desktops take two jobs at once, the
-  # laptop one. Each runner is its own launchd daemon and work dir, and cchp's
-  # `make test-unit-ci` keys its database on the runner name, so two jobs on
-  # one host never share a database.
-  cchpCount = { studio = 2; mini = 2; mbp = 1; }.${hostname} or 0;
+  # laptop one, and mbpi (Intel, 64 GB) three. Each runner is its own launchd
+  # daemon and work dir, and cchp's `make test-unit-ci` keys its database on the
+  # runner name, so two jobs on one host never share a database.
+  cchpCount = { studio = 2; mini = 2; mbp = 1; mbpi = 3; }.${hostname} or 0;
   cchpRunners = lib.listToAttrs (map
     (i: lib.nameValuePair "cchp-${toString i}"
       ((mkRunner "cchp") // { name = "${hostname}-cchp-${toString i}"; }))
