@@ -8,6 +8,7 @@
   imports = [
     ./darwin/daemons/tailscale-utun.nix
     ./darwin/user-agents/buildkite-agent.nix
+    ./darwin/daemons/github-runner.nix
   ];
 
   networking.hostName = "mbpi";

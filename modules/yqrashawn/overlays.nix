@@ -179,6 +179,7 @@ in
       stable = import inputs.stable { system = prev.system; };
       small = import inputs.small { system = prev.system; };
       darwins = import inputs.darwin-stable { system = prev.system; };
+      darwin-intel = import inputs.darwin-intel { system = prev.system; };
       masters = import inputs.nixpkgs-master { system = prev.system; };
       own = import inputs.own { system = prev.system; };
       # old = import inputs.old { system = prev.system; };
