@@ -44,11 +44,16 @@ let
       ((mkRunner "cchp") // { name = "${hostname}-cchp-${toString i}"; }))
     (lib.range 1 cchpCount));
 
-  # studio takes no zgh CI: its 32 GB swapped out with a zgh JVM next to the
-  # mydeck agents.
-  zghRunners = lib.optionalAttrs (hostname != "studio") {
-    zgh = (mkRunner "zgh") // { name = "${hostname}-zgh"; };
-  };
+  # zgh runners per host: zgh's CI is 7 jobs, so two per host on mini and mbp.
+  # studio takes one: its 32 GB swapped out with a zgh JVM next to the mydeck
+  # agents. The first runner keeps its old name (<host>-zgh) so it needs no
+  # re-registration; the rest are <host>-zgh-<i>.
+  zghCount = { studio = 1; mini = 2; mbp = 2; }.${hostname} or 0;
+  zghRunners = lib.listToAttrs (map
+    (i:
+      let attr = if i == 1 then "zgh" else "zgh-${toString i}";
+      in lib.nameValuePair attr ((mkRunner "zgh") // { name = "${hostname}-${attr}"; }))
+    (lib.range 1 zghCount));
 
   runners = zghRunners // cchpRunners;
 in
