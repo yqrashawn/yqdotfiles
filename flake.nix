@@ -21,6 +21,8 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     darwin-stable.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
+    # The last channel that builds for x86_64-darwin (mbpi); 26.11 dropped it
+    darwin-intel.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
     stable.url = "github:nixos/nixpkgs/nixos-23.05";
     own.url = "github:yqrashawn/nixpkgs/master";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";

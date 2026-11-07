@@ -660,6 +660,22 @@
         "type": "github"
       }
     },
+    "darwin-intel": {
+      "locked": {
+        "lastModified": 1793976852,
+        "narHash": "sha256-bWDN3JZcE9ovYoaD0/6WYbMtXYpUu0vd5onpK0pc/SE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "57f1c8965649ce5bcac5118a0d2e41f1fbdc56e5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-26.05-darwin",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "darwin-stable": {
       "locked": {
         "lastModified": 1768649915,
@@ -1437,6 +1453,7 @@
         "clojure-lsp": "clojure-lsp",
         "comma": "comma",
         "darwin": "darwin",
+        "darwin-intel": "darwin-intel",
         "darwin-stable": "darwin-stable",
         "devshell": "devshell_2",
         "emacs-custom-src": "emacs-custom-src",
