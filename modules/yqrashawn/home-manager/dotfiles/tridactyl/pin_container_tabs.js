@@ -33,13 +33,17 @@
   const identities = await browser.contextualIdentities.query({})
   for (const site of SITES) {
     for (const name of site.containers) {
-      const ci =
-        identities.find((c) => c.name === name) ||
-        (await browser.contextualIdentities.create({
+      let ci = identities.find((c) => c.name === name)
+      if (!ci) {
+        ci = await browser.contextualIdentities.create({
           name,
           color: "blue",
           icon: "fingerprint",
-        }))
+        })
+        // later sites may want the same name; without this they would
+        // look up the stale list and mint a duplicate container
+        identities.push(ci)
+      }
       const tabs = await browser.tabs.query({
         cookieStoreId: ci.cookieStoreId,
         url: site.match,
