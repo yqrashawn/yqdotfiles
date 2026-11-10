@@ -1,10 +1,19 @@
-// Keep one pinned tab per container for URL; never open duplicates.
+// Keep one pinned tab per container for each site; never open duplicates.
 // Run with jsb (background context).
 ;(async () => {
-  const URL = "https://claude.ai/new#settings/usage"
-  // match patterns ignore the #fragment; full url only matters for unpinned tabs
-  const MATCH = "*://claude.ai/*"
-  const CONTAINERS = ["p", "Personal", "Work"]
+  const SITES = [
+    {
+      url: "https://claude.ai/new#settings/usage",
+      // match patterns ignore the #fragment; full url only matters for unpinned tabs
+      match: "*://claude.ai/*",
+      containers: ["p", "Personal", "Work"],
+    },
+    {
+      url: "https://pc.0g.ai/dashboard/overview",
+      match: "*://pc.0g.ai/*",
+      containers: ["Personal", "Work"],
+    },
+  ]
 
   // On TriStart (flag set by the autocmd), wait for session restore to settle
   // so restored pinned tabs are found instead of duplicated (tab count stable
@@ -22,31 +31,34 @@
   }
 
   const identities = await browser.contextualIdentities.query({})
-  for (const name of CONTAINERS) {
-    const ci =
-      identities.find((c) => c.name === name) ||
-      (await browser.contextualIdentities.create({
-        name,
-        color: "blue",
-        icon: "fingerprint",
-      }))
-    const tabs = await browser.tabs.query({
-      cookieStoreId: ci.cookieStoreId,
-      url: MATCH,
-    })
-    // any pinned claude.ai tab counts (user may have navigated inside it);
-    // only adopt an unpinned tab that is on the usage page
-    const tab =
-      tabs.find((t) => t.pinned) || tabs.find((t) => t.url.startsWith(URL))
-    if (tab) {
-      if (!tab.pinned) await browser.tabs.update(tab.id, { pinned: true })
-    } else {
-      await browser.tabs.create({
-        url: URL,
+  for (const site of SITES) {
+    for (const name of site.containers) {
+      const ci =
+        identities.find((c) => c.name === name) ||
+        (await browser.contextualIdentities.create({
+          name,
+          color: "blue",
+          icon: "fingerprint",
+        }))
+      const tabs = await browser.tabs.query({
         cookieStoreId: ci.cookieStoreId,
-        pinned: true,
-        active: false,
+        url: site.match,
       })
+      // any pinned tab on the site counts (user may have navigated inside it);
+      // only adopt an unpinned tab that is on the target page
+      const tab =
+        tabs.find((t) => t.pinned) ||
+        tabs.find((t) => t.url.startsWith(site.url))
+      if (tab) {
+        if (!tab.pinned) await browser.tabs.update(tab.id, { pinned: true })
+      } else {
+        await browser.tabs.create({
+          url: site.url,
+          cookieStoreId: ci.cookieStoreId,
+          pinned: true,
+          active: false,
+        })
+      }
     }
   }
 })()
