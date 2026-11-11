@@ -3,7 +3,8 @@
 
    The reviewer is a separate `claude -p` process: fresh context window, none
    of agent A's conversation history, the same machine and working tree. It is
-   granted Read, Grep, Glob and Bash, in a throwaway worktree — so nothing it does can touch the tree."
+   granted Read, Grep, Glob and Bash, in a throwaway worktree — so nothing it
+   does can touch the tree."
   (:require [babashka.fs :as fs]
             [babashka.process :as p]
             [clojure.java.io :as io]
