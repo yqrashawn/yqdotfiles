@@ -42,7 +42,7 @@
     (is (fs/exists? (:diff-path res)))
     (is (= sample-diff (slurp (:diff-path res)))
         "the diff on disk must be byte-identical to git's output — the whole
-         point of precomputing it is that B never runs a truncating rtk git diff")
+         point of precomputing it is that B never reconstructs the diff itself")
     (is (= (count sample-diff) (:diff-bytes res)))))
 
 (deftest diff-path-is-namespaced-by-pr-and-sha

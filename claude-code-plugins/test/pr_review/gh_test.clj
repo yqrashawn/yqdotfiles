@@ -69,8 +69,8 @@
     (testing "three-dot compares against the merge base, which is what a
               review wants"
       (is (some #{"base1...head1"} (first @calls))))
-    (testing "--no-ext-diff, or the user's git decides the format. This repo
-              sets diff.external to difftastic side-by-side, and every review
+    (testing "--no-ext-diff, or the user's git decides the format. When
+              diff.external was difftastic side-by-side, every review
               before this flag read that instead of a unified diff: the real
               context diff for PR #395 held 0 `diff --git` lines, so
               context/changed-files was always empty and the prompt's

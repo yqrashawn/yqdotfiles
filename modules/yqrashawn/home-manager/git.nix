@@ -76,14 +76,10 @@
       commit.verbose = true;
       fetch.prune = true;
 
-      diff = {
-        external = "${pkgs.difftastic}/bin/difft --color auto --background $(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo dark || echo light) --display side-by-side";
-      };
       # url."git@github.com:".insteadOf = "https://github.com/";
     };
     lfs.enable = true;
     # delta = { enable = true; };
-    # custom in extraConfig.diff.external
     # difftastic = { enable = true; };
     ignores = [
       # Compiled source #

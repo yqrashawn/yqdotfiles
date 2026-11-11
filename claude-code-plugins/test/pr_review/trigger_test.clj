@@ -170,11 +170,9 @@
   (let [o (opts :pushes {"/g" [(a-push "feat/x" "newsha" 999999)]}
                 :prs {"feat/x" (a-pr 370 "newsha")})]
     (doseq [[cmd verb] {"git push -u origin feat/x" :push
-                        "rtk git push" :push
                         "cd /x && git push 2>&1 | tail -2" :push
                         "git  push" :push
                         "gh pr create --base main" :create
-                        "rtk gh pr create --title x" :create
                         "cd /x && gh  pr  create" :create
                         "git status" nil}]
       (testing cmd

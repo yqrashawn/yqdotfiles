@@ -1,11 +1,8 @@
 (ns pr-review.context
-  "Precompute everything the reviewer needs to read, so the reviewer needs no
-   Bash at all.
-
-   Dropping Bash from B removes two problems in one move: rtk cannot truncate
-   a diff B never has to reconstruct, and the one view of the change that
-   is guaranteed complete: B may run its own git commands now, but nothing
-   makes it run the RIGHT range, and the review must not depend on it doing so."
+  "Precompute everything the reviewer needs to read, so B never has to
+   reconstruct the diff and always has one view of the change that is
+   guaranteed complete. B may run its own git commands, but nothing makes it
+   run the RIGHT range, and the review must not depend on it doing so."
   (:require [babashka.fs :as fs]
             [clojure.string :as str]
             [pr-review.gh :as gh]))
