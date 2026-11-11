@@ -2,9 +2,7 @@
   "Thin, injectable shell layer over git and gh.
 
    This namespace runs inside a hook subprocess, not as a Claude Code tool
-   call, so rtk's PreToolUse rewriter never sees these commands. That is the
-   whole reason the diff produced here is the real diff: `rtk git diff HEAD~1`
-   returns 195 bytes where plain git returns 80162.
+   call, so no PreToolUse hook can rewrite these commands.
 
    Every function takes an opts map with an optional :sh so tests can stub the
    shell without a real repo."
@@ -80,8 +78,8 @@
   ;; Bypasses ok-out on purpose: the reviewer trusts these bytes unseen, so trimming git's trailing newline here would silently corrupt the one file the whole module exists to keep faithful.
   ;;
   ;; --no-ext-diff and --no-color, because the user's git decides the format
-  ;; otherwise and this repo's `diff.external` is difftastic side-by-side.
-  ;; Every review before this flag read that instead of a unified diff:
+  ;; otherwise, and a `diff.external` such as difftastic side-by-side is not
+  ;; a unified diff. Every review before this flag read that instead:
   ;; measured, the real context diff for PR #395 held 0 `diff --git` lines, so
   ;; `changed-files` was always empty and the prompt's "Changed files" section
   ;; always blank. The prompt tells the reviewer it is reading a diff and the

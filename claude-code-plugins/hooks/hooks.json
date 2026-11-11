@@ -7,19 +7,6 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(rtk git push:*)",
-            "command": "bb",
-            "args": [
-              "--config",
-              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
-              "review-trigger"
-            ],
-            "asyncRewake": true,
-            "statusMessage": "Reviewing the pushed commits\u2026",
-            "timeout": 1800
-          },
-          {
-            "type": "command",
             "if": "Bash(git push:*)",
             "command": "bb",
             "args": [
@@ -29,19 +16,6 @@
             ],
             "asyncRewake": true,
             "statusMessage": "Reviewing the pushed commits\u2026",
-            "timeout": 1800
-          },
-          {
-            "type": "command",
-            "if": "Bash(rtk gh pr create:*)",
-            "command": "bb",
-            "args": [
-              "--config",
-              "${CLAUDE_PLUGIN_ROOT}/bb.edn",
-              "review-trigger"
-            ],
-            "asyncRewake": true,
-            "statusMessage": "Reviewing the new PR\u2026",
             "timeout": 1800
           },
           {

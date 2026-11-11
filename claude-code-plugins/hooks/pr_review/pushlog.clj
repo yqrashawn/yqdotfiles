@@ -3,8 +3,8 @@
 
    This replaces every attempt to learn what was pushed by reading the shell
    command. Five separate defects came out of that approach — a worktree the
-   session cwd did not name, `gh pr create` skipped for its heredoc, rtk
-   silent on heredocs, `$(...)` before the push, a two-level variable chain —
+   session cwd did not name, `gh pr create` skipped for its heredoc, a
+   rewriter silent on heredocs, `$(...)` before the push, a two-level variable chain —
    and each fix covered one more command shape while the next shape broke
    again. Git already records the fact, exactly, for every push however the
    command was written:
