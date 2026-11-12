@@ -303,29 +303,29 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ("cchp" .
          (:url "http://localhost:8035/mcp"))
 
-       ;; The real Firefox, driven through pext. Supervised by pm2 as
-       ;; pext-mcp-studio; see ~/workspace/home/pext/docs/agent-browser.md.
+       ;; The real Firefox, driven through foxhand. Supervised by pm2 as
+       ;; foxhand-mcp-studio; see ~/workspace/home/foxhand/docs/agent-browser.md.
        ;;
        ;; The daemon requires a bearer token, and this repo is public, so the
        ;; token is read at generation time rather than written here. It still
        ;; ends up in ~/.claude.json -- it has to, headers are literals there --
        ;; but as generated output rather than something pasted by hand, so
        ;; rotating it is re-running this generator, not `claude mcp add'.
-       ("pext-browser" .
-         (:url "http://127.0.0.1:62941/mcp"
+       ("foxhand" .
+         (:url "http://127.0.0.1:62942/mcp"
            :token ,(lambda ()
-                     (let ((path (expand-file-name "~/.pext/mcp-token")))
+                     (let ((path (expand-file-name "~/.foxhand/mcp-token")))
                        (if (file-exists-p path)
                          (string-trim (f-read-text path))
                          ;; Returning nil here drops :headers entirely, and the
                          ;; entry is still emitted -- so every call 401s with
                          ;; nothing naming the cause. A warning rather than an
                          ;; error because this machine is not the only one: on
-                         ;; a host without pext, aborting generation would take
+                         ;; a host without foxhand, aborting generation would take
                          ;; every other server down with it.
                          (prog1 nil
                            (display-warning '+mcp
-                             (format "pext-browser: no token at %s -- its entry will have no auth and every call will 401"
+                             (format "foxhand: no token at %s -- its entry will have no auth and every call will 401"
                                path)
                              :warning)))))))
 
