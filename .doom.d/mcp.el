@@ -174,8 +174,11 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;;          ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
        ;;               file-truename))))
 
+       ;; exa-mcp-server on Cloudflare Workers; setup in
+       ;; that repo's cloudflare/README.md. Token lives in not-secret.el.
        ("exa" .
-         (:url "http://localhost:18681/mcp"))
+         (:url "https://flatware-shadily-fondness-lunchbox-smother.nil.ng/mcp"
+           :token +exa-mcp-token))
 
        ;; ("perplexity" .
        ;;  (:command "npx"
@@ -184,8 +187,11 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;;   (:PERPLEXITY_API_KEY ,+perplexity-api-key
        ;;    :PERPLEXITY_TIMEOUT_MS "600000")))
        
+       ;; jina-mcp on Cloudflare Workers; setup in that
+       ;; repo's cloudflare/README.md. Token lives in not-secret.el.
        ("jina_search" .
-         (:url "http://localhost:18682/v1"))
+         (:url "https://liking-anywhere-handler-undermine-remake.nil.ng/v1"
+           :token +jina-mcp-token))
 
        ;; ("jina_search" .
        ;;  (:command "npx"
