@@ -80,17 +80,9 @@
   evil-search-backward)
 
 (after! evil-terminal-cursor-changer
-  (setq! etcc-use-color t)
-  (defadvice! +evil-set-cursor-color (&optional color)
-    :after #'evil-set-cursor-color
-    (unless (display-graphic-p)
-      (etcc--evil-set-cursor-color color)))
-
-  (defadvice! +evil-set-cursor (specs)
-    :after #'evil-set-cursor
-    (unless (display-graphic-p)
-      (etcc--evil-set-cursor)))
-  (defun etcc--in-xterm? () t))
+  ;; Upstream sets shape and color itself on pre/post-command-hook.
+  (setq! etcc-use-color t
+         etcc-term-type-override 'xterm))
 
 (after! evil-org
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
