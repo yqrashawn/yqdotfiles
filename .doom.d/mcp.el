@@ -152,22 +152,23 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;;     ("@playwright/mcp@latest"
        ;;       "--storage-state=/Users/yqrashawn/.cache/playwrite-mcp/storage.json")))
 
-       ("context7" .
-         (:command "bunx"
-           :args
-           ("@upstash/context7-mcp"
-             "--api-key"
-             ,+context-7-api-key)))
-       ("aside" .
-         (:command ,(expand-file-name "~/.local/bin/aside")
-           :args
-           ("mcp")))
+       ;; ("context7" .
+       ;;   (:command "bunx"
+       ;;     :args
+       ;;     ("@upstash/context7-mcp"
+       ;;       "--api-key"
+       ;;       ,+context-7-api-key)))
+       
+       ;; ("aside" .
+       ;;   (:command ,(expand-file-name "~/.local/bin/aside")
+       ;;     :args
+       ;;     ("mcp")))
 
        ;; ("nextjs-devtools" .
        ;;  (:command "npx"
        ;;   :args
        ;;   ("-y" "next-devtools-mcp@latest")))
-
+       
        ;; ("exa" .
        ;;  (:command "bun"
        ;;   :args ("run"
@@ -347,8 +348,8 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
 
        ("scout" .
          (:url "https://scout.rashawn.work/mcp"))
-       ("notion" .
-         (:url "https://mcp.notion.com/mcp"))
+       ;; ("notion" .
+       ;;   (:url "https://mcp.notion.com/mcp"))
        ;; OAuth only: /mcp rejects the REST API key (401), so no :token here.
        ("mobbin" .
          (:url "https://api.mobbin.com/mcp"))
@@ -356,9 +357,9 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ("notion" .
          (:url "https://mcp.notion.com/mcp"))
 
-       ("codebase-memory-mcp" .
-         (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"
-           :env (:CBM_RUNTIME_DIR ,(expand-file-name "~/.cbm-runtime"))))
+       ;; ("codebase-memory-mcp" .
+       ;;   (:command "/Users/yqrashawn/.local/bin/codebase-memory-mcp"
+       ;;     :env (:CBM_RUNTIME_DIR ,(expand-file-name "~/.cbm-runtime"))))
 
        ;; ("slack" .
        ;;  (:url "http://localhost:13080/mcp"))
@@ -402,7 +403,14 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        
        ;; ("core-memory" .
        ;;  (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))
-       ))
+
+       ("figma-console" .
+         (:command "bun"
+           :args
+           ("figma-console-mcp@latest")
+           :env
+           (:FIGMA_ACCESS_TOKEN ,+figma-access-token-3
+             :ENABLE_MCP_APPS "true")))))
   (+gen-mcp-json-conf))
 
 (use-package! mcp-server-lib
