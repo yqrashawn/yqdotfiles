@@ -247,15 +247,16 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;;   ("-Tmcp"
        ;;    "start")))
 
-       ("lattice" .
-         (:command "bunx"
-           :args ("-p"
-                   "matryoshka-rlm@latest"
-                   "lattice-mcp"
-                   "--dangerously-skip-cwd-checking")))
-       ("lemmalog" .
-         (:command "/Users/yqrashawn/Library/CloudStorage/Dropbox/sync/lemmalog/target/release/lemmalog-mcp"
-           :env (:LEMMALOG_MCP_PATH "/Users/yqrashawn/.local/share/lemmalog/memory.snapshot")))
+       ;; ("lattice" .
+       ;;   (:command "bunx"
+       ;;     :args ("-p"
+       ;;             "matryoshka-rlm@latest"
+       ;;             "lattice-mcp"
+       ;;             "--dangerously-skip-cwd-checking")))
+
+       ;; ("lemmalog" .
+       ;;   (:command "/Users/yqrashawn/Library/CloudStorage/Dropbox/sync/lemmalog/target/release/lemmalog-mcp"
+       ;;     :env (:LEMMALOG_MCP_PATH "/Users/yqrashawn/.local/share/lemmalog/memory.snapshot")))
 
        ;; ("chiasmus" .
        ;;  (:command "bunx"
