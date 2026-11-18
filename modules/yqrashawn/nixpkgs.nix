@@ -39,7 +39,7 @@
 
     gc = {
       automatic = true;
-      options = "--delete-older-than 14d";
+      options = "--delete-older-than 7d";
     };
     # readOnlyStore = true;
     nixPath = builtins.map (source: "${source}=/etc/${config.environment.etc.${source}.target}") [
