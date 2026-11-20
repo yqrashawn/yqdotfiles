@@ -52,11 +52,40 @@ let
   # keeps its old name (<host>-zgh) so it needs no re-registration; the rest
   # are <host>-zgh-<i>.
   zghCount = { mini = 1; mbp = 2; mbpi = 3; }.${hostname} or 0;
+  zghAttrs = map (i: if i == 1 then "zgh" else "zgh-${toString i}") (lib.range 1 zghCount);
+
+  # zgh's CI runs every step as `nix develop -c …`. nix develop's rc makes a
+  # nix-shell.XXXXXX dir under $TMPDIR, points TMPDIR at it, and never deletes
+  # it (nor its own nix-develop-* dir); zgh's tests fill it, and test servers
+  # (valkey, the mcp fixture) outlive the job holding sockets in it. That grew
+  # /tmp ~20 GB a day on mbp. So each zgh runner gets its own TMPDIR, and a
+  # job-started hook clears the previous job's: a runner runs one job at a
+  # time and no step has run yet, so every nix-shell.*/nix-develop-* in it, and
+  # every process naming it, is left over. Short: valkey sockets live under it
+  # and macOS caps a socket path at 104 bytes.
+  zghTmp = attr: "/private/tmp/ghr-${attr}";
+  zghJobStarted = attr: pkgs.writeShellScript "github-runner-${attr}-job-started" ''
+    tmp=${zghTmp attr}
+    if /usr/bin/pgrep -f "$tmp/" >/dev/null; then
+      /usr/bin/pkill -f "$tmp/"
+      for _ in 1 2 3 4 5; do /usr/bin/pgrep -f "$tmp/" >/dev/null || break; /bin/sleep 1; done
+      /usr/bin/pkill -9 -f "$tmp/"
+    fi
+    /usr/bin/find "$tmp" -mindepth 1 -maxdepth 1 \( -name 'nix-shell.*' -o -name 'nix-develop-*' \) \
+      -exec /bin/rm -rf {} + 2>/dev/null
+    # periodic's clean-tmps may have removed an idle one
+    /bin/mkdir -p -m 700 "$tmp"
+    exit 0
+  '';
   zghRunners = lib.listToAttrs (map
-    (i:
-      let attr = if i == 1 then "zgh" else "zgh-${toString i}";
-      in lib.nameValuePair attr ((mkRunner "zgh") // { name = "${hostname}-${attr}"; }))
-    (lib.range 1 zghCount));
+    (attr: lib.nameValuePair attr (lib.recursiveUpdate (mkRunner "zgh") {
+      name = "${hostname}-${attr}";
+      extraEnvironment = {
+        TMPDIR = zghTmp attr;
+        ACTIONS_RUNNER_HOOK_JOB_STARTED = "${zghJobStarted attr}";
+      };
+    }))
+    zghAttrs);
 
   runners = zghRunners // cchpRunners;
 in
@@ -83,6 +112,9 @@ in
           "/sbin"
         ])
       ];
+      # The runner's own TMPDIR must exist before Runner.Listener starts.
+      script = lib.mkIf (lib.elem attr zghAttrs)
+        (lib.mkBefore "/bin/mkdir -p -m 700 ${zghTmp attr}");
     })
     runners;
 }
