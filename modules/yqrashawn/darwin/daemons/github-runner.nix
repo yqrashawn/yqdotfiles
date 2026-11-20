@@ -61,10 +61,12 @@ let
   # /tmp ~20 GB a day on mbp. So each zgh runner gets its own TMPDIR, and a
   # job-started hook clears the previous job's: a runner runs one job at a
   # time and no step has run yet, so every nix-shell.*/nix-develop-* in it, and
-  # every process naming it, is left over. Short: valkey sockets live under it
-  # and macOS caps a socket path at 104 bytes.
+  # every process naming it in its arguments (both servers pass their socket
+  # path there), is left over. Short: valkey sockets live under it and macOS
+  # caps a socket path at 104 bytes. The runner picks a hook's shell by its
+  # extension and refuses a path not ending in .sh/.ps1/.js.
   zghTmp = attr: "/private/tmp/ghr-${attr}";
-  zghJobStarted = attr: pkgs.writeShellScript "github-runner-${attr}-job-started" ''
+  zghJobStarted = attr: pkgs.writeShellScript "github-runner-${attr}-job-started.sh" ''
     tmp=${zghTmp attr}
     if /usr/bin/pgrep -f "$tmp/" >/dev/null; then
       /usr/bin/pkill -f "$tmp/"
