@@ -307,11 +307,11 @@
     "asdf-pnpm": {
       "flake": false,
       "locked": {
-        "lastModified": 1773019955,
-        "narHash": "sha256-ZB9ndNzSVMiLgU0CxerT19yxiyTFFNSOMUUuGcBLrBo=",
+        "lastModified": 1794800072,
+        "narHash": "sha256-TTXrSxrDQKzjBwH7hAk5GmRDEQ/5d7S5Cqh0EhCGmZk=",
         "owner": "jonathanmorley",
         "repo": "asdf-pnpm",
-        "rev": "741219da5cab66529afe28a60454e15a6870ea4d",
+        "rev": "34bb74c0b9bb66f5d14f8ae7ad38777c81bb3da5",
         "type": "github"
       },
       "original": {
