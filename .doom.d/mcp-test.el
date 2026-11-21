@@ -13,6 +13,9 @@
 (defvar mcp-test--dynamic nil
   "Dynamically bound in `mcp-test-resolve-value'.")
 
+(defvar mcp-test--env-token "tok"
+  "A bound string for `mcp-test-env-string'.")
+
 (ert-deftest mcp-test-resolve-value ()
   "A function is called, a bound symbol dereferenced, anything else is itself."
   (should (equal "plain" (+mcp-resolve-value "plain")))
@@ -72,6 +75,25 @@ every call to that server 401s with the warning naming why."
       (should (equal nil (+mcp-server-headers
                            (list :headers '(("X-Api-Key" . +mcp-test--unbound-header)))))))
     (should (equal 2 (length warned)))))
+
+(ert-deftest mcp-test-env-string ()
+  "A bound string symbol yields its value; anything else degrades to \"\".
+The mcp package passes :env values to `setenv' verbatim (only :token gets
+`mcp--resolve-value'), so an env secret must be a string at setq time: a bare
+comma on an unbound symbol void-variables the whole mcp-hub-servers form
+while not-secret.el is missing -- the crash review pass 2 of #210 filed --
+and an unquoted symbol would reach the subprocess as its own name. The
+empty string degrades the way foxhand degrades a missing token."
+  (should (equal "tok" (+mcp-env-string 'mcp-test--env-token)))
+  (let (warned)
+    (cl-letf (((symbol-function 'display-warning)
+                (lambda (&rest args) (push args warned))))
+      (should (equal "" (+mcp-env-string 'mcp-test--env-unbound)))
+      (should (equal "" (progn
+                          (defvar mcp-test--env-nil)
+                          (setq mcp-test--env-nil nil)
+                          (+mcp-env-string 'mcp-test--env-nil))))
+      (should (equal 2 (length warned))))))
 
 (ert-deftest mcp-test-headers-merge-order ()
   "Explicit headers come first, the derived Authorization last."

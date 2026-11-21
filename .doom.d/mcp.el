@@ -22,10 +22,28 @@ config slot for the message."
       ((or (null v) (stringp v)) v)
       (t
        (display-warning '+mcp
-         (format "mcp-hub-servers: %s resolved to %S, not a string -- dropped; that entry will have no auth and every call will 401"
+         (format "mcp-hub-servers: %s resolved to %S, not a string -- dropped"
            what v)
          :warning)
        nil))))
+
+(defun +mcp-env-string (symbol)
+  "SYMBOL's value as a string, degrading to \"\" with a warning.
+The mcp package hands :env values to `setenv' verbatim -- only :token goes
+through `mcp--resolve-value' -- so an env secret must already be a string
+when `mcp-hub-servers' is set: an unquoted symbol would reach the subprocess
+as its own name, and a bare comma would void-variable the whole setq! on a
+machine whose not-secret.el has not synced yet, killing the mcp.el load. The
+empty string degrades the way foxhand degrades a missing token: the entry
+still loads, its calls just fail auth."
+  (let ((v (when (boundp symbol) (symbol-value symbol))))
+    (if (stringp v)
+      v
+      (prog1 ""
+        (display-warning '+mcp
+          (format "mcp-hub-servers: %s is unbound or not a string -- its server gets an empty env value"
+            symbol)
+          :warning)))))
 
 (defun +mcp-server-headers (cfg)
   "HTTP headers for CFG as a plist ready for `json-serialize', or nil.
@@ -436,12 +454,16 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;; ("core-memory" .
        ;;  (:url "https://mcp.getcore.me/api/v1/mcp?source=Claude-Code"))
 
+       ;; Token lives in not-secret.el, resolved to a string here because the
+       ;; mcp package hands :env values to `setenv' verbatim (only :token gets
+       ;; `mcp--resolve-value') -- a bare comma would void-variable the whole
+       ;; setq! on a machine where not-secret.el has not synced yet.
        ("figma-console" .
          (:command "bun"
            :args
            ("figma-console-mcp@latest")
            :env
-           (:FIGMA_ACCESS_TOKEN ,+figma-access-token-3
+           (:FIGMA_ACCESS_TOKEN ,(+mcp-env-string '+figma-access-token-3)
              :ENABLE_MCP_APPS "true")))))
   (+gen-mcp-json-conf))
 
