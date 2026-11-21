@@ -194,6 +194,17 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
          (:url "https://liking-anywhere-handler-undermine-remake.nil.ng/v1"
            :token +jina-mcp-token))
 
+       ;; twitterapis-mcp and tavily-mcp on Cloudflare Workers, API keys
+       ;; pooled from free-api-keys; see ~/workspace/home/cf-workers/workers.
+       ;; Tokens live in not-secret.el.
+       ("twitterapis" .
+         (:url "https://twitterapis-mcp.yqrashawn.workers.dev/mcp"
+           :token +twitterapis-mcp-token))
+
+       ("tavily" .
+         (:url "https://tavily-mcp.yqrashawn.workers.dev/mcp"
+           :token +tavily-mcp-token))
+
        ;; ("jina_search" .
        ;;  (:command "npx"
        ;;   :args
