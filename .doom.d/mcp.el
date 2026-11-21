@@ -9,24 +9,44 @@ Duplicated rather than reused because this runs before mcp.el is loaded."
     ((and (symbolp value) (boundp value)) (symbol-value value))
     (value)))
 
+(defun +mcp-resolve-string (value what)
+  "Resolve VALUE like `+mcp-resolve-value', but only nil or a string survives.
+An unbound symbol passes `+mcp-resolve-value' through unchanged, and one that
+reached `concat' as a :token crashed generation with wrong-type-argument --
+at mcp.el load time, so one machine whose not-secret.el had not synced yet
+lost the whole mcp.el load, the Emacs MCP server and gptel-tools included.
+Degrade to nil with a warning instead, the foxhand precedent. WHAT names the
+config slot for the message."
+  (let ((v (+mcp-resolve-value value)))
+    (cond
+      ((or (null v) (stringp v)) v)
+      (t
+       (display-warning '+mcp
+         (format "mcp-hub-servers: %s resolved to %S, not a string -- dropped; that entry will have no auth and every call will 401"
+           what v)
+         :warning)
+       nil))))
+
 (defun +mcp-server-headers (cfg)
   "HTTP headers for CFG as a plist ready for `json-serialize', or nil.
 
 Built from :headers (an alist, as mcp.el wants it) and :token, which mcp.el
 turns into an Authorization bearer header itself. Both are resolved, so a
 :token may be a lambda that reads a file -- that keeps the secret out of this
-repo and means rotation needs no edit here.
+repo and means rotation needs no edit here. A value that does not resolve to
+a string (an unbound symbol on a machine where not-secret.el has not synced
+yet) is dropped with a warning rather than aborting generation.
 
 Without this, every header would be silently dropped from ~/.claude.json: the
 generator below rebuilds each server entry from scratch and keeps only the keys
 it knows about."
-  (let* ((token (+mcp-resolve-value (plist-get cfg :token)))
+  (let* ((token (+mcp-resolve-string (plist-get cfg :token) ":token"))
           (pairs (append
                    (cl-loop for (k . v) in (+mcp-resolve-value (plist-get cfg :headers))
-                     for rv = (+mcp-resolve-value v)
-                     when (and rv (not (string-empty-p (format "%s" rv))))
-                     append (list (intern (format "%s" k)) (format "%s" rv)))
-                   (when (and token (not (string-empty-p (format "%s" token))))
+                     for rv = (+mcp-resolve-string v "a :headers value")
+                     when (and rv (not (string-empty-p rv)))
+                     append (list (intern (format "%s" k)) rv))
+                   (when (and token (not (string-empty-p token)))
                      (list 'Authorization (concat "Bearer " token))))))
     pairs))
 
@@ -193,6 +213,17 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ("jina_search" .
          (:url "https://liking-anywhere-handler-undermine-remake.nil.ng/v1"
            :token +jina-mcp-token))
+
+       ;; twitterapis-mcp and tavily-mcp on Cloudflare Workers, API keys
+       ;; pooled from free-api-keys; see ~/workspace/home/cf-workers/workers.
+       ;; Tokens live in not-secret.el.
+       ("twitterapis" .
+         (:url "https://twitterapis-mcp.yqrashawn.workers.dev/mcp"
+           :token +twitterapis-mcp-token))
+
+       ("tavily" .
+         (:url "https://tavily-mcp.yqrashawn.workers.dev/mcp"
+           :token +tavily-mcp-token))
 
        ;; ("jina_search" .
        ;;  (:command "npx"

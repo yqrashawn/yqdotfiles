@@ -1,6 +1,7 @@
 ;;; .nixpkgs/.doom.d/mcp-test.el -*- lexical-binding: t; coding: utf-8 -*-
 
 (require 'ert)
+(require 'cl-lib)
 (require 'json)
 
 (comment
@@ -54,6 +55,23 @@ case."
   (should (equal nil (+mcp-server-headers (list :token ""))))
   (should (equal nil (+mcp-server-headers (list :token (lambda () nil)))))
   (should (equal nil (+mcp-server-headers (list :headers '(("X-Empty" . "")))))))
+
+(ert-deftest mcp-test-headers-unbound-symbols-degrade ()
+  "An unbound symbol in :token or a :headers value degrades to nil, not worse.
+`+mcp-resolve-value' passes an unbound symbol through unchanged (pinned by
+`mcp-test-resolve-value'); the old code then crashed `concat' on the :token
+symbol -- and generation runs at mcp.el load time, so one machine whose
+~/Dropbox/sync/not-secret.el had not synced yet lost the whole mcp.el load:
+the Emacs MCP server never started and gptel-tools never loaded. The foxhand
+precedent applies: one warning, then the entry goes out without auth, and
+every call to that server 401s with the warning naming why."
+  (let (warned)
+    (cl-letf (((symbol-function 'display-warning)
+                (lambda (&rest args) (push args warned))))
+      (should (equal nil (+mcp-server-headers (list :token '+mcp-test--unbound-token))))
+      (should (equal nil (+mcp-server-headers
+                           (list :headers '(("X-Api-Key" . +mcp-test--unbound-header)))))))
+    (should (equal 2 (length warned)))))
 
 (ert-deftest mcp-test-headers-merge-order ()
   "Explicit headers come first, the derived Authorization last."
