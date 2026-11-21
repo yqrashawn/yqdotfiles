@@ -185,3 +185,17 @@ by reading the write path, not by this assertion."
         (should (equal "-rw-------" (file-modes-number-to-symbolic
                                       (file-modes existing) nil))))
       (delete-directory dir t))))
+
+;;; +secret-mcp-servers
+
+(ert-deftest mcp-test-secret-servers-spread ()
+  "Entries from not-secret.el ride along into `mcp-hub-servers'.
+mcp.el spreads `+secret-mcp-servers' into its `setq!'; the defvar default
+there is nil, so a machine whose not-secret.el predates the variable still
+loads mcp.el -- it just lacks these servers, the same degrade as an unbound
+:token. A skip is that case too: this daemon has no not-secret.el defining
+the variable."
+  (skip-unless (and (boundp '+secret-mcp-servers) +secret-mcp-servers))
+  (dolist (entry +secret-mcp-servers)
+    (should (equal (cdr entry)
+            (cdr (assoc (car entry) mcp-hub-servers))))))

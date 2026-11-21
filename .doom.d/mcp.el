@@ -176,6 +176,12 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
       (message "Wrote MCP config to %s and updated %s"
         output-file claude-json-file))))
 
+(defvar +secret-mcp-servers nil
+  "Private `mcp-hub-servers' entries, set by not-secret.el.
+That file loads before this one (config.el before llm.el), so its `setq!'
+wins over the nil default here. A machine it has not synced to just gets
+none of these servers, rather than a void-variable taking mcp.el down.")
+
 (progn
   (require 'f)
   (let ((f (expand-file-name "~/.cbm-runtime")))
@@ -213,11 +219,13 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;;          ,(-> "~/Dropbox/sync/exa-mcp-server/.smithery/stdio/index.cjs"
        ;;               file-truename))))
 
-       ;; exa-mcp-server on Cloudflare Workers; setup in
-       ;; that repo's cloudflare/README.md. Token lives in not-secret.el.
-       ("exa" .
-         (:url "https://flatware-shadily-fondness-lunchbox-smother.nil.ng/mcp"
-           :token +exa-mcp-token))
+       ;; exa, jina_search, twitterapis and tavily: URL-authenticated
+       ;; workers whose endpoints and tokens are private, so the entries
+       ;; live in not-secret.el as `+secret-mcp-servers', spread in here.
+       ;; Tokens stay symbols in that list -- `+mcp-resolve-string' resolves
+       ;; them at generation time, so a machine whose not-secret.el has not
+       ;; synced yet just lacks the servers instead of losing mcp.el.
+       ,@+secret-mcp-servers
 
        ;; ("perplexity" .
        ;;  (:command "npx"
@@ -225,23 +233,6 @@ NOTE: this REPLACES the whole mcpServers object, so a server added with
        ;;   :env
        ;;   (:PERPLEXITY_API_KEY ,+perplexity-api-key
        ;;    :PERPLEXITY_TIMEOUT_MS "600000")))
-       
-       ;; jina-mcp on Cloudflare Workers; setup in that
-       ;; repo's cloudflare/README.md. Token lives in not-secret.el.
-       ("jina_search" .
-         (:url "https://liking-anywhere-handler-undermine-remake.nil.ng/v1"
-           :token +jina-mcp-token))
-
-       ;; twitterapis-mcp and tavily-mcp on Cloudflare Workers, API keys
-       ;; pooled from free-api-keys; see ~/workspace/home/cf-workers/workers.
-       ;; Tokens live in not-secret.el.
-       ("twitterapis" .
-         (:url "https://twitterapis-mcp.yqrashawn.workers.dev/mcp"
-           :token +twitterapis-mcp-token))
-
-       ("tavily" .
-         (:url "https://tavily-mcp.yqrashawn.workers.dev/mcp"
-           :token +tavily-mcp-token))
 
        ;; ("jina_search" .
        ;;  (:command "npx"
