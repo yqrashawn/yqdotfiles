@@ -123,7 +123,17 @@
   :init
   (setq! treesit-auto-install t)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all))
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  ;; treesit-auto rebuilds major-mode-remap-alist on every set-auto-mode-0,
+  ;; re-verifying every grammar via treesit-language-available-p (a dlopen
+  ;; each): 62 grammars x 2 calls per open is ~10s on mbp. The alist only
+  ;; changes when grammars or treesit-auto-langs change, so cache it.
+  (defvar +treesit-auto-remap-alist-cache nil)
+  (defun +treesit-auto-cache-remap-a (orig &rest _)
+    (or +treesit-auto-remap-alist-cache
+        (setq +treesit-auto-remap-alist-cache (funcall orig))))
+  (advice-add 'treesit-auto--build-major-mode-remap-alist
+              :around #'+treesit-auto-cache-remap-a))
 
 (after! js-json-mode
   (set-formatter! 'prettier-json
