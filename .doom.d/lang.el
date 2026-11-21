@@ -126,14 +126,22 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   ;; treesit-auto rebuilds major-mode-remap-alist on every set-auto-mode-0,
   ;; re-verifying every grammar via treesit-language-available-p (a dlopen
-  ;; each): 62 grammars x 2 calls per open is ~10s on mbp. The alist only
-  ;; changes when grammars or treesit-auto-langs change, so cache it.
-  (defvar +treesit-auto-remap-alist-cache nil)
+  ;; each): 62 grammars x 2 calls per open is ~10s on mbp. Cache the build;
+  ;; reset when a grammar gets installed (treesit-auto-install t does that
+  ;; mid-session on a long-lived daemon) so new languages remap without a
+  ;; restart. The 'uninitialized sentinel also caches a nil build (no
+  ;; grammars ready), which `or'-based caching would recompute every open.
+  (defvar +treesit-auto-remap-alist-cache 'uninitialized)
   (defun +treesit-auto-cache-remap-a (orig &rest _)
-    (or +treesit-auto-remap-alist-cache
-        (setq +treesit-auto-remap-alist-cache (funcall orig))))
+    (if (eq +treesit-auto-remap-alist-cache 'uninitialized)
+        (setq +treesit-auto-remap-alist-cache (funcall orig))
+      +treesit-auto-remap-alist-cache))
+  (defun +treesit-auto-reset-remap-cache-a (&rest _)
+    (setq +treesit-auto-remap-alist-cache 'uninitialized))
   (advice-add 'treesit-auto--build-major-mode-remap-alist
-              :around #'+treesit-auto-cache-remap-a))
+              :around #'+treesit-auto-cache-remap-a)
+  (advice-add 'treesit-install-language-grammar
+              :after #'+treesit-auto-reset-remap-cache-a))
 
 (after! js-json-mode
   (set-formatter! 'prettier-json
