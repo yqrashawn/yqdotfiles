@@ -67,6 +67,10 @@ let
   # extension and refuses a path not ending in .sh/.ps1/.js.
   zghTmp = attr: "/private/tmp/ghr-${attr}";
   zghJobStarted = attr: pkgs.writeShellScript "github-runner-${attr}-job-started.sh" ''
+    # The runner runs this as `bash -e <script>`, and a hook that exits
+    # non-zero fails the job before its first step. Cleanup is best effort:
+    # pkill exits 1 when nothing is left to match, find when $tmp is gone.
+    set +e
     tmp=${zghTmp attr}
     if /usr/bin/pgrep -f "$tmp/" >/dev/null; then
       /usr/bin/pkill -f "$tmp/"
