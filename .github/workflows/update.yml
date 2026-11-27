@@ -23,7 +23,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           bb: "latest"
-      - uses: cachix/install-nix-action@v30
+      - uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare flakebot branch
