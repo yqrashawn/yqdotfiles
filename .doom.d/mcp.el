@@ -21,11 +21,11 @@ config slot for the message."
     (cond
       ((or (null v) (stringp v)) v)
       (t
-       (display-warning '+mcp
-         (format "mcp-hub-servers: %s resolved to %S, not a string -- dropped"
-           what v)
-         :warning)
-       nil))))
+        (display-warning '+mcp
+          (format "mcp-hub-servers: %s resolved to %S, not a string -- dropped"
+            what v)
+          :warning)
+        nil))))
 
 (defun +mcp-env-string (symbol)
   "SYMBOL's value as a string, degrading to \"\" with a warning.
@@ -449,13 +449,14 @@ none of these servers, rather than a void-variable taking mcp.el down.")
        ;; mcp package hands :env values to `setenv' verbatim (only :token gets
        ;; `mcp--resolve-value') -- a bare comma would void-variable the whole
        ;; setq! on a machine where not-secret.el has not synced yet.
-       ("figma-console" .
-         (:command "bun"
-           :args
-           ("figma-console-mcp@latest")
-           :env
-           (:FIGMA_ACCESS_TOKEN ,(+mcp-env-string '+figma-access-token-3)
-             :ENABLE_MCP_APPS "true")))))
+       ;; ("figma-console" .
+       ;;   (:command "bun"
+       ;;     :args
+       ;;     ("figma-console-mcp@latest")
+       ;;     :env
+       ;;     (:FIGMA_ACCESS_TOKEN ,(+mcp-env-string '+figma-access-token-3)
+       ;;       :ENABLE_MCP_APPS "true")))
+       ))
   (+gen-mcp-json-conf))
 
 (use-package! mcp-server-lib
